@@ -1,13 +1,11 @@
-﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Reflection;
-
-namespace Gu.ChangeTracking
+﻿namespace Gu.ChangeTracking
 {
     using System;
-    using System.Collections.ObjectModel;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
+    using System.Reflection;
 
     /// <summary>
     /// Settings for how <see cref="ChangeTracker"/> tracks changes.

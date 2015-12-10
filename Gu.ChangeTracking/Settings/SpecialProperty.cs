@@ -8,7 +8,7 @@ namespace Gu.ChangeTracking
     [Serializable]
     public class SpecialProperty
     {
-        protected SpecialProperty() // for serialization
+        private SpecialProperty() // for serialization
         {
         }
 

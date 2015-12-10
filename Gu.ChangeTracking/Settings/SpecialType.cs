@@ -7,7 +7,7 @@
     [Serializable]
     public class SpecialType 
     {
-        protected SpecialType() // for serialization
+        private SpecialType() // for serialization
         {
         }
 
@@ -36,7 +36,5 @@
         /// The reason <see cref="Name"/> is excluded from tracking.
         /// </summary>
         public TrackAs TrackAs { get; }
-
-
     }
 }
