@@ -16,19 +16,6 @@
             }
         }
 
-        internal static void NotNull(object o, string parameterName, string message, [CallerMemberName] string caller = null)
-        {
-            Debug.Assert(!string.IsNullOrEmpty(parameterName));
-            if (o == null)
-            {
-                if (message == null)
-                {
-                    throw new ArgumentNullException(parameterName);
-                }
-                throw new ArgumentNullException(parameterName, message);
-            }
-        }
-
         internal static void NotNullOrEmpty(string s, string paramName, string message = null)
         {
             if (string.IsNullOrEmpty(s))

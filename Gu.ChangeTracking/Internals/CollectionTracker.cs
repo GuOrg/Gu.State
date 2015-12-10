@@ -6,29 +6,26 @@ namespace Gu.ChangeTracking
     using System.ComponentModel;
     using System.Reflection;
 
-    public sealed class CollectionTracker : PropertyTracker
+    internal sealed class CollectionTracker : PropertyTracker
     {
-        private readonly ChangeTrackerSettings _settings;
-        private readonly CollectionItemTrackerCollection _itemTrackers;
+        private readonly ChangeTrackerSettings settings;
+        private readonly CollectionItemTrackerCollection itemTrackers;
 
         public CollectionTracker(Type parentType, PropertyInfo parentProperty, IEnumerable value, ChangeTrackerSettings settings)
             : base(parentType, parentProperty, value)
         {
-            _settings = settings;
-            _itemTrackers = new CollectionItemTrackerCollection(parentType, parentProperty, settings);
-            _itemTrackers.PropertyChanged += OnSubtrackerPropertyChanged;
+            this.settings = settings;
+            this.itemTrackers = new CollectionItemTrackerCollection(parentType, parentProperty, settings);
+            this.itemTrackers.PropertyChanged += OnSubtrackerPropertyChanged;
             var incc = value as INotifyCollectionChanged;
             if (incc != null)
             {
                 incc.CollectionChanged += OnItemsChanged;
             }
-            _itemTrackers.Add(value);
+            this.itemTrackers.Add(value);
         }
 
-        private IEnumerable Items
-        {
-            get { return (IEnumerable)base.Value; }
-        }
+        private IEnumerable Items => (IEnumerable)Value;
 
         protected override void Dispose(bool disposing)
         {
@@ -40,8 +37,8 @@ namespace Gu.ChangeTracking
                     incc.CollectionChanged -= OnItemsChanged;
                 }
 
-                _itemTrackers.Dispose();
-                _itemTrackers.PropertyChanged -= OnSubtrackerPropertyChanged;
+                this.itemTrackers.Dispose();
+                this.itemTrackers.PropertyChanged -= OnSubtrackerPropertyChanged;
             }
             base.Dispose(disposing);
         }
@@ -53,13 +50,13 @@ namespace Gu.ChangeTracking
             if (type.IsEnumerableOfT())
             {
                 var itemType = type.GetItemType();
-                if (itemType != null && !IsTrackType(itemType, _settings))
+                if (itemType != null && !IsTrackType(itemType, this.settings))
                 {
                     return;
                 }
             }
-            _itemTrackers.Clear(); // keeping it simple here.
-            _itemTrackers.Add((IEnumerable)sender);
+            this.itemTrackers.Clear(); // keeping it simple here.
+            this.itemTrackers.Add((IEnumerable)sender);
         }
 
         private void OnSubtrackerPropertyChanged(object sender, PropertyChangedEventArgs e)

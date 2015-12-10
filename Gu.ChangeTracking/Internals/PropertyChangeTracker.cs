@@ -6,10 +6,11 @@
     using System.Linq;
     using System.Reflection;
 
-    public sealed class PropertyChangeTracker : PropertyTracker
+    internal sealed class PropertyChangeTracker : PropertyTracker
     {
-        private readonly ChangeTrackerSettings _settings;
-        private readonly PropertyTrackerCollection _propertyTrackers;
+        private readonly ChangeTrackerSettings settings;
+        private readonly PropertyTrackerCollection propertyTrackers;
+        private HashSet<string> ignoredProperties;
 
         internal PropertyChangeTracker(Type parentType, PropertyInfo parentProperty, INotifyPropertyChanged value, ChangeTrackerSettings settings)
             : base(parentType, parentProperty, value)
@@ -19,41 +20,50 @@
             Ensure.NotNull(value, nameof(value));
             Ensure.NotNull(settings, nameof(settings));
 
-            _settings = settings;
-            _propertyTrackers = new PropertyTrackerCollection(value.GetType(), settings);
+            this.settings = settings;
+            this.propertyTrackers = new PropertyTrackerCollection(value.GetType(), settings);
             value.PropertyChanged += OnItemPropertyChanged;
-            _propertyTrackers.PropertyChanged += OnSubtrackerPropertyChanged;
-            _propertyTrackers.Add(value, TrackProperties);
+            this.propertyTrackers.PropertyChanged += OnSubtrackerPropertyChanged;
+            this.propertyTrackers.Add(value, TrackProperties);
+            this.ignoredProperties = new HashSet<string>();
+            foreach (var property in value.GetType().GetProperties())
+            {
+                if(Attribute.GetCustomAttribute(property, typeof(IgnoreChangesAttribute)) != null ||
+                   settings.IsIgnored(property))
+                {
+                    this.ignoredProperties.Add(property.Name);
+                }
+            }
         }
 
-        private new INotifyPropertyChanged Value
-        {
-            get { return (INotifyPropertyChanged)base.Value; }
-        }
+        private new INotifyPropertyChanged Value => (INotifyPropertyChanged)base.Value;
 
-        public IReadOnlyList<PropertyInfo> TrackProperties
-        {
-            get { return GetTrackProperties(Value, _settings); }
-        }
+        private IReadOnlyList<PropertyInfo> TrackProperties => GetTrackProperties(Value, this.settings);
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
                 Value.PropertyChanged -= OnItemPropertyChanged;
-                _propertyTrackers.Dispose();
+                this.propertyTrackers.Dispose();
             }
+
             base.Dispose(disposing);
         }
 
         private void OnItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            if (this.ignoredProperties.Contains(e.PropertyName))
+            {
+                return;
+            }
+
             Changes++;
             var propertyInfo = TrackProperties.SingleOrDefault(x => x.Name == e.PropertyName);
             if (propertyInfo != null)
             {
-                _propertyTrackers.RemoveBy(propertyInfo);
-                _propertyTrackers.Add((INotifyPropertyChanged)sender, propertyInfo);
+                this.propertyTrackers.RemoveBy(propertyInfo);
+                this.propertyTrackers.Add((INotifyPropertyChanged)sender, propertyInfo);
             }
         }
 

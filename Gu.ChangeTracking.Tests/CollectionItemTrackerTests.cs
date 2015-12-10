@@ -12,12 +12,12 @@
     public class CollectionItemTrackerTests
     {
         public static readonly PropertyInfo DummyPropertyInfo = typeof(List<int>).GetProperty("Count");
-        private List<PropertyChangedEventArgs> _changes;
+        private List<PropertyChangedEventArgs> changes;
 
         [SetUp]
         public void SetUp()
         {
-            _changes = new List<PropertyChangedEventArgs>();
+            this.changes = new List<PropertyChangedEventArgs>();
         }
 
         [Test]
@@ -30,7 +30,7 @@
 
                 ints.Add(1);
                 Assert.AreEqual(1, tracker.Changes);
-                Assert.AreEqual(1, _changes.Count);
+                Assert.AreEqual(1, this.changes.Count);
                 tracker.PropertyChanged -= TrackerOnPropertyChanged;
             }
         }
@@ -46,16 +46,16 @@
                 var item = new Level();
                 items.Add(item);
                 Assert.AreEqual(1, tracker.Changes);
-                Assert.AreEqual(1, _changes.Count);
+                Assert.AreEqual(1, this.changes.Count);
 
                 item.Value++;
                 Assert.AreEqual(2, tracker.Changes);
-                Assert.AreEqual(2, _changes.Count);
+                Assert.AreEqual(2, this.changes.Count);
 
 
                 items.Add(new Level());
                 Assert.AreEqual(3, tracker.Changes);
-                Assert.AreEqual(3, _changes.Count);
+                Assert.AreEqual(3, this.changes.Count);
 
                 tracker.PropertyChanged -= TrackerOnPropertyChanged;
             }
@@ -63,7 +63,7 @@
 
         private void TrackerOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            _changes.Add(e);
+            this.changes.Add(e);
         }
     }
 }

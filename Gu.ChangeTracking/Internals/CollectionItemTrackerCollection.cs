@@ -7,30 +7,30 @@
     using System.Linq;
     using System.Reflection;
 
-    public sealed class CollectionItemTrackerCollection : ChangeTracker, IReadOnlyCollection<IValueTracker>
+    internal sealed class CollectionItemTrackerCollection : ChangeTracker, IReadOnlyCollection<IValueTracker>
     {
-        private readonly Type _parentType;
-        private readonly PropertyInfo _parentProperty;
-        private readonly ChangeTrackerSettings _settings;
-        private readonly List<IValueTracker> _trackers = new List<IValueTracker>();
+        private readonly Type parentType;
+        private readonly PropertyInfo parentProperty;
+        private readonly ChangeTrackerSettings settings;
+        private readonly List<IValueTracker> trackers = new List<IValueTracker>();
 
         public CollectionItemTrackerCollection(Type parentType, PropertyInfo parentProperty, ChangeTrackerSettings settings)
         {
             Ensure.NotNull(parentType, nameof(parentType));
             Ensure.NotNull(parentProperty, nameof(parentProperty));
-            _parentType = parentType;
-            _parentProperty = parentProperty;
-            _settings = settings;
+            this.parentType = parentType;
+            this.parentProperty = parentProperty;
+            this.settings = settings;
         }
 
         /// <inheritdoc/>
-        public int Count { get { return _trackers.Count; } }
+        public int Count => this.trackers.Count;
 
         /// <inheritdoc/>
         public bool IsReadOnly => true;
 
         /// <inheritdoc/>
-        public IEnumerator<IValueTracker> GetEnumerator() => _trackers.GetEnumerator();
+        public IEnumerator<IValueTracker> GetEnumerator() => this.trackers.GetEnumerator();
 
         /// <inheritdoc/>
         IEnumerator IEnumerable.GetEnumerator()
@@ -42,7 +42,7 @@
         public bool Contains(IValueTracker item)
         {
             VerifyDisposed();
-            return _trackers.Contains(item);
+            return this.trackers.Contains(item);
         }
 
         /// <see cref="List{IValueTracker}.Add(IValueTracker)"/>
@@ -50,7 +50,7 @@
         {
             foreach (var child in items)
             {
-                var itemTracker = Create(_parentType, _parentProperty, child, _settings);
+                var itemTracker = Create(this.parentType, this.parentProperty, child, this.settings);
                 if (itemTracker != null)
                 {
                     Add(itemTracker);
@@ -75,11 +75,13 @@
             {
                 ClearCore();
             }
+
+            base.Dispose(disposing);
         }
 
         private void ClearCore()
         {
-            foreach (var tracker in _trackers)
+            foreach (var tracker in this.trackers)
             {
                 if (tracker != null)
                 {
@@ -87,7 +89,7 @@
                     tracker.PropertyChanged -= OnItemPropertyChanged;
                 }
             }
-            _trackers.Clear();
+            this.trackers.Clear();
         }
 
         private void OnItemPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -101,19 +103,19 @@
 
         private void Add(IValueTracker item)
         {
-            var match = _trackers.FirstOrDefault(x => ReferenceEquals(x.Value, item));
+            var match = this.trackers.FirstOrDefault(x => ReferenceEquals(x.Value, item));
             if (match != null)
             {
                 throw new InvalidOperationException("Cannot track the same item twice. Clear before add");
             }
             item.PropertyChanged += OnItemPropertyChanged;
-            _trackers.Add(item);
+            this.trackers.Add(item);
         }
 
         private bool Remove(IValueTracker item)
         {
             VerifyDisposed();
-            var remove = _trackers.Remove(item);
+            var remove = this.trackers.Remove(item);
             if (remove)
             {
                 item.PropertyChanged -= OnItemPropertyChanged;
@@ -125,7 +127,7 @@
         private bool RemoveBy(object item)
         {
             VerifyDisposed();
-            var match = _trackers.FirstOrDefault(x => ReferenceEquals(x.Value, item));
+            var match = this.trackers.FirstOrDefault(x => ReferenceEquals(x.Value, item));
             if (match != null)
             {
                 return Remove(match);

@@ -6,7 +6,7 @@ namespace Gu.ChangeTracking
     public interface ITracker : INotifyPropertyChanged, IDisposable
     {
         /// <summary>
-        /// This event is raised when a change in the tracked intance is detected.
+        /// This event is raised when a change in the tracked instance is detected.
         /// </summary>
         event EventHandler Changed;
 

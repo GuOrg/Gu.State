@@ -5,7 +5,7 @@ namespace Gu.ChangeTracking
     using System.Reflection;
 
     [DebuggerDisplay("Item: {Value.ToString()} ParentType:{ParentType.Name} ParentProperty: {ParentProperty.Name}")]
-    public abstract class PropertyTracker : ValueTracker, IPropertyTracker
+    internal abstract class PropertyTracker : ValueTracker, IPropertyTracker
     {
         protected PropertyTracker(Type parentType, PropertyInfo property, object value)
             : base(value)
@@ -16,9 +16,9 @@ namespace Gu.ChangeTracking
         }
 
         /// <inheritdoc/>
-        public Type ParentType { get; private set; }
+        public Type ParentType { get; }
 
         /// <inheritdoc/>
-        public PropertyInfo ParentProperty { get; private set; }
+        public PropertyInfo ParentProperty { get; }
     }
 }

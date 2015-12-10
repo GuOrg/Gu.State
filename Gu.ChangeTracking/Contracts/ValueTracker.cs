@@ -1,6 +1,6 @@
 namespace Gu.ChangeTracking
 {
-    public abstract class ValueTracker : ChangeTracker, IValueTracker
+    internal abstract class ValueTracker : ChangeTracker, IValueTracker
     {
         protected ValueTracker(object value)
         {
@@ -8,11 +8,6 @@ namespace Gu.ChangeTracking
             Value = value;
         }
 
-        public object Value { get; private set; }
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-        }
+        public object Value { get; }
     }
 }
