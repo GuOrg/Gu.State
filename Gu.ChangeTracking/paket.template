@@ -1,0 +1,8 @@
+﻿type project
+title Gu.ChangeTracking
+tags INotifyPropertyChanged
+projectUrl https://github.com/JohanLarsson/Gu.ChangeTracking
+licenseUrl http://opensource.org/licenses/MIT
+
+excludeddependencies
+  JetBrains.Annotations

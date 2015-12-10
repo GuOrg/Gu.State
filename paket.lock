@@ -1,0 +1,6 @@
+NUGET
+  remote: http://www.nuget.org/api/v2
+  specs:
+    JetBrains.Annotations (10.0.0)
+    Moq (4.2.1510.2205)
+    NUnit (2.6.4)

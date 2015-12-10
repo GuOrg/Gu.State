@@ -12,13 +12,16 @@
 
     using JetBrains.Annotations;
 
+    /// <summary>
+    /// Tracks changes in a graph. Listens to Property and collection changes.
+    /// </summary>
     public abstract class ChangeTracker : ITracker
     {
-        protected static readonly PropertyInfo ChangesPropertyInfo = typeof(ChangeTracker).GetProperty(nameof(Changes));
-        protected static readonly PropertyChangedEventArgs ChangesEventArgs = new PropertyChangedEventArgs(nameof(Changes));
+        private static readonly PropertyInfo ChangesPropertyInfo = typeof(ChangeTracker).GetProperty(nameof(Changes));
+        private static readonly PropertyChangedEventArgs ChangesEventArgs = new PropertyChangedEventArgs(nameof(Changes));
         private static readonly ConcurrentDictionary<Type, IReadOnlyList<PropertyInfo>> TrackPropertiesMap = new ConcurrentDictionary<Type, IReadOnlyList<PropertyInfo>>();
-        private int _changes;
-        private bool _disposed;
+        private int changes;
+        private bool disposed;
 
         /// <inheritdoc/>
         public event PropertyChangedEventHandler PropertyChanged;
@@ -29,14 +32,15 @@
         /// <inheritdoc/>
         public int Changes
         {
-            get { return _changes; }
+            get { return this.changes; }
             protected set
             {
-                if (value == _changes)
+                if (value == this.changes)
                 {
                     return;
                 }
-                _changes = value;
+
+                this.changes = value;
                 OnPropertyChanged(ChangesEventArgs);
                 OnChanged();
             }
@@ -45,8 +49,8 @@
         /// <summary>
         /// Creates a tracker that detects and notifies about changes of any property or subproperty of <paramref name="root"/>
         /// </summary>
-        /// <param name="root"></param>
-        /// <returns></returns>
+        /// <param name="root">The item to track changes for.</param>
+        /// <returns>An <see cref="IValueTracker"/> that signals on changes in <paramref name="root"/></returns>
         public static IValueTracker Track(INotifyPropertyChanged root)
         {
             Ensure.NotNull(root, nameof(root));
@@ -56,9 +60,9 @@
         /// <summary>
         /// Creates a tracker that detects and notifies about changes of any property or subproperty of <paramref name="root"/>
         /// </summary>
-        /// <param name="root"></param>
-        /// <param name="settings"></param>
-        /// <returns></returns>
+        /// <param name="root">The item to track changes for.</param>
+        /// <param name="settings">Settings telling the tracker which types to ignore.</param>
+        /// <returns>An <see cref="IValueTracker"/> that signals on changes in <paramref name="root"/></returns>
         public static IValueTracker Track(INotifyPropertyChanged root, ChangeTrackerSettings settings)
         {
             Ensure.NotNull(root, nameof(root));
@@ -69,69 +73,85 @@
             return tracker;
         }
 
-        internal static void Verify(Type parentType, PropertyInfo parentProperty, object item, ChangeTrackerSettings settings)
+        private static void Verify(Type parentType, PropertyInfo parentProperty, object value, ChangeTrackerSettings settings)
         {
-            if (Attribute.IsDefined(parentType, typeof(TrackingAttribute), true))
+            if (value is IEnumerable && !(value is INotifyCollectionChanged))
             {
-                return;
+                // goto throw :)
+            }
+            else
+            {
+                if (Attribute.IsDefined(parentType, typeof(IgnoreChangesAttribute), true))
+                {
+                    return;
+                }
+
+                if (Attribute.IsDefined(parentProperty, typeof(IgnoreChangesAttribute), true))
+                {
+                    return;
+                }
+
+                if (settings.IsIgnored(parentProperty))
+                {
+                    return;
+                }
+
+                var propertyType = parentProperty.PropertyType;
+                if (settings.IsIgnored(propertyType))
+                {
+                    return;
+                }
+
+                if (!IsTrackType(propertyType, settings))
+                {
+                    return;
+                }
+
+                if (typeof(INotifyPropertyChanged).IsAssignableFrom(propertyType))
+                {
+                    return;
+                }
+
+                if (typeof(INotifyCollectionChanged).IsAssignableFrom(propertyType))
+                {
+                    return;
+                }
             }
 
-            if (Attribute.IsDefined(parentProperty, typeof(TrackingAttribute), true))
-            {
-                return;
-            }
-
-            var propertyType = parentProperty.PropertyType;
-            if (settings.SpecialTypes.Any(x => x.TypeName == propertyType.FullName))
-            {
-                return;
-            }
-            //if (Attribute.IsDefined(propertyType, typeof(TrackingAttribute), true))
-            //{
-            //    return;
-            //}
-
-            if (!IsTrackType(propertyType, settings))
-            {
-                return;
-            }
-
-            if (typeof(INotifyPropertyChanged).IsAssignableFrom(propertyType))
-            {
-                return;
-            }
-
-            if (typeof(INotifyCollectionChanged).IsAssignableFrom(propertyType))
-            {
-                return;
-            }
             // settings.AddSpecialType<FileInfo>(TrackAs.Explicit)
-            var message =
-                string.Format(
-                    @"Create tracker failed for {0}.{1}." + Environment.NewLine +
-                    @"Solve the problem by:" +Environment.NewLine +
-                    @"1) Add a specialcase to tracker setting example: " + Environment.NewLine +
-                    @"    settings.AddSpecialType<YourType>(TrackAs.Explicit)" + Environment.NewLine +
-                    @"    Note that this requires you to track changes." + Environment.NewLine +
-                    @"2) Implementing INotifyPropertyChanged for {2}" + Environment.NewLine +
-                    @"3) Implementing INotifyCollectionChanged for {2}" +Environment.NewLine +
-                    @"4) Add TrackingAttribute: Immutable to type:{1}" + Environment.NewLine +
-                    @"5) Add TrackingAttribute: Explicit to {2} ",
-                    parentType.Name,
-                    parentProperty.Name,
-                    parentProperty.PropertyType.Name);
+            var message = $"Create tracker failed for {parentType.FullPrettyName()}.{parentProperty.Name}.\r\n" +
+                          $"Solve the problem by any of:\r\n" +
+                          $"* Add a specialcase to tracker setting example:\r\n" +
+                          $"    settings.AddSpecialType<{parentProperty.PropertyType.FullPrettyName()}>(...)\r\n" +
+                          $"    or:" +
+                          $"    settings.AddSpecialProperty(typeof({parentType.PrettyName()}).GetProperty(nameof({parentType.PrettyName()}.{parentProperty.Name}))" +
+                          $"    Note that this requires you to track changes.\r\n" +
+                          $"* Implement {nameof(INotifyPropertyChanged)} for {parentType.FullPrettyName()}\r\n" +
+                          $"* Implement {nameof(INotifyCollectionChanged)} for {parentType.FullPrettyName()}\r\n" +
+                          $"* Add attribute [{nameof(IgnoreChangesAttribute)}] to type {parentType.FullPrettyName()}\r\n" +
+                          $"* Add attribute [{nameof(IgnoreChangesAttribute)}] to property {parentType.FullPrettyName()}.{parentProperty.Name}";
             throw new ArgumentException(message);
         }
 
         internal static bool CanTrack(Type parentType, PropertyInfo parentProperty, object value, ChangeTrackerSettings settings)
         {
             Verify(parentType, parentProperty, value, settings);
+            if (settings.IsIgnored(parentProperty))
+            {
+                return false;
+            }
+
+            if (settings.IsIgnored(parentType))
+            {
+                return false;
+            }
 
             var incc = value as INotifyCollectionChanged;
             if (incc != null)
             {
                 return true;
             }
+
             var inpc = value as INotifyPropertyChanged;
             if (inpc != null)
             {
@@ -147,6 +167,13 @@
         /// </summary>
         public void Dispose()
         {
+            if (this.disposed)
+            {
+                return;
+            }
+
+            this.disposed = true;
+
             Dispose(true);
             GC.SuppressFinalize(this);
         }
@@ -162,17 +189,20 @@
             {
                 return null;
             }
+
             var incc = child as INotifyCollectionChanged;
             if (incc != null)
             {
                 return new CollectionTracker(parentType, parentProperty, (IEnumerable)incc, settings);
             }
+
             var inpc = child as INotifyPropertyChanged;
             if (inpc != null)
             {
                 return new PropertyChangeTracker(parentType, parentProperty, inpc, settings);
             }
-            throw new ArgumentException();
+
+            throw new ArgumentOutOfRangeException($"Could not create a tracker for {child}");
         }
 
         protected static IReadOnlyList<PropertyInfo> GetTrackProperties(INotifyPropertyChanged item, ChangeTrackerSettings settings)
@@ -192,22 +222,15 @@
         /// <param name="disposing">true: safe to free managed resources</param>
         protected virtual void Dispose(bool disposing)
         {
-            if (_disposed)
-            {
-                return;
-            }
-            _disposed = true;
             if (disposing)
             {
                 // Free any other managed objects here. 
             }
-
-            // Free any unmanaged objects here. 
         }
 
         protected void VerifyDisposed()
         {
-            if (_disposed)
+            if (this.disposed)
             {
                 throw new ObjectDisposedException(GetType().FullName);
             }
@@ -216,29 +239,17 @@
         [NotifyPropertyChangedInvocator]
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            var handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        protected void OnPropertyChanged(PropertyChangedEventArgs e)
+        private void OnPropertyChanged(PropertyChangedEventArgs e)
         {
-            var handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            PropertyChanged?.Invoke(this, e);
         }
 
-        protected virtual void OnChanged()
+        private void OnChanged()
         {
-            var handler = Changed;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            Changed?.Invoke(this, EventArgs.Empty);
         }
 
         protected static bool IsTrackType(Type type, ChangeTrackerSettings settings)
@@ -249,10 +260,11 @@
                 return false;
             }
 
-            if (settings.SpecialTypes.Any(x => x.TypeName == type.FullName))
+            if (settings.IsIgnored(type))
             {
                 return false;
             }
+
             return true;
         }
 

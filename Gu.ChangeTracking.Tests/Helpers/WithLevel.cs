@@ -1,18 +1,23 @@
 ﻿namespace Gu.ChangeTracking.Tests.Helpers
 {
-    using System.Collections;
     using System.ComponentModel;
-    using System.Linq;
     using System.Runtime.CompilerServices;
     using JetBrains.Annotations;
 
-    public class IllegalEnumerable : INotifyPropertyChanged, IEnumerable
+    public class WithLevel : INotifyPropertyChanged
     {
+        private Level level;
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public IEnumerator GetEnumerator()
+        public Level Level
         {
-            return Enumerable.Empty<int>().GetEnumerator();
+            get { return this.level; }
+            set
+            {
+                if (Equals(value, this.level)) return;
+                this.level = value;
+                OnPropertyChanged();
+            }
         }
 
         [NotifyPropertyChangedInvocator]

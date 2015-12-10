@@ -9,94 +9,95 @@
 
     public class Level : INotifyPropertyChanged
     {
-        private int _value;
-        private Level _next;
-        private ObservableCollection<int> _ints = new ObservableCollection<int>();
-        private ObservableCollection<Level> _levels = new ObservableCollection<Level>();
-        private string _name;
-        private StringComparison _comparison;
+        private int value;
+        private Level next;
+        private ObservableCollection<int> ints = new ObservableCollection<int>();
+        private ObservableCollection<Level> levels = new ObservableCollection<Level>();
+        private string name;
+        private StringComparison comparison;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public int Value
         {
-            get { return _value; }
+            get { return this.value; }
             set
             {
-                if (value == _value)
+                if (value == this.value)
                 {
                     return;
                 }
-                _value = value;
+                this.value = value;
                 OnPropertyChanged();
             }
         }
 
         public string Name
         {
-            get { return _name; }
+            get { return this.name; }
             set
             {
-                if (value == _name)
+                if (value == this.name)
                 {
                     return;
                 }
-                _name = value;
+                this.name = value;
                 OnPropertyChanged();
             }
         }
 
         public StringComparison Comparison
         {
-            get { return _comparison; }
+            get { return this.comparison; }
             set
             {
-                if (value == _comparison)
+                if (value == this.comparison)
                 {
                     return;
                 }
-                _comparison = value;
+                this.comparison = value;
                 OnPropertyChanged();
             }
         }
 
         public Level Next
         {
-            get { return _next; }
+            get { return this.next; }
             set
             {
-                if (Equals(value, _next))
+                if (Equals(value, this.next))
                 {
                     return;
                 }
-                _next = value;
+                this.next = value;
                 OnPropertyChanged();
             }
         }
 
         public ObservableCollection<int> Ints
         {
-            get { return _ints; }
+            get { return this.ints; }
             set
             {
-                if (Equals(value, _ints))
+                if (Equals(value, this.ints))
                 {
                     return;
                 }
-                _ints = value;
+                this.ints = value;
                 OnPropertyChanged();
             }
         }
 
         public ObservableCollection<Level> Levels
         {
-            get { return _levels; }
+            get { return this.levels; }
             set
             {
-                if (Equals(value, _levels))
+                if (Equals(value, this.levels))
                 {
                     return;
                 }
-                _levels = value;
+                this.levels = value;
                 OnPropertyChanged();
             }
         }

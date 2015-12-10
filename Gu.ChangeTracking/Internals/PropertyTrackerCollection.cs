@@ -9,26 +9,26 @@
     using System.Reflection;
 
     [DebuggerDisplay("Count: {Count}")]
-    public sealed class PropertyTrackerCollection : ChangeTracker, IReadOnlyCollection<IPropertyTracker>, IDisposable
+    internal sealed class PropertyTrackerCollection : ChangeTracker, IReadOnlyCollection<IPropertyTracker>, IDisposable
     {
-        private readonly Type _parentType;
-        private readonly ChangeTrackerSettings _settings;
-        private readonly List<IPropertyTracker> _trackers = new List<IPropertyTracker>();
+        private readonly Type parentType;
+        private readonly ChangeTrackerSettings settings;
+        private readonly List<IPropertyTracker> trackers = new List<IPropertyTracker>();
 
         public PropertyTrackerCollection(Type parentType, ChangeTrackerSettings settings)
         {
-            _parentType = parentType;
-            _settings = settings;
+            this.parentType = parentType;
+            this.settings = settings;
         }
 
-        public int Count { get { return _trackers.Count; } }
+        public int Count => this.trackers.Count;
 
-        public bool IsReadOnly { get { return false; } }
+        public bool IsReadOnly => false;
 
         public IEnumerator<IPropertyTracker> GetEnumerator()
         {
             VerifyDisposed();
-            return _trackers.GetEnumerator();
+            return this.trackers.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -51,7 +51,7 @@
             Ensure.NotNull(item, nameof(item));
             Ensure.NotNull(property, nameof(property));
             var value = property.GetValue(item);
-            if (!CanTrack(_parentType, property, value, _settings))
+            if (!CanTrack(this.parentType, property, value, this.settings))
             {
                 return;
             }
@@ -59,7 +59,7 @@
             {
                 return;
             }
-            var tracker = Create(_parentType, property, value, _settings);
+            var tracker = Create(this.parentType, property, value, this.settings);
             if (tracker != null)
             {
                 Add(tracker);
@@ -74,7 +74,7 @@
 
         internal void RemoveBy(PropertyInfo propertyInfo)
         {
-            var toRemove = _trackers.SingleOrDefault(x => x.ParentProperty == propertyInfo);
+            var toRemove = this.trackers.SingleOrDefault(x => x.ParentProperty == propertyInfo);
             if (toRemove != null)
             {
                 Remove(toRemove);
@@ -91,6 +91,8 @@
             {
                 ClearCore();
             }
+
+            base.Dispose(disposing);
         }
 
         private void Add(IPropertyTracker tracker)
@@ -101,7 +103,7 @@
                 return;
             }
             tracker.PropertyChanged += OnItemPropertyChanged;
-            var old = _trackers.SingleOrDefault(x => x.ParentProperty.Name == tracker.ParentProperty.Name);
+            var old = this.trackers.SingleOrDefault(x => x.ParentProperty.Name == tracker.ParentProperty.Name);
             if (old != null)
             {
                 var message =
@@ -113,13 +115,13 @@
                 throw new InvalidOperationException(message);
             }
 
-            _trackers.Add(tracker);
+            this.trackers.Add(tracker);
         }
 
         private bool Remove(IPropertyTracker item)
         {
             VerifyDisposed();
-            var removed = _trackers.Remove(item);
+            var removed = this.trackers.Remove(item);
             if (removed)
             {
                 item.PropertyChanged -= OnItemPropertyChanged;
@@ -131,7 +133,7 @@
 
         private void ClearCore()
         {
-            foreach (var tracker in _trackers)
+            foreach (var tracker in this.trackers)
             {
                 if (tracker != null)
                 {
@@ -139,7 +141,7 @@
                     tracker.PropertyChanged -= OnItemPropertyChanged;
                 }
             }
-            _trackers.Clear();
+            this.trackers.Clear();
         }
 
         private void OnItemPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -148,6 +150,7 @@
             {
                 return;
             }
+
             Changes++;
         }
     }
