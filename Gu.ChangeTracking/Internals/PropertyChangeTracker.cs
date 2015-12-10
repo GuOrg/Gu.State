@@ -10,7 +10,7 @@
     {
         private readonly ChangeTrackerSettings settings;
         private readonly PropertyTrackerCollection propertyTrackers;
-        private HashSet<string> ignoredProperties;
+        private readonly HashSet<string> ignoredProperties;
 
         internal PropertyChangeTracker(Type parentType, PropertyInfo parentProperty, INotifyPropertyChanged value, ChangeTrackerSettings settings)
             : base(parentType, parentProperty, value)

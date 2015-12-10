@@ -11,7 +11,7 @@
 
     public class CollectionItemTrackerTests
     {
-        public static readonly PropertyInfo DummyPropertyInfo = typeof(List<int>).GetProperty("Count");
+        private static readonly PropertyInfo DummyPropertyInfo = typeof(List<int>).GetProperty("Count");
         private List<PropertyChangedEventArgs> changes;
 
         [SetUp]

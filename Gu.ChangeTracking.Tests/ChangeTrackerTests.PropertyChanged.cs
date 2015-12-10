@@ -25,7 +25,7 @@
             public void NotifiesOnCurrentLevelAndStopsOnDisposed()
             {
                 var root = new Level();
-                using (var tracker = PropertyChangeTracker.Track(root))
+                using (var tracker = ChangeTracker.Track(root))
                 {
                     tracker.PropertyChanged += TrackerOnPropertyChanged;
 
@@ -46,7 +46,7 @@
             public void NotifiesNextLevel()
             {
                 var level = new Level { Next = new Level() };
-                using (var tracker = PropertyChangeTracker.Track(level))
+                using (var tracker = ChangeTracker.Track(level))
                 {
                     tracker.PropertyChanged += TrackerOnPropertyChanged;
 
@@ -62,7 +62,7 @@
             public void NotifiesThreeLevels()
             {
                 var level = new Level { Next = new Level { Next = new Level() } };
-                using (var tracker = PropertyChangeTracker.Track(level))
+                using (var tracker = ChangeTracker.Track(level))
                 {
                     tracker.PropertyChanged += TrackerOnPropertyChanged;
 
@@ -82,7 +82,7 @@
             public void StartSubscribingToNextLevel()
             {
                 var level = new Level();
-                using (var tracker = PropertyChangeTracker.Track(level))
+                using (var tracker = ChangeTracker.Track(level))
                 {
                     tracker.PropertyChanged += TrackerOnPropertyChanged;
 
@@ -102,7 +102,7 @@
             public void StopsSubscribingNextLevel()
             {
                 var level = new Level { Next = new Level() };
-                using (var tracker = PropertyChangeTracker.Track(level))
+                using (var tracker = ChangeTracker.Track(level))
                 {
                     tracker.PropertyChanged += TrackerOnPropertyChanged;
 
