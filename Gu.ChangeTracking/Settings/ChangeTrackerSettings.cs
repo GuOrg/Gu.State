@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
+    using System.Linq.Expressions;
     using System.Reflection;
 
     /// <summary>
@@ -15,7 +16,7 @@
     {
         private readonly ConcurrentDictionary<string, SpecialType> specialTypes = new ConcurrentDictionary<string, SpecialType>();
         private readonly ConcurrentDictionary<PropertyInfo, SpecialProperty> specialProperties = new ConcurrentDictionary<PropertyInfo, SpecialProperty>();
-        
+
         /// <summary>
         /// The default change tracker settings containing common ignores like for <see cref="System.Type"/>.
         /// </summary>
@@ -67,6 +68,31 @@
         public void AddExplicitType(Type type)
         {
             AddSpecialType(type, TrackAs.Explicit);
+        }
+
+        /// <summary>
+        /// Sample: AddExplicitProperty{<typeparamref name="TSource"/>}(x => x.Bar)
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="property"></param>
+        public void AddExplicitProperty<TSource>(Expression<Func<TSource, object>> property)
+        {
+            var expression = property.Body as MemberExpression;
+            if (expression == null)
+            {
+                var message = $"{nameof(property)} must be a property expression like foo => foo.Bar\r\n" +
+                              $"Nested properties are not allowed";
+                throw new ArgumentException(message);
+            }
+
+            var propertyInfo = expression.Member as PropertyInfo;
+            if (propertyInfo == null)
+            {
+                var message = $"{nameof(property)} must be a property expression like foo => foo.Bar";
+                throw new ArgumentException(message);
+            }
+
+            AddExplicitProperty(propertyInfo);
         }
 
         /// <summary>
