@@ -58,6 +58,7 @@
     <Compile Include="Helpers\IllegalObject.cs" />
     <Compile Include="Helpers\Level.cs" />
     <Compile Include="Helpers\SpecialCollection.cs" />
+    <Compile Include="Settings\ChangeTrackerSettingsTests.cs" />
     <Compile Include="TrackerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

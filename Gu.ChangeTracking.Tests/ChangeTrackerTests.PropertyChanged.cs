@@ -1,6 +1,7 @@
 ﻿namespace Gu.ChangeTracking.Tests
 {
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.ComponentModel;
 
     using Gu.ChangeTracking.Tests.Helpers;
@@ -79,6 +80,18 @@
             }
 
             [Test]
+            public void TracksCollectionItem()
+            {
+                var root = new Level { Next = new Level { Levels = new ObservableCollection<Level>(new[] { new Level(), }) } };
+                using (var tracker = ChangeTracker.Track(root))
+                {
+                    Assert.AreEqual(0, tracker.Changes);
+                    root.Next.Levels[0].Value++;
+                    Assert.AreEqual(1, tracker.Changes);
+                }
+            }
+
+            [Test]
             public void StartSubscribingToNextLevel()
             {
                 var level = new Level();
@@ -124,6 +137,23 @@
                 var withIllegalObject = new WithIllegalObject();
                 var settings = new ChangeTrackerSettings();
                 settings.AddExplicitProperty(typeof(WithIllegalObject).GetProperty(nameof(WithIllegalObject.Illegal)));
+                using (var tracker = ChangeTracker.Track(withIllegalObject, settings))
+                {
+                    Assert.AreEqual(0, tracker.Changes);
+                    withIllegalObject.Value++;
+                    Assert.AreEqual(1, tracker.Changes);
+
+                    withIllegalObject.Illegal = new IllegalObject();
+                    Assert.AreEqual(1, tracker.Changes);
+                }
+            }
+
+            [Test]
+            public void IgnoresPropertyLambda()
+            {
+                var withIllegalObject = new WithIllegalObject();
+                var settings = new ChangeTrackerSettings();
+                settings.AddExplicitProperty<WithIllegalObject>(x => x.Illegal);
                 using (var tracker = ChangeTracker.Track(withIllegalObject, settings))
                 {
                     Assert.AreEqual(0, tracker.Changes);
