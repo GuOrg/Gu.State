@@ -15,7 +15,7 @@
     public class ChangeTrackerSettings
     {
         private readonly ConcurrentDictionary<string, SpecialType> specialTypes = new ConcurrentDictionary<string, SpecialType>();
-        private readonly ConcurrentDictionary<PropertyInfo, SpecialProperty> specialProperties = new ConcurrentDictionary<PropertyInfo, SpecialProperty>();
+        private readonly ConcurrentDictionary<string, SpecialProperty> specialProperties = new ConcurrentDictionary<string, SpecialProperty>();
 
         /// <summary>
         /// The default change tracker settings containing common ignores like for <see cref="System.Type"/>.
@@ -77,15 +77,30 @@
         /// <param name="property"></param>
         public void AddExplicitProperty<TSource>(Expression<Func<TSource, object>> property)
         {
-            var expression = property.Body as MemberExpression;
-            if (expression == null)
+            var memberExpression = property.Body as MemberExpression;
+            if (memberExpression == null)
+            {
+                if (property.Body.NodeType == ExpressionType.Convert)
+                {
+                    memberExpression = (property.Body as UnaryExpression)?.Operand as MemberExpression;
+                }
+            }
+
+            if (memberExpression == null)
             {
                 var message = $"{nameof(property)} must be a property expression like foo => foo.Bar\r\n" +
                               $"Nested properties are not allowed";
                 throw new ArgumentException(message);
             }
 
-            var propertyInfo = expression.Member as PropertyInfo;
+            if (memberExpression.Expression.NodeType != ExpressionType.Parameter)
+            {
+                var message = $"{nameof(property)} must be a property expression like foo => foo.Bar\r\n" +
+                              $"Nested properties are not allowed";
+                throw new ArgumentException(message);
+            }
+
+            var propertyInfo = memberExpression.Member as PropertyInfo;
             if (propertyInfo == null)
             {
                 var message = $"{nameof(property)} must be a property expression like foo => foo.Bar";
@@ -102,7 +117,7 @@
         public void AddExplicitProperty(PropertyInfo property)
         {
             var specialProperty = new SpecialProperty(property, TrackAs.Explicit);
-            if (!this.specialProperties.TryAdd(property, specialProperty))
+            if (!this.specialProperties.TryAdd(property.Name, specialProperty))
             {
                 var message = $"Failed adding {property.DeclaringType?.FullName}{property.Name}. {nameof(SpecialProperties)} already contains key {specialProperty.Name}";
                 throw new InvalidOperationException(message);
@@ -141,7 +156,14 @@
         /// <returns>True if <paramref name="property"/> is ignored when tracking changes.</returns>
         public bool IsIgnored(PropertyInfo property)
         {
-            return this.specialProperties.ContainsKey(property);
+            SpecialProperty specialProperty;
+            if (!this.specialProperties.TryGetValue(property.Name, out specialProperty))
+            {
+                return false;
+            }
+
+            var type = property.DeclaringType?.Assembly.GetType(specialProperty.DeclaringTypeName);
+            return type?.IsAssignableFrom(property.DeclaringType) == true;
         }
 
         private static ChangeTrackerSettings CreateDefault()

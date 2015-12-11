@@ -166,6 +166,40 @@
             }
 
             [Test]
+            public void IgnoresBaseClassPropertyLambda()
+            {
+                var root = new DerivedClass();
+                var settings = new ChangeTrackerSettings();
+                settings.AddExplicitProperty<BaseClass>(x => x.Excluded);
+                using (var tracker = ChangeTracker.Track(root, settings))
+                {
+                    Assert.AreEqual(0, tracker.Changes);
+                    root.Value++;
+                    Assert.AreEqual(1, tracker.Changes);
+
+                    root.Excluded++;
+                    Assert.AreEqual(1, tracker.Changes);
+                }
+            }
+
+            [Test]
+            public void IgnoresInterfacePropertyLambda()
+            {
+                var root = new DerivedClass();
+                var settings = new ChangeTrackerSettings();
+                settings.AddExplicitProperty<IBaseClass>(x => x.Excluded);
+                using (var tracker = ChangeTracker.Track(root, settings))
+                {
+                    Assert.AreEqual(0, tracker.Changes);
+                    root.Value++;
+                    Assert.AreEqual(1, tracker.Changes);
+
+                    root.Excluded++;
+                    Assert.AreEqual(1, tracker.Changes);
+                }
+            }
+
+            [Test]
             public void IgnoresAttributedProperty()
             {
                 var withIllegalObject = new WithIgnoredProperty();
