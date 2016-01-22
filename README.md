@@ -17,7 +17,7 @@ using (var tracker = ChangeTracker.Track(foo))
 
 ```
 var settings = ChangeTrackerSettings.Default;
-settings.AddImmutableType<Color>(); // we tell the tracker that COlor is immutable like this.
+settings.AddImmutableType<Color>(); // we tell the tracker that Color is immutable like this.
 var foo = new WithColor();
 using (var tracker = ChangeTracker.Track(foo, settings))
 {
