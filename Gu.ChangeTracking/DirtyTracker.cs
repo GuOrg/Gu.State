@@ -9,5 +9,11 @@ namespace Gu.ChangeTracking
         {
             return new DirtyTracker<T>(x, y, ignoreProperties);
         }
+
+        public static void Verify<T>(params string[] ignoreProperties)
+            where T : class, INotifyPropertyChanged
+        {
+            DirtyTracker<T>.Verify(ignoreProperties);
+        }
     }
 }
