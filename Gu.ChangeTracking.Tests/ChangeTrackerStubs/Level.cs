@@ -1,10 +1,9 @@
-﻿namespace Gu.ChangeTracking.Tests.Helpers
+﻿namespace Gu.ChangeTracking.Tests.ChangeTrackerStubs
 {
     using System;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
-
     using JetBrains.Annotations;
 
     public class Level : INotifyPropertyChanged
@@ -28,7 +27,7 @@
                     return;
                 }
                 this.value = value;
-                OnPropertyChanged();
+                this.OnPropertyChanged();
             }
         }
 
@@ -42,7 +41,7 @@
                     return;
                 }
                 this.name = value;
-                OnPropertyChanged();
+                this.OnPropertyChanged();
             }
         }
 
@@ -56,7 +55,7 @@
                     return;
                 }
                 this.comparison = value;
-                OnPropertyChanged();
+                this.OnPropertyChanged();
             }
         }
 
@@ -70,7 +69,7 @@
                     return;
                 }
                 this.next = value;
-                OnPropertyChanged();
+                this.OnPropertyChanged();
             }
         }
 
@@ -84,7 +83,7 @@
                     return;
                 }
                 this.ints = value;
-                OnPropertyChanged();
+                this.OnPropertyChanged();
             }
         }
 
@@ -98,14 +97,14 @@
                     return;
                 }
                 this.levels = value;
-                OnPropertyChanged();
+                this.OnPropertyChanged();
             }
         }
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            var handler = PropertyChanged;
+            var handler = this.PropertyChanged;
             if (handler != null)
             {
                 handler(this, new PropertyChangedEventArgs(propertyName));

@@ -1,4 +1,4 @@
-﻿namespace Gu.ChangeTracking.Tests.Helpers
+﻿namespace Gu.ChangeTracking.Tests.ChangeTrackerStubs
 {
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
@@ -17,7 +17,7 @@
             {
                 if (value == this.value) return;
                 this.value = value;
-                OnPropertyChanged();
+                this.OnPropertyChanged();
             }
         }
 
@@ -28,20 +28,20 @@
             {
                 if (value == this.excluded) return;
                 this.excluded = value;
-                OnPropertyChanged();
+                this.OnPropertyChanged();
             }
         }
 
         [NotifyPropertyChangedInvocator]
         public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public void SetFields(int value, int excluded)
         {
-            Value = value;
-            Excluded = excluded;
+            this.Value = value;
+            this.Excluded = excluded;
         }
     }
 }

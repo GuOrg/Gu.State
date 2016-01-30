@@ -1,4 +1,4 @@
-﻿namespace Gu.ChangeTracking.Tests.Helpers
+﻿namespace Gu.ChangeTracking.Tests.ChangeTrackerStubs
 {
     using System.Collections;
     using System.ComponentModel;
@@ -18,7 +18,7 @@
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

@@ -1,14 +1,13 @@
-﻿using System.Runtime.CompilerServices;
-using JetBrains.Annotations;
-
-namespace Gu.ChangeTracking.Tests.Helpers
+﻿namespace Gu.ChangeTracking.Tests.ChangeTrackerStubs
 {
     using System.ComponentModel;
+    using System.Runtime.CompilerServices;
+    using JetBrains.Annotations;
 
-    public class WithIllegalObject : INotifyPropertyChanged
+    public class WithIgnoredProperty : INotifyPropertyChanged
     {
         private int value;
-        private IllegalObject illegal;
+        private int ignored;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public int Value
@@ -18,25 +17,26 @@ namespace Gu.ChangeTracking.Tests.Helpers
             {
                 if (value == this.value) return;
                 this.value = value;
-                OnPropertyChanged();
+                this.OnPropertyChanged();
             }
         }
 
-        public IllegalObject Illegal
+        [IgnoreChanges]
+        public int Ignored
         {
-            get { return this.illegal; }
+            get { return this.ignored; }
             set
             {
-                if (Equals(value, this.illegal)) return;
-                this.illegal = value;
-                OnPropertyChanged();
+                if (value == this.ignored) return;
+                this.ignored = value;
+                this.OnPropertyChanged();
             }
         }
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

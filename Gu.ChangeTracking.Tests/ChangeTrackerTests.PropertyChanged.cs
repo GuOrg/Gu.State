@@ -3,9 +3,7 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
-
-    using Gu.ChangeTracking.Tests.Helpers;
-
+    using Gu.ChangeTracking.Tests.ChangeTrackerStubs;
     using NUnit.Framework;
 
     public partial class ChangeTrackerTests
@@ -28,7 +26,7 @@
                 var root = new Level();
                 using (var tracker = ChangeTracker.Track(root))
                 {
-                    tracker.PropertyChanged += TrackerOnPropertyChanged;
+                    tracker.PropertyChanged += this.TrackerOnPropertyChanged;
 
                     root.Value++;
                     Assert.AreEqual(1, tracker.Changes);
@@ -39,7 +37,7 @@
                     Assert.AreEqual(1, tracker.Changes);
                     Assert.AreEqual(1, this.changes.Count);
 
-                    tracker.PropertyChanged -= TrackerOnPropertyChanged;
+                    tracker.PropertyChanged -= this.TrackerOnPropertyChanged;
                 }
             }
 
@@ -49,13 +47,13 @@
                 var level = new Level { Next = new Level() };
                 using (var tracker = ChangeTracker.Track(level))
                 {
-                    tracker.PropertyChanged += TrackerOnPropertyChanged;
+                    tracker.PropertyChanged += this.TrackerOnPropertyChanged;
 
                     level.Next.Value++;
                     Assert.AreEqual(1, tracker.Changes);
                     Assert.AreEqual(1, this.changes.Count);
 
-                    tracker.PropertyChanged -= TrackerOnPropertyChanged;
+                    tracker.PropertyChanged -= this.TrackerOnPropertyChanged;
                 }
             }
 
@@ -65,7 +63,7 @@
                 var level = new Level { Next = new Level { Next = new Level() } };
                 using (var tracker = ChangeTracker.Track(level))
                 {
-                    tracker.PropertyChanged += TrackerOnPropertyChanged;
+                    tracker.PropertyChanged += this.TrackerOnPropertyChanged;
 
                     level.Next.Value++;
                     Assert.AreEqual(1, tracker.Changes);
@@ -75,7 +73,7 @@
                     Assert.AreEqual(2, tracker.Changes);
                     Assert.AreEqual(2, this.changes.Count);
 
-                    tracker.PropertyChanged -= TrackerOnPropertyChanged;
+                    tracker.PropertyChanged -= this.TrackerOnPropertyChanged;
                 }
             }
 
@@ -97,7 +95,7 @@
                 var level = new Level();
                 using (var tracker = ChangeTracker.Track(level))
                 {
-                    tracker.PropertyChanged += TrackerOnPropertyChanged;
+                    tracker.PropertyChanged += this.TrackerOnPropertyChanged;
 
                     level.Next = new Level();
                     Assert.AreEqual(1, tracker.Changes);
@@ -107,7 +105,7 @@
                     Assert.AreEqual(2, tracker.Changes);
                     Assert.AreEqual(2, this.changes.Count);
 
-                    tracker.PropertyChanged -= TrackerOnPropertyChanged;
+                    tracker.PropertyChanged -= this.TrackerOnPropertyChanged;
                 }
             }
 
@@ -117,7 +115,7 @@
                 var level = new Level { Next = new Level() };
                 using (var tracker = ChangeTracker.Track(level))
                 {
-                    tracker.PropertyChanged += TrackerOnPropertyChanged;
+                    tracker.PropertyChanged += this.TrackerOnPropertyChanged;
 
                     var next = level.Next;
                     level.Next = null;
@@ -127,7 +125,7 @@
                     next.Value++;
                     Assert.AreEqual(1, tracker.Changes);
                     Assert.AreEqual(1, this.changes.Count);
-                    tracker.PropertyChanged -= TrackerOnPropertyChanged;
+                    tracker.PropertyChanged -= this.TrackerOnPropertyChanged;
                 }
             }
 

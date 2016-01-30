@@ -1,4 +1,4 @@
-﻿namespace Gu.ChangeTracking.Tests.Helpers
+﻿namespace Gu.ChangeTracking.Tests.ChangeTrackerStubs
 {
     using System.Collections.ObjectModel;
 
