@@ -51,14 +51,17 @@
     <Compile Include="Internals\Ensure.cs" />
     <Compile Include="Internals\Ensure.string.cs" />
     <Compile Include="Internals\Ensure.type.cs" />
+    <Compile Include="Internals\PropertyInfoExt.cs" />
     <Compile Include="Internals\TypeExt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Internals\PropertyChangeTracker.cs" />
     <Compile Include="Internals\PropertyTrackerCollection.cs" />
+    <Compile Include="PropertySynchronizer.cs" />
+    <Compile Include="PropertySynchronizer{T}.cs" />
     <Compile Include="Settings\ChangeTrackerSettings.cs" />
     <Compile Include="Settings\SpecialProperty.cs" />
     <Compile Include="Settings\SpecialType.cs" />
-    <Compile Include="Synchronizer.cs" />
+    <Compile Include="Copy.cs" />
     <Compile Include="TrackAs.cs" />
     <Compile Include="IgnoreChangesAttribute.cs" />
   </ItemGroup>
