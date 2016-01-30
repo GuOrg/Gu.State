@@ -39,7 +39,7 @@
         /// <typeparam name="T">The immutable type</typeparam>
         public void AddImmutableType<T>()
         {
-            AddSpecialType<T>(TrackAs.Immutable);
+            this.AddSpecialType<T>(TrackAs.Immutable);
         }
 
         /// <summary>
@@ -48,7 +48,7 @@
         /// </summary>
         public void AddImmutableType(Type type)
         {
-            AddSpecialType(type, TrackAs.Immutable);
+            this.AddSpecialType(type, TrackAs.Immutable);
         }
 
         /// <summary>
@@ -58,7 +58,7 @@
         /// <typeparam name="T">The Explicit type</typeparam>
         public void AddExplicitType<T>()
         {
-            AddSpecialType<T>(TrackAs.Explicit);
+            this.AddSpecialType<T>(TrackAs.Explicit);
         }
 
         /// <summary>
@@ -67,7 +67,7 @@
         /// </summary>
         public void AddExplicitType(Type type)
         {
-            AddSpecialType(type, TrackAs.Explicit);
+            this.AddSpecialType(type, TrackAs.Explicit);
         }
 
         /// <summary>
@@ -107,7 +107,7 @@
                 throw new ArgumentException(message);
             }
 
-            AddExplicitProperty(propertyInfo);
+            this.AddExplicitProperty(propertyInfo);
         }
 
         /// <summary>
@@ -119,14 +119,14 @@
             var specialProperty = new SpecialProperty(property, TrackAs.Explicit);
             if (!this.specialProperties.TryAdd(property.Name, specialProperty))
             {
-                var message = $"Failed adding {property.DeclaringType?.FullName}{property.Name}. {nameof(SpecialProperties)} already contains key {specialProperty.Name}";
+                var message = $"Failed adding {property.DeclaringType?.FullName}{property.Name}. {nameof(this.SpecialProperties)} already contains key {specialProperty.Name}";
                 throw new InvalidOperationException(message);
             }
         }
 
         public void AddSpecialType<T>(TrackAs trackas)
         {
-            AddSpecialType(typeof(T), trackas);
+            this.AddSpecialType(typeof(T), trackas);
         }
 
         public void AddSpecialType(Type type, TrackAs trackas)
@@ -134,7 +134,7 @@
             var specialType = new SpecialType(type, trackas);
             if (!this.specialTypes.TryAdd(specialType.Name, specialType))
             {
-                var message = $"Failed adding {type.FullName}. {nameof(SpecialTypes)} already contains key {specialType.Name}";
+                var message = $"Failed adding {type.FullName}. {nameof(this.SpecialTypes)} already contains key {specialType.Name}";
                 throw new InvalidOperationException(message);
             }
         }

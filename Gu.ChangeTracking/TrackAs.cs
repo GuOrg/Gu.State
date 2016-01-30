@@ -9,7 +9,7 @@
         /// No value specified. This is illegal
         /// </summary>
         Unknown,
-        
+
         /// <summary>
         /// The value is treated as immutable and the tracker does not track changes to sub properties.
         /// Useful for types like <see cref="System.DateTime"/>

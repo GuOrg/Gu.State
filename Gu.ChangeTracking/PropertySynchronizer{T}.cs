@@ -6,6 +6,9 @@ namespace Gu.ChangeTracking
     using System.Linq;
     using System.Reflection;
 
+    /// <summary>
+    /// This class tracks propertu changes in source and keeps target in sync
+    /// </summary>
     public class PropertySynchronizer<T> : IDisposable
         where T : class, INotifyPropertyChanged
     {
@@ -22,13 +25,13 @@ namespace Gu.ChangeTracking
             Ensure.NotNull(source, nameof(source));
             Ensure.NotNull(target, nameof(target));
             Copy.VerifyCanCopyPropertyValues<T>(ignoreProperties);
-            BindingFlags = bindingFlags;
+            this.BindingFlags = bindingFlags;
             this.source = source;
             this.target = target;
             var allProperties = typeof(T).GetProperties(bindingFlags);
             this.IgnoredProperties = allProperties.Where(p => ignoreProperties.Contains(p.Name)).ToArray();
             this.TrackedProperties = allProperties.Except(this.IgnoredProperties).ToArray();
-            this.source.PropertyChanged += OnSourcePropertyChanged;
+            this.source.PropertyChanged += this.OnSourcePropertyChanged;
             Copy.PropertyValues(source, target, ignoreProperties);
         }
 
@@ -40,7 +43,7 @@ namespace Gu.ChangeTracking
 
         public void Dispose()
         {
-            this.source.PropertyChanged -= OnSourcePropertyChanged;
+            this.source.PropertyChanged -= this.OnSourcePropertyChanged;
         }
 
         private void OnSourcePropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -52,7 +55,7 @@ namespace Gu.ChangeTracking
 
             if (string.IsNullOrEmpty(e.PropertyName))
             {
-                foreach (var trackedProperty in TrackedProperties)
+                foreach (var trackedProperty in this.TrackedProperties)
                 {
                     Copy.PropertyValue(this.source, this.target, trackedProperty);
                 }
@@ -60,7 +63,7 @@ namespace Gu.ChangeTracking
                 return;
             }
 
-            var propertyInfo = this.source.GetType().GetProperty(e.PropertyName, BindingFlags);
+            var propertyInfo = this.source.GetType().GetProperty(e.PropertyName, this.BindingFlags);
             Copy.PropertyValue(this.source, this.target, propertyInfo);
         }
     }

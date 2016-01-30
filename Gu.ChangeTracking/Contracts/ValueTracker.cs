@@ -5,7 +5,7 @@ namespace Gu.ChangeTracking
         protected ValueTracker(object value)
         {
             Ensure.NotNull(value, nameof(value));
-            Value = value;
+            this.Value = value;
         }
 
         public object Value { get; }

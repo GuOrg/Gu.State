@@ -3,7 +3,6 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Linq;
     using System.Reflection;
     using System.Text;
@@ -63,7 +62,7 @@
         public static void PropertyValues<T>(T source, T target, params string[] ignoredProperties)
             where T : class
         {
-            Copy.PropertyValues(source, target, BindingFlags.Instance | BindingFlags.Public, ignoredProperties);
+            PropertyValues(source, target, BindingFlags.Instance | BindingFlags.Public, ignoredProperties);
         }
 
         /// <summary>
@@ -112,7 +111,7 @@
                 .Where(p => ignoreProperties?.All(pn => pn != p.Name) == true)
                 .ToArray();
 
-            VerifyCanCopyPropertyValues<T>(propertyInfos);
+            VerifyCanCopyPropertyValues(propertyInfos);
         }
 
         /// <summary>
@@ -150,7 +149,7 @@
             }
         }
 
-        internal static void VerifyCanCopyPropertyValues<T>(IReadOnlyList<PropertyInfo> properties)
+        internal static void VerifyCanCopyPropertyValues(IReadOnlyList<PropertyInfo> properties)
         {
             var missingSetters = properties.Where(p => p.SetMethod == null).ToArray();
 
@@ -177,6 +176,7 @@
                         stringBuilder.AppendLine($"The property {prop.Name} is not of a supported type. Expected valuetype of string but was {prop.PropertyType}");
                     }
                 }
+
                 var message = stringBuilder.ToString();
                 throw new NotSupportedException(message);
             }

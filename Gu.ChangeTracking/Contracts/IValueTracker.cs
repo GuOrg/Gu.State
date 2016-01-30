@@ -1,7 +1,7 @@
 namespace Gu.ChangeTracking
 {
     /// <summary>
-    /// Tracks 
+    /// Tracks
     /// </summary>
     public interface IValueTracker : ITracker
     {

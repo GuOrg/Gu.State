@@ -35,13 +35,13 @@
         /// <inheritdoc/>
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return GetEnumerator();
+            return this.GetEnumerator();
         }
 
         /// <see cref="List{IValueTracker}.Contains(IValueTracker)"/>
         public bool Contains(IValueTracker item)
         {
-            VerifyDisposed();
+            this.VerifyDisposed();
             return this.trackers.Contains(item);
         }
 
@@ -53,7 +53,7 @@
                 var itemTracker = Create(this.parentType, this.parentProperty, child, this.settings);
                 if (itemTracker != null)
                 {
-                    Add(itemTracker);
+                    this.Add(itemTracker);
                 }
             }
         }
@@ -61,19 +61,19 @@
         /// <see cref="List{IValueTracker}.Clear()"/>
         internal void Clear()
         {
-            VerifyDisposed();
-            ClearCore();
+            this.VerifyDisposed();
+            this.ClearCore();
         }
 
         /// <summary>
-        /// Make the class sealed when using this. 
+        /// Make the class sealed when using this.
         /// Call VerifyDisposed at the start of all public methods
         /// </summary>
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                ClearCore();
+                this.ClearCore();
             }
 
             base.Dispose(disposing);
@@ -86,19 +86,21 @@
                 if (tracker != null)
                 {
                     tracker.Dispose();
-                    tracker.PropertyChanged -= OnItemPropertyChanged;
+                    tracker.PropertyChanged -= this.OnItemPropertyChanged;
                 }
             }
+
             this.trackers.Clear();
         }
 
         private void OnItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName != nameof(Changes))
+            if (e.PropertyName != nameof(this.Changes))
             {
                 return;
             }
-            Changes++;
+
+            this.Changes++;
         }
 
         private void Add(IValueTracker item)
@@ -108,31 +110,9 @@
             {
                 throw new InvalidOperationException("Cannot track the same item twice. Clear before add");
             }
-            item.PropertyChanged += OnItemPropertyChanged;
+
+            item.PropertyChanged += this.OnItemPropertyChanged;
             this.trackers.Add(item);
-        }
-
-        private bool Remove(IValueTracker item)
-        {
-            VerifyDisposed();
-            var remove = this.trackers.Remove(item);
-            if (remove)
-            {
-                item.PropertyChanged -= OnItemPropertyChanged;
-                item.Dispose();
-            }
-            return remove;
-        }
-
-        private bool RemoveBy(object item)
-        {
-            VerifyDisposed();
-            var match = this.trackers.FirstOrDefault(x => ReferenceEquals(x.Value, item));
-            if (match != null)
-            {
-                return Remove(match);
-            }
-            return false;
         }
     }
 }
