@@ -39,6 +39,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChangeTracker.cs" />
+    <Compile Include="DirtyTracker.cs" />
+    <Compile Include="DirtyTracker{T}.cs" />
     <Compile Include="Internals\CollectionItemTrackerCollection.cs" />
     <Compile Include="Internals\CollectionTracker.cs" />
     <Compile Include="Contracts\IPropertyTracker.cs" />
@@ -48,6 +50,7 @@
     <Compile Include="Contracts\ValueTracker.cs" />
     <Compile Include="Internals\Ensure.cs" />
     <Compile Include="Internals\Ensure.string.cs" />
+    <Compile Include="Internals\Ensure.type.cs" />
     <Compile Include="Internals\TypeExt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Internals\PropertyChangeTracker.cs" />

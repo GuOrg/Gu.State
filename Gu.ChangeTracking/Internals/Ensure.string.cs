@@ -4,7 +4,7 @@
     using System.Diagnostics;
     using System.Text.RegularExpressions;
 
-    internal static partial class Ensure
+    public static partial class Ensure
     {
         internal static void NotNullOrEmpty(string value, string parameterName)
         {

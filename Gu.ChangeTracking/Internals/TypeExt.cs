@@ -65,8 +65,6 @@
         /// <summary>
         /// Returns nicely formatted type names for generic types.
         /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
         internal static string PrettyName(this Type type)
         {
             string alias;
@@ -100,6 +98,46 @@
             }
 
             return type.FullName.Replace("+", ".");
+        }
+
+        public static bool IsEquatable(this Type type)
+        {
+            return type.Implements(typeof(IEquatable<>), type);
+        }
+
+        /// <summary>
+        /// To check if type implements IEquatable{string}
+        /// Call like this type.Implements(typeof(IEquatable{}, typeof(string))
+        /// </summary>
+        internal static bool Implements(this Type type, Type genericInterface, Type genericArgument)
+        {
+            if (type.IsInterface &&
+                type.IsGenericType(genericInterface, genericArgument))
+            {
+                return true;
+            }
+
+            var interfaces = type.GetInterfaces();
+            return interfaces.Any(i => i.IsGenericType(genericInterface, genericArgument));
+        }
+
+        internal static bool IsGenericType(this Type type, Type genericTypeDefinition, Type genericArgument)
+        {
+            Ensure.IsTrue(genericTypeDefinition.IsGenericType, nameof(genericTypeDefinition), $"{nameof(genericTypeDefinition)}.{nameof(genericTypeDefinition.IsGenericType)} must be true");
+
+            if (!type.IsGenericType)
+            {
+                return false;
+            }
+
+            var gtd = type.GetGenericTypeDefinition();
+            if (gtd != genericTypeDefinition)
+            {
+                return false;
+            }
+
+            var genericArguments = type.GetGenericArguments();
+            return genericArguments.Length == 1 && genericArguments[0] == genericArgument;
         }
     }
 }
