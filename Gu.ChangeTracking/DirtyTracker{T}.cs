@@ -4,7 +4,6 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Runtime.CompilerServices;
@@ -20,17 +19,19 @@
     {
         private readonly T x;
         private readonly T y;
+        private readonly string[] ignoreProperties;
         private readonly HashSet<PropertyInfo> diff = new HashSet<PropertyInfo>();
 
-        public DirtyTracker(T x, T y)
+        public DirtyTracker(T x, T y, params string[] ignoreProperties)
         {
             Ensure.NotNull(x, nameof(x));
             Ensure.NotNull(y, nameof(y));
             Ensure.SameType(x, y);
             Ensure.NotIs<IEnumerable>(x, nameof(x));
-            Verify();
+            Verify(ignoreProperties);
             this.x = x;
             this.y = y;
+            this.ignoreProperties = ignoreProperties;
             Reset();
             x.PropertyChanged += OnTrackedPropertyChanged;
             y.PropertyChanged += OnTrackedPropertyChanged;
@@ -42,7 +43,10 @@
 
         public IEnumerable<PropertyInfo> Diff => this.diff;
 
-        public static void Verify()
+        /// <summary>
+        /// Check if <typeparamref name="T"/> can be tracked
+        /// </summary>
+        public static void Verify(params string[] ignoreProperties)
         {
             if (typeof(IEnumerable).IsAssignableFrom(typeof(T)))
             {
@@ -50,11 +54,13 @@
             }
 
             var notDiffable = typeof(T).GetProperties()
-                .Where(p => !IsDiffableType(p.PropertyType))
+                .Where(p => !ignoreProperties?.Contains(p.Name) == true)
+                .Where(p => !IsDiffable(p))
                 .ToArray();
             if (notDiffable.Any())
             {
                 var sb = new StringBuilder();
+                sb.AppendLine("Only supports simple properties like string & int");
                 foreach (var prop in notDiffable)
                 {
                     sb.AppendLine($"Property {prop} is not diffable.");
@@ -70,12 +76,21 @@
             this.y.PropertyChanged -= OnTrackedPropertyChanged;
         }
 
+        /// <summary>
+        /// Clears the <see cref="Diff"/> and calculates a new.
+        /// Notifies if there are changes.
+        /// </summary>
         protected void Reset()
         {
             var before = this.diff.Count;
             this.diff.Clear();
             foreach (var prop in this.x.GetType().GetProperties())
             {
+                if (this.ignoreProperties?.Contains(prop.Name) == true)
+                {
+                    continue;
+                }
+
                 var xv = prop.GetValue(this.x);
                 var yv = prop.GetValue(this.y);
                 if (!Equals(xv, yv))
@@ -97,14 +112,14 @@
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private static bool IsDiffableType(Type type)
+        private static bool IsDiffable(PropertyInfo propertyInfo)
         {
-            if (type == typeof(string))
+            if (propertyInfo.PropertyType == typeof(string))
             {
                 return true;
             }
 
-            return type.IsValueType && type.IsEquatable();
+            return propertyInfo.PropertyType.IsValueType && propertyInfo.PropertyType.IsEquatable();
         }
 
         private void OnTrackedPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -112,6 +127,11 @@
             if (string.IsNullOrEmpty(e.PropertyName))
             {
                 Reset();
+                return;
+            }
+
+            if (this.ignoreProperties?.Contains(e.PropertyName) == true)
+            {
                 return;
             }
 
