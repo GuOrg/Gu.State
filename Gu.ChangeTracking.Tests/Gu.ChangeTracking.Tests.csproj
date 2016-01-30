@@ -50,6 +50,7 @@
     <Compile Include="ChangeTrackerTests.throws.cs" />
     <Compile Include="ChangeTrackerTests.PropertyChanged.cs" />
     <Compile Include="CollectionItemTrackerTests.cs" />
+    <Compile Include="DirtyTrackerTests.cs" />
     <Compile Include="Helpers\BaseClass.cs" />
     <Compile Include="Helpers\DerivedClass.cs" />
     <Compile Include="Helpers\IBaseClass.cs" />
