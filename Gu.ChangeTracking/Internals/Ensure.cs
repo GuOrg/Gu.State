@@ -2,40 +2,62 @@
 {
     using System;
     using System.Diagnostics;
-    using System.Runtime.CompilerServices;
 
-    internal static class Ensure
+    internal static partial class Ensure
     {
-        internal static void NotNull(object o, string parameterName, [CallerMemberName] string caller = null)
+        internal static void NotNull<T>(T value, string parameterName) 
+            where T : class
         {
-            Debug.Assert(!string.IsNullOrEmpty(parameterName));
-            if (o == null)
+            Debug.Assert(!string.IsNullOrEmpty(parameterName), $"{nameof(parameterName)} cannot be null");
+            if (value == null)
             {
-                var message = $"Expected parameter {parameterName} in member {caller} to not be null";
-                throw new ArgumentNullException(parameterName, message);
+                throw new ArgumentNullException(parameterName);
             }
         }
 
-        internal static void NotNullOrEmpty(string s, string paramName, string message = null)
+        internal static void IsTrue(bool condition, string parameterName, string message)
         {
-            if (string.IsNullOrEmpty(s))
+            Debug.Assert(!string.IsNullOrEmpty(parameterName), $"{nameof(parameterName)} cannot be null");
+            if (!condition)
             {
-                if (message == null)
+                if (!string.IsNullOrEmpty(message))
                 {
-                    throw new ArgumentNullException(paramName);
+                    throw new ArgumentException(message, parameterName);
                 }
-                throw new ArgumentNullException(paramName, message);
+                else
+                {
+                    throw new ArgumentException(parameterName);
+                }
             }
         }
 
-        public static void NotEqual<T>(T value, T other, string parameterName)
+        internal static void Equal<T>(T value, T expected, string parameterName)
         {
-            Debug.Assert(!string.IsNullOrEmpty(parameterName));
-            if (Equals(value, other))
+            Debug.Assert(!string.IsNullOrEmpty(parameterName), $"{nameof(parameterName)} cannot be null");
+            if (!Equals(value, expected))
             {
-                var message = $"Expected {value} to not equal {other}";
+                var message = $"Expected {parameterName} to be: {expected.ToStringOrNull()}, was: {value.ToStringOrNull()}";
                 throw new ArgumentException(message, parameterName);
             }
+        }
+
+        internal static void NotEqual<T>(T value, T expected, string parameterName)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(parameterName), $"{nameof(parameterName)} cannot be null");
+            if (Equals(value, expected))
+            {
+                var message = $"Expected {parameterName} to not be: {expected.ToStringOrNull()}";
+                throw new ArgumentException(message, parameterName);
+            }
+        }
+
+        private static string ToStringOrNull<T>(this T value)
+        {
+            if (value == null)
+            {
+                return "null";
+            }
+            return value.ToString();
         }
     }
 }
