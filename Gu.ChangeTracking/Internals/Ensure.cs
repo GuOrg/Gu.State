@@ -3,7 +3,7 @@
     using System;
     using System.Diagnostics;
 
-    internal static partial class Ensure
+    public static partial class Ensure
     {
         internal static void NotNull<T>(T value, string parameterName) 
             where T : class

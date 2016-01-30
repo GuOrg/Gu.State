@@ -20,11 +20,8 @@
         {
             Ensure.NotNull(source, nameof(source));
             Ensure.NotNull(destination, nameof(destination));
-            Ensure.Equal(source.GetType(), destination.GetType(), $"{nameof(source)}, {nameof(destination)}");
-            if (source is IEnumerable)
-            {
-                throw new InvalidOperationException("Not supporting IEnumerable");
-            }
+            Ensure.SameType(source, destination);
+            Ensure.NotIs<IEnumerable>(source, nameof(source));
 
             var fieldInfos = typeof(T).GetFields(BindingFlags);
             foreach (var fieldInfo in fieldInfos)
@@ -57,11 +54,8 @@
         {
             Ensure.NotNull(source, nameof(source));
             Ensure.NotNull(destination, nameof(destination));
-            Ensure.Equal(source.GetType(), destination.GetType(), $"{nameof(source)}, {nameof(destination)}");
-            if (source is IEnumerable)
-            {
-                throw new InvalidOperationException("Not supporting IEnumerable");
-            }
+            Ensure.SameType(source, destination);
+            Ensure.NotIs<IEnumerable>(source, nameof(source));
 
             var propertyInfos = typeof(T).GetProperties(BindingFlags);
             foreach (var propertyInfo in propertyInfos)
