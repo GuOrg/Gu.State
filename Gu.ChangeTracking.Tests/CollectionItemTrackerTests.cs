@@ -4,9 +4,7 @@
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Reflection;
-
-    using Gu.ChangeTracking.Tests.Helpers;
-
+    using Gu.ChangeTracking.Tests.ChangeTrackerStubs;
     using NUnit.Framework;
 
     public class CollectionItemTrackerTests
@@ -26,12 +24,12 @@
             var ints = new ObservableCollection<int>();
             using (var tracker = new CollectionTracker(typeof(CollectionItemTrackerTests), DummyPropertyInfo, ints, ChangeTrackerSettings.Default))
             {
-                tracker.PropertyChanged += TrackerOnPropertyChanged;
+                tracker.PropertyChanged += this.TrackerOnPropertyChanged;
 
                 ints.Add(1);
                 Assert.AreEqual(1, tracker.Changes);
                 Assert.AreEqual(1, this.changes.Count);
-                tracker.PropertyChanged -= TrackerOnPropertyChanged;
+                tracker.PropertyChanged -= this.TrackerOnPropertyChanged;
             }
         }
 
@@ -41,7 +39,7 @@
             var items = new ObservableCollection<Level>();
             using (var tracker = new CollectionTracker(typeof(CollectionItemTrackerTests), DummyPropertyInfo, items, ChangeTrackerSettings.Default))
             {
-                tracker.PropertyChanged += TrackerOnPropertyChanged;
+                tracker.PropertyChanged += this.TrackerOnPropertyChanged;
 
                 var item = new Level();
                 items.Add(item);
@@ -57,7 +55,7 @@
                 Assert.AreEqual(3, tracker.Changes);
                 Assert.AreEqual(3, this.changes.Count);
 
-                tracker.PropertyChanged -= TrackerOnPropertyChanged;
+                tracker.PropertyChanged -= this.TrackerOnPropertyChanged;
             }
         }
 

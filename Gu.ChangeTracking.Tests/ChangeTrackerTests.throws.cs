@@ -1,7 +1,7 @@
 namespace Gu.ChangeTracking.Tests
 {
     using System;
-    using Gu.ChangeTracking.Tests.Helpers;
+    using Gu.ChangeTracking.Tests.ChangeTrackerStubs;
     using NUnit.Framework;
 
     public partial class ChangeTrackerTests
@@ -14,17 +14,17 @@ namespace Gu.ChangeTracking.Tests
                 var item = new WithIllegalObject();
                 var exception = Assert.Throws<ArgumentException>(() => ChangeTracker.Track(item, ChangeTrackerSettings.Default));
                 Console.WriteLine(exception.Message);
-                var expected = "Create tracker failed for Gu.ChangeTracking.Tests.Helpers.WithIllegalObject.Illegal.\r\n" +
+                var expected = "Create tracker failed for Gu.ChangeTracking.Tests.ChangeTrackerStubs.WithIllegalObject.Illegal.\r\n" +
                                "Solve the problem by any of:\r\n" +
                                "* Add a specialcase to tracker setting example:\r\n" +
-                               "    settings.AddSpecialType<Gu.ChangeTracking.Tests.Helpers.IllegalObject>(...)\r\n" +
+                               "    settings.AddSpecialType<Gu.ChangeTracking.Tests.ChangeTrackerStubs.IllegalObject>(...)\r\n" +
                                "    or:" +
                                "    settings.AddSpecialProperty(typeof(WithIllegalObject).GetProperty(nameof(WithIllegalObject.Illegal))" +
                                "    Note that this requires you to track changes.\r\n" +
-                               "* Implement INotifyPropertyChanged for Gu.ChangeTracking.Tests.Helpers.WithIllegalObject\r\n" +
-                               "* Implement INotifyCollectionChanged for Gu.ChangeTracking.Tests.Helpers.WithIllegalObject\r\n" +
-                               "* Add attribute [IgnoreChangesAttribute] to type Gu.ChangeTracking.Tests.Helpers.WithIllegalObject\r\n" +
-                               "* Add attribute [IgnoreChangesAttribute] to property Gu.ChangeTracking.Tests.Helpers.WithIllegalObject.Illegal";
+                               "* Implement INotifyPropertyChanged for Gu.ChangeTracking.Tests.ChangeTrackerStubs.WithIllegalObject\r\n" +
+                               "* Implement INotifyCollectionChanged for Gu.ChangeTracking.Tests.ChangeTrackerStubs.WithIllegalObject\r\n" +
+                               "* Add attribute [IgnoreChangesAttribute] to type Gu.ChangeTracking.Tests.ChangeTrackerStubs.WithIllegalObject\r\n" +
+                               "* Add attribute [IgnoreChangesAttribute] to property Gu.ChangeTracking.Tests.ChangeTrackerStubs.WithIllegalObject.Illegal";
                 Console.Write(exception.Message);
                 Assert.AreEqual(expected, exception.Message);
             }

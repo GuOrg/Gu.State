@@ -22,6 +22,7 @@ namespace Gu.ChangeTracking
 
         public PropertySynchronizer(T source, T target, BindingFlags bindingFlags, string[] ignoreProperties)
         {
+            Ensure.NotSame(source, target, nameof(source), nameof(target));
             Ensure.NotNull(source, nameof(source));
             Ensure.NotNull(target, nameof(target));
             Copy.VerifyCanCopyPropertyValues<T>(ignoreProperties);
@@ -55,11 +56,8 @@ namespace Gu.ChangeTracking
 
             if (string.IsNullOrEmpty(e.PropertyName))
             {
-                foreach (var trackedProperty in this.TrackedProperties)
-                {
-                    Copy.PropertyValue(this.source, this.target, trackedProperty);
-                }
-
+                Copy.WritableProperties(this.source, this.target, this.TrackedProperties, null);
+                Copy.VerifyReadonlyPropertiesAreEqual(this.source, this.target, this.TrackedProperties, null);
                 return;
             }
 

@@ -3,7 +3,7 @@ namespace Gu.ChangeTracking.Tests
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
-    using Gu.ChangeTracking.Tests.Helpers;
+    using Gu.ChangeTracking.Tests.ChangeTrackerStubs;
     using NUnit.Framework;
 
     public class DirtyTrackerTests
