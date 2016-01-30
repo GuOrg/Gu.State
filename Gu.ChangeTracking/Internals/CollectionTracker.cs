@@ -16,36 +16,38 @@ namespace Gu.ChangeTracking
         {
             this.settings = settings;
             this.itemTrackers = new CollectionItemTrackerCollection(parentType, parentProperty, settings);
-            this.itemTrackers.PropertyChanged += OnSubtrackerPropertyChanged;
+            this.itemTrackers.PropertyChanged += this.OnSubtrackerPropertyChanged;
             var incc = value as INotifyCollectionChanged;
             if (incc != null)
             {
-                incc.CollectionChanged += OnItemsChanged;
+                incc.CollectionChanged += this.OnItemsChanged;
             }
+
             this.itemTrackers.Add(value);
         }
 
-        private IEnumerable Items => (IEnumerable)Value;
+        private IEnumerable Items => (IEnumerable)this.Value;
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                var incc = Value as INotifyCollectionChanged;
+                var incc = this.Value as INotifyCollectionChanged;
                 if (incc != null)
                 {
-                    incc.CollectionChanged -= OnItemsChanged;
+                    incc.CollectionChanged -= this.OnItemsChanged;
                 }
 
                 this.itemTrackers.Dispose();
-                this.itemTrackers.PropertyChanged -= OnSubtrackerPropertyChanged;
+                this.itemTrackers.PropertyChanged -= this.OnSubtrackerPropertyChanged;
             }
+
             base.Dispose(disposing);
         }
 
         private void OnItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            Changes++;
+            this.Changes++;
             var type = sender.GetType();
             if (type.IsEnumerableOfT())
             {
@@ -55,15 +57,16 @@ namespace Gu.ChangeTracking
                     return;
                 }
             }
+
             this.itemTrackers.Clear(); // keeping it simple here.
             this.itemTrackers.Add((IEnumerable)sender);
         }
 
         private void OnSubtrackerPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(Changes))
+            if (e.PropertyName == nameof(this.Changes))
             {
-                Changes++;
+                this.Changes++;
             }
         }
     }

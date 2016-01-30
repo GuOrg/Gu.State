@@ -32,9 +32,9 @@
             this.x = x;
             this.y = y;
             this.ignoreProperties = ignoreProperties;
-            Reset();
-            x.PropertyChanged += OnTrackedPropertyChanged;
-            y.PropertyChanged += OnTrackedPropertyChanged;
+            this.Reset();
+            x.PropertyChanged += this.OnTrackedPropertyChanged;
+            y.PropertyChanged += this.OnTrackedPropertyChanged;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -72,8 +72,8 @@
 
         public void Dispose()
         {
-            this.x.PropertyChanged -= OnTrackedPropertyChanged;
-            this.y.PropertyChanged -= OnTrackedPropertyChanged;
+            this.x.PropertyChanged -= this.OnTrackedPropertyChanged;
+            this.y.PropertyChanged -= this.OnTrackedPropertyChanged;
         }
 
         /// <summary>
@@ -101,15 +101,15 @@
 
             if (this.diff.Count != before)
             {
-                OnPropertyChanged(nameof(IsDirty));
-                OnPropertyChanged(nameof(Diff));
+                this.OnPropertyChanged(nameof(this.IsDirty));
+                this.OnPropertyChanged(nameof(this.Diff));
             }
         }
 
         [NotifyPropertyChangedInvocator]
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private static bool IsDiffable(PropertyInfo propertyInfo)
@@ -126,7 +126,7 @@
         {
             if (string.IsNullOrEmpty(e.PropertyName))
             {
-                Reset();
+                this.Reset();
                 return;
             }
 
@@ -150,10 +150,10 @@
                 {
                     if (before == 0)
                     {
-                        OnPropertyChanged(nameof(IsDirty));
+                        this.OnPropertyChanged(nameof(this.IsDirty));
                     }
 
-                    OnPropertyChanged(nameof(Diff));
+                    this.OnPropertyChanged(nameof(this.Diff));
                 }
             }
             else
@@ -162,10 +162,10 @@
                 {
                     if (before == 1)
                     {
-                        OnPropertyChanged(nameof(IsDirty));
+                        this.OnPropertyChanged(nameof(this.IsDirty));
                     }
 
-                    OnPropertyChanged(nameof(Diff));
+                    this.OnPropertyChanged(nameof(this.Diff));
                 }
             }
         }

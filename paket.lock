@@ -4,3 +4,4 @@ NUGET
     JetBrains.Annotations (10.0.0)
     Moq (4.2.1510.2205)
     NUnit (2.6.4)
+    StyleCop.Analyzers (1.0.0)

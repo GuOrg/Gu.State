@@ -22,9 +22,9 @@
 
             this.settings = settings;
             this.propertyTrackers = new PropertyTrackerCollection(value.GetType(), settings);
-            value.PropertyChanged += OnItemPropertyChanged;
-            this.propertyTrackers.PropertyChanged += OnSubtrackerPropertyChanged;
-            this.propertyTrackers.Add(value, TrackProperties);
+            value.PropertyChanged += this.OnItemPropertyChanged;
+            this.propertyTrackers.PropertyChanged += this.OnSubtrackerPropertyChanged;
+            this.propertyTrackers.Add(value, this.TrackProperties);
             this.ignoredProperties = new HashSet<string>();
             foreach (var property in value.GetType().GetProperties())
             {
@@ -38,13 +38,13 @@
 
         private new INotifyPropertyChanged Value => (INotifyPropertyChanged)base.Value;
 
-        private IReadOnlyList<PropertyInfo> TrackProperties => GetTrackProperties(Value, this.settings);
+        private IReadOnlyList<PropertyInfo> TrackProperties => GetTrackProperties(this.Value, this.settings);
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                Value.PropertyChanged -= OnItemPropertyChanged;
+                this.Value.PropertyChanged -= this.OnItemPropertyChanged;
                 this.propertyTrackers.Dispose();
             }
 
@@ -58,8 +58,8 @@
                 return;
             }
 
-            Changes++;
-            var propertyInfo = TrackProperties.SingleOrDefault(x => x.Name == e.PropertyName);
+            this.Changes++;
+            var propertyInfo = this.TrackProperties.SingleOrDefault(x => x.Name == e.PropertyName);
             if (propertyInfo != null)
             {
                 this.propertyTrackers.RemoveBy(propertyInfo);
@@ -69,9 +69,9 @@
 
         private void OnSubtrackerPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(Changes))
+            if (e.PropertyName == nameof(this.Changes))
             {
-                Changes++;
+                this.Changes++;
             }
         }
     }

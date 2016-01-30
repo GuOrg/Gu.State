@@ -5,7 +5,7 @@
 
     [DebuggerDisplay("Name: {Name} TrackAs: {TrackAs}")]
     [Serializable]
-    public class SpecialType 
+    public class SpecialType
     {
         private SpecialType() // for serialization
         {
@@ -15,16 +15,16 @@
         {
             Ensure.NotNullOrEmpty(fullTypeName, nameof(fullTypeName));
             Ensure.NotEqual(trackAs, TrackAs.Unknown, nameof(trackAs));
-            Name = fullTypeName;
-            TrackAs = trackAs;
+            this.Name = fullTypeName;
+            this.TrackAs = trackAs;
         }
 
         public SpecialType(Type type, TrackAs trackAs)
         {
             Ensure.NotNull(type, nameof(type));
             Ensure.NotEqual(trackAs, TrackAs.Unknown, nameof(trackAs));
-            Name = type.FullName;
-            TrackAs = trackAs;
+            this.Name = type.FullName;
+            this.TrackAs = trackAs;
         }
 
         /// <summary>

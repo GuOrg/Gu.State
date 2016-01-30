@@ -11,8 +11,8 @@ namespace Gu.ChangeTracking
             : base(value)
         {
             Ensure.NotNull(property, nameof(property));
-            ParentType = parentType;
-            ParentProperty = property;
+            this.ParentType = parentType;
+            this.ParentProperty = property;
         }
 
         /// <inheritdoc/>

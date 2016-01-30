@@ -13,7 +13,8 @@
     using JetBrains.Annotations;
 
     /// <summary>
-    /// Tracks changes in a graph. Listens to Property and collection changes.
+    /// Tracks changes in a graph.
+    /// Listens to nested Property and collection changes.
     /// </summary>
     public abstract class ChangeTracker : ITracker
     {
@@ -32,7 +33,11 @@
         /// <inheritdoc/>
         public int Changes
         {
-            get { return this.changes; }
+            get
+            {
+                return this.changes;
+            }
+
             protected set
             {
                 if (value == this.changes)
@@ -41,8 +46,8 @@
                 }
 
                 this.changes = value;
-                OnPropertyChanged(ChangesEventArgs);
-                OnChanged();
+                this.OnPropertyChanged(ChangesEventArgs);
+                this.OnChanged();
             }
         }
 
@@ -174,7 +179,7 @@
 
             this.disposed = true;
 
-            Dispose(true);
+            this.Dispose(true);
             GC.SuppressFinalize(this);
         }
 
@@ -217,14 +222,14 @@
         }
 
         /// <summary>
-        /// Protected implementation of Dispose pattern. 
+        /// Protected implementation of Dispose pattern.
         /// </summary>
         /// <param name="disposing">true: safe to free managed resources</param>
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
             {
-                // Free any other managed objects here. 
+                // Free any other managed objects here.
             }
         }
 
@@ -232,24 +237,24 @@
         {
             if (this.disposed)
             {
-                throw new ObjectDisposedException(GetType().FullName);
+                throw new ObjectDisposedException(this.GetType().FullName);
             }
         }
 
         [NotifyPropertyChangedInvocator]
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private void OnPropertyChanged(PropertyChangedEventArgs e)
         {
-            PropertyChanged?.Invoke(this, e);
+            this.PropertyChanged?.Invoke(this, e);
         }
 
         private void OnChanged()
         {
-            Changed?.Invoke(this, EventArgs.Empty);
+            this.Changed?.Invoke(this, EventArgs.Empty);
         }
 
         protected static bool IsTrackType(Type type, ChangeTrackerSettings settings)

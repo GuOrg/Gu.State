@@ -18,18 +18,18 @@ namespace Gu.ChangeTracking
             Ensure.NotNullOrEmpty(name, nameof(name));
             Ensure.NotEqual(trackAs, TrackAs.Unknown, nameof(trackAs));
 
-            DeclaringTypeName = declaringTypeName;
-            Name = name;
-            TrackAs = trackAs;
+            this.DeclaringTypeName = declaringTypeName;
+            this.Name = name;
+            this.TrackAs = trackAs;
         }
 
         public SpecialProperty(PropertyInfo property, TrackAs trackAs)
         {
             Ensure.NotNull(property, nameof(property));
             Ensure.NotEqual(trackAs, TrackAs.Unknown, nameof(trackAs));
-            DeclaringTypeName = property.DeclaringType?.FullName;
-            Name = property.Name;
-            TrackAs = trackAs;
+            this.DeclaringTypeName = property.DeclaringType?.FullName;
+            this.Name = property.Name;
+            this.TrackAs = trackAs;
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace Gu.ChangeTracking
 
         public PropertyInfo AsProperty()
         {
-            return Type.GetType(DeclaringTypeName, true).GetProperty(Name);
+            return Type.GetType(this.DeclaringTypeName, true).GetProperty(this.Name);
         }
     }
 }
