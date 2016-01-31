@@ -39,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChangeTracker.cs" />
+    <Compile Include="Internals\Constants.cs" />
     <Compile Include="DirtyTracker.cs" />
     <Compile Include="DirtyTracker{T}.cs" />
     <Compile Include="Internals\CollectionItemTrackerCollection.cs" />
