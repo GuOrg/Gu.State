@@ -16,7 +16,7 @@ namespace Gu.ChangeTracking
         private readonly T target;
 
         public PropertySynchronizer(T source, T target, string[] ignoreProperties)
-            : this(source, target, BindingFlags.Instance | BindingFlags.Public, ignoreProperties)
+            : this(source, target, Constants.DefaultPropertyBindingFlags, ignoreProperties)
         {
         }
 

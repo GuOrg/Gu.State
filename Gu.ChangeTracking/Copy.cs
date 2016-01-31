@@ -16,7 +16,7 @@
         public static void FieldValues<T>(T source, T target, params string[] excludedFields)
             where T : class
         {
-            FieldValues(source, target, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, excludedFields);
+            FieldValues(source, target, Constants.DefaultFieldBindingFlags, excludedFields);
         }
 
         /// <summary>
@@ -68,50 +68,6 @@
             }
         }
 
-        public static void PropertyValues<T>(T source, T target, params string[] excludedProperties)
-            where T : class
-        {
-            PropertyValues(source, target, BindingFlags.Instance | BindingFlags.Public, excludedProperties);
-        }
-
-        /// <summary>
-        /// Copies property values from source to target.
-        /// Only valur types and string are allowed.
-        /// </summary>
-        public static void PropertyValues<T>(
-            T source,
-            T target,
-            BindingFlags bindingFlags,
-            params string[] excludedProperties)
-            where T : class
-        {
-            Ensure.NotNull(source, nameof(source));
-            Ensure.NotNull(target, nameof(target));
-            Ensure.SameType(source, target);
-            Ensure.NotIs<IEnumerable>(source, nameof(source));
-
-            var propertyInfos = typeof(T).GetProperties(bindingFlags);
-            WritableProperties(source, target, propertyInfos, excludedProperties);
-            VerifyReadonlyPropertiesAreEqual(source, target, propertyInfos, excludedProperties);
-        }
-
-        /// <summary>
-        /// Check if the properties of <typeparamref name="T"/> can be synchronized.
-        /// Use this to fail fast.
-        /// </summary>
-        public static void VerifyCanCopyPropertyValues<T>(params string[] excludedProperties)
-        {
-            if (typeof(IEnumerable).IsAssignableFrom(typeof(T)))
-            {
-                throw new NotSupportedException("Not supporting IEnumerable");
-            }
-
-            var propertyInfos = typeof(T).GetProperties()
-                .Where(p => excludedProperties?.All(pn => pn != p.Name) == true)
-                .ToArray();
-
-            VerifyCanCopyPropertyValues(propertyInfos);
-        }
 
         /// <summary>
         /// Check if the fields of <typeparamref name="T"/> can be synchronized.
@@ -119,7 +75,7 @@
         /// </summary>
         public static void VerifyCanCopyFieldValues<T>(params string[] excludedFields)
         {
-            VerifyCanCopyFieldValues<T>(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, excludedFields);
+            VerifyCanCopyFieldValues<T>(Constants.DefaultFieldBindingFlags, excludedFields);
         }
 
         /// <summary>
@@ -155,6 +111,60 @@
                 var message = stringBuilder.ToString();
                 throw new NotSupportedException(message);
             }
+        }
+
+        public static void PropertyValues<T>(T source, T target, params string[] excludedProperties)
+            where T : class
+        {
+            PropertyValues(source, target, Constants.DefaultPropertyBindingFlags, excludedProperties);
+        }
+
+        /// <summary>
+        /// Copies property values from source to target.
+        /// Only valur types and string are allowed.
+        /// </summary>
+        public static void PropertyValues<T>(
+            T source,
+            T target,
+            BindingFlags bindingFlags,
+            params string[] excludedProperties)
+            where T : class
+        {
+            Ensure.NotNull(source, nameof(source));
+            Ensure.NotNull(target, nameof(target));
+            Ensure.SameType(source, target);
+            Ensure.NotIs<IEnumerable>(source, nameof(source));
+
+            var propertyInfos = typeof(T).GetProperties(bindingFlags);
+            WritableProperties(source, target, propertyInfos, excludedProperties);
+            VerifyReadonlyPropertiesAreEqual(source, target, propertyInfos, excludedProperties);
+        }
+
+        /// <summary>
+        /// Check if the properties of <typeparamref name="T"/> can be synchronized.
+        /// Use this to fail fast.
+        /// </summary>
+        public static void VerifyCanCopyPropertyValues<T>(params string[] excludedProperties)
+        {
+            VerifyCanCopyPropertyValues<T>(Constants.DefaultPropertyBindingFlags, excludedProperties);
+        }
+
+        /// <summary>
+        /// Check if the properties of <typeparamref name="T"/> can be synchronized.
+        /// Use this to fail fast.
+        /// </summary>
+        public static void VerifyCanCopyPropertyValues<T>(BindingFlags bindingFlags, params string[] excludedProperties)
+        {
+            if (typeof(IEnumerable).IsAssignableFrom(typeof(T)))
+            {
+                throw new NotSupportedException("Not supporting IEnumerable");
+            }
+
+            var propertyInfos = typeof(T).GetProperties(bindingFlags)
+                .Where(p => excludedProperties?.All(pn => pn != p.Name) == true)
+                .ToArray();
+
+            VerifyCanCopyPropertyValues(propertyInfos);
         }
 
         internal static void VerifyCanCopyPropertyValues(IReadOnlyList<PropertyInfo> properties)

@@ -23,12 +23,18 @@
         private readonly HashSet<PropertyInfo> diff = new HashSet<PropertyInfo>();
 
         public DirtyTracker(T x, T y, params string[] ignoreProperties)
+            : this(x, y, Constants.DefaultPropertyBindingFlags, ignoreProperties)
         {
+        }
+
+        public DirtyTracker(T x, T y, BindingFlags bindingFlags, params string[] ignoreProperties)
+        {
+            this.BindingFlags = bindingFlags;
             Ensure.NotNull(x, nameof(x));
             Ensure.NotNull(y, nameof(y));
             Ensure.SameType(x, y);
             Ensure.NotIs<IEnumerable>(x, nameof(x));
-            Verify(ignoreProperties);
+            Verify(bindingFlags, ignoreProperties);
             this.x = x;
             this.y = y;
             this.ignoreProperties = ignoreProperties;
@@ -43,17 +49,27 @@
 
         public IEnumerable<PropertyInfo> Diff => this.diff;
 
+        public BindingFlags BindingFlags { get; }
+
         /// <summary>
         /// Check if <typeparamref name="T"/> can be tracked
         /// </summary>
         public static void Verify(params string[] ignoreProperties)
+        {
+            Verify(Constants.DefaultPropertyBindingFlags, ignoreProperties);
+        }
+
+        /// <summary>
+        /// Check if <typeparamref name="T"/> can be tracked
+        /// </summary>
+        public static void Verify(BindingFlags bindingFlags, params string[] ignoreProperties)
         {
             if (typeof(IEnumerable).IsAssignableFrom(typeof(T)))
             {
                 throw new NotSupportedException("Not supporting IEnumerable");
             }
 
-            var notDiffable = typeof(T).GetProperties()
+            var notDiffable = typeof(T).GetProperties(bindingFlags)
                 .Where(p => !ignoreProperties?.Contains(p.Name) == true)
                 .Where(p => !IsDiffable(p))
                 .ToArray();
@@ -84,7 +100,7 @@
         {
             var before = this.diff.Count;
             this.diff.Clear();
-            foreach (var prop in this.x.GetType().GetProperties())
+            foreach (var prop in this.x.GetType().GetProperties(this.BindingFlags))
             {
                 if (this.ignoreProperties?.Contains(prop.Name) == true)
                 {
@@ -135,7 +151,7 @@
                 return;
             }
 
-            var prop = this.x.GetType().GetProperty(e.PropertyName);
+            var prop = this.x.GetType().GetProperty(e.PropertyName, this.BindingFlags);
             if (prop == null)
             {
                 return;
