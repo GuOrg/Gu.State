@@ -66,6 +66,7 @@
     <Compile Include="ChangeTrackerStubs\IllegalObject.cs" />
     <Compile Include="ChangeTrackerStubs\Level.cs" />
     <Compile Include="ChangeTrackerStubs\SpecialCollection.cs" />
+    <Compile Include="EqualByTests.cs" />
     <Compile Include="Settings\ChangeTrackerSettingsTests.cs" />
     <Compile Include="SynchronizerTests.cs" />
     <Compile Include="TrackerTests.cs" />

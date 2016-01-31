@@ -6,7 +6,6 @@
     public static partial class Ensure
     {
         internal static void NotSame<T>(T x, T y, string xParameterName, string yParametername)
-    where T : class
         {
             Debug.Assert(!string.IsNullOrEmpty(xParameterName), $"{nameof(xParameterName)} cannot be null");
             Debug.Assert(!string.IsNullOrEmpty(yParametername), $"{nameof(yParametername)} cannot be null");
@@ -18,7 +17,6 @@
         }
 
         internal static void NotNull<T>(T value, string parameterName)
-            where T : class
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), $"{nameof(parameterName)} cannot be null");
             if (value == null)
