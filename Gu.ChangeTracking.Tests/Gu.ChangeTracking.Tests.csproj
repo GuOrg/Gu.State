@@ -49,7 +49,7 @@
     <Compile Include="ChangeTrackerTests.Collection.cs" />
     <Compile Include="ChangeTrackerTests.throws.cs" />
     <Compile Include="ChangeTrackerTests.PropertyChanged.cs" />
-    <Compile Include="CollectionItemTrackerTests.cs" />
+    <Compile Include="Internals\CollectionItemTrackerTests.cs" />
     <Compile Include="CopyStubs\WithCalculatedProperty.cs" />
     <Compile Include="CopyStubs\WithReadonlyField.cs" />
     <Compile Include="CopyStubs\WithSimpleProperties.cs" />
@@ -69,7 +69,6 @@
     <Compile Include="EqualByTests.cs" />
     <Compile Include="Settings\ChangeTrackerSettingsTests.cs" />
     <Compile Include="SynchronizerTests.cs" />
-    <Compile Include="TrackerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
