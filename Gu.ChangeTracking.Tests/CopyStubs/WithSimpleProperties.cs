@@ -11,6 +11,19 @@
         private int? nullableIntValue;
         private string stringValue;
         private StringSplitOptions enumValue;
+
+        public WithSimpleProperties()
+        {
+        }
+
+        public WithSimpleProperties(int intValue, int? nullableIntValue, string stringValue, StringSplitOptions enumValue)
+        {
+            this.intValue = intValue;
+            this.nullableIntValue = nullableIntValue;
+            this.stringValue = stringValue;
+            this.enumValue = enumValue;
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public int IntValue

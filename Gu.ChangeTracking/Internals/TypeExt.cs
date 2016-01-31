@@ -105,6 +105,18 @@
             return type.Implements(typeof(IEquatable<>), type);
         }
 
+        public static bool IsNullable(this Type type)
+        {
+            if (type.IsGenericType && !type.IsGenericTypeDefinition)
+            {
+                // instantiated generic type only                
+                Type genericType = type.GetGenericTypeDefinition();
+                return Object.ReferenceEquals(genericType, typeof(Nullable<>));
+            }
+
+            return false;
+        }
+
         /// <summary>
         /// To check if type implements IEquatable{string}
         /// Call like this type.Implements(typeof(IEquatable{}, typeof(string))

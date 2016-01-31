@@ -39,6 +39,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChangeTracker.cs" />
+    <Compile Include="EqualBy.cs" />
+    <Compile Include="Internals\FieldInfoExt.cs" />
     <Compile Include="Internals\Constants.cs" />
     <Compile Include="DirtyTracker.cs" />
     <Compile Include="DirtyTracker{T}.cs" />

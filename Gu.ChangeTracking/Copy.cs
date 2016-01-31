@@ -39,7 +39,7 @@
                     continue;
                 }
 
-                if (IsEventField(fieldInfo))
+                if (fieldInfo.IsEventField())
                 {
                     continue;
                 }
@@ -68,7 +68,6 @@
             }
         }
 
-
         /// <summary>
         /// Check if the fields of <typeparamref name="T"/> can be synchronized.
         /// Use this to fail fast.
@@ -90,7 +89,7 @@
             }
 
             var fieldInfos = typeof(T).GetFields(bindingFlags)
-                .Where(f => ignoreFields?.All(pn => pn != f.Name) == true && !IsEventField(f))
+                .Where(f => ignoreFields?.All(pn => pn != f.Name) == true && !f.IsEventField())
                 .ToArray();
 
             var illegalTypes = fieldInfos.Where(p => !IsCopyableType(p.FieldType))
@@ -283,11 +282,6 @@
         private static bool IsCopyableType(Type type)
         {
             return type.IsValueType || type == typeof(string);
-        }
-
-        private static bool IsEventField(FieldInfo field)
-        {
-            return typeof(MulticastDelegate).IsAssignableFrom(field.FieldType);
         }
     }
 }

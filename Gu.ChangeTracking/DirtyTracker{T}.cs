@@ -71,7 +71,7 @@
 
             var notDiffable = typeof(T).GetProperties(bindingFlags)
                 .Where(p => !ignoreProperties?.Contains(p.Name) == true)
-                .Where(p => !IsDiffable(p))
+                .Where(p => !EqualBy.IsEquatable(p.PropertyType))
                 .ToArray();
             if (notDiffable.Any())
             {
@@ -126,16 +126,6 @@
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private static bool IsDiffable(PropertyInfo propertyInfo)
-        {
-            if (propertyInfo.PropertyType == typeof(string))
-            {
-                return true;
-            }
-
-            return propertyInfo.PropertyType.IsValueType && propertyInfo.PropertyType.IsEquatable();
         }
 
         private void OnTrackedPropertyChanged(object sender, PropertyChangedEventArgs e)
