@@ -9,13 +9,21 @@
 
     public static class Copy
     {
-        private static readonly BindingFlags BindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+        /// <summary>
+        /// Copies field values from source to target.
+        /// Only valur types and string are allowed.
+        /// </summary>
+        public static void FieldValues<T>(T source, T target, params string[] excludedFields)
+            where T : class
+        {
+            FieldValues(source, target, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, excludedFields);
+        }
 
         /// <summary>
         /// Copies field values from source to target.
         /// Only valur types and string are allowed.
         /// </summary>
-        public static void FieldValues<T>(T source, T target, params string[] ignoredFields)
+        public static void FieldValues<T>(T source, T target, BindingFlags bindingFlags, params string[] excludedFields)
             where T : class
         {
             Ensure.NotNull(source, nameof(source));
@@ -23,10 +31,10 @@
             Ensure.SameType(source, target);
             Ensure.NotIs<IEnumerable>(source, nameof(source));
 
-            var fieldInfos = typeof(T).GetFields(BindingFlags);
+            var fieldInfos = typeof(T).GetFields(bindingFlags);
             foreach (var fieldInfo in fieldInfos)
             {
-                if (ignoredFields?.Contains(fieldInfo.Name) == true)
+                if (excludedFields?.Contains(fieldInfo.Name) == true)
                 {
                     continue;
                 }
@@ -60,10 +68,10 @@
             }
         }
 
-        public static void PropertyValues<T>(T source, T target, params string[] ignoredProperties)
+        public static void PropertyValues<T>(T source, T target, params string[] excludedProperties)
             where T : class
         {
-            PropertyValues(source, target, BindingFlags.Instance | BindingFlags.Public, ignoredProperties);
+            PropertyValues(source, target, BindingFlags.Instance | BindingFlags.Public, excludedProperties);
         }
 
         /// <summary>
@@ -91,7 +99,7 @@
         /// Check if the properties of <typeparamref name="T"/> can be synchronized.
         /// Use this to fail fast.
         /// </summary>
-        public static void VerifyCanCopyPropertyValues<T>(params string[] ignoredProperties)
+        public static void VerifyCanCopyPropertyValues<T>(params string[] excludedProperties)
         {
             if (typeof(IEnumerable).IsAssignableFrom(typeof(T)))
             {
@@ -99,7 +107,7 @@
             }
 
             var propertyInfos = typeof(T).GetProperties()
-                .Where(p => ignoredProperties?.All(pn => pn != p.Name) == true)
+                .Where(p => excludedProperties?.All(pn => pn != p.Name) == true)
                 .ToArray();
 
             VerifyCanCopyPropertyValues(propertyInfos);
@@ -109,14 +117,23 @@
         /// Check if the fields of <typeparamref name="T"/> can be synchronized.
         /// Use this to fail fast.
         /// </summary>
-        public static void VerifyCanCopyFieldValues<T>(params string[] ignoreFields)
+        public static void VerifyCanCopyFieldValues<T>(params string[] excludedFields)
+        {
+            VerifyCanCopyFieldValues<T>(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, excludedFields);
+        }
+
+        /// <summary>
+        /// Check if the fields of <typeparamref name="T"/> can be synchronized.
+        /// Use this to fail fast.
+        /// </summary>
+        public static void VerifyCanCopyFieldValues<T>(BindingFlags bindingFlags, params string[] ignoreFields)
         {
             if (typeof(IEnumerable).IsAssignableFrom(typeof(T)))
             {
                 throw new NotSupportedException("Not supporting IEnumerable");
             }
 
-            var fieldInfos = typeof(T).GetFields(BindingFlags)
+            var fieldInfos = typeof(T).GetFields(bindingFlags)
                 .Where(f => ignoreFields?.All(pn => pn != f.Name) == true && !IsEventField(f))
                 .ToArray();
 
