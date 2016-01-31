@@ -1,8 +1,8 @@
 # Gu.ChangeTracking
-
+## ChangeTracker
 Small library for tracking changes to object graphs.
 
-### Sample 1, simplest use case.
+##### Sample 1, simplest use case.
 
 ```
 using (var tracker = ChangeTracker.Track(foo))
@@ -13,7 +13,7 @@ using (var tracker = ChangeTracker.Track(foo))
 }
 ```
 
-### Sample 2, ignore immutable type
+##### Sample 2, ignore immutable type
 
 ```
 var settings = ChangeTrackerSettings.Default;
@@ -43,7 +43,7 @@ Solve the problem by any of:
 * Add attribute [IgnoreChangesAttribute] to property Gu.ChangeTracking.Tests.ChangeTrackerTests.PropertyChanged.WithColor.Color
 ```
 
-### Sample 3, ignore property
+##### Sample 3, ignore property
 ```
 var settings = new ChangeTrackerSettings();
 var property = foo.GetType().GetProperty(nameof(Foo.IgnoredProperty));
@@ -58,3 +58,25 @@ using (var tracker = ChangeTracker.Track(foo, settings))
     Assert.AreEqual(1, tracker.Changes);
 }
 ```
+
+## DirtyTracker
+Tracks changes to two instances of the same type and reports if they are different.
+Useful for edit views where a copy is edited and compared to the instance last saved to disk.
+The `DirtyTracker` is `IDisposable` and disposing stops listening.
+Notifies when there are changes to `IsDirty` and `Diff` via `INotifyPropertyChanged`
+Only simple properties { IEquatable<struct>, string } are supported for now.
+The constructor checks and throws. There is also a Vefify method that can be used to check if a type can be tracked.
+Sample:
+
+```c#
+var dirtyTracker = DirtyTracker.Track(x, y);
+// dirtyTracker.IsDirty true if any property differs between x and y. 
+```
+
+## Copy
+
+- FieldValues
+- PropertyValues
+
+## PropertySynchronizer
+Keeps the property values of target in sync with source.
