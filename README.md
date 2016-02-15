@@ -86,7 +86,7 @@ Copy.FieldValues(source, target, ReferenceHandling.Reference); // copies referen
 #### PropertyValues
 ```
 Copy.PropertyValues(source, target);
-Copy.PropertyValues(source, target, "ignoreThisField");
+Copy.PropertyValues(source, target, "IgnoreThisProperty");
 Copy.PropertyValues(source, target, ReferenceHandling.Structural); // copies the field values for nested reference types. Used Activator.CreateInstance so a default ctor is required, can be private.
 Copy.PropertyValues(source, target, ReferenceHandling.Reference); // copies references for nested reference types.
 ```
