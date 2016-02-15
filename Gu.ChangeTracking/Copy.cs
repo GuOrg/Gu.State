@@ -190,7 +190,8 @@
                     stringBuilder.AppendLine("Illegal types:");
                     foreach (var prop in illegalTypes)
                     {
-                        stringBuilder.AppendLine($"The property {prop.Name} is not of a supported type. Expected valuetype of string but was {prop.PropertyType}");
+                        stringBuilder.AppendLine($"The property {prop.Name} is not of a supported type.");
+                        stringBuilder.AppendLine($" Expected valuetype or string but was {prop.PropertyType}");
                     }
                 }
 

@@ -51,7 +51,7 @@ namespace Gu.ChangeTracking
 
         public static bool PropertyValues<T>(T x, T y, params string[] excludedProperties)
         {
-            return PropertyValues(x, y, Constants.DefaultFieldBindingFlags, excludedProperties);
+            return PropertyValues(x, y, Constants.DefaultPropertyBindingFlags, excludedProperties);
         }
 
         public static bool PropertyValues<T>(T x, T y, BindingFlags bindingFlags, params string[] excludedProperties)
