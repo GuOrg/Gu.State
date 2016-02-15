@@ -9,6 +9,25 @@
 
     public static partial class Copy
     {
+        public static void PropertyValues<T>(T source, T target, ReferenceHandling referenceHandling)
+            where T : class
+        {
+            PropertyValues(source, target, Constants.DefaultPropertyBindingFlags, referenceHandling);
+        }
+
+        public static void PropertyValues<T>(T source, T target, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
+            where T : class
+        {
+            Ensure.NotNull(source, nameof(source));
+            Ensure.NotNull(target, nameof(target));
+            Ensure.SameType(source, target);
+            Ensure.NotIs<IEnumerable>(source, nameof(source));
+
+            var propertyInfos = source.GetType().GetProperties(bindingFlags);
+            WritableProperties(source, target, propertyInfos, referenceHandling);
+            VerifyReadonlyPropertiesAreEqual(source, target, propertyInfos, null);
+        }
+
         public static void PropertyValues<T>(T source, T target, params string[] excludedProperties)
             where T : class
         {
@@ -56,7 +75,7 @@
             Ensure.SameType(source, target);
             Ensure.NotIs<IEnumerable>(source, nameof(source));
 
-            var propertyInfos = typeof(T).GetProperties(bindingFlags);
+            var propertyInfos = source.GetType().GetProperties(bindingFlags);
             WritableProperties(source, target, propertyInfos, specialCopyProperties, excludedProperties);
             VerifyReadonlyPropertiesAreEqual(source, target, propertyInfos, excludedProperties);
         }
@@ -151,7 +170,7 @@
                 if (!IsCopyableType(propertyInfo.PropertyType))
                 {
                     var message = $"Copy does not support copying the property {propertyInfo.Name} of type {propertyInfo.PropertyType}";
-                    throw new NotSupportedException(message);
+                    throw new InvalidOperationException(message);
                 }
 
                 var value = propertyInfo.GetValue(source);
@@ -159,11 +178,48 @@
             }
         }
 
-        internal static void VerifyReadonlyPropertiesAreEqual(
+        internal static void WritableProperties(
             object source,
             object target,
             IReadOnlyList<PropertyInfo> propertyInfos,
-            string[] excludedProperties)
+            ReferenceHandling referenceHandling)
+        {
+            foreach (var propertyInfo in propertyInfos)
+            {
+                if (!propertyInfo.CanWrite)
+                {
+                    continue;
+                }
+
+                if (!IsCopyableType(propertyInfo.PropertyType))
+                {
+                    switch (referenceHandling)
+                    {
+                        case ReferenceHandling.Reference:
+                            break;
+                        case ReferenceHandling.Structural:
+                            var sourceValue = propertyInfo.GetValue(source);
+                            if (sourceValue == null)
+                            {
+                                propertyInfo.SetValue(target, null, null);
+                                continue;
+                            }
+
+                            var targetValue = Activator.CreateInstance(sourceValue.GetType(), true);
+                            Copy.PropertyValues(sourceValue, targetValue, referenceHandling);
+                            propertyInfo.SetValue(target, targetValue, null);
+                            continue;
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(referenceHandling), referenceHandling, null);
+                    }
+                }
+
+                var value = propertyInfo.GetValue(source);
+                propertyInfo.SetValue(target, value, null);
+            }
+        }
+
+        internal static void VerifyReadonlyPropertiesAreEqual(object source, object target, IReadOnlyList<PropertyInfo> propertyInfos, string[] excludedProperties)
         {
             foreach (var propertyInfo in propertyInfos)
             {
@@ -209,6 +265,5 @@
                 }
             }
         }
-
     }
 }

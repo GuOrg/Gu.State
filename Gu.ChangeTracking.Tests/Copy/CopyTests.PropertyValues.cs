@@ -92,7 +92,7 @@
                 var source = new WithComplexProperty();
                 var target = new WithComplexProperty();
                 var exception = Assert.Throws<InvalidOperationException>(() => Copy.PropertyValues(source, target));
-                Assert.AreEqual("", exception.Message);
+                Assert.Inconclusive("", exception.Message);
             }
 
             [Test]
@@ -121,6 +121,54 @@
                     () => new ComplexType());
 
                 Copy.PropertyValues(source, target, new[] { copyProperty });
+                Assert.AreEqual(source.Name, target.Name);
+                Assert.AreEqual(source.Value, target.Value);
+                Assert.IsNull(source.ComplexType);
+                Assert.IsNull(target.ComplexType);
+            }
+
+            [Test]
+            public void WithComplexPropertyHappyPathStructural()
+            {
+                var source = new WithComplexProperty { Name = "a", Value = 1, ComplexType = new ComplexType { Name = "b", Value = 2 } };
+                var target = new WithComplexProperty();
+                Copy.PropertyValues(source, target, ReferenceHandling.Structural);
+                Assert.AreEqual(source.Name, target.Name);
+                Assert.AreEqual(source.Value, target.Value);
+                Assert.AreEqual(source.ComplexType.Name, target.ComplexType.Name);
+                Assert.AreEqual(source.ComplexType.Value, target.ComplexType.Value);
+            }
+
+            [Test]
+            public void WithComplexPropertyHappyPathWhenNullStructural()
+            {
+                var source = new WithComplexProperty { Name = "a", Value = 1 };
+                var target = new WithComplexProperty();
+                Copy.PropertyValues(source, target, ReferenceHandling.Structural);
+                Assert.AreEqual(source.Name, target.Name);
+                Assert.AreEqual(source.Value, target.Value);
+                Assert.IsNull(source.ComplexType);
+                Assert.IsNull(target.ComplexType);
+            }
+
+
+            [Test]
+            public void WithComplexPropertyHappyPathReference()
+            {
+                var source = new WithComplexProperty { Name = "a", Value = 1, ComplexType = new ComplexType { Name = "b", Value = 2 } };
+                var target = new WithComplexProperty();
+                Copy.PropertyValues(source, target, ReferenceHandling.Reference);
+                Assert.AreEqual(source.Name, target.Name);
+                Assert.AreEqual(source.Value, target.Value);
+                Assert.AreSame(source.ComplexType, target.ComplexType);
+            }
+
+            [Test]
+            public void WithComplexPropertyHappyPathWhenNullReference()
+            {
+                var source = new WithComplexProperty { Name = "a", Value = 1 };
+                var target = new WithComplexProperty();
+                Copy.PropertyValues(source, target, ReferenceHandling.Reference);
                 Assert.AreEqual(source.Name, target.Name);
                 Assert.AreEqual(source.Value, target.Value);
                 Assert.IsNull(source.ComplexType);

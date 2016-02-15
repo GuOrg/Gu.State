@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
     using System.Text;
@@ -31,7 +30,7 @@
             Ensure.SameType(source, target);
             Ensure.NotIs<IEnumerable>(source, nameof(source));
 
-            var fieldInfos = typeof(T).GetFields(bindingFlags);
+            var fieldInfos = source.GetType().GetFields(bindingFlags);
             foreach (var fieldInfo in fieldInfos)
             {
                 if (excludedFields?.Contains(fieldInfo.Name) == true)
