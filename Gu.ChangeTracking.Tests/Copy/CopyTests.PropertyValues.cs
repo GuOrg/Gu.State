@@ -151,7 +151,6 @@
                 Assert.IsNull(target.ComplexType);
             }
 
-
             [Test]
             public void WithComplexPropertyHappyPathReference()
             {
