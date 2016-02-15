@@ -39,6 +39,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChangeTracker.cs" />
+    <Compile Include="Contracts\ISpecialCopyProperty.cs" />
+    <Compile Include="Copy\ReferenceHandling.cs" />
+    <Compile Include="Copy\SpecialCopyProperty.cs" />
+    <Compile Include="Copy\Copy.PropertyValues.cs" />
     <Compile Include="EqualBy.cs" />
     <Compile Include="Internals\FieldInfoExt.cs" />
     <Compile Include="Internals\Constants.cs" />
@@ -64,7 +68,7 @@
     <Compile Include="Settings\ChangeTrackerSettings.cs" />
     <Compile Include="Settings\SpecialProperty.cs" />
     <Compile Include="Settings\SpecialType.cs" />
-    <Compile Include="Copy.cs" />
+    <Compile Include="Copy\Copy.FieldValues.cs" />
     <Compile Include="TrackAs.cs" />
     <Compile Include="IgnoreChangesAttribute.cs" />
   </ItemGroup>

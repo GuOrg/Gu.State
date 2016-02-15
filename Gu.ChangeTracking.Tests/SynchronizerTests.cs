@@ -4,6 +4,7 @@
     using System.Diagnostics.CodeAnalysis;
     using Gu.ChangeTracking.Tests.ChangeTrackerStubs;
     using Gu.ChangeTracking.Tests.CopyStubs;
+
     using NUnit.Framework;
 
     [SuppressMessage("ReSharper", "NotResolvedInText")]
