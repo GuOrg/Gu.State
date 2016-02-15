@@ -2,7 +2,9 @@ namespace Gu.ChangeTracking.Tests
 {
     using System;
     using System.Collections.Generic;
+
     using Gu.ChangeTracking.Tests.CopyStubs;
+
     using NUnit.Framework;
 
     public class EqualByTests

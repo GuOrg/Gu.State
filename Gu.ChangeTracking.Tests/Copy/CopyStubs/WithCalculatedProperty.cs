@@ -2,6 +2,7 @@
 {
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
+
     using JetBrains.Annotations;
 
     public class WithCalculatedProperty : INotifyPropertyChanged
