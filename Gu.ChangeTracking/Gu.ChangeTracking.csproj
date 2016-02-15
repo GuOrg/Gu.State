@@ -46,8 +46,8 @@
     <Compile Include="EqualBy.cs" />
     <Compile Include="Internals\FieldInfoExt.cs" />
     <Compile Include="Internals\Constants.cs" />
-    <Compile Include="DirtyTracker.cs" />
-    <Compile Include="DirtyTracker{T}.cs" />
+    <Compile Include="DirtyTracker\DirtyTracker.cs" />
+    <Compile Include="DirtyTracker\DirtyTracker{T}.cs" />
     <Compile Include="Internals\CollectionItemTrackerCollection.cs" />
     <Compile Include="Internals\CollectionTracker.cs" />
     <Compile Include="Contracts\IPropertyTracker.cs" />

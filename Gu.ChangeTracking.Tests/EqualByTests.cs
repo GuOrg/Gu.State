@@ -15,6 +15,26 @@ namespace Gu.ChangeTracking.Tests
             Assert.AreEqual(data.Equals, EqualBy.FieldValues(data.Source, data.Target));
         }
 
+        [Test]
+        public void FieldValuesStructural()
+        {
+            var x = new WithComplexProperty { Name = "a", Value = 1, ComplexType = new ComplexType { Name = "c", Value = 2 } };
+            var y = new WithComplexProperty { Name = "a", Value = 1, ComplexType = new ComplexType { Name = "c", Value = 2 } };
+            Assert.AreEqual(true, EqualBy.FieldValues(x, y, ReferenceHandling.Structural));
+            x.ComplexType.Value++;
+            Assert.AreEqual(false, EqualBy.FieldValues(x, y, ReferenceHandling.Structural));
+        }
+
+        [Test]
+        public void FieldValuesReferential()
+        {
+            var x = new WithComplexProperty { Name = "a", Value = 1, ComplexType = new ComplexType { Name = "c", Value = 2 } };
+            var y = new WithComplexProperty { Name = "a", Value = 1, ComplexType = new ComplexType { Name = "c", Value = 2 } };
+            Assert.AreEqual(false, EqualBy.FieldValues(x, y, ReferenceHandling.Reference));
+            x.ComplexType = y.ComplexType;
+            Assert.AreEqual(true, EqualBy.FieldValues(x, y, ReferenceHandling.Structural));
+        }
+
         [TestCaseSource(nameof(EqualsSource))]
         public void PropertyValuesHappyPath(EqualsData data)
         {

@@ -84,7 +84,6 @@
                 Assert.AreEqual(StringSplitOptions.RemoveEmptyEntries, target.EnumValue);
             }
 
-
             [Test]
             public void WithComplexFieldHappyPathStructural()
             {
