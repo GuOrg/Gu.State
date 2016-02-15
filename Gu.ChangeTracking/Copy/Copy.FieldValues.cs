@@ -8,12 +8,72 @@
 
     public static partial class Copy
     {
+        public static void FieldValues<T>(T source, T target, ReferenceHandling referenceHandling)
+    where T : class
+        {
+            FieldValues(source, target, Constants.DefaultFieldBindingFlags, referenceHandling);
+        }
+
+        public static void FieldValues<T>(T source, T target, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
+            where T : class
+        {
+            Ensure.NotNull(source, nameof(source));
+            Ensure.NotNull(target, nameof(target));
+            Ensure.SameType(source, target);
+            Ensure.NotIs<IEnumerable>(source, nameof(source));
+
+            var fieldInfos = source.GetType().GetFields(bindingFlags);
+            foreach (var fieldInfo in fieldInfos)
+            {
+
+                if (fieldInfo.IsEventField())
+                {
+                    continue;
+                }
+
+                if (!IsCopyableType(fieldInfo.FieldType) && !fieldInfo.IsInitOnly)
+                {
+                    var sourceValue = fieldInfo.GetValue(source);
+                    if (sourceValue == null)
+                    {
+                        fieldInfo.SetValue(target, null);
+                        continue;
+                    }
+
+                    switch (referenceHandling)
+                    {
+                        case ReferenceHandling.Reference:
+                            fieldInfo.SetValue(target, sourceValue);
+                            continue;
+                        case ReferenceHandling.Structural:
+                            var targetValue = fieldInfo.GetValue(target);
+                            if (targetValue != null)
+                            {
+                                FieldValues(sourceValue, targetValue, referenceHandling);
+                                continue;
+                            }
+
+                            targetValue = Activator.CreateInstance(sourceValue.GetType(), true);
+                            FieldValues(sourceValue, targetValue, referenceHandling);
+                            fieldInfo.SetValue(target, targetValue);
+                            continue;
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(referenceHandling), referenceHandling, null);
+                    }
+
+                    var message = $"Copy does not support copying the field {fieldInfo.Name} of type {fieldInfo.FieldType}";
+                    throw new NotSupportedException(message);
+                }
+
+                FieldValue(source, target, fieldInfo);
+            }
+        }
+
         /// <summary>
         /// Copies field values from source to target.
         /// Only valur types and string are allowed.
         /// </summary>
-        public static void FieldValues<T>(T source, T target, params string[] excludedFields)
-            where T : class
+        public static void FieldValues<T>(T source, T target, params string[] excludedFields) where T : class
         {
             FieldValues(source, target, Constants.DefaultFieldBindingFlags, excludedFields);
         }
@@ -22,8 +82,7 @@
         /// Copies field values from source to target.
         /// Only valur types and string are allowed.
         /// </summary>
-        public static void FieldValues<T>(T source, T target, BindingFlags bindingFlags, params string[] excludedFields)
-            where T : class
+        public static void FieldValues<T>(T source, T target, BindingFlags bindingFlags, params string[] excludedFields) where T : class
         {
             Ensure.NotNull(source, nameof(source));
             Ensure.NotNull(target, nameof(target));
@@ -49,21 +108,7 @@
                     throw new NotSupportedException(message);
                 }
 
-                var sourceValue = fieldInfo.GetValue(source);
-                if (fieldInfo.IsInitOnly)
-                {
-                    var targetValue = fieldInfo.GetValue(target);
-                    if (!Equals(sourceValue, targetValue))
-                    {
-                        var message = $"Field {typeof(T).Name}.{fieldInfo.Name} differs but cannot be updated because it is readonly.\r\n" +
-                                      $"Provide {typeof(Copy).Name}.{nameof(FieldValues)}(x, y, nameof({typeof(T).Name}.{fieldInfo.Name}))";
-                        throw new InvalidOperationException(message);
-                    }
-                }
-                else
-                {
-                    fieldInfo.SetValue(target, sourceValue);
-                }
+                FieldValue(source, target, fieldInfo);
             }
         }
 
@@ -87,12 +132,9 @@
                 throw new NotSupportedException("Not supporting IEnumerable");
             }
 
-            var fieldInfos = typeof(T).GetFields(bindingFlags)
-                .Where(f => ignoreFields?.All(pn => pn != f.Name) == true && !f.IsEventField())
-                .ToArray();
+            var fieldInfos = typeof(T).GetFields(bindingFlags).Where(f => ignoreFields?.All(pn => pn != f.Name) == true && !f.IsEventField()).ToArray();
 
-            var illegalTypes = fieldInfos.Where(p => !IsCopyableType(p.FieldType))
-                .ToArray();
+            var illegalTypes = fieldInfos.Where(p => !IsCopyableType(p.FieldType)).ToArray();
 
             if (illegalTypes.Any())
             {
@@ -108,6 +150,24 @@
 
                 var message = stringBuilder.ToString();
                 throw new NotSupportedException(message);
+            }
+        }
+
+        private static void FieldValue<T>(T source, T target, FieldInfo fieldInfo) where T : class
+        {
+            var sourceValue = fieldInfo.GetValue(source);
+            if (fieldInfo.IsInitOnly)
+            {
+                var targetValue = fieldInfo.GetValue(target);
+                if (!Equals(sourceValue, targetValue))
+                {
+                    var message = $"Field {typeof(T).Name}.{fieldInfo.Name} differs but cannot be updated because it is readonly.\r\n" + $"Provide {typeof(Copy).Name}.{nameof(FieldValues)}(x, y, nameof({typeof(T).Name}.{fieldInfo.Name}))";
+                    throw new InvalidOperationException(message);
+                }
+            }
+            else
+            {
+                fieldInfo.SetValue(target, sourceValue);
             }
         }
 

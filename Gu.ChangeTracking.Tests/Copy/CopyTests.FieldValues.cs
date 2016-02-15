@@ -84,6 +84,53 @@
                 Assert.AreEqual(StringSplitOptions.RemoveEmptyEntries, target.EnumValue);
             }
 
+
+            [Test]
+            public void WithComplexFieldHappyPathStructural()
+            {
+                var source = new WithComplexProperty { Name = "a", Value = 1, ComplexType = new ComplexType { Name = "b", Value = 2 } };
+                var target = new WithComplexProperty();
+                Copy.FieldValues(source, target, ReferenceHandling.Structural);
+                Assert.AreEqual(source.Name, target.Name);
+                Assert.AreEqual(source.Value, target.Value);
+                Assert.AreEqual(source.ComplexType.Name, target.ComplexType.Name);
+                Assert.AreEqual(source.ComplexType.Value, target.ComplexType.Value);
+            }
+
+            [Test]
+            public void WithComplexFieldHappyPathWhenNullStructural()
+            {
+                var source = new WithComplexProperty { Name = "a", Value = 1 };
+                var target = new WithComplexProperty();
+                Copy.FieldValues(source, target, ReferenceHandling.Structural);
+                Assert.AreEqual(source.Name, target.Name);
+                Assert.AreEqual(source.Value, target.Value);
+                Assert.IsNull(source.ComplexType);
+                Assert.IsNull(target.ComplexType);
+            }
+
+            [Test]
+            public void WithComplexFieldHappyPathReference()
+            {
+                var source = new WithComplexProperty { Name = "a", Value = 1, ComplexType = new ComplexType { Name = "b", Value = 2 } };
+                var target = new WithComplexProperty();
+                Copy.FieldValues(source, target, ReferenceHandling.Reference);
+                Assert.AreEqual(source.Name, target.Name);
+                Assert.AreEqual(source.Value, target.Value);
+                Assert.AreSame(source.ComplexType, target.ComplexType);
+            }
+
+            [Test]
+            public void WithComplexFieldHappyPathWhenNullReference()
+            {
+                var source = new WithComplexProperty { Name = "a", Value = 1 };
+                var target = new WithComplexProperty();
+                Copy.FieldValues(source, target, ReferenceHandling.Reference);
+                Assert.AreEqual(source.Name, target.Name);
+                Assert.AreEqual(source.Value, target.Value);
+                Assert.IsNull(source.ComplexType);
+                Assert.IsNull(target.ComplexType);
+            }
         }
     }
 }
