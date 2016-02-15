@@ -1,7 +1,8 @@
 # Gu.ChangeTracking
-## ChangeTracker
 Small library for tracking changes to object graphs.
 
+## ChangeTracker
+Tracks changes in a graph, handles collections and nested properties.
 ##### Sample 1, simplest use case.
 
 ```
@@ -75,8 +76,20 @@ var dirtyTracker = DirtyTracker.Track(x, y);
 
 ## Copy
 
-- FieldValues
-- PropertyValues
+#### FieldValues
+```
+Copy.FieldValues(source, target);
+Copy.FieldValues(source, target, "ignoreThisField");
+Copy.FieldValues(source, target, ReferenceHandling.Structural); // copies the field values for nested reference types. Used Activator.CreateInstance so a default ctor is required, can be private.
+Copy.FieldValues(source, target, ReferenceHandling.Reference); // copies references for nested reference types.
+```
+#### PropertyValues
+```
+Copy.PropertyValues(source, target);
+Copy.PropertyValues(source, target, "ignoreThisField");
+Copy.PropertyValues(source, target, ReferenceHandling.Structural); // copies the field values for nested reference types. Used Activator.CreateInstance so a default ctor is required, can be private.
+Copy.PropertyValues(source, target, ReferenceHandling.Reference); // copies references for nested reference types.
+```
 
 ## PropertySynchronizer
 Keeps the property values of target in sync with source.
