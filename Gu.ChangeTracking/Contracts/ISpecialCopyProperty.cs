@@ -7,6 +7,6 @@
     {
         PropertyInfo Property { get; }
 
-        Func<object, object> CreateCopyValue { get; }
+        void CopyValue(object source, object target);
     }
 }

@@ -1,10 +1,7 @@
 ﻿namespace Gu.ChangeTracking.Tests
 {
     using System;
-    using System.Security.Cryptography.X509Certificates;
-
     using Gu.ChangeTracking.Tests.CopyStubs;
-
     using NUnit.Framework;
 
     public partial class CopyTests
@@ -101,19 +98,33 @@
             [Test]
             public void WithComplexPropertyHappyPath()
             {
-                var source = new WithComplexProperty {Name = "a", Value = 1, ComplexType = new ComplexType {Name = "b", Value = 2} };
+                var source = new WithComplexProperty { Name = "a", Value = 1, ComplexType = new ComplexType { Name = "b", Value = 2 } };
                 var target = new WithComplexProperty();
-                var copyProperty = SpecialCopyProperty.Create<WithComplexProperty, ComplexType>(
+                var copyProperty = SpecialCopyProperty.CreateClone<WithComplexProperty, ComplexType>(
                     x => x.ComplexType,
-                    c =>
-                        {
-                            var t = new ComplexType();
-                            Copy.PropertyValues(c, t);
-                            return t;
-                        });
+                    () => new ComplexType());
 
-                Copy.PropertyValues(source, target, copyProperty);
+                Copy.PropertyValues(source, target, new[] { copyProperty });
+                Assert.AreEqual(source.Name, target.Name);
+                Assert.AreEqual(source.Value, target.Value);
+                Assert.AreEqual(source.ComplexType.Name, target.ComplexType.Name);
+                Assert.AreEqual(source.ComplexType.Value, target.ComplexType.Value);
+            }
 
+            [Test]
+            public void WithComplexPropertyHappyPathWhenNull()
+            {
+                var source = new WithComplexProperty { Name = "a", Value = 1};
+                var target = new WithComplexProperty();
+                var copyProperty = SpecialCopyProperty.CreateClone<WithComplexProperty, ComplexType>(
+                    x => x.ComplexType,
+                    () => new ComplexType());
+
+                Copy.PropertyValues(source, target, new[] { copyProperty });
+                Assert.AreEqual(source.Name, target.Name);
+                Assert.AreEqual(source.Value, target.Value);
+                Assert.IsNull(source.ComplexType);
+                Assert.IsNull(target.ComplexType);
             }
         }
     }

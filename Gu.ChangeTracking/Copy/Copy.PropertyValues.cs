@@ -17,12 +17,37 @@
 
         /// <summary>
         /// Copies property values from source to target.
-        /// Only valur types and string are allowed.
+        /// Only value types and string are allowed.
         /// </summary>
         public static void PropertyValues<T>(
             T source,
             T target,
             BindingFlags bindingFlags,
+            params string[] excludedProperties)
+            where T : class
+        {
+            PropertyValues(source, target, bindingFlags, null, excludedProperties);
+        }
+
+        public static void PropertyValues<T>(
+            T source,
+            T target,
+            IReadOnlyList<SpecialCopyProperty> specialCopyProperties,
+            params string[] excludedProperties)
+            where T : class
+        {
+            PropertyValues(source, target, Constants.DefaultPropertyBindingFlags, specialCopyProperties, excludedProperties);
+        }
+
+        /// <summary>
+        /// Copies property values from source to target.
+        /// Only value types and string are allowed.
+        /// </summary>
+        public static void PropertyValues<T>(
+            T source,
+            T target,
+            BindingFlags bindingFlags,
+            IReadOnlyList<SpecialCopyProperty> specialCopyProperties,
             params string[] excludedProperties)
             where T : class
         {
@@ -32,7 +57,7 @@
             Ensure.NotIs<IEnumerable>(source, nameof(source));
 
             var propertyInfos = typeof(T).GetProperties(bindingFlags);
-            WritableProperties(source, target, propertyInfos, excludedProperties);
+            WritableProperties(source, target, propertyInfos, specialCopyProperties, excludedProperties);
             VerifyReadonlyPropertiesAreEqual(source, target, propertyInfos, excludedProperties);
         }
 
@@ -101,12 +126,20 @@
             object source,
             object target,
             IReadOnlyList<PropertyInfo> propertyInfos,
-            string[] ignoreProperties)
+            IReadOnlyList<SpecialCopyProperty> specialCopyProperties,
+            params string[] excludedProperties)
         {
             foreach (var propertyInfo in propertyInfos)
             {
-                if (ignoreProperties?.Contains(propertyInfo.Name) == true)
+                if (excludedProperties?.Contains(propertyInfo.Name) == true)
                 {
+                    continue;
+                }
+
+                var match = specialCopyProperties?.SingleOrDefault(x => x.Property == propertyInfo);
+                if (match != null)
+                {
+                    match.CopyValue(source, target);
                     continue;
                 }
 
