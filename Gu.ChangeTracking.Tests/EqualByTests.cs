@@ -41,6 +41,27 @@ namespace Gu.ChangeTracking.Tests
             Assert.AreEqual(data.Equals, EqualBy.PropertyValues(data.Source, data.Target));
         }
 
+
+        [Test]
+        public void PropertyValuesStructural()
+        {
+            var x = new WithComplexProperty { Name = "a", Value = 1, ComplexType = new ComplexType { Name = "c", Value = 2 } };
+            var y = new WithComplexProperty { Name = "a", Value = 1, ComplexType = new ComplexType { Name = "c", Value = 2 } };
+            Assert.AreEqual(true, EqualBy.PropertyValues(x, y, ReferenceHandling.Structural));
+            x.ComplexType.Value++;
+            Assert.AreEqual(false, EqualBy.PropertyValues(x, y, ReferenceHandling.Structural));
+        }
+
+        [Test]
+        public void PropertyValuesReferential()
+        {
+            var x = new WithComplexProperty { Name = "a", Value = 1, ComplexType = new ComplexType { Name = "c", Value = 2 } };
+            var y = new WithComplexProperty { Name = "a", Value = 1, ComplexType = new ComplexType { Name = "c", Value = 2 } };
+            Assert.AreEqual(false, EqualBy.PropertyValues(x, y, ReferenceHandling.Reference));
+            x.ComplexType = y.ComplexType;
+            Assert.AreEqual(true, EqualBy.PropertyValues(x, y, ReferenceHandling.Structural));
+        }
+
         public static IReadOnlyList<EqualsData> EqualsSource = new List<EqualsData>
         {
             new EqualsData(new WithSimpleProperties(1, 2, "3", StringSplitOptions.RemoveEmptyEntries),
