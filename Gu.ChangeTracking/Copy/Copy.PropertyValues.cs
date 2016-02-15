@@ -205,9 +205,18 @@
                                 continue;
                             }
 
-                            var targetValue = Activator.CreateInstance(sourceValue.GetType(), true);
-                            Copy.PropertyValues(sourceValue, targetValue, referenceHandling);
-                            propertyInfo.SetValue(target, targetValue, null);
+                            var targetValue = propertyInfo.GetValue(target);
+                            if (targetValue == null)
+                            {
+                                targetValue = Activator.CreateInstance(sourceValue.GetType(), true);
+                                Copy.PropertyValues(sourceValue, targetValue, referenceHandling);
+                                propertyInfo.SetValue(target, targetValue, null);
+                            }
+                            else
+                            {
+                                Copy.PropertyValues(sourceValue, targetValue, referenceHandling);
+                            }
+
                             continue;
                         default:
                             throw new ArgumentOutOfRangeException(nameof(referenceHandling), referenceHandling, null);
