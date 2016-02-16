@@ -34,11 +34,10 @@
                             {
                                 tv = Activator.CreateInstance(sv.GetType(), true);
                                 SetItem(targetList, i, tv);
-                                continue;
                             }
 
                             syncItem(sv, tv, referenceHandling);
-                            break;
+                            continue;
                         default:
                             throw new ArgumentOutOfRangeException(nameof(referenceHandling), referenceHandling, null);
                     }
