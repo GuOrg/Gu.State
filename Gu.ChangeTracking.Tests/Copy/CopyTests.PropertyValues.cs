@@ -177,7 +177,7 @@
             }
 
             [Test]
-            public void ListToEmpty()
+            public void ListOfIntsToEmpty()
             {
                 var source = new List<int> { 1, 2, 3 };
                 var target = new List<int>();
@@ -186,7 +186,7 @@
             }
 
             [Test]
-            public void ListToLonger()
+            public void ListOfIntsToLonger()
             {
                 var source = new List<int> { 1, 2, 3 };
                 var target = new List<int> { 1, 2, 3, 4 };
