@@ -7,7 +7,7 @@ namespace Gu.ChangeTracking
     using System.Reflection;
 
     /// <summary>
-    /// This class tracks propertu changes in source and keeps target in sync
+    /// This class tracks property changes in source and keeps target in sync
     /// </summary>
     public class PropertySynchronizer<T> : IDisposable
         where T : class, INotifyPropertyChanged
@@ -29,7 +29,7 @@ namespace Gu.ChangeTracking
             this.BindingFlags = bindingFlags;
             this.source = source;
             this.target = target;
-            var allProperties = typeof(T).GetProperties(bindingFlags);
+            var allProperties = source.GetType().GetProperties(bindingFlags);
             this.IgnoredProperties = allProperties.Where(p => ignoreProperties.Contains(p.Name)).ToArray();
             this.TrackedProperties = allProperties.Except(this.IgnoredProperties).ToArray();
             this.source.PropertyChanged += this.OnSourcePropertyChanged;
