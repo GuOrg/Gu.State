@@ -60,9 +60,6 @@
                         default:
                             throw new ArgumentOutOfRangeException(nameof(referenceHandling), referenceHandling, null);
                     }
-
-                    var message = $"Copy does not support copying the field {fieldInfo.Name} of type {fieldInfo.FieldType}";
-                    throw new NotSupportedException(message);
                 }
 
                 FieldValue(source, target, fieldInfo);
