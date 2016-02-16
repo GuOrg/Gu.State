@@ -1,6 +1,7 @@
 ﻿namespace Gu.ChangeTracking.Tests
 {
     using System;
+    using System.Collections.Generic;
 
     using Gu.ChangeTracking.Tests.CopyStubs;
 
@@ -129,6 +130,24 @@
                 Assert.AreEqual(source.Value, target.Value);
                 Assert.IsNull(source.ComplexType);
                 Assert.IsNull(target.ComplexType);
+            }
+
+            [Test]
+            public void ListToEmpty()
+            {
+                var source = new List<int> { 1, 2, 3 };
+                var target = new List<int>();
+                Copy.FieldValues(source, target, ReferenceHandling.Structural);
+                CollectionAssert.AreEqual(source, target);
+            }
+
+            [Test]
+            public void ListToLonger()
+            {
+                var source = new List<int> { 1, 2, 3 };
+                var target = new List<int> { 1, 2, 3, 4 };
+                Copy.FieldValues(source, target, ReferenceHandling.Structural);
+                CollectionAssert.AreEqual(source, target);
             }
         }
     }

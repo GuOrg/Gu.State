@@ -3,6 +3,7 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Linq;
     using System.Reflection;
     using System.Text;
@@ -35,14 +36,23 @@
             Ensure.NotNull(source, nameof(source));
             Ensure.NotNull(target, nameof(target));
             Ensure.SameType(source, target);
+            var sourceList = source as IList;
+            var targetList = target as IList;
+            if (sourceList != null && targetList != null)
+            {
+                SyncLists(sourceList, targetList, PropertyValues, referenceHandling);
+                return;
+            }
+
             Ensure.NotIs<IEnumerable>(source, nameof(source));
 
-            var propertyInfos = source.GetType().GetProperties(bindingFlags);
+            var propertyInfos = source.GetType()
+                                      .GetProperties(bindingFlags);
             WritableProperties(source, target, propertyInfos, referenceHandling);
             VerifyReadonlyPropertiesAreEqual(source, target, propertyInfos, null);
         }
 
-        public static void PropertyValues<T>(T source, T target, params string[] excludedProperties)
+        public static void PropertyValues<T>(T source, T target, params string[] excludedProperties) 
             where T : class
         {
             PropertyValues(source, target, Constants.DefaultPropertyBindingFlags, excludedProperties);
@@ -52,22 +62,12 @@
         /// Copies property values from source to target.
         /// Only value types and string are allowed.
         /// </summary>
-        public static void PropertyValues<T>(
-            T source,
-            T target,
-            BindingFlags bindingFlags,
-            params string[] excludedProperties)
-            where T : class
+        public static void PropertyValues<T>(T source, T target, BindingFlags bindingFlags, params string[] excludedProperties) where T : class
         {
             PropertyValues(source, target, bindingFlags, null, excludedProperties);
         }
 
-        public static void PropertyValues<T>(
-            T source,
-            T target,
-            IReadOnlyList<SpecialCopyProperty> specialCopyProperties,
-            params string[] excludedProperties)
-            where T : class
+        public static void PropertyValues<T>(T source, T target, IReadOnlyList<SpecialCopyProperty> specialCopyProperties, params string[] excludedProperties) where T : class
         {
             PropertyValues(source, target, Constants.DefaultPropertyBindingFlags, specialCopyProperties, excludedProperties);
         }
@@ -76,20 +76,15 @@
         /// Copies property values from source to target.
         /// Only value types and string are allowed.
         /// </summary>
-        public static void PropertyValues<T>(
-            T source,
-            T target,
-            BindingFlags bindingFlags,
-            IReadOnlyList<SpecialCopyProperty> specialCopyProperties,
-            params string[] excludedProperties)
-            where T : class
+        public static void PropertyValues<T>(T source, T target, BindingFlags bindingFlags, IReadOnlyList<SpecialCopyProperty> specialCopyProperties, params string[] excludedProperties) where T : class
         {
             Ensure.NotNull(source, nameof(source));
             Ensure.NotNull(target, nameof(target));
             Ensure.SameType(source, target);
             Ensure.NotIs<IEnumerable>(source, nameof(source));
 
-            var propertyInfos = source.GetType().GetProperties(bindingFlags);
+            var propertyInfos = source.GetType()
+                                      .GetProperties(bindingFlags);
             WritableProperties(source, target, propertyInfos, specialCopyProperties, excludedProperties);
             VerifyReadonlyPropertiesAreEqual(source, target, propertyInfos, excludedProperties);
         }
@@ -115,8 +110,8 @@
             }
 
             var propertyInfos = typeof(T).GetProperties(bindingFlags)
-                .Where(p => excludedProperties?.All(pn => pn != p.Name) == true)
-                .ToArray();
+                                         .Where(p => excludedProperties?.All(pn => pn != p.Name) == true)
+                                         .ToArray();
 
             VerifyCanCopyPropertyValues(propertyInfos);
         }
@@ -126,9 +121,9 @@
             ////var missingSetters = properties.Where(p => p.SetMethod == null).ToArray();
 
             var illegalTypes = properties.Where(p => !IsCopyableType(p.PropertyType))
-                .ToArray();
+                                         .ToArray();
 
-            if (/* missingSetters.Any() || */ illegalTypes.Any())
+            if ( /* missingSetters.Any() || */ illegalTypes.Any())
             {
                 var stringBuilder = new StringBuilder();
                 ////if (missingSetters.Any())
@@ -155,12 +150,7 @@
             }
         }
 
-        internal static void WritableProperties(
-            object source,
-            object target,
-            IReadOnlyList<PropertyInfo> propertyInfos,
-            IReadOnlyList<SpecialCopyProperty> specialCopyProperties,
-            params string[] excludedProperties)
+        internal static void WritableProperties(object source, object target, IReadOnlyList<PropertyInfo> propertyInfos, IReadOnlyList<SpecialCopyProperty> specialCopyProperties, params string[] excludedProperties)
         {
             foreach (var propertyInfo in propertyInfos)
             {
@@ -192,11 +182,7 @@
             }
         }
 
-        internal static void WritableProperties(
-            object source,
-            object target,
-            IReadOnlyList<PropertyInfo> propertyInfos,
-            ReferenceHandling referenceHandling)
+        internal static void WritableProperties(object source, object target, IReadOnlyList<PropertyInfo> propertyInfos, ReferenceHandling referenceHandling)
         {
             foreach (var propertyInfo in propertyInfos)
             {
