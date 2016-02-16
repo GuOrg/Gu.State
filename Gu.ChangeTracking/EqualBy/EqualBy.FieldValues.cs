@@ -2,8 +2,8 @@ namespace Gu.ChangeTracking
 {
     using System;
     using System.Collections;
-    using System.Linq;
     using System.Reflection;
+    using JetBrains.Annotations;
 
     public static partial class EqualBy
     {
@@ -30,18 +30,7 @@ namespace Gu.ChangeTracking
         /// </param>
         public static bool FieldValues<T>(T x, T y, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
         {
-            if (x == null && y == null)
-            {
-                return true;
-            }
-
-            if (x == null || y == null)
-            {
-                return false;
-            }
-
-            Ensure.SameType(x, y, nameof(x), nameof(y));
-            return FieldValuesCore(x, y, bindingFlags, referenceHandling);
+            return FieldValues(x, y, new EqualByFieldsSettings(null, bindingFlags, referenceHandling));
         }
 
         public static bool FieldValues<T>(T x, T y, params string[] excludedFields)
@@ -67,37 +56,15 @@ namespace Gu.ChangeTracking
             }
 
             Ensure.SameType(x, y, nameof(x), nameof(y));
-            Ensure.NotIs<IEnumerable>(x, nameof(x));
-            var fieldInfos = x.GetType().GetFields(settings.BindingFlags);
-            foreach (var fieldInfo in fieldInfos)
+            if (settings.ReferenceHandling == ReferenceHandling.Throw)
             {
-                if (settings.IsIgnoringField(fieldInfo))
-                {
-                    continue;
-                }
-
-                if (!IsEquatable(fieldInfo.FieldType))
-                {
-                    if (settings.ReferenceHandling == ReferenceHandling.Throw)
-                    {
-                        var message = $"Copy does not support comparing the field {fieldInfo.Name} of type {fieldInfo.FieldType}";
-                        throw new NotSupportedException(message);
-                    }
-
-                }
-
-                var xv = fieldInfo.GetValue(x);
-                var yv = fieldInfo.GetValue(y);
-                if (!Equals(xv, yv))
-                {
-                    return false;
-                }
+                Ensure.NotIs<IEnumerable>(x, nameof(x));
             }
 
-            return true;
+            return FieldValuesCore(x, y, settings);
         }
 
-        private static bool FieldValuesCore<T>(T x, T y, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
+        private static bool FieldValuesCore(object x, object y, EqualByFieldsSettings settings)
         {
             if (x == null && y == null)
             {
@@ -116,37 +83,16 @@ namespace Gu.ChangeTracking
 
             if (x is IEnumerable)
             {
-                var xlist = x as IList;
-                var ylist = y as IList;
-                if (xlist != null && ylist != null)
+                if (!ListEquals(x, y, FieldItemEquals, settings))
                 {
-                    if (xlist.Count != ylist.Count)
-                    {
-                        return false;
-                    }
-
-                    for (int i = 0; i < xlist.Count; i++)
-                    {
-                        var xv = xlist[i];
-                        var yv = ylist[i];
-
-                        if (!FieldValueEquals<T>(xv, yv, bindingFlags, referenceHandling))
-                        {
-                            return false;
-                        }
-                    }
-                }
-                else
-                {
-                    // using ensure to throw
-                    Ensure.NotIs<IEnumerable>(x, nameof(x));
+                    return false;
                 }
             }
 
-            var fieldInfos = x.GetType().GetFields(bindingFlags);
+            var fieldInfos = x.GetType().GetFields(settings.BindingFlags);
             foreach (var fieldInfo in fieldInfos)
             {
-                if (fieldInfo.IsEventField())
+                if (settings.IsIgnoringField(fieldInfo))
                 {
                     continue;
                 }
@@ -154,7 +100,7 @@ namespace Gu.ChangeTracking
                 var xv = fieldInfo.GetValue(x);
                 var yv = fieldInfo.GetValue(y);
 
-                if (!FieldValueEquals<T>(xv, yv, bindingFlags, referenceHandling))
+                if (!FieldValueEquals(xv, yv, fieldInfo, settings))
                 {
                     return false;
                 }
@@ -163,7 +109,12 @@ namespace Gu.ChangeTracking
             return true;
         }
 
-        private static bool FieldValueEquals<T>(object x, object y, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
+        private static bool FieldItemEquals(object x, object y, EqualByFieldsSettings settings)
+        {
+            return FieldValueEquals(x, y, null, settings);
+        }
+
+        private static bool FieldValueEquals(object x, object y, FieldInfo fieldInfo, EqualByFieldsSettings settings)
         {
             if (x == null && y == null)
             {
@@ -184,7 +135,7 @@ namespace Gu.ChangeTracking
             }
             else
             {
-                switch (referenceHandling)
+                switch (settings.ReferenceHandling)
                 {
                     case ReferenceHandling.Reference:
                         if (ReferenceEquals(x, y))
@@ -194,14 +145,17 @@ namespace Gu.ChangeTracking
 
                         return false;
                     case ReferenceHandling.Structural:
-                        if (FieldValuesCore(x, y, bindingFlags, referenceHandling))
+                        if (FieldValuesCore(x, y, settings))
                         {
                             return true;
                         }
 
                         return false;
+                    case ReferenceHandling.Throw:
+                        var message = $"EqualBy does not support comparing the field {fieldInfo.Name} of type {fieldInfo.FieldType}";
+                        throw new NotSupportedException(message);
                     default:
-                        throw new ArgumentOutOfRangeException(nameof(referenceHandling), referenceHandling, null);
+                        throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);
                 }
             }
 

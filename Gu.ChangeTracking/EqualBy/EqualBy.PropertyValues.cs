@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections;
-    using System.Linq;
     using System.Reflection;
 
     public static partial class EqualBy
@@ -30,18 +29,7 @@
         /// </param>
         public static bool PropertyValues<T>(T x, T y, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
         {
-            if (x == null && y == null)
-            {
-                return true;
-            }
-
-            if (x == null || y == null)
-            {
-                return false;
-            }
-
-            Ensure.SameType(x, y, nameof(x), nameof(y));
-            return PropertyValuesCore(x, y, bindingFlags, referenceHandling);
+            return PropertyValues(x, y, new EqualByPropertiesSettings(null, bindingFlags, referenceHandling));
         }
 
         public static bool PropertyValues<T>(T x, T y, params string[] excludedProperties)
@@ -51,44 +39,11 @@
 
         public static bool PropertyValues<T>(T x, T y, BindingFlags bindingFlags, params string[] excludedProperties)
         {
-            if (x == null && y == null)
-            {
-                return true;
-            }
-
-            if (x == null || y == null)
-            {
-                return false;
-            }
-
-            Ensure.SameType(x, y, nameof(x), nameof(y));
-            Ensure.NotIs<IEnumerable>(x, nameof(x));
-            var propertyInfos = x.GetType().GetProperties(bindingFlags);
-            foreach (var propertyInfo in propertyInfos)
-            {
-                if (excludedProperties?.Contains(propertyInfo.Name) == true)
-                {
-                    continue;
-                }
-
-                if (!IsEquatable(propertyInfo.PropertyType))
-                {
-                    var message = $"Copy does not support comparing the property {propertyInfo.Name} of type {propertyInfo.PropertyType}";
-                    throw new NotSupportedException(message);
-                }
-
-                var xv = propertyInfo.GetValue(x);
-                var yv = propertyInfo.GetValue(y);
-                if (!Equals(xv, yv))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            var settings = new EqualByPropertiesSettings(x?.GetType().GetIgnoreProperties(bindingFlags, excludedProperties), bindingFlags, ReferenceHandling.Throw);
+            return PropertyValues(x, y, settings);
         }
 
-        private static bool PropertyValuesCore(object x, object y, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
+        public static bool PropertyValues(object x, object y, EqualByPropertiesSettings settings)
         {
             if (x == null && y == null)
             {
@@ -107,36 +62,26 @@
 
             if (x is IEnumerable)
             {
-                var xlist = x as IList;
-                var ylist = y as IList;
-                if (xlist != null && ylist != null)
+                if (!ListEquals(x, y, PropertyItemEquals, settings))
                 {
-                    if (xlist.Count != ylist.Count)
-                    {
-                        return false;
-                    }
-
-                    for (int i = 0; i < xlist.Count; i++)
-                    {
-                        var xv = xlist[i];
-                        var yv = ylist[i];
-
-                        if (!PropertyValueEquals(xv, yv, bindingFlags, referenceHandling))
-                        {
-                            return false;
-                        }
-                    }
-                }
-                else
-                {
-                    // using ensure to throw
-                    Ensure.NotIs<IEnumerable>(x, nameof(x));
+                    return false;
                 }
             }
 
-            var propertyInfos = x.GetType().GetProperties(bindingFlags);
+            var propertyInfos = x.GetType().GetProperties(settings.BindingFlags);
             foreach (var propertyInfo in propertyInfos)
             {
+                if (settings.IsIgnoringProperty(propertyInfo))
+                {
+                    continue;
+                }
+
+                if (!IsEquatable(propertyInfo.PropertyType) && settings.ReferenceHandling == ReferenceHandling.Throw)
+                {
+                    var message = $"Copy does not support comparing the property {propertyInfo.Name} of type {propertyInfo.PropertyType}";
+                    throw new NotSupportedException(message);
+                }
+
                 var xv = propertyInfo.GetValue(x);
                 var yv = propertyInfo.GetValue(y);
                 if (ReferenceEquals(x, xv) && ReferenceEquals(y, yv))
@@ -144,7 +89,7 @@
                     continue;
                 }
 
-                if (!PropertyValueEquals(xv, yv, bindingFlags, referenceHandling))
+                if (!PropertyValueEquals(xv, yv, settings))
                 {
                     return false;
                 }
@@ -153,7 +98,12 @@
             return true;
         }
 
-        private static bool PropertyValueEquals(object x, object y, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
+        private static bool PropertyItemEquals(object x, object y, EqualByPropertiesSettings settings)
+        {
+            return PropertyValueEquals(x, y, settings);
+        }
+
+        private static bool PropertyValueEquals(object x, object y, EqualByPropertiesSettings settings)
         {
             if (x == null && y == null)
             {
@@ -174,7 +124,7 @@
             }
             else
             {
-                switch (referenceHandling)
+                switch (settings.ReferenceHandling)
                 {
                     case ReferenceHandling.Reference:
                         if (ReferenceEquals(x, y))
@@ -184,14 +134,14 @@
 
                         return false;
                     case ReferenceHandling.Structural:
-                        if (PropertyValuesCore(x, y, bindingFlags, referenceHandling))
+                        if (PropertyValues(x, y, settings))
                         {
                             return true;
                         }
 
                         return false;
                     default:
-                        throw new ArgumentOutOfRangeException(nameof(referenceHandling), referenceHandling, null);
+                        throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);
                 }
             }
 

@@ -4,24 +4,19 @@
     using System.Linq;
     using System.Reflection;
 
-    public class EqualByPropertiesSettings
+    public class EqualByPropertiesSettings : EqualBySettings
     {
         private readonly HashSet<PropertyInfo> ignoredProperties;
 
         public EqualByPropertiesSettings(IEnumerable<PropertyInfo> ignoredProperties, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
+            : base(bindingFlags,referenceHandling)
         {
             this.ignoredProperties = this.ignoredProperties != null
                                          ? new HashSet<PropertyInfo>(ignoredProperties)
                                          : null;
-            this.BindingFlags = bindingFlags;
-            this.ReferenceHandling = referenceHandling;
         }
 
         public IEnumerable<PropertyInfo> IgnoredProperties => this.ignoredProperties ?? Enumerable.Empty<PropertyInfo>();
-
-        public BindingFlags BindingFlags { get; }
-
-        public ReferenceHandling ReferenceHandling { get; }
 
         public bool IsIgnoringProperty(PropertyInfo propertyInfo)
         {
