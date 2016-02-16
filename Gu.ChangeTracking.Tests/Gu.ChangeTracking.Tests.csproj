@@ -52,6 +52,8 @@
     <Compile Include="Copy\CopyStubs\ComplexType.cs" />
     <Compile Include="Copy\CopyStubs\WithComplexProperty.cs" />
     <Compile Include="Copy\CopyTests.PropertyValues.cs" />
+    <Compile Include="EqualBy\EqualBy.Shared.cs" />
+    <Compile Include="EqualBy\EqualByTests.PropertyValues.cs" />
     <Compile Include="Internals\CollectionItemTrackerTests.cs" />
     <Compile Include="Copy\CopyStubs\WithCalculatedProperty.cs" />
     <Compile Include="Copy\CopyStubs\WithReadonlyField.cs" />
@@ -69,7 +71,7 @@
     <Compile Include="ChangeTrackerStubs\IllegalObject.cs" />
     <Compile Include="ChangeTrackerStubs\Level.cs" />
     <Compile Include="ChangeTrackerStubs\SpecialCollection.cs" />
-    <Compile Include="EqualByTests.cs" />
+    <Compile Include="EqualBy\EqualByTests.FieldValues.cs" />
     <Compile Include="Settings\ChangeTrackerSettingsTests.cs" />
     <Compile Include="SynchronizerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

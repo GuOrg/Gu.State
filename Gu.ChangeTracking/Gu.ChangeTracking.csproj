@@ -40,10 +40,12 @@
   <ItemGroup>
     <Compile Include="ChangeTracker\ChangeTracker.cs" />
     <Compile Include="Contracts\ISpecialCopyProperty.cs" />
-    <Compile Include="Copy\ReferenceHandling.cs" />
+    <Compile Include="ReferenceHandling.cs" />
     <Compile Include="Copy\SpecialCopyProperty.cs" />
     <Compile Include="Copy\Copy.PropertyValues.cs" />
-    <Compile Include="EqualBy.cs" />
+    <Compile Include="EqualBy\EqualBy.FieldValues.cs" />
+    <Compile Include="EqualBy\EqualBy.PropertyValues.cs" />
+    <Compile Include="EqualBy\EqualBy.Shared.cs" />
     <Compile Include="Internals\FieldInfoExt.cs" />
     <Compile Include="Internals\Constants.cs" />
     <Compile Include="DirtyTracker\DirtyTracker.cs" />

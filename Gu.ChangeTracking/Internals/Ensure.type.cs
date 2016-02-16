@@ -40,7 +40,7 @@
                 return;
             }
 
-            throw new ArgumentException($"Expected {parameterName} to be of type {typeof(T)}", parameterName);
+            throw new ArgumentException($"Expected {parameterName} to not be of type {typeof(T)}", parameterName);
         }
 
         internal static void IsAssignableFrom<T>(object x, string parameterName)
