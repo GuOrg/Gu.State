@@ -15,6 +15,25 @@ namespace Gu.ChangeTracking
         private readonly T source;
         private readonly T target;
 
+        //public PropertySynchronizer(T source, T target, ReferenceHandling referenceHandling)
+        //    : this(source, target, Constants.DefaultPropertyBindingFlags, referenceHandling)
+        //{
+        //}
+
+        //public PropertySynchronizer(T source, T target, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
+        //{
+        //    Ensure.NotSame(source, target, nameof(source), nameof(target));
+        //    Ensure.NotNull(source, nameof(source));
+        //    Ensure.NotNull(target, nameof(target));
+        //    Ensure.SameType(source, target, nameof(source), nameof(target));
+        //    this.BindingFlags = bindingFlags;
+        //    this.source = source;
+        //    this.target = target;
+        //    this.TrackedProperties = source.GetType().GetProperties(bindingFlags);
+        //    this.source.PropertyChanged += this.OnSourcePropertyChanged;
+        //    Copy.PropertyValues(source, target, referenceHandling);
+        //}
+
         public PropertySynchronizer(T source, T target, string[] ignoreProperties)
             : this(source, target, Constants.DefaultPropertyBindingFlags, ignoreProperties)
         {
