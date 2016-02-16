@@ -13,7 +13,6 @@
     /// <summary>
     /// Tracks if there is a difference between the properties of x and y
     /// </summary>
-    /// <typeparam name="T"></typeparam>
     public class DirtyTracker<T> : INotifyPropertyChanged, IDisposable
         where T : class, INotifyPropertyChanged
     {
@@ -29,12 +28,13 @@
 
         public DirtyTracker(T x, T y, BindingFlags bindingFlags, params string[] ignoreProperties)
         {
-            this.BindingFlags = bindingFlags;
             Ensure.NotNull(x, nameof(x));
             Ensure.NotNull(y, nameof(y));
+            Ensure.NotSame(x, y, nameof(x), nameof(y));
             Ensure.SameType(x, y);
             Ensure.NotIs<IEnumerable>(x, nameof(x));
             Verify(bindingFlags, ignoreProperties);
+            this.BindingFlags = bindingFlags;
             this.x = x;
             this.y = y;
             this.ignoreProperties = ignoreProperties;
