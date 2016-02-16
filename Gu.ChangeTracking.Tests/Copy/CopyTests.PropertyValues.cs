@@ -1,6 +1,8 @@
 ﻿namespace Gu.ChangeTracking.Tests
 {
     using System;
+    using System.Collections.Generic;
+
     using Gu.ChangeTracking.Tests.CopyStubs;
     using NUnit.Framework;
 
@@ -114,7 +116,7 @@
             [Test]
             public void WithComplexPropertyHappyPathWhenNull()
             {
-                var source = new WithComplexProperty { Name = "a", Value = 1};
+                var source = new WithComplexProperty { Name = "a", Value = 1 };
                 var target = new WithComplexProperty();
                 var copyProperty = SpecialCopyProperty.CreateClone<WithComplexProperty, ComplexType>(
                     x => x.ComplexType,
@@ -172,6 +174,24 @@
                 Assert.AreEqual(source.Value, target.Value);
                 Assert.IsNull(source.ComplexType);
                 Assert.IsNull(target.ComplexType);
+            }
+
+            [Test]
+            public void ListToEmpty()
+            {
+                var source = new List<int> { 1, 2, 3 };
+                var target = new List<int>();
+                Copy.PropertyValues(source, target, ReferenceHandling.Structural);
+                CollectionAssert.AreEqual(source, target);
+            }
+
+            [Test]
+            public void ListToLonger()
+            {
+                var source = new List<int> { 1, 2, 3 };
+                var target = new List<int> { 1, 2, 3, 4 };
+                Copy.PropertyValues(source, target, ReferenceHandling.Structural);
+                CollectionAssert.AreEqual(source, target);
             }
         }
     }

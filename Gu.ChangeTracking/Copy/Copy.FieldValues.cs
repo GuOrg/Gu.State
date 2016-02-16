@@ -20,12 +20,19 @@
             Ensure.NotNull(source, nameof(source));
             Ensure.NotNull(target, nameof(target));
             Ensure.SameType(source, target);
+            var sourceList = source as IList;
+            var targetList = target as IList;
+            if (sourceList != null && targetList != null)
+            {
+                SyncLists(sourceList, targetList, FieldValues, referenceHandling);
+                return;
+            }
+
             Ensure.NotIs<IEnumerable>(source, nameof(source));
 
             var fieldInfos = source.GetType().GetFields(bindingFlags);
             foreach (var fieldInfo in fieldInfos)
             {
-
                 if (fieldInfo.IsEventField())
                 {
                     continue;
@@ -61,8 +68,10 @@
                             throw new ArgumentOutOfRangeException(nameof(referenceHandling), referenceHandling, null);
                     }
                 }
-
-                FieldValue(source, target, fieldInfo);
+                else
+                {
+                    FieldValue(source, target, fieldInfo);
+                }
             }
         }
 
@@ -150,7 +159,7 @@
             }
         }
 
-        private static void FieldValue<T>(T source, T target, FieldInfo fieldInfo) where T : class
+        private static void FieldValue(object source, object target, FieldInfo fieldInfo)
         {
             var sourceValue = fieldInfo.GetValue(source);
             if (fieldInfo.IsInitOnly)
@@ -158,7 +167,7 @@
                 var targetValue = fieldInfo.GetValue(target);
                 if (!Equals(sourceValue, targetValue))
                 {
-                    var message = $"Field {typeof(T).Name}.{fieldInfo.Name} differs but cannot be updated because it is readonly.\r\n" + $"Provide {typeof(Copy).Name}.{nameof(FieldValues)}(x, y, nameof({typeof(T).Name}.{fieldInfo.Name}))";
+                    var message = $"Field {source.GetType().Name}.{fieldInfo.Name} differs but cannot be updated because it is readonly.\r\n" + $"Provide {typeof(Copy).Name}.{nameof(FieldValues)}(x, y, nameof({source.GetType().Name}.{fieldInfo.Name}))";
                     throw new InvalidOperationException(message);
                 }
             }
@@ -166,11 +175,6 @@
             {
                 fieldInfo.SetValue(target, sourceValue);
             }
-        }
-
-        private static bool IsCopyableType(Type type)
-        {
-            return type.IsValueType || type == typeof(string);
         }
     }
 }
