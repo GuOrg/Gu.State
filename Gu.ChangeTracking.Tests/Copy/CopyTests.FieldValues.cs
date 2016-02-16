@@ -149,6 +149,33 @@
                 Copy.FieldValues(source, target, ReferenceHandling.Structural);
                 CollectionAssert.AreEqual(source, target);
             }
+
+
+            [Test]
+            public void ListOfComplexToEmpty()
+            {
+                var source = new List<ComplexType> { new ComplexType("a", 1) };
+                var target = new List<ComplexType>();
+                Copy.FieldValues(source, target, ReferenceHandling.Structural);
+                Assert.AreEqual(1, source.Count);
+                Assert.AreEqual(1, target.Count);
+                Assert.AreEqual(source[0].Name, target[0].Name);
+                Assert.AreEqual(source[0].Value, target[0].Value);
+            }
+
+            [Test]
+            public void ListOfComplexToLonger()
+            {
+                var source = new List<ComplexType> { new ComplexType("a", 1) };
+                var target = new List<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) };
+                var item = target[0];
+                Copy.FieldValues(source, target, ReferenceHandling.Structural);
+                Assert.AreEqual(1, source.Count);
+                Assert.AreEqual(1, target.Count);
+                Assert.AreEqual(source[0].Name, target[0].Name);
+                Assert.AreEqual(source[0].Value, target[0].Value);
+                Assert.AreSame(item, target[0]);
+            }
         }
     }
 }
