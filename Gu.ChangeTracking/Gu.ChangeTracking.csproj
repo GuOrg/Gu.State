@@ -38,7 +38,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChangeTracker.cs" />
+    <Compile Include="ChangeTracker\ChangeTracker.cs" />
     <Compile Include="Contracts\ISpecialCopyProperty.cs" />
     <Compile Include="Copy\ReferenceHandling.cs" />
     <Compile Include="Copy\SpecialCopyProperty.cs" />
@@ -69,8 +69,8 @@
     <Compile Include="Settings\SpecialProperty.cs" />
     <Compile Include="Settings\SpecialType.cs" />
     <Compile Include="Copy\Copy.FieldValues.cs" />
-    <Compile Include="TrackAs.cs" />
-    <Compile Include="IgnoreChangesAttribute.cs" />
+    <Compile Include="ChangeTracker\TrackAs.cs" />
+    <Compile Include="ChangeTracker\IgnoreChangesAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="paket.references" />

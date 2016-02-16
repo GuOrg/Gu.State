@@ -25,6 +25,7 @@ namespace Gu.ChangeTracking
             Ensure.NotSame(source, target, nameof(source), nameof(target));
             Ensure.NotNull(source, nameof(source));
             Ensure.NotNull(target, nameof(target));
+            Ensure.SameType(source, target, nameof(source), nameof(target));
             Copy.VerifyCanCopyPropertyValues<T>(ignoreProperties);
             this.BindingFlags = bindingFlags;
             this.source = source;
