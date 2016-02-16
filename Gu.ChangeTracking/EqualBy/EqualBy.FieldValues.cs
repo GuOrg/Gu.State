@@ -7,11 +7,27 @@ namespace Gu.ChangeTracking
 
     public static partial class EqualBy
     {
+        /// <summary>
+        /// Compares x and y for equality using field values.
+        /// If a type implements IList the items of the list are compared
+        /// </summary>
+        /// <param name="referenceHandling">
+        /// Specifies how reference types are compared.
+        /// Structural compares field values recursively.
+        /// </param>
         public static bool FieldValues<T>(T x, T y, ReferenceHandling referenceHandling)
         {
             return FieldValues(x, y, Constants.DefaultFieldBindingFlags, referenceHandling);
         }
 
+        /// <summary>
+        /// Compares x and y for equality using field values.
+        /// If a type implements IList the items of the list are compared
+        /// </summary>
+        /// <param name="referenceHandling">
+        /// Specifies how reference types are compared.
+        /// Structural compares field values recursively.
+        /// </param>
         public static bool FieldValues<T>(T x, T y, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
         {
             if (x == null && y == null)

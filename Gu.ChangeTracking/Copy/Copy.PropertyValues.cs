@@ -9,12 +9,26 @@
 
     public static partial class Copy
     {
+        /// <summary>
+        /// Copies property values from source to target.
+        /// </summary>
+        /// <param name="referenceHandling">
+        /// If Structural is used property values for sub properties are copied for the entire graph.
+        /// Activator.CreateInstance is sued to new up references so a default constructor is required, can be private
+        /// </param>
         public static void PropertyValues<T>(T source, T target, ReferenceHandling referenceHandling)
             where T : class
         {
             PropertyValues(source, target, Constants.DefaultPropertyBindingFlags, referenceHandling);
         }
 
+        /// <summary>
+        /// Copies property values from source to target.
+        /// </summary>
+        /// <param name="referenceHandling">
+        /// If Structural is used property values for sub properties are copied for the entire graph.
+        /// Activator.CreateInstance is sued to new up references so a default constructor is required, can be private
+        /// </param>
         public static void PropertyValues<T>(T source, T target, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
             where T : class
         {

@@ -7,12 +7,27 @@
 
     public static partial class EqualBy
     {
-
+        /// <summary>
+        /// Compares x and y for equality using property values.
+        /// If a type implements IList the items of the list are compared
+        /// </summary>
+        /// <param name="referenceHandling">
+        /// Specifies how reference types are compared.
+        /// Structural compares property values recursively.
+        /// </param>
         public static bool PropertyValues<T>(T x, T y, ReferenceHandling referenceHandling)
         {
             return PropertyValues(x, y, Constants.DefaultPropertyBindingFlags, referenceHandling);
         }
 
+        /// <summary>
+        /// Compares x and y for equality using property values.
+        /// If a type implements IList the items of the list are compared
+        /// </summary>
+        /// <param name="referenceHandling">
+        /// Specifies how reference types are compared.
+        /// Structural compares property values recursively.
+        /// </param>
         public static bool PropertyValues<T>(T x, T y, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
         {
             if (x == null && y == null)
