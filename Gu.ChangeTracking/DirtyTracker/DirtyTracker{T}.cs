@@ -36,7 +36,7 @@
         }
 
         public DirtyTracker(T x, T y, BindingFlags bindingFlags, params string[] ignoreProperties)
-            : this(x, y, new DirtyTrackerSettings(x?.GetType().GetIgnoreProperties(ignoreProperties), bindingFlags, ReferenceHandling.Throw))
+            : this(x, y, new DirtyTrackerSettings(x?.GetType().GetIgnoreProperties(bindingFlags, ignoreProperties), bindingFlags, ReferenceHandling.Throw))
         {
         }
 
@@ -77,7 +77,7 @@
         /// </summary>
         public static void Verify(BindingFlags bindingFlags, params string[] ignoreProperties)
         {
-            Verify(new DirtyTrackerSettings(typeof(T).GetIgnoreProperties(ignoreProperties), bindingFlags, ReferenceHandling.Throw));
+            Verify(new DirtyTrackerSettings(typeof(T).GetIgnoreProperties(bindingFlags, ignoreProperties), bindingFlags, ReferenceHandling.Throw));
         }
 
         public static void Verify(DirtyTrackerSettings settings)

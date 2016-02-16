@@ -25,6 +25,11 @@
 
         public bool IsIgnoringField(FieldInfo fieldInfo)
         {
+            if (fieldInfo.IsEventField())
+            {
+                return true;
+            }
+
             if (this.ignoredFields == null)
             {
                 return false;
