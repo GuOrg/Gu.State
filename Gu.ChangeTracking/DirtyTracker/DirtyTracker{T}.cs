@@ -18,8 +18,17 @@
     {
         private readonly T x;
         private readonly T y;
-        private readonly string[] ignoreProperties;
         private readonly HashSet<PropertyInfo> diff = new HashSet<PropertyInfo>();
+
+        private DirtyTracker(T x, T y, ReferenceHandling referenceHandling)
+            : this(x, y, Constants.DefaultPropertyBindingFlags, referenceHandling)
+        {
+        }
+
+        private DirtyTracker(T x, T y, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
+                        : this(x, y, new DirtyTrackerSettings(null, bindingFlags, referenceHandling))
+        {
+        }
 
         public DirtyTracker(T x, T y, params string[] ignoreProperties)
             : this(x, y, Constants.DefaultPropertyBindingFlags, ignoreProperties)
@@ -27,17 +36,21 @@
         }
 
         public DirtyTracker(T x, T y, BindingFlags bindingFlags, params string[] ignoreProperties)
+            : this(x, y, new DirtyTrackerSettings(x?.GetType().GetIgnoreProperties(ignoreProperties), bindingFlags, ReferenceHandling.Throw))
+        {
+        }
+
+        private DirtyTracker(T x, T y, DirtyTrackerSettings settings)
         {
             Ensure.NotNull(x, nameof(x));
             Ensure.NotNull(y, nameof(y));
             Ensure.NotSame(x, y, nameof(x), nameof(y));
             Ensure.SameType(x, y);
             Ensure.NotIs<IEnumerable>(x, nameof(x));
-            Verify(bindingFlags, ignoreProperties);
-            this.BindingFlags = bindingFlags;
+            Verify(settings);
             this.x = x;
             this.y = y;
-            this.ignoreProperties = ignoreProperties;
+            this.Settings = settings;
             this.Reset();
             x.PropertyChanged += this.OnTrackedPropertyChanged;
             y.PropertyChanged += this.OnTrackedPropertyChanged;
@@ -49,7 +62,7 @@
 
         public IEnumerable<PropertyInfo> Diff => this.diff;
 
-        public BindingFlags BindingFlags { get; }
+        public DirtyTrackerSettings Settings { get; }
 
         /// <summary>
         /// Check if <typeparamref name="T"/> can be tracked
@@ -64,13 +77,18 @@
         /// </summary>
         public static void Verify(BindingFlags bindingFlags, params string[] ignoreProperties)
         {
+            Verify(new DirtyTrackerSettings(typeof(T).GetIgnoreProperties(ignoreProperties), bindingFlags, ReferenceHandling.Throw));
+        }
+
+        public static void Verify(DirtyTrackerSettings settings)
+        {
             if (typeof(IEnumerable).IsAssignableFrom(typeof(T)))
             {
                 throw new NotSupportedException("Not supporting IEnumerable");
             }
 
-            var notDiffable = typeof(T).GetProperties(bindingFlags)
-                .Where(p => !ignoreProperties?.Contains(p.Name) == true)
+            var notDiffable = typeof(T).GetProperties(settings.BindingFlags)
+                .Where(p => !settings.IsIgnoringProperty(p))
                 .Where(p => !EqualBy.IsEquatable(p.PropertyType))
                 .ToArray();
             if (notDiffable.Any())
@@ -100,9 +118,9 @@
         {
             var before = this.diff.Count;
             this.diff.Clear();
-            foreach (var prop in this.x.GetType().GetProperties(this.BindingFlags))
+            foreach (var prop in this.x.GetType().GetProperties(this.Settings.BindingFlags))
             {
-                if (this.ignoreProperties?.Contains(prop.Name) == true)
+                if (this.Settings.IsIgnoringProperty(prop))
                 {
                     continue;
                 }
@@ -136,23 +154,23 @@
                 return;
             }
 
-            if (this.ignoreProperties?.Contains(e.PropertyName) == true)
+            var propertyInfo = sender.GetType().GetProperty(e.PropertyName, this.Settings.BindingFlags);
+            if (propertyInfo == null)
             {
                 return;
             }
 
-            var prop = this.x.GetType().GetProperty(e.PropertyName, this.BindingFlags);
-            if (prop == null)
+            if (this.Settings.IsIgnoringProperty(propertyInfo))
             {
                 return;
             }
 
-            var xv = prop.GetValue(this.x);
-            var yv = prop.GetValue(this.y);
+            var xv = propertyInfo.GetValue(this.x);
+            var yv = propertyInfo.GetValue(this.y);
             var before = this.diff.Count;
             if (!Equals(xv, yv))
             {
-                if (this.diff.Add(prop))
+                if (this.diff.Add(propertyInfo))
                 {
                     if (before == 0)
                     {
@@ -164,7 +182,7 @@
             }
             else
             {
-                if (this.diff.Remove(prop))
+                if (this.diff.Remove(propertyInfo))
                 {
                     if (before == 1)
                     {

@@ -69,6 +69,9 @@
     <Compile Include="PropertySynchronizer.cs" />
     <Compile Include="PropertySynchronizer{T}.cs" />
     <Compile Include="Settings\ChangeTrackerSettings.cs" />
+    <Compile Include="Settings\DirtyTrackerSettings.cs" />
+    <Compile Include="Settings\EqualByFieldsSettings.cs" />
+    <Compile Include="Settings\EqualByPropertiesSettings.cs" />
     <Compile Include="Settings\SpecialProperty.cs" />
     <Compile Include="Settings\SpecialType.cs" />
     <Compile Include="Copy\Copy.FieldValues.cs" />
