@@ -51,6 +51,11 @@ namespace Gu.ChangeTracking
 
         public static bool FieldValues<T>(T x, T y, BindingFlags bindingFlags, params string[] excludedFields)
         {
+            return FieldValues(x, y, new EqualByFieldsSettings(x.GetType().GetIgnoreFields(bindingFlags, excludedFields), bindingFlags, ReferenceHandling.Throw));
+        }
+
+        public static bool FieldValues<T>(T x, T y, EqualByFieldsSettings settings)
+        {
             if (x == null && y == null)
             {
                 return true;
@@ -63,23 +68,22 @@ namespace Gu.ChangeTracking
 
             Ensure.SameType(x, y, nameof(x), nameof(y));
             Ensure.NotIs<IEnumerable>(x, nameof(x));
-            var fieldInfos = x.GetType().GetFields(bindingFlags);
+            var fieldInfos = x.GetType().GetFields(settings.BindingFlags);
             foreach (var fieldInfo in fieldInfos)
             {
-                if (excludedFields?.Contains(fieldInfo.Name) == true)
-                {
-                    continue;
-                }
-
-                if (fieldInfo.IsEventField())
+                if (settings.IsIgnoringField(fieldInfo))
                 {
                     continue;
                 }
 
                 if (!IsEquatable(fieldInfo.FieldType))
                 {
-                    var message = $"Copy does not support comparing the field {fieldInfo.Name} of type {fieldInfo.FieldType}";
-                    throw new NotSupportedException(message);
+                    if (settings.ReferenceHandling == ReferenceHandling.Throw)
+                    {
+                        var message = $"Copy does not support comparing the field {fieldInfo.Name} of type {fieldInfo.FieldType}";
+                        throw new NotSupportedException(message);
+                    }
+
                 }
 
                 var xv = fieldInfo.GetValue(x);

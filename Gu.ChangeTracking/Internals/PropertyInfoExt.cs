@@ -19,7 +19,7 @@
             return Attribute.GetCustomAttribute(getMethod, typeof(CompilerGeneratedAttribute)) == null;
         }
 
-        internal static IEnumerable<PropertyInfo> GetIgnoreProperties(this Type type, string[] ignoreProperties)
+        internal static IEnumerable<PropertyInfo> GetIgnoreProperties(this Type type, BindingFlags bindingFlags, string[] ignoreProperties)
         {
             if (type == null)
             {
@@ -31,7 +31,7 @@
                 return null;
             }
 
-            var propertyInfos = type.GetProperties().Where(p => ignoreProperties.Any(x => x == p.Name)).ToArray();
+            var propertyInfos = type.GetProperties(bindingFlags).Where(p => ignoreProperties.Any(x => x == p.Name)).ToArray();
             if (propertyInfos.Length != ignoreProperties.Length)
             {
                 var missing = ignoreProperties.Where(x => propertyInfos.All(p => p.Name != x))
