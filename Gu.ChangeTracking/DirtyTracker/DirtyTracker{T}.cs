@@ -20,12 +20,12 @@
         private readonly T y;
         private readonly HashSet<PropertyInfo> diff = new HashSet<PropertyInfo>();
 
-        private DirtyTracker(T x, T y, ReferenceHandling referenceHandling)
+        internal DirtyTracker(T x, T y, ReferenceHandling referenceHandling)
             : this(x, y, Constants.DefaultPropertyBindingFlags, referenceHandling)
         {
         }
 
-        private DirtyTracker(T x, T y, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
+        internal DirtyTracker(T x, T y, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
                         : this(x, y, new DirtyTrackerSettings(null, bindingFlags, referenceHandling))
         {
         }
