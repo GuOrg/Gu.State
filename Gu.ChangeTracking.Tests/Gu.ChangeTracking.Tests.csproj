@@ -50,7 +50,12 @@
     <Compile Include="ChangeTracker\ChangeTrackerTests.throws.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerTests.PropertyChanged.cs" />
     <Compile Include="Copy\CopyStubs\ComplexType.cs" />
+    <Compile Include="Copy\CopyStubs\WithCalculatedProperty.cs" />
     <Compile Include="Copy\CopyStubs\WithComplexProperty.cs" />
+    <Compile Include="Copy\CopyStubs\WithReadonlyField.cs" />
+    <Compile Include="Copy\CopyStubs\WithSimpleProperties.cs" />
+    <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\ComplexType.cs" />
+    <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\WithComplexProperty.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerStubs\ComplexType.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerStubs\WithComplexProperty.cs" />
     <Compile Include="Copy\CopyTests.PropertyValues.cs" />
@@ -59,9 +64,8 @@
     <Compile Include="EqualBy\EqualBy.Shared.cs" />
     <Compile Include="EqualBy\EqualByTests.PropertyValues.cs" />
     <Compile Include="Internals\CollectionItemTrackerTests.cs" />
-    <Compile Include="Copy\CopyStubs\WithCalculatedProperty.cs" />
-    <Compile Include="Copy\CopyStubs\WithReadonlyField.cs" />
-    <Compile Include="Copy\CopyStubs\WithSimpleProperties.cs" />
+    <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\WithCalculatedProperty.cs" />
+    <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\WithSimpleProperties.cs" />
     <Compile Include="Copy\CopyTests.FieldValues.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerTests.Simple.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerStubs\BaseClass.cs" />
@@ -76,8 +80,9 @@
     <Compile Include="ChangeTracker\ChangeTrackerStubs\Level.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerStubs\SpecialCollection.cs" />
     <Compile Include="EqualBy\EqualByTests.FieldValues.cs" />
+    <Compile Include="PropertySynchronizer\PropertySynchronizerTests.Complex.cs" />
     <Compile Include="Settings\ChangeTrackerSettingsTests.cs" />
-    <Compile Include="SynchronizerTests.cs" />
+    <Compile Include="PropertySynchronizer\PropertySynchronizerTests.Simple.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

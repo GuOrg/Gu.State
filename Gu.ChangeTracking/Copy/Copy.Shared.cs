@@ -68,7 +68,7 @@
             }
         }
 
-        private static bool IsCopyableType(Type type)
+        internal static bool IsCopyableType(Type type)
         {
             return type.IsValueType || type == typeof(string);
         }

@@ -6,6 +6,12 @@ namespace Gu.ChangeTracking
 
     public static class PropertySynchronizer
     {
+        public static IDisposable Create<T>(T source, T destination, ReferenceHandling referenceHandling)
+            where T : class, INotifyPropertyChanged
+        {
+            return new PropertySynchronizer<T>(source, destination, referenceHandling);
+        }
+
         public static IDisposable Create<T>(T source, T destination, params string[] excludedProperties)
             where T : class, INotifyPropertyChanged
         {
@@ -16,6 +22,12 @@ namespace Gu.ChangeTracking
             where T : class, INotifyPropertyChanged
         {
             return new PropertySynchronizer<T>(source, destination, bindingFlags, excludedProperties);
+        }
+
+        public static IDisposable Create<T>(T source, T target, CopyPropertiesSettings settings)
+                where T : class, INotifyPropertyChanged
+        {
+            return new PropertySynchronizer<T>(source, target, settings);
         }
 
         public static void VerifyCanSyncronize<T>(params string[] excludedProperties)
