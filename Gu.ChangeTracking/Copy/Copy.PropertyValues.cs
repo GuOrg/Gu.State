@@ -122,47 +122,36 @@
         /// </summary>
         public static void VerifyCanCopyPropertyValues<T>(CopyPropertiesSettings settings)
         {
-            if (typeof(IEnumerable).IsAssignableFrom(typeof(T)))
+            VerifyCanCopyPropertyValues(typeof(T), settings);
+        }
+
+        public static void VerifyCanCopyPropertyValues(Type type, CopyPropertiesSettings settings)
+        {
+            if (typeof(IEnumerable).IsAssignableFrom(type))
             {
                 throw new NotSupportedException("Not supporting IEnumerable");
             }
 
-            var propertyInfos = typeof(T).GetProperties(settings.BindingFlags)
-                                         .Where(p => !settings.IsIgnoringProperty(p))
-                                         .ToArray();
-
-            VerifyCanCopyPropertyValues(propertyInfos);
-        }
-
-        internal static void VerifyCanCopyPropertyValues(IReadOnlyList<PropertyInfo> properties)
-        {
-            ////var missingSetters = properties.Where(p => p.SetMethod == null).ToArray();
-
-            var illegalTypes = properties.Where(p => !IsCopyableType(p.PropertyType))
-                                         .ToArray();
-
-            if ( /* missingSetters.Any() || */ illegalTypes.Any())
+            var propertyInfos = type.GetProperties(settings.BindingFlags);
+            var stringBuilder = new StringBuilder();
+            foreach (var propertyInfo in propertyInfos)
             {
-                var stringBuilder = new StringBuilder();
-                ////if (missingSetters.Any())
-                ////{
-                ////    stringBuilder.AppendLine("Missing setters:");
-                ////    foreach (var prop in missingSetters)
-                ////    {
-                ////        stringBuilder.AppendLine($"The property {prop.Name} does not have a setter");
-                ////    }
-                ////}
-
-                if (illegalTypes.Any())
+                if (settings.IsIgnoringProperty(propertyInfo) ||
+                    settings.GetSpecialCopyProperty(propertyInfo) != null)
                 {
-                    stringBuilder.AppendLine("Illegal types:");
-                    foreach (var prop in illegalTypes)
-                    {
-                        stringBuilder.AppendLine($"The property {prop.Name} is not of a supported type.");
-                        stringBuilder.AppendLine($" Expected valuetype or string but was {prop.PropertyType}");
-                    }
+                    continue;
                 }
 
+                if (settings.ReferenceHandling == ReferenceHandling.Throw && !IsCopyableType(propertyInfo.PropertyType))
+                {
+                    stringBuilder.AppendLine($"The property {type.Name}{propertyInfo.Name} is not of a supported type.");
+                    stringBuilder.AppendLine($"Expected valuetype or string but was {propertyInfo.PropertyType}");
+                    stringBuilder.AppendLine($"Or specify ReferenceHandling");
+                }
+            }
+
+            if (stringBuilder.Length > 0)
+            {
                 var message = stringBuilder.ToString();
                 throw new NotSupportedException(message);
             }

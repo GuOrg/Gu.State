@@ -3,7 +3,6 @@ namespace Gu.ChangeTracking
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Linq;
     using System.Reflection;
 
     /// <summary>
@@ -14,6 +13,9 @@ namespace Gu.ChangeTracking
     {
         private readonly T source;
         private readonly T target;
+        private readonly Lazy<Dictionary<object, PropertySynchronizer<INotifyPropertyChanged>>> subPropertySynchronizers =
+            new Lazy<Dictionary<object, PropertySynchronizer<INotifyPropertyChanged>>>(
+                () => new Dictionary<object, PropertySynchronizer<INotifyPropertyChanged>>());
 
         public PropertySynchronizer(T source, T target, ReferenceHandling referenceHandling)
             : this(source, target, Constants.DefaultPropertyBindingFlags, referenceHandling)
@@ -21,7 +23,7 @@ namespace Gu.ChangeTracking
         }
 
         public PropertySynchronizer(T source, T target, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
-                        : this(source, target, new CopyPropertiesSettings(null, bindingFlags, referenceHandling))
+            : this(source, target, new CopyPropertiesSettings(null, bindingFlags, referenceHandling))
         {
         }
 
@@ -31,7 +33,12 @@ namespace Gu.ChangeTracking
         }
 
         public PropertySynchronizer(T source, T target, BindingFlags bindingFlags, params string[] ignoreProperties)
-            : this(source, target, new CopyPropertiesSettings(source?.GetType().GetIgnoreProperties(bindingFlags, ignoreProperties), bindingFlags, ReferenceHandling.Throw))
+            : this(source,
+                target,
+                new CopyPropertiesSettings(
+                    source?.GetType().GetIgnoreProperties(bindingFlags, ignoreProperties),
+                    bindingFlags,
+                    ReferenceHandling.Throw))
         {
         }
 
@@ -43,42 +50,93 @@ namespace Gu.ChangeTracking
             Ensure.SameType(source, target, nameof(source), nameof(target));
             Copy.VerifyCanCopyPropertyValues<T>(settings);
             this.Settings = settings;
-            this.source = source;
             this.target = target;
-            var allProperties = source.GetType().GetProperties(settings.BindingFlags);
-            this.IgnoredProperties = allProperties.Where(settings.IsIgnoringProperty).ToArray();
-            this.TrackedProperties = allProperties.Except(this.IgnoredProperties).ToArray();
+            this.source = source;
             this.source.PropertyChanged += this.OnSourcePropertyChanged;
             Copy.PropertyValues(source, target, settings);
+            foreach (var propertyInfo in this.source.GetType().GetProperties(this.Settings.BindingFlags))
+            {
+                if (this.Settings.IsIgnoringProperty(propertyInfo) ||
+                    this.Settings.GetSpecialCopyProperty(propertyInfo) != null)
+                {
+                    continue;
+                }
+
+                if (!Copy.IsCopyableType(propertyInfo.PropertyType))
+                {
+                    this.UpdateSubPropertySynchronizer(propertyInfo);
+                }
+            }
         }
 
         public CopyPropertiesSettings Settings { get; }
 
-        public IReadOnlyList<PropertyInfo> TrackedProperties { get; }
-
-        public IReadOnlyList<PropertyInfo> IgnoredProperties { get; }
-
         public void Dispose()
         {
             this.source.PropertyChanged -= this.OnSourcePropertyChanged;
+            if (this.subPropertySynchronizers.IsValueCreated)
+            {
+                foreach (var propertySynchronizer in this.subPropertySynchronizers.Value)
+                {
+                    propertySynchronizer.Value.Dispose();
+                }
+            }
         }
 
         private void OnSourcePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (this.IgnoredProperties.Any(p => p.Name == e.PropertyName))
-            {
-                return;
-            }
-
             if (string.IsNullOrEmpty(e.PropertyName))
             {
-                Copy.WritableProperties(this.source, this.target, this.TrackedProperties, this.Settings);
-                Copy.VerifyReadonlyPropertiesAreEqual(this.source, this.target, this.TrackedProperties, this.Settings);
+                Copy.PropertyValues(this.source, this.target, this.Settings);
                 return;
             }
 
-            var propertyInfo = this.source.GetType().GetProperty(e.PropertyName, this.Settings.BindingFlags);
-            Copy.PropertyValue(this.source, this.target, propertyInfo);
+            var propertyInfo = this.source.GetType()
+                                   .GetProperty(e.PropertyName, this.Settings.BindingFlags);
+            if (propertyInfo == null)
+            {
+                return;
+            }
+
+            if (this.Settings.IsIgnoringProperty(propertyInfo))
+            {
+                return;
+            }
+
+            var specialCopyProperty = this.Settings.GetSpecialCopyProperty(propertyInfo);
+            if (specialCopyProperty != null)
+            {
+                specialCopyProperty.CopyValue(this.source, this.target);
+                return;
+            }
+
+            if (!Copy.IsCopyableType(propertyInfo.PropertyType))
+            {
+                Copy.PropertyValues(this.source, this.target, this.Settings);
+                this.UpdateSubPropertySynchronizer(propertyInfo);
+            }
+            else
+            {
+                Copy.PropertyValue(this.source, this.target, propertyInfo);
+            }
+        }
+
+        private void UpdateSubPropertySynchronizer(PropertyInfo propertyInfo)
+        {
+            var propertySynchronizers = this.subPropertySynchronizers.Value;
+            PropertySynchronizer<INotifyPropertyChanged> synchronizer;
+            var sv = (INotifyPropertyChanged)propertyInfo.GetValue(this.source);
+            var tv = (INotifyPropertyChanged)propertyInfo.GetValue(this.target);
+
+            if (propertySynchronizers.TryGetValue(propertyInfo, out synchronizer))
+            {
+                synchronizer.Dispose();
+            }
+            if (sv != null)
+            {
+                synchronizer = new PropertySynchronizer<INotifyPropertyChanged>(sv, tv, this.Settings);
+                propertySynchronizers[propertyInfo] = synchronizer;
+            }
         }
     }
 }

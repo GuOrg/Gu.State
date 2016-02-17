@@ -1,4 +1,4 @@
-﻿namespace Gu.ChangeTracking.Tests.CopyStubs
+﻿namespace Gu.ChangeTracking.Tests.PropertySynchronizerStubs
 {
     using System;
     using System.ComponentModel;
