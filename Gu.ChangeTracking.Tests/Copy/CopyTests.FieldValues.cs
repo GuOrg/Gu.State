@@ -86,6 +86,18 @@
             }
 
             [Test]
+            public void WithComplexFieldThrowsWithoutReferenceHandling()
+            {
+                var source = new WithComplexProperty();
+                var target = new WithComplexProperty();
+                var exception = Assert.Throws<NotSupportedException>(() => Copy.FieldValues(source, target));
+                var expectedMessage = "Only fields with types struct or string are supported without specifying ReferenceHandling\r\n" +
+                                      "Field WithComplexProperty.<ComplexType>k__BackingField is a reference type (ComplexType).\r\n" +
+                                      "Use the overload Copy.FieldValues(source, target, ReferenceHandling) if you want to copy a graph";
+                Assert.AreEqual(expectedMessage, exception.Message);
+            }
+
+            [Test]
             public void WithComplexFieldHappyPathStructural()
             {
                 var source = new WithComplexProperty { Name = "a", Value = 1, ComplexType = new ComplexType { Name = "b", Value = 2 } };

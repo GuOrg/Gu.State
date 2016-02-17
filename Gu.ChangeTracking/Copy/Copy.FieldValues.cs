@@ -9,7 +9,7 @@
     public static partial class Copy
     {
         public static void FieldValues<T>(T source, T target, ReferenceHandling referenceHandling)
-    where T : class
+            where T : class
         {
             FieldValues(source, target, Constants.DefaultFieldBindingFlags, referenceHandling);
         }
@@ -17,69 +17,16 @@
         public static void FieldValues<T>(T source, T target, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
             where T : class
         {
-            Ensure.NotNull(source, nameof(source));
-            Ensure.NotNull(target, nameof(target));
-            Ensure.SameType(source, target);
-            var sourceList = source as IList;
-            var targetList = target as IList;
-            if (sourceList != null && targetList != null)
-            {
-                SyncLists(sourceList, targetList, FieldValues, referenceHandling);
-                return;
-            }
-
-            Ensure.NotIs<IEnumerable>(source, nameof(source));
-
-            var fieldInfos = source.GetType().GetFields(bindingFlags);
-            foreach (var fieldInfo in fieldInfos)
-            {
-                if (fieldInfo.IsEventField())
-                {
-                    continue;
-                }
-
-                if (!IsCopyableType(fieldInfo.FieldType) && !fieldInfo.IsInitOnly)
-                {
-                    var sourceValue = fieldInfo.GetValue(source);
-                    if (sourceValue == null)
-                    {
-                        fieldInfo.SetValue(target, null);
-                        continue;
-                    }
-
-                    switch (referenceHandling)
-                    {
-                        case ReferenceHandling.Reference:
-                            fieldInfo.SetValue(target, sourceValue);
-                            continue;
-                        case ReferenceHandling.Structural:
-                            var targetValue = fieldInfo.GetValue(target);
-                            if (targetValue != null)
-                            {
-                                FieldValues(sourceValue, targetValue, referenceHandling);
-                                continue;
-                            }
-
-                            targetValue = Activator.CreateInstance(sourceValue.GetType(), true);
-                            FieldValues(sourceValue, targetValue, referenceHandling);
-                            fieldInfo.SetValue(target, targetValue);
-                            continue;
-                        default:
-                            throw new ArgumentOutOfRangeException(nameof(referenceHandling), referenceHandling, null);
-                    }
-                }
-                else
-                {
-                    FieldValue(source, target, fieldInfo);
-                }
-            }
+            var settings = new CopyFieldsSettings(null, bindingFlags, referenceHandling);
+            FieldValues(source, target, settings);
         }
 
         /// <summary>
         /// Copies field values from source to target.
         /// Only valur types and string are allowed.
         /// </summary>
-        public static void FieldValues<T>(T source, T target, params string[] excludedFields) where T : class
+        public static void FieldValues<T>(T source, T target, params string[] excludedFields) 
+            where T : class
         {
             FieldValues(source, target, Constants.DefaultFieldBindingFlags, excludedFields);
         }
@@ -88,33 +35,76 @@
         /// Copies field values from source to target.
         /// Only valur types and string are allowed.
         /// </summary>
-        public static void FieldValues<T>(T source, T target, BindingFlags bindingFlags, params string[] excludedFields) where T : class
+        public static void FieldValues<T>(T source, T target, BindingFlags bindingFlags, params string[] excludedFields) 
+            where T : class
+        {
+            var settings = new CopyFieldsSettings(source?.GetType().GetIgnoreFields(bindingFlags, excludedFields), bindingFlags, ReferenceHandling.Throw);
+            FieldValues(source, target, settings);
+        }
+
+        public static void FieldValues<T>(T source, T target, CopyFieldsSettings settings)
+            where T : class
         {
             Ensure.NotNull(source, nameof(source));
             Ensure.NotNull(target, nameof(target));
             Ensure.SameType(source, target);
+            var sourceList = source as IList;
+            var targetList = target as IList;
+            if (sourceList != null && targetList != null && settings.ReferenceHandling != ReferenceHandling.Throw)
+            {
+                SyncLists(sourceList, targetList, FieldValues, settings);
+                return;
+            }
+
             Ensure.NotIs<IEnumerable>(source, nameof(source));
 
-            var fieldInfos = source.GetType().GetFields(bindingFlags);
+            var fieldInfos = source.GetType().GetFields(settings.BindingFlags);
             foreach (var fieldInfo in fieldInfos)
             {
-                if (excludedFields?.Contains(fieldInfo.Name) == true)
+                if (settings.IsIgnoringField(fieldInfo))
                 {
                     continue;
                 }
 
-                if (fieldInfo.IsEventField())
+                if (!IsCopyableType(fieldInfo.FieldType) && !fieldInfo.IsInitOnly)
                 {
-                    continue;
-                }
+                    var sourceValue = fieldInfo.GetValue(source);
+                    switch (settings.ReferenceHandling)
+                    {
+                        case ReferenceHandling.Reference:
+                            fieldInfo.SetValue(target, sourceValue);
+                            continue;
+                        case ReferenceHandling.Structural:
+                            if (sourceValue == null)
+                            {
+                                fieldInfo.SetValue(target, null);
+                                continue;
+                            }
 
-                if (!IsCopyableType(fieldInfo.FieldType))
+                            var targetValue = fieldInfo.GetValue(target);
+                            if (targetValue != null)
+                            {
+                                FieldValues(sourceValue, targetValue, settings);
+                                continue;
+                            }
+
+                            targetValue = Activator.CreateInstance(sourceValue.GetType(), true);
+                            FieldValues(sourceValue, targetValue, settings);
+                            fieldInfo.SetValue(target, targetValue);
+                            continue;
+                        case ReferenceHandling.Throw:
+                            var message = "Only fields with types struct or string are supported without specifying ReferenceHandling\r\n" +
+                                         $"Field {source.GetType().Name}.{fieldInfo.Name} is a reference type ({fieldInfo.FieldType.Name}).\r\n" +
+                                          "Use the overload Copy.FieldValues(source, target, ReferenceHandling) if you want to copy a graph";
+                            throw new NotSupportedException(message);
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);
+                    }
+                }
+                else
                 {
-                    var message = $"Copy does not support copying the field {fieldInfo.Name} of type {fieldInfo.FieldType}";
-                    throw new NotSupportedException(message);
+                    FieldValue(source, target, fieldInfo);
                 }
-
-                FieldValue(source, target, fieldInfo);
             }
         }
 

@@ -1,9 +1,9 @@
-﻿using System;
-using System.Diagnostics;
-using System.Reflection;
-
-namespace Gu.ChangeTracking
+﻿namespace Gu.ChangeTracking
 {
+    using System;
+    using System.Diagnostics;
+    using System.Reflection;
+
     [DebuggerDisplay("Name: {Name} TrackAs: {TrackAs}")]
     [Serializable]
     public class SpecialProperty

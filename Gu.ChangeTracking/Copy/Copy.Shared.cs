@@ -5,7 +5,8 @@
 
     public static partial class Copy
     {
-        private static void SyncLists(IList sourceList, IList targetList, Action<object, object, ReferenceHandling> syncItem, ReferenceHandling referenceHandling)
+        private static void SyncLists<T>(IList sourceList, IList targetList, Action<object, object, T> syncItem, T settings)
+            where T : CopySettings
         {
             for (int i = 0; i < sourceList.Count; i++)
             {
@@ -19,7 +20,7 @@
                 if (!IsCopyableType(sv.GetType()))
                 {
                     var tv = targetList.Count > i ? targetList[i] : null;
-                    switch (referenceHandling)
+                    switch (settings.ReferenceHandling)
                     {
                         case ReferenceHandling.Reference:
                             if (ReferenceEquals(sv, tv))
@@ -36,10 +37,10 @@
                                 SetItem(targetList, i, tv);
                             }
 
-                            syncItem(sv, tv, referenceHandling);
+                            syncItem(sv, tv, settings);
                             continue;
                         default:
-                            throw new ArgumentOutOfRangeException(nameof(referenceHandling), referenceHandling, null);
+                            throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);
                     }
                 }
                 else

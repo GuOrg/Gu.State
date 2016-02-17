@@ -89,12 +89,15 @@
             }
 
             [Test]
-            public void WithComplexPropertyThrowsWithoutSpecialHandling()
+            public void WithComplexPropertyThrowsWithoutReferenceHandling()
             {
                 var source = new WithComplexProperty();
                 var target = new WithComplexProperty();
-                var exception = Assert.Throws<InvalidOperationException>(() => Copy.PropertyValues(source, target));
-                Assert.Inconclusive("", exception.Message);
+                var exception = Assert.Throws<NotSupportedException>(() => Copy.PropertyValues(source, target));
+                var expectedMessage = "Only properties with types struct or string are supported without specifying ReferenceHandling\r\n" +
+                                      "Property WithComplexProperty.ComplexType is a reference type (ComplexType).\r\n" +
+                                      "Use the overload Copy.PropertyValues(source, target, ReferenceHandling) if you want to copy a graph";
+                Assert.AreEqual(expectedMessage, exception.Message);
             }
 
             [Test]

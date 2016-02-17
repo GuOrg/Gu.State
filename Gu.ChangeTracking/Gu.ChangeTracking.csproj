@@ -41,8 +41,11 @@
     <Compile Include="ChangeTracker\ChangeTracker.cs" />
     <Compile Include="Contracts\ISpecialCopyProperty.cs" />
     <Compile Include="Copy\Copy.Shared.cs" />
+    <Compile Include="Copy\Settings\CopyFieldsSettings.cs" />
+    <Compile Include="Copy\Settings\CopyPropertiesSettings.cs" />
+    <Compile Include="Copy\Settings\CopySettings.cs" />
     <Compile Include="ReferenceHandling.cs" />
-    <Compile Include="Copy\SpecialCopyProperty.cs" />
+    <Compile Include="Copy\Settings\SpecialCopyProperty.cs" />
     <Compile Include="Copy\Copy.PropertyValues.cs" />
     <Compile Include="EqualBy\EqualBy.FieldValues.cs" />
     <Compile Include="EqualBy\EqualBy.PropertyValues.cs" />
@@ -70,9 +73,9 @@
     <Compile Include="PropertySynchronizer\PropertySynchronizer{T}.cs" />
     <Compile Include="ChangeTracker\Settings\ChangeTrackerSettings.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerSettings.cs" />
-    <Compile Include="EqualBy\EqualByFieldsSettings.cs" />
-    <Compile Include="EqualBy\EqualByPropertiesSettings.cs" />
-    <Compile Include="EqualBy\EqualBySettings.cs" />
+    <Compile Include="EqualBy\Settings\EqualByFieldsSettings.cs" />
+    <Compile Include="EqualBy\Settings\EqualByPropertiesSettings.cs" />
+    <Compile Include="EqualBy\Settings\EqualBySettings.cs" />
     <Compile Include="ChangeTracker\Settings\SpecialProperty.cs" />
     <Compile Include="ChangeTracker\Settings\SpecialType.cs" />
     <Compile Include="Copy\Copy.FieldValues.cs" />

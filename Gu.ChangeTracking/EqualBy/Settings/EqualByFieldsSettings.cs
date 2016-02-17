@@ -9,9 +9,9 @@
         private readonly HashSet<FieldInfo> ignoredFields;
 
         public EqualByFieldsSettings(IEnumerable<FieldInfo> ignoredFields, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
-            : base(bindingFlags,referenceHandling)
+            : base(bindingFlags, referenceHandling)
         {
-            this.ignoredFields = this.ignoredFields != null
+            this.ignoredFields = ignoredFields != null
                                      ? new HashSet<FieldInfo>(ignoredFields)
                                      : null;
         }

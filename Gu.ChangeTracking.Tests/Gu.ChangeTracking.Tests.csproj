@@ -51,7 +51,11 @@
     <Compile Include="ChangeTracker\ChangeTrackerTests.PropertyChanged.cs" />
     <Compile Include="Copy\CopyStubs\ComplexType.cs" />
     <Compile Include="Copy\CopyStubs\WithComplexProperty.cs" />
+    <Compile Include="DirtyTracker\DirtyTrackerStubs\ComplexType.cs" />
+    <Compile Include="DirtyTracker\DirtyTrackerStubs\WithComplexProperty.cs" />
     <Compile Include="Copy\CopyTests.PropertyValues.cs" />
+    <Compile Include="DirtyTracker\DirtyTrackerTests.Complex.cs" />
+    <Compile Include="DirtyTracker\DirtyTrackerStubs\SimpleDirtyTrackClass.cs" />
     <Compile Include="EqualBy\EqualBy.Shared.cs" />
     <Compile Include="EqualBy\EqualByTests.PropertyValues.cs" />
     <Compile Include="Internals\CollectionItemTrackerTests.cs" />
@@ -59,7 +63,7 @@
     <Compile Include="Copy\CopyStubs\WithReadonlyField.cs" />
     <Compile Include="Copy\CopyStubs\WithSimpleProperties.cs" />
     <Compile Include="Copy\CopyTests.FieldValues.cs" />
-    <Compile Include="DirtyTrackerTests.cs" />
+    <Compile Include="DirtyTracker\DirtyTrackerTests.Simple.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerStubs\BaseClass.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerStubs\DerivedClass.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerStubs\IBaseClass.cs" />

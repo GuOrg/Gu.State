@@ -11,7 +11,7 @@
         public EqualByPropertiesSettings(IEnumerable<PropertyInfo> ignoredProperties, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
             : base(bindingFlags,referenceHandling)
         {
-            this.ignoredProperties = this.ignoredProperties != null
+            this.ignoredProperties = ignoredProperties != null
                                          ? new HashSet<PropertyInfo>(ignoredProperties)
                                          : null;
         }

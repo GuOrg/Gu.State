@@ -15,48 +15,44 @@ namespace Gu.ChangeTracking
         private readonly T source;
         private readonly T target;
 
-        //public PropertySynchronizer(T source, T target, ReferenceHandling referenceHandling)
-        //    : this(source, target, Constants.DefaultPropertyBindingFlags, referenceHandling)
-        //{
-        //}
+        public PropertySynchronizer(T source, T target, ReferenceHandling referenceHandling)
+            : this(source, target, Constants.DefaultPropertyBindingFlags, referenceHandling)
+        {
+        }
 
-        //public PropertySynchronizer(T source, T target, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
-        //{
-        //    Ensure.NotSame(source, target, nameof(source), nameof(target));
-        //    Ensure.NotNull(source, nameof(source));
-        //    Ensure.NotNull(target, nameof(target));
-        //    Ensure.SameType(source, target, nameof(source), nameof(target));
-        //    this.BindingFlags = bindingFlags;
-        //    this.source = source;
-        //    this.target = target;
-        //    this.TrackedProperties = source.GetType().GetProperties(bindingFlags);
-        //    this.source.PropertyChanged += this.OnSourcePropertyChanged;
-        //    Copy.PropertyValues(source, target, referenceHandling);
-        //}
+        public PropertySynchronizer(T source, T target, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
+                        : this(source, target, new CopyPropertiesSettings(null, bindingFlags, referenceHandling))
+        {
+        }
 
-        public PropertySynchronizer(T source, T target, string[] ignoreProperties)
+        public PropertySynchronizer(T source, T target, params string[] ignoreProperties)
             : this(source, target, Constants.DefaultPropertyBindingFlags, ignoreProperties)
         {
         }
 
-        public PropertySynchronizer(T source, T target, BindingFlags bindingFlags, string[] ignoreProperties)
+        public PropertySynchronizer(T source, T target, BindingFlags bindingFlags, params string[] ignoreProperties)
+            : this(source, target, new CopyPropertiesSettings(source?.GetType().GetIgnoreProperties(bindingFlags, ignoreProperties), bindingFlags, ReferenceHandling.Throw))
+        {
+        }
+
+        public PropertySynchronizer(T source, T target, CopyPropertiesSettings settings)
         {
             Ensure.NotSame(source, target, nameof(source), nameof(target));
             Ensure.NotNull(source, nameof(source));
             Ensure.NotNull(target, nameof(target));
             Ensure.SameType(source, target, nameof(source), nameof(target));
-            Copy.VerifyCanCopyPropertyValues<T>(ignoreProperties);
-            this.BindingFlags = bindingFlags;
+            Copy.VerifyCanCopyPropertyValues<T>(settings);
+            this.Settings = settings;
             this.source = source;
             this.target = target;
-            var allProperties = source.GetType().GetProperties(bindingFlags);
-            this.IgnoredProperties = allProperties.Where(p => ignoreProperties.Contains(p.Name)).ToArray();
+            var allProperties = source.GetType().GetProperties(settings.BindingFlags);
+            this.IgnoredProperties = allProperties.Where(settings.IsIgnoringProperty).ToArray();
             this.TrackedProperties = allProperties.Except(this.IgnoredProperties).ToArray();
             this.source.PropertyChanged += this.OnSourcePropertyChanged;
-            Copy.PropertyValues(source, target, ignoreProperties);
+            Copy.PropertyValues(source, target, settings);
         }
 
-        public BindingFlags BindingFlags { get; }
+        public CopyPropertiesSettings Settings { get; }
 
         public IReadOnlyList<PropertyInfo> TrackedProperties { get; }
 
@@ -76,12 +72,12 @@ namespace Gu.ChangeTracking
 
             if (string.IsNullOrEmpty(e.PropertyName))
             {
-                Copy.WritableProperties(this.source, this.target, this.TrackedProperties, null);
-                Copy.VerifyReadonlyPropertiesAreEqual(this.source, this.target, this.TrackedProperties, null);
+                Copy.WritableProperties(this.source, this.target, this.TrackedProperties, this.Settings);
+                Copy.VerifyReadonlyPropertiesAreEqual(this.source, this.target, this.TrackedProperties, this.Settings);
                 return;
             }
 
-            var propertyInfo = this.source.GetType().GetProperty(e.PropertyName, this.BindingFlags);
+            var propertyInfo = this.source.GetType().GetProperty(e.PropertyName, this.Settings.BindingFlags);
             Copy.PropertyValue(this.source, this.target, propertyInfo);
         }
     }

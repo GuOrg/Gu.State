@@ -5,6 +5,18 @@ namespace Gu.ChangeTracking
 
     public static class DirtyTracker
     {
+        internal static DirtyTracker<T> Track<T>(T x, T y, ReferenceHandling referenceHandling)
+            where T : class, INotifyPropertyChanged
+        {
+            return new DirtyTracker<T>(x, y, referenceHandling);
+        }
+
+        internal static DirtyTracker<T> Track<T>(T x, T y, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
+            where T : class, INotifyPropertyChanged
+        {
+            return new DirtyTracker<T>(x, y, bindingFlags, referenceHandling);
+        }
+
         public static DirtyTracker<T> Track<T>(T x, T y, params string[] ignoreProperties)
             where T : class, INotifyPropertyChanged
         {
