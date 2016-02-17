@@ -46,9 +46,9 @@
     </When>
   </Choose>
   <ItemGroup>
-    <Compile Include="ChangeTrackerTests.Collection.cs" />
-    <Compile Include="ChangeTrackerTests.throws.cs" />
-    <Compile Include="ChangeTrackerTests.PropertyChanged.cs" />
+    <Compile Include="ChangeTracker\ChangeTrackerTests.Collection.cs" />
+    <Compile Include="ChangeTracker\ChangeTrackerTests.throws.cs" />
+    <Compile Include="ChangeTracker\ChangeTrackerTests.PropertyChanged.cs" />
     <Compile Include="Copy\CopyStubs\ComplexType.cs" />
     <Compile Include="Copy\CopyStubs\WithComplexProperty.cs" />
     <Compile Include="Copy\CopyTests.PropertyValues.cs" />
@@ -60,17 +60,17 @@
     <Compile Include="Copy\CopyStubs\WithSimpleProperties.cs" />
     <Compile Include="Copy\CopyTests.FieldValues.cs" />
     <Compile Include="DirtyTrackerTests.cs" />
-    <Compile Include="ChangeTrackerStubs\BaseClass.cs" />
-    <Compile Include="ChangeTrackerStubs\DerivedClass.cs" />
-    <Compile Include="ChangeTrackerStubs\IBaseClass.cs" />
-    <Compile Include="ChangeTrackerStubs\WithLevel.cs" />
-    <Compile Include="ChangeTrackerStubs\WithList.cs" />
-    <Compile Include="ChangeTrackerStubs\WithIgnoredProperty.cs" />
-    <Compile Include="ChangeTrackerStubs\WithIllegalObject.cs" />
-    <Compile Include="ChangeTrackerStubs\IllegalEnumerable.cs" />
-    <Compile Include="ChangeTrackerStubs\IllegalObject.cs" />
-    <Compile Include="ChangeTrackerStubs\Level.cs" />
-    <Compile Include="ChangeTrackerStubs\SpecialCollection.cs" />
+    <Compile Include="ChangeTracker\ChangeTrackerStubs\BaseClass.cs" />
+    <Compile Include="ChangeTracker\ChangeTrackerStubs\DerivedClass.cs" />
+    <Compile Include="ChangeTracker\ChangeTrackerStubs\IBaseClass.cs" />
+    <Compile Include="ChangeTracker\ChangeTrackerStubs\WithLevel.cs" />
+    <Compile Include="ChangeTracker\ChangeTrackerStubs\WithList.cs" />
+    <Compile Include="ChangeTracker\ChangeTrackerStubs\WithIgnoredProperty.cs" />
+    <Compile Include="ChangeTracker\ChangeTrackerStubs\WithIllegalObject.cs" />
+    <Compile Include="ChangeTracker\ChangeTrackerStubs\IllegalEnumerable.cs" />
+    <Compile Include="ChangeTracker\ChangeTrackerStubs\IllegalObject.cs" />
+    <Compile Include="ChangeTracker\ChangeTrackerStubs\Level.cs" />
+    <Compile Include="ChangeTracker\ChangeTrackerStubs\SpecialCollection.cs" />
     <Compile Include="EqualBy\EqualByTests.FieldValues.cs" />
     <Compile Include="Settings\ChangeTrackerSettingsTests.cs" />
     <Compile Include="SynchronizerTests.cs" />
