@@ -9,10 +9,10 @@
 
     public class ComplexType : INotifyPropertyChanged
     {
+        public static readonly TestComparer Comparer = new TestComparer();
+
         private string name;
         private int value;
-
-        public static TestComparer Comparer => new TestComparer();
 
         public ComplexType()
         {

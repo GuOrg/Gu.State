@@ -55,6 +55,8 @@
     <Compile Include="Copy\CopyStubs\WithListProperty.cs" />
     <Compile Include="Copy\CopyStubs\WithReadonlyField.cs" />
     <Compile Include="Copy\CopyStubs\WithSimpleProperties.cs" />
+    <Compile Include="DirtyTracker\DirtyTrackerStubs\WithObservableCollectionProperty.cs" />
+    <Compile Include="DirtyTracker\DirtyTrackerTests.Collection.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\ComplexType.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\WithComplexProperty.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerStubs\ComplexType.cs" />
