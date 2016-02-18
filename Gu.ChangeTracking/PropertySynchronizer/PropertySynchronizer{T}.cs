@@ -1,7 +1,9 @@
 namespace Gu.ChangeTracking
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
+    using System.Collections.Specialized;
     using System.ComponentModel;
     using System.Reflection;
 
@@ -13,7 +15,8 @@ namespace Gu.ChangeTracking
     {
         private readonly T source;
         private readonly T target;
-        private readonly Lazy<Dictionary<object, PropertySynchronizer<INotifyPropertyChanged>>> subPropertySynchronizers =
+        private readonly ItemSynchronizerCollection itemSynchronizers = new ItemSynchronizerCollection();
+        private readonly Lazy<Dictionary<object, PropertySynchronizer<INotifyPropertyChanged>>> propertySynchronizers =
             new Lazy<Dictionary<object, PropertySynchronizer<INotifyPropertyChanged>>>(
                 () => new Dictionary<object, PropertySynchronizer<INotifyPropertyChanged>>());
 
@@ -52,19 +55,29 @@ namespace Gu.ChangeTracking
             this.Settings = settings;
             this.target = target;
             this.source = source;
-            this.source.PropertyChanged += this.OnSourcePropertyChanged;
-            Copy.PropertyValues(source, target, settings);
-            foreach (var propertyInfo in this.source.GetType().GetProperties(this.Settings.BindingFlags))
+            var notifyCollectionChanged = source as INotifyCollectionChanged;
+            if (notifyCollectionChanged != null)
             {
-                if (this.Settings.IsIgnoringProperty(propertyInfo) ||
-                    this.Settings.GetSpecialCopyProperty(propertyInfo) != null)
+                notifyCollectionChanged.CollectionChanged += this.OnSourceCollectionChanged;
+                Copy.PropertyValues(source, target, settings);
+                this.ResetItemSynchronizers();
+            }
+            else
+            {
+                this.source.PropertyChanged += this.OnSourcePropertyChanged;
+                Copy.PropertyValues(source, target, settings);
+                foreach (var propertyInfo in this.source.GetType().GetProperties(this.Settings.BindingFlags))
                 {
-                    continue;
-                }
+                    if (this.Settings.IsIgnoringProperty(propertyInfo) ||
+                        this.Settings.GetSpecialCopyProperty(propertyInfo) != null)
+                    {
+                        continue;
+                    }
 
-                if (!Copy.IsCopyableType(propertyInfo.PropertyType))
-                {
-                    this.UpdateSubPropertySynchronizer(propertyInfo);
+                    if (!Copy.IsCopyableType(propertyInfo.PropertyType))
+                    {
+                        this.UpdateSubPropertySynchronizer(propertyInfo);
+                    }
                 }
             }
         }
@@ -74,13 +87,22 @@ namespace Gu.ChangeTracking
         public void Dispose()
         {
             this.source.PropertyChanged -= this.OnSourcePropertyChanged;
-            if (this.subPropertySynchronizers.IsValueCreated)
+            if (this.propertySynchronizers.IsValueCreated)
             {
-                foreach (var propertySynchronizer in this.subPropertySynchronizers.Value)
+                foreach (var propertySynchronizer in this.propertySynchronizers.Value)
                 {
                     propertySynchronizer.Value.Dispose();
                 }
             }
+
+            var notifyCollectionChanged = this.source as INotifyCollectionChanged;
+            if (notifyCollectionChanged != null)
+            {
+                notifyCollectionChanged.CollectionChanged -= this.OnSourceCollectionChanged;
+            }
+
+            this.itemSynchronizers?.Dispose();
+
         }
 
         private void OnSourcePropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -123,20 +145,143 @@ namespace Gu.ChangeTracking
 
         private void UpdateSubPropertySynchronizer(PropertyInfo propertyInfo)
         {
-            var propertySynchronizers = this.subPropertySynchronizers.Value;
-            PropertySynchronizer<INotifyPropertyChanged> synchronizer;
             var sv = (INotifyPropertyChanged)propertyInfo.GetValue(this.source);
             var tv = (INotifyPropertyChanged)propertyInfo.GetValue(this.target);
+            var synchronizers = this.propertySynchronizers.Value;
+            PropertySynchronizer<INotifyPropertyChanged> synchronizer;
+            if (synchronizers.TryGetValue(propertyInfo, out synchronizer))
+            {
+                synchronizer?.Dispose();
+            }
 
-            if (propertySynchronizers.TryGetValue(propertyInfo, out synchronizer))
+            synchronizers[propertyInfo] = this.CreateSynchronizer(sv, tv);
+        }
+
+        private void OnSourceCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
             {
-                synchronizer.Dispose();
+                case NotifyCollectionChangedAction.Add:
+                    for (int i = 0; i < e.NewItems.Count; i++)
+                    {
+                        var sv = e.NewItems[i];
+                        object tv = null;
+                        if (sv != null)
+                        {
+                            if (Copy.IsCopyableType(sv.GetType()))
+                            {
+                                tv = sv;
+                            }
+                            else
+                            {
+                                tv = Activator.CreateInstance(sv.GetType(), true);
+                                Copy.PropertyValues(sv, tv, this.Settings);
+                            }
+                        }
+
+                        var index = e.NewStartingIndex + i;
+                        ((IList)this.target).Insert(index, tv);
+                        this.UpdateItemSynchronizer(index, NotifyCollectionChangedAction.Add);
+                    }
+
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    for (int i = 0; i < e.OldItems.Count; i++)
+                    {
+                        var index = e.OldStartingIndex + i;
+                        ((IList)this.target).RemoveAt(index);
+                        this.UpdateItemSynchronizer(index, NotifyCollectionChangedAction.Remove);
+                    }
+
+                    break;
+                case NotifyCollectionChangedAction.Replace:
+                    ((IList)this.target)[e.NewStartingIndex] = ((IList)this.source)[e.NewStartingIndex];
+                    this.UpdateItemSynchronizer(e.NewStartingIndex, NotifyCollectionChangedAction.Replace);
+                    break;
+                case NotifyCollectionChangedAction.Move:
+                    this.target.GetType().GetMethod("Move", new[] { typeof(int), typeof(int) }).Invoke(this.target, new object[] { e.OldStartingIndex, e.NewStartingIndex });
+                    this.UpdateItemSynchronizer(e.OldStartingIndex, NotifyCollectionChangedAction.Move, e.NewStartingIndex);
+                    break;
+                case NotifyCollectionChangedAction.Reset:
+                    Copy.PropertyValues(this.source, this.target, this.Settings);
+                    this.ResetItemSynchronizers();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
-            if (sv != null)
+        }
+
+        private void ResetItemSynchronizers()
+        {
+            var sourceList = (IList)this.source;
+            for (int i = 0; i < sourceList.Count; i++)
             {
-                synchronizer = new PropertySynchronizer<INotifyPropertyChanged>(sv, tv, this.Settings);
-                propertySynchronizers[propertyInfo] = synchronizer;
+                this.UpdateItemSynchronizer(i, NotifyCollectionChangedAction.Reset);
             }
+        }
+
+        private void UpdateItemSynchronizer(int index, NotifyCollectionChangedAction action, int toIndex = -1)
+        {
+            switch (action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    {
+                        var synchronizer = this.CreateSynchronizer(index);
+                        this.itemSynchronizers.Insert(index, synchronizer);
+                        break;
+                    }
+
+                case NotifyCollectionChangedAction.Remove:
+                    this.itemSynchronizers.RemoveAt(index);
+                    break;
+                case NotifyCollectionChangedAction.Replace:
+                    {
+                        var synchronizer = this.CreateSynchronizer(index);
+                        this.itemSynchronizers[index] = synchronizer;
+                        break;
+                    }
+
+                case NotifyCollectionChangedAction.Move:
+                    this.itemSynchronizers.Move(index, toIndex);
+                    break;
+                case NotifyCollectionChangedAction.Reset:
+                    {
+                        var synchronizer = this.CreateSynchronizer(index);
+                        if (this.itemSynchronizers.Count > index)
+                        {
+                            this.itemSynchronizers[index] = synchronizer;
+                        }
+                        else
+                        {
+                            this.itemSynchronizers.Insert(index, synchronizer);
+                        }
+
+                        break;
+                    }
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(action), action, null);
+            }
+        }
+
+        private PropertySynchronizer<INotifyPropertyChanged> CreateSynchronizer(int index)
+        {
+            return this.CreateSynchronizer(((IList)this.source)[index], ((IList)this.target)[index]);
+        }
+
+        private PropertySynchronizer<INotifyPropertyChanged> CreateSynchronizer(object sv, object tv)
+        {
+            if (sv == null || Copy.IsCopyableType(sv.GetType()))
+            {
+                return null;
+            }
+
+            if (this.Settings.ReferenceHandling == ReferenceHandling.Throw)
+            {
+                throw new NotSupportedException("Specify how to handle reference types using ReferenceHandling");
+            }
+
+            return new PropertySynchronizer<INotifyPropertyChanged>((INotifyPropertyChanged)sv, (INotifyPropertyChanged)tv, this.Settings);
         }
     }
 }

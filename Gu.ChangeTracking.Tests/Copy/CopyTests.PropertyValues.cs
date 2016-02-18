@@ -256,6 +256,27 @@
             }
 
             [Test]
+            public void WithListOfIntsPropertyToEmpty()
+            {
+                var source = new WithListProperty<int>();
+                source.Items.AddRange(new[] { 1, 2, 3 });
+                var target = new WithListProperty<int>();
+                Copy.PropertyValues(source, target, ReferenceHandling.Structural);
+                CollectionAssert.AreEqual(source.Items, target.Items);
+            }
+
+            [Test]
+            public void WithListOfIntsPropertyToLonger()
+            {
+                var source = new WithListProperty<int>();
+                source.Items.AddRange(new[] { 1, 2, 3 });
+                var target = new WithListProperty<int>();
+                target.Items.AddRange(new[] { 1, 2, 3, 4 });
+                Copy.PropertyValues(source, target, ReferenceHandling.Structural);
+                CollectionAssert.AreEqual(source.Items, target.Items);
+            }
+
+            [Test]
             public void ListOfComplexToEmpty()
             {
                 var source = new List<ComplexType> { new ComplexType("a", 1) };
@@ -279,6 +300,48 @@
                 Assert.AreEqual(source[0].Name, target[0].Name);
                 Assert.AreEqual(source[0].Value, target[0].Value);
                 Assert.AreSame(item, target[0]);
+            }
+
+            [Test]
+            public void WithListOfComplexPropertyToEmptyStructural()
+            {
+                var source = new WithListProperty<ComplexType>();
+                source.Items.Add(new ComplexType("a", 1));
+                var target = new WithListProperty<ComplexType>();
+                Copy.PropertyValues(source, target, ReferenceHandling.Structural);
+                var expected = new[] { new ComplexType("a", 1) };
+                CollectionAssert.AreEqual(expected, source.Items, ComplexType.Comparer);
+                CollectionAssert.AreEqual(expected, target.Items, ComplexType.Comparer);
+                Assert.AreNotSame(source.Items[0], target.Items[0]);
+            }
+
+            [Test]
+            public void WithListOfComplexPropertyToEmptyReference()
+            {
+                Assert.Inconclusive("Not sure how to handle this");
+                var source = new WithListProperty<ComplexType>();
+                source.Items.Add(new ComplexType("a", 1));
+                var target = new WithListProperty<ComplexType>();
+                Copy.PropertyValues(source, target, ReferenceHandling.Reference);
+                var expected = new[] { new ComplexType("a", 1) };
+                CollectionAssert.AreEqual(expected, source.Items, ComplexType.Comparer);
+                CollectionAssert.AreEqual(expected, target.Items, ComplexType.Comparer);
+                Assert.AreSame(source.Items[0], target.Items[0]);
+            }
+
+            [Test]
+            public void WithListOfComplexPropertyToLonger()
+            {
+                var source = new WithListProperty<ComplexType>();
+                source.Items.Add(new ComplexType("a", 1));
+                var target = new WithListProperty<ComplexType>();
+                target.Items.AddRange(new[] { new ComplexType("b", 2), new ComplexType("c", 3) });
+                var item = target.Items[0];
+                Copy.PropertyValues(source, target, ReferenceHandling.Structural);
+                var expected = new[] { new ComplexType("a", 1) };
+                CollectionAssert.AreEqual(expected, source.Items, ComplexType.Comparer);
+                CollectionAssert.AreEqual(expected, target.Items, ComplexType.Comparer);
+                Assert.AreSame(item, target.Items[0]);
             }
         }
     }

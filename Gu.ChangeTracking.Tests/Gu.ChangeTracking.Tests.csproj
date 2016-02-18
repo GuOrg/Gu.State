@@ -52,6 +52,7 @@
     <Compile Include="Copy\CopyStubs\ComplexType.cs" />
     <Compile Include="Copy\CopyStubs\WithCalculatedProperty.cs" />
     <Compile Include="Copy\CopyStubs\WithComplexProperty.cs" />
+    <Compile Include="Copy\CopyStubs\WithListProperty.cs" />
     <Compile Include="Copy\CopyStubs\WithReadonlyField.cs" />
     <Compile Include="Copy\CopyStubs\WithSimpleProperties.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\ComplexType.cs" />

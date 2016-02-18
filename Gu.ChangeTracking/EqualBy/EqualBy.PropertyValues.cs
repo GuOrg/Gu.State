@@ -43,7 +43,7 @@
             return PropertyValues(x, y, settings);
         }
 
-        public static bool PropertyValues(object x, object y, EqualByPropertiesSettings settings)
+        public static bool PropertyValues(object x, object y, IEqualByPropertiesSettings settings)
         {
             if (x == null && y == null)
             {
@@ -58,6 +58,11 @@
             if (x.GetType() != y.GetType())
             {
                 return false;
+            }
+
+            if (IsEquatable(x.GetType()))
+            {
+                return Equals(x, y);
             }
 
             if (x is IEnumerable)
@@ -98,12 +103,12 @@
             return true;
         }
 
-        private static bool PropertyItemEquals(object x, object y, EqualByPropertiesSettings settings)
+        private static bool PropertyItemEquals(object x, object y, IEqualByPropertiesSettings settings)
         {
             return PropertyValueEquals(x, y, settings);
         }
 
-        private static bool PropertyValueEquals(object x, object y, EqualByPropertiesSettings settings)
+        private static bool PropertyValueEquals(object x, object y, IEqualByPropertiesSettings settings)
         {
             if (x == null && y == null)
             {

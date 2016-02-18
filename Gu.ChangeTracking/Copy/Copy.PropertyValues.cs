@@ -3,7 +3,6 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Reflection;
     using System.Text;
 
@@ -178,7 +177,10 @@
 
                 if (!propertyInfo.CanWrite)
                 {
-                    continue;
+                    if (IsCopyableType(propertyInfo.PropertyType))
+                    {
+                        continue;
+                    }
                 }
 
                 if (!IsCopyableType(propertyInfo.PropertyType))
@@ -186,12 +188,16 @@
                     switch (settings.ReferenceHandling)
                     {
                         case ReferenceHandling.Reference:
-                            break;
+                            {
+                                var value = propertyInfo.GetValue(source);
+                                propertyInfo.SetValue(target, value);
+                                break;
+                            }
                         case ReferenceHandling.Structural:
                             var sourceValue = propertyInfo.GetValue(source);
                             if (sourceValue == null)
                             {
-                                propertyInfo.SetValue(target, null, null);
+                                propertyInfo.SetValue(target, null);
                                 continue;
                             }
 
@@ -217,9 +223,11 @@
                             throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);
                     }
                 }
-
-                var value = propertyInfo.GetValue(source);
-                propertyInfo.SetValue(target, value, null);
+                else
+                {
+                    var value = propertyInfo.GetValue(source);
+                    propertyInfo.SetValue(target, value);
+                }
             }
         }
 
@@ -240,7 +248,12 @@
 
                 var sourceValue = propertyInfo.GetValue(source);
                 var targetValue = propertyInfo.GetValue(target);
-                if (!Equals(sourceValue, targetValue))
+                if (sourceValue == null && targetValue == null)
+                {
+                    continue;
+                }
+
+                if (!EqualBy.PropertyValues(sourceValue, targetValue, settings))
                 {
                     var message = $"Value differs for readonly property {source.GetType().Name}.{propertyInfo.Name}";
                     throw new InvalidOperationException(message);
