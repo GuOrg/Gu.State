@@ -3,6 +3,7 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Collections.Specialized;
     using System.ComponentModel;
     using System.Linq;
     using System.Reflection;
@@ -84,23 +85,27 @@
         {
             if (typeof(IEnumerable).IsAssignableFrom(typeof(T)))
             {
-                throw new NotSupportedException("Not supporting IEnumerable");
+                if (settings.ReferenceHandling == ReferenceHandling.Throw ||
+                    (settings.ReferenceHandling != ReferenceHandling.Throw && !typeof(INotifyCollectionChanged).IsAssignableFrom(typeof(T))))
+                {
+                    throw new NotSupportedException("Not supporting IEnumerable unless ReferenceHandling is specified and the collection is INotifyCollectionChanged");
+                }
             }
 
-            var notDiffable = typeof(T).GetProperties(settings.BindingFlags)
-                .Where(p => !settings.IsIgnoringProperty(p))
-                .Where(p => !EqualBy.IsEquatable(p.PropertyType))
-                .ToArray();
-            if (notDiffable.Any())
+            foreach (var propertyInfo in typeof(T).GetProperties(settings.BindingFlags))
             {
-                var sb = new StringBuilder();
-                sb.AppendLine("Only supports simple properties like string & int");
-                foreach (var prop in notDiffable)
+                if (settings.IsIgnoringProperty(propertyInfo))
                 {
-                    sb.AppendLine($"Property {prop} is not diffable.");
+                    continue;
                 }
 
-                throw new NotSupportedException(sb.ToString());
+                if (!EqualBy.IsEquatable(propertyInfo.PropertyType) && settings.ReferenceHandling == ReferenceHandling.Throw)
+                {
+                    var message = $"Only equatable properties are supported without specifying {typeof(ReferenceHandling).Name}\r\n" + 
+                                  $"Property {typeof(T).Name}.{propertyInfo.Name} is not IEquatable<{propertyInfo.PropertyType.Name}>.\r\n" + 
+                                  "Use the overload DirtyTracker.Track(x, y, ReferenceHandling) if you want to track a graph";
+                    throw new NotSupportedException(message);
+                }
             }
         }
 

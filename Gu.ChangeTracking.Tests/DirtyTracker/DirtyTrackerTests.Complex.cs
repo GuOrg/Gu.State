@@ -14,7 +14,7 @@
             {
                 var x = new WithComplexProperty();
                 var y = new WithComplexProperty();
-                var exception = Assert.Throws<NotSupportedException>(() => DirtyTracker.Track(x, y, ReferenceHandling.Structural));
+                var exception = Assert.Throws<NotSupportedException>(() => DirtyTracker.Track(x, y));
                 var expectedMessage = "Only equatable properties are supported without specifying ReferenceHandling\r\n" +
                                       "Property WithComplexProperty.ComplexType is not IEquatable<ComplexType>.\r\n" +
                                       "Use the overload DirtyTracker.Track(x, y, ReferenceHandling) if you want to track a graph";
