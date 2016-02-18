@@ -44,6 +44,9 @@
     <Compile Include="Copy\Settings\CopyFieldsSettings.cs" />
     <Compile Include="Copy\Settings\CopyPropertiesSettings.cs" />
     <Compile Include="Copy\Settings\CopySettings.cs" />
+    <Compile Include="EqualBy\Settings\IEqualByPropertiesSettings.cs" />
+    <Compile Include="EqualBy\Settings\IEqualBySettings.cs" />
+    <Compile Include="PropertySynchronizer\ItemSyncronizerCollection.cs" />
     <Compile Include="ReferenceHandling.cs" />
     <Compile Include="Copy\Settings\SpecialCopyProperty.cs" />
     <Compile Include="Copy\Copy.PropertyValues.cs" />

@@ -1,5 +1,6 @@
 ﻿namespace Gu.ChangeTracking.Tests
 {
+    using System.Collections.Generic;
     using System.Linq;
 
     using Gu.ChangeTracking.Tests.CopyStubs;
@@ -46,6 +47,8 @@
                 var y = ys.Split(',').Select(int.Parse).ToArray();
                 Assert.AreEqual(expected, EqualBy.PropertyValues(x, y, ReferenceHandling.Structural));
             }
+
+            public static IReadOnlyList<EqualsData> EqualsSource => EqualByTests.EqualsSource;
         }
     }
 }

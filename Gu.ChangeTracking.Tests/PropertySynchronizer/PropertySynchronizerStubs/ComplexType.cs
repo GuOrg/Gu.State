@@ -1,5 +1,7 @@
 ﻿namespace Gu.ChangeTracking.Tests.PropertySynchronizerStubs
 {
+    using System.Collections;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
 
@@ -8,8 +10,9 @@
     public class ComplexType : INotifyPropertyChanged
     {
         private string name;
-
         private int value;
+
+        public static TestComparer Comparer => new TestComparer();
 
         public ComplexType()
         {
@@ -61,6 +64,50 @@
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public sealed class TestComparer : IEqualityComparer<ComplexType>, IComparer<ComplexType>, IComparer
+        {
+            public bool Equals(ComplexType x, ComplexType y)
+            {
+                if (ReferenceEquals(x, y))
+                {
+                    return true;
+                }
+                if (ReferenceEquals(x, null))
+                {
+                    return false;
+                }
+                if (ReferenceEquals(y, null))
+                {
+                    return false;
+                }
+                if (x.GetType() != y.GetType())
+                {
+                    return false;
+                }
+                return string.Equals(x.name, y.name) && x.value == y.value;
+            }
+
+            public int GetHashCode(ComplexType obj)
+            {
+                unchecked
+                {
+                    return ((obj.name?.GetHashCode() ?? 0) * 397) ^ obj.value;
+                }
+            }
+
+            public int Compare(ComplexType x, ComplexType y)
+            {
+                return this.Equals(x, y)
+                           ? 0
+                           : -1;
+            }
+
+            int IComparer.Compare(object x, object y)
+            {
+                return this.Compare((ComplexType)x, (ComplexType)y);
+            }
         }
     }
 }

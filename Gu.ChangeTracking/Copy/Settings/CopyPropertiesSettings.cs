@@ -4,7 +4,7 @@
     using System.Linq;
     using System.Reflection;
 
-    public class CopyPropertiesSettings : CopySettings
+    public class CopyPropertiesSettings : CopySettings, IEqualByPropertiesSettings
     {
         private readonly HashSet<PropertyInfo> ignoredProperties;
 
@@ -32,7 +32,18 @@
 
         public bool IsIgnoringProperty(PropertyInfo propertyInfo)
         {
+            if (propertyInfo == null || propertyInfo.GetIndexParameters()
+                                                    .Length > 0)
+            {
+                return true;
+            }
+
             return this.ignoredProperties?.Contains(propertyInfo) == true;
+        }
+
+        bool IEqualByPropertiesSettings.IsIgnoringProperty(PropertyInfo propertyInfo)
+        {
+            return this.IsIgnoringProperty(propertyInfo) || this.GetSpecialCopyProperty(propertyInfo) != null;
         }
 
         public SpecialCopyProperty GetSpecialCopyProperty(PropertyInfo propertyInfo)

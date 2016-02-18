@@ -6,7 +6,7 @@
     public static partial class EqualBy
     {
         private static bool ListEquals<TSetting>(object x, object y, Func<object, object, TSetting, bool> compareItem, TSetting settings)
-            where TSetting : EqualBySettings
+            where TSetting : IEqualBySettings
         {
             if (settings.ReferenceHandling == ReferenceHandling.Throw)
             {
@@ -39,6 +39,7 @@
                 // using ensure to throw
                 Ensure.NotIs<IEnumerable>(x, nameof(x));
             }
+
             return true;
         }
 

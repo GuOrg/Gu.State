@@ -1,6 +1,5 @@
 namespace Gu.ChangeTracking.Tests
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -49,6 +48,7 @@ namespace Gu.ChangeTracking.Tests
                 Assert.AreEqual(true, EqualBy.FieldValues(x, y, ReferenceHandling.Structural));
             }
 
+            public static IReadOnlyList<EqualsData> EqualsSource => EqualByTests.EqualsSource;
         }
     }
 }
