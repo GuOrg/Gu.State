@@ -5,7 +5,7 @@
 
     public class ComplexType
     {
-        public static TestComparer Comparer => new TestComparer();
+        public static readonly TestComparer Comparer = new TestComparer();
 
         public ComplexType()
         {
