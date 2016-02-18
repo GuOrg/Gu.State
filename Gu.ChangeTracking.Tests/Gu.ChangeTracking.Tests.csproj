@@ -65,6 +65,7 @@
     <Compile Include="EqualBy\EqualByTests.PropertyValues.cs" />
     <Compile Include="Internals\CollectionItemTrackerTests.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\WithCalculatedProperty.cs" />
+    <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\WithObservableCollectionProperty.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\WithSimpleProperties.cs" />
     <Compile Include="Copy\CopyTests.FieldValues.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerTests.Simple.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="ChangeTracker\ChangeTrackerStubs\Level.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerStubs\SpecialCollection.cs" />
     <Compile Include="EqualBy\EqualByTests.FieldValues.cs" />
+    <Compile Include="PropertySynchronizer\PropertySynchronizerTests.Collection.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerTests.Complex.cs" />
     <Compile Include="Settings\ChangeTrackerSettingsTests.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerTests.Simple.cs" />
