@@ -23,6 +23,64 @@
             }
 
             [Test]
+            public void VerifyCanCopyPropertyWithComplexPropertyThrows()
+            {
+                var exception = Assert.Throws<NotSupportedException>(() => Copy.VerifyCanCopyPropertyValues<WithComplexProperty>());
+                var expected = "The property WithComplexProperty.ComplexType is not of a supported type.\r\n" +
+                               "Expected struct or string but was: ComplexType\r\n" +
+                               "Specify ReferenceHandling if you want to copy a graph.\r\n";
+                Assert.AreEqual(expected, exception.Message);
+
+                var settings = new CopyPropertiesSettings(null, Constants.DefaultPropertyBindingFlags, ReferenceHandling.Throw);
+                exception = Assert.Throws<NotSupportedException>(() => Copy.VerifyCanCopyPropertyValues<WithComplexProperty>(settings));
+                Assert.AreEqual(expected, exception.Message);
+            }
+
+            [TestCase(ReferenceHandling.Structural)]
+            [TestCase(ReferenceHandling.Reference)]
+            public void VerifyCanCopyPropertyWithComplexPropertyDoesNotThrowWithReferenceHandling(ReferenceHandling referenceHandling)
+            {
+                var settings = new CopyPropertiesSettings(null, Constants.DefaultPropertyBindingFlags, referenceHandling);
+                Copy.VerifyCanCopyPropertyValues<WithComplexProperty>(settings);
+            }
+
+            [Test]
+            public void VerifyCanCopyPropertyListOfIntsThrows()
+            {
+                var exception = Assert.Throws<NotSupportedException>(() => Copy.VerifyCanCopyPropertyValues<List<int>>());
+                var expected = "Collections must be : IList and ReferenceHandling must be other than Throw";
+                Assert.AreEqual(expected, exception.Message);
+
+                var settings = new CopyPropertiesSettings(null, Constants.DefaultPropertyBindingFlags, ReferenceHandling.Throw);
+                exception = Assert.Throws<NotSupportedException>(() => Copy.VerifyCanCopyPropertyValues<List<int>>(settings));
+                Assert.AreEqual(expected, exception.Message);
+            }
+
+            [Test]
+            public void VerifyCanCopyPropertyEnumerableOfIntsThrows()
+            {
+                var exception = Assert.Throws<NotSupportedException>(() => Copy.VerifyCanCopyPropertyValues<IEnumerable<int>>());
+                var expected = "Collections must be : IList and ReferenceHandling must be other than Throw";
+                Assert.AreEqual(expected, exception.Message);
+
+                var settings = new CopyPropertiesSettings(null, Constants.DefaultPropertyBindingFlags, ReferenceHandling.Throw);
+                exception = Assert.Throws<NotSupportedException>(() => Copy.VerifyCanCopyPropertyValues<IEnumerable<int>>(settings));
+                Assert.AreEqual(expected, exception.Message);
+
+                settings = new CopyPropertiesSettings(null, Constants.DefaultPropertyBindingFlags, ReferenceHandling.Structural);
+                exception = Assert.Throws<NotSupportedException>(() => Copy.VerifyCanCopyPropertyValues<IEnumerable<int>>(settings));
+                Assert.AreEqual(expected, exception.Message);
+            }
+
+            [TestCase(ReferenceHandling.Structural)]
+            [TestCase(ReferenceHandling.Reference)]
+            public void VerifyCanCopyPropertyListOfIntsWithReferenceHandling(ReferenceHandling referenceHandling)
+            {
+                var settings = new CopyPropertiesSettings(null, Constants.DefaultPropertyBindingFlags, referenceHandling);
+                Copy.VerifyCanCopyPropertyValues<List<int>>(settings);
+            }
+
+            [Test]
             public void PropertyValuesHappyPath()
             {
                 var source = new WithSimpleProperties

@@ -1,5 +1,7 @@
 ﻿namespace Gu.ChangeTracking.Tests
 {
+    using System;
+
     using Gu.ChangeTracking.Tests.PropertySynchronizerStubs;
 
     using NUnit.Framework;
@@ -278,6 +280,18 @@
                     Assert.AreEqual(6, source.ComplexType.Value);
                     Assert.AreEqual(6, target.ComplexType.Value);
                 }
+            }
+
+            [Test]
+            public void WithComplexPropertyThrowsWithoutReferenceHandling()
+            {
+                var source = new WithComplexProperty();
+                var target = new WithComplexProperty();
+                var exception = Assert.Throws<NotSupportedException>(() => PropertySynchronizer.Create(source, target));
+                var expectedMessage = "The property WithComplexProperty.ComplexType is not of a supported type.\r\n" +
+                                      "Expected struct or string but was: ComplexType\r\n" +
+                                      "Specify ReferenceHandling if you want to copy a graph.\r\n";
+                Assert.AreEqual(expectedMessage, exception.Message);
             }
         }
     }

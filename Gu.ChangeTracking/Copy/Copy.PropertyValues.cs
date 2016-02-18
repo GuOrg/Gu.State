@@ -129,7 +129,10 @@
         {
             if (typeof(IEnumerable).IsAssignableFrom(type))
             {
-                throw new NotSupportedException("Not supporting IEnumerable");
+                if (settings.ReferenceHandling == ReferenceHandling.Throw || !typeof(IList).IsAssignableFrom(type))
+                {
+                    throw new NotSupportedException("Collections must be : IList and ReferenceHandling must be other than Throw");
+                }
             }
 
             var propertyInfos = type.GetProperties(settings.BindingFlags);
@@ -144,9 +147,9 @@
 
                 if (settings.ReferenceHandling == ReferenceHandling.Throw && !IsCopyableType(propertyInfo.PropertyType))
                 {
-                    stringBuilder.AppendLine($"The property {type.Name}{propertyInfo.Name} is not of a supported type.");
-                    stringBuilder.AppendLine($"Expected valuetype or string but was {propertyInfo.PropertyType}");
-                    stringBuilder.AppendLine($"Or specify ReferenceHandling");
+                    stringBuilder.AppendLine($"The property {type.Name}.{propertyInfo.Name} is not of a supported type.");
+                    stringBuilder.AppendLine($"Expected struct or string but was: {propertyInfo.PropertyType.Name}");
+                    stringBuilder.AppendLine($"Specify {typeof(ReferenceHandling).Name} if you want to copy a graph.");
                 }
             }
 
