@@ -25,6 +25,12 @@
 
         public bool IsIgnoringProperty(PropertyInfo propertyInfo)
         {
+            if (propertyInfo == null || propertyInfo.GetIndexParameters()
+                                                    .Length > 0)
+            {
+                return true;
+            }
+
             if (this.ignoredProperties == null)
             {
                 return false;

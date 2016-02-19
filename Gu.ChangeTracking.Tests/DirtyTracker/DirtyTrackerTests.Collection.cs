@@ -20,12 +20,18 @@
                 var expectedChanges = new List<string>();
                 using (var tracker = DirtyTracker.Track(x, y, ReferenceHandling.Structural))
                 {
-                    Assert.Fail();
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(false, tracker.IsDirty);
                     CollectionAssert.IsEmpty(tracker.Diff);
                     CollectionAssert.IsEmpty(changes);
 
+                    x.Add(1);
+                    Assert.AreEqual(true, tracker.IsDirty);
+                    CollectionAssert.AreEqual(new[] { ItemDirtyTracker.IndexerProperty }, tracker.Diff);
+                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
+                    CollectionAssert.AreEqual(expectedChanges, changes);
+
+                    Assert.Inconclusive();
                     //x.Name = "newName";
                     //Assert.AreEqual(true, tracker.IsDirty);
                     //expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
