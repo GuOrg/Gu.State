@@ -46,7 +46,7 @@
     <Compile Include="Copy\Settings\CopySettings.cs" />
     <Compile Include="EqualBy\Settings\IEqualByPropertiesSettings.cs" />
     <Compile Include="EqualBy\Settings\IEqualBySettings.cs" />
-    <Compile Include="PropertySynchronizer\ItemSyncronizerCollection.cs" />
+    <Compile Include="Internals\ItemCollection.cs" />
     <Compile Include="ReferenceHandling.cs" />
     <Compile Include="Copy\Settings\SpecialCopyProperty.cs" />
     <Compile Include="Copy\Copy.PropertyValues.cs" />
@@ -57,8 +57,8 @@
     <Compile Include="Internals\Constants.cs" />
     <Compile Include="DirtyTracker\DirtyTracker.cs" />
     <Compile Include="DirtyTracker\DirtyTracker{T}.cs" />
-    <Compile Include="Internals\CollectionItemTrackerCollection.cs" />
-    <Compile Include="Internals\CollectionTracker.cs" />
+    <Compile Include="ChangeTracker\Internals\CollectionItemTrackerCollection.cs" />
+    <Compile Include="ChangeTracker\Internals\CollectionTracker.cs" />
     <Compile Include="Contracts\IPropertyTracker.cs" />
     <Compile Include="Contracts\ITracker.cs" />
     <Compile Include="Contracts\IValueTracker.cs" />
@@ -70,8 +70,8 @@
     <Compile Include="Internals\PropertyInfoExt.cs" />
     <Compile Include="Internals\TypeExt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Internals\PropertyChangeTracker.cs" />
-    <Compile Include="Internals\PropertyTrackerCollection.cs" />
+    <Compile Include="ChangeTracker\Internals\PropertyChangeTracker.cs" />
+    <Compile Include="ChangeTracker\Internals\PropertyTrackerCollection.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizer.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizer{T}.cs" />
     <Compile Include="ChangeTracker\Settings\ChangeTrackerSettings.cs" />
@@ -137,4 +137,5 @@
       <Paket>True</Paket>
     </Analyzer>
   </ItemGroup>
+  <ItemGroup />
 </Project>
