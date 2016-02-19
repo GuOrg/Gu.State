@@ -44,6 +44,10 @@
     <Compile Include="Copy\Settings\CopyFieldsSettings.cs" />
     <Compile Include="Copy\Settings\CopyPropertiesSettings.cs" />
     <Compile Include="Copy\Settings\CopySettings.cs" />
+    <Compile Include="DirtyTracker\AlwaysDirtyNode.cs" />
+    <Compile Include="DirtyTracker\IDirtyTrackerNode.cs" />
+    <Compile Include="DirtyTracker\NeverDirtyNode.cs" />
+    <Compile Include="DirtyTracker\PropertyDirtyTracker.cs" />
     <Compile Include="EqualBy\Settings\IEqualByPropertiesSettings.cs" />
     <Compile Include="EqualBy\Settings\IEqualBySettings.cs" />
     <Compile Include="Internals\ItemCollection.cs" />
