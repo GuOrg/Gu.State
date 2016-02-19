@@ -1,17 +1,13 @@
 ﻿namespace Gu.ChangeTracking
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
 
-    internal sealed class ItemCollection<T> : IDisposable
+    internal sealed class ItemCollection<T> : IEnumerable<T>, IDisposable
         where T : class, IDisposable
     {
         private readonly List<T> items = new List<T>();
-
-        public void Dispose()
-        {
-            this.Clear();
-        }
 
         internal int Count => this.items.Count;
 
@@ -27,6 +23,18 @@
 
                 this.SetItem(index, value);
             }
+        }
+
+        public IEnumerator<T> GetEnumerator() => this.items.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
+        }
+
+        public void Dispose()
+        {
+            this.Clear();
         }
 
         internal void RemoveAt(int index)
