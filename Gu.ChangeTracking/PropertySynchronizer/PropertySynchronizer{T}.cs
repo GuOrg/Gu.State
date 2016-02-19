@@ -14,7 +14,7 @@ namespace Gu.ChangeTracking
     {
         private readonly T source;
         private readonly T target;
-        private readonly ItemCollection<PropertySynchronizer<INotifyPropertyChanged>> itemSynchronizers = new ItemCollection<PropertySynchronizer<INotifyPropertyChanged>>();
+        private readonly ItemCollection<PropertySynchronizer<INotifyPropertyChanged>> itemSynchronizers;
         private readonly PropertyCollection propertySynchronizers;
 
         public PropertySynchronizer(T source, T target, ReferenceHandling referenceHandling)
@@ -57,6 +57,7 @@ namespace Gu.ChangeTracking
             if (notifyCollectionChanged != null)
             {
                 notifyCollectionChanged.CollectionChanged += this.OnSourceCollectionChanged;
+                this.itemSynchronizers = new ItemCollection<PropertySynchronizer<INotifyPropertyChanged>>();
                 this.ResetItemSynchronizers();
             }
 
