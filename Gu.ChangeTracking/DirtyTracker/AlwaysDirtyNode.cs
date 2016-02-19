@@ -4,10 +4,9 @@ namespace Gu.ChangeTracking
 
     internal class AlwaysDirtyNode : IDirtyTrackerNode
     {
-        public AlwaysDirtyNode(IDirtyTrackerNode parent, PropertyInfo propertyInfo)
+        public AlwaysDirtyNode(PropertyInfo propertyInfo)
         {
             this.PropertyInfo = propertyInfo;
-            parent.Update(this);
         }
 
         public bool IsDirty => true;

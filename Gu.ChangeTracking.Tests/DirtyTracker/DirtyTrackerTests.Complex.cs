@@ -67,7 +67,17 @@
                     CollectionAssert.AreEqual(expectedChanges, changes);
                     CollectionAssert.AreEqual(new[] { typeof(WithComplexProperty).GetProperty(nameof(x.ComplexType)) }, tracker.Diff);
 
+                    x.ComplexType.Value++;
+                    Assert.AreEqual(true, tracker.IsDirty);
+                    CollectionAssert.AreEqual(expectedChanges, changes);
+                    CollectionAssert.AreEqual(new[] { typeof(WithComplexProperty).GetProperty(nameof(x.ComplexType)) }, tracker.Diff);
+
                     y.ComplexType.Name = "newName2";
+                    Assert.AreEqual(true, tracker.IsDirty);
+                    CollectionAssert.AreEqual(expectedChanges, changes);
+                    CollectionAssert.AreEqual(new[] { typeof(WithComplexProperty).GetProperty(nameof(x.ComplexType)) }, tracker.Diff);
+
+                    y.ComplexType.Value++;
                     Assert.AreEqual(false, tracker.IsDirty);
                     expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
