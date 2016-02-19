@@ -52,19 +52,16 @@ namespace Gu.ChangeTracking
             this.Settings = settings;
             this.target = target;
             this.source = source;
+            Copy.PropertyValues(source, target, settings);
             var notifyCollectionChanged = source as INotifyCollectionChanged;
             if (notifyCollectionChanged != null)
             {
                 notifyCollectionChanged.CollectionChanged += this.OnSourceCollectionChanged;
-                Copy.PropertyValues(source, target, settings);
                 this.ResetItemSynchronizers();
             }
-            else
-            {
-                Copy.PropertyValues(source, target, settings);
-                this.propertySynchronizers = PropertyCollection.Create(this.source, this.target, settings, this.CreateSynchronizer);
-                this.source.PropertyChanged += this.OnSourcePropertyChanged;
-            }
+
+            this.propertySynchronizers = PropertyCollection.Create(this.source, this.target, settings, this.CreateSynchronizer);
+            this.source.PropertyChanged += this.OnSourcePropertyChanged;
         }
 
         public CopyPropertiesSettings Settings { get; }
@@ -91,14 +88,14 @@ namespace Gu.ChangeTracking
                 return;
             }
 
-            var propertyInfo = this.source.GetType()
-                                   .GetProperty(e.PropertyName, this.Settings.BindingFlags);
+            var propertyInfo = this.source.GetType().GetProperty(e.PropertyName, this.Settings.BindingFlags);
             if (propertyInfo == null)
             {
                 return;
             }
 
-            if (this.Settings.IsIgnoringProperty(propertyInfo))
+            if (this.Settings.IsIgnoringProperty(propertyInfo) ||
+                (this.source is INotifyCollectionChanged && e.PropertyName == "Count"))
             {
                 return;
             }

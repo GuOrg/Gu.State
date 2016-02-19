@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
 
     using Gu.ChangeTracking.Tests.CopyStubs;
     using NUnit.Framework;
@@ -251,6 +252,24 @@
             {
                 var source = new List<int> { 1, 2, 3 };
                 var target = new List<int> { 1, 2, 3, 4 };
+                Copy.PropertyValues(source, target, ReferenceHandling.Structural);
+                CollectionAssert.AreEqual(source, target);
+            }
+
+            [Test]
+            public void ObservableCollectionOfIntsToEmpty()
+            {
+                var source = new ObservableCollection<int> { 1, 2, 3 };
+                var target = new ObservableCollection<int>();
+                Copy.PropertyValues(source, target, ReferenceHandling.Structural);
+                CollectionAssert.AreEqual(source, target);
+            }
+
+            [Test]
+            public void ObservableCollectionOfIntsToLonger()
+            {
+                var source = new ObservableCollection<int> { 1, 2, 3 };
+                var target = new ObservableCollection<int> { 1, 2, 3, 4 };
                 Copy.PropertyValues(source, target, ReferenceHandling.Structural);
                 CollectionAssert.AreEqual(source, target);
             }
