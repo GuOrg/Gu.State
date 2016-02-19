@@ -12,7 +12,6 @@
         {
             this.parent = parent;
             this.PropertyInfo = propertyInfo;
-            this.parent.Update(this);
         }
 
         public PropertyInfo PropertyInfo { get; }

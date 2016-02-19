@@ -20,6 +20,7 @@
         private readonly T y;
         private readonly HashSet<PropertyInfo> diff = new HashSet<PropertyInfo>();
         private readonly PropertyCollection propertyTrackers;
+        private readonly ItemCollection<IDirtyTrackerNode> itemTrackers;
 
         internal DirtyTracker(T x, T y, ReferenceHandling referenceHandling)
             : this(x, y, Constants.DefaultPropertyBindingFlags, referenceHandling)
@@ -124,6 +125,8 @@
         {
             this.x.PropertyChanged -= this.OnTrackedPropertyChanged;
             this.y.PropertyChanged -= this.OnTrackedPropertyChanged;
+            this.propertyTrackers?.Dispose();
+            this.itemTrackers?.Dispose();
         }
 
         void IDirtyTrackerNode.Update(IDirtyTrackerNode child)
@@ -131,28 +134,14 @@
             var before = this.diff.Count;
             if (child.IsDirty)
             {
-                if (this.diff.Add(child.PropertyInfo))
-                {
-                    if (before == 0)
-                    {
-                        this.OnPropertyChanged(nameof(this.IsDirty));
-                    }
-
-                    this.OnPropertyChanged(nameof(this.Diff));
-                }
+                this.diff.Add(child.PropertyInfo);
             }
             else
             {
-                if (this.diff.Remove(child.PropertyInfo))
-                {
-                    if (before == 1 && this.diff.Count == 0)
-                    {
-                        this.OnPropertyChanged(nameof(this.IsDirty));
-                    }
-
-                    this.OnPropertyChanged(nameof(this.Diff));
-                }
+                this.diff.Remove(child.PropertyInfo);
             }
+
+            this.NotifyChanges(before);
         }
 
         /// <summary>
@@ -163,24 +152,34 @@
         {
             var before = this.diff.Count;
             this.diff.Clear();
-            foreach (var prop in this.x.GetType().GetProperties(this.Settings.BindingFlags))
+            foreach (var propertyInfo in this.x.GetType().GetProperties(this.Settings.BindingFlags))
             {
-                if (this.Settings.IsIgnoringProperty(prop))
+                if (this.Settings.IsIgnoringProperty(propertyInfo))
                 {
                     continue;
                 }
 
-                var xv = prop.GetValue(this.x);
-                var yv = prop.GetValue(this.y);
-                if (!Equals(xv, yv))
+                var xv = propertyInfo.GetValue(this.x);
+                var yv = propertyInfo.GetValue(this.y);
+                if (this.propertyTrackers != null && this.propertyTrackers.Contains(propertyInfo))
                 {
-                    this.diff.Add(prop);
+                    var propertyTracker = this.CreatePropertyTracker((INotifyPropertyChanged)xv, (INotifyPropertyChanged)yv, propertyInfo);
+                    this.propertyTrackers[propertyInfo] = propertyTracker;
+                }
+                else if (!Equals(xv, yv))
+                {
+                    this.diff.Add(propertyInfo);
                 }
             }
 
-            if (this.diff.Count != before)
+            this.NotifyChanges(before);
+        }
+
+        protected void NotifyChanges(int diffsBefore)
+        {
+            if (this.diff.Count != diffsBefore)
             {
-                if ((before == 0 && this.diff.Count > 0) || (before > 0 && this.diff.Count == 0))
+                if ((diffsBefore == 0 && this.diff.Count > 0) || (diffsBefore > 0 && this.diff.Count == 0))
                 {
                     this.OnPropertyChanged(nameof(this.IsDirty));
                 }
@@ -216,41 +215,28 @@
 
             var xv = propertyInfo.GetValue(this.x);
             var yv = propertyInfo.GetValue(this.y);
-            var before = this.diff.Count;
             if (this.propertyTrackers != null && this.propertyTrackers.Contains(propertyInfo))
             {
-                this.propertyTrackers[propertyInfo] = this.CreatePropertyTracker((INotifyPropertyChanged)xv, (INotifyPropertyChanged)yv, propertyInfo);
+                var propertyTracker = this.CreatePropertyTracker((INotifyPropertyChanged)xv, (INotifyPropertyChanged)yv, propertyInfo);
+                this.propertyTrackers[propertyInfo] = propertyTracker;
+                ((IDirtyTrackerNode)this).Update(propertyTracker);
+                return;
+            }
+
+            var before = this.diff.Count;
+            if (!Equals(xv, yv))
+            {
+                this.diff.Add(propertyInfo);
             }
             else
             {
-                if (!Equals(xv, yv))
-                {
-                    if (this.diff.Add(propertyInfo))
-                    {
-                        if (before == 0)
-                        {
-                            this.OnPropertyChanged(nameof(this.IsDirty));
-                        }
-
-                        this.OnPropertyChanged(nameof(this.Diff));
-                    }
-                }
-                else
-                {
-                    if (this.diff.Remove(propertyInfo))
-                    {
-                        if (before == 1)
-                        {
-                            this.OnPropertyChanged(nameof(this.IsDirty));
-                        }
-
-                        this.OnPropertyChanged(nameof(this.Diff));
-                    }
-                }
+                this.diff.Remove(propertyInfo);
             }
+
+            this.NotifyChanges(before);
         }
 
-        private IDisposable CreatePropertyTracker(INotifyPropertyChanged x, INotifyPropertyChanged y, PropertyInfo propertyInfo)
+        private IDirtyTrackerNode CreatePropertyTracker(INotifyPropertyChanged x, INotifyPropertyChanged y, PropertyInfo propertyInfo)
         {
             if (x == null && y == null)
             {
@@ -259,7 +245,7 @@
 
             if (x == null || y == null)
             {
-                return new AlwaysDirtyNode(this, propertyInfo);
+                return new AlwaysDirtyNode(propertyInfo);
             }
 
             return new PropertyDirtyTracker(x, y, this, propertyInfo, this.Settings);
