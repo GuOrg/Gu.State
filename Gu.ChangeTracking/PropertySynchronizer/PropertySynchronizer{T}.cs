@@ -15,7 +15,7 @@ namespace Gu.ChangeTracking
     {
         private readonly T source;
         private readonly T target;
-        private readonly ItemSynchronizerCollection itemSynchronizers = new ItemSynchronizerCollection();
+        private readonly ItemCollection<PropertySynchronizer<INotifyPropertyChanged>> itemSynchronizers = new ItemCollection<PropertySynchronizer<INotifyPropertyChanged>>();
         private readonly Lazy<Dictionary<object, PropertySynchronizer<INotifyPropertyChanged>>> propertySynchronizers =
             new Lazy<Dictionary<object, PropertySynchronizer<INotifyPropertyChanged>>>(
                 () => new Dictionary<object, PropertySynchronizer<INotifyPropertyChanged>>());
@@ -102,7 +102,6 @@ namespace Gu.ChangeTracking
             }
 
             this.itemSynchronizers?.Dispose();
-
         }
 
         private void OnSourcePropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -247,15 +246,7 @@ namespace Gu.ChangeTracking
                 case NotifyCollectionChangedAction.Reset:
                     {
                         var synchronizer = this.CreateSynchronizer(index);
-                        if (this.itemSynchronizers.Count > index)
-                        {
-                            this.itemSynchronizers[index] = synchronizer;
-                        }
-                        else
-                        {
-                            this.itemSynchronizers.Insert(index, synchronizer);
-                        }
-
+                        this.itemSynchronizers[index] = synchronizer;
                         break;
                     }
 

@@ -5,10 +5,9 @@
     using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.ComponentModel;
-    using System.Linq;
     using System.Reflection;
     using System.Runtime.CompilerServices;
-    using System.Text;
+
     using JetBrains.Annotations;
 
     /// <summary>

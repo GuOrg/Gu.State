@@ -127,70 +127,44 @@
                     CollectionAssert.AreEqual(expectedComplexes, source.Complexes, ComplexType.Comparer);
                     CollectionAssert.AreEqual(expectedComplexes, target.Complexes, ComplexType.Comparer);
 
+                    source.Complexes.Add(new ComplexType("c", 3));
+                    Assert.AreEqual("a", source.Name);
+                    Assert.AreEqual("a", target.Name);
+                    Assert.AreEqual(1, source.Value);
+                    Assert.AreEqual(1, target.Value);
 
-                    Assert.Inconclusive();
+                    expectedComplexes.Add(new ComplexType("c", 3));
+                    CollectionAssert.AreEqual(expectedComplexes, source.Complexes, ComplexType.Comparer);
+                    CollectionAssert.AreEqual(expectedComplexes, target.Complexes, ComplexType.Comparer);
 
-                    //source.Add(new ComplexType("c", 3));
-                    //Assert.AreEqual(3, source.Count);
-                    //Assert.AreEqual(3, target.Count);
-                    //Assert.AreEqual("a", source[0].Name);
-                    //Assert.AreEqual("a", target[0].Name);
-                    //Assert.AreEqual(1, source[0].Value);
-                    //Assert.AreEqual(1, target[0].Value);
+                    source.Complexes[1].Name = "changed";
+                    Assert.AreEqual("a", source.Name);
+                    Assert.AreEqual("a", target.Name);
+                    Assert.AreEqual(1, source.Value);
+                    Assert.AreEqual(1, target.Value);
 
-                    //Assert.AreEqual("b", source[1].Name);
-                    //Assert.AreEqual("b", target[1].Name);
-                    //Assert.AreEqual(2, source[1].Value);
-                    //Assert.AreEqual(2, target[1].Value);
+                    expectedComplexes[1].Name = "changed";
+                    CollectionAssert.AreEqual(expectedComplexes, source.Complexes, ComplexType.Comparer);
+                    CollectionAssert.AreEqual(expectedComplexes, target.Complexes, ComplexType.Comparer);
 
-                    //Assert.AreEqual("c", source[2].Name);
-                    //Assert.AreEqual("c", target[2].Name);
-                    //Assert.AreEqual(3, source[2].Value);
-                    //Assert.AreEqual(3, target[2].Value);
+                    source.Complexes.RemoveAt(1);
+                    Assert.AreEqual("a", source.Name);
+                    Assert.AreEqual("a", target.Name);
+                    Assert.AreEqual(1, source.Value);
+                    Assert.AreEqual(1, target.Value);
 
-                    //source[2].Name = "changed";
-                    //Assert.AreEqual(3, source.Count);
-                    //Assert.AreEqual(3, target.Count);
-                    //Assert.AreEqual("a", source[0].Name);
-                    //Assert.AreEqual("a", target[0].Name);
-                    //Assert.AreEqual(1, source[0].Value);
-                    //Assert.AreEqual(1, target[0].Value);
+                    expectedComplexes.RemoveAt(1);
+                    CollectionAssert.AreEqual(expectedComplexes, source.Complexes, ComplexType.Comparer);
+                    CollectionAssert.AreEqual(expectedComplexes, target.Complexes, ComplexType.Comparer);
 
-                    //Assert.AreEqual("b", source[1].Name);
-                    //Assert.AreEqual("b", target[1].Name);
-                    //Assert.AreEqual(2, source[1].Value);
-                    //Assert.AreEqual(2, target[1].Value);
+                    source.Complexes.Clear();
+                    Assert.AreEqual("a", source.Name);
+                    Assert.AreEqual("a", target.Name);
+                    Assert.AreEqual(1, source.Value);
+                    Assert.AreEqual(1, target.Value);
 
-                    //Assert.AreEqual("changed", source[2].Name);
-                    //Assert.AreEqual("changed", target[2].Name);
-                    //Assert.AreEqual(3, source[2].Value);
-                    //Assert.AreEqual(3, target[2].Value);
-
-                    //source.RemoveAt(1);
-                    //Assert.AreEqual(2, source.Count);
-                    //Assert.AreEqual(2, target.Count);
-                    //Assert.AreEqual("a", source[0].Name);
-                    //Assert.AreEqual("a", target[0].Name);
-                    //Assert.AreEqual(1, source[0].Value);
-                    //Assert.AreEqual(1, target[0].Value);
-
-                    //Assert.AreEqual("changed", source[1].Name);
-                    //Assert.AreEqual("changed", target[1].Name);
-                    //Assert.AreEqual(3, source[1].Value);
-                    //Assert.AreEqual(3, target[1].Value);
-
-                    //target.RemoveAt(0);
-                    //Assert.AreEqual(2, source.Count);
-                    //Assert.AreEqual(1, target.Count);
-                    //Assert.AreEqual("a", source[0].Name);
-                    //Assert.AreEqual("changed", target[0].Name);
-                    //Assert.AreEqual(1, source[0].Value);
-                    //Assert.AreEqual(2, target[0].Value);
-
-                    //Assert.AreEqual("changed", source[1].Name);
-                    //Assert.AreEqual(3, source[1].Value);
-
-                    //Assert.Inconclusive("Not sure how to handle the situation where target changes. Maybe throw but not very elegant");
+                    CollectionAssert.IsEmpty(source.Complexes);
+                    CollectionAssert.IsEmpty(target.Complexes);
                 }
             }
         }
