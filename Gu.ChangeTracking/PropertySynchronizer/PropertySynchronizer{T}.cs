@@ -2,7 +2,6 @@ namespace Gu.ChangeTracking
 {
     using System;
     using System.Collections;
-    using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.ComponentModel;
     using System.Reflection;
@@ -16,9 +15,7 @@ namespace Gu.ChangeTracking
         private readonly T source;
         private readonly T target;
         private readonly ItemCollection<PropertySynchronizer<INotifyPropertyChanged>> itemSynchronizers = new ItemCollection<PropertySynchronizer<INotifyPropertyChanged>>();
-        private readonly Lazy<Dictionary<object, PropertySynchronizer<INotifyPropertyChanged>>> propertySynchronizers =
-            new Lazy<Dictionary<object, PropertySynchronizer<INotifyPropertyChanged>>>(
-                () => new Dictionary<object, PropertySynchronizer<INotifyPropertyChanged>>());
+        private readonly PropertyCollection propertySynchronizers;
 
         public PropertySynchronizer(T source, T target, ReferenceHandling referenceHandling)
             : this(source, target, Constants.DefaultPropertyBindingFlags, referenceHandling)
@@ -64,21 +61,9 @@ namespace Gu.ChangeTracking
             }
             else
             {
-                this.source.PropertyChanged += this.OnSourcePropertyChanged;
                 Copy.PropertyValues(source, target, settings);
-                foreach (var propertyInfo in this.source.GetType().GetProperties(this.Settings.BindingFlags))
-                {
-                    if (this.Settings.IsIgnoringProperty(propertyInfo) ||
-                        this.Settings.GetSpecialCopyProperty(propertyInfo) != null)
-                    {
-                        continue;
-                    }
-
-                    if (!Copy.IsCopyableType(propertyInfo.PropertyType))
-                    {
-                        this.UpdateSubPropertySynchronizer(propertyInfo);
-                    }
-                }
+                this.propertySynchronizers = PropertyCollection.Create(this.source, this.target, settings, this.CreateSynchronizer);
+                this.source.PropertyChanged += this.OnSourcePropertyChanged;
             }
         }
 
@@ -87,13 +72,7 @@ namespace Gu.ChangeTracking
         public void Dispose()
         {
             this.source.PropertyChanged -= this.OnSourcePropertyChanged;
-            if (this.propertySynchronizers.IsValueCreated)
-            {
-                foreach (var propertySynchronizer in this.propertySynchronizers.Value)
-                {
-                    propertySynchronizer.Value.Dispose();
-                }
-            }
+            this.propertySynchronizers?.Dispose();
 
             var notifyCollectionChanged = this.source as INotifyCollectionChanged;
             if (notifyCollectionChanged != null)
@@ -146,14 +125,7 @@ namespace Gu.ChangeTracking
         {
             var sv = (INotifyPropertyChanged)propertyInfo.GetValue(this.source);
             var tv = (INotifyPropertyChanged)propertyInfo.GetValue(this.target);
-            var synchronizers = this.propertySynchronizers.Value;
-            PropertySynchronizer<INotifyPropertyChanged> synchronizer;
-            if (synchronizers.TryGetValue(propertyInfo, out synchronizer))
-            {
-                synchronizer?.Dispose();
-            }
-
-            synchronizers[propertyInfo] = this.CreateSynchronizer(sv, tv);
+            this.propertySynchronizers[propertyInfo] = this.CreateSynchronizer(sv, tv);
         }
 
         private void OnSourceCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -225,7 +197,7 @@ namespace Gu.ChangeTracking
             {
                 case NotifyCollectionChangedAction.Add:
                     {
-                        var synchronizer = this.CreateSynchronizer(index);
+                        var synchronizer = this.CreateItemSynchronizer(index);
                         this.itemSynchronizers.Insert(index, synchronizer);
                         break;
                     }
@@ -235,7 +207,7 @@ namespace Gu.ChangeTracking
                     break;
                 case NotifyCollectionChangedAction.Replace:
                     {
-                        var synchronizer = this.CreateSynchronizer(index);
+                        var synchronizer = this.CreateItemSynchronizer(index);
                         this.itemSynchronizers[index] = synchronizer;
                         break;
                     }
@@ -245,7 +217,7 @@ namespace Gu.ChangeTracking
                     break;
                 case NotifyCollectionChangedAction.Reset:
                     {
-                        var synchronizer = this.CreateSynchronizer(index);
+                        var synchronizer = this.CreateItemSynchronizer(index);
                         this.itemSynchronizers[index] = synchronizer;
                         break;
                     }
@@ -255,7 +227,7 @@ namespace Gu.ChangeTracking
             }
         }
 
-        private PropertySynchronizer<INotifyPropertyChanged> CreateSynchronizer(int index)
+        private PropertySynchronizer<INotifyPropertyChanged> CreateItemSynchronizer(int index)
         {
             return this.CreateSynchronizer(((IList)this.source)[index], ((IList)this.target)[index]);
         }
