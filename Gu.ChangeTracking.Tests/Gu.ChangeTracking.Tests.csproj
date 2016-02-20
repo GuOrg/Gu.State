@@ -59,6 +59,7 @@
     <Compile Include="DirtyTracker\DirtyTrackerTests.WithObservableCollectionProperty.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerTests.ObservableCollectionOfComplexType.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerTests.ObservableCollectionOfInt.cs" />
+    <Compile Include="PropertySynchronizer\PropertySynchronizerTests.WithObservableCollectionProperty.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerTests.ObservableCollectionOfComplexTypes.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\ComplexType.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\WithComplexProperty.cs" />
@@ -71,7 +72,7 @@
     <Compile Include="EqualBy\EqualByTests.PropertyValues.cs" />
     <Compile Include="Internals\CollectionItemTrackerTests.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\WithCalculatedProperty.cs" />
-    <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\WithObservableCollectionProperty.cs" />
+    <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\WithObservableCollectionProperties.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\WithSimpleProperties.cs" />
     <Compile Include="Copy\CopyTests.FieldValues.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerTests.Simple.cs" />
