@@ -11,6 +11,142 @@
         public class Complex
         {
             [Test]
+            public void CreateAndDisposeStructural()
+            {
+                var source = new WithComplexProperty("a", 1) { ComplexType = new ComplexType("b", 2) };
+                var target = new WithComplexProperty("c", 3) { ComplexType = new ComplexType("d", 4) };
+                using (PropertySynchronizer.Create(source, target, ReferenceHandling.Structural))
+                {
+                    Assert.AreEqual("a", source.Name);
+                    Assert.AreEqual("a", target.Name);
+                    Assert.AreEqual(1, source.Value);
+                    Assert.AreEqual(1, target.Value);
+
+                    Assert.AreNotSame(source.ComplexType, target.ComplexType);
+                    Assert.AreEqual("b", source.ComplexType.Name);
+                    Assert.AreEqual("b", target.ComplexType.Name);
+                    Assert.AreEqual(2, source.ComplexType.Value);
+                    Assert.AreEqual(2, target.ComplexType.Value);
+
+                    source.Value++;
+                    Assert.AreEqual("a", source.Name);
+                    Assert.AreEqual("a", target.Name);
+                    Assert.AreEqual(2, source.Value);
+                    Assert.AreEqual(2, target.Value);
+
+                    Assert.AreNotSame(source.ComplexType, target.ComplexType);
+                    Assert.AreEqual("b", source.ComplexType.Name);
+                    Assert.AreEqual("b", target.ComplexType.Name);
+                    Assert.AreEqual(2, source.ComplexType.Value);
+                    Assert.AreEqual(2, target.ComplexType.Value);
+
+                    source.ComplexType.Value++;
+                    Assert.AreEqual("a", source.Name);
+                    Assert.AreEqual("a", target.Name);
+                    Assert.AreEqual(2, source.Value);
+                    Assert.AreEqual(2, target.Value);
+
+                    Assert.AreNotSame(source.ComplexType, target.ComplexType);
+                    Assert.AreEqual("b", source.ComplexType.Name);
+                    Assert.AreEqual("b", target.ComplexType.Name);
+                    Assert.AreEqual(3, source.ComplexType.Value);
+                    Assert.AreEqual(3, target.ComplexType.Value);
+
+                    var sourceComplexType = source.ComplexType;
+                    var targetComplexType = target.ComplexType;
+                    source.ComplexType = null;
+                    Assert.AreEqual("a", source.Name);
+                    Assert.AreEqual("a", target.Name);
+                    Assert.AreEqual(2, source.Value);
+                    Assert.AreEqual(2, target.Value);
+
+                    Assert.AreEqual(null, source.ComplexType);
+                    Assert.AreEqual(null, target.ComplexType);
+
+                    sourceComplexType.Value++;
+
+                    Assert.AreNotEqual(sourceComplexType.Value, targetComplexType.Value);
+
+                    source.ComplexType = new ComplexType("c", 5);
+                    Assert.AreEqual("a", source.Name);
+                    Assert.AreEqual("a", target.Name);
+                    Assert.AreEqual(2, source.Value);
+                    Assert.AreEqual(2, target.Value);
+
+                    Assert.AreNotSame(source.ComplexType, target.ComplexType);
+                    Assert.AreEqual("c", source.ComplexType.Name);
+                    Assert.AreEqual("c", target.ComplexType.Name);
+                    Assert.AreEqual(5, source.ComplexType.Value);
+                    Assert.AreEqual(5, target.ComplexType.Value);
+                }
+
+                source.Value++;
+                Assert.AreEqual("a", source.Name);
+                Assert.AreEqual("a", target.Name);
+                Assert.AreEqual(3, source.Value);
+                Assert.AreEqual(2, target.Value);
+
+                Assert.AreNotSame(source.ComplexType, target.ComplexType);
+                Assert.AreEqual("c", source.ComplexType.Name);
+                Assert.AreEqual("c", target.ComplexType.Name);
+                Assert.AreEqual(5, source.ComplexType.Value);
+                Assert.AreEqual(5, target.ComplexType.Value);
+
+                source.ComplexType.Value++;
+                Assert.AreEqual("a", source.Name);
+                Assert.AreEqual("a", target.Name);
+                Assert.AreEqual(3, source.Value);
+                Assert.AreEqual(2, target.Value);
+
+                Assert.AreNotSame(source.ComplexType, target.ComplexType);
+                Assert.AreEqual("c", source.ComplexType.Name);
+                Assert.AreEqual("c", target.ComplexType.Name);
+                Assert.AreEqual(6, source.ComplexType.Value);
+                Assert.AreEqual(5, target.ComplexType.Value);
+            }
+
+            [Test]
+            public void CreateAndDisposeReference()
+            {
+                var source = new WithComplexProperty("a", 1) { ComplexType = new ComplexType("b", 2) };
+                var target = new WithComplexProperty("c", 3) { ComplexType = new ComplexType("d", 4) };
+                using (PropertySynchronizer.Create(source, target, ReferenceHandling.Reference))
+                {
+                    Assert.AreEqual("a", source.Name);
+                    Assert.AreEqual("a", target.Name);
+                    Assert.AreEqual(1, source.Value);
+                    Assert.AreEqual(1, target.Value);
+
+                    Assert.AreSame(source.ComplexType, target.ComplexType);
+
+                    source.Value++;
+                    Assert.AreEqual("a", source.Name);
+                    Assert.AreEqual("a", target.Name);
+                    Assert.AreEqual(2, source.Value);
+                    Assert.AreEqual(2, target.Value);
+
+                    Assert.AreSame(source.ComplexType, target.ComplexType);
+
+                    source.ComplexType = null;
+                    Assert.AreEqual("a", source.Name);
+                    Assert.AreEqual("a", target.Name);
+                    Assert.AreEqual(2, source.Value);
+                    Assert.AreEqual(2, target.Value);
+
+                    Assert.AreEqual(null, source.ComplexType);
+                    Assert.AreEqual(null, target.ComplexType);
+
+                    source.ComplexType = new ComplexType("c", 5);
+                    Assert.AreEqual("a", source.Name);
+                    Assert.AreEqual("a", target.Name);
+                    Assert.AreEqual(2, source.Value);
+                    Assert.AreEqual(2, target.Value);
+
+                    Assert.AreSame(source.ComplexType, target.ComplexType);
+                }
+            }
+
+            [Test]
             public void HappyPath()
             {
                 var source = new WithComplexProperty("a", 1)
