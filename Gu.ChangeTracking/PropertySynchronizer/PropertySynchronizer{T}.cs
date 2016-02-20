@@ -170,6 +170,11 @@ namespace Gu.ChangeTracking
                     throw new NotSupportedException("Specify how to handle reference types using ReferenceHandling");
                 }
 
+                if (ReferenceEquals(sv, tv))
+                {
+                    return null;
+                }
+
                 return new PropertySynchronizer<INotifyPropertyChanged>((INotifyPropertyChanged)sv, (INotifyPropertyChanged)tv, settings);
             }
         }
