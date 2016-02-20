@@ -198,7 +198,6 @@
                 }
             }
 
-
             [Test]
             public void MoveXThenY()
             {
