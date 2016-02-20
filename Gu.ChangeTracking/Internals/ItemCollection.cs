@@ -65,7 +65,7 @@
             }
         }
 
-        protected void SetItem(int index, T item)
+        private void SetItem(int index, T item)
         {
             this.FillTo(index);
             this.TryGet(index)?.Dispose();

@@ -54,43 +54,6 @@ namespace Gu.ChangeTracking
             }
         }
 
-        internal static PropertyCollection Create(
-            INotifyPropertyChanged source,
-            INotifyPropertyChanged target,
-            CopyPropertiesSettings settings,
-            Func<INotifyPropertyChanged, INotifyPropertyChanged, IDisposable> createSynchronizer)
-        {
-            List<PropertyAndDisposable> items = null;
-            foreach (var propertyInfo in source.GetType()
-                                               .GetProperties(settings.BindingFlags))
-            {
-                if (settings.IsIgnoringProperty(propertyInfo) || settings.GetSpecialCopyProperty(propertyInfo) != null)
-                {
-                    continue;
-                }
-
-                if (!Copy.IsCopyableType(propertyInfo.PropertyType))
-                {
-                    var sv = propertyInfo.GetValue(source);
-                    var tv = propertyInfo.GetValue(target);
-                    var synchronizer = createSynchronizer((INotifyPropertyChanged)sv, (INotifyPropertyChanged)tv);
-                    if (items == null)
-                    {
-                        items = new List<PropertyAndDisposable>();
-                    }
-
-                    items.Add(new PropertyAndDisposable(propertyInfo, synchronizer));
-                }
-            }
-
-            if (items == null)
-            {
-                return null;
-            }
-
-            return new PropertyCollection(items);
-        }
-
         internal class PropertyAndDisposable : IDisposable
         {
             private IDisposable synchronizer;
