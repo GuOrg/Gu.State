@@ -1,14 +1,16 @@
 ﻿namespace Gu.ChangeTracking
 {
     using System.ComponentModel;
+    using System.Diagnostics;
     using System.Reflection;
 
-    internal class PropertyDirtyTracker : DirtyTracker<INotifyPropertyChanged>, IDirtyTrackerNode
+    [DebuggerDisplay("PropertyDirtyTracker Property: {PropertyInfo.Name}, IsDirty: {IsDirty}")]
+    internal class PropertyDirtyTracker : DirtyTracker<INotifyPropertyChanged>, IDirtyTracker
     {
-        private readonly IDirtyTrackerNode parent;
+        private readonly IDirtyTracker parent;
 
-        public PropertyDirtyTracker(INotifyPropertyChanged x, INotifyPropertyChanged y, IDirtyTrackerNode parent, PropertyInfo propertyInfo)
-            : base(x, y, parent.Settings, false)
+        public PropertyDirtyTracker(INotifyPropertyChanged x, INotifyPropertyChanged y, IDirtyTracker parent, PropertyInfo propertyInfo)
+            : base(x, y, parent.Settings)
         {
             this.parent = parent;
             this.PropertyInfo = propertyInfo;
@@ -20,7 +22,7 @@
         {
             if (propertyName == nameof(this.IsDirty))
             {
-                this.parent.Update(this);
+                this.parent?.Update(this);
             }
 
             base.OnPropertyChanged(propertyName);

@@ -1,15 +1,18 @@
 namespace Gu.ChangeTracking
 {
+    using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Reflection;
 
+    [DebuggerDisplay("AlwaysDirtyNode Property: {PropertyInfo.Name}")]
     internal class AlwaysDirtyNode : IDirtyTrackerNode
     {
-        public AlwaysDirtyNode(PropertyInfo propertyInfo)
+        private static readonly Dictionary<PropertyInfo, AlwaysDirtyNode> Cache = new Dictionary<PropertyInfo, AlwaysDirtyNode>();
+
+        private AlwaysDirtyNode(PropertyInfo propertyInfo)
         {
             this.PropertyInfo = propertyInfo;
         }
-
-        DirtyTrackerSettings IDirtyTrackerNode.Settings => null;
 
         public bool IsDirty => true;
 
@@ -23,6 +26,19 @@ namespace Gu.ChangeTracking
         public void Update(IDirtyTrackerNode child)
         {
             // nop
+        }
+
+        internal static AlwaysDirtyNode For(PropertyInfo propertyInfo)
+        {
+            AlwaysDirtyNode node;
+            if (Cache.TryGetValue(propertyInfo, out node))
+            {
+                return node;
+            }
+
+            node = new AlwaysDirtyNode(propertyInfo);
+            Cache[propertyInfo] = node;
+            return node;
         }
     }
 }

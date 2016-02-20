@@ -1,5 +1,6 @@
 ﻿namespace Gu.ChangeTracking
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
@@ -7,6 +8,11 @@
     public class DirtyTrackerSettings
     {
         private readonly HashSet<PropertyInfo> ignoredProperties;
+
+        public DirtyTrackerSettings(Type type, string[] ignoreProperties, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
+            : this(type?.GetIgnoreProperties(bindingFlags, ignoreProperties), bindingFlags, referenceHandling)
+        {
+        }
 
         public DirtyTrackerSettings(IEnumerable<PropertyInfo> ignoredProperties, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
         {

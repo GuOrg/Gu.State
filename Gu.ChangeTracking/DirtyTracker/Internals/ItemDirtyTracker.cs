@@ -5,13 +5,13 @@
     using System.Linq;
     using System.Reflection;
 
-    internal class ItemDirtyTracker : DirtyTracker<INotifyPropertyChanged>, IDirtyTrackerNode
+    internal class ItemDirtyTracker : DirtyTracker<INotifyPropertyChanged>, IDirtyTracker
     {
         internal static readonly PropertyInfo IndexerProperty = typeof(IList).GetProperties().Single(p => p.GetIndexParameters().Length > 0);
-        private readonly IDirtyTrackerNode parent;
+        private readonly IDirtyTracker parent;
 
-        public ItemDirtyTracker(INotifyPropertyChanged x, INotifyPropertyChanged y, IDirtyTrackerNode parent)
-            : base(x, y, parent.Settings, false)
+        public ItemDirtyTracker(INotifyPropertyChanged x, INotifyPropertyChanged y, IDirtyTracker parent)
+            : base(x, y, parent.Settings)
         {
             this.parent = parent;
         }

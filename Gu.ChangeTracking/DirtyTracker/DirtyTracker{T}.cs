@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.ComponentModel;
+    using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
     using System.Runtime.CompilerServices;
@@ -14,11 +15,10 @@
     /// <summary>
     /// Tracks if there is a difference between the properties of x and y
     /// </summary>
-    public class DirtyTracker<T> : INotifyPropertyChanged, IDisposable, IDirtyTrackerNode
+    [DebuggerDisplay("DirtyTracker<{typeof(T).Name}> IsDirty: {IsDirty}")]
+    public class DirtyTracker<T> : INotifyPropertyChanged, IDirtyTracker
         where T : class, INotifyPropertyChanged
     {
-        private readonly T x;
-        private readonly T y;
         private readonly HashSet<PropertyInfo> diff = new HashSet<PropertyInfo>();
         private readonly PropertiesDirtyTracker propertyTracker;
         private readonly ItemsDirtyTracker itemTrackers;
@@ -29,7 +29,7 @@
         }
 
         internal DirtyTracker(T x, T y, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
-                        : this(x, y, new DirtyTrackerSettings(null, bindingFlags, referenceHandling))
+            : this(x, y, new DirtyTrackerSettings(null, bindingFlags, referenceHandling))
         {
         }
 
@@ -39,28 +39,17 @@
         }
 
         public DirtyTracker(T x, T y, BindingFlags bindingFlags, params string[] ignoreProperties)
-            : this(x, y, new DirtyTrackerSettings(x?.GetType().GetIgnoreProperties(bindingFlags, ignoreProperties), bindingFlags, ReferenceHandling.Throw))
+            : this(x, y, new DirtyTrackerSettings(x?.GetType(), ignoreProperties, bindingFlags, ReferenceHandling.Throw))
         {
         }
 
         public DirtyTracker(T x, T y, DirtyTrackerSettings settings)
-            : this(x, y, settings, true)
-        {
-        }
-
-        protected DirtyTracker(T x, T y, DirtyTrackerSettings settings, bool validateArguments)
         {
             Ensure.NotNull(x, nameof(x));
             Ensure.NotNull(y, nameof(y));
-            if (validateArguments)
-            {
-                Ensure.NotSame(x, y, nameof(x), nameof(y));
-            }
-
+            Ensure.NotSame(x, y, nameof(x), nameof(y));
             Ensure.SameType(x, y);
             Verify(settings);
-            this.x = x;
-            this.y = y;
             this.Settings = settings;
             this.propertyTracker = PropertiesDirtyTracker.Create(x, y, this);
             this.itemTrackers = ItemsDirtyTracker.Create(x, y, this);
@@ -89,17 +78,23 @@
         /// </summary>
         public static void Verify(BindingFlags bindingFlags, params string[] ignoreProperties)
         {
-            Verify(new DirtyTrackerSettings(typeof(T).GetIgnoreProperties(bindingFlags, ignoreProperties), bindingFlags, ReferenceHandling.Throw));
+            Verify(
+                new DirtyTrackerSettings(
+                    typeof(T).GetIgnoreProperties(bindingFlags, ignoreProperties),
+                    bindingFlags,
+                    ReferenceHandling.Throw));
         }
 
         public static void Verify(DirtyTrackerSettings settings)
         {
             if (typeof(IEnumerable).IsAssignableFrom(typeof(T)))
             {
-                if (settings.ReferenceHandling == ReferenceHandling.Throw ||
-                    (settings.ReferenceHandling != ReferenceHandling.Throw && !typeof(INotifyCollectionChanged).IsAssignableFrom(typeof(T))))
+                if (settings.ReferenceHandling == ReferenceHandling.Throw
+                    || (settings.ReferenceHandling != ReferenceHandling.Throw
+                        && !typeof(INotifyCollectionChanged).IsAssignableFrom(typeof(T))))
                 {
-                    throw new NotSupportedException("Not supporting IEnumerable unless ReferenceHandling is specified and the collection is INotifyCollectionChanged");
+                    throw new NotSupportedException(
+                        "Not supporting IEnumerable unless ReferenceHandling is specified and the collection is INotifyCollectionChanged");
                 }
             }
 
@@ -110,11 +105,13 @@
                     continue;
                 }
 
-                if (!EqualBy.IsEquatable(propertyInfo.PropertyType) && settings.ReferenceHandling == ReferenceHandling.Throw)
+                if (!EqualBy.IsEquatable(propertyInfo.PropertyType)
+                    && settings.ReferenceHandling == ReferenceHandling.Throw)
                 {
-                    var message = $"Only equatable properties are supported without specifying {typeof(ReferenceHandling).Name}\r\n" +
-                                  $"Property {typeof(T).Name}.{propertyInfo.Name} is not IEquatable<{propertyInfo.PropertyType.Name}>.\r\n" +
-                                  "Use the overload DirtyTracker.Track(x, y, ReferenceHandling) if you want to track a graph";
+                    var message =
+                        $"Only equatable properties are supported without specifying {typeof(ReferenceHandling).Name}\r\n"
+                        + $"Property {typeof(T).Name}.{propertyInfo.Name} is not IEquatable<{propertyInfo.PropertyType.Name}>.\r\n"
+                        + "Use the overload DirtyTracker.Track(x, y, ReferenceHandling) if you want to track a graph";
                     throw new NotSupportedException(message);
                 }
             }
@@ -126,7 +123,7 @@
             this.itemTrackers?.Dispose();
         }
 
-        void IDirtyTrackerNode.Update(IDirtyTrackerNode child)
+        void IDirtyTracker.Update(IDirtyTrackerNode child)
         {
             var before = this.diff.Count;
             if (child.IsDirty)
@@ -173,7 +170,11 @@
 
         private class PropertiesDirtyTracker : IDisposable
         {
-            private static readonly IEnumerable<PropertyInfo> IndexerProperty = new[] { ItemDirtyTracker.IndexerProperty };
+            private static readonly IEnumerable<PropertyInfo> IndexerProperty = new[]
+                                                                                    {
+                                                                                        ItemDirtyTracker.IndexerProperty
+                                                                                    };
+
             private readonly INotifyPropertyChanged x;
             private readonly INotifyPropertyChanged y;
             private readonly DirtyTracker<T> parent;
@@ -184,7 +185,6 @@
                 this.x = x;
                 this.y = y;
                 this.parent = parent;
-                this.Reset();
                 x.PropertyChanged += this.OnTrackedPropertyChanged;
                 y.PropertyChanged += this.OnTrackedPropertyChanged;
                 List<PropertyCollection.PropertyAndDisposable> items = null;
@@ -196,17 +196,20 @@
                         continue;
                     }
 
-                    if (!Copy.IsCopyableType(propertyInfo.PropertyType))
+                    var tracker = this.CreatePropertyTracker(propertyInfo);
+                    if (items == null)
                     {
-                        var sv = propertyInfo.GetValue(x);
-                        var tv = propertyInfo.GetValue(y);
-                        if (items == null)
-                        {
-                            items = new List<PropertyCollection.PropertyAndDisposable>();
-                        }
+                        items = new List<PropertyCollection.PropertyAndDisposable>();
+                    }
 
-                        var tracker = this.CreatePropertyTracker((INotifyPropertyChanged)sv, (INotifyPropertyChanged)tv, propertyInfo);
-                        items.Add(new PropertyCollection.PropertyAndDisposable(propertyInfo, tracker));
+                    items.Add(new PropertyCollection.PropertyAndDisposable(propertyInfo, tracker));
+                    if (tracker.IsDirty)
+                    {
+                        parent.diff.Add(propertyInfo);
+                    }
+                    else
+                    {
+                        parent.diff.Remove(propertyInfo);
                     }
                 }
 
@@ -216,9 +219,17 @@
                 }
             }
 
-            public static PropertiesDirtyTracker Create(INotifyPropertyChanged x, INotifyPropertyChanged y, DirtyTracker<T> parent)
+            internal static PropertiesDirtyTracker Create(
+                INotifyPropertyChanged x,
+                INotifyPropertyChanged y,
+                DirtyTracker<T> parent)
             {
                 if (x == null && y == null)
+                {
+                    return null;
+                }
+
+                if (ReferenceEquals(x, y))
                 {
                     return null;
                 }
@@ -250,23 +261,23 @@
             {
                 var before = this.parent.diff.Count;
                 this.parent.diff.IntersectWith(IndexerProperty);
-                foreach (var propertyInfo in this.x.GetType().GetProperties(this.parent.Settings.BindingFlags))
+                foreach (var propertyInfo in this.x.GetType()
+                                                 .GetProperties(this.parent.Settings.BindingFlags))
                 {
                     if (this.parent.Settings.IsIgnoringProperty(propertyInfo))
                     {
                         continue;
                     }
 
-                    var xv = propertyInfo.GetValue(this.x);
-                    var yv = propertyInfo.GetValue(this.y);
-                    if (this.propertyTrackers != null && this.propertyTrackers.Contains(propertyInfo))
-                    {
-                        var propertyTracker = this.CreatePropertyTracker((INotifyPropertyChanged)xv, (INotifyPropertyChanged)yv, propertyInfo);
-                        this.propertyTrackers[propertyInfo] = propertyTracker;
-                    }
-                    else if (!Equals(xv, yv))
+                    var propertyTracker = this.CreatePropertyTracker(propertyInfo);
+                    this.propertyTrackers[propertyInfo] = propertyTracker;
+                    if (propertyTracker.IsDirty)
                     {
                         this.parent.diff.Add(propertyInfo);
+                    }
+                    else
+                    {
+                        this.parent.diff.Remove(propertyInfo);
                     }
                 }
 
@@ -281,29 +292,18 @@
                     return;
                 }
 
-                var propertyInfo = sender.GetType().GetProperty(e.PropertyName, this.parent.Settings.BindingFlags);
-                if (propertyInfo == null)
-                {
-                    return;
-                }
+                var propertyInfo = sender.GetType()
+                                         .GetProperty(e.PropertyName, this.parent.Settings.BindingFlags);
 
                 if (this.parent.Settings.IsIgnoringProperty(propertyInfo))
                 {
                     return;
                 }
 
-                var xv = propertyInfo.GetValue(this.x);
-                var yv = propertyInfo.GetValue(this.y);
-                if (this.propertyTrackers != null && this.propertyTrackers.Contains(propertyInfo))
-                {
-                    var propertyTracker = this.CreatePropertyTracker((INotifyPropertyChanged)xv, (INotifyPropertyChanged)yv, propertyInfo);
-                    this.propertyTrackers[propertyInfo] = propertyTracker;
-                    ((IDirtyTrackerNode)this.parent).Update(propertyTracker);
-                    return;
-                }
-
                 var before = this.parent.diff.Count;
-                if (!Equals(xv, yv))
+                var propertyTracker = this.CreatePropertyTracker(propertyInfo);
+                this.propertyTrackers[propertyInfo] = propertyTracker;
+                if (propertyTracker.IsDirty)
                 {
                     this.parent.diff.Add(propertyInfo);
                 }
@@ -315,34 +315,38 @@
                 this.parent.NotifyChanges(before);
             }
 
-            private IDirtyTrackerNode CreatePropertyTracker(INotifyPropertyChanged x, INotifyPropertyChanged y, PropertyInfo propertyInfo)
+            private IDirtyTrackerNode CreatePropertyTracker(PropertyInfo propertyInfo)
             {
-                if (x == null && y == null)
+                var xv = propertyInfo.GetValue(this.x);
+                var yv = propertyInfo.GetValue(this.y);
+                if (xv == null && yv == null)
                 {
-                    return new NeverDirtyNode(propertyInfo);
+                    return NeverDirtyNode.For(propertyInfo);
                 }
 
-                if (x == null || y == null)
+                if (xv == null || yv == null)
                 {
-                    return new AlwaysDirtyNode(propertyInfo);
+                    return AlwaysDirtyNode.For(propertyInfo);
                 }
 
-                if (EqualBy.IsEquatable(x.GetType()))
+                if (EqualBy.IsEquatable(xv.GetType()))
                 {
-                    return new PropertyDirtyTracker(x, y, this.parent, propertyInfo);
+                    return Equals(xv, yv)
+                               ? (IDirtyTrackerNode)NeverDirtyNode.For(ItemDirtyTracker.IndexerProperty)
+                               : AlwaysDirtyNode.For(ItemDirtyTracker.IndexerProperty);
                 }
 
                 switch (this.parent.Settings.ReferenceHandling)
                 {
                     case ReferenceHandling.Throw:
-                        var message = $"{typeof(DirtyTracker).Name} does not support tracking an item of type {x.GetType().Name}. Specify {typeof(ReferenceHandling).Name} if you want to track a graph";
+                        var message = $"{typeof(DirtyTracker).Name} does not support tracking an item of type {xv.GetType().Name}. Specify {typeof(ReferenceHandling).Name} if you want to track a graph";
                         throw new NotSupportedException(message);
                     case ReferenceHandling.Reference:
-                        return ReferenceEquals(x, y)
-                                   ? (IDirtyTrackerNode)new NeverDirtyNode(ItemDirtyTracker.IndexerProperty)
-                                   : new AlwaysDirtyNode(ItemDirtyTracker.IndexerProperty);
+                        return ReferenceEquals(xv, yv)
+                                   ? (IDirtyTrackerNode)NeverDirtyNode.For(ItemDirtyTracker.IndexerProperty)
+                                   : AlwaysDirtyNode.For(ItemDirtyTracker.IndexerProperty);
                     case ReferenceHandling.Structural:
-                        return new PropertyDirtyTracker(x, y, this.parent, propertyInfo);
+                        return new PropertyDirtyTracker((INotifyPropertyChanged)xv, (INotifyPropertyChanged)yv, this.parent, propertyInfo);
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -475,37 +479,43 @@
                              : null;
                 if (xv == null && yv == null)
                 {
-                    return new NeverDirtyNode(ItemDirtyTracker.IndexerProperty);
+                    return NeverDirtyNode.For(ItemDirtyTracker.IndexerProperty);
                 }
-                else if (xv == null || yv == null)
+
+                if (xv == null || yv == null)
                 {
-                    return new AlwaysDirtyNode(ItemDirtyTracker.IndexerProperty);
+                    return AlwaysDirtyNode.For(ItemDirtyTracker.IndexerProperty);
                 }
-                else
+
+                if (EqualBy.IsEquatable(xv.GetType()))
                 {
-                    if (EqualBy.IsEquatable(xv.GetType()))
-                    {
-                        return Equals(xv, yv)
-                                   ? (IDirtyTrackerNode)new NeverDirtyNode(ItemDirtyTracker.IndexerProperty)
-                                   : new AlwaysDirtyNode(ItemDirtyTracker.IndexerProperty);
-                    }
-                    else
-                    {
-                        switch (this.parent.Settings.ReferenceHandling)
+                    return Equals(xv, yv)
+                               ? (IDirtyTrackerNode)NeverDirtyNode.For(ItemDirtyTracker.IndexerProperty)
+                               : AlwaysDirtyNode.For(ItemDirtyTracker.IndexerProperty);
+                }
+
+                switch (this.parent.Settings.ReferenceHandling)
+                {
+                    case ReferenceHandling.Throw:
+                        var message =
+                            $"{typeof(DirtyTracker).Name} does not support tracking an item of type {xv.GetType().Name}. Specify {typeof(ReferenceHandling).Name} if you want to track a graph";
+                        throw new NotSupportedException(message);
+                    case ReferenceHandling.Reference:
+                        return ReferenceEquals(xv, yv)
+                                   ? (IDirtyTrackerNode)NeverDirtyNode.For(ItemDirtyTracker.IndexerProperty)
+                                   : AlwaysDirtyNode.For(ItemDirtyTracker.IndexerProperty);
+                    case ReferenceHandling.Structural:
+                        if (ReferenceEquals(xv, yv))
                         {
-                            case ReferenceHandling.Throw:
-                                var message = $"{typeof(DirtyTracker).Name} does not support tracking an item of type {xv.GetType().Name}. Specify {typeof(ReferenceHandling).Name} if you want to track a graph";
-                                throw new NotSupportedException(message);
-                            case ReferenceHandling.Reference:
-                                return ReferenceEquals(xv, yv)
-                                           ? (IDirtyTrackerNode)new NeverDirtyNode(ItemDirtyTracker.IndexerProperty)
-                                           : new AlwaysDirtyNode(ItemDirtyTracker.IndexerProperty);
-                            case ReferenceHandling.Structural:
-                                return new ItemDirtyTracker((INotifyPropertyChanged)xv, (INotifyPropertyChanged)yv, this.parent);
-                            default:
-                                throw new ArgumentOutOfRangeException();
+                            return NeverDirtyNode.For(ItemDirtyTracker.IndexerProperty);
                         }
-                    }
+
+                        return new ItemDirtyTracker(
+                            (INotifyPropertyChanged)xv,
+                            (INotifyPropertyChanged)yv,
+                            this.parent);
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
         }
