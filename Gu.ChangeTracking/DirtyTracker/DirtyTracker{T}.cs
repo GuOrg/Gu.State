@@ -327,15 +327,36 @@
                     return new AlwaysDirtyNode(propertyInfo);
                 }
 
-                return new PropertyDirtyTracker(x, y, this.parent, propertyInfo);
+                if (EqualBy.IsEquatable(x.GetType()))
+                {
+                    return new PropertyDirtyTracker(x, y, this.parent, propertyInfo);
+                }
+
+                switch (this.parent.Settings.ReferenceHandling)
+                {
+                    case ReferenceHandling.Throw:
+                        var message = $"{typeof(DirtyTracker).Name} does not support tracking an item of type {x.GetType().Name}. Specify {typeof(ReferenceHandling).Name} if you want to track a graph";
+                        throw new NotSupportedException(message);
+                    case ReferenceHandling.Reference:
+                        return ReferenceEquals(x, y)
+                                   ? (IDirtyTrackerNode)new NeverDirtyNode(ItemDirtyTracker.IndexerProperty)
+                                   : new AlwaysDirtyNode(ItemDirtyTracker.IndexerProperty);
+                    case ReferenceHandling.Structural:
+                        return new PropertyDirtyTracker(x, y, this.parent, propertyInfo);
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
         }
 
         private class ItemsDirtyTracker : IDisposable
         {
             private readonly INotifyCollectionChanged x;
+
             private readonly INotifyCollectionChanged y;
+
             private readonly DirtyTracker<T> parent;
+
             private readonly ItemCollection<IDirtyTrackerNode> itemTrackers;
 
             private ItemsDirtyTracker(INotifyCollectionChanged x, INotifyCollectionChanged y, DirtyTracker<T> parent)
@@ -470,7 +491,20 @@
                     }
                     else
                     {
-                        return new ItemDirtyTracker((INotifyPropertyChanged)xv, (INotifyPropertyChanged)yv, this.parent);
+                        switch (this.parent.Settings.ReferenceHandling)
+                        {
+                            case ReferenceHandling.Throw:
+                                var message = $"{typeof(DirtyTracker).Name} does not support tracking an item of type {xv.GetType().Name}. Specify {typeof(ReferenceHandling).Name} if you want to track a graph";
+                                throw new NotSupportedException(message);
+                            case ReferenceHandling.Reference:
+                                return ReferenceEquals(xv, yv)
+                                           ? (IDirtyTrackerNode)new NeverDirtyNode(ItemDirtyTracker.IndexerProperty)
+                                           : new AlwaysDirtyNode(ItemDirtyTracker.IndexerProperty);
+                            case ReferenceHandling.Structural:
+                                return new ItemDirtyTracker((INotifyPropertyChanged)xv, (INotifyPropertyChanged)yv, this.parent);
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
                     }
                 }
             }

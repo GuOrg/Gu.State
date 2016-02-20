@@ -83,7 +83,7 @@
 
                 if (!IsEquatable(propertyInfo.PropertyType) && settings.ReferenceHandling == ReferenceHandling.Throw)
                 {
-                    var message = $"Copy does not support comparing the property {propertyInfo.Name} of type {propertyInfo.PropertyType}";
+                    var message = $"{typeof(EqualBy).Name}.{nameof(PropertyValues)} does not support comparing the property {propertyInfo.Name} of type {propertyInfo.PropertyType}";
                     throw new NotSupportedException(message);
                 }
 
