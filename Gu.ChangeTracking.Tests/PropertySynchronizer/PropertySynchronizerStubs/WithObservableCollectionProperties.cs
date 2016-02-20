@@ -6,19 +6,27 @@
 
     using JetBrains.Annotations;
 
-    public class WithObservableCollectionProperty : INotifyPropertyChanged
+    public class WithObservableCollectionProperties : INotifyPropertyChanged
     {
         private string name;
         private int value;
 
-        public WithObservableCollectionProperty()
+        public WithObservableCollectionProperties()
         {
         }
 
-        public WithObservableCollectionProperty(string name, int value)
+        public WithObservableCollectionProperties(string name, int value)
         {
             this.Name = name;
             this.Value = value;
+        }
+
+        public WithObservableCollectionProperties(params ComplexType[] complexTypes)
+        {
+            foreach (var complexType in complexTypes)
+            {
+                this.Complexes.Add(complexType);
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

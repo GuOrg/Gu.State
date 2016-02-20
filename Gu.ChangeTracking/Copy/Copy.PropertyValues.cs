@@ -193,6 +193,7 @@
                                 propertyInfo.SetValue(target, value);
                                 break;
                             }
+
                         case ReferenceHandling.Structural:
                             var sourceValue = propertyInfo.GetValue(source);
                             if (sourceValue == null)

@@ -32,24 +32,12 @@
                 }
 
                 source.Add(new ComplexType("c", 3));
-                CollectionAssert.AreEqual(
-                    new[] { new ComplexType("a", 2), new ComplexType("b", 2), new ComplexType("c", 3) },
-                    source,
-                    ComplexType.Comparer);
-                CollectionAssert.AreEqual(
-                    new[] { new ComplexType("a", 2), new ComplexType("b", 2) },
-                    target,
-                    ComplexType.Comparer);
+                CollectionAssert.AreEqual(new[] { new ComplexType("a", 2), new ComplexType("b", 2), new ComplexType("c", 3) }, source, ComplexType.Comparer);
+                CollectionAssert.AreEqual(new[] { new ComplexType("a", 2), new ComplexType("b", 2) }, target, ComplexType.Comparer);
 
                 source[0].Value++;
-                CollectionAssert.AreEqual(
-                    new[] { new ComplexType("a", 3), new ComplexType("b", 2), new ComplexType("c", 3) },
-                    source,
-                    ComplexType.Comparer);
-                CollectionAssert.AreEqual(
-                    new[] { new ComplexType("a", 2), new ComplexType("b", 2) },
-                    target,
-                    ComplexType.Comparer);
+                CollectionAssert.AreEqual(new[] { new ComplexType("a", 3), new ComplexType("b", 2), new ComplexType("c", 3) }, source, ComplexType.Comparer);
+                CollectionAssert.AreEqual(new[] { new ComplexType("a", 2), new ComplexType("b", 2) }, target, ComplexType.Comparer);
             }
 
             [Test]
@@ -72,24 +60,12 @@
                 }
 
                 source.Add(new ComplexType("c", 3));
-                CollectionAssert.AreEqual(
-                    new[] { new ComplexType("a", 2), new ComplexType("b", 2), new ComplexType("c", 3) },
-                    source,
-                    ComplexType.Comparer);
-                CollectionAssert.AreEqual(
-                    new[] { new ComplexType("a", 2), new ComplexType("b", 2) },
-                    target,
-                    ComplexType.Comparer);
+                CollectionAssert.AreEqual(new[] { new ComplexType("a", 2), new ComplexType("b", 2), new ComplexType("c", 3) }, source, ComplexType.Comparer);
+                CollectionAssert.AreEqual(new[] { new ComplexType("a", 2), new ComplexType("b", 2) }, target, ComplexType.Comparer);
 
                 source[0].Value++;
-                CollectionAssert.AreEqual(
-                    new[] { new ComplexType("a", 3), new ComplexType("b", 2), new ComplexType("c", 3) },
-                    source,
-                    ComplexType.Comparer);
-                CollectionAssert.AreEqual(
-                    new[] { new ComplexType("a", 3), new ComplexType("b", 2) },
-                    target,
-                    ComplexType.Comparer);
+                CollectionAssert.AreEqual(new[] { new ComplexType("a", 3), new ComplexType("b", 2), new ComplexType("c", 3) }, source, ComplexType.Comparer);
+                CollectionAssert.AreEqual(new[] { new ComplexType("a", 3), new ComplexType("b", 2) }, target, ComplexType.Comparer);
             }
 
             [TestCase(ReferenceHandling.Structural)]
@@ -247,68 +223,6 @@
                     //Assert.AreEqual(3, source[1].Value);
 
                     //Assert.Inconclusive("Not sure how to handle the situation where target changes. Maybe throw but not very elegant");
-                }
-            }
-
-            [Test]
-            public void WithObservableCollectionProperty()
-            {
-                var source = new WithObservableCollectionProperty("a", 1);
-                source.Complexes.Add(new ComplexType("a.1", 11));
-                source.Ints.Add(1);
-                var target = new WithObservableCollectionProperty("b", 2);
-                using (PropertySynchronizer.Create(source, target, ReferenceHandling.Structural))
-                {
-                    Assert.AreEqual("a", source.Name);
-                    Assert.AreEqual("a", target.Name);
-                    Assert.AreEqual(1, source.Value);
-                    Assert.AreEqual(1, target.Value);
-
-                    CollectionAssert.AreEqual(new[] { 1 }, source.Ints);
-                    CollectionAssert.AreEqual(new[] { 1 }, target.Ints);
-                    var expectedComplexes = new List<ComplexType> { new ComplexType("a.1", 11) };
-
-                    CollectionAssert.AreEqual(expectedComplexes, source.Complexes, ComplexType.Comparer);
-                    CollectionAssert.AreEqual(expectedComplexes, target.Complexes, ComplexType.Comparer);
-
-                    source.Complexes.Add(new ComplexType("c", 3));
-                    Assert.AreEqual("a", source.Name);
-                    Assert.AreEqual("a", target.Name);
-                    Assert.AreEqual(1, source.Value);
-                    Assert.AreEqual(1, target.Value);
-
-                    expectedComplexes.Add(new ComplexType("c", 3));
-                    CollectionAssert.AreEqual(expectedComplexes, source.Complexes, ComplexType.Comparer);
-                    CollectionAssert.AreEqual(expectedComplexes, target.Complexes, ComplexType.Comparer);
-
-                    source.Complexes[1].Name = "changed";
-                    Assert.AreEqual("a", source.Name);
-                    Assert.AreEqual("a", target.Name);
-                    Assert.AreEqual(1, source.Value);
-                    Assert.AreEqual(1, target.Value);
-
-                    expectedComplexes[1].Name = "changed";
-                    CollectionAssert.AreEqual(expectedComplexes, source.Complexes, ComplexType.Comparer);
-                    CollectionAssert.AreEqual(expectedComplexes, target.Complexes, ComplexType.Comparer);
-
-                    source.Complexes.RemoveAt(1);
-                    Assert.AreEqual("a", source.Name);
-                    Assert.AreEqual("a", target.Name);
-                    Assert.AreEqual(1, source.Value);
-                    Assert.AreEqual(1, target.Value);
-
-                    expectedComplexes.RemoveAt(1);
-                    CollectionAssert.AreEqual(expectedComplexes, source.Complexes, ComplexType.Comparer);
-                    CollectionAssert.AreEqual(expectedComplexes, target.Complexes, ComplexType.Comparer);
-
-                    source.Complexes.Clear();
-                    Assert.AreEqual("a", source.Name);
-                    Assert.AreEqual("a", target.Name);
-                    Assert.AreEqual(1, source.Value);
-                    Assert.AreEqual(1, target.Value);
-
-                    CollectionAssert.IsEmpty(source.Complexes);
-                    CollectionAssert.IsEmpty(target.Complexes);
                 }
             }
         }
