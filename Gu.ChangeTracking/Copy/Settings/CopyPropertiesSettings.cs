@@ -7,6 +7,7 @@
 
     public class CopyPropertiesSettings : CopySettings, IEqualByPropertiesSettings
     {
+        private static readonly Dictionary<BindingFlagsAndReferenceHandling, CopyPropertiesSettings> Cache = new Dictionary<BindingFlagsAndReferenceHandling, CopyPropertiesSettings>();
         private readonly HashSet<PropertyInfo> ignoredProperties;
 
         public CopyPropertiesSettings(IEnumerable<PropertyInfo> ignoredProperties, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
@@ -35,6 +36,20 @@
         public IEnumerable<PropertyInfo> IgnoredProperties => this.ignoredProperties ?? Enumerable.Empty<PropertyInfo>();
 
         public IReadOnlyList<SpecialCopyProperty> SpecialCopyProperties { get; }
+
+        public static CopyPropertiesSettings GetOrCreate(BindingFlags bindingFlags, ReferenceHandling referenceHandling)
+        {
+            var key = new BindingFlagsAndReferenceHandling(bindingFlags, referenceHandling);
+            CopyPropertiesSettings settings;
+            if (Cache.TryGetValue(key, out settings))
+            {
+                return settings;
+            }
+
+            settings = new CopyPropertiesSettings((IEnumerable<PropertyInfo>) null,null,bindingFlags, referenceHandling);
+            Cache[key] = settings;
+            return settings;
+        }
 
         public bool IsIgnoringProperty(PropertyInfo propertyInfo)
         {

@@ -3,10 +3,15 @@ namespace Gu.ChangeTracking
     using System;
     using System.Collections;
     using System.Reflection;
-    using JetBrains.Annotations;
 
     public static partial class EqualBy
     {
+        public static bool FieldValues<T>(T x, T y, BindingFlags bindingFlags)
+        {
+            var settings = EqualByFieldsSettings.GetOrCreate(bindingFlags, ReferenceHandling.Throw);
+            return FieldValues(x, y, settings);
+        }
+
         /// <summary>
         /// Compares x and y for equality using field values.
         /// If a type implements IList the items of the list are compared
@@ -17,7 +22,8 @@ namespace Gu.ChangeTracking
         /// </param>
         public static bool FieldValues<T>(T x, T y, ReferenceHandling referenceHandling)
         {
-            return FieldValues(x, y, Constants.DefaultFieldBindingFlags, referenceHandling);
+            var settings = EqualByFieldsSettings.GetOrCreate(Constants.DefaultFieldBindingFlags, referenceHandling);
+            return FieldValues(x, y, settings);
         }
 
         /// <summary>
@@ -30,7 +36,8 @@ namespace Gu.ChangeTracking
         /// </param>
         public static bool FieldValues<T>(T x, T y, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
         {
-            return FieldValues(x, y, new EqualByFieldsSettings(null, bindingFlags, referenceHandling));
+            var settings = EqualByFieldsSettings.GetOrCreate(bindingFlags, referenceHandling);
+            return FieldValues(x, y, settings);
         }
 
         public static bool FieldValues<T>(T x, T y, params string[] excludedFields)

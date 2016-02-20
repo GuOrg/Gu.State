@@ -6,10 +6,25 @@ namespace Gu.ChangeTracking
 
     public static class PropertySynchronizer
     {
+        public static IDisposable Create<T>(T source, T destination, BindingFlags bindingFlags)
+            where T : class, INotifyPropertyChanged
+        {
+            var settings = CopyPropertiesSettings.GetOrCreate(bindingFlags, ReferenceHandling.Throw);
+            return new PropertySynchronizer<T>(source, destination, settings);
+        }
+
         public static IDisposable Create<T>(T source, T destination, ReferenceHandling referenceHandling)
             where T : class, INotifyPropertyChanged
         {
-            return new PropertySynchronizer<T>(source, destination, referenceHandling);
+            var settings = CopyPropertiesSettings.GetOrCreate(Constants.DefaultPropertyBindingFlags, referenceHandling);
+            return new PropertySynchronizer<T>(source, destination, settings);
+        }
+
+        public static IDisposable Create<T>(T source, T destination, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
+            where T : class, INotifyPropertyChanged
+        {
+            var settings = CopyPropertiesSettings.GetOrCreate(bindingFlags, referenceHandling);
+            return new PropertySynchronizer<T>(source, destination, settings);
         }
 
         public static IDisposable Create<T>(T source, T destination, params string[] excludedProperties)
@@ -25,7 +40,7 @@ namespace Gu.ChangeTracking
         }
 
         public static IDisposable Create<T>(T source, T target, CopyPropertiesSettings settings)
-                where T : class, INotifyPropertyChanged
+            where T : class, INotifyPropertyChanged
         {
             return new PropertySynchronizer<T>(source, target, settings);
         }

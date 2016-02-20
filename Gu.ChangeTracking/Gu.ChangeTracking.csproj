@@ -52,6 +52,7 @@
     <Compile Include="DirtyTracker\Internals\PropertyDirtyTracker.cs" />
     <Compile Include="EqualBy\Settings\IEqualByPropertiesSettings.cs" />
     <Compile Include="EqualBy\Settings\IEqualBySettings.cs" />
+    <Compile Include="Internals\BindingFlagsAndReferenceHandling.cs" />
     <Compile Include="Internals\ItemCollection.cs" />
     <Compile Include="Internals\PropertyCollection.cs" />
     <Compile Include="Internals\ThrowHelper.cs" />
