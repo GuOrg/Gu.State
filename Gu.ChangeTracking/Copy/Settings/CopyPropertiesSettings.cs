@@ -1,5 +1,6 @@
 ﻿namespace Gu.ChangeTracking
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
@@ -24,6 +25,11 @@
                                          ? new HashSet<PropertyInfo>(ignoredProperties)
                                          : null;
             this.SpecialCopyProperties = specialCopyProperties;
+        }
+
+        public CopyPropertiesSettings(Type type, string[] ignoreProperties, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
+            : this(type?.GetIgnoreProperties(bindingFlags, ignoreProperties), bindingFlags, referenceHandling)
+        {
         }
 
         public IEnumerable<PropertyInfo> IgnoredProperties => this.ignoredProperties ?? Enumerable.Empty<PropertyInfo>();

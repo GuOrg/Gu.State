@@ -31,7 +31,7 @@
         public static void PropertyValues<T>(T source, T target, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
             where T : class
         {
-            var settings = new CopyPropertiesSettings(null, null, bindingFlags, referenceHandling);
+            var settings = new CopyPropertiesSettings((IEnumerable<PropertyInfo>)null, null, bindingFlags, referenceHandling);
             PropertyValues(source, target, settings);
         }
 

@@ -9,50 +9,10 @@
 
     public partial class PropertySynchronizerTests
     {
-        public class Collection
+        public class ObservableCollectionOfComplexTypes
         {
             [Test]
-            public void ObservableCollectionOfInts()
-            {
-                var source = new ObservableCollection<int> { 1, 2 };
-                var target = new ObservableCollection<int>();
-                using (PropertySynchronizer.Create(source, target, ReferenceHandling.Structural))
-                {
-                    CollectionAssert.AreEqual(new[] { 1, 2 }, source);
-                    CollectionAssert.AreEqual(new[] { 1, 2 }, target);
-
-                    source.Add(3);
-                    CollectionAssert.AreEqual(new[] { 1, 2, 3 }, source);
-                    CollectionAssert.AreEqual(new[] { 1, 2, 3 }, target);
-
-                    source.RemoveAt(1);
-                    CollectionAssert.AreEqual(new[] { 1, 3 }, source);
-                    CollectionAssert.AreEqual(new[] { 1, 3 }, target);
-
-                    source.Move(0, 1);
-                    CollectionAssert.AreEqual(new[] { 3, 1 }, source);
-                    CollectionAssert.AreEqual(new[] { 3, 1 }, target);
-
-                    source[1] = 4;
-                    CollectionAssert.AreEqual(new[] { 3, 4 }, source);
-                    CollectionAssert.AreEqual(new[] { 3, 4 }, target);
-
-                    target.RemoveAt(1);
-                    CollectionAssert.AreEqual(new[] { 3, 4 }, source);
-                    CollectionAssert.AreEqual(new[] { 3 }, target);
-
-                    source.Clear();
-                    CollectionAssert.IsEmpty(source);
-                    CollectionAssert.IsEmpty(target);
-                }
-
-                source.Add(1);
-                CollectionAssert.AreEqual(new[] { 1 }, source);
-                CollectionAssert.IsEmpty(target);
-            }
-
-            [Test]
-            public void ObservableCollectionOfComplexTypes()
+            public void Synchronizes()
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
                 var target = new ObservableCollection<ComplexType>();
