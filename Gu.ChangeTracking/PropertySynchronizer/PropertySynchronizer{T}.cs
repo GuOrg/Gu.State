@@ -383,6 +383,11 @@ namespace Gu.ChangeTracking
                     throw new NotSupportedException("Can only synchronize items that are INotifyPropertyChanged");
                 }
 
+                if (ReferenceEquals(sv, tv))
+                {
+                    return null;
+                }
+
                 return new PropertySynchronizer<INotifyPropertyChanged>((INotifyPropertyChanged)sv, (INotifyPropertyChanged)tv, this.settings);
             }
         }
