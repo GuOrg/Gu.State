@@ -7,8 +7,8 @@
     {
         private readonly IDirtyTrackerNode parent;
 
-        public PropertyDirtyTracker(INotifyPropertyChanged x, INotifyPropertyChanged y, IDirtyTrackerNode parent, PropertyInfo propertyInfo, DirtyTrackerSettings settings)
-            : base(x, y, settings, false)
+        public PropertyDirtyTracker(INotifyPropertyChanged x, INotifyPropertyChanged y, IDirtyTrackerNode parent, PropertyInfo propertyInfo)
+            : base(x, y, parent.Settings, false)
         {
             this.parent = parent;
             this.PropertyInfo = propertyInfo;

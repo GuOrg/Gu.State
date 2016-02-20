@@ -20,8 +20,8 @@
         private readonly T x;
         private readonly T y;
         private readonly HashSet<PropertyInfo> diff = new HashSet<PropertyInfo>();
-        private readonly PropertyCollection propertyTrackers;
-        private readonly NotifyCollectionChangedTracker itemTrackers;
+        private readonly PropertiesDirtyTracker propertyTracker;
+        private readonly ItemsDirtyTracker itemTrackers;
 
         internal DirtyTracker(T x, T y, ReferenceHandling referenceHandling)
             : this(x, y, Constants.DefaultPropertyBindingFlags, referenceHandling)
@@ -62,12 +62,8 @@
             this.x = x;
             this.y = y;
             this.Settings = settings;
-            this.Reset();
-            this.itemTrackers = NotifyCollectionChangedTracker.Create(x, y);
-
-            x.PropertyChanged += this.OnTrackedPropertyChanged;
-            y.PropertyChanged += this.OnTrackedPropertyChanged;
-            this.propertyTrackers = PropertyCollection.Create(x, y, settings, this.CreatePropertyTracker);
+            this.propertyTracker = PropertiesDirtyTracker.Create(x, y, this);
+            this.itemTrackers = ItemsDirtyTracker.Create(x, y, this);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -126,10 +122,7 @@
 
         public void Dispose()
         {
-            this.x.PropertyChanged -= this.OnTrackedPropertyChanged;
-            this.y.PropertyChanged -= this.OnTrackedPropertyChanged;
-            this.itemTrackers?.Dispose();
-            this.propertyTrackers?.Dispose();
+            this.propertyTracker?.Dispose();
             this.itemTrackers?.Dispose();
         }
 
@@ -145,7 +138,7 @@
                 var itemDirtyTracker = child as ItemDirtyTracker;
                 if (itemDirtyTracker != null)
                 {
-                    if (this.itemTrackers.All(x => !x.IsDirty))
+                    if (!this.itemTrackers.IsDirty)
                     {
                         this.diff.Remove(child.PropertyInfo);
                     }
@@ -153,37 +146,6 @@
                 else
                 {
                     this.diff.Remove(child.PropertyInfo);
-                }
-            }
-
-            this.NotifyChanges(before);
-        }
-
-        /// <summary>
-        /// Clears the <see cref="Diff"/> and calculates a new.
-        /// Notifies if there are changes.
-        /// </summary>
-        protected void Reset()
-        {
-            var before = this.diff.Count;
-            this.diff.Clear();
-            foreach (var propertyInfo in this.x.GetType().GetProperties(this.Settings.BindingFlags))
-            {
-                if (this.Settings.IsIgnoringProperty(propertyInfo))
-                {
-                    continue;
-                }
-
-                var xv = propertyInfo.GetValue(this.x);
-                var yv = propertyInfo.GetValue(this.y);
-                if (this.propertyTrackers != null && this.propertyTrackers.Contains(propertyInfo))
-                {
-                    var propertyTracker = this.CreatePropertyTracker((INotifyPropertyChanged)xv, (INotifyPropertyChanged)yv, propertyInfo);
-                    this.propertyTrackers[propertyInfo] = propertyTracker;
-                }
-                else if (!Equals(xv, yv))
-                {
-                    this.diff.Add(propertyInfo);
                 }
             }
 
@@ -209,91 +171,206 @@
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void OnTrackedPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private class PropertiesDirtyTracker : IDisposable
         {
-            if (string.IsNullOrEmpty(e.PropertyName))
-            {
-                this.Reset();
-                return;
-            }
+            private static readonly IEnumerable<PropertyInfo> IndexerProperty = new[] { ItemDirtyTracker.IndexerProperty };
+            private readonly INotifyPropertyChanged x;
+            private readonly INotifyPropertyChanged y;
+            private readonly DirtyTracker<T> parent;
+            private readonly PropertyCollection propertyTrackers;
 
-            var propertyInfo = sender.GetType().GetProperty(e.PropertyName, this.Settings.BindingFlags);
-            if (propertyInfo == null)
-            {
-                return;
-            }
-
-            if (this.Settings.IsIgnoringProperty(propertyInfo))
-            {
-                return;
-            }
-
-            var xv = propertyInfo.GetValue(this.x);
-            var yv = propertyInfo.GetValue(this.y);
-            if (this.propertyTrackers != null && this.propertyTrackers.Contains(propertyInfo))
-            {
-                var propertyTracker = this.CreatePropertyTracker((INotifyPropertyChanged)xv, (INotifyPropertyChanged)yv, propertyInfo);
-                this.propertyTrackers[propertyInfo] = propertyTracker;
-                ((IDirtyTrackerNode)this).Update(propertyTracker);
-                return;
-            }
-
-            var before = this.diff.Count;
-            if (!Equals(xv, yv))
-            {
-                this.diff.Add(propertyInfo);
-            }
-            else
-            {
-                this.diff.Remove(propertyInfo);
-            }
-
-            this.NotifyChanges(before);
-        }
-
-        private IDirtyTrackerNode CreatePropertyTracker(INotifyPropertyChanged x, INotifyPropertyChanged y, PropertyInfo propertyInfo)
-        {
-            if (x == null && y == null)
-            {
-                return new NeverDirtyNode(propertyInfo);
-            }
-
-            if (x == null || y == null)
-            {
-                return new AlwaysDirtyNode(propertyInfo);
-            }
-
-            return new PropertyDirtyTracker(x, y, this, propertyInfo, this.Settings);
-        }
-
-        private class NotifyCollectionChangedTracker : IDisposable
-        {
-            private readonly INotifyCollectionChanged x;
-            private readonly INotifyCollectionChanged y;
-            private readonly ItemCollection<IDirtyTrackerNode> itemTrackers;
-
-            private NotifyCollectionChangedTracker(INotifyCollectionChanged x, INotifyCollectionChanged y)
+            private PropertiesDirtyTracker(INotifyPropertyChanged x, INotifyPropertyChanged y, DirtyTracker<T> parent)
             {
                 this.x = x;
                 this.y = y;
+                this.parent = parent;
+                this.Reset();
+                x.PropertyChanged += this.OnTrackedPropertyChanged;
+                y.PropertyChanged += this.OnTrackedPropertyChanged;
+                List<PropertyCollection.PropertyAndDisposable> items = null;
+                foreach (var propertyInfo in x.GetType()
+                                              .GetProperties(parent.Settings.BindingFlags))
+                {
+                    if (parent.Settings.IsIgnoringProperty(propertyInfo))
+                    {
+                        continue;
+                    }
+
+                    if (!Copy.IsCopyableType(propertyInfo.PropertyType))
+                    {
+                        var sv = propertyInfo.GetValue(x);
+                        var tv = propertyInfo.GetValue(y);
+                        if (items == null)
+                        {
+                            items = new List<PropertyCollection.PropertyAndDisposable>();
+                        }
+
+                        var tracker = this.CreatePropertyTracker((INotifyPropertyChanged)sv, (INotifyPropertyChanged)tv, propertyInfo);
+                        items.Add(new PropertyCollection.PropertyAndDisposable(propertyInfo, tracker));
+                    }
+                }
+
+                if (items != null)
+                {
+                    this.propertyTrackers = new PropertyCollection(items);
+                }
+            }
+
+            public static PropertiesDirtyTracker Create(INotifyPropertyChanged x, INotifyPropertyChanged y, DirtyTracker<T> parent)
+            {
+                if (x == null && y == null)
+                {
+                    return null;
+                }
+
+                if (x == null || y == null)
+                {
+                    var type = x?.GetType() ?? y.GetType();
+                    var propertyInfos = type.GetProperties(parent.Settings.BindingFlags)
+                                            .Where(p => !parent.Settings.IsIgnoringProperty(p));
+                    parent.diff.UnionWith(propertyInfos);
+                    return null;
+                }
+
+                return new PropertiesDirtyTracker(x, y, parent);
+            }
+
+            public void Dispose()
+            {
+                this.x.PropertyChanged -= this.OnTrackedPropertyChanged;
+                this.y.PropertyChanged -= this.OnTrackedPropertyChanged;
+                this.propertyTrackers?.Dispose();
+            }
+
+            /// <summary>
+            /// Clears the <see cref="Diff"/> and calculates a new.
+            /// Notifies if there are changes.
+            /// </summary>
+            private void Reset()
+            {
+                var before = this.parent.diff.Count;
+                this.parent.diff.IntersectWith(IndexerProperty);
+                foreach (var propertyInfo in this.x.GetType().GetProperties(this.parent.Settings.BindingFlags))
+                {
+                    if (this.parent.Settings.IsIgnoringProperty(propertyInfo))
+                    {
+                        continue;
+                    }
+
+                    var xv = propertyInfo.GetValue(this.x);
+                    var yv = propertyInfo.GetValue(this.y);
+                    if (this.propertyTrackers != null && this.propertyTrackers.Contains(propertyInfo))
+                    {
+                        var propertyTracker = this.CreatePropertyTracker((INotifyPropertyChanged)xv, (INotifyPropertyChanged)yv, propertyInfo);
+                        this.propertyTrackers[propertyInfo] = propertyTracker;
+                    }
+                    else if (!Equals(xv, yv))
+                    {
+                        this.parent.diff.Add(propertyInfo);
+                    }
+                }
+
+                this.parent.NotifyChanges(before);
+            }
+
+            private void OnTrackedPropertyChanged(object sender, PropertyChangedEventArgs e)
+            {
+                if (string.IsNullOrEmpty(e.PropertyName))
+                {
+                    this.Reset();
+                    return;
+                }
+
+                var propertyInfo = sender.GetType().GetProperty(e.PropertyName, this.parent.Settings.BindingFlags);
+                if (propertyInfo == null)
+                {
+                    return;
+                }
+
+                if (this.parent.Settings.IsIgnoringProperty(propertyInfo))
+                {
+                    return;
+                }
+
+                var xv = propertyInfo.GetValue(this.x);
+                var yv = propertyInfo.GetValue(this.y);
+                if (this.propertyTrackers != null && this.propertyTrackers.Contains(propertyInfo))
+                {
+                    var propertyTracker = this.CreatePropertyTracker((INotifyPropertyChanged)xv, (INotifyPropertyChanged)yv, propertyInfo);
+                    this.propertyTrackers[propertyInfo] = propertyTracker;
+                    ((IDirtyTrackerNode)this.parent).Update(propertyTracker);
+                    return;
+                }
+
+                var before = this.parent.diff.Count;
+                if (!Equals(xv, yv))
+                {
+                    this.parent.diff.Add(propertyInfo);
+                }
+                else
+                {
+                    this.parent.diff.Remove(propertyInfo);
+                }
+
+                this.parent.NotifyChanges(before);
+            }
+
+            private IDirtyTrackerNode CreatePropertyTracker(INotifyPropertyChanged x, INotifyPropertyChanged y, PropertyInfo propertyInfo)
+            {
+                if (x == null && y == null)
+                {
+                    return new NeverDirtyNode(propertyInfo);
+                }
+
+                if (x == null || y == null)
+                {
+                    return new AlwaysDirtyNode(propertyInfo);
+                }
+
+                return new PropertyDirtyTracker(x, y, this.parent, propertyInfo);
+            }
+        }
+
+        private class ItemsDirtyTracker : IDisposable
+        {
+            private readonly INotifyCollectionChanged x;
+            private readonly INotifyCollectionChanged y;
+            private readonly DirtyTracker<T> parent;
+            private readonly ItemCollection<IDirtyTrackerNode> itemTrackers;
+
+            private ItemsDirtyTracker(INotifyCollectionChanged x, INotifyCollectionChanged y, DirtyTracker<T> parent)
+            {
+                this.x = x;
+                this.y = y;
+                this.parent = parent;
                 this.x.CollectionChanged += this.OnTrackedCollectionChanged;
                 this.y.CollectionChanged += this.OnTrackedCollectionChanged;
                 var xList = (IList)x;
                 var yList = (IList)y;
                 this.itemTrackers = new ItemCollection<IDirtyTrackerNode>();
+                bool anyDirty = false;
                 for (int i = 0; i < Math.Max(xList.Count, yList.Count); i++)
                 {
-                    this.itemTrackers[i] = this.CreateItemTracker(i);
+                    var itemTracker = this.CreateItemTracker(i);
+                    this.itemTrackers[i] = itemTracker;
+                    anyDirty |= itemTracker.IsDirty;
+                }
+
+                if (anyDirty)
+                {
+                    parent.diff.Add(ItemDirtyTracker.IndexerProperty);
                 }
             }
 
-            internal static NotifyCollectionChangedTracker Create(object x, object y)
+            public bool IsDirty => this.itemTrackers.Any(it => it.IsDirty);
+
+            internal static ItemsDirtyTracker Create(object x, object y, DirtyTracker<T> parent)
             {
                 var xCollectionChanged = x as INotifyCollectionChanged;
                 var yCollectionChanged = y as INotifyCollectionChanged;
-                if (x != null && y != null)
+                if (xCollectionChanged != null && yCollectionChanged != null)
                 {
-                    return new NotifyCollectionChangedTracker(xCollectionChanged, yCollectionChanged);
+                    return new ItemsDirtyTracker(xCollectionChanged, yCollectionChanged, parent);
                 }
 
                 return null;
@@ -303,71 +380,65 @@
             {
                 this.x.CollectionChanged -= this.OnTrackedCollectionChanged;
                 this.y.CollectionChanged -= this.OnTrackedCollectionChanged;
+                this.itemTrackers?.Dispose();
             }
 
             private void OnTrackedCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
             {
+                var before = this.parent.diff.Count;
                 switch (e.Action)
                 {
                     case NotifyCollectionChangedAction.Add:
-                        throw new NotImplementedException();
-                        break;
-                    case NotifyCollectionChangedAction.Remove:
-                        throw new NotImplementedException();
-                        for (int i = 0; i < e.OldItems.Count; i++)
-                        {
-
-                        }
-                        break;
-                    case NotifyCollectionChangedAction.Replace:
-                        throw new NotImplementedException();
-                        break;
-                    case NotifyCollectionChangedAction.Move:
-                        throw new NotImplementedException();
-                        this.itemTrackers.Move(e.OldStartingIndex, e.NewStartingIndex);
-                        break;
-                    case NotifyCollectionChangedAction.Reset:
-                        var xList = (IList)this.x;
-                        var yList = (IList)this.y;
-                        var before = this.diff.Contains(ItemDirtyTracker.IndexerProperty);
-                        this.itemTrackers.Clear();
-                        bool hasDirtyItem = false;
-                        for (int i = 0; i < Math.Max(xList.Count, yList.Count); i++)
+                        for (int i = e.NewStartingIndex; i < e.NewStartingIndex + e.NewItems.Count; i++)
                         {
                             var itemTracker = this.CreateItemTracker(i);
                             this.itemTrackers[i] = itemTracker;
-                            hasDirtyItem |= itemTracker.IsDirty;
-                        }
-
-                        if (before && !hasDirtyItem)
-                        {
-                            if (this.diff.Remove(ItemDirtyTracker.IndexerProperty))
-                            {
-                                if (this.diff.Count == 0)
-                                {
-                                    this.OnPropertyChanged(nameof(this.IsDirty));
-                                }
-
-                                this.OnPropertyChanged(nameof(this.Diff));
-                            }
-                        }
-                        else if (!before && hasDirtyItem)
-                        {
-                            if (this.diff.Add(ItemDirtyTracker.IndexerProperty))
-                            {
-                                if (this.diff.Count == 1)
-                                {
-                                    this.OnPropertyChanged(nameof(this.IsDirty));
-                                }
-
-                                this.OnPropertyChanged(nameof(this.Diff));
-                            }
                         }
 
                         break;
+                    case NotifyCollectionChangedAction.Remove:
+                        for (int i = e.OldStartingIndex; i < e.OldStartingIndex + e.OldItems.Count; i++)
+                        {
+                            this.itemTrackers.RemoveAt(i);
+                        }
+
+                        break;
+                    case NotifyCollectionChangedAction.Replace:
+                        this.itemTrackers.RemoveAt(e.NewStartingIndex);
+                        this.itemTrackers.Insert(e.NewStartingIndex, this.CreateItemTracker(e.NewStartingIndex));
+                        break;
+                    case NotifyCollectionChangedAction.Move:
+                        this.itemTrackers[e.OldStartingIndex] = this.CreateItemTracker(e.OldStartingIndex);
+                        this.itemTrackers[e.NewStartingIndex] = this.CreateItemTracker(e.NewStartingIndex);
+                        break;
+                    case NotifyCollectionChangedAction.Reset:
+                        {
+                            var xList = (IList)this.x;
+                            var yList = (IList)this.y;
+                            this.itemTrackers.Clear();
+                            for (int i = 0; i < Math.Max(xList.Count, yList.Count); i++)
+                            {
+                                var itemTracker = this.CreateItemTracker(i);
+                                this.itemTrackers[i] = itemTracker;
+                            }
+
+                            break;
+                        }
+
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
+
+                if (this.IsDirty)
+                {
+                    this.parent.diff.Add(ItemDirtyTracker.IndexerProperty);
+                }
+                else
+                {
+                    this.parent.diff.Remove(ItemDirtyTracker.IndexerProperty);
+                }
+
+                this.parent.NotifyChanges(before);
             }
 
             private IDirtyTrackerNode CreateItemTracker(int index)
@@ -399,7 +470,7 @@
                     }
                     else
                     {
-                        return new ItemDirtyTracker((INotifyPropertyChanged)xv, (INotifyPropertyChanged)yv, this, Settings);
+                        return new ItemDirtyTracker((INotifyPropertyChanged)xv, (INotifyPropertyChanged)yv, this.parent);
                     }
                 }
             }

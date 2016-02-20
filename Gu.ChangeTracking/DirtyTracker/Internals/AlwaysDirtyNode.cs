@@ -9,6 +9,8 @@ namespace Gu.ChangeTracking
             this.PropertyInfo = propertyInfo;
         }
 
+        DirtyTrackerSettings IDirtyTrackerNode.Settings => null;
+
         public bool IsDirty => true;
 
         public PropertyInfo PropertyInfo { get; }
