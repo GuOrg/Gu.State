@@ -10,7 +10,7 @@ namespace Gu.ChangeTracking
     {
         private readonly IReadOnlyList<PropertyAndDisposable> items;
 
-        private PropertyCollection(List<PropertyAndDisposable> items)
+        internal PropertyCollection(List<PropertyAndDisposable> items)
         {
             this.items = items;
         }
@@ -91,45 +91,7 @@ namespace Gu.ChangeTracking
             return new PropertyCollection(items);
         }
 
-        internal static PropertyCollection Create<T>(
-            T x,
-            T y,
-            DirtyTrackerSettings settings,
-            Func<INotifyPropertyChanged, INotifyPropertyChanged, PropertyInfo, IDisposable> createTracker)
-            where T : class, INotifyPropertyChanged
-        {
-            List<PropertyAndDisposable> items = null;
-            foreach (var propertyInfo in x.GetType()
-                                          .GetProperties(settings.BindingFlags))
-            {
-                if (settings.IsIgnoringProperty(propertyInfo))
-                {
-                    continue;
-                }
-
-                if (!Copy.IsCopyableType(propertyInfo.PropertyType))
-                {
-                    var sv = propertyInfo.GetValue(x);
-                    var tv = propertyInfo.GetValue(y);
-                    if (items == null)
-                    {
-                        items = new List<PropertyAndDisposable>();
-                    }
-
-                    var tracker = createTracker((INotifyPropertyChanged)sv, (INotifyPropertyChanged)tv, propertyInfo);
-                    items.Add(new PropertyAndDisposable(propertyInfo, tracker));
-                }
-            }
-
-            if (items == null)
-            {
-                return null;
-            }
-
-            return new PropertyCollection(items);
-        }
-
-        private class PropertyAndDisposable : IDisposable
+        internal class PropertyAndDisposable : IDisposable
         {
             private IDisposable synchronizer;
 

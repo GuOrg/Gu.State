@@ -10,8 +10,8 @@
         internal static readonly PropertyInfo IndexerProperty = typeof(IList).GetProperties().Single(p => p.GetIndexParameters().Length > 0);
         private readonly IDirtyTrackerNode parent;
 
-        public ItemDirtyTracker(INotifyPropertyChanged x, INotifyPropertyChanged y, IDirtyTrackerNode parent, DirtyTrackerSettings settings)
-            : base(x, y, settings, false)
+        public ItemDirtyTracker(INotifyPropertyChanged x, INotifyPropertyChanged y, IDirtyTrackerNode parent)
+            : base(x, y, parent.Settings, false)
         {
             this.parent = parent;
         }
