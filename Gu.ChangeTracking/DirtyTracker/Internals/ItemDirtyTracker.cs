@@ -22,7 +22,7 @@
         {
             if (propertyName == nameof(this.IsDirty))
             {
-                this.parent.Update(this);
+                this.parent?.Update(this);
             }
 
             base.OnPropertyChanged(propertyName);

@@ -95,247 +95,239 @@
             [Test]
             public void RemoveTheDifference()
             {
-                Assert.Fail("Change to complex type");
-                //var x = new ObservableCollection<ComplexType> { 1, 2 };
-                //var y = new ObservableCollection<ComplexType> { 1 };
-                //var countProperty = typeof(ObservableCollection<ComplexType>).GetProperty("Count");
-                //var changes = new List<string>();
-                //var expectedChanges = new List<string>();
-                //using (var tracker = DirtyTracker.Track(x, y, ReferenceHandling.Structural))
-                //{
-                //    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
-                //    Assert.AreEqual(true, tracker.IsDirty);
-                //    CollectionAssert.AreEqual(new[] { countProperty, ItemDirtyTracker.IndexerProperty }, tracker.Diff);
-                //    CollectionAssert.IsEmpty(changes);
+                var x = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
+                var y = new ObservableCollection<ComplexType> { new ComplexType("a", 1) };
+                var countProperty = typeof(ObservableCollection<ComplexType>).GetProperty("Count");
+                var changes = new List<string>();
+                var expectedChanges = new List<string>();
+                using (var tracker = DirtyTracker.Track(x, y, ReferenceHandling.Structural))
+                {
+                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    Assert.AreEqual(true, tracker.IsDirty);
+                    CollectionAssert.AreEqual(new[] { countProperty, ItemDirtyTracker.IndexerProperty }, tracker.Diff);
+                    CollectionAssert.IsEmpty(changes);
 
-                //    x.RemoveAt(1);
-                //    Assert.AreEqual(false, tracker.IsDirty);
-                //    CollectionAssert.IsEmpty(tracker.Diff);
-                //    expectedChanges.AddRange(new[] { "Diff", "IsDirty", "Diff" });
-                //    CollectionAssert.AreEqual(expectedChanges, changes);
-                //}
+                    x.RemoveAt(1);
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    CollectionAssert.IsEmpty(tracker.Diff);
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty", "Diff" });
+                    CollectionAssert.AreEqual(expectedChanges, changes);
+                }
             }
 
             [Test]
             public void RemoveStillDirty()
             {
-                Assert.Fail("Change to complex type");
-                //var x = new ObservableCollection<ComplexType> { 1, 2 };
-                //var y = new ObservableCollection<ComplexType> { 3 };
-                //var countProperty = typeof(ObservableCollection<ComplexType>).GetProperty("Count");
-                //var changes = new List<string>();
-                //var expectedChanges = new List<string>();
-                //using (var tracker = DirtyTracker.Track(x, y, ReferenceHandling.Structural))
-                //{
-                //    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
-                //    Assert.AreEqual(true, tracker.IsDirty);
-                //    CollectionAssert.AreEqual(new[] { countProperty, ItemDirtyTracker.IndexerProperty }, tracker.Diff);
-                //    CollectionAssert.IsEmpty(changes);
+                var x = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
+                var y = new ObservableCollection<ComplexType> { new ComplexType("c", 3) };
+                var countProperty = typeof(ObservableCollection<ComplexType>).GetProperty("Count");
+                var changes = new List<string>();
+                var expectedChanges = new List<string>();
+                using (var tracker = DirtyTracker.Track(x, y, ReferenceHandling.Structural))
+                {
+                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    Assert.AreEqual(true, tracker.IsDirty);
+                    CollectionAssert.AreEqual(new[] { countProperty, ItemDirtyTracker.IndexerProperty }, tracker.Diff);
+                    CollectionAssert.IsEmpty(changes);
 
-                //    x.RemoveAt(1);
-                //    Assert.AreEqual(true, tracker.IsDirty);
-                //    CollectionAssert.AreEqual(new[] { ItemDirtyTracker.IndexerProperty }, tracker.Diff);
-                //    expectedChanges.AddRange(new[] { "Diff" });
-                //    CollectionAssert.AreEqual(expectedChanges, changes);
-                //}
+                    x.RemoveAt(1);
+                    Assert.AreEqual(true, tracker.IsDirty);
+                    CollectionAssert.AreEqual(new[] { ItemDirtyTracker.IndexerProperty }, tracker.Diff);
+                    expectedChanges.AddRange(new[] { "Diff" });
+                    CollectionAssert.AreEqual(expectedChanges, changes);
+                }
             }
 
             [Test]
             public void ClearBothWhenNotDirty()
             {
-                Assert.Fail("Change to complex type");
-                //var x = new ObservableCollection<ComplexType> { 1, 2 };
-                //var y = new ObservableCollection<ComplexType> { 1, 2 };
-                //var countProperty = typeof(ObservableCollection<ComplexType>).GetProperty("Count");
-                //var changes = new List<string>();
-                //var expectedChanges = new List<string>();
-                //using (var tracker = DirtyTracker.Track(x, y, ReferenceHandling.Structural))
-                //{
-                //    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
-                //    Assert.AreEqual(false, tracker.IsDirty);
-                //    CollectionAssert.IsEmpty(tracker.Diff);
-                //    CollectionAssert.IsEmpty(changes);
-
-                //    x.Clear();
-                //    Assert.AreEqual(true, tracker.IsDirty);
-                //    CollectionAssert.AreEqual(new[] { countProperty, ItemDirtyTracker.IndexerProperty }, tracker.Diff);
-                //    expectedChanges.AddRange(new[] { "IsDirty", "Diff", "Diff" });
-                //    CollectionAssert.AreEqual(expectedChanges, changes);
-
-                //    y.Clear();
-                //    Assert.AreEqual(false, tracker.IsDirty);
-                //    CollectionAssert.IsEmpty(tracker.Diff);
-                //    expectedChanges.AddRange(new[] { "Diff", "IsDirty", "Diff" });
-                //    CollectionAssert.AreEqual(expectedChanges, changes);
-                //}
-            }
-
-            [Test]
-            public void ClearBothWhenDirty()
-            {
-                Assert.Fail("Change to complex type");
-                //var x = new ObservableCollection<ComplexType> { 1, 2 };
-                //var y = new ObservableCollection<ComplexType> { 3, 4, 5 };
-                //var countProperty = typeof(ObservableCollection<ComplexType>).GetProperty("Count");
-                //var changes = new List<string>();
-                //var expectedChanges = new List<string>();
-                //using (var tracker = DirtyTracker.Track(x, y, ReferenceHandling.Structural))
-                //{
-                //    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
-                //    Assert.AreEqual(true, tracker.IsDirty);
-                //    CollectionAssert.AreEqual(new[] { countProperty, ItemDirtyTracker.IndexerProperty }, tracker.Diff);
-                //    CollectionAssert.IsEmpty(changes);
-
-                //    x.Clear();
-                //    Assert.AreEqual(true, tracker.IsDirty);
-                //    CollectionAssert.AreEqual(new[] { countProperty, ItemDirtyTracker.IndexerProperty }, tracker.Diff);
-                //    CollectionAssert.IsEmpty(changes);
-
-                //    y.Clear();
-                //    Assert.AreEqual(false, tracker.IsDirty);
-                //    CollectionAssert.IsEmpty(tracker.Diff);
-                //    expectedChanges.AddRange(new[] { "Diff", "IsDirty", "Diff" });
-                //    CollectionAssert.AreEqual(expectedChanges, changes);
-                //}
-            }
-
-            [Test]
-            public void MoveX()
-            {
-                Assert.Fail("Change to complex type");
-                //var x = new ObservableCollection<ComplexType> { 1, 2 };
-                //var y = new ObservableCollection<ComplexType> { 1, 2 };
-                //var changes = new List<string>();
-                //var expectedChanges = new List<string>();
-                //using (var tracker = DirtyTracker.Track(x, y, ReferenceHandling.Structural))
-                //{
-                //    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
-                //    Assert.AreEqual(false, tracker.IsDirty);
-                //    CollectionAssert.IsEmpty(tracker.Diff);
-                //    CollectionAssert.IsEmpty(changes);
-
-                //    x.Move(0, 1);
-                //    Assert.AreEqual(true, tracker.IsDirty);
-                //    CollectionAssert.AreEqual(new[] { ItemDirtyTracker.IndexerProperty }, tracker.Diff);
-                //    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
-                //    CollectionAssert.AreEqual(expectedChanges, changes);
-
-                //    x.Move(0, 1);
-                //    Assert.AreEqual(false, tracker.IsDirty);
-                //    CollectionAssert.IsEmpty(tracker.Diff);
-                //    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
-                //    CollectionAssert.AreEqual(expectedChanges, changes);
-                //}
-            }
-
-            [Test]
-            public void MoveXThenY()
-            {
-                Assert.Fail("Change to complex type");
-                //var x = new ObservableCollection<ComplexType> { 1, 2 };
-                //var y = new ObservableCollection<ComplexType> { 1, 2 };
-                //var changes = new List<string>();
-                //var expectedChanges = new List<string>();
-                //using (var tracker = DirtyTracker.Track(x, y, ReferenceHandling.Structural))
-                //{
-                //    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
-                //    Assert.AreEqual(false, tracker.IsDirty);
-                //    CollectionAssert.IsEmpty(tracker.Diff);
-                //    CollectionAssert.IsEmpty(changes);
-
-                //    x.Move(0, 1);
-                //    Assert.AreEqual(true, tracker.IsDirty);
-                //    CollectionAssert.AreEqual(new[] { ItemDirtyTracker.IndexerProperty }, tracker.Diff);
-                //    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
-                //    CollectionAssert.AreEqual(expectedChanges, changes);
-
-                //    y.Move(0, 1);
-                //    Assert.AreEqual(false, tracker.IsDirty);
-                //    CollectionAssert.IsEmpty(tracker.Diff);
-                //    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
-                //    CollectionAssert.AreEqual(expectedChanges, changes);
-                //}
-            }
-
-            [Test]
-            public void Replace()
-            {
-                Assert.Fail("Change to complex type");
-                //var x = new ObservableCollection<ComplexType> { 1, 2 };
-                //var y = new ObservableCollection<ComplexType> { 1, 2 };
-                //var changes = new List<string>();
-                //var expectedChanges = new List<string>();
-                //using (var tracker = DirtyTracker.Track(x, y, ReferenceHandling.Structural))
-                //{
-                //    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
-                //    Assert.AreEqual(false, tracker.IsDirty);
-                //    CollectionAssert.IsEmpty(tracker.Diff);
-                //    CollectionAssert.IsEmpty(changes);
-
-                //    x[0] = 3;
-                //    Assert.AreEqual(true, tracker.IsDirty);
-                //    CollectionAssert.AreEqual(new[] { ItemDirtyTracker.IndexerProperty }, tracker.Diff);
-                //    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
-                //    CollectionAssert.AreEqual(expectedChanges, changes);
-
-                //    y[0] = 3;
-                //    Assert.AreEqual(false, tracker.IsDirty);
-                //    CollectionAssert.IsEmpty(tracker.Diff);
-                //    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
-                //    CollectionAssert.AreEqual(expectedChanges, changes);
-                //}
-            }
-
-            [Test]
-            public void TracksObservableCollectionOfComplexType()
-            {
-                var x = new ObservableCollection<ComplexType>();
-                var y = new ObservableCollection<ComplexType>();
+                var x = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
+                var y = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
+                var countProperty = typeof(ObservableCollection<ComplexType>).GetProperty("Count");
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
                 using (var tracker = DirtyTracker.Track(x, y, ReferenceHandling.Structural))
                 {
-                    Assert.Fail();
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(false, tracker.IsDirty);
                     CollectionAssert.IsEmpty(tracker.Diff);
                     CollectionAssert.IsEmpty(changes);
 
-                    //x.Name = "newName";
-                    //Assert.AreEqual(true, tracker.IsDirty);
-                    //expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
-                    //CollectionAssert.AreEqual(expectedChanges, changes);
-                    //CollectionAssert.AreEqual(new[] { typeof(WithComplexProperty).GetProperty(nameof(x.Name)) }, tracker.Diff);
+                    x.Clear();
+                    Assert.AreEqual(true, tracker.IsDirty);
+                    CollectionAssert.AreEqual(new[] { countProperty, ItemDirtyTracker.IndexerProperty }, tracker.Diff);
+                    expectedChanges.AddRange(new[] { "IsDirty", "Diff", "Diff" });
+                    CollectionAssert.AreEqual(expectedChanges, changes);
 
-                    //y.Name = "newName";
-                    //Assert.AreEqual(false, tracker.IsDirty);
-                    //expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
-                    //CollectionAssert.AreEqual(expectedChanges, changes);
-                    //CollectionAssert.IsEmpty(tracker.Diff);
+                    y.Clear();
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    CollectionAssert.IsEmpty(tracker.Diff);
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty", "Diff" });
+                    CollectionAssert.AreEqual(expectedChanges, changes);
+                }
+            }
 
-                    //x.ComplexType = new ComplexType("a", 1);
-                    //Assert.AreEqual(true, tracker.IsDirty);
-                    //expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
-                    //CollectionAssert.AreEqual(expectedChanges, changes);
-                    //CollectionAssert.AreEqual(new[] { typeof(WithComplexProperty).GetProperty(nameof(x.ComplexType)) }, tracker.Diff);
+            [Test]
+            public void ClearBothWhenDirty()
+            {
+                var x = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
+                var y = new ObservableCollection<ComplexType> { new ComplexType("c", 2), new ComplexType("d", 4), new ComplexType("e", 5) };
+                var countProperty = typeof(ObservableCollection<ComplexType>).GetProperty("Count");
+                var changes = new List<string>();
+                var expectedChanges = new List<string>();
+                using (var tracker = DirtyTracker.Track(x, y, ReferenceHandling.Structural))
+                {
+                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    Assert.AreEqual(true, tracker.IsDirty);
+                    CollectionAssert.AreEqual(new[] { countProperty, ItemDirtyTracker.IndexerProperty }, tracker.Diff);
+                    CollectionAssert.IsEmpty(changes);
 
-                    //y.ComplexType = new ComplexType("a", 1);
-                    //Assert.AreEqual(false, tracker.IsDirty);
-                    //expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
-                    //CollectionAssert.AreEqual(expectedChanges, changes);
-                    //CollectionAssert.IsEmpty(tracker.Diff);
+                    x.Clear();
+                    Assert.AreEqual(true, tracker.IsDirty);
+                    CollectionAssert.AreEqual(new[] { countProperty, ItemDirtyTracker.IndexerProperty }, tracker.Diff);
+                    CollectionAssert.IsEmpty(changes);
 
-                    //x.ComplexType.Name = "newName";
-                    //Assert.AreEqual(true, tracker.IsDirty);
-                    //expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
-                    //CollectionAssert.AreEqual(expectedChanges, changes);
-                    //CollectionAssert.AreEqual(new[] { typeof(WithComplexProperty).GetProperty(nameof(x.ComplexType)) }, tracker.Diff);
+                    y.Clear();
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    CollectionAssert.IsEmpty(tracker.Diff);
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty", "Diff" });
+                    CollectionAssert.AreEqual(expectedChanges, changes);
+                }
+            }
 
-                    //y.ComplexType.Name = "newName";
-                    //Assert.AreEqual(false, tracker.IsDirty);
-                    //expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
-                    //CollectionAssert.AreEqual(expectedChanges, changes);
-                    //CollectionAssert.IsEmpty(tracker.Diff);
+            [Test]
+            public void MoveX()
+            {
+                var x = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
+                var y = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
+                var changes = new List<string>();
+                var expectedChanges = new List<string>();
+                using (var tracker = DirtyTracker.Track(x, y, ReferenceHandling.Structural))
+                {
+                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    CollectionAssert.IsEmpty(tracker.Diff);
+                    CollectionAssert.IsEmpty(changes);
+
+                    x.Move(0, 1);
+                    Assert.AreEqual(true, tracker.IsDirty);
+                    CollectionAssert.AreEqual(new[] { ItemDirtyTracker.IndexerProperty }, tracker.Diff);
+                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
+                    CollectionAssert.AreEqual(expectedChanges, changes);
+
+                    x.Move(0, 1);
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    CollectionAssert.IsEmpty(tracker.Diff);
+                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
+                    CollectionAssert.AreEqual(expectedChanges, changes);
+                }
+            }
+
+            [Test]
+            public void MoveXThenY()
+            {
+                var x = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
+                var y = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
+                var changes = new List<string>();
+                var expectedChanges = new List<string>();
+                using (var tracker = DirtyTracker.Track(x, y, ReferenceHandling.Structural))
+                {
+                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    CollectionAssert.IsEmpty(tracker.Diff);
+                    CollectionAssert.IsEmpty(changes);
+
+                    x.Move(0, 1);
+                    Assert.AreEqual(true, tracker.IsDirty);
+                    CollectionAssert.AreEqual(new[] { ItemDirtyTracker.IndexerProperty }, tracker.Diff);
+                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
+                    CollectionAssert.AreEqual(expectedChanges, changes);
+
+                    y.Move(0, 1);
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    CollectionAssert.IsEmpty(tracker.Diff);
+                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
+                    CollectionAssert.AreEqual(expectedChanges, changes);
+                }
+            }
+
+            [Test]
+            public void Replace()
+            {
+                var x = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
+                var y = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
+                var changes = new List<string>();
+                var expectedChanges = new List<string>();
+                using (var tracker = DirtyTracker.Track(x, y, ReferenceHandling.Structural))
+                {
+                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    CollectionAssert.IsEmpty(tracker.Diff);
+                    CollectionAssert.IsEmpty(changes);
+
+                    x[0] = new ComplexType("c", 3);
+                    Assert.AreEqual(true, tracker.IsDirty);
+                    CollectionAssert.AreEqual(new[] { ItemDirtyTracker.IndexerProperty }, tracker.Diff);
+                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
+                    CollectionAssert.AreEqual(expectedChanges, changes);
+
+                    y[0] = new ComplexType("c", 3);
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    CollectionAssert.IsEmpty(tracker.Diff);
+                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
+                    CollectionAssert.AreEqual(expectedChanges, changes);
+                }
+            }
+
+            [Test]
+            public void TracksItems()
+            {
+                var x = new ObservableCollection<ComplexType>();
+                var y = new ObservableCollection<ComplexType>();
+                var countProperty = typeof(ObservableCollection<ComplexType>).GetProperty("Count");
+                var changes = new List<string>();
+                var expectedChanges = new List<string>();
+                using (var tracker = DirtyTracker.Track(x, y, ReferenceHandling.Structural))
+                {
+                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    CollectionAssert.IsEmpty(tracker.Diff);
+                    CollectionAssert.IsEmpty(changes);
+
+                    x.Add(new ComplexType("a", 1));
+                    Assert.AreEqual(true, tracker.IsDirty);
+                    CollectionAssert.AreEqual(new[] { countProperty, ItemDirtyTracker.IndexerProperty }, tracker.Diff);
+                    expectedChanges.AddRange(new[] { "IsDirty", "Diff", "Diff" });
+                    CollectionAssert.AreEqual(expectedChanges, changes);
+
+                    y.Add(new ComplexType("a", 1));
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    CollectionAssert.IsEmpty(tracker.Diff);
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty", "Diff" });
+                    CollectionAssert.AreEqual(expectedChanges, changes);
+
+                    x[0].Value++;
+                    Assert.AreEqual(true, tracker.IsDirty);
+                    CollectionAssert.AreEqual(new[] { ItemDirtyTracker.IndexerProperty }, tracker.Diff);
+                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
+                    CollectionAssert.AreEqual(expectedChanges, changes);
+
+                    y[0].Value++;
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    CollectionAssert.IsEmpty(tracker.Diff);
+                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
+                    CollectionAssert.AreEqual(expectedChanges, changes);
+
+                    var complexType = y[0];
+                    y[0]= new ComplexType(complexType.Name, complexType.Value);
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    CollectionAssert.IsEmpty(tracker.Diff);
+                    CollectionAssert.AreEqual(expectedChanges, changes);
+
+                    complexType.Value++;
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    CollectionAssert.IsEmpty(tracker.Diff);
+                    CollectionAssert.AreEqual(expectedChanges, changes);
                 }
             }
 

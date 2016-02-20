@@ -362,7 +362,7 @@
                 }
             }
 
-            public bool IsDirty => this.itemTrackers.Any(it => it.IsDirty);
+            public bool IsDirty => this.itemTrackers.Any(it => it?.IsDirty == true);
 
             internal static ItemsDirtyTracker Create(object x, object y, DirtyTracker<T> parent)
             {
