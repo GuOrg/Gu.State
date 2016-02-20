@@ -1,6 +1,5 @@
 ﻿namespace Gu.ChangeTracking
 {
-    using System;
     using System.Reflection;
 
     public interface ISpecialCopyProperty

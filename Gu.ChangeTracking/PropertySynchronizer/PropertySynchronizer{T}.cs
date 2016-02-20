@@ -22,7 +22,7 @@ namespace Gu.ChangeTracking
         }
 
         public PropertySynchronizer(T source, T target, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
-            : this(source, target, new CopyPropertiesSettings(null, bindingFlags, referenceHandling))
+            : this(source, target, CopyPropertiesSettings.GetOrCreate(bindingFlags, referenceHandling))
         {
         }
 

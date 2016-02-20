@@ -11,13 +11,14 @@
         public static void FieldValues<T>(T source, T target, ReferenceHandling referenceHandling)
             where T : class
         {
-            FieldValues(source, target, Constants.DefaultFieldBindingFlags, referenceHandling);
+            var settings = CopyFieldsSettings.GetOrCreate(Constants.DefaultFieldBindingFlags, referenceHandling);
+            FieldValues(source, target, settings);
         }
 
         public static void FieldValues<T>(T source, T target, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
             where T : class
         {
-            var settings = new CopyFieldsSettings(null, bindingFlags, referenceHandling);
+            var settings = CopyFieldsSettings.GetOrCreate(bindingFlags, referenceHandling);
             FieldValues(source, target, settings);
         }
 
@@ -25,7 +26,7 @@
         /// Copies field values from source to target.
         /// Only valur types and string are allowed.
         /// </summary>
-        public static void FieldValues<T>(T source, T target, params string[] excludedFields) 
+        public static void FieldValues<T>(T source, T target, params string[] excludedFields)
             where T : class
         {
             FieldValues(source, target, Constants.DefaultFieldBindingFlags, excludedFields);
@@ -35,7 +36,7 @@
         /// Copies field values from source to target.
         /// Only valur types and string are allowed.
         /// </summary>
-        public static void FieldValues<T>(T source, T target, BindingFlags bindingFlags, params string[] excludedFields) 
+        public static void FieldValues<T>(T source, T target, BindingFlags bindingFlags, params string[] excludedFields)
             where T : class
         {
             var settings = new CopyFieldsSettings(source?.GetType().GetIgnoreFields(bindingFlags, excludedFields), bindingFlags, ReferenceHandling.Throw);

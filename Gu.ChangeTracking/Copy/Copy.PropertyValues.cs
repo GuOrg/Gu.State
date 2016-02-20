@@ -8,6 +8,13 @@
 
     public static partial class Copy
     {
+        public static void PropertyValues<T>(T source, T target, BindingFlags bindingFlags)
+    where T : class
+        {
+            var settings = CopyPropertiesSettings.GetOrCreate(bindingFlags, ReferenceHandling.Throw);
+            PropertyValues(source, target, settings);
+        }
+
         /// <summary>
         /// Copies property values from source to target.
         /// </summary>
@@ -18,7 +25,8 @@
         public static void PropertyValues<T>(T source, T target, ReferenceHandling referenceHandling)
             where T : class
         {
-            PropertyValues(source, target, Constants.DefaultPropertyBindingFlags, referenceHandling);
+            var settings = CopyPropertiesSettings.GetOrCreate(Constants.DefaultPropertyBindingFlags, referenceHandling);
+            PropertyValues(source, target, settings);
         }
 
         /// <summary>
@@ -31,7 +39,7 @@
         public static void PropertyValues<T>(T source, T target, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
             where T : class
         {
-            var settings = new CopyPropertiesSettings((IEnumerable<PropertyInfo>)null, null, bindingFlags, referenceHandling);
+            var settings = CopyPropertiesSettings.GetOrCreate(bindingFlags, referenceHandling);
             PropertyValues(source, target, settings);
         }
 

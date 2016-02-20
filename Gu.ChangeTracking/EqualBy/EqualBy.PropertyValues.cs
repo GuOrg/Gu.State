@@ -6,6 +6,12 @@
 
     public static partial class EqualBy
     {
+        public static bool PropertyValues<T>(T x, T y, BindingFlags bindingFlags)
+        {
+            var settings = EqualByPropertiesSettings.GetOrCreate(bindingFlags, ReferenceHandling.Throw);
+            return PropertyValues(x, y, settings);
+        }
+
         /// <summary>
         /// Compares x and y for equality using property values.
         /// If a type implements IList the items of the list are compared
@@ -16,7 +22,8 @@
         /// </param>
         public static bool PropertyValues<T>(T x, T y, ReferenceHandling referenceHandling)
         {
-            return PropertyValues(x, y, Constants.DefaultPropertyBindingFlags, referenceHandling);
+            var settings = EqualByPropertiesSettings.GetOrCreate(Constants.DefaultPropertyBindingFlags, referenceHandling);
+            return PropertyValues(x, y, settings);
         }
 
         /// <summary>
@@ -29,7 +36,8 @@
         /// </param>
         public static bool PropertyValues<T>(T x, T y, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
         {
-            return PropertyValues(x, y, new EqualByPropertiesSettings(null, bindingFlags, referenceHandling));
+            var settings = EqualByPropertiesSettings.GetOrCreate(bindingFlags, referenceHandling);
+            return PropertyValues(x, y, settings);
         }
 
         public static bool PropertyValues<T>(T x, T y, params string[] excludedProperties)
