@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
 
     public class ReferencePairCollection
     {
@@ -22,6 +21,11 @@
         public void Add(object x, object y)
         {
             this.pairs.Add(new ReferencePair(x, y));
+        }
+
+        public void Remove(object x, object y)
+        {
+            this.pairs.Remove(new ReferencePair(x, y));
         }
 
         public bool Contains(object x, object y)
