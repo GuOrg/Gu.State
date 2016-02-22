@@ -37,6 +37,16 @@
 
         public IReadOnlyList<SpecialCopyProperty> SpecialCopyProperties { get; }
 
+        public static CopyPropertiesSettings GetOrCreate(ReferenceHandling referenceHandling)
+        {
+            return GetOrCreate(Constants.DefaultPropertyBindingFlags, referenceHandling);
+        }
+
+        public static CopyPropertiesSettings GetOrCreate(BindingFlags bindingFlags)
+        {
+            return GetOrCreate(bindingFlags, ReferenceHandling.Throw);
+        }
+
         public static CopyPropertiesSettings GetOrCreate(BindingFlags bindingFlags, ReferenceHandling referenceHandling)
         {
             var key = new BindingFlagsAndReferenceHandling(bindingFlags, referenceHandling);

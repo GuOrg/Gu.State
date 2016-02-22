@@ -1,5 +1,6 @@
 ﻿namespace Gu.ChangeTracking
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
@@ -8,6 +9,11 @@
     {
         private readonly HashSet<PropertyInfo> ignoredProperties;
         private static readonly Dictionary<BindingFlagsAndReferenceHandling, EqualByPropertiesSettings> Cache = new Dictionary<BindingFlagsAndReferenceHandling, EqualByPropertiesSettings>();
+
+        public EqualByPropertiesSettings(Type type, string[] ignoredProperties, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
+            : this(type?.GetIgnoreProperties(bindingFlags, ignoredProperties), bindingFlags, referenceHandling)
+        {
+        }
 
         public EqualByPropertiesSettings(IEnumerable<PropertyInfo> ignoredProperties, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
             : base(bindingFlags, referenceHandling)
@@ -18,6 +24,16 @@
         }
 
         public IEnumerable<PropertyInfo> IgnoredProperties => this.ignoredProperties ?? Enumerable.Empty<PropertyInfo>();
+
+        public static EqualByPropertiesSettings GetOrCreate(ReferenceHandling referenceHandling)
+        {
+            return GetOrCreate(Constants.DefaultPropertyBindingFlags, referenceHandling);
+        }
+
+        public static EqualByPropertiesSettings GetOrCreate(BindingFlags bindingFlags)
+        {
+            return GetOrCreate(bindingFlags, ReferenceHandling.Throw);
+        }
 
         public static EqualByPropertiesSettings GetOrCreate(BindingFlags bindingFlags, ReferenceHandling referenceHandling)
         {
