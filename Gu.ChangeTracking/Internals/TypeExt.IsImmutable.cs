@@ -45,6 +45,16 @@
 
         internal static bool IsImmutable(this Type type)
         {
+            if (ImmutableTypes.Contains(type))
+            {
+                return true;
+            }
+
+            if (MutableTypes.Contains(type))
+            {
+                return false;
+            }
+
             if (!IsImmutable(type, null))
             {
                 MutableTypes.Add(type);
