@@ -45,6 +45,18 @@
 
         internal static bool IsImmutable(this Type type)
         {
+            if (!IsImmutable(type, null))
+            {
+                MutableTypes.Add(type);
+                return false;
+            }
+
+            ImmutableTypes.Add(type);
+            return true;
+        }
+
+        private static bool IsImmutable(Type type, List<Type> checkedTypes)
+        {
             if (ImmutableTypes.Contains(type))
             {
                 return true;
@@ -58,19 +70,19 @@
             var propertyInfos = type.GetProperties(Constants.DefaultFieldBindingFlags);
             foreach (var propertyInfo in propertyInfos)
             {
-                if (!propertyInfo.IsGetReadOnly())
+                if (!propertyInfo.IsGetReadOnly() ||
+                    (propertyInfo.GetIndexParameters().Length > 0 && propertyInfo.SetMethod != null))
                 {
                     MutableTypes.Add(type);
                     return false;
                 }
 
-                if (!propertyInfo.PropertyType.IsImmutable())
+                if (!ShouldCheckNested(type, ref checkedTypes))
                 {
-                    MutableTypes.Add(type);
-                    return false;
+                    continue;
                 }
 
-                if (propertyInfo.GetIndexParameters().Length > 0 && propertyInfo.SetMethod != null)
+                if (!IsImmutable(propertyInfo.PropertyType, checkedTypes))
                 {
                     MutableTypes.Add(type);
                     return false;
@@ -91,7 +103,12 @@
                     return false;
                 }
 
-                if (!fieldInfo.FieldType.IsImmutable())
+                if (!ShouldCheckNested(type, ref checkedTypes))
+                {
+                    continue;
+                }
+
+                if (!IsImmutable(fieldInfo.FieldType, checkedTypes))
                 {
                     MutableTypes.Add(type);
                     return false;
@@ -99,6 +116,25 @@
             }
 
             ImmutableTypes.Add(type);
+            return true;
+        }
+
+        private static bool ShouldCheckNested(Type type, ref List<Type> checkedTypes)
+        {
+            if (checkedTypes == null)
+            {
+                checkedTypes = new List<Type>(1) { type };
+            }
+            else
+            {
+                if (checkedTypes.Contains(type))
+                {
+                    return false;
+                }
+
+                checkedTypes.Add(type);
+            }
+
             return true;
         }
     }

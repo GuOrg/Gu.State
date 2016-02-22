@@ -16,6 +16,8 @@
         [TestCase(typeof(WithReadonlyField<int>), true)]
         [TestCase(typeof(WithReadonlyField<int?>), true)]
         [TestCase(typeof(WithReadonlyField<WithGetReadOnlyProperty<int>>), true)]
+        [TestCase(typeof(WithSelfField), true)]
+        [TestCase(typeof(WithSelfProp), true)]
         [TestCase(typeof(int[]), false)]
         [TestCase(typeof(WithGetPrivateSet), false)]
         [TestCase(typeof(WithGetPublicSet), false)]
