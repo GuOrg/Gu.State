@@ -53,6 +53,7 @@
     <Compile Include="EqualBy\Settings\IEqualByPropertiesSettings.cs" />
     <Compile Include="EqualBy\Settings\IEqualBySettings.cs" />
     <Compile Include="Internals\BindingFlagsAndReferenceHandling.cs" />
+    <Compile Include="Internals\ConcurrentSet.cs" />
     <Compile Include="Internals\ItemCollection.cs" />
     <Compile Include="Internals\PropertyCollection.cs" />
     <Compile Include="Internals\ReferenceCollection.cs" />
