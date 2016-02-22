@@ -1,4 +1,4 @@
-namespace Gu.ChangeTracking.Tests.DirtyTrackerStubs
+namespace Gu.ChangeTracking.Tests.PropertySynchronizerStubs
 {
     using System;
     using System.Collections.Generic;
@@ -45,7 +45,7 @@ namespace Gu.ChangeTracking.Tests.DirtyTrackerStubs
             {
                 return true;
             }
-            return obj is WithGetReadOnlyPropertySealed<T> && this.Equals((WithGetReadOnlyPropertySealed<T>)obj);
+            return obj is WithGetReadOnlyPropertySealed<T> && Equals((WithGetReadOnlyPropertySealed<T>)obj);
         }
 
         public override int GetHashCode()

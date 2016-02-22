@@ -1,5 +1,6 @@
 ﻿namespace Gu.ChangeTracking.Tests
 {
+    using System;
     using System.Collections.ObjectModel;
 
     using NUnit.Framework;
@@ -14,8 +15,16 @@
             {
                 var source = new ObservableCollection<int> { 1, 2 };
                 var target = new ObservableCollection<int>();
-                using (PropertySynchronizer.Create(source, target, referenceHandling))
+                using (var synchronizer = PropertySynchronizer.Create(source, target, referenceHandling))
                 {
+                    var itemsSynchronizerField = synchronizer.GetType().GetField("itemsSynchronizer", Constants.DefaultFieldBindingFlags);
+                    Assert.NotNull(itemsSynchronizerField);
+                    var itemsSynchronizer = itemsSynchronizerField.GetValue(synchronizer);
+                    Assert.NotNull(itemsSynchronizer);
+                    var itemSynchronizersField = itemsSynchronizer.GetType().GetField("itemSynchronizers", Constants.DefaultFieldBindingFlags);
+                    Assert.NotNull(itemSynchronizersField);
+                    Assert.IsNull(itemSynchronizersField.GetValue(itemsSynchronizer));
+
                     CollectionAssert.AreEqual(new[] { 1, 2 }, source);
                     CollectionAssert.AreEqual(new[] { 1, 2 }, target);
                 }
@@ -108,6 +117,19 @@
                     source[1] = 4;
                     CollectionAssert.AreEqual(new[] { 3, 4 }, source);
                     CollectionAssert.AreEqual(new[] { 3, 4 }, target);
+                }
+            }
+
+            [Test]
+            public void ThrowsIfTargetCollectionChanges()
+            {
+                var source = new ObservableCollection<int> { 1, 2 };
+                var target = new ObservableCollection<int> { 1, 2 };
+                using (PropertySynchronizer.Create(source, target, ReferenceHandling.Structural))
+                {
+                    var exception = Assert.Throws<InvalidOperationException>(() => target.Add(3));
+                    var expected = "You cannot modify the target collection when you have applied a PropertySynchronizer on it";
+                    Assert.AreEqual(expected, exception.Message);
                 }
             }
         }

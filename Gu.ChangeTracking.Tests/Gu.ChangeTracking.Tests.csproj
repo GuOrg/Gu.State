@@ -59,6 +59,7 @@
     <Compile Include="Copy\CopyPropertiesSettingsTests.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerSettingsTests.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerStubs\WithGetReadOnlyPropertySealed.cs" />
+    <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\WithGetReadOnlyPropertySealed.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerStubs\WithGetReadOnlyPropertyStruct.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerStubs\WithImmutableProperty.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerStubs\WithObservableCollectionProperties.cs" />
@@ -79,6 +80,8 @@
     <Compile Include="Internals\Stubs\WithSelfProp.cs" />
     <Compile Include="Internals\Stubs\WithSelfPropSealed.cs" />
     <Compile Include="Internals\TypeExtTests.cs" />
+    <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\WithImmutableProperty.cs" />
+    <Compile Include="PropertySynchronizer\PropertySynchronizerTests.ObservableCollectionOfImmutableTypes.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerTests.WithObservableCollectionProperty.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerTests.ObservableCollectionOfComplexTypes.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\ComplexType.cs" />

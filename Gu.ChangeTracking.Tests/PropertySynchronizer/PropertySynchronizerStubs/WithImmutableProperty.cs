@@ -1,19 +1,25 @@
-﻿namespace Gu.ChangeTracking.Tests.DirtyTrackerStubs
+﻿namespace Gu.ChangeTracking.Tests.PropertySynchronizerStubs
 {
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
-
-    using Gu.ChangeTracking.Tests.PropertySynchronizerStubs;
 
     using JetBrains.Annotations;
 
     public class WithImmutableProperty : INotifyPropertyChanged
     {
         private string name;
-
         private int value;
-
         private WithGetReadOnlyPropertySealed<int> immutableValue;
+
+        public WithImmutableProperty()
+        {
+        }
+
+        public WithImmutableProperty(string name, int value)
+        {
+            this.Name = name;
+            this.Value = value;
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -63,16 +69,22 @@
                 {
                     return;
                 }
-
                 this.immutableValue = value;
                 this.OnPropertyChanged();
             }
         }
 
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void SetFields(string name, int value, WithGetReadOnlyPropertySealed<int> immutableValue)
+        {
+            this.name = name;
+            this.value = value;
+            this.immutableValue = immutableValue;
         }
     }
 }

@@ -22,6 +22,8 @@
                     var expected = new[] { new ComplexType("a", 1), new ComplexType("b", 2) };
                     CollectionAssert.AreEqual(expected, source, ComplexType.Comparer);
                     CollectionAssert.AreEqual(expected, target, ComplexType.Comparer);
+                    Assert.AreNotSame(source[0], target[0]);
+                    Assert.AreNotSame(source[1], target[1]);
 
                     source[0].Value++;
                     expected = new[] { new ComplexType("a", 2), new ComplexType("b", 2) };
@@ -50,6 +52,8 @@
                     var expected = new[] { new ComplexType("a", 1), new ComplexType("b", 2) };
                     CollectionAssert.AreEqual(expected, source, ComplexType.Comparer);
                     CollectionAssert.AreEqual(expected, target, ComplexType.Comparer);
+                    Assert.AreSame(source[0], target[0]);
+                    Assert.AreSame(source[1], target[1]);
 
                     source[0].Value++;
                     expected = new[] { new ComplexType("a", 2), new ComplexType("b", 2) };
