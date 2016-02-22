@@ -94,7 +94,6 @@
     <Compile Include="ChangeTracker\Settings\SpecialType.cs" />
     <Compile Include="Copy\Copy.FieldValues.cs" />
     <Compile Include="ChangeTracker\TrackAs.cs" />
-    <Compile Include="IgnoreChangesAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="paket.references" />

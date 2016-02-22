@@ -28,8 +28,7 @@
             this.ignoredProperties = new HashSet<string>();
             foreach (var property in value.GetType().GetProperties())
             {
-                if(Attribute.GetCustomAttribute(property, typeof(IgnoreChangesAttribute)) != null ||
-                   settings.IsIgnored(property))
+                if(settings.IsIgnored(property))
                 {
                     this.ignoredProperties.Add(property.Name);
                 }

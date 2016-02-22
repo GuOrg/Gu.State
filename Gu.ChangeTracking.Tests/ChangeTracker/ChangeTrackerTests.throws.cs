@@ -22,9 +22,7 @@ namespace Gu.ChangeTracking.Tests
                                "    settings.AddSpecialProperty(typeof(WithIllegalObject).GetProperty(nameof(WithIllegalObject.Illegal))" +
                                "    Note that this requires you to track changes.\r\n" +
                                "* Implement INotifyPropertyChanged for Gu.ChangeTracking.Tests.ChangeTrackerStubs.WithIllegalObject\r\n" +
-                               "* Implement INotifyCollectionChanged for Gu.ChangeTracking.Tests.ChangeTrackerStubs.WithIllegalObject\r\n" +
-                               "* Add attribute [IgnoreChangesAttribute] to type Gu.ChangeTracking.Tests.ChangeTrackerStubs.WithIllegalObject\r\n" +
-                               "* Add attribute [IgnoreChangesAttribute] to property Gu.ChangeTracking.Tests.ChangeTrackerStubs.WithIllegalObject.Illegal";
+                               "* Implement INotifyCollectionChanged for Gu.ChangeTracking.Tests.ChangeTrackerStubs.WithIllegalObject\r\n";
                 Console.Write(exception.Message);
                 Assert.AreEqual(expected, exception.Message);
             }

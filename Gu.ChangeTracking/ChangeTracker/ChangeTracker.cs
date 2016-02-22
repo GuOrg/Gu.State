@@ -86,16 +86,6 @@
             }
             else
             {
-                if (Attribute.IsDefined(parentType, typeof(IgnoreChangesAttribute), true))
-                {
-                    return;
-                }
-
-                if (Attribute.IsDefined(parentProperty, typeof(IgnoreChangesAttribute), true))
-                {
-                    return;
-                }
-
                 if (settings.IsIgnored(parentProperty))
                 {
                     return;
@@ -132,9 +122,7 @@
                           $"    settings.AddSpecialProperty(typeof({parentType.PrettyName()}).GetProperty(nameof({parentType.PrettyName()}.{parentProperty.Name}))" +
                           $"    Note that this requires you to track changes.\r\n" +
                           $"* Implement {nameof(INotifyPropertyChanged)} for {parentType.FullPrettyName()}\r\n" +
-                          $"* Implement {nameof(INotifyCollectionChanged)} for {parentType.FullPrettyName()}\r\n" +
-                          $"* Add attribute [{nameof(IgnoreChangesAttribute)}] to type {parentType.FullPrettyName()}\r\n" +
-                          $"* Add attribute [{nameof(IgnoreChangesAttribute)}] to property {parentType.FullPrettyName()}.{parentProperty.Name}";
+                          $"* Implement {nameof(INotifyCollectionChanged)} for {parentType.FullPrettyName()}\r\n";
             throw new ArgumentException(message);
         }
 
