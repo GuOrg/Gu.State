@@ -89,6 +89,11 @@
                 return array;
             }
 
+            if (type.IsImmutable())
+            {
+                return sourceValue;
+            }
+
             return Activator.CreateInstance(type, true);
         }
     }

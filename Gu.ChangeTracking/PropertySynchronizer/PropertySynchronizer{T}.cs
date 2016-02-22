@@ -194,7 +194,7 @@ namespace Gu.ChangeTracking
 
             private bool isSynchronizing;
 
-            public ItemsSynchronizer(IList source, IList target, CopyPropertiesSettings settings)
+            private ItemsSynchronizer(IList source, IList target, CopyPropertiesSettings settings)
             {
                 this.source = source;
                 this.target = target;
@@ -206,7 +206,7 @@ namespace Gu.ChangeTracking
                     targetColChanged.CollectionChanged += this.OnTargetCollectionChanged;
                 }
 
-                if (!Copy.IsCopyableType(source.GetType().GetItemType()))
+                if (!source.GetType().GetItemType().IsImmutable())
                 {
                     this.itemSynchronizers = new ItemCollection<PropertySynchronizer<INotifyPropertyChanged>>();
                 }
