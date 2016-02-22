@@ -5,16 +5,25 @@ namespace Gu.ChangeTracking
 
     public static class DirtyTracker
     {
-        internal static DirtyTracker<T> Track<T>(T x, T y, ReferenceHandling referenceHandling)
+        public static DirtyTracker<T> Track<T>(T x, T y, BindingFlags bindingFlags)
             where T : class, INotifyPropertyChanged
         {
-            return new DirtyTracker<T>(x, y, referenceHandling);
+            var settings = DirtyTrackerSettings.GetOrCreate(bindingFlags);
+            return new DirtyTracker<T>(x, y, settings);
         }
 
-        internal static DirtyTracker<T> Track<T>(T x, T y, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
+        public static DirtyTracker<T> Track<T>(T x, T y, ReferenceHandling referenceHandling)
             where T : class, INotifyPropertyChanged
         {
-            return new DirtyTracker<T>(x, y, bindingFlags, referenceHandling);
+            var settings = DirtyTrackerSettings.GetOrCreate(referenceHandling);
+            return new DirtyTracker<T>(x, y, settings);
+        }
+
+        public static DirtyTracker<T> Track<T>(T x, T y, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
+            where T : class, INotifyPropertyChanged
+        {
+            var settings = DirtyTrackerSettings.GetOrCreate(bindingFlags, referenceHandling);
+            return new DirtyTracker<T>(x, y, settings);
         }
 
         public static DirtyTracker<T> Track<T>(T x, T y, params string[] ignoreProperties)
@@ -29,8 +38,7 @@ namespace Gu.ChangeTracking
             return new DirtyTracker<T>(x, y, bindingFlags, ignoreProperties);
         }
 
-        public static void Verify<T>(params string[] ignoreProperties)
-            where T : class, INotifyPropertyChanged
+        public static void Verify<T>(params string[] ignoreProperties) where T : class, INotifyPropertyChanged
         {
             DirtyTracker<T>.Verify(ignoreProperties);
         }
