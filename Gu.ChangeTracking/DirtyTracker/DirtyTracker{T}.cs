@@ -107,8 +107,7 @@
                     continue;
                 }
 
-                if (!EqualBy.IsEquatable(propertyInfo.PropertyType)
-                    && settings.ReferenceHandling == ReferenceHandling.Throw)
+                if (!propertyInfo.PropertyType.IsImmutable() && settings.ReferenceHandling == ReferenceHandling.Throw)
                 {
                     var message =
                         $"Only equatable properties are supported without specifying {typeof(ReferenceHandling).Name}\r\n"
@@ -375,6 +374,13 @@
                                : AlwaysDirtyNode.For(ItemDirtyTracker.IndexerProperty);
                 }
 
+                if (xv.GetType().IsImmutable())
+                {
+                    return EqualBy.PropertyValues(xv, yv, this.parent.Settings)
+                               ? (IDirtyTrackerNode)NeverDirtyNode.For(ItemDirtyTracker.IndexerProperty)
+                               : AlwaysDirtyNode.For(ItemDirtyTracker.IndexerProperty);
+                }
+
                 switch (this.parent.Settings.ReferenceHandling)
                 {
                     case ReferenceHandling.Throw:
@@ -395,11 +401,8 @@
         private class ItemsDirtyTracker : IDisposable
         {
             private readonly INotifyCollectionChanged x;
-
             private readonly INotifyCollectionChanged y;
-
             private readonly DirtyTracker<T> parent;
-
             private readonly ItemCollection<IDirtyTrackerNode> itemTrackers;
 
             private ItemsDirtyTracker(INotifyCollectionChanged x, INotifyCollectionChanged y, DirtyTracker<T> parent)
@@ -536,8 +539,8 @@
                 switch (this.parent.Settings.ReferenceHandling)
                 {
                     case ReferenceHandling.Throw:
-                        var message =
-                            $"{typeof(DirtyTracker).Name} does not support tracking an item of type {xv.GetType().Name}. Specify {typeof(ReferenceHandling).Name} if you want to track a graph";
+                        var message = $"{typeof(DirtyTracker).Name} does not support tracking an item of type {xv.GetType().Name}.\r\n" +
+                                      $" Specify {typeof(ReferenceHandling).Name} if you want to track a graph";
                         throw new NotSupportedException(message);
                     case ReferenceHandling.Reference:
                         return ReferenceEquals(xv, yv)
