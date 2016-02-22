@@ -63,6 +63,12 @@
     <Compile Include="DirtyTracker\DirtyTrackerTests.ObservableCollectionOfComplexType.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerTests.ObservableCollectionOfInt.cs" />
     <Compile Include="EqualBy\EqualByPropertiesSettingsTests.cs" />
+    <Compile Include="Internals\Stubs\WithGetPublicSet.cs" />
+    <Compile Include="Internals\Stubs\WithMutableField.cs" />
+    <Compile Include="Internals\Stubs\WithGetSet.cs" />
+    <Compile Include="Internals\Stubs\WithGetReadOnlyProperty.cs" />
+    <Compile Include="Internals\Stubs\WithReadonlyField.cs" />
+    <Compile Include="Internals\TypeExtTests.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerTests.WithObservableCollectionProperty.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerTests.ObservableCollectionOfComplexTypes.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\ComplexType.cs" />

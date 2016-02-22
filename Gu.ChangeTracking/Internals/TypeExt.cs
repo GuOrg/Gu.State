@@ -3,9 +3,10 @@
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
 
-    internal static class TypeExt
+    internal static partial class TypeExt
     {
         private static readonly ConcurrentDictionary<Type, string> Aliases = new ConcurrentDictionary<Type, string>
         {

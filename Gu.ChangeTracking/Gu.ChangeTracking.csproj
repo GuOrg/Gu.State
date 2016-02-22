@@ -58,6 +58,7 @@
     <Compile Include="Internals\ReferenceCollection.cs" />
     <Compile Include="Internals\ReferencePairCollection.cs" />
     <Compile Include="Internals\ThrowHelper.cs" />
+    <Compile Include="Internals\TypeExt.IsImmutable.cs" />
     <Compile Include="ReferenceHandling.cs" />
     <Compile Include="Copy\Settings\SpecialCopyProperty.cs" />
     <Compile Include="Copy\Copy.PropertyValues.cs" />
