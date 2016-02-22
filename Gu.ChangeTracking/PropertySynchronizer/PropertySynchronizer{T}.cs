@@ -81,7 +81,7 @@ namespace Gu.ChangeTracking
 
             internal static PropertiesSynchronizer Create(INotifyPropertyChanged source, INotifyPropertyChanged target, CopyPropertiesSettings settings)
             {
-                if (source == null || source.GetType().IsImmutable())
+                if (source == null)
                 {
                     return null;
                 }

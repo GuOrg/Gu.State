@@ -58,7 +58,11 @@
     <Compile Include="Copy\CopyStubs\WithSimpleProperties.cs" />
     <Compile Include="Copy\CopyPropertiesSettingsTests.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerSettingsTests.cs" />
+    <Compile Include="DirtyTracker\DirtyTrackerStubs\WithGetReadOnlyPropertySealed.cs" />
+    <Compile Include="DirtyTracker\DirtyTrackerStubs\WithGetReadOnlyPropertyStruct.cs" />
+    <Compile Include="DirtyTracker\DirtyTrackerStubs\WithImmutableProperty.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerStubs\WithObservableCollectionProperties.cs" />
+    <Compile Include="DirtyTracker\DirtyTrackerTests.Immutable.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerTests.WithObservableCollectionProperty.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerTests.ObservableCollectionOfComplexType.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerTests.ObservableCollectionOfInt.cs" />
