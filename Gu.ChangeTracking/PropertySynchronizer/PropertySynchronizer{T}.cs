@@ -271,7 +271,7 @@ namespace Gu.ChangeTracking
                                 }
                                 else
                                 {
-                                    tv = Activator.CreateInstance(sv.GetType(), true);
+                                    tv = Copy.CreateInstance(sv);
                                     Copy.PropertyValues(sv, tv, this.settings);
                                 }
                             }

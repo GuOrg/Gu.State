@@ -239,6 +239,35 @@
             }
 
             [Test]
+            public void WithArrayPropertyWhenTargetArrayIsNullStructural()
+            {
+                var source = new WithArrayProperty("a", 1, new[] { 1, 2 });
+                var target = new WithArrayProperty("a", 1, null);
+                Copy.PropertyValues(source, target, ReferenceHandling.Structural);
+                Assert.AreEqual("a", source.Name);
+                Assert.AreEqual("a", target.Name);
+                Assert.AreEqual(1, source.Value);
+                Assert.AreEqual(1, target.Value);
+                Assert.AreNotSame(source.Array, target.Array);
+                CollectionAssert.AreEqual(new[] { 1, 2 }, source.Array);
+                CollectionAssert.AreEqual(new[] { 1, 2 }, target.Array);
+            }
+
+            [Test]
+            public void WithArrayPropertyWhenTargetArrayIsNullReference()
+            {
+                var source = new WithArrayProperty("a", 1, new[] { 1, 2 });
+                var target = new WithArrayProperty("a", 1, null);
+                Copy.PropertyValues(source, target, ReferenceHandling.Reference);
+                Assert.AreEqual("a", source.Name);
+                Assert.AreEqual("a", target.Name);
+                Assert.AreEqual(1, source.Value);
+                Assert.AreEqual(1, target.Value);
+                Assert.AreSame(source.Array, target.Array);
+                CollectionAssert.AreEqual(new[] { 1, 2 }, source.Array);
+            }
+
+            [Test]
             public void ListOfIntsToEmpty()
             {
                 var source = new List<int> { 1, 2, 3 };
