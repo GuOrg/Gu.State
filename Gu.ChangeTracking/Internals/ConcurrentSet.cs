@@ -20,7 +20,7 @@ namespace Gu.ChangeTracking
 
         public int Count => this.inner.Count;
 
-        public bool IsReadOnly => false;
+        bool ICollection<T>.IsReadOnly => false;
 
         public bool Add(T item) => this.inner.TryAdd(item, 0);
 
@@ -30,7 +30,7 @@ namespace Gu.ChangeTracking
 
         public bool Contains(T item) => this.inner.ContainsKey(item);
 
-        public void CopyTo(T[] array, int arrayIndex) => this.inner.Keys.CopyTo(array, arrayIndex);
+        void ICollection<T>.CopyTo(T[] array, int arrayIndex) => this.inner.Keys.CopyTo(array, arrayIndex);
 
         public bool Remove(T item)
         {
