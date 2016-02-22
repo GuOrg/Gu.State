@@ -55,14 +55,7 @@
                 return false;
             }
 
-            if (!IsImmutable(type, null))
-            {
-                MutableTypes.Add(type);
-                return false;
-            }
-
-            ImmutableTypes.Add(type);
-            return true;
+            return IsImmutable(type, null);
         }
 
         private static bool IsImmutable(Type type, List<Type> checkedTypes)
@@ -87,7 +80,13 @@
                     return false;
                 }
 
-                if (!ShouldCheckNested(type, ref checkedTypes))
+                if (!IsValidSubPropertyOrFieldType(propertyInfo.PropertyType))
+                {
+                    MutableTypes.Add(type);
+                    return false;
+                }
+
+                if (!ShouldCheckPropertyOrField(type, ref checkedTypes))
                 {
                     continue;
                 }
@@ -113,7 +112,13 @@
                     return false;
                 }
 
-                if (!ShouldCheckNested(type, ref checkedTypes))
+                if (!IsValidSubPropertyOrFieldType(fieldInfo.FieldType))
+                {
+                    MutableTypes.Add(type);
+                    return false;
+                }
+
+                if (!ShouldCheckPropertyOrField(type, ref checkedTypes))
                 {
                     continue;
                 }
@@ -129,7 +134,12 @@
             return true;
         }
 
-        private static bool ShouldCheckNested(Type type, ref List<Type> checkedTypes)
+        private static bool IsValidSubPropertyOrFieldType(Type type)
+        {
+            return type.IsValueType || type.IsSealed;
+        }
+
+        private static bool ShouldCheckPropertyOrField(Type type, ref List<Type> checkedTypes)
         {
             if (checkedTypes == null)
             {
