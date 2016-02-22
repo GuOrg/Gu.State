@@ -28,6 +28,8 @@
         [TestCase(typeof(WithMutableField), false)]
         [TestCase(typeof(WithSelfField), false)]
         [TestCase(typeof(WithSelfProp), false)]
+        [TestCase(typeof(WithImmutableSubclassingMutable), false)]
+        [TestCase(typeof(WithImmutableImplementingMutableInterfaceExplicit), false)]
         public void IsImmutable(Type type, bool expected)
         {
             var isImmutable = type.IsImmutable();
