@@ -55,11 +55,13 @@
     <Compile Include="Copy\CopyStubs\WithListProperty.cs" />
     <Compile Include="Copy\CopyStubs\WithReadonlyField.cs" />
     <Compile Include="Copy\CopyStubs\WithSimpleProperties.cs" />
+    <Compile Include="Copy\CopyPropertiesSettingsTests.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerSettingsTests.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerStubs\WithObservableCollectionProperties.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerTests.WithObservableCollectionProperty.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerTests.ObservableCollectionOfComplexType.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerTests.ObservableCollectionOfInt.cs" />
+    <Compile Include="EqualBy\EqualByPropertiesSettingsTests.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerTests.WithObservableCollectionProperty.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerTests.ObservableCollectionOfComplexTypes.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\ComplexType.cs" />
