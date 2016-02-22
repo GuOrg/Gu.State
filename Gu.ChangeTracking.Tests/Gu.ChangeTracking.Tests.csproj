@@ -50,6 +50,7 @@
     <Compile Include="ChangeTracker\ChangeTrackerTests.throws.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerTests.PropertyChanged.cs" />
     <Compile Include="Copy\CopyStubs\ComplexType.cs" />
+    <Compile Include="Copy\CopyStubs\WithArrayProperty.cs" />
     <Compile Include="Copy\CopyStubs\WithCalculatedProperty.cs" />
     <Compile Include="Copy\CopyStubs\WithComplexProperty.cs" />
     <Compile Include="Copy\CopyStubs\WithListProperty.cs" />

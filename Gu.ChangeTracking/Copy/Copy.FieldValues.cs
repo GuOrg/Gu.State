@@ -89,7 +89,7 @@
                                 continue;
                             }
 
-                            targetValue = Activator.CreateInstance(sourceValue.GetType(), true);
+                            targetValue = CreateInstance(sourceValue);
                             FieldValues(sourceValue, targetValue, settings);
                             fieldInfo.SetValue(target, targetValue);
                             continue;

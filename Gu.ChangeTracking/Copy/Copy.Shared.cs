@@ -33,7 +33,7 @@
                         case ReferenceHandling.Structural:
                             if (tv == null)
                             {
-                                tv = Activator.CreateInstance(sv.GetType(), true);
+                                tv = CreateInstance(sv);
                                 SetItem(targetList, i, tv);
                             }
 
@@ -71,6 +71,25 @@
         internal static bool IsCopyableType(Type type)
         {
             return type.IsValueType || type == typeof(string);
+        }
+
+        internal static object CreateInstance(object sourceValue)
+        {
+            if (sourceValue == null)
+            {
+                return null;
+            }
+
+            var type = sourceValue.GetType();
+            if (type.IsArray)
+            {
+                var constructor = type.GetConstructor(new Type[] { typeof(int) });
+                var parameters = new[] { type.GetProperty("Length").GetValue(sourceValue) };
+                var array = constructor.Invoke(parameters);
+                return array;
+            }
+
+            return Activator.CreateInstance(type, true);
         }
     }
 }

@@ -213,7 +213,7 @@
                             var targetValue = propertyInfo.GetValue(target);
                             if (targetValue == null)
                             {
-                                targetValue = Activator.CreateInstance(sourceValue.GetType(), true);
+                                targetValue = CreateInstance(sourceValue);
                                 PropertyValues(sourceValue, targetValue, settings);
                                 propertyInfo.SetValue(target, targetValue, null);
                             }
