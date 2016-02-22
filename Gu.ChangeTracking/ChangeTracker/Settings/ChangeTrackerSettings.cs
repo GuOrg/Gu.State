@@ -156,7 +156,7 @@
         /// <returns>True if <paramref name="property"/> is ignored when tracking changes.</returns>
         public bool IsIgnored(PropertyInfo property)
         {
-            if (property == null)
+            if (property == null || property.GetIndexParameters().Length > 0)
             {
                 return true;
             }

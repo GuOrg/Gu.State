@@ -25,13 +25,13 @@
 
         private bool disposed;
 
-        internal DirtyTracker(T x, T y, ReferenceHandling referenceHandling)
-            : this(x, y, Constants.DefaultPropertyBindingFlags, referenceHandling)
+        public DirtyTracker(T x, T y, ReferenceHandling referenceHandling)
+            : this(x, y, DirtyTrackerSettings.GetOrCreate(referenceHandling))
         {
         }
 
-        internal DirtyTracker(T x, T y, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
-            : this(x, y, new DirtyTrackerSettings(null, bindingFlags, referenceHandling))
+        public DirtyTracker(T x, T y, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
+            : this(x, y, DirtyTrackerSettings.GetOrCreate(bindingFlags, referenceHandling))
         {
         }
 

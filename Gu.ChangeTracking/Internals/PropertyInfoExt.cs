@@ -19,6 +19,17 @@
             return Attribute.GetCustomAttribute(getMethod, typeof(CompilerGeneratedAttribute)) == null;
         }
 
+        internal static bool IsGetReadOnly(this PropertyInfo propertyInfo)
+        {
+            if (propertyInfo.SetMethod != null)
+            {
+                return false;
+            }
+
+            var getMethod = propertyInfo.GetMethod;
+            return Attribute.GetCustomAttribute(getMethod, typeof(CompilerGeneratedAttribute)) != null;
+        }
+
         internal static IEnumerable<PropertyInfo> GetIgnoreProperties(this Type type, BindingFlags bindingFlags, string[] ignoreProperties)
         {
             if (type == null)

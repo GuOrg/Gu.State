@@ -7,6 +7,7 @@
 
     public class DirtyTrackerSettings
     {
+        private static readonly Dictionary<BindingFlagsAndReferenceHandling, DirtyTrackerSettings> Cache = new Dictionary<BindingFlagsAndReferenceHandling, DirtyTrackerSettings>();
         private readonly HashSet<PropertyInfo> ignoredProperties;
 
         public DirtyTrackerSettings(Type type, string[] ignoreProperties, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
@@ -28,6 +29,30 @@
         public BindingFlags BindingFlags { get; }
 
         public ReferenceHandling ReferenceHandling { get; }
+
+        public static DirtyTrackerSettings GetOrCreate(ReferenceHandling referenceHandling)
+        {
+            return GetOrCreate(Constants.DefaultPropertyBindingFlags, referenceHandling);
+        }
+
+        public static DirtyTrackerSettings GetOrCreate(BindingFlags bindingFlags)
+        {
+            return GetOrCreate(bindingFlags, ReferenceHandling.Throw);
+        }
+
+        public static DirtyTrackerSettings GetOrCreate(BindingFlags bindingFlags, ReferenceHandling referenceHandling)
+        {
+            var key = new BindingFlagsAndReferenceHandling(bindingFlags, referenceHandling);
+            DirtyTrackerSettings settings;
+            if (Cache.TryGetValue(key, out settings))
+            {
+                return settings;
+            }
+
+            settings = new DirtyTrackerSettings(null, bindingFlags, referenceHandling);
+            Cache[key] = settings;
+            return settings;
+        }
 
         public bool IsIgnoringProperty(PropertyInfo propertyInfo)
         {
