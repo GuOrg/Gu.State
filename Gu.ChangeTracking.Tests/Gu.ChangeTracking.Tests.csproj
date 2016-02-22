@@ -65,9 +65,11 @@
     <Compile Include="EqualBy\EqualByPropertiesSettingsTests.cs" />
     <Compile Include="Internals\Stubs\WithGetPublicSet.cs" />
     <Compile Include="Internals\Stubs\WithMutableField.cs" />
-    <Compile Include="Internals\Stubs\WithGetSet.cs" />
+    <Compile Include="Internals\Stubs\WithGetPrivateSet.cs" />
     <Compile Include="Internals\Stubs\WithGetReadOnlyProperty.cs" />
     <Compile Include="Internals\Stubs\WithReadonlyField.cs" />
+    <Compile Include="Internals\Stubs\WithSelfField.cs" />
+    <Compile Include="Internals\Stubs\WithSelfProp.cs" />
     <Compile Include="Internals\TypeExtTests.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerTests.WithObservableCollectionProperty.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerTests.ObservableCollectionOfComplexTypes.cs" />
