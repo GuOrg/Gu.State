@@ -55,7 +55,7 @@
     <Compile Include="Internals\BindingFlagsAndReferenceHandling.cs" />
     <Compile Include="Internals\ItemCollection.cs" />
     <Compile Include="Internals\PropertyCollection.cs" />
-    <Compile Include="Internals\ReferenceCollection.cs" />
+    <Compile Include="Internals\ReferencePairCollection.cs" />
     <Compile Include="Internals\ThrowHelper.cs" />
     <Compile Include="ReferenceHandling.cs" />
     <Compile Include="Copy\Settings\SpecialCopyProperty.cs" />
