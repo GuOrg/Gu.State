@@ -21,7 +21,6 @@
             }
         }
 
-        [IgnoreChanges]
         public int Ignored
         {
             get { return this.ignored; }
