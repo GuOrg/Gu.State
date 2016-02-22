@@ -16,7 +16,7 @@
 
         public DirtyTrackerSettings(IEnumerable<PropertyInfo> ignoredProperties, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
         {
-            this.ignoredProperties = this.ignoredProperties != null
+            this.ignoredProperties = ignoredProperties != null
                                          ? new HashSet<PropertyInfo>(ignoredProperties)
                                          : null;
             this.BindingFlags = bindingFlags;

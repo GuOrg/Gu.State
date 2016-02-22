@@ -55,6 +55,7 @@
     <Compile Include="Internals\BindingFlagsAndReferenceHandling.cs" />
     <Compile Include="Internals\ItemCollection.cs" />
     <Compile Include="Internals\PropertyCollection.cs" />
+    <Compile Include="Internals\ReferenceCollection.cs" />
     <Compile Include="Internals\ReferencePairCollection.cs" />
     <Compile Include="Internals\ThrowHelper.cs" />
     <Compile Include="ReferenceHandling.cs" />
@@ -93,7 +94,7 @@
     <Compile Include="ChangeTracker\Settings\SpecialType.cs" />
     <Compile Include="Copy\Copy.FieldValues.cs" />
     <Compile Include="ChangeTracker\TrackAs.cs" />
-    <Compile Include="ChangeTracker\IgnoreChangesAttribute.cs" />
+    <Compile Include="IgnoreChangesAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="paket.references" />
