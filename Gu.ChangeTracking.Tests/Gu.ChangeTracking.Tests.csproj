@@ -116,6 +116,7 @@
     <Compile Include="Settings\ChangeTrackerSettingsTests.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerTests.Simple.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="paket.references" />
