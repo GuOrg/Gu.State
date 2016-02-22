@@ -250,13 +250,36 @@
                     return null;
                 }
 
+                var type = x?.GetType() ?? y.GetType();
                 if (x == null || y == null)
                 {
-                    var type = x?.GetType() ?? y.GetType();
                     var propertyInfos = type.GetProperties(parent.Settings.BindingFlags)
                                             .Where(p => !parent.Settings.IsIgnoringProperty(p));
                     parent.diff.UnionWith(propertyInfos);
                     return null;
+                }
+
+                if (type.IsImmutable())
+                {
+                    parent.diff.IntersectWith(IndexerProperty);
+                    var before = parent.diff.Count;
+                    foreach (var propertyInfo in type.GetProperties(parent.Settings.BindingFlags))
+                    {
+                        if (parent.Settings.IsIgnoringProperty(propertyInfo))
+                        {
+                            continue;
+                        }
+
+                        var xv = propertyInfo.GetValue(x);
+                        var yv = propertyInfo.GetValue(y);
+
+                        if (!EqualBy.PropertyValues(xv, yv, parent.Settings))
+                        {
+                            parent.diff.Add(propertyInfo);
+                        }
+                    }
+
+                    parent.NotifyChanges(before);
                 }
 
                 return new PropertiesDirtyTracker(x, y, parent);
@@ -503,9 +526,9 @@
                     return AlwaysDirtyNode.For(ItemDirtyTracker.IndexerProperty);
                 }
 
-                if (EqualBy.IsEquatable(xv.GetType()))
+                if (xv.GetType().IsImmutable())
                 {
-                    return Equals(xv, yv)
+                    return EqualBy.PropertyValues(xv, yv, this.parent.Settings)
                                ? (IDirtyTrackerNode)NeverDirtyNode.For(ItemDirtyTracker.IndexerProperty)
                                : AlwaysDirtyNode.For(ItemDirtyTracker.IndexerProperty);
                 }
