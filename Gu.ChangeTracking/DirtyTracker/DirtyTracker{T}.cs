@@ -23,6 +23,8 @@
         private readonly PropertiesDirtyTracker propertyTracker;
         private readonly ItemsDirtyTracker itemTrackers;
 
+        private bool disposed;
+
         internal DirtyTracker(T x, T y, ReferenceHandling referenceHandling)
             : this(x, y, Constants.DefaultPropertyBindingFlags, referenceHandling)
         {
@@ -119,8 +121,13 @@
 
         public void Dispose()
         {
-            this.propertyTracker?.Dispose();
-            this.itemTrackers?.Dispose();
+            if (this.disposed)
+            {
+                return;
+            }
+
+            this.disposed = true;
+            this.Dispose(true);
         }
 
         void IDirtyTracker.Update(IDirtyTrackerNode child)
@@ -147,6 +154,15 @@
             }
 
             this.NotifyChanges(before);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                this.propertyTracker?.Dispose();
+                this.itemTrackers?.Dispose();
+            }
         }
 
         protected void NotifyChanges(int diffsBefore)

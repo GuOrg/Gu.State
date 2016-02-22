@@ -156,6 +156,11 @@
         /// <returns>True if <paramref name="property"/> is ignored when tracking changes.</returns>
         public bool IsIgnored(PropertyInfo property)
         {
+            if (property == null)
+            {
+                return true;
+            }
+
             SpecialProperty specialProperty;
             if (!this.specialProperties.TryGetValue(property.Name, out specialProperty))
             {
