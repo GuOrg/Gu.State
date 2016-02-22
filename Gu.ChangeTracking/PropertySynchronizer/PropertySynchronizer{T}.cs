@@ -81,11 +81,17 @@ namespace Gu.ChangeTracking
 
             internal static PropertiesSynchronizer Create(INotifyPropertyChanged source, INotifyPropertyChanged target, CopyPropertiesSettings settings)
             {
+                if (source == null || source.GetType().IsImmutable())
+                {
+                    return null;
+                }
+
                 List<PropertyCollection.PropertyAndDisposable> items = null;
                 foreach (var propertyInfo in source.GetType()
                                                    .GetProperties(settings.BindingFlags))
                 {
-                    if (settings.IsIgnoringProperty(propertyInfo) || settings.GetSpecialCopyProperty(propertyInfo) != null)
+                    if (settings.IsIgnoringProperty(propertyInfo) ||
+                        settings.GetSpecialCopyProperty(propertyInfo) != null)
                     {
                         continue;
                     }

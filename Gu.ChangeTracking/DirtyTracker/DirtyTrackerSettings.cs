@@ -5,7 +5,7 @@
     using System.Linq;
     using System.Reflection;
 
-    public class DirtyTrackerSettings
+    public class DirtyTrackerSettings : IEqualByPropertiesSettings
     {
         private static readonly Dictionary<BindingFlagsAndReferenceHandling, DirtyTrackerSettings> Cache = new Dictionary<BindingFlagsAndReferenceHandling, DirtyTrackerSettings>();
         private readonly HashSet<PropertyInfo> ignoredProperties;
