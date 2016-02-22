@@ -414,8 +414,8 @@
                 this.y.CollectionChanged += this.OnTrackedCollectionChanged;
                 var xList = (IList)x;
                 var yList = (IList)y;
-                this.itemTrackers = new ItemCollection<IDirtyTrackerNode>();
                 bool anyDirty = false;
+                this.itemTrackers = new ItemCollection<IDirtyTrackerNode>();
                 for (int i = 0; i < Math.Max(xList.Count, yList.Count); i++)
                 {
                     var itemTracker = this.CreateItemTracker(i);

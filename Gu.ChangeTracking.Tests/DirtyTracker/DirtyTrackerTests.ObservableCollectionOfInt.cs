@@ -131,7 +131,7 @@
                     x.Clear();
                     Assert.AreEqual(true, tracker.IsDirty);
                     CollectionAssert.AreEqual(new[] { countProperty, ItemDirtyTracker.IndexerProperty }, tracker.Diff);
-                    expectedChanges.AddRange(new[] {  "IsDirty", "Diff", "Diff" });
+                    expectedChanges.AddRange(new[] { "IsDirty", "Diff", "Diff" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
                     y.Clear();
