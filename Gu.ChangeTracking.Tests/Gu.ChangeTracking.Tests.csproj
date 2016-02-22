@@ -74,7 +74,7 @@
     <Compile Include="DirtyTracker\DirtyTrackerStubs\SimpleDirtyTrackClass.cs" />
     <Compile Include="EqualBy\EqualBy.Shared.cs" />
     <Compile Include="EqualBy\EqualByTests.PropertyValues.cs" />
-    <Compile Include="Internals\CollectionItemTrackerTests.cs" />
+    <Compile Include="ChangeTracker\Internals\CollectionItemTrackerTests.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\WithCalculatedProperty.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\WithObservableCollectionProperties.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\WithSimpleProperties.cs" />
