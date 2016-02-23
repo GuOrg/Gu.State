@@ -3,7 +3,7 @@ namespace Gu.ChangeTracking
     /// <summary>
     /// Tracks
     /// </summary>
-    public interface IValueTracker : ITracker
+    public interface IValueTracker : IChangeTracker
     {
         /// <summary>
         /// Gets the current value

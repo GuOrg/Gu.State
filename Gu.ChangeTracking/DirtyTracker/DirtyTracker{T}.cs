@@ -183,7 +183,7 @@
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private class PropertiesDirtyTracker : IDisposable
+        private sealed class PropertiesDirtyTracker : IDisposable
         {
             private static readonly IEnumerable<PropertyInfo> IndexerProperty = new[]
                                                                                     {
@@ -398,7 +398,7 @@
             }
         }
 
-        private class ItemsDirtyTracker : IDisposable
+        private sealed class ItemsDirtyTracker : IDisposable
         {
             private readonly INotifyCollectionChanged x;
             private readonly INotifyCollectionChanged y;

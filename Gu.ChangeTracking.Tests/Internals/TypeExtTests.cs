@@ -10,6 +10,10 @@
     {
         [TestCase(typeof(int), true)]
         [TestCase(typeof(int?), true)]
+        [TestCase(typeof(TimeSpan), true)]
+        [TestCase(typeof(TimeSpan?), true)]
+        [TestCase(typeof(StringSplitOptions), true)]
+        [TestCase(typeof(StringSplitOptions?), true)]
         [TestCase(typeof(WithGetReadOnlyProperty<int>), true)]
         [TestCase(typeof(WithGetReadOnlyProperty<int?>), true)]
         [TestCase(typeof(WithGetReadOnlyPropertySealed<WithGetReadOnlyPropertySealed<int>>), true)]

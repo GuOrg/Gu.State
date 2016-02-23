@@ -9,6 +9,8 @@ namespace Gu.ChangeTracking.Tests
 
     using NUnit.Framework;
 
+    using ComplexType = Gu.ChangeTracking.Tests.ChangeTrackerStubs.ComplexType;
+
     public partial class DirtyTrackerTests
     {
         public class Simple
@@ -46,7 +48,7 @@ namespace Gu.ChangeTracking.Tests
                     expectedChanges.Add(nameof(DirtyTracker<INotifyPropertyChanged>.Diff));
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
-                    source.OnPropertyChanged(nameof(BaseClass.Excluded));
+                    source.OnPropertyChanged(nameof(ComplexType.Excluded));
                     Assert.AreEqual(false, tracker.IsDirty);
                     Assert.AreEqual(0, tracker.Diff.Count());
                     CollectionAssert.AreEqual(expectedChanges, changes);
@@ -98,7 +100,7 @@ namespace Gu.ChangeTracking.Tests
                     expectedChanges.Add(nameof(DirtyTracker<INotifyPropertyChanged>.Diff));
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
-                    target.OnPropertyChanged(nameof(BaseClass.Excluded));
+                    target.OnPropertyChanged(nameof(ComplexType.Excluded));
                     Assert.AreEqual(false, tracker.IsDirty);
                     Assert.AreEqual(0, tracker.Diff.Count());
                     CollectionAssert.AreEqual(expectedChanges, changes);

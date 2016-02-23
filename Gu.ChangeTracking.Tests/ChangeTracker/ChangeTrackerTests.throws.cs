@@ -31,14 +31,16 @@ namespace Gu.ChangeTracking.Tests
             public void OnIllegalEnumerable()
             {
                 var item = new IllegalEnumerable();
-                Assert.Throws<ArgumentException>(() => ChangeTracker.Track(item, ChangeTrackerSettings.Default));
+                var exception = Assert.Throws<ArgumentException>(() => ChangeTracker.Track(item, ChangeTrackerSettings.Default));
+                Assert.AreEqual("", exception.Message);
             }
 
             [Test]
-            public void OnWithList()
+            public void WithList()
             {
                 var item = new WithList();
-                Assert.Throws<ArgumentException>(() => ChangeTracker.Track(item, ChangeTrackerSettings.Default));
+                var exception = Assert.Throws<ArgumentException>(() => ChangeTracker.Track(item, ChangeTrackerSettings.Default));
+                Assert.AreEqual("", exception.Message);
             }
         }
     }

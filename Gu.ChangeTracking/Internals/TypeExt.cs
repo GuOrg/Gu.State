@@ -109,7 +109,7 @@
         {
             if (type.IsGenericType && !type.IsGenericTypeDefinition)
             {
-                // instantiated generic type only                
+                // instantiated generic type only
                 Type genericType = type.GetGenericTypeDefinition();
                 return object.ReferenceEquals(genericType, typeof(Nullable<>));
             }
