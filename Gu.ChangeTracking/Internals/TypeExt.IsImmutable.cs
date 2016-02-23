@@ -30,26 +30,21 @@
 
         internal static bool IsImmutable(this Type type)
         {
-            bool result;
-            if (CheckedTypes.TryGetValue(type, out result))
-            {
-                return result;
-            }
-
-            return IsImmutable(type, null);
+            return CheckedTypes.GetOrAdd(type, x => CheckIfIsImmutable(x, null));
         }
 
-        private static bool IsImmutable(Type type, List<Type> checkedTypes)
+        private static bool CheckIfIsImmutable(Type type, List<Type> checkedTypes)
         {
             bool result;
             if (CheckedTypes.TryGetValue(type, out result))
             {
                 return result;
             }
+
             if (type.IsNullable())
             {
                 type = Nullable.GetUnderlyingType(type);
-                var isImmutable = IsImmutable(type, checkedTypes);
+                var isImmutable = CheckIfIsImmutable(type, checkedTypes);
                 CheckedTypes.TryAdd(type, isImmutable);
                 return isImmutable;
             }
@@ -82,7 +77,7 @@
                     continue;
                 }
 
-                if (!IsImmutable(propertyInfo.PropertyType, checkedTypes))
+                if (!CheckIfIsImmutable(propertyInfo.PropertyType, checkedTypes))
                 {
                     CheckedTypes.TryAdd(type, false);
                     return false;
@@ -114,7 +109,7 @@
                     continue;
                 }
 
-                if (!IsImmutable(fieldInfo.FieldType, checkedTypes))
+                if (!CheckIfIsImmutable(fieldInfo.FieldType, checkedTypes))
                 {
                     CheckedTypes.TryAdd(type, false);
                     return false;
