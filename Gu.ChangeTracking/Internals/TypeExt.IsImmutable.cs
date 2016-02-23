@@ -1,44 +1,39 @@
 ﻿namespace Gu.ChangeTracking
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Globalization;
 
     internal static partial class TypeExt
     {
-        private static readonly ConcurrentSet<Type> ImmutableTypes = new ConcurrentSet<Type>
+        private static readonly ConcurrentDictionary<Type, bool> CheckedTypes = new ConcurrentDictionary<Type, bool>
         {
-            typeof(Type),
-            typeof(CultureInfo),
-            typeof(DateTime),
-            typeof(DateTimeOffset),
-            typeof(TimeSpan),
-            typeof(string),
-            typeof(double),
-            typeof(float),
-            typeof(decimal),
-            typeof(int),
-            typeof(uint),
-            typeof(long),
-            typeof(ulong),
-            typeof(short),
-            typeof(ushort),
-            typeof(sbyte),
-            typeof(byte),
+            [typeof(Type)] = true,
+            [typeof(CultureInfo)] = true,
+            [typeof(DateTime)] = true,
+            [typeof(DateTimeOffset)] = true,
+            [typeof(TimeSpan)] = true,
+            [typeof(string)] = true,
+            [typeof(double)] = true,
+            [typeof(float)] = true,
+            [typeof(decimal)] = true,
+            [typeof(int)] = true,
+            [typeof(uint)] = true,
+            [typeof(long)] = true,
+            [typeof(ulong)] = true,
+            [typeof(short)] = true,
+            [typeof(ushort)] = true,
+            [typeof(sbyte)] = true,
+            [typeof(byte)] = true,
         };
-
-        private static readonly ConcurrentSet<Type> MutableTypes = new ConcurrentSet<Type>();
 
         internal static bool IsImmutable(this Type type)
         {
-            if (ImmutableTypes.Contains(type))
+            bool result;
+            if (CheckedTypes.TryGetValue(type, out result))
             {
-                return true;
-            }
-
-            if (MutableTypes.Contains(type))
-            {
-                return false;
+                return result;
             }
 
             return IsImmutable(type, null);
@@ -46,36 +41,23 @@
 
         private static bool IsImmutable(Type type, List<Type> checkedTypes)
         {
+            bool result;
+            if (CheckedTypes.TryGetValue(type, out result))
+            {
+                return result;
+            }
             if (type.IsNullable())
             {
                 type = Nullable.GetUnderlyingType(type);
                 var isImmutable = IsImmutable(type, checkedTypes);
-                if (isImmutable)
-                {
-                    ImmutableTypes.Add(type);
-                }
-                else
-                {
-                    MutableTypes.Add(type);
-                }
-
+                CheckedTypes.TryAdd(type, isImmutable);
                 return isImmutable;
             }
 
             if (type.IsEnum)
             {
-                ImmutableTypes.Add(type);
+                CheckedTypes.TryAdd(type, true);
                 return true;
-            }
-
-            if (ImmutableTypes.Contains(type))
-            {
-                return true;
-            }
-
-            if (MutableTypes.Contains(type))
-            {
-                return false;
             }
 
             var propertyInfos = type.GetProperties(Constants.DefaultFieldBindingFlags);
@@ -84,13 +66,14 @@
                 if (!propertyInfo.IsGetReadOnly() ||
                     (propertyInfo.GetIndexParameters().Length > 0 && propertyInfo.SetMethod != null))
                 {
-                    MutableTypes.Add(type);
+
+                    CheckedTypes.TryAdd(type, false);
                     return false;
                 }
 
                 if (!IsValidSubPropertyOrFieldType(propertyInfo.PropertyType))
                 {
-                    MutableTypes.Add(type);
+                    CheckedTypes.TryAdd(type, false);
                     return false;
                 }
 
@@ -101,7 +84,7 @@
 
                 if (!IsImmutable(propertyInfo.PropertyType, checkedTypes))
                 {
-                    MutableTypes.Add(type);
+                    CheckedTypes.TryAdd(type, false);
                     return false;
                 }
             }
@@ -116,13 +99,13 @@
 
                 if (!fieldInfo.IsInitOnly)
                 {
-                    MutableTypes.Add(type);
+                    CheckedTypes.TryAdd(type, false);
                     return false;
                 }
 
                 if (!IsValidSubPropertyOrFieldType(fieldInfo.FieldType))
                 {
-                    MutableTypes.Add(type);
+                    CheckedTypes.TryAdd(type, false);
                     return false;
                 }
 
@@ -133,12 +116,12 @@
 
                 if (!IsImmutable(fieldInfo.FieldType, checkedTypes))
                 {
-                    MutableTypes.Add(type);
+                    CheckedTypes.TryAdd(type, false);
                     return false;
                 }
             }
 
-            ImmutableTypes.Add(type);
+            CheckedTypes.TryAdd(type, true);
             return true;
         }
 
