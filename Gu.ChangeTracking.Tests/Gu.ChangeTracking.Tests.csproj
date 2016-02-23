@@ -46,11 +46,13 @@
     </When>
   </Choose>
   <ItemGroup>
+    <Compile Include="ChangeTracker\ChangeTrackerStubs\Immutable.cs" />
+    <Compile Include="ChangeTracker\ChangeTrackerStubs\WithImmutable.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerStubs\WithObservableCollectionProperty.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerTests.WithObservableCollectionProperty.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerTests.ObservableCollectionOfComplexTypes.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerTests.ObservableCollectionOfInts.cs" />
-    <Compile Include="ChangeTracker\ChangeTrackerTests.Collection.cs" />
+    <Compile Include="ChangeTracker\ChangeTrackerTests.Levels.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerTests.Shared.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerTests.throws.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerTests.PropertyChanged.cs" />
