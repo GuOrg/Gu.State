@@ -46,7 +46,12 @@
     </When>
   </Choose>
   <ItemGroup>
+    <Compile Include="ChangeTracker\ChangeTrackerStubs\WithObservableCollectionProperty.cs" />
+    <Compile Include="ChangeTracker\ChangeTrackerTests.WithObservableCollectionProperty.cs" />
+    <Compile Include="ChangeTracker\ChangeTrackerTests.ObservableCollectionOfComplexTypes.cs" />
+    <Compile Include="ChangeTracker\ChangeTrackerTests.ObservableCollectionOfInts.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerTests.Collection.cs" />
+    <Compile Include="ChangeTracker\ChangeTrackerTests.Shared.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerTests.throws.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerTests.PropertyChanged.cs" />
     <Compile Include="Copy\CopyStubs\ComplexType.cs" />
@@ -96,13 +101,12 @@
     <Compile Include="DirtyTracker\DirtyTrackerStubs\SimpleDirtyTrackClass.cs" />
     <Compile Include="EqualBy\EqualBy.Shared.cs" />
     <Compile Include="EqualBy\EqualByTests.PropertyValues.cs" />
-    <Compile Include="ChangeTracker\Internals\CollectionItemTrackerTests.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\WithCalculatedProperty.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\WithObservableCollectionProperties.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\WithSimpleProperties.cs" />
     <Compile Include="Copy\CopyTests.FieldValues.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerTests.Simple.cs" />
-    <Compile Include="ChangeTracker\ChangeTrackerStubs\BaseClass.cs" />
+    <Compile Include="ChangeTracker\ChangeTrackerStubs\ComplexType.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerStubs\DerivedClass.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerStubs\IBaseClass.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerStubs\WithLevel.cs" />
@@ -221,5 +225,8 @@
       <Private>True</Private>
       <Paket>True</Paket>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ChangeTracker\Internals\" />
   </ItemGroup>
 </Project>

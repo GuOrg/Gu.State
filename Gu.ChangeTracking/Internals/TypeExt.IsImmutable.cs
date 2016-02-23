@@ -11,34 +11,20 @@
             typeof(Type),
             typeof(CultureInfo),
             typeof(DateTime),
-            typeof(DateTime?),
             typeof(DateTimeOffset),
-            typeof(DateTimeOffset?),
             typeof(TimeSpan),
-            typeof(TimeSpan?),
             typeof(string),
             typeof(double),
-            typeof(double?),
             typeof(float),
-            typeof(float?),
             typeof(decimal),
-            typeof(decimal?),
             typeof(int),
-            typeof(int?),
             typeof(uint),
-            typeof(uint?),
             typeof(long),
-            typeof(long?),
             typeof(ulong),
-            typeof(ulong?),
             typeof(short),
-            typeof(short?),
             typeof(ushort),
-            typeof(ushort?),
             typeof(sbyte),
-            typeof(sbyte?),
             typeof(byte),
-            typeof(byte?),
         };
 
         private static readonly ConcurrentSet<Type> MutableTypes = new ConcurrentSet<Type>();
@@ -60,6 +46,28 @@
 
         private static bool IsImmutable(Type type, List<Type> checkedTypes)
         {
+            if (type.IsNullable())
+            {
+                type = Nullable.GetUnderlyingType(type);
+                var isImmutable = IsImmutable(type, checkedTypes);
+                if (isImmutable)
+                {
+                    ImmutableTypes.Add(type);
+                }
+                else
+                {
+                    MutableTypes.Add(type);
+                }
+
+                return isImmutable;
+            }
+
+            if (type.IsEnum)
+            {
+                ImmutableTypes.Add(type);
+                return true;
+            }
+
             if (ImmutableTypes.Contains(type))
             {
                 return true;

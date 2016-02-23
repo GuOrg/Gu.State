@@ -146,6 +146,11 @@
         /// <returns>True if <paramref name="type"/> is ignored when tracking changes.</returns>
         public bool IsIgnored(Type type)
         {
+            if (type == null || type.IsImmutable())
+            {
+                return true;
+            }
+
             return this.specialTypes.ContainsKey(type.FullName);
         }
 

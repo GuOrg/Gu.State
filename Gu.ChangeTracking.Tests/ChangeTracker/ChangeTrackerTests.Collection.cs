@@ -12,36 +12,6 @@ namespace Gu.ChangeTracking.Tests
         public class Collection
         {
             [Test]
-            public void NotifiesOnAddInt()
-            {
-                var changes = new List<string>();
-                var root = new Level();
-                using (var tracker = ChangeTracker.Track(root, ChangeTrackerSettings.Default))
-                {
-                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
-                    Assert.AreEqual(0, tracker.Changes);
-                    CollectionAssert.IsEmpty(changes);
-
-                    root.Ints.Add(1);
-                    Assert.AreEqual(1, tracker.Changes);
-                    CollectionAssert.AreEqual(new[] { "Changes" }, changes);
-
-                    root.Ints = new ObservableCollection<int>();
-                    Assert.AreEqual(2, tracker.Changes);
-                    CollectionAssert.AreEqual(new[] { "Changes", "Changes" }, changes);
-
-                    root.Ints.Add(1);
-                    Assert.AreEqual(3, tracker.Changes);
-                    CollectionAssert.AreEqual(new[] { "Changes", "Changes", "Changes" }, changes);
-
-                    tracker.Dispose();
-                    root.Ints.Add(2);
-                    Assert.AreEqual(3, tracker.Changes);
-                    CollectionAssert.AreEqual(new[] { "Changes", "Changes", "Changes" }, changes);
-                }
-            }
-
-            [Test]
             public void NotifiesOnAdd()
             {
                 var changes = new List<string>();

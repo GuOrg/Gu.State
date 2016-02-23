@@ -3,7 +3,7 @@ namespace Gu.ChangeTracking
     using System;
     using System.ComponentModel;
 
-    public interface ITracker : INotifyPropertyChanged, IDisposable
+    public interface IChangeTracker : INotifyPropertyChanged, IDisposable
     {
         /// <summary>
         /// This event is raised when a change in the tracked instance is detected.

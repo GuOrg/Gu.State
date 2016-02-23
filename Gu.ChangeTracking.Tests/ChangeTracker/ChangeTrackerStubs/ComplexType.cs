@@ -4,7 +4,7 @@
     using System.Runtime.CompilerServices;
     using JetBrains.Annotations;
 
-    public class BaseClass : INotifyPropertyChanged, IBaseClass
+    public class ComplexType : INotifyPropertyChanged, IBaseClass
     {
         private int value;
         private int excluded;

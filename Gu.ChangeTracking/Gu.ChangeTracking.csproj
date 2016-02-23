@@ -40,6 +40,7 @@
   <ItemGroup>
     <Compile Include="ChangeTracker\ChangeTracker.cs" />
     <Compile Include="ChangeTracker\Contracts\ISpecialCopyProperty.cs" />
+    <Compile Include="ChangeTracker\PropertyChangeTracker.cs" />
     <Compile Include="Copy\Copy.Shared.cs" />
     <Compile Include="Copy\Settings\CopyFieldsSettings.cs" />
     <Compile Include="Copy\Settings\CopyPropertiesSettings.cs" />
@@ -70,21 +71,16 @@
     <Compile Include="Internals\Constants.cs" />
     <Compile Include="DirtyTracker\DirtyTracker.cs" />
     <Compile Include="DirtyTracker\DirtyTracker{T}.cs" />
-    <Compile Include="ChangeTracker\Internals\CollectionItemTrackerCollection.cs" />
-    <Compile Include="ChangeTracker\Internals\CollectionTracker.cs" />
     <Compile Include="ChangeTracker\Contracts\IPropertyTracker.cs" />
-    <Compile Include="ChangeTracker\Contracts\ITracker.cs" />
+    <Compile Include="ChangeTracker\Contracts\IChangeTracker.cs" />
     <Compile Include="ChangeTracker\Contracts\IValueTracker.cs" />
-    <Compile Include="ChangeTracker\PropertyTracker.cs" />
-    <Compile Include="ChangeTracker\ValueTracker.cs" />
+    <Compile Include="ChangeTracker\ItemChangeTracker.cs" />
     <Compile Include="Internals\Ensure.cs" />
     <Compile Include="Internals\Ensure.string.cs" />
     <Compile Include="Internals\Ensure.type.cs" />
     <Compile Include="Internals\PropertyInfoExt.cs" />
     <Compile Include="Internals\TypeExt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ChangeTracker\Internals\PropertyChangeTracker.cs" />
-    <Compile Include="ChangeTracker\Internals\PropertyTrackerCollection.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizer.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizer{T}.cs" />
     <Compile Include="ChangeTracker\Settings\ChangeTrackerSettings.cs" />
