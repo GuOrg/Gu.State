@@ -56,7 +56,7 @@
         /// </summary>
         /// <param name="root">The item to track changes for.</param>
         /// <returns>An <see cref="IValueTracker"/> that signals on changes in <paramref name="root"/></returns>
-        public static IValueTracker Track(INotifyPropertyChanged root)
+        public static ITracker Track(INotifyPropertyChanged root)
         {
             Ensure.NotNull(root, nameof(root));
             return Track(root, ChangeTrackerSettings.Default);
@@ -68,7 +68,7 @@
         /// <param name="root">The item to track changes for.</param>
         /// <param name="settings">Settings telling the tracker which types to ignore.</param>
         /// <returns>An <see cref="IValueTracker"/> that signals on changes in <paramref name="root"/></returns>
-        public static IValueTracker Track(INotifyPropertyChanged root, ChangeTrackerSettings settings)
+        public static ITracker Track(INotifyPropertyChanged root, ChangeTrackerSettings settings)
         {
             Ensure.NotNull(root, nameof(root));
             Ensure.NotNull(settings, nameof(settings));
