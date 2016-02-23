@@ -2,11 +2,9 @@
 {
     using System;
     using System.Collections;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.ComponentModel;
-    using System.Linq;
     using System.Reflection;
     using System.Runtime.CompilerServices;
     using JetBrains.Annotations;
@@ -17,9 +15,7 @@
     /// </summary>
     public class ChangeTracker : IChangeTracker
     {
-        private static readonly PropertyInfo ChangesPropertyInfo = typeof(ChangeTracker).GetProperty(nameof(Changes));
         private static readonly PropertyChangedEventArgs ChangesEventArgs = new PropertyChangedEventArgs(nameof(Changes));
-        private static readonly ConcurrentDictionary<Type, IReadOnlyList<PropertyInfo>> TrackPropertiesMap = new ConcurrentDictionary<Type, IReadOnlyList<PropertyInfo>>();
         private readonly ItemsChangeTrackers itemsChangeTrackers;
         private readonly PropertiesChangeTrackers propertiesChangeTrackers;
 
