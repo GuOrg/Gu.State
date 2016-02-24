@@ -5,8 +5,10 @@
     using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.ComponentModel;
+    using System.Linq;
     using System.Reflection;
     using System.Runtime.CompilerServices;
+    using System.Text;
     using JetBrains.Annotations;
 
     /// <summary>
@@ -57,6 +59,8 @@
                 this.OnChanged();
             }
         }
+
+        internal object Source => (object)this.propertiesChangeTrackers?.Source ?? this.itemsChangeTrackers.Source;
 
         /// <summary>
         /// Creates a tracker that detects and notifies about changes of any property or subproperty of <paramref name="root"/>
@@ -138,25 +142,47 @@
 
         private sealed class PropertiesChangeTrackers : IDisposable
         {
-            private readonly INotifyPropertyChanged source;
+            internal readonly INotifyPropertyChanged Source;
             private readonly ChangeTracker parent;
             private readonly PropertyCollection propertyTrackers;
 
-            private PropertiesChangeTrackers(INotifyPropertyChanged source, ChangeTracker parent)
+            private PropertiesChangeTrackers(INotifyPropertyChanged source, ChangeTracker parent, PropertyCollection propertyTrackers)
             {
-                this.source = source;
+                this.Source = source;
                 this.parent = parent;
+                this.propertyTrackers = propertyTrackers;
                 source.PropertyChanged += this.OnTrackedPropertyChanged;
+            }
+
+            public void Dispose()
+            {
+                this.Source.PropertyChanged -= this.OnTrackedPropertyChanged;
+                this.propertyTrackers?.Dispose();
+            }
+
+            internal static PropertiesChangeTrackers Create(INotifyPropertyChanged source, ChangeTracker parent)
+            {
+                if (source == null)
+                {
+                    return null;
+                }
+
+                var sourceType = source.GetType();
+                if (parent.Settings.IsIgnored(sourceType))
+                {
+                    return null;
+                }
+
                 List<PropertyCollection.PropertyAndDisposable> items = null;
-                foreach (var propertyInfo in source.GetType()
-                                              .GetProperties(Constants.DefaultPropertyBindingFlags))
+                var properties = sourceType.GetProperties(Constants.DefaultPropertyBindingFlags);
+                foreach (var propertyInfo in properties)
                 {
                     if (parent.Settings.IsIgnored(propertyInfo))
                     {
                         continue;
                     }
 
-                    var tracker = this.CreatePropertyTracker(propertyInfo);
+                    var tracker = CreatePropertyTracker(source, propertyInfo, parent);
                     if (items == null)
                     {
                         items = new List<PropertyCollection.PropertyAndDisposable>();
@@ -167,31 +193,11 @@
 
                 if (items != null)
                 {
-                    this.propertyTrackers = new PropertyCollection(items);
-                }
-            }
-
-            internal static PropertiesChangeTrackers Create(
-                INotifyPropertyChanged source,
-                ChangeTracker parent)
-            {
-                if (source == null)
-                {
-                    return null;
+                    var propertyCollection = new PropertyCollection(items);
+                    return new PropertiesChangeTrackers(source, parent, propertyCollection);
                 }
 
-                if (parent.Settings.IsIgnored(source.GetType()))
-                {
-                    return null;
-                }
-
-                return new PropertiesChangeTrackers(source, parent);
-            }
-
-            public void Dispose()
-            {
-                this.source.PropertyChanged -= this.OnTrackedPropertyChanged;
-                this.propertyTrackers?.Dispose();
+                return new PropertiesChangeTrackers(source, parent, null);
             }
 
             private void OnTrackedPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -211,7 +217,7 @@
                     return;
                 }
 
-                var propertyTracker = this.CreatePropertyTracker(propertyInfo);
+                var propertyTracker = CreatePropertyTracker(this.Source, propertyInfo, this.parent);
                 this.propertyTrackers[propertyInfo] = propertyTracker;
                 this.parent.Changes++;
             }
@@ -223,7 +229,8 @@
                     return;
                 }
 
-                var properties = this.source.GetType().GetProperties(Constants.DefaultPropertyBindingFlags);
+                var properties = this.Source.GetType()
+                                     .GetProperties(Constants.DefaultPropertyBindingFlags);
                 foreach (var propertyInfo in properties)
                 {
                     if (this.parent.Settings.IsIgnored(propertyInfo))
@@ -231,15 +238,15 @@
                         continue;
                     }
 
-                    // might be worth it to check if source ReferenceEquals to avoid creating a new tracker here.
+                    // might be worth it to check if Source ReferenceEquals to avoid creating a new tracker here.
                     // Probably not a big problem as I expect PropertyChanged.Invoke(string.Empty) to be rare.
-                    this.propertyTrackers[propertyInfo] = this.CreatePropertyTracker(propertyInfo);
+                    this.propertyTrackers[propertyInfo] = CreatePropertyTracker(this.Source, propertyInfo, this.parent);
                 }
             }
 
-            private PropertyChangeTracker CreatePropertyTracker(PropertyInfo propertyInfo)
+            private static PropertyChangeTracker CreatePropertyTracker(object source, PropertyInfo propertyInfo, ChangeTracker parent)
             {
-                var sv = propertyInfo.GetValue(this.source);
+                var sv = propertyInfo.GetValue(source);
                 if (sv == null)
                 {
                     return null;
@@ -254,64 +261,79 @@
                 var notifyPropertyChanged = sv as INotifyPropertyChanged;
                 if (notifyPropertyChanged == null)
                 {
-                    var parentType = this.source.GetType();
-                    var message = $"Create tracker failed for {type.FullPrettyName()}.{propertyInfo.Name}.\r\n" +
-                                  $"Solve the problem by any of:\r\n" +
-                                  $"* Add a specialcase to tracker setting example:\r\n" +
-                                  $"    settings.AddSpecialType<{propertyInfo.PropertyType.FullPrettyName()}>(...)\r\n" +
-                                  $"    or:" +
-                                  $"    settings.AddSpecialProperty(typeof({parentType.PrettyName()}).GetProperty(nameof({parentType.PrettyName()}.{propertyInfo.Name}))" +
-                                  $"    Note that this requires you to track changes.\r\n" +
-                                  $"* Implement {nameof(INotifyPropertyChanged)} for {parentType.FullPrettyName()}\r\n" +
-                                  $"* Implement {nameof(INotifyCollectionChanged)} for {parentType.FullPrettyName()}\r\n" +
-                                  $"  Make {parentType.FullPrettyName()} Immutable. Note: To be immutable the class must be sealed.";
+                    var parentType = source?.GetType() ?? propertyInfo.DeclaringType;
+                    var message = $"Create tracker failed for {type.FullPrettyName()}.{propertyInfo.Name}.\r\n"
+                                  + $"Solve the problem by any of:\r\n"
+                                  + $"* Add a specialcase to tracker setting example:\r\n"
+                                  + $"    settings.AddSpecialType<{propertyInfo.PropertyType.FullPrettyName()}>(...)\r\n"
+                                  + $"    or:"
+                                  + $"    settings.AddSpecialProperty(typeof({parentType.PrettyName()}).GetProperty(nameof({parentType.PrettyName()}.{propertyInfo.Name}))"
+                                  + $"    Note that this requires you to track changes.\r\n"
+                                  + $"* Implement {nameof(INotifyPropertyChanged)} for {parentType.FullPrettyName()}\r\n"
+                                  + $"* Implement {nameof(INotifyCollectionChanged)} for {parentType.FullPrettyName()}\r\n"
+                                  + $"  Make {parentType.FullPrettyName()} Immutable. Note: To be immutable the class must be sealed.";
                     throw new ArgumentException(message);
                 }
 
-                return new PropertyChangeTracker(notifyPropertyChanged, propertyInfo, this.parent);
+                return new PropertyChangeTracker(notifyPropertyChanged, propertyInfo, parent);
             }
         }
 
         private sealed class ItemsChangeTrackers : IDisposable
         {
-            private readonly INotifyCollectionChanged source;
+            internal readonly INotifyCollectionChanged Source;
             private readonly ChangeTracker parent;
-            private readonly ItemCollection<IChangeTracker> itemTrackers;
+            private readonly ItemCollection<ChangeTracker> itemTrackers;
 
-            private ItemsChangeTrackers(INotifyCollectionChanged source, ChangeTracker parent)
+            private ItemsChangeTrackers(INotifyCollectionChanged source, ChangeTracker parent, ItemCollection<ChangeTracker> itemTrackers)
             {
-                this.source = source;
+                this.Source = source;
                 this.parent = parent;
-                this.source.CollectionChanged += this.OnTrackedCollectionChanged;
-                var sourceList = (IList)source;
-
-                var itemType = sourceList.GetType()
-                                         .GetItemType();
-                if (!itemType.IsImmutable() && !parent.Settings.IsIgnored(itemType))
-                {
-                    this.itemTrackers = new ItemCollection<IChangeTracker>();
-                    for (int i = 0; i < Math.Max(sourceList.Count, sourceList.Count); i++)
-                    {
-                        var itemTracker = this.CreateItemTracker(i);
-                        this.itemTrackers[i] = itemTracker;
-                    }
-                }
+                this.itemTrackers = itemTrackers;
+                this.Source.CollectionChanged += this.OnTrackedCollectionChanged;
             }
 
             internal static ItemsChangeTrackers Create(object source, ChangeTracker parent)
             {
-                var xCollectionChanged = source as INotifyCollectionChanged;
-                if (xCollectionChanged != null)
+                if (!(source is IEnumerable))
                 {
-                    return new ItemsChangeTrackers(xCollectionChanged, parent);
+                    return null;
                 }
 
-                return null;
+                if (!(source is INotifyCollectionChanged) || !(source is IList))
+                {
+                    var propertyPath = PropertyPath.Create(parent);
+                    var messageBuilder = new StringBuilder();
+                    messageBuilder.AppendCreateFailedForLine<ChangeTracker>(propertyPath)
+                                  .AppendSolveTheProblemByLine()
+                                  .AppendImplementsIListAndINotifyCollectionChangedLines(source, propertyPath)
+                                  .AppendUseImmutableTypeLine(propertyPath)
+                                  .AppendChangeTrackerSettingsSpecialCaseLines(source, propertyPath);
+
+                    throw new ArgumentException(messageBuilder.ToString(), nameof(source));
+                }
+
+                var incc = source as INotifyCollectionChanged;
+                var itemType = source.GetType().GetItemType();
+                if (itemType.IsImmutable() || parent.Settings.IsIgnored(itemType))
+                {
+                    return new ItemsChangeTrackers(incc, parent, null);
+                }
+
+                var sourceList = (IList)source;
+                var itemTrackers = new ItemCollection<ChangeTracker>(sourceList.Count);
+                for (int i = 0; i < sourceList.Count; i++)
+                {
+                    var itemTracker = CreateItemTracker(sourceList, i, parent);
+                    itemTrackers[i] = itemTracker;
+                }
+
+                return new ItemsChangeTrackers(incc, parent, itemTrackers);
             }
 
             public void Dispose()
             {
-                this.source.CollectionChanged -= this.OnTrackedCollectionChanged;
+                this.Source.CollectionChanged -= this.OnTrackedCollectionChanged;
                 this.itemTrackers?.Dispose();
             }
 
@@ -323,12 +345,13 @@
                     return;
                 }
 
+                var sourceList = (IList)this.Source;
                 switch (e.Action)
                 {
                     case NotifyCollectionChangedAction.Add:
                         for (int i = e.NewStartingIndex; i < e.NewStartingIndex + e.NewItems.Count; i++)
                         {
-                            var itemTracker = this.CreateItemTracker(i);
+                            var itemTracker = CreateItemTracker(sourceList, i, this.parent);
                             this.itemTrackers[i] = itemTracker;
                         }
 
@@ -342,19 +365,19 @@
                         break;
                     case NotifyCollectionChangedAction.Replace:
                         this.itemTrackers.RemoveAt(e.NewStartingIndex);
-                        this.itemTrackers.Insert(e.NewStartingIndex, this.CreateItemTracker(e.NewStartingIndex));
+                        this.itemTrackers.Insert(e.NewStartingIndex, CreateItemTracker(sourceList, e.NewStartingIndex, this.parent));
                         break;
                     case NotifyCollectionChangedAction.Move:
-                        this.itemTrackers[e.OldStartingIndex] = this.CreateItemTracker(e.OldStartingIndex);
-                        this.itemTrackers[e.NewStartingIndex] = this.CreateItemTracker(e.NewStartingIndex);
+                        this.itemTrackers[e.OldStartingIndex] = CreateItemTracker(sourceList, e.OldStartingIndex, this.parent);
+                        this.itemTrackers[e.NewStartingIndex] = CreateItemTracker(sourceList, e.NewStartingIndex, this.parent);
                         break;
                     case NotifyCollectionChangedAction.Reset:
                         {
-                            var xList = (IList)this.source;
+                            var xList = (IList)this.Source;
                             this.itemTrackers.Clear();
                             for (int i = 0; i < xList.Count; i++)
                             {
-                                var itemTracker = this.CreateItemTracker(i);
+                                var itemTracker = CreateItemTracker(sourceList, i, this.parent);
                                 this.itemTrackers[i] = itemTracker;
                             }
 
@@ -368,10 +391,9 @@
                 this.parent.Changes++;
             }
 
-            private ItemChangeTracker CreateItemTracker(int index)
+            private static ItemChangeTracker CreateItemTracker(IList source, int index, ChangeTracker parent)
             {
-                var sourceList = (IList)this.source;
-                var sv = sourceList[index];
+                var sv = source[index];
 
                 if (sv == null)
                 {
@@ -379,7 +401,7 @@
                 }
 
                 var parentType = sv.GetType();
-                if (this.parent.Settings.IsIgnored(parentType))
+                if (parent.Settings.IsIgnored(parentType))
                 {
                     return null;
                 }
@@ -387,20 +409,36 @@
                 var inpc = sv as INotifyPropertyChanged;
                 if (inpc == null)
                 {
-                    //var message = $"Create tracker failed for {parentType.FullPrettyName()}.{propertyInfo.Name}.\r\n"
-                    //              + $"Solve the problem by any of:\r\n"
-                    //              + $"* Add a specialcase to tracker setting example:\r\n"
-                    //              + $"    settings.AddSpecialType<{propertyInfo.PropertyType.FullPrettyName()}>(...)\r\n"
-                    //              + $"    or:"
-                    //              + $"    settings.AddSpecialProperty(typeof({parentType.PrettyName()}).GetProperty(nameof({parentType.PrettyName()}.{propertyInfo.Name}))"
-                    //              + $"    Note that this requires you to track changes.\r\n"
-                    //              + $"* Implement {nameof(INotifyPropertyChanged)} for {parentType.FullPrettyName()}\r\n"
-                    //              + $"* Implement {nameof(INotifyCollectionChanged)} for {parentType.FullPrettyName()}\r\n"
-                    //              + $"  Make {parentType.FullPrettyName()} Immutable. Note: To be immutable the class must be sealed.";
-                    throw new ArgumentException("Create item tracker failed");
+                    var propertyPath = PropertyPath.Create(parent);
+                    var messageBuilder = new StringBuilder();
+                    messageBuilder.AppendCreateFailedForLine<ChangeTracker>(propertyPath)
+                                  .AppendSolveTheProblemByLine()
+                                  .AppendImplementsLine<INotifyPropertyChanged>(sv, propertyPath)
+                                  .AppendUseImmutableTypeLine(propertyPath)
+                                  .AppendChangeTrackerSettingsSpecialCaseLines(sv, propertyPath);
+
+                    throw new ArgumentException(messageBuilder.ToString(), nameof(index));
                 }
 
-                return new ItemChangeTracker(inpc, this.parent);
+                return new ItemChangeTracker(inpc, index, parent);
+            }
+        }
+
+        private static class Validator
+        {
+            internal static void VerifyCreatePropertyTracker(PropertyPath path)
+            {
+            }
+
+            internal static void VerifyCreateItemTracker(Type sourceType, PropertyPath path)
+            {
+                //var type = sourceType ?? path.Path.OfType<PropertyPath.PropertyItem>()
+                //                                    .LastOrDefault()
+                //                                    ?.GetType()
+                //                             ?? path.Root.Type;
+                //var itemType = type.GetItemType();
+                //if (!itemType.im)
+
             }
         }
     }
