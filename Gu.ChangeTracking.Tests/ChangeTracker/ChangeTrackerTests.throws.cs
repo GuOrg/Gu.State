@@ -2,7 +2,10 @@ namespace Gu.ChangeTracking.Tests
 {
     using System;
     using System.Collections.Generic;
-
+    using System.Collections.ObjectModel;
+    using System.Linq;
+    using System.Linq.Expressions;
+    using System.Reflection;
     using Gu.ChangeTracking.Tests.ChangeTrackerStubs;
     using NUnit.Framework;
 
@@ -13,8 +16,53 @@ namespace Gu.ChangeTracking.Tests
             [Test]
             public void AddIllegalThrows()
             {
-                Assert.Inconclusive("Add deferred types");
-                Assert.Inconclusive("Set the property public Legal { get; set; } = new Illegal() : Legal");
+                var expected = "Create ChangeTracker failed for item: ObservableCollection<ComplexType>[0].Illegal.\r\n" +
+                               "Solve the problem by any of:\r\n" +
+                               "* Implement INotifyPropertyChanged for IllegalType or use a type that notifies.\r\n" +
+                               "* Use an immutable type instead of IllegalType. For immutable types the following must hold:\r\n" +
+                               "  - Must be a sealed class or a struct.\r\n" +
+                               "  - All fields and properties must be readonly.\r\n" +
+                               "  - All field and property types must be immutable.\r\n" +
+                               "  - All indexers must be readonly.\r\n" +
+                               "  - Event fields are ignored.\r\n" +
+                               "* Use ChangeTrackerSettings and add a specialcase for IllegalType example:\r\n" +
+                               "    settings.AddIgnoredType<IllegalType>()\r\n" +
+                               "    or:\r\n" +
+                               "    settings.AddIgnoredProperty(typeof(IllegalSubType).GetProperty(nameof(IllegalSubType.Illegal)))\r\n" +
+                               "    Note that this means that the ChangeTracker does not track changes so you are responsible for any tracking needed.\r\n";
+
+                var root = new ObservableCollection<ComplexType>();
+                using (ChangeTracker.Track(root, ChangeTrackerSettings.Default))
+                {
+                    var exception = Assert.Throws<NotSupportedException>(() => root.Add(new IllegalSubType()));
+                    Assert.AreEqual(expected, exception.Message);
+                }
+            }
+
+            [Test]
+            public void SetIllegalThrows()
+            {
+                var expected = "Create ChangeTracker failed for property: With<ComplexType>.Value.Illegal.\r\n" +
+                               "Solve the problem by any of:\r\n" +
+                               "* Implement INotifyPropertyChanged for IllegalType or use a type that notifies.\r\n" +
+                               "* Use an immutable type instead of IllegalType. For immutable types the following must hold:\r\n" +
+                               "  - Must be a sealed class or a struct.\r\n" +
+                               "  - All fields and properties must be readonly.\r\n" +
+                               "  - All field and property types must be immutable.\r\n" +
+                               "  - All indexers must be readonly.\r\n" +
+                               "  - Event fields are ignored.\r\n" +
+                               "* Use ChangeTrackerSettings and add a specialcase for IllegalType example:\r\n" +
+                               "    settings.AddIgnoredType<IllegalType>()\r\n" +
+                               "    or:\r\n" +
+                               "    settings.AddIgnoredProperty(typeof(IllegalSubType).GetProperty(nameof(IllegalSubType.Illegal)))\r\n" +
+                               "    Note that this means that the ChangeTracker does not track changes so you are responsible for any tracking needed.\r\n";
+
+                var item = new With<ComplexType>();
+                using (ChangeTracker.Track(item, ChangeTrackerSettings.Default))
+                {
+                    var exception = Assert.Throws<NotSupportedException>(() => item.Value = new IllegalSubType());
+                    Assert.AreEqual(expected, exception.Message);
+                }
             }
 
             [Test]
@@ -80,7 +128,7 @@ namespace Gu.ChangeTracking.Tests
                                "  - All indexers must be readonly.\r\n" +
                                "  - Event fields are ignored.\r\n" +
                                "* Use ChangeTrackerSettings and add a specialcase for List<int> example:\r\n" +
-                               "    settings.AddIgnoredType<List<int>>()\r\n" + 
+                               "    settings.AddIgnoredType<List<int>>()\r\n" +
                                "    or:\r\n" +
                                "    settings.AddIgnoredProperty(typeof(With<List<int>>).GetProperty(nameof(With<List<int>>.Value)))\r\n" +
                                "    Note that this means that the ChangeTracker does not track changes so you are responsible for any tracking needed.\r\n";

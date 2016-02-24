@@ -46,6 +46,7 @@
     </When>
   </Choose>
   <ItemGroup>
+    <Compile Include="ChangeTracker\ChangeTrackerStubs\IllegalSubType.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerStubs\Immutable.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerStubs\With.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerStubs\WithImmutable.cs" />

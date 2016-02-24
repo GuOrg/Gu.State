@@ -116,8 +116,9 @@
                 }
             }
 
-            CheckedTypes.TryAdd(type, true);
-            return true;
+            result = type.IsSealed || type.IsValueType;
+            CheckedTypes.TryAdd(type, result);
+            return result;
         }
 
         private static bool IsValidSubPropertyOrFieldType(Type type)
