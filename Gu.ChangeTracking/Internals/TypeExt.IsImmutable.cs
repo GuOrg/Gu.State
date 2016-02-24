@@ -55,18 +55,23 @@
                 return true;
             }
 
+            if (!CanBeImmutable(type))
+            {
+                CheckedTypes.TryAdd(type, false);
+                return false;
+            }
+
             var propertyInfos = type.GetProperties(Constants.DefaultFieldBindingFlags);
             foreach (var propertyInfo in propertyInfos)
             {
                 if (!propertyInfo.IsGetReadOnly() ||
                     (propertyInfo.GetIndexParameters().Length > 0 && propertyInfo.SetMethod != null))
                 {
-
                     CheckedTypes.TryAdd(type, false);
                     return false;
                 }
 
-                if (!IsValidSubPropertyOrFieldType(propertyInfo.PropertyType))
+                if (!CanBeImmutable(propertyInfo.PropertyType))
                 {
                     CheckedTypes.TryAdd(type, false);
                     return false;
@@ -98,7 +103,7 @@
                     return false;
                 }
 
-                if (!IsValidSubPropertyOrFieldType(fieldInfo.FieldType))
+                if (!CanBeImmutable(fieldInfo.FieldType))
                 {
                     CheckedTypes.TryAdd(type, false);
                     return false;
@@ -116,12 +121,11 @@
                 }
             }
 
-            result = type.IsSealed || type.IsValueType;
-            CheckedTypes.TryAdd(type, result);
-            return result;
+            CheckedTypes.TryAdd(type, true);
+            return true;
         }
 
-        private static bool IsValidSubPropertyOrFieldType(Type type)
+        private static bool CanBeImmutable(Type type)
         {
             return type.IsValueType || type.IsSealed;
         }

@@ -72,6 +72,7 @@
     <Compile Include="Internals\Stubs\IMutableInterface.cs" />
     <Compile Include="Internals\Stubs\WithImmutableImplementingMutableInterfaceExplicit.cs" />
     <Compile Include="Internals\Stubs\WithImmutableSubclassingMutable.cs" />
+    <Compile Include="Internals\Stubs\WithReadonlyFieldSealed.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\WithGetReadOnlyPropertySealed.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerStubs\WithGetReadOnlyPropertyStruct.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerStubs\WithImmutableProperty.cs" />
