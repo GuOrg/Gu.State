@@ -6,16 +6,16 @@ namespace Gu.ChangeTracking
     [DebuggerDisplay("ItemChangeTracker")]
     internal class ItemChangeTracker : ChangeTracker
     {
-        private readonly ChangeTracker parent;
-
         public ItemChangeTracker(INotifyPropertyChanged source, int index, ChangeTracker parent)
-            : base(source, parent.Settings)
+            : base(source, parent.Settings, parent.Path.WithIndexer(index))
         {
             this.Index = index;
-            this.parent = parent;
+            this.Parent = parent;
         }
 
         public int Index { get; }
+
+        internal ChangeTracker Parent { get; }
 
         public override int Changes
         {
@@ -25,7 +25,7 @@ namespace Gu.ChangeTracking
             }
             protected internal set
             {
-                this.parent.Changes++;
+                this.Parent.Changes++;
                 base.Changes = value;
             }
         }

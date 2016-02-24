@@ -57,11 +57,15 @@
     <Compile Include="Internals\ConcurrentSet.cs" />
     <Compile Include="Internals\ItemCollection.cs" />
     <Compile Include="Internals\PropertyCollection.cs" />
+    <Compile Include="Internals\PropertyPath\IndexItem.cs" />
+    <Compile Include="Internals\PropertyPath\PathItem.cs" />
+    <Compile Include="Internals\PropertyPath\PropertyItem.cs" />
+    <Compile Include="Internals\PropertyPath\RootItem.cs" />
     <Compile Include="Internals\ReferenceCollection.cs" />
     <Compile Include="Internals\ReferencePairCollection.cs" />
     <Compile Include="Internals\ThrowHelper.cs" />
     <Compile Include="Internals\TypeExt.IsImmutable.cs" />
-    <Compile Include="Internals\PropertyPath.cs" />
+    <Compile Include="Internals\PropertyPath\PropertyPath.cs" />
     <Compile Include="ReferenceHandling.cs" />
     <Compile Include="Copy\Settings\SpecialCopyProperty.cs" />
     <Compile Include="Copy\Copy.PropertyValues.cs" />

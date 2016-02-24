@@ -1,6 +1,7 @@
 ﻿namespace Gu.ChangeTracking.Tests.ChangeTrackerStubs
 {
-    public  class IllegalObject
+    public class IllegalType
     {
+        public int Value { get; set; }
     }
 }

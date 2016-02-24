@@ -10,7 +10,7 @@
         public void AddPropertyLambda()
         {
             var settings = new ChangeTrackerSettings();
-            settings.AddExplicitProperty<Level>(x => x.Next);
+            settings.AddIgnoredProperty<Level>(x => x.Next);
             Assert.IsTrue(settings.IsIgnored(typeof(Level).GetProperty(nameof(Level.Next))));
         }
 
@@ -18,7 +18,7 @@
         public void AddPropertyThrowsOnNested()
         {
             var settings = new ChangeTrackerSettings();
-            var exception = Assert.Throws<ArgumentException>(() => settings.AddExplicitProperty<Level>(x => x.Next.Value));
+            var exception = Assert.Throws<ArgumentException>(() => settings.AddIgnoredProperty<Level>(x => x.Next.Value));
             var expected = "property must be a property expression like foo => foo.Bar\r\n" +
                            "Nested properties are not allowed";
             Assert.AreEqual(expected, exception.Message);

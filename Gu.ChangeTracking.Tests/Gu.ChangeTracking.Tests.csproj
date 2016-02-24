@@ -116,9 +116,9 @@
     <Compile Include="ChangeTracker\ChangeTrackerStubs\WithLevel.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerStubs\WithList.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerStubs\WithIgnoredProperty.cs" />
-    <Compile Include="ChangeTracker\ChangeTrackerStubs\WithIllegalObject.cs" />
+    <Compile Include="ChangeTracker\ChangeTrackerStubs\WithIllegal.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerStubs\IllegalEnumerable.cs" />
-    <Compile Include="ChangeTracker\ChangeTrackerStubs\IllegalObject.cs" />
+    <Compile Include="ChangeTracker\ChangeTrackerStubs\IllegalType.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerStubs\Level.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerStubs\SpecialCollection.cs" />
     <Compile Include="EqualBy\EqualByTests.FieldValues.cs" />

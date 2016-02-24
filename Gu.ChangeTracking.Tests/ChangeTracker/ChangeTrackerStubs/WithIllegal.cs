@@ -4,10 +4,10 @@
     using System.Runtime.CompilerServices;
     using JetBrains.Annotations;
 
-    public class WithIllegalObject : INotifyPropertyChanged
+    public class WithIllegal : INotifyPropertyChanged
     {
         private int value;
-        private IllegalObject illegal;
+        private IllegalType illegal;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public int Value
@@ -21,7 +21,7 @@
             }
         }
 
-        public IllegalObject Illegal
+        public IllegalType Illegal
         {
             get { return this.illegal; }
             set
