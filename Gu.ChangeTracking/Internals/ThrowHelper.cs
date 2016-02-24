@@ -1,8 +1,9 @@
 ﻿namespace Gu.ChangeTracking
 {
+    using System;
     using System.Collections;
+    using System.Collections.Generic;
     using System.Collections.Specialized;
-    using System.ComponentModel;
     using System.Linq;
     using System.Text;
 
@@ -10,9 +11,9 @@
     {
         internal static StringBuilder AppendCreateFailedForLine<T>(this StringBuilder messageBuilder, PropertyPath path)
         {
-            var line = path.Path.OfType<PropertyPath.PropertyItem>().LastOrDefault() != null
-                           ? $"Create {typeof(T).Name} failed for property: {path.PathString}."
-                           : $"Create {typeof(T).Name} failed for type: {path.Root.Type.Name}.";
+            var line = path.Path.OfType<PropertyItem>().LastOrDefault() != null
+                           ? $"Create {typeof(T).PrettyName()} failed for property: {path.PathString}."
+                           : $"Create {typeof(T).PrettyName()} failed for type: {path.Root.Type.PrettyName()}.";
             return messageBuilder.AppendLine(line);
         }
 
@@ -21,29 +22,34 @@
             return messageBuilder.AppendLine("Solve the problem by any of:");
         }
 
-        internal static StringBuilder AppendImplementsIListAndINotifyCollectionChangedLines(this StringBuilder messageBuilder, object source, PropertyPath path)
+        internal static StringBuilder AppendSuggestionsForEnumerableLines(this StringBuilder messageBuilder, Type sourceType, PropertyPath path)
         {
-            var line = path.Path.OfType<PropertyPath.PropertyItem>().LastOrDefault() != null
-                           ? $"* Implement {typeof(INotifyCollectionChanged).Name}  {typeof(IList).Name} and for {path.PathString} or use a type that does."
-                           : $"* Make {source.GetType()} implement {typeof(INotifyCollectionChanged).Name}  {typeof(IList).Name} or use a type that does.";
-            return messageBuilder.AppendLine(line);
+            messageBuilder.AppendLine($"* Use ObservableCollection<T> or another collection type that notifies instead of {sourceType.PrettyName()}.");
+
+            if (sourceType.Assembly != typeof(List<>).Assembly)
+            {
+                var line = $"* Make {sourceType.PrettyName()} implement the interfaces {typeof(INotifyCollectionChanged).Name} and {typeof(IList).Name}.";
+                messageBuilder.AppendLine(line);
+            }
+
+            return messageBuilder;
         }
 
-        internal static StringBuilder AppendImplementsLine<T>(this StringBuilder messageBuilder, object source, PropertyPath path)
+        internal static StringBuilder AppendImplementsLine<T>(this StringBuilder messageBuilder, Type sourceType, PropertyPath path)
         {
-            var line = path.Path.OfType<PropertyPath.PropertyItem>().LastOrDefault() != null
-                           ? $"* Implement {typeof(T).Name} for {path.PathString} or use a type that does."
-                           : $"* Make {source.GetType()} implement {typeof(T).Name} or use a type that does.";
+            var line = sourceType.Assembly == typeof(int).Assembly
+                ? $"* Use a type that implements {typeof(T).PrettyName()} instead of {sourceType.PrettyName()}."
+                : $"* Implement {typeof(T).PrettyName()} for {sourceType.PrettyName()} or use a type that notifies.";
             return messageBuilder.AppendLine(line);
         }
 
         internal static StringBuilder AppendUseImmutableTypeLine(this StringBuilder messageBuilder, PropertyPath propertyPath)
         {
-            var lastProperty = propertyPath.Path.OfType<PropertyPath.PropertyItem>()
+            var lastProperty = propertyPath.Path.OfType<PropertyItem>()
                                             .LastOrDefault();
             var line = lastProperty != null
-                        ? $"* Use an immutable type for {propertyPath.PathString}. For a class to be deemed immutable the following must hold:"
-                        : $"* Use an immutable type instead of {propertyPath.Root.Type} or make it immutable if possible. For a class to be deemed immutable the following must hold:";
+                        ? $"* Use an immutable type instead of {lastProperty.Property.PropertyType.PrettyName()}. For immutable types the following must hold:"
+                        : $"* Make {propertyPath.Root.Type.PrettyName()} immutable or use an immutable type. For immutable types the following must hold:";
 
             messageBuilder.AppendLine(line);
             return messageBuilder.AppendImmutableConditionsLines();
@@ -51,25 +57,25 @@
 
         internal static StringBuilder AppendImmutableConditionsLines(this StringBuilder messageBuilder)
         {
-            messageBuilder.AppendLine("  - Must be sealed or struct.");
+            messageBuilder.AppendLine("  - Must be a sealed class or a struct.");
             messageBuilder.AppendLine("  - All fields and properties must be readonly.");
-            messageBuilder.AppendLine("  - All fields and properties values must be immutable.");
+            messageBuilder.AppendLine("  - All field and property types must be immutable.");
             messageBuilder.AppendLine("  - All indexers must be readonly.");
             messageBuilder.AppendLine("  - Event fields are ignored.");
             return messageBuilder;
         }
 
-        internal static StringBuilder AppendChangeTrackerSettingsSpecialCaseLines(this StringBuilder messageBuilder, object source, PropertyPath propertyPath)
+        internal static StringBuilder AppendChangeTrackerSettingsSpecialCaseLines(this StringBuilder messageBuilder, Type sourceType, PropertyPath propertyPath)
         {
-            var sourceType = source.GetType();
-            var lastProperty = propertyPath.Path.OfType<PropertyPath.PropertyItem>()
+            var lastProperty = propertyPath.Path.OfType<PropertyItem>()
                                            .LastOrDefault();
-            messageBuilder.AppendLine($"* Add a special case to {typeof(ChangeTrackerSettings).Name} example:");
-            messageBuilder.AppendLine($"    settings.AddExplicitType<{sourceType.PrettyName()}>()\r\n");
+            messageBuilder.AppendLine($"* Use {typeof(ChangeTrackerSettings).Name} and add a specialcase for {sourceType.PrettyName()} example:");
+            messageBuilder.AppendLine($"    settings.AddIgnoredType<{sourceType.PrettyName()}>()");
             if (lastProperty != null)
             {
                 messageBuilder.AppendLine("    or:");
-                messageBuilder.AppendLine($"    settings.AddExplicitProperty(typeof({sourceType.Name}).GetProperty(nameof({sourceType.Name}.{lastProperty.Property.Name})))");
+                var declaringType = lastProperty.Property.DeclaringType.PrettyName();
+                messageBuilder.AppendLine($"    settings.AddIgnoredProperty(typeof({declaringType}).GetProperty(nameof({declaringType}.{lastProperty.Property.Name})))");
             }
 
             return messageBuilder.AppendLine($"    Note that this means that the {typeof(ChangeTracker).Name} does not track changes so you are responsible for any tracking needed.");

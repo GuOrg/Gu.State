@@ -2,6 +2,7 @@ namespace Gu.ChangeTracking
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
 
@@ -53,6 +54,7 @@ namespace Gu.ChangeTracking
             }
         }
 
+        [DebuggerDisplay("PropertyAndDisposable, Property: {PropertyInfo.Name} ")]
         internal class PropertyAndDisposable : IDisposable
         {
             private IDisposable synchronizer;

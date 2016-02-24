@@ -56,7 +56,7 @@
         /// This means that the <see cref="ChangeTracker"/> will not track changes to items of this type.
         /// </summary>
         /// <typeparam name="T">The Explicit type</typeparam>
-        public void AddExplicitType<T>()
+        public void AddIgnoredType<T>()
         {
             this.AddSpecialType<T>(TrackAs.Explicit);
         }
@@ -65,7 +65,7 @@
         /// Adds a special type <see cref="TrackAs.Explicit"/> for <paramref name="type"/>.
         /// This means that the <see cref="ChangeTracker"/> will not track changes to items of this type.
         /// </summary>
-        public void AddExplicitType(Type type)
+        public void AddIgnoredType(Type type)
         {
             this.AddSpecialType(type, TrackAs.Explicit);
         }
@@ -75,7 +75,7 @@
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
         /// <param name="property"></param>
-        public void AddExplicitProperty<TSource>(Expression<Func<TSource, object>> property)
+        public void AddIgnoredProperty<TSource>(Expression<Func<TSource, object>> property)
         {
             var memberExpression = property.Body as MemberExpression;
             if (memberExpression == null)
@@ -107,14 +107,14 @@
                 throw new ArgumentException(message);
             }
 
-            this.AddExplicitProperty(propertyInfo);
+            this.AddIgnoredProperty(propertyInfo);
         }
 
         /// <summary>
         /// Adds a special type <see cref="TrackAs.Explicit"/> for <paramref name="property"/>.
         /// This means that the <see cref="ChangeTracker"/> will not track changes to items of this type.
         /// </summary>
-        public void AddExplicitProperty(PropertyInfo property)
+        public void AddIgnoredProperty(PropertyInfo property)
         {
             var specialProperty = new SpecialProperty(property, TrackAs.Explicit);
             if (!this.specialProperties.TryAdd(property.Name, specialProperty))

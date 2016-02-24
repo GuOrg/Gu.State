@@ -7,14 +7,14 @@ namespace Gu.ChangeTracking
     [DebuggerDisplay("PropertyTracker Property: {PropertyInfo.Name}")]
     internal class PropertyChangeTracker : ChangeTracker
     {
-        private readonly ChangeTracker parent;
-
         public PropertyChangeTracker(INotifyPropertyChanged source, PropertyInfo propertyInfo, ChangeTracker parent)
-            : base(source, parent.Settings)
+            : base(source, parent.Settings, parent.Path.WithProperty(propertyInfo))
         {
-            this.parent = parent;
+            this.Parent = parent;
             this.PropertyInfo = propertyInfo;
         }
+
+        internal ChangeTracker Parent { get; }
 
         public PropertyInfo PropertyInfo { get; }
 
@@ -26,7 +26,7 @@ namespace Gu.ChangeTracking
             }
             protected internal set
             {
-                this.parent.Changes++;
+                this.Parent.Changes++;
                 base.Changes = value;
             }
         }

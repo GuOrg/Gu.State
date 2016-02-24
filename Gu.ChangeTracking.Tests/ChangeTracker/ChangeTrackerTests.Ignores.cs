@@ -15,9 +15,9 @@
             public void IgnoresProperty()
             {
                 var changes = new List<object>();
-                var withIllegalObject = new WithIllegalObject();
+                var withIllegalObject = new WithIllegal();
                 var settings = new ChangeTrackerSettings();
-                settings.AddExplicitProperty(typeof(WithIllegalObject).GetProperty(nameof(WithIllegalObject.Illegal)));
+                settings.AddIgnoredProperty(typeof(WithIllegal).GetProperty(nameof(WithIllegal.Illegal)));
                 using (var tracker = ChangeTracker.Track(withIllegalObject, settings))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
@@ -29,7 +29,7 @@
                     Assert.AreEqual(1, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
 
-                    withIllegalObject.Illegal = new IllegalObject();
+                    withIllegalObject.Illegal = new IllegalType();
                     Assert.AreEqual(1, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
                 }
@@ -39,9 +39,9 @@
             public void IgnoresPropertyLambda()
             {
                 var changes = new List<object>();
-                var withIllegalObject = new WithIllegalObject();
+                var withIllegalObject = new WithIllegal();
                 var settings = new ChangeTrackerSettings();
-                settings.AddExplicitProperty<WithIllegalObject>(x => x.Illegal);
+                settings.AddIgnoredProperty<WithIllegal>(x => x.Illegal);
                 using (var tracker = ChangeTracker.Track(withIllegalObject, settings))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
@@ -53,7 +53,7 @@
                     Assert.AreEqual(1, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
 
-                    withIllegalObject.Illegal = new IllegalObject();
+                    withIllegalObject.Illegal = new IllegalType();
                     Assert.AreEqual(1, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
                 }
@@ -65,7 +65,7 @@
                 var changes = new List<object>();
                 var root = new DerivedClass();
                 var settings = new ChangeTrackerSettings();
-                settings.AddExplicitProperty<ComplexType>(x => x.Excluded);
+                settings.AddIgnoredProperty<ComplexType>(x => x.Excluded);
                 using (var tracker = ChangeTracker.Track(root, settings))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
@@ -89,7 +89,7 @@
                 var changes = new List<object>();
                 var root = new DerivedClass();
                 var settings = new ChangeTrackerSettings();
-                settings.AddExplicitProperty<IBaseClass>(x => x.Excluded);
+                settings.AddIgnoredProperty<IBaseClass>(x => x.Excluded);
                 using (var tracker = ChangeTracker.Track(root, settings))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
@@ -113,7 +113,7 @@
                 var changes = new List<object>();
                 var withIllegalObject = new WithIgnoredProperty();
                 var settings = new ChangeTrackerSettings();
-                settings.AddExplicitProperty(typeof(WithIgnoredProperty).GetProperty(nameof(WithIgnoredProperty.Ignored)));
+                settings.AddIgnoredProperty(typeof(WithIgnoredProperty).GetProperty(nameof(WithIgnoredProperty.Ignored)));
                 using (var tracker = ChangeTracker.Track(withIllegalObject, settings))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
@@ -135,9 +135,9 @@
             public void IgnoresType()
             {
                 var changes = new List<object>();
-                var withIllegalObject = new WithIllegalObject();
+                var withIllegalObject = new WithIllegal();
                 var settings = new ChangeTrackerSettings();
-                settings.AddImmutableType<IllegalObject>();
+                settings.AddImmutableType<IllegalType>();
                 using (var tracker = ChangeTracker.Track(withIllegalObject, settings))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
@@ -174,9 +174,9 @@
             public void IgnoresTypeProperty()
             {
                 var changes = new List<object>();
-                var root = new WithLevel();
+                var root = new WithIllegal();
                 var settings = new ChangeTrackerSettings();
-                settings.AddExplicitType<Level>();
+                settings.AddIgnoredType<IllegalType>();
                 using (var tracker = ChangeTracker.Track(root, settings))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
@@ -184,11 +184,7 @@
                     Assert.AreEqual(0, tracker.Changes);
                     CollectionAssert.IsEmpty(changes);
 
-                    root.Level = new Level();
-                    Assert.AreEqual(1, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
-
-                    root.Level.Value++;
+                    root.Value++;
                     Assert.AreEqual(1, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
                 }
