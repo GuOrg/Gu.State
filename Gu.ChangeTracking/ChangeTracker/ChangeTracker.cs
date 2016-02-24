@@ -152,7 +152,7 @@
 
         private sealed class PropertiesChangeTrackers : IDisposable
         {
-            internal readonly INotifyPropertyChanged Source;
+            private readonly INotifyPropertyChanged Source;
             private readonly ChangeTracker parent;
             private readonly PropertyCollection propertyTrackers;
 
@@ -288,7 +288,7 @@
 
         private sealed class ItemsChangeTrackers : IDisposable
         {
-            internal readonly INotifyCollectionChanged Source;
+            private readonly INotifyCollectionChanged Source;
             private readonly ChangeTracker parent;
             private readonly ItemCollection<ChangeTracker> itemTrackers;
 
