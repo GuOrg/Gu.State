@@ -8,11 +8,14 @@ namespace Gu.ChangeTracking
     {
         private readonly ChangeTracker parent;
 
-        public ItemChangeTracker(INotifyPropertyChanged source, ChangeTracker parent)
+        public ItemChangeTracker(INotifyPropertyChanged source, int index, ChangeTracker parent)
             : base(source, parent.Settings)
         {
+            this.Index = index;
             this.parent = parent;
         }
+
+        public int Index { get; }
 
         public override int Changes
         {

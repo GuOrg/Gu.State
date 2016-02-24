@@ -47,14 +47,16 @@
   </Choose>
   <ItemGroup>
     <Compile Include="ChangeTracker\ChangeTrackerStubs\Immutable.cs" />
+    <Compile Include="ChangeTracker\ChangeTrackerStubs\With.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerStubs\WithImmutable.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerStubs\WithObservableCollectionProperty.cs" />
+    <Compile Include="ChangeTracker\ChangeTrackerTests.Ignores.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerTests.WithObservableCollectionProperty.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerTests.ObservableCollectionOfComplexTypes.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerTests.ObservableCollectionOfInts.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerTests.Levels.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerTests.Shared.cs" />
-    <Compile Include="ChangeTracker\ChangeTrackerTests.throws.cs" />
+    <Compile Include="ChangeTracker\ChangeTrackerTests.Throws.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerTests.PropertyChanged.cs" />
     <Compile Include="Copy\CopyStubs\ComplexType.cs" />
     <Compile Include="Copy\CopyStubs\WithArrayProperty.cs" />

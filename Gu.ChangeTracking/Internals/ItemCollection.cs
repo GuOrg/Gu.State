@@ -7,7 +7,17 @@
     internal sealed class ItemCollection<T> : IEnumerable<T>, IDisposable
         where T : class, IDisposable
     {
-        private readonly List<T> items = new List<T>();
+        private readonly List<T> items;
+
+        public ItemCollection()
+        {
+            this.items = new List<T>();
+        }
+
+        public ItemCollection(int capacity)
+        {
+            this.items = new List<T>(capacity);
+        }
 
         internal int Count => this.items.Count;
 
