@@ -18,17 +18,14 @@ namespace Gu.ChangeTracking
 
         public PropertyInfo PropertyInfo { get; }
 
-        public override int Changes
+        protected override void OnPropertyChanged(PropertyChangedEventArgs e)
         {
-            get
-            {
-                return base.Changes;
-            }
-            protected internal set
+            if (e.PropertyName == nameof(this.Changes))
             {
                 this.Parent.Changes++;
-                base.Changes = value;
             }
+
+            base.OnPropertyChanged(e);
         }
     }
 }

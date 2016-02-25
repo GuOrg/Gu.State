@@ -1,5 +1,6 @@
 ﻿namespace Gu.ChangeTracking.Tests
 {
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -45,6 +46,20 @@
             {
                 var x = xs.Split(',').Select(int.Parse);
                 var y = ys.Split(',').Select(int.Parse);
+                Assert.AreEqual(expected, EqualBy.PropertyValues(x, y, ReferenceHandling.Structural));
+            }
+
+            [TestCase(0, 0, 0, 0, true)]
+            [TestCase(0, 1, 0, 1, true)]
+            [TestCase(1, 1, 1, 1, true)]
+            [TestCase(0, 2, 0, 1, false)]
+            [TestCase(0, 1, 0, 2, false)]
+            [TestCase(1, 1, 0, 1, false)]
+            [TestCase(0, 1, 1, 1, false)]
+            public void EnumarebleRepeatStructural1(int startX, int countX, int startY, int countY, bool expected)
+            {
+                var x = Enumerable.Repeat(startX, countX);
+                var y = Enumerable.Repeat(startY, countY);
                 Assert.AreEqual(expected, EqualBy.PropertyValues(x, y, ReferenceHandling.Structural));
             }
 

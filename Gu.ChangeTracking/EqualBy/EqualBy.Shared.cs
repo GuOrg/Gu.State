@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections;
+    using System.Collections.Generic;
 
     public static partial class EqualBy
     {
@@ -14,19 +15,19 @@
                 Ensure.NotIs<IEnumerable>(x, nameof(x));
             }
 
-            var xlist = x as IList;
-            var ylist = y as IList;
-            if (xlist != null && ylist != null)
+            var xl = x as IList;
+            var yl = y as IList;
+            if (xl != null && yl != null)
             {
-                if (xlist.Count != ylist.Count)
+                if (xl.Count != yl.Count)
                 {
                     return false;
                 }
 
-                for (int i = 0; i < xlist.Count; i++)
+                for (int i = 0; i < xl.Count; i++)
                 {
-                    var xv = xlist[i];
-                    var yv = ylist[i];
+                    var xv = xl[i];
+                    var yv = yl[i];
 
                     if (!compareItem(xv, yv, settings))
                     {
@@ -34,10 +35,32 @@
                     }
                 }
             }
+            else if (xl != null || yl != null)
+            {
+                return false;
+            }
             else
             {
-                // using ensure to throw
-                Ensure.NotIs<IEnumerable>(x, nameof(x));
+                var xe = x as IEnumerable;
+                var ye = y as IEnumerable;
+                if (xe != null && ye != null)
+                {
+                    foreach (var pair in new PaddedPairs(xe, ye))
+                    {
+                        if (!compareItem(pair.X, pair.Y, settings))
+                        {
+                            return false;
+                        }
+                    }
+                }
+                else if (xe != null || ye != null)
+                {
+                    return false;
+                }
+                else
+                {
+                    throw new InvalidOperationException("Could not compare enumerables");
+                }
             }
 
             return true;

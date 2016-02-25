@@ -27,7 +27,6 @@
 
         internal ChangeTracker(INotifyPropertyChanged source, ChangeTrackerSettings settings, PropertyPath path)
         {
-            this.Source = source;
             this.Settings = settings;
             this.Path = path;
             Ensure.IsTrackableType(source.GetType(), this);
@@ -35,7 +34,9 @@
             this.itemsChangeTrackers = ItemsChangeTrackers.Create(source, this);
             if (this.propertiesChangeTrackers == null && this.itemsChangeTrackers == null)
             {
-                throw new InvalidOperationException("Created a tracker that does not track anything");
+                var message = "There is a bug in the library as it:\r\n" +
+                              "Created a tracker that does not track anything";
+                throw new InvalidOperationException(message);
             }
         }
 
@@ -53,7 +54,7 @@
         public ChangeTrackerSettings Settings { get; }
 
         /// <inheritdoc/>
-        public virtual int Changes
+        public int Changes
         {
             get
             {
@@ -72,8 +73,6 @@
                 this.OnChanged();
             }
         }
-
-        internal object Source { get; }
 
         internal PropertyPath Path { get; }
 
@@ -134,13 +133,7 @@
             }
         }
 
-        [NotifyPropertyChangedInvocator]
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private void OnPropertyChanged(PropertyChangedEventArgs e)
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             this.PropertyChanged?.Invoke(this, e);
         }
@@ -315,7 +308,7 @@
                 var sourceType = source.GetType();
                 if (parent.Settings.IsIgnored(sourceType))
                 {
-                    throw new InvalidOperationException("Should not get here");
+                    return null;
                 }
 
                 Ensure.IsTrackableItemValue(source.GetType(), null, parent);
@@ -407,7 +400,7 @@
                         }
 
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        throw new ArgumentOutOfRangeException(nameof(e.Action));
                 }
 
                 this.parent.Changes++;
