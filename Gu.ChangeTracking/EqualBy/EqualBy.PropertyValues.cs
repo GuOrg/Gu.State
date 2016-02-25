@@ -59,12 +59,7 @@
                 var type = x?.GetType() ?? y?.GetType() ?? typeof(T);
                 if (typeof(IEnumerable).IsAssignableFrom(type))
                 {
-                    var errorBuilder = new StringBuilder();
-                    errorBuilder.AppendLine($"EqualBy.{nameof(PropertyValues)}(x, y) does not support comparing the type {type.PrettyName()}.")
-                                .AppendSolveTheProblemBy()
-                                .AppendSuggestImplementIEquatable(type)
-                                .AppendSuggestEqualBySettings<EqualByPropertiesSettings>();
-                    throw new NotSupportedException(errorBuilder.ToString());
+                    ThrowCannotComparePropertiesForType(type);
                 }
 
                 var properties = type.GetProperties(settings.BindingFlags);
@@ -77,12 +72,7 @@
 
                     if (!propertyInfo.PropertyType.IsEquatable())
                     {
-                        var errorBuilder = new StringBuilder();
-                        errorBuilder.AppendLine($"EqualBy.{nameof(PropertyValues)}(x, y) does not support comparing the property {type.PrettyName()}.{propertyInfo.Name} of type {propertyInfo.PropertyType.PrettyName()}.")
-                                    .AppendSolveTheProblemBy()
-                                    .AppendSuggestImplementIEquatable(propertyInfo.PropertyType)
-                                    .AppendSuggestEqualBySettings<EqualByFieldsSettings>();
-                        throw new NotSupportedException(errorBuilder.ToString());
+                        ThrowCannotCompareProperty(type, propertyInfo);
                     }
                 }
             }
@@ -125,12 +115,7 @@
 
                 if (!IsEquatable(propertyInfo.PropertyType) && settings.ReferenceHandling == ReferenceHandling.Throw)
                 {
-                    var errorBuilder = new StringBuilder();
-                    errorBuilder.AppendLine($"EqualBy.{nameof(PropertyValues)}(x, y) does not support comparing the property {x.GetType().PrettyName()}.{propertyInfo.Name} of type {propertyInfo.PropertyType.PrettyName()}.")
-                                .AppendSolveTheProblemBy()
-                                .AppendSuggestImplementIEquatable(propertyInfo.PropertyType)
-                                .AppendSuggestEqualBySettings<EqualByPropertiesSettings>();
-                    throw new NotSupportedException(errorBuilder.ToString());
+                    ThrowCannotCompareProperty(x.GetType(), propertyInfo);
                 }
 
                 var xv = propertyInfo.GetValue(x);
@@ -192,17 +177,34 @@
 
                         return false;
                     case ReferenceHandling.Throw:
-                        var message = $"EqualBy.{nameof(PropertyValues)}(x, y) does not support comparing the type {x.GetType()} without {typeof(ReferenceHandling).Name}\r\n" +
-                                      $"{typeof(ReferenceHandling).Name} tells how comparison of referance types are made\r\n" +
-                                      $"- {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Structural)} means that all property values in the graph must be equal.\r\n" +
-                                      $"- {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Reference)} uses reference equality.";
-                        throw new NotSupportedException(message);
+                        ThrowCannotComparePropertiesForType(x.GetType());
+                        break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);
                 }
             }
 
             return true;
+        }
+
+        private static void ThrowCannotCompareProperty(Type type, PropertyInfo propertyInfo)
+        {
+            var errorBuilder = new StringBuilder();
+            errorBuilder.AppendLine($"EqualBy.{nameof(PropertyValues)}(x, y) does not support comparing the property {type.PrettyName()}.{propertyInfo.Name} of type {propertyInfo.PropertyType.PrettyName()}.")
+                        .AppendSolveTheProblemBy()
+                        .AppendSuggestImplementIEquatable(propertyInfo.PropertyType)
+                        .AppendSuggestEqualBySettings<EqualByFieldsSettings>();
+            throw new NotSupportedException(errorBuilder.ToString());
+        }
+
+        private static void ThrowCannotComparePropertiesForType(Type type)
+        {
+            var errorBuilder = new StringBuilder();
+            errorBuilder.AppendLine($"EqualBy.{nameof(PropertyValues)}(x, y) does not support comparing the type {type.PrettyName()}.")
+                        .AppendSolveTheProblemBy()
+                        .AppendSuggestImplementIEquatable(type)
+                        .AppendSuggestEqualBySettings<EqualByPropertiesSettings>();
+            throw new NotSupportedException(errorBuilder.ToString());
         }
     }
 }
