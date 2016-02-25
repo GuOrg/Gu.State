@@ -8,8 +8,7 @@
 
     public static partial class Copy
     {
-        public static void PropertyValues<T>(T source, T target, BindingFlags bindingFlags)
-    where T : class
+        public static void PropertyValues<T>(T source, T target, BindingFlags bindingFlags) where T : class
         {
             var settings = CopyPropertiesSettings.GetOrCreate(bindingFlags, ReferenceHandling.Throw);
             PropertyValues(source, target, settings);
@@ -22,8 +21,7 @@
         /// If Structural is used property values for sub properties are copied for the entire graph.
         /// Activator.CreateInstance is sued to new up references so a default constructor is required, can be private
         /// </param>
-        public static void PropertyValues<T>(T source, T target, ReferenceHandling referenceHandling)
-            where T : class
+        public static void PropertyValues<T>(T source, T target, ReferenceHandling referenceHandling) where T : class
         {
             var settings = CopyPropertiesSettings.GetOrCreate(Constants.DefaultPropertyBindingFlags, referenceHandling);
             PropertyValues(source, target, settings);
@@ -36,15 +34,17 @@
         /// If Structural is used property values for sub properties are copied for the entire graph.
         /// Activator.CreateInstance is sued to new up references so a default constructor is required, can be private
         /// </param>
-        public static void PropertyValues<T>(T source, T target, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
-            where T : class
+        public static void PropertyValues<T>(
+            T source,
+            T target,
+            BindingFlags bindingFlags,
+            ReferenceHandling referenceHandling) where T : class
         {
             var settings = CopyPropertiesSettings.GetOrCreate(bindingFlags, referenceHandling);
             PropertyValues(source, target, settings);
         }
 
-        public static void PropertyValues<T>(T source, T target, params string[] excludedProperties)
-            where T : class
+        public static void PropertyValues<T>(T source, T target, params string[] excludedProperties) where T : class
         {
             PropertyValues(source, target, Constants.DefaultPropertyBindingFlags, excludedProperties);
         }
@@ -53,26 +53,46 @@
         /// Copies property values from source to target.
         /// Only value types and string are allowed.
         /// </summary>
-        public static void PropertyValues<T>(T source, T target, BindingFlags bindingFlags, params string[] excludedProperties)
-            where T : class
+        public static void PropertyValues<T>(
+            T source,
+            T target,
+            BindingFlags bindingFlags,
+            params string[] excludedProperties) where T : class
         {
             PropertyValues(source, target, bindingFlags, null, excludedProperties);
         }
 
-        public static void PropertyValues<T>(T source, T target, IReadOnlyList<SpecialCopyProperty> specialCopyProperties, params string[] excludedProperties)
-            where T : class
+        public static void PropertyValues<T>(
+            T source,
+            T target,
+            IReadOnlyList<SpecialCopyProperty> specialCopyProperties,
+            params string[] excludedProperties) where T : class
         {
-            PropertyValues(source, target, Constants.DefaultPropertyBindingFlags, specialCopyProperties, excludedProperties);
+            PropertyValues(
+                source,
+                target,
+                Constants.DefaultPropertyBindingFlags,
+                specialCopyProperties,
+                excludedProperties);
         }
 
         /// <summary>
         /// Copies property values from source to target.
         /// Only value types and string are allowed.
         /// </summary>
-        public static void PropertyValues<T>(T source, T target, BindingFlags bindingFlags, IReadOnlyList<SpecialCopyProperty> specialCopyProperties, params string[] excludedProperties)
-            where T : class
+        public static void PropertyValues<T>(
+            T source,
+            T target,
+            BindingFlags bindingFlags,
+            IReadOnlyList<SpecialCopyProperty> specialCopyProperties,
+            params string[] excludedProperties) where T : class
         {
-            var settings = new CopyPropertiesSettings(source?.GetType().GetIgnoreProperties(bindingFlags, excludedProperties), specialCopyProperties, bindingFlags, ReferenceHandling.Throw);
+            var settings = new CopyPropertiesSettings(
+                source?.GetType()
+                       .GetIgnoreProperties(bindingFlags, excludedProperties),
+                specialCopyProperties,
+                bindingFlags,
+                ReferenceHandling.Throw);
             PropertyValues(source, target, settings);
         }
 
@@ -80,8 +100,7 @@
         /// Copies property values from source to target.
         /// Only value types and string are allowed.
         /// </summary>
-        public static void PropertyValues<T>(T source, T target, CopyPropertiesSettings settings)
-            where T : class
+        public static void PropertyValues<T>(T source, T target, CopyPropertiesSettings settings) where T : class
         {
             Ensure.NotNull(source, nameof(source));
             Ensure.NotNull(target, nameof(target));
@@ -138,7 +157,8 @@
             {
                 if (settings.ReferenceHandling == ReferenceHandling.Throw || !typeof(IList).IsAssignableFrom(type))
                 {
-                    throw new NotSupportedException("Collections must be : IList and ReferenceHandling must be other than Throw");
+                    throw new NotSupportedException(
+                        "Collections must be : IList and ReferenceHandling must be other than Throw");
                 }
             }
 
@@ -146,15 +166,15 @@
             var stringBuilder = new StringBuilder();
             foreach (var propertyInfo in propertyInfos)
             {
-                if (settings.IsIgnoringProperty(propertyInfo) ||
-                    settings.GetSpecialCopyProperty(propertyInfo) != null)
+                if (settings.IsIgnoringProperty(propertyInfo) || settings.GetSpecialCopyProperty(propertyInfo) != null)
                 {
                     continue;
                 }
 
                 if (settings.ReferenceHandling == ReferenceHandling.Throw && !IsCopyableType(propertyInfo.PropertyType))
                 {
-                    stringBuilder.AppendLine($"The property {type.Name}.{propertyInfo.Name} is not of a supported type.");
+                    stringBuilder.AppendLine(
+                        $"The property {type.Name}.{propertyInfo.Name} is not of a supported type.");
                     stringBuilder.AppendLine($"Expected struct or string but was: {propertyInfo.PropertyType.Name}");
                     stringBuilder.AppendLine($"Specify {typeof(ReferenceHandling).Name} if you want to copy a graph.");
                 }
@@ -167,7 +187,11 @@
             }
         }
 
-        internal static void WritableProperties(object source, object target, IReadOnlyList<PropertyInfo> propertyInfos, CopyPropertiesSettings settings)
+        internal static void WritableProperties(
+            object source,
+            object target,
+            IReadOnlyList<PropertyInfo> propertyInfos,
+            CopyPropertiesSettings settings)
         {
             foreach (var propertyInfo in propertyInfos)
             {
@@ -224,12 +248,16 @@
 
                             continue;
                         case ReferenceHandling.Throw:
-                            var message = "Only properties with types struct or string are supported without specifying ReferenceHandling\r\n" +
-                                         $"Property {source.GetType().Name}.{propertyInfo.Name} is a reference type ({propertyInfo.PropertyType.Name}).\r\n" +
-                                          "Use the overload Copy.PropertyValues(source, target, ReferenceHandling) if you want to copy a graph";
+                            var message =
+                                "Only properties with types struct or string are supported without specifying ReferenceHandling\r\n"
+                                + $"Property {source.GetType() .Name}.{propertyInfo.Name} is a reference type ({propertyInfo.PropertyType.Name}).\r\n"
+                                + "Use the overload Copy.PropertyValues(source, target, ReferenceHandling) if you want to copy a graph";
                             throw new NotSupportedException(message);
                         default:
-                            throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);
+                            throw new ArgumentOutOfRangeException(
+                                nameof(settings.ReferenceHandling),
+                                settings.ReferenceHandling,
+                                null);
                     }
                 }
                 else
@@ -240,12 +268,15 @@
             }
         }
 
-        internal static void VerifyReadonlyPropertiesAreEqual(object source, object target, IReadOnlyList<PropertyInfo> propertyInfos, CopyPropertiesSettings settings)
+        internal static void VerifyReadonlyPropertiesAreEqual(
+            object source,
+            object target,
+            IReadOnlyList<PropertyInfo> propertyInfos,
+            CopyPropertiesSettings settings)
         {
             foreach (var propertyInfo in propertyInfos)
             {
-                if (settings.IsIgnoringProperty(propertyInfo) ||
-                    settings.GetSpecialCopyProperty(propertyInfo) != null)
+                if (settings.IsIgnoringProperty(propertyInfo) || settings.GetSpecialCopyProperty(propertyInfo) != null)
                 {
                     continue;
                 }
@@ -264,7 +295,7 @@
 
                 if (!EqualBy.PropertyValues(sourceValue, targetValue, settings))
                 {
-                    var message = $"Value differs for readonly property {source.GetType().Name}.{propertyInfo.Name}";
+                    var message = $"Value differs for readonly property {source.GetType() .Name}.{propertyInfo.Name}";
                     throw new InvalidOperationException(message);
                 }
             }

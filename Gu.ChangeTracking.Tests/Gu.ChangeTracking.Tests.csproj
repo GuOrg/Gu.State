@@ -134,6 +134,7 @@
     <Compile Include="TestHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Copy\CopyTests.Throws.cs" />
     <None Include="paket.references" />
   </ItemGroup>
   <ItemGroup>

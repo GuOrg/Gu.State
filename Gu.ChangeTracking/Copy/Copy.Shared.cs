@@ -39,6 +39,12 @@
 
                             syncItem(sv, tv, settings);
                             continue;
+                        case ReferenceHandling.Throw:
+                            var message = $"Copy.{nameof(PropertyValues)}(x, y) does not support copying the type {sourceList.GetType().GetItemType().PrettyName()} without {typeof(ReferenceHandling).Name}\r\n" +
+                                          $"{typeof(ReferenceHandling).Name} tells how comparison of referance types are made\r\n" +
+                                          $"- {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Structural)} means that all property values in the graph are copied from source to target.\r\n" +
+                                          $"- {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Reference)} copies references.";
+                            throw new NotSupportedException(message);
                         default:
                             throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);
                     }
