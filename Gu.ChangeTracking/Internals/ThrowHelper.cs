@@ -62,6 +62,20 @@
             return messageBuilder.AppendImmutableConditionsLines();
         }
 
+        internal static StringBuilder AppendSuggestImmutableType(this StringBuilder messageBuilder, Type type)
+        {
+            if (type.Assembly == typeof(string).Assembly)
+            {
+                messageBuilder.AppendLine($"* Use an immutable type instead of {type.PrettyName()}. For immutable types the following must hold:");
+            }
+            else
+            {
+                messageBuilder.AppendLine($"* Make {type.PrettyName()} immutable or use an immutable type. For immutable types the following must hold:");
+            }
+
+            return messageBuilder.AppendImmutableConditionsLines();
+        }
+
         internal static StringBuilder AppendSuggestChangeTrackerSettings(this StringBuilder messageBuilder, Type sourceType, PropertyPath propertyPath)
         {
             var lastProperty = propertyPath.Path.OfType<PropertyItem>()

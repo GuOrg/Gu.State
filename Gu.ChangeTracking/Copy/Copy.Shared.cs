@@ -2,6 +2,8 @@
 {
     using System;
     using System.Collections;
+    using System.Runtime.CompilerServices;
+    using System.Text;
 
     public static partial class Copy
     {
@@ -100,7 +102,22 @@
                 return sourceValue;
             }
 
-            return Activator.CreateInstance(type, true);
+            try
+            {
+                return Activator.CreateInstance(type, true);
+            }
+            catch (Exception e)
+            {
+                var errorBuilder = new StringBuilder();
+                errorBuilder.AppendLine($"{typeof(Activator).Name}.{nameof(Activator.CreateInstance)} failed for type {sourceValue.GetType().PrettyName()}.")
+                            .AppendSolveTheProblemBy()
+                            .AppendLine($"* Add a parameterless constructor to {type.PrettyName()}")
+                            .AppendSuggestImmutableType(type)
+                            .AppendLine($"* Provide {typeof(CopySettings).Name} and specify either or both of:")
+                            .AppendLine("  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Reference)}")
+                            .AppendLine("  - Exclude the member or type if feasible");
+                throw new NotSupportedException(errorBuilder.ToString(), e);
+            }
         }
     }
 }
