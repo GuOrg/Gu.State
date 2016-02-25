@@ -33,6 +33,25 @@
             }
 
             [Test]
+            public void WithImmutable()
+            {
+                var changes = new List<object>();
+                var root = new WithImmutable();
+
+                using (var tracker = ChangeTracker.Track(root))
+                {
+                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    tracker.Changed += (_, e) => changes.Add(e);
+                    Assert.AreEqual(0, tracker.Changes);
+                    CollectionAssert.IsEmpty(changes);
+
+                    root.Immutable = new Immutable();
+                    Assert.AreEqual(1, tracker.Changes);
+                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
+                }
+            }
+
+            [Test]
             public void NotifiesNextLevel()
             {
                 var changes = new List<object>();
