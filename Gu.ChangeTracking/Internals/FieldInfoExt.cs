@@ -12,7 +12,7 @@ namespace Gu.ChangeTracking
             return typeof(MulticastDelegate).IsAssignableFrom(field.FieldType);
         }
 
-        internal static IEnumerable<FieldInfo> GetIgnoreFields(this Type type, BindingFlags bindingFlags, string[] ignoredFields)
+        internal static IReadOnlyList<FieldInfo> GetIgnoreFields(this Type type, BindingFlags bindingFlags, string[] ignoredFields)
         {
             if (type == null)
             {

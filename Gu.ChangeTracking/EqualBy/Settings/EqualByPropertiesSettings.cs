@@ -25,6 +25,18 @@
 
         public IEnumerable<PropertyInfo> IgnoredProperties => this.ignoredProperties ?? Enumerable.Empty<PropertyInfo>();
 
+        public static EqualByPropertiesSettings Create<T>(T x, T y, BindingFlags bindingFlags, ReferenceHandling referenceHandling, string[] excludedProperties)
+        {
+            var type = x?.GetType() ?? y?.GetType() ?? typeof(T);
+            var ignored = type.GetIgnoreProperties(bindingFlags, excludedProperties);
+            if (ignored == null || ignored.Count == 0)
+            {
+                return GetOrCreate(bindingFlags, referenceHandling);
+            }
+
+            return new EqualByPropertiesSettings(ignored, bindingFlags, referenceHandling);
+        }
+
         public static EqualByPropertiesSettings GetOrCreate(ReferenceHandling referenceHandling)
         {
             return GetOrCreate(Constants.DefaultPropertyBindingFlags, referenceHandling);

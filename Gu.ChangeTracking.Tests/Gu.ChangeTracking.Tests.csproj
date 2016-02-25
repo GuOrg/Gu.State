@@ -69,6 +69,8 @@
     <Compile Include="Copy\CopyPropertiesSettingsTests.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerSettingsTests.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerStubs\WithGetReadOnlyPropertySealed.cs" />
+    <Compile Include="EqualBy\EqualByFieldsSettingsTests.cs" />
+    <Compile Include="EqualBy\EqualByTests.Throws.cs" />
     <Compile Include="Internals\Stubs\IMutableInterface.cs" />
     <Compile Include="Internals\Stubs\WithImmutableImplementingMutableInterfaceExplicit.cs" />
     <Compile Include="Internals\Stubs\WithImmutableSubclassingMutable.cs" />

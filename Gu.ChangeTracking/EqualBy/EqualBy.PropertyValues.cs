@@ -3,12 +3,13 @@
     using System;
     using System.Collections;
     using System.Reflection;
+    using System.Text;
 
     public static partial class EqualBy
     {
         public static bool PropertyValues<T>(T x, T y, BindingFlags bindingFlags)
         {
-            var settings = EqualByPropertiesSettings.GetOrCreate(bindingFlags, ReferenceHandling.Throw);
+            var settings = EqualByPropertiesSettings.GetOrCreate(bindingFlags);
             return PropertyValues(x, y, settings);
         }
 
@@ -22,7 +23,7 @@
         /// </param>
         public static bool PropertyValues<T>(T x, T y, ReferenceHandling referenceHandling)
         {
-            var settings = EqualByPropertiesSettings.GetOrCreate(Constants.DefaultPropertyBindingFlags, referenceHandling);
+            var settings = EqualByPropertiesSettings.GetOrCreate(referenceHandling);
             return PropertyValues(x, y, settings);
         }
 
@@ -47,12 +48,45 @@
 
         public static bool PropertyValues<T>(T x, T y, BindingFlags bindingFlags, params string[] excludedProperties)
         {
-            var settings = new EqualByPropertiesSettings(x?.GetType().GetIgnoreProperties(bindingFlags, excludedProperties), bindingFlags, ReferenceHandling.Throw);
+            var settings = EqualByPropertiesSettings.Create(x,y, bindingFlags, ReferenceHandling.Throw, excludedProperties);
             return PropertyValues(x, y, settings);
         }
 
-        public static bool PropertyValues(object x, object y, IEqualByPropertiesSettings settings)
+        public static bool PropertyValues<T>(T x, T y, IEqualByPropertiesSettings settings)
         {
+            if (settings.ReferenceHandling == ReferenceHandling.Throw)
+            {
+                var type = x?.GetType() ?? y?.GetType() ?? typeof(T);
+                if (typeof(IEnumerable).IsAssignableFrom(type))
+                {
+                    var errorBuilder = new StringBuilder();
+                    errorBuilder.AppendLine($"EqualBy.{nameof(PropertyValues)}(x, y) does not support comparing the type {type.PrettyName()}.")
+                                .AppendSolveTheProblemBy()
+                                .AppendSuggestImplementIEquatable(type)
+                                .AppendSuggestEqualBySettings<EqualByPropertiesSettings>();
+                    throw new NotSupportedException(errorBuilder.ToString());
+                }
+
+                var properties = type.GetProperties(settings.BindingFlags);
+                foreach (var propertyInfo in properties)
+                {
+                    if (settings.IsIgnoringProperty(propertyInfo))
+                    {
+                        continue;
+                    }
+
+                    if (!propertyInfo.PropertyType.IsEquatable())
+                    {
+                        var errorBuilder = new StringBuilder();
+                        errorBuilder.AppendLine($"EqualBy.{nameof(PropertyValues)}(x, y) does not support comparing the property {type.PrettyName()}.{propertyInfo.Name} of type {propertyInfo.PropertyType.PrettyName()}.")
+                                    .AppendSolveTheProblemBy()
+                                    .AppendSuggestImplementIEquatable(propertyInfo.PropertyType)
+                                    .AppendSuggestEqualBySettings<EqualByFieldsSettings>();
+                        throw new NotSupportedException(errorBuilder.ToString());
+                    }
+                }
+            }
+
             if (x == null && y == null)
             {
                 return true;
@@ -91,8 +125,12 @@
 
                 if (!IsEquatable(propertyInfo.PropertyType) && settings.ReferenceHandling == ReferenceHandling.Throw)
                 {
-                    var message = $"{typeof(EqualBy).Name}.{nameof(PropertyValues)} does not support comparing the property {propertyInfo.Name} of type {propertyInfo.PropertyType}";
-                    throw new NotSupportedException(message);
+                    var errorBuilder = new StringBuilder();
+                    errorBuilder.AppendLine($"EqualBy.{nameof(PropertyValues)}(x, y) does not support comparing the property {x.GetType().PrettyName()}.{propertyInfo.Name} of type {propertyInfo.PropertyType.PrettyName()}.")
+                                .AppendSolveTheProblemBy()
+                                .AppendSuggestImplementIEquatable(propertyInfo.PropertyType)
+                                .AppendSuggestEqualBySettings<EqualByPropertiesSettings>();
+                    throw new NotSupportedException(errorBuilder.ToString());
                 }
 
                 var xv = propertyInfo.GetValue(x);
@@ -153,6 +191,12 @@
                         }
 
                         return false;
+                    case ReferenceHandling.Throw:
+                        var message = $"EqualBy.{nameof(PropertyValues)}(x, y) does not support comparing the type {x.GetType()} without {typeof(ReferenceHandling).Name}\r\n" +
+                                      $"{typeof(ReferenceHandling).Name} tells how comparison of referance types are made\r\n" +
+                                      $"- {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Structural)} means that all property values in the graph must be equal.\r\n" +
+                                      $"- {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Reference)} uses reference equality.";
+                        throw new NotSupportedException(message);
                     default:
                         throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);
                 }

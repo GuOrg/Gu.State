@@ -14,21 +14,21 @@
             [Test]
             public void VerifyCanCopyFieldValuesHappyPath()
             {
-                Copy.VerifyCanCopyFieldValues<WithSimpleProperties>();
+                Copy.VerifyCanCopyFieldValues<WithSimpleFields>();
             }
 
             [Test]
             public void FieldValuesHappyPath()
             {
-                var source = new WithSimpleProperties
-                {
-                    IntValue = 1,
-                    NullableIntValue = 2,
-                    StringValue = "3",
-                    EnumValue = StringSplitOptions.RemoveEmptyEntries
-                };
+                var source = new WithSimpleFields
+                                 {
+                                     IntValue = 1,
+                                     NullableIntValue = 2,
+                                     StringValue = "3",
+                                     EnumValue = StringSplitOptions.RemoveEmptyEntries
+                                 };
 
-                var target = new WithSimpleProperties { IntValue = 3, NullableIntValue = 4 };
+                var target = new WithSimpleFields { IntValue = 3, NullableIntValue = 4 };
                 Copy.FieldValues(source, target);
                 Assert.AreEqual(1, source.IntValue);
                 Assert.AreEqual(1, target.IntValue);
@@ -58,22 +58,23 @@
                 var x = new WithReadonlyField(1, 2);
                 var y = new WithReadonlyField(3, 4);
                 var exception = Assert.Throws<InvalidOperationException>(() => Copy.FieldValues(x, y));
-                var expected = "Field WithReadonlyField.ReadonlyValue differs but cannot be updated because it is readonly.\r\n" +
-                               "Provide Copy.FieldValues(x, y, nameof(WithReadonlyField.ReadonlyValue))";
+                var expected =
+                    "Field WithReadonlyField.ReadonlyValue differs but cannot be updated because it is readonly.\r\n"
+                    + "Provide Copy.FieldValues(x, y, nameof(WithReadonlyField.ReadonlyValue))";
                 Assert.AreEqual(expected, exception.Message);
             }
 
             [Test]
             public void FieldValuesIgnores()
             {
-                var source = new WithSimpleProperties
-                {
-                    IntValue = 1,
-                    NullableIntValue = 2,
-                    StringValue = "3",
-                    EnumValue = StringSplitOptions.RemoveEmptyEntries
-                };
-                var target = new WithSimpleProperties { IntValue = 3, NullableIntValue = 4 };
+                var source = new WithSimpleFields
+                                 {
+                                     IntValue = 1,
+                                     NullableIntValue = 2,
+                                     StringValue = "3",
+                                     EnumValue = StringSplitOptions.RemoveEmptyEntries
+                                 };
+                var target = new WithSimpleFields { IntValue = 3, NullableIntValue = 4 };
                 Copy.FieldValues(source, target, "nullableIntValue");
                 Assert.AreEqual(1, source.IntValue);
                 Assert.AreEqual(1, target.IntValue);
@@ -91,16 +92,22 @@
                 var source = new WithComplexProperty();
                 var target = new WithComplexProperty();
                 var exception = Assert.Throws<NotSupportedException>(() => Copy.FieldValues(source, target));
-                var expectedMessage = "Only fields with types struct or string are supported without specifying ReferenceHandling\r\n" +
-                                      "Field WithComplexProperty.<ComplexType>k__BackingField is a reference type (ComplexType).\r\n" +
-                                      "Use the overload Copy.FieldValues(source, target, ReferenceHandling) if you want to copy a graph";
+                var expectedMessage =
+                    "Only fields with types struct or string are supported without specifying ReferenceHandling\r\n"
+                    + "Field WithComplexProperty.<ComplexType>k__BackingField is a reference type (ComplexType).\r\n"
+                    + "Use the overload Copy.FieldValues(source, target, ReferenceHandling) if you want to copy a graph";
                 Assert.AreEqual(expectedMessage, exception.Message);
             }
 
             [Test]
             public void WithComplexFieldHappyPathStructural()
             {
-                var source = new WithComplexProperty { Name = "a", Value = 1, ComplexType = new ComplexType { Name = "b", Value = 2 } };
+                var source = new WithComplexProperty
+                                 {
+                                     Name = "a",
+                                     Value = 1,
+                                     ComplexType = new ComplexType { Name = "b", Value = 2 }
+                                 };
                 var target = new WithComplexProperty();
                 Copy.FieldValues(source, target, ReferenceHandling.Structural);
                 Assert.AreEqual(source.Name, target.Name);
@@ -124,7 +131,12 @@
             [Test]
             public void WithComplexFieldHappyPathReference()
             {
-                var source = new WithComplexProperty { Name = "a", Value = 1, ComplexType = new ComplexType { Name = "b", Value = 2 } };
+                var source = new WithComplexProperty
+                                 {
+                                     Name = "a",
+                                     Value = 1,
+                                     ComplexType = new ComplexType { Name = "b", Value = 2 }
+                                 };
                 var target = new WithComplexProperty();
                 Copy.FieldValues(source, target, ReferenceHandling.Reference);
                 Assert.AreEqual(source.Name, target.Name);
@@ -162,7 +174,6 @@
                 CollectionAssert.AreEqual(source, target);
             }
 
-
             [Test]
             public void ListOfComplexToEmpty()
             {
@@ -187,6 +198,14 @@
                 Assert.AreEqual(source[0].Name, target[0].Name);
                 Assert.AreEqual(source[0].Value, target[0].Value);
                 Assert.AreSame(item, target[0]);
+            }
+
+            public class WithSimpleFields
+            {
+                internal int IntValue;
+                internal int? NullableIntValue;
+                internal string StringValue;
+                internal StringSplitOptions EnumValue;
             }
         }
     }

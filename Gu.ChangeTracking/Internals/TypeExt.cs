@@ -102,6 +102,16 @@
 
         public static bool IsEquatable(this Type type)
         {
+            if (type.IsNullable())
+            {
+                return IsEquatable(Nullable.GetUnderlyingType(type));
+            }
+
+            if (type.IsEnum)
+            {
+                return true;
+            }
+
             return type.Implements(typeof(IEquatable<>), type);
         }
 

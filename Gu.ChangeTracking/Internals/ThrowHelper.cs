@@ -42,10 +42,12 @@
 
         internal static StringBuilder AppendSuggestImplement<T>(this StringBuilder messageBuilder, Type sourceType)
         {
-            var line = sourceType.Assembly == typeof(int).Assembly
-                ? $"* Use a type that implements {typeof(T).PrettyName()} instead of {sourceType.PrettyName()}."
-                : $"* Implement {typeof(T).PrettyName()} for {sourceType.PrettyName()} or use a type that notifies.";
-            return messageBuilder.AppendLine(line);
+            return messageBuilder.AppendSuggestImplement(sourceType, typeof(T).PrettyName());
+        }
+
+        internal static StringBuilder AppendSuggestImplementIEquatable(this StringBuilder messageBuilder, Type sourceType)
+        {
+            return messageBuilder.AppendSuggestImplement(sourceType, $"IEquatable<{sourceType.PrettyName()}>");
         }
 
         internal static StringBuilder AppendSuggestImmutableType(this StringBuilder messageBuilder, PropertyPath propertyPath)
@@ -76,6 +78,15 @@
             return messageBuilder.AppendLine($"    Note that this means that the {typeof(ChangeTracker).Name} does not track changes so you are responsible for any tracking needed.");
         }
 
+        internal static StringBuilder AppendSuggestEqualBySettings<T>(this StringBuilder messageBuilder)
+            where T : EqualBySettings
+        {
+            messageBuilder.AppendLine($"* Use {typeof(T).Name} to specify {typeof(ReferenceHandling).Name}");
+            messageBuilder.AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Structural)} means that a deep equals is performed.");
+            messageBuilder.AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Reference)} means that reference equality is used.");
+            return messageBuilder;
+        }
+
         private static StringBuilder AppendImmutableConditionsLines(this StringBuilder messageBuilder)
         {
             messageBuilder.AppendLine("  - Must be a sealed class or a struct.");
@@ -84,6 +95,14 @@
             messageBuilder.AppendLine("  - All indexers must be readonly.");
             messageBuilder.AppendLine("  - Event fields are ignored.");
             return messageBuilder;
+        }
+
+        internal static StringBuilder AppendSuggestImplement(this StringBuilder messageBuilder, Type sourceType, string interfaceName)
+        {
+            var line = sourceType.Assembly == typeof(int).Assembly
+                ? $"* Use a type that implements {interfaceName} instead of {sourceType.PrettyName()}."
+                : $"* Implement {interfaceName} for {sourceType.PrettyName()} or use a type that does.";
+            return messageBuilder.AppendLine(line);
         }
     }
 }

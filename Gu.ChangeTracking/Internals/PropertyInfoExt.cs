@@ -30,7 +30,7 @@
             return Attribute.GetCustomAttribute(getMethod, typeof(CompilerGeneratedAttribute)) != null;
         }
 
-        internal static IEnumerable<PropertyInfo> GetIgnoreProperties(this Type type, BindingFlags bindingFlags, string[] ignoreProperties)
+        internal static IReadOnlyList<PropertyInfo> GetIgnoreProperties(this Type type, BindingFlags bindingFlags, string[] ignoreProperties)
         {
             if (type == null)
             {
