@@ -90,7 +90,7 @@ namespace Gu.ChangeTracking
 
             if (x is IEnumerable)
             {
-                if (!ListEquals(x, y, FieldItemEquals, settings))
+                if (!EnumerableEquals(x, y, FieldItemEquals, settings))
                 {
                     return false;
                 }

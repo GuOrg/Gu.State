@@ -75,7 +75,7 @@
 
             if (x is IEnumerable)
             {
-                if (!ListEquals(x, y, PropertyItemEquals, settings))
+                if (!EnumerableEquals(x, y, PropertyItemEquals, settings))
                 {
                     return false;
                 }
