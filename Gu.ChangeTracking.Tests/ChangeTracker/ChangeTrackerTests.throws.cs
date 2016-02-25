@@ -57,10 +57,10 @@ namespace Gu.ChangeTracking.Tests
                                "    settings.AddIgnoredProperty(typeof(IllegalSubType).GetProperty(nameof(IllegalSubType.Illegal)))\r\n" +
                                "    Note that this means that the ChangeTracker does not track changes so you are responsible for any tracking needed.\r\n";
 
-                var item = new With<ComplexType>();
-                using (ChangeTracker.Track(item, ChangeTrackerSettings.Default))
+                var root = new With<ComplexType>();
+                using (ChangeTracker.Track(root, ChangeTrackerSettings.Default))
                 {
-                    var exception = Assert.Throws<NotSupportedException>(() => item.Value = new IllegalSubType());
+                    var exception = Assert.Throws<NotSupportedException>(() => root.Value = new IllegalSubType());
                     Assert.AreEqual(expected, exception.Message);
                 }
             }
