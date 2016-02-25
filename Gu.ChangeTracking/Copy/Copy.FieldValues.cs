@@ -8,10 +8,17 @@
 
     public static partial class Copy
     {
+        public static void FieldValues<T>(T source, T target, BindingFlags bindingFlags)
+            where T : class
+        {
+            var settings = CopyFieldsSettings.GetOrCreate(bindingFlags);
+            FieldValues(source, target, settings);
+        }
+
         public static void FieldValues<T>(T source, T target, ReferenceHandling referenceHandling)
             where T : class
         {
-            var settings = CopyFieldsSettings.GetOrCreate(Constants.DefaultFieldBindingFlags, referenceHandling);
+            var settings = CopyFieldsSettings.GetOrCreate(referenceHandling);
             FieldValues(source, target, settings);
         }
 
@@ -39,7 +46,7 @@
         public static void FieldValues<T>(T source, T target, BindingFlags bindingFlags, params string[] excludedFields)
             where T : class
         {
-            var settings = new CopyFieldsSettings(source?.GetType().GetIgnoreFields(bindingFlags, excludedFields), bindingFlags, ReferenceHandling.Throw);
+            var settings = CopyFieldsSettings.Create(source, target, bindingFlags, ReferenceHandling.Throw, excludedFields);
             FieldValues(source, target, settings);
         }
 

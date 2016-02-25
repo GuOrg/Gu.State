@@ -20,6 +20,28 @@
 
         public IEnumerable<FieldInfo> IgnoredFields => this.ignoredFields ?? Enumerable.Empty<FieldInfo>();
 
+        public static CopyFieldsSettings Create<T>(T source, T target, BindingFlags bindingFlags, ReferenceHandling referenceHandling, string[] excludedFields)
+        {
+            var type = source?.GetType() ?? target?.GetType() ?? typeof(T);
+            var ignoreFields = type.GetIgnoreFields(bindingFlags, excludedFields);
+            if (ignoreFields == null || ignoreFields.Count == 0)
+            {
+                return GetOrCreate(bindingFlags, referenceHandling);
+            }
+
+            return new CopyFieldsSettings(ignoreFields, bindingFlags, referenceHandling);
+        }
+
+        public static CopyFieldsSettings GetOrCreate(BindingFlags bindingFlags)
+        {
+            return GetOrCreate(bindingFlags, ReferenceHandling.Throw);
+        }
+
+        public static CopyFieldsSettings GetOrCreate(ReferenceHandling referenceHandling)
+        {
+            return GetOrCreate(Constants.DefaultFieldBindingFlags, referenceHandling);
+        }
+
         public static CopyFieldsSettings GetOrCreate(BindingFlags bindingFlags, ReferenceHandling referenceHandling)
         {
             var key = new BindingFlagsAndReferenceHandling(bindingFlags, referenceHandling);
