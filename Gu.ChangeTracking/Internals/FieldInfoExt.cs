@@ -4,6 +4,7 @@ namespace Gu.ChangeTracking
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using System.Text;
 
     internal static class FieldInfoExt
     {
@@ -29,7 +30,14 @@ namespace Gu.ChangeTracking
             {
                 var missing = ignoredFields.Where(x => fieldInfos.All(p => p.Name != x))
                                               .ToArray();
-                throw new ArgumentException($"The type {type} does not have fields named {{{string.Join(", ", missing.Select(x => $"'{x}'"))}}}");
+                var errorBuilder = new StringBuilder();
+                errorBuilder.AppendLine($"{nameof(GetIgnoreFields)} failed. The type {type.PrettyName()} does not have the follwing field specified in {nameof(ignoredFields)}");
+                foreach (var fieldName in missing)
+                {
+                    errorBuilder.AppendLine(fieldName);
+                }
+
+                throw new ArgumentException(errorBuilder.ToString(), nameof(ignoredFields));
             }
 
             return fieldInfos;

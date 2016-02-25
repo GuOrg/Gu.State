@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Reflection;
     using System.Runtime.CompilerServices;
+    using System.Text;
 
     internal static class PropertyInfoExt
     {
@@ -47,7 +48,14 @@
             {
                 var missing = ignoreProperties.Where(x => propertyInfos.All(p => p.Name != x))
                                               .ToArray();
-                throw new ArgumentException($"The type {type} does not have properties named {{{string.Join(", ", missing.Select(x => $"'{x}'"))}}}");
+                var errorBuilder = new StringBuilder();
+                errorBuilder.AppendLine($"{nameof(GetIgnoreProperties)} failed. The type {type.PrettyName()} does not have the follwing field specified in {nameof(ignoreProperties)}");
+                foreach (var name in missing)
+                {
+                    errorBuilder.AppendLine(name);
+                }
+
+                throw new ArgumentException(errorBuilder.ToString(), nameof(ignoreProperties));
             }
 
             return propertyInfos;
