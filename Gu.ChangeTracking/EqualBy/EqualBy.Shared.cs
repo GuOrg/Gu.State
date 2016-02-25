@@ -5,7 +5,7 @@
 
     public static partial class EqualBy
     {
-        private static bool ListEquals<TSetting>(object x, object y, Func<object, object, TSetting, bool> compareItem, TSetting settings)
+        private static bool EnumerableEquals<TSetting>(object x, object y, Func<object, object, TSetting, bool> compareItem, TSetting settings)
             where TSetting : IEqualBySettings
         {
             if (settings.ReferenceHandling == ReferenceHandling.Throw)
