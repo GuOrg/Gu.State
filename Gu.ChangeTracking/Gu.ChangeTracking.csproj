@@ -56,6 +56,7 @@
     <Compile Include="Internals\BindingFlagsAndReferenceHandling.cs" />
     <Compile Include="Internals\ConcurrentSet.cs" />
     <Compile Include="Internals\ItemCollection.cs" />
+    <Compile Include="Internals\PairIterator.cs" />
     <Compile Include="Internals\PropertyCollection.cs" />
     <Compile Include="Internals\PropertyPath\IndexItem.cs" />
     <Compile Include="Internals\PropertyPath\PathItem.cs" />
