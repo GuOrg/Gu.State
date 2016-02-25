@@ -27,7 +27,7 @@
             return messageBuilder.AppendLine("Solve the problem by any of:");
         }
 
-        internal static StringBuilder AppendSuggestionsForEnumerableLines(this StringBuilder messageBuilder, Type sourceType, PropertyPath path)
+        internal static StringBuilder AppendSuggestionsForEnumerableLines(this StringBuilder messageBuilder, Type sourceType)
         {
             messageBuilder.AppendLine($"* Use ObservableCollection<T> or another collection type that notifies instead of {sourceType.PrettyName()}.");
 
@@ -40,7 +40,7 @@
             return messageBuilder;
         }
 
-        internal static StringBuilder AppendSuggestImplement<T>(this StringBuilder messageBuilder, Type sourceType, PropertyPath path)
+        internal static StringBuilder AppendSuggestImplement<T>(this StringBuilder messageBuilder, Type sourceType)
         {
             var line = sourceType.Assembly == typeof(int).Assembly
                 ? $"* Use a type that implements {typeof(T).PrettyName()} instead of {sourceType.PrettyName()}."
@@ -60,16 +60,6 @@
             return messageBuilder.AppendImmutableConditionsLines();
         }
 
-        internal static StringBuilder AppendImmutableConditionsLines(this StringBuilder messageBuilder)
-        {
-            messageBuilder.AppendLine("  - Must be a sealed class or a struct.");
-            messageBuilder.AppendLine("  - All fields and properties must be readonly.");
-            messageBuilder.AppendLine("  - All field and property types must be immutable.");
-            messageBuilder.AppendLine("  - All indexers must be readonly.");
-            messageBuilder.AppendLine("  - Event fields are ignored.");
-            return messageBuilder;
-        }
-
         internal static StringBuilder AppendSuggestChangeTrackerSettings(this StringBuilder messageBuilder, Type sourceType, PropertyPath propertyPath)
         {
             var lastProperty = propertyPath.Path.OfType<PropertyItem>()
@@ -84,6 +74,16 @@
             }
 
             return messageBuilder.AppendLine($"    Note that this means that the {typeof(ChangeTracker).Name} does not track changes so you are responsible for any tracking needed.");
+        }
+
+        private static StringBuilder AppendImmutableConditionsLines(this StringBuilder messageBuilder)
+        {
+            messageBuilder.AppendLine("  - Must be a sealed class or a struct.");
+            messageBuilder.AppendLine("  - All fields and properties must be readonly.");
+            messageBuilder.AppendLine("  - All field and property types must be immutable.");
+            messageBuilder.AppendLine("  - All indexers must be readonly.");
+            messageBuilder.AppendLine("  - Event fields are ignored.");
+            return messageBuilder;
         }
     }
 }

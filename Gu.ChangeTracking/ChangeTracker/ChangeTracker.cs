@@ -478,7 +478,7 @@
                     var messageBuilder = new StringBuilder();
                     messageBuilder.AppendCreateFailed<ChangeTracker>(propertyPath)
                                   .AppendSolveTheProblemBy()
-                                  .AppendSuggestionsForEnumerableLines(type, propertyPath)
+                                  .AppendSuggestionsForEnumerableLines(type)
                                   .AppendSuggestImmutableType(propertyPath)
                                   .AppendSuggestChangeTrackerSettings(type, propertyPath);
 
@@ -494,7 +494,7 @@
                     var messageBuilder = new StringBuilder();
                     messageBuilder.AppendCreateFailed<ChangeTracker>(propertyPath)
                                   .AppendSolveTheProblemBy()
-                                  .AppendSuggestImplement<INotifyPropertyChanged>(type, propertyPath)
+                                  .AppendSuggestImplement<INotifyPropertyChanged>(type)
                                   .AppendSuggestImmutableType(propertyPath)
                                   .AppendSuggestChangeTrackerSettings(type, propertyPath);
 
