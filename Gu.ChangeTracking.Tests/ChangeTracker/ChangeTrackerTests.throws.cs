@@ -3,9 +3,7 @@ namespace Gu.ChangeTracking.Tests
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Linq;
-    using System.Linq.Expressions;
-    using System.Reflection;
+
     using Gu.ChangeTracking.Tests.ChangeTrackerStubs;
     using NUnit.Framework;
 
@@ -66,7 +64,7 @@ namespace Gu.ChangeTracking.Tests
             }
 
             [Test]
-            public void WIthIllegalObject()
+            public void WithIllegal()
             {
                 var item = new WithIllegal();
                 var expected = "Create ChangeTracker failed for property: WithIllegal.Illegal.\r\n" +
@@ -91,7 +89,7 @@ namespace Gu.ChangeTracking.Tests
             }
 
             [Test]
-            public void OnIllegalEnumerable()
+            public void IllegalEnumerable()
             {
                 var item = new IllegalEnumerable();
                 var exception = Assert.Throws<NotSupportedException>(() => ChangeTracker.Track(item));
