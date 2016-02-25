@@ -152,13 +152,13 @@
 
         private sealed class PropertiesChangeTrackers : IDisposable
         {
-            private readonly INotifyPropertyChanged Source;
+            private readonly INotifyPropertyChanged source;
             private readonly ChangeTracker parent;
             private readonly PropertyCollection propertyTrackers;
 
             private PropertiesChangeTrackers(INotifyPropertyChanged source, ChangeTracker parent, PropertyCollection propertyTrackers)
             {
-                this.Source = source;
+                this.source = source;
                 this.parent = parent;
                 this.propertyTrackers = propertyTrackers;
                 source.PropertyChanged += this.OnTrackedPropertyChanged;
@@ -166,7 +166,7 @@
 
             public void Dispose()
             {
-                this.Source.PropertyChanged -= this.OnTrackedPropertyChanged;
+                this.source.PropertyChanged -= this.OnTrackedPropertyChanged;
                 this.propertyTrackers?.Dispose();
             }
 
@@ -238,9 +238,7 @@
                     return null;
                 }
 
-                Ensure.IsPropertyChanged(sv.GetType(), parent.Path);
-                Ensure.IsTrackableIfEnumerable(sv.GetType(), parent.Path);
-
+                Ensure.IsTrackableType(sv.GetType(), parent);
                 var notifyPropertyChanged = sv as INotifyPropertyChanged;
                 return new PropertyChangeTracker(notifyPropertyChanged, propertyInfo, parent);
             }
@@ -263,7 +261,7 @@
 
                 if (IsTrackProperty(propertyInfo, this.parent.Settings))
                 {
-                    var propertyTracker = CreatePropertyTracker(this.Source, propertyInfo, this.parent);
+                    var propertyTracker = CreatePropertyTracker(this.source, propertyInfo, this.parent);
                     this.propertyTrackers[propertyInfo] = propertyTracker;
                 }
 
@@ -277,32 +275,32 @@
                     return;
                 }
 
-                foreach (var propertyInfo in GetTrackProperties(this.Source?.GetType(), this.parent.Settings))
+                foreach (var propertyInfo in GetTrackProperties(this.source?.GetType(), this.parent.Settings))
                 {
                     // might be worth it to check if Source ReferenceEquals to avoid creating a new tracker here.
                     // Probably not a big problem as I expect PropertyChanged.Invoke(string.Empty) to be rare.
-                    this.propertyTrackers[propertyInfo] = CreatePropertyTracker(this.Source, propertyInfo, this.parent);
+                    this.propertyTrackers[propertyInfo] = CreatePropertyTracker(this.source, propertyInfo, this.parent);
                 }
             }
         }
 
         private sealed class ItemsChangeTrackers : IDisposable
         {
-            private readonly INotifyCollectionChanged Source;
+            private readonly INotifyCollectionChanged source;
             private readonly ChangeTracker parent;
             private readonly ItemCollection<ChangeTracker> itemTrackers;
 
             private ItemsChangeTrackers(INotifyCollectionChanged source, ChangeTracker parent, ItemCollection<ChangeTracker> itemTrackers)
             {
-                this.Source = source;
+                this.source = source;
                 this.parent = parent;
                 this.itemTrackers = itemTrackers;
-                this.Source.CollectionChanged += this.OnTrackedCollectionChanged;
+                this.source.CollectionChanged += this.OnTrackedCollectionChanged;
             }
 
             public void Dispose()
             {
-                this.Source.CollectionChanged -= this.OnTrackedCollectionChanged;
+                this.source.CollectionChanged -= this.OnTrackedCollectionChanged;
                 this.itemTrackers?.Dispose();
             }
 
@@ -313,7 +311,7 @@
                     return null;
                 }
 
-                Ensure.IsTrackableIfEnumerable(source.GetType(), parent.Path);
+                Ensure.IsTrackableType(source.GetType(), parent);
 
                 var incc = source as INotifyCollectionChanged;
                 var itemType = source.GetType().GetItemType();
@@ -362,7 +360,7 @@
                     return;
                 }
 
-                var sourceList = (IList)this.Source;
+                var sourceList = (IList)this.source;
                 switch (e.Action)
                 {
                     case NotifyCollectionChangedAction.Add:
@@ -390,7 +388,7 @@
                         break;
                     case NotifyCollectionChangedAction.Reset:
                         {
-                            var xList = (IList)this.Source;
+                            var xList = (IList)this.source;
                             this.itemTrackers.Clear();
                             for (int i = 0; i < xList.Count; i++)
                             {
@@ -443,7 +441,7 @@
                 checkedTypes.Add(type);
             }
 
-            internal static void IsTrackableIfEnumerable(Type type, PropertyPath propertyPath)
+            private static void IsTrackableIfEnumerable(Type type, PropertyPath propertyPath)
             {
                 if (!typeof(IEnumerable).IsAssignableFrom(type))
                 {
