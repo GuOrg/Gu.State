@@ -21,12 +21,12 @@
             public void FieldValuesHappyPath()
             {
                 var source = new WithSimpleFields
-                                 {
-                                     IntValue = 1,
-                                     NullableIntValue = 2,
-                                     StringValue = "3",
-                                     EnumValue = StringSplitOptions.RemoveEmptyEntries
-                                 };
+                {
+                    IntValue = 1,
+                    NullableIntValue = 2,
+                    StringValue = "3",
+                    EnumValue = StringSplitOptions.RemoveEmptyEntries
+                };
 
                 var target = new WithSimpleFields { IntValue = 3, NullableIntValue = 4 };
                 Copy.FieldValues(source, target);
@@ -68,14 +68,14 @@
             public void FieldValuesIgnores()
             {
                 var source = new WithSimpleFields
-                                 {
-                                     IntValue = 1,
-                                     NullableIntValue = 2,
-                                     StringValue = "3",
-                                     EnumValue = StringSplitOptions.RemoveEmptyEntries
-                                 };
+                {
+                    IntValue = 1,
+                    NullableIntValue = 2,
+                    StringValue = "3",
+                    EnumValue = StringSplitOptions.RemoveEmptyEntries
+                };
                 var target = new WithSimpleFields { IntValue = 3, NullableIntValue = 4 };
-                Copy.FieldValues(source, target, "nullableIntValue");
+                Copy.FieldValues(source, target, nameof(WithSimpleFields.NullableIntValue));
                 Assert.AreEqual(1, source.IntValue);
                 Assert.AreEqual(1, target.IntValue);
                 Assert.AreEqual(2, source.NullableIntValue);
@@ -103,11 +103,11 @@
             public void WithComplexFieldHappyPathStructural()
             {
                 var source = new WithComplexProperty
-                                 {
-                                     Name = "a",
-                                     Value = 1,
-                                     ComplexType = new ComplexType { Name = "b", Value = 2 }
-                                 };
+                {
+                    Name = "a",
+                    Value = 1,
+                    ComplexType = new ComplexType { Name = "b", Value = 2 }
+                };
                 var target = new WithComplexProperty();
                 Copy.FieldValues(source, target, ReferenceHandling.Structural);
                 Assert.AreEqual(source.Name, target.Name);
@@ -132,11 +132,11 @@
             public void WithComplexFieldHappyPathReference()
             {
                 var source = new WithComplexProperty
-                                 {
-                                     Name = "a",
-                                     Value = 1,
-                                     ComplexType = new ComplexType { Name = "b", Value = 2 }
-                                 };
+                {
+                    Name = "a",
+                    Value = 1,
+                    ComplexType = new ComplexType { Name = "b", Value = 2 }
+                };
                 var target = new WithComplexProperty();
                 Copy.FieldValues(source, target, ReferenceHandling.Reference);
                 Assert.AreEqual(source.Name, target.Name);
@@ -175,15 +175,21 @@
             }
 
             [Test]
-            public void ListOfComplexToEmpty()
+            public void ListOfWithSimpleFieldsToEmpty()
             {
-                var source = new List<ComplexType> { new ComplexType("a", 1) };
-                var target = new List<ComplexType>();
+                var source = new List<WithSimpleFields> { new WithSimpleFields { IntValue = 1, NullableIntValue = 2, StringValue = "a", EnumValue = StringSplitOptions.RemoveEmptyEntries } };
+                var target = new List<WithSimpleFields>();
                 Copy.FieldValues(source, target, ReferenceHandling.Structural);
                 Assert.AreEqual(1, source.Count);
                 Assert.AreEqual(1, target.Count);
-                Assert.AreEqual(source[0].Name, target[0].Name);
-                Assert.AreEqual(source[0].Value, target[0].Value);
+                Assert.AreEqual(1, source[0].IntValue);
+                Assert.AreEqual(1, target[0].IntValue);
+                Assert.AreEqual(2, source[0].NullableIntValue);
+                Assert.AreEqual(2, target[0].NullableIntValue);
+                Assert.AreEqual("a", source[0].StringValue);
+                Assert.AreEqual("a", target[0].StringValue);
+                Assert.AreEqual(StringSplitOptions.RemoveEmptyEntries, source[0].EnumValue);
+                Assert.AreEqual(StringSplitOptions.RemoveEmptyEntries, target[0].EnumValue);
             }
 
             [Test]

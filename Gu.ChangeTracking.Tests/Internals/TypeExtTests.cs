@@ -1,9 +1,7 @@
 ﻿namespace Gu.ChangeTracking.Tests.Internals
 {
     using System;
-    using System.Collections.Generic;
     using Gu.ChangeTracking.Tests.Internals.Stubs;
-
     using NUnit.Framework;
 
     public class TypeExtTests
