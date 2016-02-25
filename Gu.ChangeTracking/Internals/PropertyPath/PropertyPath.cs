@@ -62,7 +62,7 @@
             return new PropertyPath(this.Root, this.Path.Concat(new[] { new PropertyItem(propertyInfo) }).ToArray());
         }
 
-        internal PropertyPath WithIndexer(int index = 0)
+        internal PropertyPath WithIndex(int? index)
         {
             return new PropertyPath(this.Root, this.Path.Concat(new[] { new IndexItem(index) }).ToArray());
         }

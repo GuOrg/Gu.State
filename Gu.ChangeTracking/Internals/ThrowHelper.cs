@@ -9,15 +9,20 @@
 
     internal static class ThrowHelper
     {
-        internal static StringBuilder AppendCreateFailedForLine<T>(this StringBuilder messageBuilder, PropertyPath path)
+        internal static StringBuilder AppendCreateFailed<T>(this StringBuilder messageBuilder, PropertyPath path)
         {
-            var line = path.Path.OfType<PropertyItem>().LastOrDefault() != null
-                           ? $"Create {typeof(T).PrettyName()} failed for property: {path.PathString}."
-                           : $"Create {typeof(T).PrettyName()} failed for type: {path.Root.Type.PrettyName()}.";
+            if (path.Path.Count == 0)
+            {
+                return messageBuilder.AppendLine($"Create {typeof(T).PrettyName()} failed for type: {path.Root.Type.PrettyName()}.");
+            }
+
+            var line = path.Path.OfType<IndexItem>().Any(x => x.Index != null)
+                ? $"Create {typeof(T).PrettyName()} failed for item: {path.PathString}."
+                : $"Create {typeof(T).PrettyName()} failed for property: {path.PathString}.";
             return messageBuilder.AppendLine(line);
         }
 
-        internal static StringBuilder AppendSolveTheProblemByLine(this StringBuilder messageBuilder)
+        internal static StringBuilder AppendSolveTheProblemBy(this StringBuilder messageBuilder)
         {
             return messageBuilder.AppendLine("Solve the problem by any of:");
         }
@@ -35,7 +40,7 @@
             return messageBuilder;
         }
 
-        internal static StringBuilder AppendImplementsLine<T>(this StringBuilder messageBuilder, Type sourceType, PropertyPath path)
+        internal static StringBuilder AppendSuggestImplement<T>(this StringBuilder messageBuilder, Type sourceType, PropertyPath path)
         {
             var line = sourceType.Assembly == typeof(int).Assembly
                 ? $"* Use a type that implements {typeof(T).PrettyName()} instead of {sourceType.PrettyName()}."
@@ -43,7 +48,7 @@
             return messageBuilder.AppendLine(line);
         }
 
-        internal static StringBuilder AppendUseImmutableTypeLine(this StringBuilder messageBuilder, PropertyPath propertyPath)
+        internal static StringBuilder AppendSuggestImmutableType(this StringBuilder messageBuilder, PropertyPath propertyPath)
         {
             var lastProperty = propertyPath.Path.OfType<PropertyItem>()
                                             .LastOrDefault();
@@ -65,7 +70,7 @@
             return messageBuilder;
         }
 
-        internal static StringBuilder AppendChangeTrackerSettingsSpecialCaseLines(this StringBuilder messageBuilder, Type sourceType, PropertyPath propertyPath)
+        internal static StringBuilder AppendSuggestChangeTrackerSettings(this StringBuilder messageBuilder, Type sourceType, PropertyPath propertyPath)
         {
             var lastProperty = propertyPath.Path.OfType<PropertyItem>()
                                            .LastOrDefault();

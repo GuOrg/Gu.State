@@ -7,7 +7,7 @@ namespace Gu.ChangeTracking
     internal class ItemChangeTracker : ChangeTracker
     {
         public ItemChangeTracker(INotifyPropertyChanged source, int index, ChangeTracker parent)
-            : base(source, parent.Settings, parent.Path.WithIndexer(index))
+            : base(source, parent.Settings, parent.Path.WithIndex(index))
         {
             this.Index = index;
             this.Parent = parent;
