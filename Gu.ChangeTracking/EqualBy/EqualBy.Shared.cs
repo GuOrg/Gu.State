@@ -2,18 +2,14 @@
 {
     using System;
     using System.Collections;
-    using System.Collections.Generic;
+    using System.Diagnostics;
 
     public static partial class EqualBy
     {
         private static bool EnumerableEquals<TSetting>(object x, object y, Func<object, object, TSetting, bool> compareItem, TSetting settings)
             where TSetting : IEqualBySettings
         {
-            if (settings.ReferenceHandling == ReferenceHandling.Throw)
-            {
-                // using ensure to throw
-                Ensure.NotIs<IEnumerable>(x, nameof(x));
-            }
+            Debug.Assert(settings.ReferenceHandling != ReferenceHandling.Throw, "Should not get here");
 
             var xl = x as IList;
             var yl = y as IList;
@@ -59,7 +55,9 @@
                 }
                 else
                 {
-                    throw new InvalidOperationException("Could not compare enumerables");
+                    var message = "There is a bug in the library as it:\r\n" +
+                                  $"Could not compare enumerables of type {x.GetType().PrettyName()}";
+                    throw new InvalidOperationException(message);
                 }
             }
 
