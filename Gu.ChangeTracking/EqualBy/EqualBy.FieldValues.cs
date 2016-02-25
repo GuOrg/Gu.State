@@ -3,12 +3,13 @@ namespace Gu.ChangeTracking
     using System;
     using System.Collections;
     using System.Reflection;
+    using System.Text;
 
     public static partial class EqualBy
     {
         public static bool FieldValues<T>(T x, T y, BindingFlags bindingFlags)
         {
-            var settings = EqualByFieldsSettings.GetOrCreate(bindingFlags, ReferenceHandling.Throw);
+            var settings = EqualByFieldsSettings.GetOrCreate(bindingFlags);
             return FieldValues(x, y, settings);
         }
 
@@ -22,7 +23,7 @@ namespace Gu.ChangeTracking
         /// </param>
         public static bool FieldValues<T>(T x, T y, ReferenceHandling referenceHandling)
         {
-            var settings = EqualByFieldsSettings.GetOrCreate(Constants.DefaultFieldBindingFlags, referenceHandling);
+            var settings = EqualByFieldsSettings.GetOrCreate(referenceHandling);
             return FieldValues(x, y, settings);
         }
 
@@ -47,11 +48,45 @@ namespace Gu.ChangeTracking
 
         public static bool FieldValues<T>(T x, T y, BindingFlags bindingFlags, params string[] excludedFields)
         {
-            return FieldValues(x, y, new EqualByFieldsSettings(x.GetType().GetIgnoreFields(bindingFlags, excludedFields), bindingFlags, ReferenceHandling.Throw));
+            var settings = EqualByFieldsSettings.Create(x, y, bindingFlags, ReferenceHandling.Throw, excludedFields);
+            return FieldValues(x, y, settings);
         }
 
         public static bool FieldValues<T>(T x, T y, EqualByFieldsSettings settings)
         {
+            if (settings.ReferenceHandling == ReferenceHandling.Throw)
+            {
+                var type = x?.GetType() ?? y?.GetType() ?? typeof(T);
+                if (typeof(IEnumerable).IsAssignableFrom(type))
+                {
+                    var errorBuilder = new StringBuilder();
+                    errorBuilder.AppendLine($"EqualBy.{nameof(FieldValues)}(x, y) does not support comparing the type {type.PrettyName()}.")
+                                .AppendSolveTheProblemBy()
+                                .AppendSuggestImplementIEquatable(type)
+                                .AppendSuggestEqualBySettings<EqualByFieldsSettings>();
+                    throw new NotSupportedException(errorBuilder.ToString());
+                }
+
+                var fieldInfos = type.GetFields(settings.BindingFlags);
+                foreach (var fieldInfo in fieldInfos)
+                {
+                    if (settings.IsIgnoringField(fieldInfo))
+                    {
+                        continue;
+                    }
+
+                    if (!fieldInfo.FieldType.IsEquatable())
+                    {
+                        var errorBuilder = new StringBuilder();
+                        errorBuilder.AppendLine($"EqualBy.{nameof(FieldValues)}(x, y) does not support comparing the field {type.PrettyName()}.{fieldInfo.Name} of type {fieldInfo.FieldType.PrettyName()}.")
+                                    .AppendSolveTheProblemBy()
+                                    .AppendSuggestImplementIEquatable(fieldInfo.FieldType)
+                                    .AppendSuggestEqualBySettings<EqualByFieldsSettings>();
+                        throw new NotSupportedException(errorBuilder.ToString());
+                    }
+                }
+            }
+
             if (x == null && y == null)
             {
                 return true;
@@ -62,10 +97,9 @@ namespace Gu.ChangeTracking
                 return false;
             }
 
-            Ensure.SameType(x, y, nameof(x), nameof(y));
-            if (settings.ReferenceHandling == ReferenceHandling.Throw)
+            if (x.GetType() != y.GetType())
             {
-                Ensure.NotIs<IEnumerable>(x, nameof(x));
+                return false;
             }
 
             return FieldValuesCore(x, y, settings);
@@ -159,8 +193,12 @@ namespace Gu.ChangeTracking
 
                         return false;
                     case ReferenceHandling.Throw:
-                        var message = $"EqualBy does not support comparing the field {fieldInfo.Name} of type {fieldInfo.FieldType}";
-                        throw new NotSupportedException(message);
+                        var errorBuilder = new StringBuilder();
+                        errorBuilder.AppendLine($"EqualBy.{nameof(FieldValues)}(x, y) does not support comparing the field {fieldInfo.Name} of type {fieldInfo.FieldType.PrettyName()}.")
+                                    .AppendSolveTheProblemBy()
+                                    .AppendSuggestImplementIEquatable(fieldInfo.FieldType)
+                                    .AppendSuggestEqualBySettings<EqualByFieldsSettings>();
+                        throw new NotSupportedException(errorBuilder.ToString());
                     default:
                         throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);
                 }

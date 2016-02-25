@@ -1,11 +1,7 @@
 ﻿namespace Gu.ChangeTracking.Tests
 {
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
-
-    using Gu.ChangeTracking.Tests.CopyStubs;
-
     using NUnit.Framework;
 
     public partial class EqualByTests
@@ -21,20 +17,20 @@
             [Test]
             public void WithComplexPropertyStructural()
             {
-                var x = new WithComplexProperty { Name = "a", Value = 1, ComplexType = new ComplexType { Name = "c", Value = 2 } };
-                var y = new WithComplexProperty { Name = "a", Value = 1, ComplexType = new ComplexType { Name = "c", Value = 2 } };
+                var x = new WithComplexValue { Name = "a", Value = 1, ComplexValue = new ComplexType { Name = "c", Value = 2 } };
+                var y = new WithComplexValue { Name = "a", Value = 1, ComplexValue = new ComplexType { Name = "c", Value = 2 } };
                 Assert.AreEqual(true, EqualBy.PropertyValues(x, y, ReferenceHandling.Structural));
-                x.ComplexType.Value++;
+                x.ComplexValue.Value++;
                 Assert.AreEqual(false, EqualBy.PropertyValues(x, y, ReferenceHandling.Structural));
             }
 
             [Test]
             public void WithComplexPropertyReferential()
             {
-                var x = new WithComplexProperty { Name = "a", Value = 1, ComplexType = new ComplexType { Name = "c", Value = 2 } };
-                var y = new WithComplexProperty { Name = "a", Value = 1, ComplexType = new ComplexType { Name = "c", Value = 2 } };
+                var x = new WithComplexValue { Name = "a", Value = 1, ComplexValue = new ComplexType { Name = "c", Value = 2 } };
+                var y = new WithComplexValue { Name = "a", Value = 1, ComplexValue = new ComplexType { Name = "c", Value = 2 } };
                 Assert.AreEqual(false, EqualBy.PropertyValues(x, y, ReferenceHandling.Reference));
-                x.ComplexType = y.ComplexType;
+                x.ComplexValue = y.ComplexValue;
                 Assert.AreEqual(true, EqualBy.PropertyValues(x, y, ReferenceHandling.Structural));
             }
 
@@ -56,11 +52,27 @@
             [TestCase(0, 1, 0, 2, false)]
             [TestCase(1, 1, 0, 1, false)]
             [TestCase(0, 1, 1, 1, false)]
-            public void EnumarebleRepeatStructural1(int startX, int countX, int startY, int countY, bool expected)
+            public void EnumarebleRepeatStructural(int startX, int countX, int startY, int countY, bool expected)
             {
                 var x = Enumerable.Repeat(startX, countX);
                 var y = Enumerable.Repeat(startY, countY);
                 Assert.AreEqual(expected, EqualBy.PropertyValues(x, y, ReferenceHandling.Structural));
+            }
+
+            [Test]
+            public void EnumarebleNullsStructural()
+            {
+                var x = new object[] { 1, null }.Select(z => z);
+                var y = new object[] { 1, null }.Select(z => z);
+                Assert.AreEqual(true, EqualBy.PropertyValues(x, y, ReferenceHandling.Structural));
+
+                x = new object[] { 1 }.Select(z => z);
+                y = new object[] { 1, null }.Select(z => z);
+                Assert.AreEqual(false, EqualBy.PropertyValues(x, y, ReferenceHandling.Structural));
+
+                x = new object[] { 1, null }.Select(z => z);
+                y = new object[] { 1 }.Select(z => z);
+                Assert.AreEqual(false, EqualBy.PropertyValues(x, y, ReferenceHandling.Structural));
             }
 
             [TestCase("1, 2, 3", "1, 2, 3", true)]

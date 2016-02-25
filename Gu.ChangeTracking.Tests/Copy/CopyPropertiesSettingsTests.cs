@@ -4,9 +4,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-
-    using Gu.ChangeTracking.Tests.CopyStubs;
-
     using NUnit.Framework;
 
     public class CopyPropertiesSettingsTests
@@ -49,6 +46,13 @@
             Assert.AreEqual(referenceHandling, settings.ReferenceHandling);
             var second = CopyPropertiesSettings.GetOrCreate(BindingFlags.Public, referenceHandling);
             Assert.AreSame(settings, second);
+        }
+
+        public class ComplexType
+        {
+            public string Name { get; set; }
+
+            public int Value { get; set; }
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Gu.ChangeTracking.Tests
             {
                 var expected = "Create ChangeTracker failed for item: ObservableCollection<ComplexType>[0].Illegal.\r\n" +
                                "Solve the problem by any of:\r\n" +
-                               "* Implement INotifyPropertyChanged for IllegalType or use a type that notifies.\r\n" +
+                               "* Implement INotifyPropertyChanged for IllegalType or use a type that does.\r\n" +
                                "* Use an immutable type instead of IllegalType. For immutable types the following must hold:\r\n" +
                                "  - Must be a sealed class or a struct.\r\n" +
                                "  - All fields and properties must be readonly.\r\n" +
@@ -42,7 +42,7 @@ namespace Gu.ChangeTracking.Tests
             {
                 var expected = "Create ChangeTracker failed for property: With<ComplexType>.Value.Illegal.\r\n" +
                                "Solve the problem by any of:\r\n" +
-                               "* Implement INotifyPropertyChanged for IllegalType or use a type that notifies.\r\n" +
+                               "* Implement INotifyPropertyChanged for IllegalType or use a type that does.\r\n" +
                                "* Use an immutable type instead of IllegalType. For immutable types the following must hold:\r\n" +
                                "  - Must be a sealed class or a struct.\r\n" +
                                "  - All fields and properties must be readonly.\r\n" +
@@ -69,7 +69,7 @@ namespace Gu.ChangeTracking.Tests
                 var item = new WithIllegal();
                 var expected = "Create ChangeTracker failed for property: WithIllegal.Illegal.\r\n" +
                                "Solve the problem by any of:\r\n" +
-                               "* Implement INotifyPropertyChanged for IllegalType or use a type that notifies.\r\n" +
+                               "* Implement INotifyPropertyChanged for IllegalType or use a type that does.\r\n" +
                                "* Use an immutable type instead of IllegalType. For immutable types the following must hold:\r\n" +
                                "  - Must be a sealed class or a struct.\r\n" +
                                "  - All fields and properties must be readonly.\r\n" +
