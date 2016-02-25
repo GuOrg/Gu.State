@@ -5,8 +5,6 @@
     using System.Linq;
     using System.Reflection;
 
-    using Gu.ChangeTracking.Tests.CopyStubs;
-
     using NUnit.Framework;
 
     public class EqualByPropertiesSettingsTests
@@ -49,6 +47,12 @@
             Assert.AreEqual(referenceHandling, settings.ReferenceHandling);
             var second = EqualByPropertiesSettings.GetOrCreate(BindingFlags.Public, referenceHandling);
             Assert.AreSame(settings, second);
+        }
+
+        private class ComplexType
+        {
+            public string Name { get; set; }
+            public int Value { get; set; }
         }
     }
 }
