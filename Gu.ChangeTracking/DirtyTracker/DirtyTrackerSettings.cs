@@ -1,13 +1,14 @@
 ﻿namespace Gu.ChangeTracking
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
 
     public class DirtyTrackerSettings : IEqualByPropertiesSettings
     {
-        private static readonly Dictionary<BindingFlagsAndReferenceHandling, DirtyTrackerSettings> Cache = new Dictionary<BindingFlagsAndReferenceHandling, DirtyTrackerSettings>();
+        private static readonly ConcurrentDictionary<BindingFlagsAndReferenceHandling, DirtyTrackerSettings> Cache = new ConcurrentDictionary<BindingFlagsAndReferenceHandling, DirtyTrackerSettings>();
         private readonly HashSet<PropertyInfo> ignoredProperties;
 
         public DirtyTrackerSettings(Type type, string[] ignoreProperties, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
@@ -43,15 +44,7 @@
         public static DirtyTrackerSettings GetOrCreate(BindingFlags bindingFlags, ReferenceHandling referenceHandling)
         {
             var key = new BindingFlagsAndReferenceHandling(bindingFlags, referenceHandling);
-            DirtyTrackerSettings settings;
-            if (Cache.TryGetValue(key, out settings))
-            {
-                return settings;
-            }
-
-            settings = new DirtyTrackerSettings(null, bindingFlags, referenceHandling);
-            Cache[key] = settings;
-            return settings;
+            return Cache.GetOrAdd(key, x => new DirtyTrackerSettings(null, bindingFlags, referenceHandling));
         }
 
         public bool IsIgnoringProperty(PropertyInfo propertyInfo)

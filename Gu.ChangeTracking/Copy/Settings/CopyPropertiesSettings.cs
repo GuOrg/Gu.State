@@ -1,26 +1,33 @@
 ﻿namespace Gu.ChangeTracking
 {
     using System;
+    using System.Collections;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
 
     public class CopyPropertiesSettings : CopySettings, IEqualByPropertiesSettings
     {
-        private static readonly Dictionary<BindingFlagsAndReferenceHandling, CopyPropertiesSettings> Cache = new Dictionary<BindingFlagsAndReferenceHandling, CopyPropertiesSettings>();
+        private static readonly ConcurrentDictionary<BindingFlagsAndReferenceHandling, CopyPropertiesSettings> Cache = new ConcurrentDictionary<BindingFlagsAndReferenceHandling, CopyPropertiesSettings>();
         private readonly HashSet<PropertyInfo> ignoredProperties;
 
-        public CopyPropertiesSettings(IEnumerable<PropertyInfo> ignoredProperties, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
-            : this(ignoredProperties, null, bindingFlags, referenceHandling)
+        public CopyPropertiesSettings(
+            IEnumerable<PropertyInfo> ignoredProperties,
+            IEnumerable<Type> ignoredTypes,
+            BindingFlags bindingFlags,
+            ReferenceHandling referenceHandling)
+            : this(ignoredProperties, null, ignoredTypes, bindingFlags, referenceHandling)
         {
         }
 
         public CopyPropertiesSettings(
             IEnumerable<PropertyInfo> ignoredProperties,
             IReadOnlyList<SpecialCopyProperty> specialCopyProperties,
+            IEnumerable<Type> ignoredTypes,
             BindingFlags bindingFlags,
             ReferenceHandling referenceHandling)
-            : base(bindingFlags, referenceHandling)
+            : base(bindingFlags, referenceHandling, ignoredTypes)
         {
             this.ignoredProperties = ignoredProperties != null
                                          ? new HashSet<PropertyInfo>(ignoredProperties)
@@ -28,14 +35,20 @@
             this.SpecialCopyProperties = specialCopyProperties;
         }
 
-        public CopyPropertiesSettings(Type type, string[] ignoreProperties, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
-            : this(type?.GetIgnoreProperties(bindingFlags, ignoreProperties), bindingFlags, referenceHandling)
-        {
-        }
-
         public IEnumerable<PropertyInfo> IgnoredProperties => this.ignoredProperties ?? Enumerable.Empty<PropertyInfo>();
 
         public IReadOnlyList<SpecialCopyProperty> SpecialCopyProperties { get; }
+
+        public static CopyPropertiesSettings Create(Type type, string[] excludedProperties, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
+        {
+            var ignored = type.GetIgnoreProperties(bindingFlags, excludedProperties);
+            if (ignored == null || ignored.Count == 0)
+            {
+                return GetOrCreate(bindingFlags, referenceHandling);
+            }
+
+            return new CopyPropertiesSettings(ignored, null, null, bindingFlags, referenceHandling);
+        }
 
         public static CopyPropertiesSettings GetOrCreate(ReferenceHandling referenceHandling)
         {
@@ -50,21 +63,12 @@
         public static CopyPropertiesSettings GetOrCreate(BindingFlags bindingFlags, ReferenceHandling referenceHandling)
         {
             var key = new BindingFlagsAndReferenceHandling(bindingFlags, referenceHandling);
-            CopyPropertiesSettings settings;
-            if (Cache.TryGetValue(key, out settings))
-            {
-                return settings;
-            }
-
-            settings = new CopyPropertiesSettings((IEnumerable<PropertyInfo>) null,null,bindingFlags, referenceHandling);
-            Cache[key] = settings;
-            return settings;
+            return Cache.GetOrAdd(key, x => new CopyPropertiesSettings((IEnumerable<PropertyInfo>)null, null, bindingFlags, referenceHandling));
         }
 
         public bool IsIgnoringProperty(PropertyInfo propertyInfo)
         {
-            if (propertyInfo == null || propertyInfo.GetIndexParameters()
-                                                    .Length > 0)
+            if (propertyInfo == null || this.IsIgnoringType(propertyInfo.DeclaringType))
             {
                 return true;
             }

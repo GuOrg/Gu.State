@@ -110,7 +110,7 @@
             {
                 var source = new WithComplexProperty("a", 1) { ComplexType = new ComplexType("b", 2) };
                 var target = new WithComplexProperty("c", 3) { ComplexType = new ComplexType("d", 4) };
-                using (PropertySynchronizer.Create(source, target, ReferenceHandling.Reference))
+                using (PropertySynchronizer.Create(source, target, ReferenceHandling.References))
                 {
                     Assert.AreEqual("a", source.Name);
                     Assert.AreEqual("a", target.Name);
@@ -253,6 +253,7 @@
                 var excluded = new[] { typeof(WithComplexProperty).GetProperty(nameof(WithComplexProperty.Name)) };
                 var settings = new CopyPropertiesSettings(
                     excluded,
+                    null,
                     Constants.DefaultPropertyBindingFlags,
                     ReferenceHandling.Structural);
                 using (PropertySynchronizer.Create(source, target, settings))
@@ -421,13 +422,27 @@
             [Test]
             public void WithComplexPropertyThrowsWithoutReferenceHandling()
             {
+                var expected =
+    "Copy.PropertyValues(x, y) failed.\r\n" +
+    "The property WithComplexProperty.ComplexType is not supported.\r\n" +
+    "The property is of type ComplexType.\r\n" +
+    "Solve the problem by any of:\r\n" +
+    "* Make ComplexType immutable or use an immutable type. For immutable types the following must hold:\r\n" +
+    "  - Must be a sealed class or a struct.\r\n" +
+    "  - All fields and properties must be readonly.\r\n" +
+    "  - All field and property types must be immutable.\r\n" +
+    "  - All indexers must be readonly.\r\n" +
+    "  - Event fields are ignored.\r\n" +
+    "* Use CopyPropertiesSettings and specify how copying is performed:\r\n" +
+    "  - ReferenceHandling.Structural means that a deep copy is performed.\r\n" +
+    "  - ReferenceHandling.References means that references are copied.\r\n" +
+    "  - Exclude the type WithComplexProperty.\r\n" +
+    "  - Exclude the property WithComplexProperty.ComplexType.\r\n";
                 var source = new WithComplexProperty();
                 var target = new WithComplexProperty();
                 var exception = Assert.Throws<NotSupportedException>(() => PropertySynchronizer.Create(source, target));
-                var expectedMessage = "The property WithComplexProperty.ComplexType is not of a supported type.\r\n" +
-                                      "Expected struct or string but was: ComplexType\r\n" +
-                                      "Specify ReferenceHandling if you want to copy a graph.\r\n";
-                Assert.AreEqual(expectedMessage, exception.Message);
+
+                Assert.AreEqual(expected, exception.Message);
             }
         }
     }

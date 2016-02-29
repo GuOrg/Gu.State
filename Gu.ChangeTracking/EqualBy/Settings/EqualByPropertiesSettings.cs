@@ -1,6 +1,7 @@
 ﻿namespace Gu.ChangeTracking
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
@@ -8,7 +9,7 @@
     public class EqualByPropertiesSettings : EqualBySettings, IEqualByPropertiesSettings
     {
         private readonly HashSet<PropertyInfo> ignoredProperties;
-        private static readonly Dictionary<BindingFlagsAndReferenceHandling, EqualByPropertiesSettings> Cache = new Dictionary<BindingFlagsAndReferenceHandling, EqualByPropertiesSettings>();
+        private static readonly ConcurrentDictionary<BindingFlagsAndReferenceHandling, EqualByPropertiesSettings> Cache = new ConcurrentDictionary<BindingFlagsAndReferenceHandling, EqualByPropertiesSettings>();
 
         public EqualByPropertiesSettings(Type type, string[] ignoredProperties, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
             : this(type?.GetIgnoreProperties(bindingFlags, ignoredProperties), bindingFlags, referenceHandling)
@@ -50,15 +51,7 @@
         public static EqualByPropertiesSettings GetOrCreate(BindingFlags bindingFlags, ReferenceHandling referenceHandling)
         {
             var key = new BindingFlagsAndReferenceHandling(bindingFlags, referenceHandling);
-            EqualByPropertiesSettings settings;
-            if (Cache.TryGetValue(key, out settings))
-            {
-                return settings;
-            }
-
-            settings = new EqualByPropertiesSettings(null, bindingFlags, referenceHandling);
-            Cache[key] = settings;
-            return settings;
+            return Cache.GetOrAdd(key, x => new EqualByPropertiesSettings(null, bindingFlags, referenceHandling));
         }
 
         public bool IsIgnoringProperty(PropertyInfo propertyInfo)

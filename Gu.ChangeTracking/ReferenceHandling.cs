@@ -3,7 +3,7 @@ namespace Gu.ChangeTracking
     public enum ReferenceHandling
     {
         Throw,
-        Reference,
+        References,
         Structural
     }
 }

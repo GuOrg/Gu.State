@@ -2,86 +2,23 @@
 {
     using System;
     using System.Collections;
-    using System.Runtime.CompilerServices;
+    using System.Reflection;
     using System.Text;
 
     public static partial class Copy
     {
-        private static void SyncLists<T>(IList sourceList, IList targetList, Action<object, object, T> syncItem, T settings)
-            where T : CopySettings
-        {
-            for (int i = 0; i < sourceList.Count; i++)
-            {
-                var sv = sourceList[i];
-                if (sv == null)
-                {
-                    SetItem(targetList, i, null);
-                    continue;
-                }
-
-                if (!IsCopyableType(sv.GetType()))
-                {
-                    var tv = targetList.Count > i ? targetList[i] : null;
-                    switch (settings.ReferenceHandling)
-                    {
-                        case ReferenceHandling.Reference:
-                            if (ReferenceEquals(sv, tv))
-                            {
-                                continue;
-                            }
-
-                            SetItem(targetList, i, sv);
-                            continue;
-                        case ReferenceHandling.Structural:
-                            if (tv == null)
-                            {
-                                tv = CreateInstance(sv);
-                                SetItem(targetList, i, tv);
-                            }
-
-                            syncItem(sv, tv, settings);
-                            continue;
-                        case ReferenceHandling.Throw:
-                            var message = $"Copy.{nameof(PropertyValues)}(x, y) does not support copying the type {sourceList.GetType().GetItemType().PrettyName()} without {typeof(ReferenceHandling).Name}\r\n" +
-                                          $"{typeof(ReferenceHandling).Name} tells how comparison of referance types are made\r\n" +
-                                          $"- {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Structural)} means that all property values in the graph are copied from source to target.\r\n" +
-                                          $"- {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Reference)} copies references.";
-                            throw new NotSupportedException(message);
-                        default:
-                            throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);
-                    }
-                }
-                else
-                {
-                    SetItem(targetList, i, sv);
-                    continue;
-                }
-            }
-
-            while (targetList.Count > sourceList.Count)
-            {
-                targetList.RemoveAt(targetList.Count - 1);
-            }
-        }
-
-        private static void SetItem(IList targetList, int index, object item)
-        {
-            if (targetList.Count > index)
-            {
-                targetList[index] = item;
-            }
-            else
-            {
-                targetList.Insert(index, item);
-            }
-        }
-
         internal static bool IsCopyableType(Type type)
         {
-            return type.IsValueType || type == typeof(string);
+            return type.IsImmutable();
         }
 
-        internal static object CreateInstance(object sourceValue)
+        internal static bool IsCopyableCollectionType(Type type)
+        {
+            return typeof(IList).IsAssignableFrom(type) || typeof(IDictionary).IsAssignableFrom(type);
+        }
+
+        internal static object CreateInstance<T>(object sourceValue, MemberInfo member)
+            where T : CopySettings
         {
             if (sourceValue == null)
             {
@@ -109,14 +46,13 @@
             catch (Exception e)
             {
                 var errorBuilder = new StringBuilder();
-                errorBuilder.AppendLine($"{typeof(Activator).Name}.{nameof(Activator.CreateInstance)} failed for type {sourceValue.GetType().PrettyName()}.")
+                errorBuilder.AppendCopyFailed<T>();
+                errorBuilder.AppendLine($"{typeof(Activator).Name}.{nameof(Activator.CreateInstance)} failed for type {sourceValue.GetType() .PrettyName()}.")
                             .AppendSolveTheProblemBy()
-                            .AppendLine($"* Add a parameterless constructor to {type.PrettyName()}")
-                            .AppendSuggestImmutableType(type)
-                            .AppendLine($"* Provide {typeof(CopySettings).Name} and specify either or both of:")
-                            .AppendLine("  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Reference)}")
-                            .AppendLine("  - Exclude the member or type if feasible");
-                throw new NotSupportedException(errorBuilder.ToString(), e);
+                            .AppendLine($"* Add a parameterless constructor to {type.PrettyName()}, can be private.")
+                            .AppendSuggestCopySettings<T>(type, member);
+                var message = errorBuilder.ToString();
+                throw new NotSupportedException(message, e);
             }
         }
     }

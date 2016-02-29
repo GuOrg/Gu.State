@@ -4,11 +4,15 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.Specialized;
+    using System.Diagnostics;
     using System.Linq;
+    using System.Reflection;
     using System.Text;
 
     internal static class ThrowHelper
     {
+        private static readonly string ThereIsABugInTheLibrary = "There is a bug in the library as it:";
+
         internal static StringBuilder AppendCreateFailed<T>(this StringBuilder messageBuilder, PropertyPath path)
         {
             if (path.Path.Count == 0)
@@ -19,6 +23,15 @@
             var line = path.Path.OfType<IndexItem>().Any(x => x.Index != null)
                 ? $"Create {typeof(T).PrettyName()} failed for item: {path.PathString}."
                 : $"Create {typeof(T).PrettyName()} failed for property: {path.PathString}.";
+            return messageBuilder.AppendLine(line);
+        }
+
+        internal static StringBuilder AppendCopyFailed<T>(this StringBuilder messageBuilder)
+            where T : CopySettings
+        {
+            var line = typeof(T) == typeof(CopyFieldsSettings)
+                ? $"Copy.{nameof(Copy.FieldValues)}(x, y) failed."
+                : $"Copy.{nameof(Copy.PropertyValues)}(x, y) failed.";
             return messageBuilder.AppendLine(line);
         }
 
@@ -92,12 +105,42 @@
             return messageBuilder.AppendLine($"    Note that this means that the {typeof(ChangeTracker).Name} does not track changes so you are responsible for any tracking needed.");
         }
 
+        internal static StringBuilder AppendSuggestCopySettings<T>(this StringBuilder messageBuilder, Type type, MemberInfo member)
+            where T : CopySettings
+        {
+            messageBuilder.AppendLine($"* Use {typeof(T).Name} and specify how copying is performed:");
+            messageBuilder.AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Structural)} means that a deep copy is performed.");
+            messageBuilder.AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.References)} means that references are copied.");
+            messageBuilder.AppendLine($"  - Exclude the type {type.PrettyName()}.");
+            if (member != null)
+            {
+                if (typeof(T) == typeof(CopyFieldsSettings))
+                {
+                    var indexer = member as PropertyInfo;
+                    if (indexer == null)
+                    {
+                        messageBuilder.AppendLine($"  - Exclude the field {type.PrettyName()}.{member.Name}.");
+                    }
+                    else
+                    {
+                        Debug.Assert(indexer.GetIndexParameters().Length > 0, "Must be an indexer");
+                    }
+                }
+                else if (typeof(T) == typeof(CopyPropertiesSettings))
+                {
+                    messageBuilder.AppendLine($"  - Exclude the property {type.PrettyName()}.{member.Name}.");
+                }
+            }
+
+            return messageBuilder;
+        }
+
         internal static StringBuilder AppendSuggestEqualBySettings<T>(this StringBuilder messageBuilder)
             where T : EqualBySettings
         {
             messageBuilder.AppendLine($"* Use {typeof(T).Name} to specify {typeof(ReferenceHandling).Name}");
             messageBuilder.AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Structural)} means that a deep equals is performed.");
-            messageBuilder.AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Reference)} means that reference equality is used.");
+            messageBuilder.AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.References)} means that reference equality is used.");
             return messageBuilder;
         }
 
@@ -117,6 +160,12 @@
                 ? $"* Use a type that implements {interfaceName} instead of {sourceType.PrettyName()}."
                 : $"* Implement {interfaceName} for {sourceType.PrettyName()} or use a type that does.";
             return messageBuilder.AppendLine(line);
+        }
+
+        internal static void ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<T1, T2>(string parameterName)
+        {
+            var message = $"{ThrowHelper.ThereIsABugInTheLibrary}\r\n" +
+                          $"Expected {nameof(parameterName)} to be either of {typeof(T1).PrettyName()} or {typeof(T2).PrettyName()}";
         }
     }
 }

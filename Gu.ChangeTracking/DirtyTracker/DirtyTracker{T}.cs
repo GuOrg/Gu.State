@@ -386,7 +386,7 @@
                     case ReferenceHandling.Throw:
                         var message = $"{typeof(DirtyTracker).Name} does not support tracking an item of type {xv.GetType().Name}. Specify {typeof(ReferenceHandling).Name} if you want to track a graph";
                         throw new NotSupportedException(message);
-                    case ReferenceHandling.Reference:
+                    case ReferenceHandling.References:
                         return ReferenceEquals(xv, yv)
                                    ? (IDirtyTrackerNode)NeverDirtyNode.For(ItemDirtyTracker.IndexerProperty)
                                    : AlwaysDirtyNode.For(ItemDirtyTracker.IndexerProperty);
@@ -542,7 +542,7 @@
                         var message = $"{typeof(DirtyTracker).Name} does not support tracking an item of type {xv.GetType().Name}.\r\n" +
                                       $" Specify {typeof(ReferenceHandling).Name} if you want to track a graph";
                         throw new NotSupportedException(message);
-                    case ReferenceHandling.Reference:
+                    case ReferenceHandling.References:
                         return ReferenceEquals(xv, yv)
                                    ? (IDirtyTrackerNode)NeverDirtyNode.For(ItemDirtyTracker.IndexerProperty)
                                    : AlwaysDirtyNode.For(ItemDirtyTracker.IndexerProperty);

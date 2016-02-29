@@ -1,19 +1,15 @@
 ﻿namespace Gu.ChangeTracking
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
 
-    public class EqualByFieldsSettings : EqualBySettings
+    public class EqualByFieldsSettings : EqualBySettings, IEqualByFieldsSettings
     {
-        private static readonly Dictionary<BindingFlagsAndReferenceHandling, EqualByFieldsSettings> Cache = new Dictionary<BindingFlagsAndReferenceHandling, EqualByFieldsSettings>();
+        private static readonly ConcurrentDictionary<BindingFlagsAndReferenceHandling, EqualByFieldsSettings> Cache = new ConcurrentDictionary<BindingFlagsAndReferenceHandling, EqualByFieldsSettings>();
         private readonly HashSet<FieldInfo> ignoredFields;
-
-        public EqualByFieldsSettings(Type type, string[] ignoredProperties, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
-            : this(type?.GetIgnoreFields(bindingFlags, ignoredProperties), bindingFlags, referenceHandling)
-        {
-        }
 
         public EqualByFieldsSettings(IEnumerable<FieldInfo> ignoredFields, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
             : base(bindingFlags, referenceHandling)
@@ -50,15 +46,7 @@
         public static EqualByFieldsSettings GetOrCreate(BindingFlags bindingFlags, ReferenceHandling referenceHandling)
         {
             var key = new BindingFlagsAndReferenceHandling(bindingFlags, referenceHandling);
-            EqualByFieldsSettings settings;
-            if (Cache.TryGetValue(key, out settings))
-            {
-                return settings;
-            }
-
-            settings = new EqualByFieldsSettings(null, bindingFlags, referenceHandling);
-            Cache[key] = settings;
-            return settings;
+            return Cache.GetOrAdd(key, x => new EqualByFieldsSettings(null, bindingFlags, referenceHandling));
         }
 
         public bool IsIgnoringField(FieldInfo fieldInfo)
