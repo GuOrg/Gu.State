@@ -4,8 +4,6 @@ namespace Gu.ChangeTracking.Tests
     using System.ComponentModel;
     using System.Linq;
 
-    using Gu.ChangeTracking.Tests.DirtyTrackerStubs;
-
     using NUnit.Framework;
 
     using ComplexType = Gu.ChangeTracking.Tests.ChangeTrackerStubs.ComplexType;

@@ -72,7 +72,6 @@
     <Compile Include="CopyTests\ThrowTests.cs" />
     <Compile Include="CopyTests\VerifyTests.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerSettingsTests.cs" />
-    <Compile Include="DirtyTracker\DirtyTrackerStubs\WithGetReadOnlyPropertySealed.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerTypes.cs" />
     <Compile Include="EqualByTests\EqualByTypes.cs" />
     <Compile Include="EqualByTests\FieldValues\EqualByFieldsSettingsTests.cs" />
@@ -85,9 +84,6 @@
     <Compile Include="Internals\Stubs\WithReadonlyFieldSealed.cs" />
     <Compile Include="Internals\IgnoredTypesTests.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\WithGetReadOnlyPropertySealed.cs" />
-    <Compile Include="DirtyTracker\DirtyTrackerStubs\WithGetReadOnlyPropertyStruct.cs" />
-    <Compile Include="DirtyTracker\DirtyTrackerStubs\WithImmutableProperty.cs" />
-    <Compile Include="DirtyTracker\DirtyTrackerStubs\WithObservableCollectionProperties.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerTests.Immutable.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerTests.WithObservableCollectionProperty.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerTests.ObservableCollectionOfComplexType.cs" />
@@ -111,11 +107,8 @@
     <Compile Include="PropertySynchronizer\PropertySynchronizerTests.ObservableCollectionOfComplexTypes.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\ComplexType.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\WithComplexProperty.cs" />
-    <Compile Include="DirtyTracker\DirtyTrackerStubs\ComplexType.cs" />
-    <Compile Include="DirtyTracker\DirtyTrackerStubs\WithComplexProperty.cs" />
     <Compile Include="CopyTests\PropertyValues\Classes.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerTests.Complex.cs" />
-    <Compile Include="DirtyTracker\DirtyTrackerStubs\SimpleDirtyTrackClass.cs" />
     <Compile Include="EqualByTests\EqualByTestsShared.cs" />
     <Compile Include="EqualByTests\PropertyValues\EqualByTests.PropertyValues.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\WithCalculatedProperty.cs" />

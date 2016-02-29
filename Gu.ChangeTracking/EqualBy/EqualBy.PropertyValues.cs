@@ -58,7 +58,7 @@
                 var type = x?.GetType() ?? y?.GetType() ?? typeof(T);
                 if (typeof(IEnumerable).IsAssignableFrom(type))
                 {
-                    ThrowCannotCompareType(type, settings);
+                    Throw.CannotCompareType(type, settings);
                 }
 
                 var properties = type.GetProperties(settings.BindingFlags);
@@ -71,7 +71,7 @@
 
                     if (!propertyInfo.PropertyType.IsEquatable())
                     {
-                        ThrowCannotCompareMember(type, propertyInfo);
+                        Throw.CannotCompareMember(type, propertyInfo);
                     }
                 }
             }
@@ -114,7 +114,7 @@
 
                 if (!IsEquatable(propertyInfo.PropertyType) && settings.ReferenceHandling == ReferenceHandling.Throw)
                 {
-                    ThrowCannotCompareMember(x.GetType(), propertyInfo);
+                    Throw.CannotCompareMember(x.GetType(), propertyInfo);
                 }
 
                 var xv = propertyInfo.GetValue(x);
@@ -176,7 +176,7 @@
 
                         return false;
                     case ReferenceHandling.Throw:
-                        ThrowCannotCompareType(x.GetType(), settings);
+                        Throw.CannotCompareType(x.GetType(), settings);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);

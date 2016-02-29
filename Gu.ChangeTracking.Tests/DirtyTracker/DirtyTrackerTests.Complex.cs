@@ -3,8 +3,6 @@
     using System;
     using System.Collections.Generic;
 
-    using Gu.ChangeTracking.Tests.DirtyTrackerStubs;
-
     using NUnit.Framework;
 
     public partial class DirtyTrackerTests
