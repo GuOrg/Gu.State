@@ -1,9 +1,12 @@
-﻿namespace Gu.ChangeTracking.Tests
+﻿namespace Gu.ChangeTracking.Tests.PropertyValues
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Linq;
     using System.Reflection;
+
     using NUnit.Framework;
 
     public class CopyPropertiesSettingsTests
@@ -14,7 +17,7 @@
             var type = typeof(ComplexType);
             var nameProperty = type.GetProperty(nameof(ComplexType.Name));
             var valueProperty = type.GetProperty(nameof(ComplexType.Value));
-            var settings = new CopyPropertiesSettings(type, new[] { nameProperty.Name }, Constants.DefaultPropertyBindingFlags, ReferenceHandling.Throw);
+            var settings = CopyPropertiesSettings.Create(type, new[] { nameProperty.Name }, Constants.DefaultPropertyBindingFlags, ReferenceHandling.Throw);
             Assert.AreEqual(true, settings.IsIgnoringProperty(nameProperty));
             Assert.AreEqual(false, settings.IsIgnoringProperty(valueProperty));
         }
@@ -22,19 +25,24 @@
         [Test]
         public void IgnoresNull()
         {
-            var settings = new CopyPropertiesSettings(null, Constants.DefaultPropertyBindingFlags, ReferenceHandling.Throw);
+            var settings = CopyPropertiesSettings.GetOrCreate(Constants.DefaultPropertyBindingFlags, ReferenceHandling.Throw);
             Assert.AreEqual(true, settings.IsIgnoringProperty(null));
         }
 
-        [Test]
-        public void IgnoresIndexer()
+        [TestCase(typeof(List<int>))]
+        [TestCase(typeof(int[]))]
+        [TestCase(typeof(Collection<int>))]
+        [TestCase(typeof(ObservableCollection<int>))]
+        [TestCase(typeof(Dictionary<int, int>))]
+        public void IgnoresCollectionProperties(Type type)
         {
-            var type = typeof(List<int>);
-            var countProperty = type.GetProperty(nameof(IList.Count));
-            var indexerProperty = type.GetProperties().Single(x => x.GetIndexParameters().Length > 0);
-            var settings = new CopyPropertiesSettings(null, Constants.DefaultPropertyBindingFlags, ReferenceHandling.Throw);
-            Assert.AreEqual(false, settings.IsIgnoringProperty(countProperty));
-            Assert.AreEqual(true, settings.IsIgnoringProperty(indexerProperty));
+            var settings = CopyPropertiesSettings.GetOrCreate(ReferenceHandling.Structural);
+            var properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            CollectionAssert.IsNotEmpty(properties);
+            foreach (var propertyInfo in properties)
+            {
+                Assert.AreEqual(true, settings.IsIgnoringProperty(propertyInfo));
+            }
         }
 
         [TestCase(BindingFlags.Public, ReferenceHandling.Throw)]

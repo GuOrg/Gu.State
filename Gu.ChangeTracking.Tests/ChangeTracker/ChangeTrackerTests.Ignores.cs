@@ -1,8 +1,6 @@
 ﻿namespace Gu.ChangeTracking.Tests
 {
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Linq;
 
     using Gu.ChangeTracking.Tests.ChangeTrackerStubs;
     using NUnit.Framework;

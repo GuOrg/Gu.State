@@ -32,7 +32,7 @@ namespace Gu.ChangeTracking
         }
 
         public PropertySynchronizer(T source, T target, BindingFlags bindingFlags, params string[] ignoreProperties)
-            : this(source, target, new CopyPropertiesSettings(source?.GetType(), ignoreProperties, bindingFlags, ReferenceHandling.Throw))
+            : this(source, target, CopyPropertiesSettings.Create(source.GetType(), ignoreProperties, bindingFlags, ReferenceHandling.Throw))
         {
         }
 
@@ -229,7 +229,7 @@ namespace Gu.ChangeTracking
                 var targetColChanged = this.target as INotifyCollectionChanged;
                 if (targetColChanged != null)
                 {
-                    targetColChanged.CollectionChanged += OnTargetCollectionChanged;
+                    targetColChanged.CollectionChanged += this.OnTargetCollectionChanged;
                 }
             }
 
@@ -277,7 +277,7 @@ namespace Gu.ChangeTracking
                                 }
                                 else
                                 {
-                                    tv = Copy.CreateInstance(sv);
+                                    tv = Copy.CreateInstance<CopyPropertiesSettings>(sv, null);
                                     Copy.PropertyValues(sv, tv, this.settings);
                                 }
                             }

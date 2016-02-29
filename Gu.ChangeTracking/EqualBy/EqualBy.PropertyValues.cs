@@ -3,7 +3,6 @@
     using System;
     using System.Collections;
     using System.Reflection;
-    using System.Text;
 
     public static partial class EqualBy
     {
@@ -48,7 +47,7 @@
 
         public static bool PropertyValues<T>(T x, T y, BindingFlags bindingFlags, params string[] excludedProperties)
         {
-            var settings = EqualByPropertiesSettings.Create(x,y, bindingFlags, ReferenceHandling.Throw, excludedProperties);
+            var settings = EqualByPropertiesSettings.Create(x, y, bindingFlags, ReferenceHandling.Throw, excludedProperties);
             return PropertyValues(x, y, settings);
         }
 
@@ -59,7 +58,7 @@
                 var type = x?.GetType() ?? y?.GetType() ?? typeof(T);
                 if (typeof(IEnumerable).IsAssignableFrom(type))
                 {
-                    ThrowCannotComparePropertiesForType(type);
+                    ThrowCannotCompareType(type, settings);
                 }
 
                 var properties = type.GetProperties(settings.BindingFlags);
@@ -72,7 +71,7 @@
 
                     if (!propertyInfo.PropertyType.IsEquatable())
                     {
-                        ThrowCannotCompareProperty(type, propertyInfo);
+                        ThrowCannotCompareMember(type, propertyInfo);
                     }
                 }
             }
@@ -115,7 +114,7 @@
 
                 if (!IsEquatable(propertyInfo.PropertyType) && settings.ReferenceHandling == ReferenceHandling.Throw)
                 {
-                    ThrowCannotCompareProperty(x.GetType(), propertyInfo);
+                    ThrowCannotCompareMember(x.GetType(), propertyInfo);
                 }
 
                 var xv = propertyInfo.GetValue(x);
@@ -162,7 +161,7 @@
             {
                 switch (settings.ReferenceHandling)
                 {
-                    case ReferenceHandling.Reference:
+                    case ReferenceHandling.References:
                         if (ReferenceEquals(x, y))
                         {
                             return true;
@@ -177,7 +176,7 @@
 
                         return false;
                     case ReferenceHandling.Throw:
-                        ThrowCannotComparePropertiesForType(x.GetType());
+                        ThrowCannotCompareType(x.GetType(), settings);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);
@@ -185,26 +184,6 @@
             }
 
             return true;
-        }
-
-        private static void ThrowCannotCompareProperty(Type type, PropertyInfo propertyInfo)
-        {
-            var errorBuilder = new StringBuilder();
-            errorBuilder.AppendLine($"EqualBy.{nameof(PropertyValues)}(x, y) does not support comparing the property {type.PrettyName()}.{propertyInfo.Name} of type {propertyInfo.PropertyType.PrettyName()}.")
-                        .AppendSolveTheProblemBy()
-                        .AppendSuggestImplementIEquatable(propertyInfo.PropertyType)
-                        .AppendSuggestEqualBySettings<EqualByFieldsSettings>();
-            throw new NotSupportedException(errorBuilder.ToString());
-        }
-
-        private static void ThrowCannotComparePropertiesForType(Type type)
-        {
-            var errorBuilder = new StringBuilder();
-            errorBuilder.AppendLine($"EqualBy.{nameof(PropertyValues)}(x, y) does not support comparing the type {type.PrettyName()}.")
-                        .AppendSolveTheProblemBy()
-                        .AppendSuggestImplementIEquatable(type)
-                        .AppendSuggestEqualBySettings<EqualByPropertiesSettings>();
-            throw new NotSupportedException(errorBuilder.ToString());
         }
     }
 }

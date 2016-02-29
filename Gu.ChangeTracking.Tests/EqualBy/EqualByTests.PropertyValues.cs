@@ -29,7 +29,7 @@
             {
                 var x = new WithComplexValue { Name = "a", Value = 1, ComplexValue = new ComplexType { Name = "c", Value = 2 } };
                 var y = new WithComplexValue { Name = "a", Value = 1, ComplexValue = new ComplexType { Name = "c", Value = 2 } };
-                Assert.AreEqual(false, EqualBy.PropertyValues(x, y, ReferenceHandling.Reference));
+                Assert.AreEqual(false, EqualBy.PropertyValues(x, y, ReferenceHandling.References));
                 x.ComplexValue = y.ComplexValue;
                 Assert.AreEqual(true, EqualBy.PropertyValues(x, y, ReferenceHandling.Structural));
             }

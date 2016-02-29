@@ -4,7 +4,6 @@ namespace Gu.ChangeTracking.Tests
     using System.ComponentModel;
     using System.Linq;
 
-    using Gu.ChangeTracking.Tests.ChangeTrackerStubs;
     using Gu.ChangeTracking.Tests.DirtyTrackerStubs;
 
     using NUnit.Framework;

@@ -1,17 +1,19 @@
 ﻿namespace Gu.ChangeTracking
 {
+    using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
 
-    public class CopyFieldsSettings : CopySettings
+    public class CopyFieldsSettings : CopySettings, IEqualByFieldsSettings
     {
-        private static readonly Dictionary<BindingFlagsAndReferenceHandling, CopyFieldsSettings> Cache = new Dictionary<BindingFlagsAndReferenceHandling, CopyFieldsSettings>();
+        private static readonly ConcurrentDictionary<BindingFlagsAndReferenceHandling, CopyFieldsSettings> Cache = new ConcurrentDictionary<BindingFlagsAndReferenceHandling, CopyFieldsSettings>();
 
         private readonly HashSet<FieldInfo> ignoredFields;
 
-        public CopyFieldsSettings(IEnumerable<FieldInfo> ignoredFields, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
-            : base(bindingFlags, referenceHandling)
+        public CopyFieldsSettings(IEnumerable<FieldInfo> ignoredFields, IEnumerable<Type> ignoredTypes, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
+            : base(bindingFlags, referenceHandling, ignoredTypes)
         {
             this.ignoredFields = ignoredFields != null
                                      ? new HashSet<FieldInfo>(ignoredFields)
@@ -23,13 +25,27 @@
         public static CopyFieldsSettings Create<T>(T source, T target, BindingFlags bindingFlags, ReferenceHandling referenceHandling, string[] excludedFields)
         {
             var type = source?.GetType() ?? target?.GetType() ?? typeof(T);
+            return Create(type, bindingFlags, referenceHandling, excludedFields);
+        }
+
+        public static CopyFieldsSettings Create<T>(BindingFlags bindingFlags, ReferenceHandling referenceHandling, string[] excludedFields)
+        {
+            return Create(typeof(T), bindingFlags, referenceHandling, excludedFields);
+        }
+
+        public static CopyFieldsSettings Create(
+            Type type,
+            BindingFlags bindingFlags,
+            ReferenceHandling referenceHandling,
+            string[] excludedFields)
+        {
             var ignoreFields = type.GetIgnoreFields(bindingFlags, excludedFields);
             if (ignoreFields == null || ignoreFields.Count == 0)
             {
                 return GetOrCreate(bindingFlags, referenceHandling);
             }
 
-            return new CopyFieldsSettings(ignoreFields, bindingFlags, referenceHandling);
+            return new CopyFieldsSettings(ignoreFields, null, bindingFlags, referenceHandling);
         }
 
         public static CopyFieldsSettings GetOrCreate(BindingFlags bindingFlags)
@@ -45,30 +61,22 @@
         public static CopyFieldsSettings GetOrCreate(BindingFlags bindingFlags, ReferenceHandling referenceHandling)
         {
             var key = new BindingFlagsAndReferenceHandling(bindingFlags, referenceHandling);
-            CopyFieldsSettings settings;
-            if (Cache.TryGetValue(key, out settings))
-            {
-                return settings;
-            }
-
-            settings = new CopyFieldsSettings(null, bindingFlags, referenceHandling);
-            Cache[key] = settings;
-            return settings;
+            return Cache.GetOrAdd(key, x => new CopyFieldsSettings(null, null, bindingFlags, referenceHandling));
         }
 
         public bool IsIgnoringField(FieldInfo fieldInfo)
         {
-            if (fieldInfo.IsEventField())
+            if (fieldInfo == null || fieldInfo.IsEventField())
             {
                 return true;
             }
 
-            if (this.ignoredFields == null)
+            if (this.IsIgnoringType(fieldInfo.DeclaringType))
             {
-                return false;
+                return true;
             }
 
-            return this.ignoredFields.Contains(fieldInfo);
+            return this.ignoredFields?.Contains(fieldInfo) == true;
         }
     }
 }

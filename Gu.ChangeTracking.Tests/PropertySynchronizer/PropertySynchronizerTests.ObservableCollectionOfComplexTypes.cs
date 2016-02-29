@@ -1,6 +1,5 @@
 ﻿namespace Gu.ChangeTracking.Tests
 {
-    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
 
@@ -47,7 +46,7 @@
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
                 var target = new ObservableCollection<ComplexType>();
-                using (PropertySynchronizer.Create(source, target, ReferenceHandling.Reference))
+                using (PropertySynchronizer.Create(source, target, ReferenceHandling.References))
                 {
                     var expected = new[] { new ComplexType("a", 1), new ComplexType("b", 2) };
                     CollectionAssert.AreEqual(expected, source, ComplexType.Comparer);
@@ -73,7 +72,7 @@
             }
 
             [TestCase(ReferenceHandling.Structural)]
-            [TestCase(ReferenceHandling.Reference)]
+            [TestCase(ReferenceHandling.References)]
             public void Add(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<ComplexType>();
@@ -93,7 +92,7 @@
             }
 
             [TestCase(ReferenceHandling.Structural)]
-            [TestCase(ReferenceHandling.Reference)]
+            [TestCase(ReferenceHandling.References)]
             public void Remove(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
@@ -111,7 +110,7 @@
             }
 
             [TestCase(ReferenceHandling.Structural)]
-            [TestCase(ReferenceHandling.Reference)]
+            [TestCase(ReferenceHandling.References)]
             public void Insert(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
@@ -136,7 +135,7 @@
             }
 
             [TestCase(ReferenceHandling.Structural)]
-            [TestCase(ReferenceHandling.Reference)]
+            [TestCase(ReferenceHandling.References)]
             public void Move(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
@@ -156,7 +155,7 @@
             }
 
             [TestCase(ReferenceHandling.Structural)]
-            [TestCase(ReferenceHandling.Reference)]
+            [TestCase(ReferenceHandling.References)]
             public void Replace(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };

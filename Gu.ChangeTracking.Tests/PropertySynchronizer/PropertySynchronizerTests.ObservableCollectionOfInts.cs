@@ -10,7 +10,7 @@
         public class ObservableCollectionOfInts
         {
             [TestCase(ReferenceHandling.Structural)]
-            [TestCase(ReferenceHandling.Reference)]
+            [TestCase(ReferenceHandling.References)]
             public void CreateAndDispose(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<int> { 1, 2 };
@@ -35,7 +35,7 @@
             }
 
             [TestCase(ReferenceHandling.Structural)]
-            [TestCase(ReferenceHandling.Reference)]
+            [TestCase(ReferenceHandling.References)]
             public void Add(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<int>();
@@ -53,7 +53,7 @@
             }
 
             [TestCase(ReferenceHandling.Structural)]
-            [TestCase(ReferenceHandling.Reference)]
+            [TestCase(ReferenceHandling.References)]
             public void Remove(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<int> { 1, 2 };
@@ -71,7 +71,7 @@
             }
 
             [TestCase(ReferenceHandling.Structural)]
-            [TestCase(ReferenceHandling.Reference)]
+            [TestCase(ReferenceHandling.References)]
             public void Insert(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<int> { 1, 2 };
@@ -85,7 +85,7 @@
             }
 
             [TestCase(ReferenceHandling.Structural)]
-            [TestCase(ReferenceHandling.Reference)]
+            [TestCase(ReferenceHandling.References)]
             public void Move(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<int> { 1, 2 };
@@ -103,7 +103,7 @@
             }
 
             [TestCase(ReferenceHandling.Structural)]
-            [TestCase(ReferenceHandling.Reference)]
+            [TestCase(ReferenceHandling.References)]
             public void Replace(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<int> { 1, 2 };

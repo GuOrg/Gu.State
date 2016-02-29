@@ -67,6 +67,11 @@
         /// </summary>
         internal static string PrettyName(this Type type)
         {
+            if (type == null)
+            {
+                return "null";
+            }
+
             string alias;
             if (Aliases.TryGetValue(type, out alias))
             {

@@ -41,7 +41,11 @@
     <Compile Include="ChangeTracker\ChangeTracker.cs" />
     <Compile Include="ChangeTracker\Contracts\ISpecialCopyProperty.cs" />
     <Compile Include="ChangeTracker\PropertyChangeTracker.cs" />
+    <Compile Include="Copy\Copy.Collection.cs" />
     <Compile Include="Copy\Copy.Shared.cs" />
+    <Compile Include="Copy\Copy.Throw.cs" />
+    <Compile Include="Copy\Copy.Verify.cs" />
+    <Compile Include="Copy\Copy.VerifyCanCopyFieldValues.cs" />
     <Compile Include="Copy\Settings\CopyFieldsSettings.cs" />
     <Compile Include="Copy\Settings\CopyPropertiesSettings.cs" />
     <Compile Include="Copy\Settings\CopySettings.cs" />
@@ -51,10 +55,13 @@
     <Compile Include="DirtyTracker\Internals\ItemDirtyTracker.cs" />
     <Compile Include="DirtyTracker\Internals\NeverDirtyNode.cs" />
     <Compile Include="DirtyTracker\Internals\PropertyDirtyTracker.cs" />
+    <Compile Include="EqualBy\EqualBy.Throw.cs" />
+    <Compile Include="EqualBy\Settings\IEqualByFieldsSettings.cs" />
     <Compile Include="EqualBy\Settings\IEqualByPropertiesSettings.cs" />
     <Compile Include="EqualBy\Settings\IEqualBySettings.cs" />
     <Compile Include="Internals\BindingFlagsAndReferenceHandling.cs" />
     <Compile Include="Internals\ConcurrentSet.cs" />
+    <Compile Include="Internals\IgnoredTypes.cs" />
     <Compile Include="Internals\ItemCollection.cs" />
     <Compile Include="Internals\PairIterator.cs" />
     <Compile Include="Internals\PropertyCollection.cs" />
@@ -64,6 +71,7 @@
     <Compile Include="Internals\PropertyPath\RootItem.cs" />
     <Compile Include="Internals\ReferenceCollection.cs" />
     <Compile Include="Internals\ReferencePairCollection.cs" />
+    <Compile Include="Internals\SourceAndTargetValue.cs" />
     <Compile Include="Internals\ThrowHelper.cs" />
     <Compile Include="Internals\TypeExt.IsImmutable.cs" />
     <Compile Include="Internals\PropertyPath\PropertyPath.cs" />
@@ -100,6 +108,7 @@
     <Compile Include="ChangeTracker\Settings\TrackAs.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Copy\Copy.VerifyCanCopyPropertyValues.cs" />
     <None Include="paket.references" />
     <None Include="paket.template" />
   </ItemGroup>
