@@ -284,7 +284,7 @@
 
         public class WithListProperty<T>
         {
-            public List<T> Items { get; } = new List<T>();
+            public List<T> Items { get; set; } = new List<T>();
         }
 
         public class WithProperty<T>

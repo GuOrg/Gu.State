@@ -73,8 +73,11 @@
     <Compile Include="CopyTests\VerifyTests.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerSettingsTests.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerTypes.cs" />
+    <Compile Include="EqualByTests\ClassesTests.cs" />
     <Compile Include="EqualByTests\EqualByTypes.cs" />
+    <Compile Include="EqualByTests\FieldValues\Classes.cs" />
     <Compile Include="EqualByTests\FieldValues\EqualByFieldsSettingsTests.cs" />
+    <Compile Include="EqualByTests\PropertyValues\Classes.cs" />
     <Compile Include="EqualByTests\PropertyValues\Throws.cs" />
     <Compile Include="EqualByTests\ThrowsTests.cs" />
     <Compile Include="EqualByTests\FieldValues\Throws.cs" />
@@ -110,7 +113,7 @@
     <Compile Include="CopyTests\PropertyValues\Classes.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerTests.Complex.cs" />
     <Compile Include="EqualByTests\EqualByTestsShared.cs" />
-    <Compile Include="EqualByTests\PropertyValues\EqualByTests.PropertyValues.cs" />
+    <Compile Include="EqualByTests\PropertyValues\Classes_.PropertyValues.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\WithCalculatedProperty.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\WithObservableCollectionProperties.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\WithSimpleProperties.cs" />
@@ -127,7 +130,7 @@
     <Compile Include="ChangeTracker\ChangeTrackerStubs\IllegalType.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerStubs\Level.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerStubs\SpecialCollection.cs" />
-    <Compile Include="EqualByTests\FieldValues\EqualByTests.FieldValues.cs" />
+    <Compile Include="EqualByTests\FieldValues\Classes_.FieldValues.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerTests.ObservableCollectionOfInts.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerTests.Complex.cs" />
     <Compile Include="Settings\ChangeTrackerSettingsTests.cs" />

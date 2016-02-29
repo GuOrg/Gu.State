@@ -1,4 +1,4 @@
-namespace Gu.ChangeTracking.Tests.EqualByTests.FieldValues
+﻿namespace Gu.ChangeTracking.Tests.EqualByTests.PropertyValues
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -7,45 +7,28 @@ namespace Gu.ChangeTracking.Tests.EqualByTests.FieldValues
 
     using NUnit.Framework;
 
-    public partial class Classes
+    public partial class Classes_
     {
-        public class FieldValues
+        public class PropertyValues
         {
-            [TestCaseSource(nameof(EqualsSource))]
-            public void FieldValuesHappyPath(EqualByTestsShared.EqualsData data)
-            {
-                Assert.AreEqual(data.Equals, EqualBy.FieldValues(data.Source, data.Target));
-            }
-
-            [TestCase("1, 2, 3", "1, 2, 3", true)]
-            [TestCase("1, 2, 3", "1, 2", false)]
-            [TestCase("1, 2", "1, 2, 3", false)]
-            [TestCase("5, 2, 3", "1, 2, 3", false)]
-            public void ArrayFieldValuesStructural(string xs, string ys, bool expected)
-            {
-                var x = xs.Split(',').Select(int.Parse).ToArray();
-                var y = ys.Split(',').Select(int.Parse).ToArray();
-                Assert.AreEqual(expected, EqualBy.FieldValues(x, y, ReferenceHandling.Structural));
-            }
-
             [Test]
-            public void FieldValuesStructural()
+            public void WithComplexPropertyStructural()
             {
                 var x = new EqualByTypes.WithComplexValue { Name = "a", Value = 1, ComplexValue = new EqualByTypes.ComplexType { Name = "c", Value = 2 } };
                 var y = new EqualByTypes.WithComplexValue { Name = "a", Value = 1, ComplexValue = new EqualByTypes.ComplexType { Name = "c", Value = 2 } };
-                Assert.AreEqual(true, EqualBy.FieldValues(x, y, ReferenceHandling.Structural));
+                Assert.AreEqual(true, EqualBy.PropertyValues(x, y, ReferenceHandling.Structural));
                 x.ComplexValue.Value++;
-                Assert.AreEqual(false, EqualBy.FieldValues(x, y, ReferenceHandling.Structural));
+                Assert.AreEqual(false, EqualBy.PropertyValues(x, y, ReferenceHandling.Structural));
             }
 
             [Test]
-            public void FieldValuesReferential()
+            public void WithComplexPropertyReferential()
             {
                 var x = new EqualByTypes.WithComplexValue { Name = "a", Value = 1, ComplexValue = new EqualByTypes.ComplexType { Name = "c", Value = 2 } };
                 var y = new EqualByTypes.WithComplexValue { Name = "a", Value = 1, ComplexValue = new EqualByTypes.ComplexType { Name = "c", Value = 2 } };
-                Assert.AreEqual(false, EqualBy.FieldValues(x, y, ReferenceHandling.References));
+                Assert.AreEqual(false, EqualBy.PropertyValues(x, y, ReferenceHandling.References));
                 x.ComplexValue = y.ComplexValue;
-                Assert.AreEqual(true, EqualBy.FieldValues(x, y, ReferenceHandling.Structural));
+                Assert.AreEqual(true, EqualBy.PropertyValues(x, y, ReferenceHandling.Structural));
             }
 
             [TestCase("1, 2, 3", "1, 2, 3", true)]
@@ -56,7 +39,7 @@ namespace Gu.ChangeTracking.Tests.EqualByTests.FieldValues
             {
                 var x = xs.Split(',').Select(int.Parse);
                 var y = ys.Split(',').Select(int.Parse);
-                Assert.AreEqual(expected, EqualBy.FieldValues(x, y, ReferenceHandling.Structural));
+                Assert.AreEqual(expected, EqualBy.PropertyValues(x, y, ReferenceHandling.Structural));
             }
 
             [TestCase(0, 0, 0, 0, true)]
@@ -70,7 +53,7 @@ namespace Gu.ChangeTracking.Tests.EqualByTests.FieldValues
             {
                 var x = Enumerable.Repeat(startX, countX);
                 var y = Enumerable.Repeat(startY, countY);
-                Assert.AreEqual(expected, EqualBy.FieldValues(x, y, ReferenceHandling.Structural));
+                Assert.AreEqual(expected, EqualBy.PropertyValues(x, y, ReferenceHandling.Structural));
             }
 
             [Test]
@@ -78,18 +61,27 @@ namespace Gu.ChangeTracking.Tests.EqualByTests.FieldValues
             {
                 var x = new object[] { 1, null }.Select(z => z);
                 var y = new object[] { 1, null }.Select(z => z);
-                Assert.AreEqual(true, EqualBy.FieldValues(x, y, ReferenceHandling.Structural));
+                Assert.AreEqual(true, EqualBy.PropertyValues(x, y, ReferenceHandling.Structural));
 
                 x = new object[] { 1 }.Select(z => z);
                 y = new object[] { 1, null }.Select(z => z);
-                Assert.AreEqual(false, EqualBy.FieldValues(x, y, ReferenceHandling.Structural));
+                Assert.AreEqual(false, EqualBy.PropertyValues(x, y, ReferenceHandling.Structural));
 
                 x = new object[] { 1, null }.Select(z => z);
                 y = new object[] { 1 }.Select(z => z);
-                Assert.AreEqual(false, EqualBy.FieldValues(x, y, ReferenceHandling.Structural));
+                Assert.AreEqual(false, EqualBy.PropertyValues(x, y, ReferenceHandling.Structural));
             }
 
-            public static IReadOnlyList<EqualByTestsShared.EqualsData> EqualsSource => EqualByTestsShared.EqualsSource;
+            [TestCase("1, 2, 3", "1, 2, 3", true)]
+            [TestCase("1, 2, 3", "1, 2", false)]
+            [TestCase("1, 2", "1, 2, 3", false)]
+            [TestCase("5, 2, 3", "1, 2, 3", false)]
+            public void ArrayStructural(string xs, string ys, bool expected)
+            {
+                var x = xs.Split(',').Select(int.Parse).ToArray();
+                var y = ys.Split(',').Select(int.Parse).ToArray();
+                Assert.AreEqual(expected, EqualBy.PropertyValues(x, y, ReferenceHandling.Structural));
+            }
         }
     }
 }
