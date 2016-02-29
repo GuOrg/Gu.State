@@ -12,7 +12,7 @@
         private readonly HashSet<FieldInfo> ignoredFields;
 
         public EqualByFieldsSettings(IEnumerable<FieldInfo> ignoredFields, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
-            : base(bindingFlags, referenceHandling)
+            : base(bindingFlags, referenceHandling, null)
         {
             this.ignoredFields = ignoredFields != null
                                      ? new HashSet<FieldInfo>(ignoredFields)
@@ -52,6 +52,11 @@
         public bool IsIgnoringField(FieldInfo fieldInfo)
         {
             if (fieldInfo == null || fieldInfo.IsEventField())
+            {
+                return true;
+            }
+
+            if (this.IsIgnoringType(fieldInfo.DeclaringType))
             {
                 return true;
             }

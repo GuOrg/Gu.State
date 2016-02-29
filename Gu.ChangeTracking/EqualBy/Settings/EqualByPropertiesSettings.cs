@@ -17,7 +17,7 @@
         }
 
         public EqualByPropertiesSettings(IEnumerable<PropertyInfo> ignoredProperties, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
-            : base(bindingFlags, referenceHandling)
+            : base(bindingFlags, referenceHandling, null)
         {
             this.ignoredProperties = ignoredProperties != null
                                          ? new HashSet<PropertyInfo>(ignoredProperties)
@@ -57,6 +57,11 @@
         public bool IsIgnoringProperty(PropertyInfo propertyInfo)
         {
             if (propertyInfo == null || propertyInfo.GetIndexParameters().Length > 0)
+            {
+                return true;
+            }
+
+            if (this.IsIgnoringType(propertyInfo.DeclaringType))
             {
                 return true;
             }

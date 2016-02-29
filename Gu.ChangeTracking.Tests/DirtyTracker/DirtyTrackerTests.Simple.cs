@@ -17,8 +17,8 @@ namespace Gu.ChangeTracking.Tests
             [Test]
             public void TracksX()
             {
-                var source = new SimpleDirtyTrackClass { Value = 1, Excluded = 2 };
-                var target = new SimpleDirtyTrackClass { Value = 3, Excluded = 4 };
+                var source = new DirtyTrackerTypes.SimpleDirtyTrackClass { Value = 1, Excluded = 2 };
+                var target = new DirtyTrackerTypes.SimpleDirtyTrackClass { Value = 3, Excluded = 4 };
                 var tracker = DirtyTracker.Track(source, target);
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
@@ -69,8 +69,8 @@ namespace Gu.ChangeTracking.Tests
             [Test]
             public void TracksY()
             {
-                var source = new SimpleDirtyTrackClass { Value = 1, Excluded = 2 };
-                var target = new SimpleDirtyTrackClass { Value = 3, Excluded = 4 };
+                var source = new DirtyTrackerTypes.SimpleDirtyTrackClass { Value = 1, Excluded = 2 };
+                var target = new DirtyTrackerTypes.SimpleDirtyTrackClass { Value = 3, Excluded = 4 };
                 var tracker = DirtyTracker.Track(source, target);
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();

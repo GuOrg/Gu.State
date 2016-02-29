@@ -59,32 +59,26 @@
     <Compile Include="ChangeTracker\ChangeTrackerTests.Shared.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerTests.Throws.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerTests.PropertyChanged.cs" />
-    <Compile Include="Copy\ClassesTests.cs" />
-    <Compile Include="Copy\CopyStubs\ComplexType.cs" />
-    <Compile Include="Copy\CopyStubs\Immutable.cs" />
-    <Compile Include="Copy\CopyStubs\WithSimpleFields.cs" />
-    <Compile Include="Copy\CopyStubs\WithArrayProperty.cs" />
-    <Compile Include="Copy\CopyStubs\WithCalculatedProperty.cs" />
-    <Compile Include="Copy\CopyStubs\WithComplexProperty.cs" />
-    <Compile Include="Copy\CopyStubs\WithListProperty.cs" />
-    <Compile Include="Copy\CopyStubs\WithProperty.cs" />
-    <Compile Include="Copy\CopyStubs\WithReadonlyField.cs" />
-    <Compile Include="Copy\CopyStubs\WithReadonlyProperty.cs" />
-    <Compile Include="Copy\CopyStubs\WithSimpleProperties.cs" />
-    <Compile Include="Copy\FieldValues\CopyFieldsSettingsTests.cs" />
-    <Compile Include="Copy\PropertyValues\CopyPropertiesSettingsTests.cs" />
-    <Compile Include="Copy\FieldValues\Collections.cs" />
-    <Compile Include="Copy\FieldValues\Throws.cs" />
-    <Compile Include="Copy\FieldValues\Verify.cs" />
-    <Compile Include="Copy\CollectionTests.cs" />
-    <Compile Include="Copy\PropertyValues\Collections.cs" />
-    <Compile Include="Copy\PropertyValues\Verify.cs" />
-    <Compile Include="Copy\ThrowTests.cs" />
-    <Compile Include="Copy\VerifyTests.cs" />
+    <Compile Include="CopyTests\ClassesTests.cs" />
+    <Compile Include="CopyTests\CopyTypes.cs" />
+    <Compile Include="CopyTests\FieldValues\CopyFieldsSettingsTests.cs" />
+    <Compile Include="CopyTests\PropertyValues\CopyPropertiesSettingsTests.cs" />
+    <Compile Include="CopyTests\FieldValues\Collections.cs" />
+    <Compile Include="CopyTests\FieldValues\Throws.cs" />
+    <Compile Include="CopyTests\FieldValues\Verify.cs" />
+    <Compile Include="CopyTests\CollectionTests.cs" />
+    <Compile Include="CopyTests\PropertyValues\Collections.cs" />
+    <Compile Include="CopyTests\PropertyValues\Verify.cs" />
+    <Compile Include="CopyTests\ThrowTests.cs" />
+    <Compile Include="CopyTests\VerifyTests.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerSettingsTests.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerStubs\WithGetReadOnlyPropertySealed.cs" />
-    <Compile Include="EqualBy\EqualByFieldsSettingsTests.cs" />
-    <Compile Include="EqualBy\EqualByTests.Throws.cs" />
+    <Compile Include="DirtyTracker\DirtyTrackerTypes.cs" />
+    <Compile Include="EqualByTests\EqualByTypes.cs" />
+    <Compile Include="EqualByTests\FieldValues\EqualByFieldsSettingsTests.cs" />
+    <Compile Include="EqualByTests\PropertyValues\Throws.cs" />
+    <Compile Include="EqualByTests\ThrowsTests.cs" />
+    <Compile Include="EqualByTests\FieldValues\Throws.cs" />
     <Compile Include="Internals\Stubs\IMutableInterface.cs" />
     <Compile Include="Internals\Stubs\WithImmutableImplementingMutableInterfaceExplicit.cs" />
     <Compile Include="Internals\Stubs\WithImmutableSubclassingMutable.cs" />
@@ -98,7 +92,7 @@
     <Compile Include="DirtyTracker\DirtyTrackerTests.WithObservableCollectionProperty.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerTests.ObservableCollectionOfComplexType.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerTests.ObservableCollectionOfInt.cs" />
-    <Compile Include="EqualBy\EqualByPropertiesSettingsTests.cs" />
+    <Compile Include="EqualByTests\PropertyValues\EqualByPropertiesSettingsTests.cs" />
     <Compile Include="Internals\Stubs\WithGetPublicSet.cs" />
     <Compile Include="Internals\Stubs\WithGetReadOnlyPropertySealed.cs" />
     <Compile Include="Internals\Stubs\WithGetReadOnlyPropertyStruct.cs" />
@@ -119,15 +113,15 @@
     <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\WithComplexProperty.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerStubs\ComplexType.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerStubs\WithComplexProperty.cs" />
-    <Compile Include="Copy\PropertyValues\Classes.cs" />
+    <Compile Include="CopyTests\PropertyValues\Classes.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerTests.Complex.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerStubs\SimpleDirtyTrackClass.cs" />
-    <Compile Include="EqualBy\EqualBy.Shared.cs" />
-    <Compile Include="EqualBy\EqualByTests.PropertyValues.cs" />
+    <Compile Include="EqualByTests\EqualByTestsShared.cs" />
+    <Compile Include="EqualByTests\PropertyValues\EqualByTests.PropertyValues.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\WithCalculatedProperty.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\WithObservableCollectionProperties.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\WithSimpleProperties.cs" />
-    <Compile Include="Copy\FieldValues\Classes.cs" />
+    <Compile Include="CopyTests\FieldValues\Classes.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerTests.Simple.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerStubs\ComplexType.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerStubs\DerivedClass.cs" />
@@ -140,7 +134,7 @@
     <Compile Include="ChangeTracker\ChangeTrackerStubs\IllegalType.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerStubs\Level.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerStubs\SpecialCollection.cs" />
-    <Compile Include="EqualBy\EqualByTests.FieldValues.cs" />
+    <Compile Include="EqualByTests\FieldValues\EqualByTests.FieldValues.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerTests.ObservableCollectionOfInts.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerTests.Complex.cs" />
     <Compile Include="Settings\ChangeTrackerSettingsTests.cs" />
@@ -149,7 +143,7 @@
     <Compile Include="TestHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Copy\PropertyValues\Throws.cs" />
+    <Compile Include="CopyTests\PropertyValues\Throws.cs" />
     <None Include="paket.references" />
   </ItemGroup>
   <ItemGroup>

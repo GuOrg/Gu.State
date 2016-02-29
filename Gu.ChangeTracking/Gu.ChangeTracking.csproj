@@ -55,6 +55,7 @@
     <Compile Include="DirtyTracker\Internals\ItemDirtyTracker.cs" />
     <Compile Include="DirtyTracker\Internals\NeverDirtyNode.cs" />
     <Compile Include="DirtyTracker\Internals\PropertyDirtyTracker.cs" />
+    <Compile Include="EqualBy\EqualBy.Collection.cs" />
     <Compile Include="EqualBy\EqualBy.Throw.cs" />
     <Compile Include="EqualBy\Settings\IEqualByFieldsSettings.cs" />
     <Compile Include="EqualBy\Settings\IEqualByPropertiesSettings.cs" />
