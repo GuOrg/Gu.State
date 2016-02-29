@@ -74,10 +74,13 @@
     <Compile Include="DirtyTracker\DirtyTrackerSettingsTests.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerTypes.cs" />
     <Compile Include="EqualByTests\ClassesTests.cs" />
+    <Compile Include="EqualByTests\CollectionTests.cs" />
     <Compile Include="EqualByTests\EqualByTypes.cs" />
     <Compile Include="EqualByTests\FieldValues\Classes.cs" />
+    <Compile Include="EqualByTests\FieldValues\Collections.cs" />
     <Compile Include="EqualByTests\FieldValues\EqualByFieldsSettingsTests.cs" />
     <Compile Include="EqualByTests\PropertyValues\Classes.cs" />
+    <Compile Include="EqualByTests\PropertyValues\Collections.cs" />
     <Compile Include="EqualByTests\PropertyValues\Throws.cs" />
     <Compile Include="EqualByTests\ThrowsTests.cs" />
     <Compile Include="EqualByTests\FieldValues\Throws.cs" />
