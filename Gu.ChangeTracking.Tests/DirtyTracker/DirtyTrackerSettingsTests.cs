@@ -4,8 +4,6 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using Gu.ChangeTracking.Tests.CopyStubs;
-
     using NUnit.Framework;
 
     public class DirtyTrackerSettingsTests
@@ -13,9 +11,9 @@
         [Test]
         public void Ignores()
         {
-            var type = typeof(ComplexType);
-            var nameProperty = type.GetProperty(nameof(ComplexType.Name));
-            var valueProperty = type.GetProperty(nameof(ComplexType.Value));
+            var type = typeof(DirtyTrackerTypes.ComplexType);
+            var nameProperty = type.GetProperty(nameof(DirtyTrackerTypes.ComplexType.Name));
+            var valueProperty = type.GetProperty(nameof(DirtyTrackerTypes.ComplexType.Value));
             var settings = new DirtyTrackerSettings(type, new[] { nameProperty.Name }, Constants.DefaultPropertyBindingFlags, ReferenceHandling.Throw);
             Assert.AreEqual(true, settings.IsIgnoringProperty(nameProperty));
             Assert.AreEqual(false, settings.IsIgnoringProperty(valueProperty));
