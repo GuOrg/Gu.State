@@ -58,7 +58,7 @@ namespace Gu.ChangeTracking
                 var type = x?.GetType() ?? y?.GetType() ?? typeof(T);
                 if (typeof(IEnumerable).IsAssignableFrom(type))
                 {
-                    ThrowCannotCompareType(type, settings);
+                    Throw.CannotCompareType(type, settings);
                 }
 
                 var fieldInfos = type.GetFields(settings.BindingFlags);
@@ -71,7 +71,7 @@ namespace Gu.ChangeTracking
 
                     if (!fieldInfo.FieldType.IsEquatable())
                     {
-                        ThrowCannotCompareMember(type, fieldInfo);
+                        Throw.CannotCompareMember(type, fieldInfo);
                     }
                 }
             }
@@ -182,7 +182,7 @@ namespace Gu.ChangeTracking
 
                         return false;
                     case ReferenceHandling.Throw:
-                        ThrowCannotCompareMember(x.GetType(), fieldInfo);
+                        Throw.CannotCompareMember(x.GetType(), fieldInfo);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);
