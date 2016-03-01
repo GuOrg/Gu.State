@@ -90,6 +90,7 @@
                         case ReferenceHandling.References:
                             break;
                         case ReferenceHandling.Structural:
+                        case ReferenceHandling.StructuralWithReferenceLoops:
                             if (checkedTypes == null)
                             {
                                 checkedTypes = new List<Type> { type };

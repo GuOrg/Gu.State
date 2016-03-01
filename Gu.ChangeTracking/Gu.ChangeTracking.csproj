@@ -70,7 +70,6 @@
     <Compile Include="Internals\PropertyPath\PathItem.cs" />
     <Compile Include="Internals\PropertyPath\PropertyItem.cs" />
     <Compile Include="Internals\PropertyPath\RootItem.cs" />
-    <Compile Include="Internals\Collections\ReferenceCollection.cs" />
     <Compile Include="Internals\Collections\ReferencePairCollection.cs" />
     <Compile Include="Internals\SourceAndTargetValue.cs" />
     <Compile Include="Internals\ThrowHelper.cs" />

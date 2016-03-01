@@ -20,6 +20,7 @@
                             break;
                         case ReferenceHandling.References:
                         case ReferenceHandling.Structural:
+                        case ReferenceHandling.StructuralWithReferenceLoops:
                             if (!IsCopyableCollectionType(type))
                             {
                                 Throw.AppendCannotCopyType(errorBuilder, type, settings);
