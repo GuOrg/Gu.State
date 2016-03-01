@@ -9,6 +9,7 @@
     public class DirtyTrackerSettings : IEqualByPropertiesSettings
     {
         private static readonly ConcurrentDictionary<BindingFlagsAndReferenceHandling, DirtyTrackerSettings> Cache = new ConcurrentDictionary<BindingFlagsAndReferenceHandling, DirtyTrackerSettings>();
+        private readonly IgnoredTypes ignoredTypes;
         private readonly HashSet<PropertyInfo> ignoredProperties;
 
         public DirtyTrackerSettings(Type type, string[] ignoreProperties, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
@@ -23,6 +24,7 @@
                                          : null;
             this.BindingFlags = bindingFlags;
             this.ReferenceHandling = referenceHandling;
+            this.ignoredTypes = IgnoredTypes.Create(null);
         }
 
         public IEnumerable<PropertyInfo> IgnoredProperties => this.ignoredProperties ?? Enumerable.Empty<PropertyInfo>();
@@ -61,6 +63,11 @@
             }
 
             return this.ignoredProperties.Contains(propertyInfo);
+        }
+
+        public bool IsIgnoringType(Type type)
+        {
+            return this.ignoredTypes.IsIgnoringType(type);
         }
     }
 }

@@ -53,30 +53,15 @@
 
         public static bool PropertyValues<T>(T x, T y, IEqualByPropertiesSettings settings)
         {
-            if (settings.ReferenceHandling == ReferenceHandling.Throw)
-            {
-                var type = x?.GetType() ?? y?.GetType() ?? typeof(T);
-                if (typeof(IEnumerable).IsAssignableFrom(type))
-                {
-                    Throw.CannotCompareType(type, settings);
-                }
+            Verify.PropertyTypes(x, y, settings);
+            Verify.Enumerable(x, y, settings);
+            return PropertiesValuesEquals(x, y, settings);
+        }
 
-                var properties = type.GetProperties(settings.BindingFlags);
-                foreach (var propertyInfo in properties)
-                {
-                    if (settings.IsIgnoringProperty(propertyInfo))
-                    {
-                        continue;
-                    }
-
-                    if (!propertyInfo.PropertyType.IsEquatable())
-                    {
-                        Throw.CannotCompareMember(type, propertyInfo);
-                    }
-                }
-            }
-
-            if (x == null && y == null)
+        private static bool PropertiesValuesEquals<T>(T x, T y, IEqualByPropertiesSettings settings)
+        {
+            Verify.Indexers(x?.GetType() ?? y?.GetType(), settings);
+            if (ReferenceEquals(x, y))
             {
                 return true;
             }
@@ -98,7 +83,7 @@
 
             if (x is IEnumerable)
             {
-                if (!EnumerableEquals(x, y, PropertyItemEquals, settings))
+                if (!EnumerableEquals(x, y, ItemPropertiesEquals, settings))
                 {
                     return false;
                 }
@@ -112,19 +97,9 @@
                     continue;
                 }
 
-                if (!IsEquatable(propertyInfo.PropertyType) && settings.ReferenceHandling == ReferenceHandling.Throw)
-                {
-                    Throw.CannotCompareMember(x.GetType(), propertyInfo);
-                }
-
                 var xv = propertyInfo.GetValue(x);
                 var yv = propertyInfo.GetValue(y);
-                if (ReferenceEquals(x, xv) && ReferenceEquals(y, yv))
-                {
-                    continue;
-                }
-
-                if (!PropertyValueEquals(xv, yv, settings))
+                if (!PropertyValueEquals(xv, yv, propertyInfo, settings))
                 {
                     return false;
                 }
@@ -133,14 +108,14 @@
             return true;
         }
 
-        private static bool PropertyItemEquals(object x, object y, IEqualByPropertiesSettings settings)
+        private static bool ItemPropertiesEquals(object x, object y, IEqualByPropertiesSettings settings)
         {
-            return PropertyValueEquals(x, y, settings);
+            return PropertyValueEquals(x, y, null, settings);
         }
 
-        private static bool PropertyValueEquals(object x, object y, IEqualByPropertiesSettings settings)
+        private static bool PropertyValueEquals(object x, object y, PropertyInfo propertyInfo, IEqualByPropertiesSettings settings)
         {
-            if (x == null && y == null)
+            if (ReferenceEquals(x, y))
             {
                 return true;
             }
@@ -152,35 +127,20 @@
 
             if (IsEquatable(x.GetType()))
             {
-                if (!Equals(x, y))
-                {
-                    return false;
-                }
+                return Equals(x, y);
             }
-            else
+
+            switch (settings.ReferenceHandling)
             {
-                switch (settings.ReferenceHandling)
-                {
-                    case ReferenceHandling.References:
-                        if (ReferenceEquals(x, y))
-                        {
-                            return true;
-                        }
-
-                        return false;
-                    case ReferenceHandling.Structural:
-                        if (PropertyValues(x, y, settings))
-                        {
-                            return true;
-                        }
-
-                        return false;
-                    case ReferenceHandling.Throw:
-                        Throw.CannotCompareType(x.GetType(), settings);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);
-                }
+                case ReferenceHandling.References:
+                    return ReferenceEquals(x, y);
+                case ReferenceHandling.Structural:
+                    return PropertiesValuesEquals(x, y, settings);
+                case ReferenceHandling.Throw:
+                    Throw.CannotCompareMember(x.GetType(), propertyInfo);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);
             }
 
             return true;

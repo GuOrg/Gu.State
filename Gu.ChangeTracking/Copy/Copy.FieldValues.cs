@@ -1,7 +1,6 @@
 ﻿namespace Gu.ChangeTracking
 {
     using System;
-    using System.Collections;
     using System.Reflection;
 
     public static partial class Copy
