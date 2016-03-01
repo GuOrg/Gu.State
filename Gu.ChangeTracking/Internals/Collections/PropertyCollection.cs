@@ -10,7 +10,7 @@ namespace Gu.ChangeTracking
     {
         private readonly IReadOnlyList<PropertyAndDisposable> items;
 
-        internal PropertyCollection(List<PropertyAndDisposable> items)
+        internal PropertyCollection(IReadOnlyList<PropertyAndDisposable> items)
         {
             this.items = items;
         }
@@ -30,15 +30,8 @@ namespace Gu.ChangeTracking
 
         internal IDisposable this[PropertyInfo index]
         {
-            get
-            {
-                return this.items.Single(x => x.PropertyInfo == index).Synchronizer;
-            }
-            set
-            {
-                this.items.Single(x => x.PropertyInfo == index)
-                    .Synchronizer = value;
-            }
+            get { return this.items.Single(x => x.PropertyInfo == index).Synchronizer; }
+            set { this.items.Single(x => x.PropertyInfo == index).Synchronizer = value; }
         }
 
         public void Dispose()
@@ -57,6 +50,7 @@ namespace Gu.ChangeTracking
         [DebuggerDisplay("PropertyAndDisposable, Property: {PropertyInfo.Name} ")]
         internal class PropertyAndDisposable : IDisposable
         {
+            private readonly object gate = new object();
             private IDisposable synchronizer;
 
             public PropertyAndDisposable(PropertyInfo propertyInfo, IDisposable synchronizer)
@@ -71,12 +65,18 @@ namespace Gu.ChangeTracking
             {
                 get
                 {
-                    return this.synchronizer;
+                    lock (this.gate)
+                    {
+                        return this.synchronizer;
+                    }
                 }
                 set
                 {
-                    this.synchronizer?.Dispose();
-                    this.synchronizer = value;
+                    lock (this.gate)
+                    {
+                        this.synchronizer?.Dispose();
+                        this.synchronizer = value;
+                    }
                 }
             }
 

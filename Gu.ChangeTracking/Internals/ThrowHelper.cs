@@ -130,8 +130,6 @@
             return messageBuilder;
         }
 
-
-
         private static StringBuilder AppendImmutableConditionsLines(this StringBuilder messageBuilder)
         {
             messageBuilder.AppendLine("  - Must be a sealed class or a struct.");
@@ -152,8 +150,14 @@
 
         internal static void ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<T1, T2>(string parameterName)
         {
-            var message = $"{ThrowHelper.ThereIsABugInTheLibrary}\r\n" +
-                          $"Expected {nameof(parameterName)} to be either of {typeof(T1).PrettyName()} or {typeof(T2).PrettyName()}";
+            var message = $"Expected {nameof(parameterName)} to be either of {typeof(T1).PrettyName()} or {typeof(T2).PrettyName()}";
+            ThrowThereIsABugInTheLibrary(message);
+        }
+
+        internal static void ThrowThereIsABugInTheLibrary(string message)
+        {
+            message = $"{ThrowHelper.ThereIsABugInTheLibrary}\r\n" + message;
+            throw new InvalidOperationException(message);
         }
     }
 }
