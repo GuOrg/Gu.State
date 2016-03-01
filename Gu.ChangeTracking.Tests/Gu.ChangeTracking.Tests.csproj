@@ -89,6 +89,8 @@
     <Compile Include="Internals\Stubs\WithImmutableSubclassingMutable.cs" />
     <Compile Include="Internals\Stubs\WithReadonlyFieldSealed.cs" />
     <Compile Include="Internals\IgnoredTypesTests.cs" />
+    <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\Child.cs" />
+    <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\Parent.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\WithGetReadOnlyPropertySealed.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerTests.Immutable.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerTests.WithObservableCollectionProperty.cs" />
@@ -108,6 +110,7 @@
     <Compile Include="Internals\Stubs\WithSelfPropSealed.cs" />
     <Compile Include="Internals\TypeExtTests.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\WithImmutableProperty.cs" />
+    <Compile Include="PropertySynchronizer\PropertySynchronizerStubs\WithTwoComplexProperties.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerTests.ObservableCollectionOfImmutableTypes.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerTests.WithObservableCollectionProperty.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerTests.ObservableCollectionOfComplexTypes.cs" />

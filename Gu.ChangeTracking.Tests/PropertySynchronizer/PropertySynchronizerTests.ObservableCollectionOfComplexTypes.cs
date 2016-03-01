@@ -42,6 +42,50 @@
             }
 
             [Test]
+            public void CreateAndDisposeStructuralWithReferenceLoops()
+            {
+                var source = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
+                var target = new ObservableCollection<ComplexType>();
+                using (PropertySynchronizer.Create(source, target, ReferenceHandling.StructuralWithReferenceLoops))
+                {
+                    var expected = new[] { new ComplexType("a", 1), new ComplexType("b", 2) };
+                    CollectionAssert.AreEqual(expected, source, ComplexType.Comparer);
+                    CollectionAssert.AreEqual(expected, target, ComplexType.Comparer);
+                    Assert.AreNotSame(source[0], target[0]);
+                    Assert.AreNotSame(source[1], target[1]);
+
+                    source[0].Value++;
+                    expected = new[] { new ComplexType("a", 2), new ComplexType("b", 2) };
+                    CollectionAssert.AreEqual(expected, source, ComplexType.Comparer);
+                    CollectionAssert.AreEqual(expected, target, ComplexType.Comparer);
+                    Assert.AreNotSame(source[0], target[0]);
+                    Assert.AreNotSame(source[1], target[1]);
+
+                    source.Add(source[0]);
+                    expected = new[] { new ComplexType("a", 2), new ComplexType("b", 2), new ComplexType("a", 2) };
+                    CollectionAssert.AreEqual(expected, source, ComplexType.Comparer);
+                    CollectionAssert.AreEqual(expected, target, ComplexType.Comparer);
+                    Assert.AreNotSame(source[0], target[0]);
+                    Assert.AreNotSame(source[1], target[1]);
+
+                    source[0].Value++;
+                    expected = new[] { new ComplexType("a", 3), new ComplexType("b", 2), new ComplexType("a", 3) };
+                    CollectionAssert.AreEqual(expected, source, ComplexType.Comparer);
+                    CollectionAssert.AreEqual(expected, target, ComplexType.Comparer);
+                    Assert.AreNotSame(source[0], target[0]);
+                    Assert.AreNotSame(source[1], target[1]);
+                }
+
+                source.Add(new ComplexType("c", 3));
+                CollectionAssert.AreEqual(new[] { new ComplexType("a", 3), new ComplexType("b", 2), new ComplexType("a", 3), new ComplexType("c", 3) }, source, ComplexType.Comparer);
+                CollectionAssert.AreEqual(new[] { new ComplexType("a", 3), new ComplexType("b", 2), new ComplexType("a", 3) }, target, ComplexType.Comparer);
+
+                source[0].Value++;
+                CollectionAssert.AreEqual(new[] { new ComplexType("a", 4), new ComplexType("b", 2), new ComplexType("a", 4), new ComplexType("c", 3) }, source, ComplexType.Comparer);
+                CollectionAssert.AreEqual(new[] { new ComplexType("a", 3), new ComplexType("b", 2), new ComplexType("a", 3) }, target, ComplexType.Comparer);
+            }
+
+            [Test]
             public void CreateAndDisposeReference()
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
