@@ -33,9 +33,7 @@
             this.itemsChangeTrackers = ItemsChangeTrackers.Create(source, this);
             if (this.propertiesChangeTrackers == null && this.itemsChangeTrackers == null)
             {
-                var message = "There is a bug in the library as it:\r\n" +
-                              "Created a tracker that does not track anything";
-                throw new InvalidOperationException(message);
+                ThrowHelper.ThrowThereIsABugInTheLibrary("Created a tracker that does not track anything");
             }
         }
 
@@ -59,8 +57,7 @@
             {
                 return this.changes;
             }
-
-            protected internal set
+            internal set
             {
                 if (value == this.changes)
                 {
