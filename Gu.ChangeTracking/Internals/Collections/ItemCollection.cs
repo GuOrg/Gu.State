@@ -8,6 +8,7 @@
         where T : class, IDisposable
     {
         private readonly List<T> items;
+        private readonly object gate = new object();
 
         public ItemCollection()
         {
@@ -31,7 +32,10 @@
                     throw new ArgumentOutOfRangeException(nameof(index));
                 }
 
-                this.SetItem(index, value);
+                lock (this.gate)
+                {
+                    this.SetItem(index, value);
+                }
             }
         }
 
@@ -49,29 +53,41 @@
 
         internal void RemoveAt(int index)
         {
-            this.TryGet(index)?.Dispose();
-            this.items.RemoveAt(index);
+            lock (this.gate)
+            {
+                this.TryGet(index)?.Dispose();
+                this.items.RemoveAt(index);
+            }
         }
 
         internal void Insert(int index, T item)
         {
-            this.FillTo(index);
-            this.items.Insert(index, item);
+            lock (this.gate)
+            {
+                this.FillTo(index);
+                this.items.Insert(index, item);
+            }
         }
 
         internal void Move(int index, int toIndex)
         {
-            var synchronizer = this.items[index];
-            this.items.RemoveAt(index);
-            this.Insert(toIndex, synchronizer);
+            lock (this.gate)
+            {
+                var synchronizer = this.items[index];
+                this.items.RemoveAt(index);
+                this.Insert(toIndex, synchronizer);
+            }
         }
 
         internal void Clear()
         {
-            for (int i = this.items.Count - 1; i >= 0; i--)
+            lock (this.gate)
             {
-                this.items[i]?.Dispose();
-                this.items.RemoveAt(i);
+                for (int i = this.items.Count - 1; i >= 0; i--)
+                {
+                    this.items[i]?.Dispose();
+                    this.items.RemoveAt(i);
+                }
             }
         }
 
