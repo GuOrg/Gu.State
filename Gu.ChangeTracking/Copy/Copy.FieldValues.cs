@@ -47,14 +47,35 @@
             FieldValues(source, target, settings);
         }
 
-        public static void FieldValues<T>(T source, T target, CopyFieldsSettings settings)
+        public static void FieldValues<T>(T source, T target, CopyFieldsSettings settings) 
+            where T : class
+        {
+            if (settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops)
+            {
+                var referencePairs = new ReferencePairCollection();
+                CopyFieldsValues(source, target, settings, referencePairs);
+            }
+            else
+            {
+                CopyFieldsValues(source, target, settings, null);
+            }
+        }
+
+        private static void CopyFieldsValues<T>(T source, T target, CopyFieldsSettings settings, ReferencePairCollection referencePairs)
             where T : class
         {
             Ensure.NotNull(source, nameof(source));
             Ensure.NotNull(target, nameof(target));
             Ensure.SameType(source, target);
             Verify.Indexers(source.GetType(), settings);
-            CopyCollectionItems(source, target, FieldValues, settings);
+            if (referencePairs?.Contains(source, target) == true)
+            {
+                return;
+            }
+
+            referencePairs?.Add(source, target);
+
+            CopyCollectionItems(source, target, CopyFieldsValues, settings, referencePairs);
 
             var fieldInfos = source.GetType().GetFields(settings.BindingFlags);
             foreach (var fieldInfo in fieldInfos)
@@ -90,7 +111,7 @@
 
                     if (sv != null && tv != null)
                     {
-                        FieldValues(sv, tv, settings);
+                        CopyFieldsValues(sv, tv, settings, referencePairs);
                         continue;
                     }
 
@@ -109,6 +130,7 @@
                         fieldInfo.SetValue(target, sv);
                         continue;
                     case ReferenceHandling.Structural:
+                    case ReferenceHandling.StructuralWithReferenceLoops:
                         if (sv == null)
                         {
                             fieldInfo.SetValue(target, null);
@@ -118,12 +140,12 @@
                         var targetValue = fieldInfo.GetValue(target);
                         if (targetValue != null)
                         {
-                            FieldValues(sv, targetValue, settings);
+                            CopyFieldsValues(sv, targetValue, settings, referencePairs);
                             continue;
                         }
 
                         targetValue = CreateInstance<CopyFieldsSettings>(sv, fieldInfo);
-                        FieldValues(sv, targetValue, settings);
+                        CopyFieldsValues(sv, targetValue, settings, referencePairs);
                         fieldInfo.SetValue(target, targetValue);
                         continue;
                     case ReferenceHandling.Throw:
@@ -143,7 +165,7 @@
                 var targetValue = fieldInfo.GetValue(target);
                 if (!Equals(sourceValue, targetValue))
                 {
-                    var message = $"Field {source.GetType().Name}.{fieldInfo.Name} differs but cannot be updated because it is readonly.\r\n" + $"Provide {typeof(Copy).Name}.{nameof(FieldValues)}(x, y, nameof({source.GetType().Name}.{fieldInfo.Name}))";
+                    var message = $"Field {source.GetType().Name}.{fieldInfo.Name} differs but cannot be updated because it is readonly.\r\n" + $"Provide {typeof(Copy).Name}.{nameof(CopyFieldsValues)}(x, y, nameof({source.GetType().Name}.{fieldInfo.Name}))";
                     throw new InvalidOperationException(message);
                 }
             }

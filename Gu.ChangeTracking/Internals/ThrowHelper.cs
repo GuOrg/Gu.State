@@ -26,15 +26,6 @@
             return messageBuilder.AppendLine(line);
         }
 
-        internal static StringBuilder AppendCopyFailed<T>(this StringBuilder messageBuilder)
-            where T : CopySettings
-        {
-            var line = typeof(T) == typeof(CopyFieldsSettings)
-                ? $"Copy.{nameof(Copy.FieldValues)}(x, y) failed."
-                : $"Copy.{nameof(Copy.PropertyValues)}(x, y) failed.";
-            return messageBuilder.AppendLine(line);
-        }
-
         internal static StringBuilder AppendSolveTheProblemBy(this StringBuilder messageBuilder)
         {
             return messageBuilder.AppendLine("Solve the problem by any of:");

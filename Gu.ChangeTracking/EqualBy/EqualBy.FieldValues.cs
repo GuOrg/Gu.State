@@ -79,7 +79,6 @@ namespace Gu.ChangeTracking
             if (settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops)
             {
                 var referencePairs = new ReferencePairCollection();
-                referencePairs.Add(x, y);
                 return FieldsValuesEquals(x, y, settings, referencePairs);
             }
             else
@@ -91,6 +90,8 @@ namespace Gu.ChangeTracking
         private static bool FieldsValuesEquals(object x, object y, IEqualByFieldsSettings settings, ReferencePairCollection referencePairs)
         {
             Verify.Indexers(x?.GetType() ?? y?.GetType(), settings);
+            referencePairs?.Add(x, y);
+
             if (x == null && y == null)
             {
                 return true;

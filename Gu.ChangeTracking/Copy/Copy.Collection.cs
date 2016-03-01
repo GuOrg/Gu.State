@@ -6,7 +6,7 @@
 
     public static partial class Copy
     {
-        private static void CopyCollectionItems<T>(object source, object target, Action<object, object, T> syncItem, T settings)
+        private static void CopyCollectionItems<T>(object source, object target, Action<object, object, T, ReferencePairCollection> syncItem, T settings, ReferencePairCollection referencePairs)
              where T : CopySettings
         {
             var sl = source as IList;
@@ -19,7 +19,7 @@
                     Throw.CannotCopyFixesSizeCollections(sl, tl, settings);
                 }
 
-                Collection.CopyListItems(sl, tl, syncItem, settings);
+                Collection.CopyListItems(sl, tl, syncItem, settings, referencePairs);
                 return;
             }
 
@@ -33,7 +33,7 @@
                     Throw.CannotCopyFixesSizeCollections(sd, td, settings);
                 }
 
-                Collection.CopyDictionaryItems(sd, td, syncItem, settings);
+                Collection.CopyDictionaryItems(sd, td, syncItem, settings, referencePairs);
                 return;
             }
 
@@ -45,7 +45,7 @@
 
         private static class Collection
         {
-            internal static void CopyListItems<T>(IList sourceList, IList targetList, Action<object, object, T> syncItem, T settings)
+            internal static void CopyListItems<T>(IList sourceList, IList targetList, Action<object, object, T, ReferencePairCollection> syncItem, T settings, ReferencePairCollection referencePairs)
                 where T : CopySettings
             {
                 for (int i = 0; i < sourceList.Count; i++)
@@ -75,13 +75,14 @@
                             SetListItem(targetList, i, sv);
                             continue;
                         case ReferenceHandling.Structural:
+                        case ReferenceHandling.StructuralWithReferenceLoops:
                             if (tv == null)
                             {
                                 tv = CreateInstance<T>(sv, null);
                                 SetListItem(targetList, i, tv);
                             }
 
-                            syncItem(sv, tv, settings);
+                            syncItem(sv, tv, settings, referencePairs);
                             continue;
                         case ReferenceHandling.Throw:
                             Throw.CannotCopyItem(sourceList, targetList, i, settings);
@@ -97,7 +98,7 @@
                 }
             }
 
-            internal static void CopyDictionaryItems<T>(IDictionary sourceDict, IDictionary targetDict, Action<object, object, T> syncItem, T settings)
+            internal static void CopyDictionaryItems<T>(IDictionary sourceDict, IDictionary targetDict, Action<object, object, T, ReferencePairCollection> syncItem, T settings, ReferencePairCollection referencePairs)
                 where T : CopySettings
             {
                 foreach (var key in sourceDict.Keys)
@@ -133,7 +134,7 @@
                                 targetDict[key] = tv;
                             }
 
-                            syncItem(sv, tv, settings);
+                            syncItem(sv, tv, settings, referencePairs);
                             continue;
                         case ReferenceHandling.Throw:
                             Throw.CannotCopyItem(sourceDict, targetDict, key, settings);

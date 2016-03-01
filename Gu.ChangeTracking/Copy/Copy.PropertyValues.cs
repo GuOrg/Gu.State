@@ -1,7 +1,6 @@
 ﻿namespace Gu.ChangeTracking
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Reflection;
 
@@ -100,22 +99,43 @@
         public static void PropertyValues<T>(T source, T target, CopyPropertiesSettings settings)
             where T : class
         {
+            if (settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops)
+            {
+                var referencePairs = new ReferencePairCollection();
+                CopyPropertiesValues(source, target, settings, referencePairs);
+            }
+            else
+            {
+                CopyPropertiesValues(source, target, settings, null);
+            }
+        }
+
+        private static void CopyPropertiesValues<T>(T source, T target, CopyPropertiesSettings settings, ReferencePairCollection referencePairs)
+            where T : class
+        {
             Ensure.NotNull(source, nameof(source));
             Ensure.NotNull(target, nameof(target));
             Ensure.SameType(source, target);
             Verify.Indexers(source.GetType(), settings);
+            if (referencePairs?.Contains(source, target) == true)
+            {
+                return;
+            }
 
-            CopyCollectionItems(source, target, PropertyValues, settings);
+            referencePairs?.Add(source, target);
+
+            CopyCollectionItems(source, target, CopyPropertiesValues, settings, referencePairs);
             var propertyInfos = source.GetType().GetProperties(settings.BindingFlags);
-            CopyWritablePropertiesValues(source, target, propertyInfos, settings);
-            VerifyReadonlyPropertiesAreEqual(source, target, propertyInfos, settings);
+            CopyWritablePropertiesValues(source, target, propertyInfos, settings, referencePairs);
+            VerifyReadonlyPropertiesAreEqual(source, target, propertyInfos, settings, referencePairs);
         }
 
         internal static void CopyWritablePropertiesValues(
             object source,
             object target,
             IReadOnlyList<PropertyInfo> propertyInfos,
-            CopyPropertiesSettings settings)
+            CopyPropertiesSettings settings,
+            ReferencePairCollection referencePairs)
         {
             foreach (var propertyInfo in propertyInfos)
             {
@@ -147,7 +167,7 @@
                     var tv = propertyInfo.GetValue(target);
                     if (sv != null && tv != null)
                     {
-                        PropertyValues(sv, tv, settings);
+                        CopyPropertiesValues(sv, tv, settings, referencePairs);
                     }
 
                     continue;
@@ -169,6 +189,7 @@
                         }
 
                     case ReferenceHandling.Structural:
+                    case ReferenceHandling.StructuralWithReferenceLoops:
                         var sourceValue = propertyInfo.GetValue(source);
                         if (sourceValue == null)
                         {
@@ -180,12 +201,12 @@
                         if (targetValue == null)
                         {
                             targetValue = CreateInstance<CopyPropertiesSettings>(sourceValue, propertyInfo);
-                            PropertyValues(sourceValue, targetValue, settings);
+                            CopyPropertiesValues(sourceValue, targetValue, settings, referencePairs);
                             propertyInfo.SetValue(target, targetValue, null);
                         }
                         else
                         {
-                            PropertyValues(sourceValue, targetValue, settings);
+                            CopyPropertiesValues(sourceValue, targetValue, settings, referencePairs);
                         }
 
                         continue;
@@ -202,7 +223,8 @@
             object source,
             object target,
             IReadOnlyList<PropertyInfo> propertyInfos,
-            CopyPropertiesSettings settings)
+            CopyPropertiesSettings settings,
+            ReferencePairCollection referencePairs)
         {
             foreach (var propertyInfo in propertyInfos)
             {
@@ -221,6 +243,12 @@
                 if (sv == null && tv == null)
                 {
                     continue;
+                }
+
+                if (!sv.GetType()
+                       .IsImmutable())
+                {
+                    CopyPropertiesValues(sv, tv, settings, referencePairs);
                 }
 
                 if (!EqualBy.PropertyValues(sv, tv, settings))

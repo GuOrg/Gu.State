@@ -4,7 +4,6 @@
     using System.Collections.Generic;
 
     using NUnit.Framework;
-    using NUnit.Framework.Constraints;
 
     public abstract class ClassesTests
     {
@@ -148,7 +147,7 @@
         [TestCase(1, 1, ReferenceHandling.Throw, true)]
         [TestCase(1, 1, ReferenceHandling.Structural, true)]
         [TestCase(1, 1, ReferenceHandling.References, true)]
-        public void WithReadonlyHappyPath(int xv, int yv, ReferenceHandling? referenceHandling, bool expected)
+        public void WithReadonlyIntHappyPath(int xv, int yv, ReferenceHandling? referenceHandling, bool expected)
         {
             var x = new EqualByTypes.WithReadonlyProperty<int>(xv);
             var y = new EqualByTypes.WithReadonlyProperty<int>(yv);
@@ -290,6 +289,36 @@
 
             result = this.EqualMethod(y, x, ReferenceHandling.StructuralWithReferenceLoops);
             Assert.AreEqual(expected, result);
+        }
+
+        [Test]
+        public void ParentChildWhenTargetChildIsNull()
+        {
+            var x = new EqualByTypes.Parent("p", new EqualByTypes.Child("c"));
+            var y = new EqualByTypes.Parent("p", null);
+            var result = this.EqualMethod(x, y, ReferenceHandling.StructuralWithReferenceLoops);
+            Assert.AreEqual(false, result);
+
+            result = this.EqualMethod(y, x, ReferenceHandling.Structural);
+            Assert.AreEqual(false, result);
+
+            result = this.EqualMethod(y, x, ReferenceHandling.References);
+            Assert.AreEqual(false, result);
+        }
+
+        [Test]
+        public void ParentChildWhenSourceChildIsNull()
+        {
+            var x = new EqualByTypes.Parent("p", null);
+            var y = new EqualByTypes.Parent("p", new EqualByTypes.Child("c"));
+            var result = this.EqualMethod(x, y, ReferenceHandling.StructuralWithReferenceLoops);
+            Assert.AreEqual(false, result);
+
+            result = this.EqualMethod(y, x, ReferenceHandling.Structural);
+            Assert.AreEqual(false, result);
+
+            result = this.EqualMethod(y, x, ReferenceHandling.References);
+            Assert.AreEqual(false, result);
         }
     }
 }
