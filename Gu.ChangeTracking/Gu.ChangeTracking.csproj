@@ -64,6 +64,8 @@
     <Compile Include="Internals\Collections\ConcurrentSet.cs" />
     <Compile Include="Internals\Collections\IgnoredTypes.cs" />
     <Compile Include="Internals\Collections\ItemCollection.cs" />
+    <Compile Include="Internals\Collections\SingleItemTrackerReferenceCollection.cs" />
+    <Compile Include="Internals\Collections\TwoItemsTrackerReferenceCollection.cs" />
     <Compile Include="Internals\PairIterator.cs" />
     <Compile Include="Internals\Collections\PropertyCollection.cs" />
     <Compile Include="Internals\PropertyPath\IndexItem.cs" />
