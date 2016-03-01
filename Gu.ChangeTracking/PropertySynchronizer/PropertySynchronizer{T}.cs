@@ -71,7 +71,12 @@ namespace Gu.ChangeTracking
             private readonly TwoItemsTrackerReferenceCollection<IPropertySynchronizer> references;
             private readonly PropertyCollection propertySynchronizers;
 
-            private PropertiesSynchronizer(INotifyPropertyChanged source, INotifyPropertyChanged target, PropertyCollection propertySynchronizers, CopyPropertiesSettings settings, TwoItemsTrackerReferenceCollection<IPropertySynchronizer> references)
+            private PropertiesSynchronizer(
+                INotifyPropertyChanged source, 
+                INotifyPropertyChanged target, 
+                PropertyCollection propertySynchronizers, 
+                CopyPropertiesSettings settings, 
+                TwoItemsTrackerReferenceCollection<IPropertySynchronizer> references)
             {
                 source.PropertyChanged += this.OnSourcePropertyChanged;
                 this.source = source;
@@ -131,6 +136,39 @@ namespace Gu.ChangeTracking
                 return new PropertiesSynchronizer(source, target, propertyCollection, settings, references);
             }
 
+            private static IDisposable CreateSynchronizer(object sv, object tv, CopyPropertiesSettings settings, TwoItemsTrackerReferenceCollection<IPropertySynchronizer> references)
+            {
+                if (sv == null || Copy.IsCopyableType(sv.GetType()))
+                {
+                    return null;
+                }
+
+                if (settings.ReferenceHandling == ReferenceHandling.Throw)
+                {
+                    throw new NotSupportedException("Specify how to handle reference types using ReferenceHandling");
+                }
+
+                if (ReferenceEquals(sv, tv))
+                {
+                    return null;
+                }
+
+                if (references != null)
+                {
+                    return references.GetOrAdd(
+                        sv,
+                        tv,
+                        () =>
+                        new PropertySynchronizer<INotifyPropertyChanged>(
+                            (INotifyPropertyChanged)sv,
+                            (INotifyPropertyChanged)tv,
+                            settings,
+                            references));
+                }
+
+                return new PropertySynchronizer<INotifyPropertyChanged>((INotifyPropertyChanged)sv, (INotifyPropertyChanged)tv, settings, references);
+            }
+
             private void OnSourcePropertyChanged(object sender, PropertyChangedEventArgs e)
             {
                 if (string.IsNullOrEmpty(e.PropertyName))
@@ -175,39 +213,6 @@ namespace Gu.ChangeTracking
                 var tv = (INotifyPropertyChanged)propertyInfo.GetValue(this.target);
                 this.propertySynchronizers[propertyInfo] = CreateSynchronizer(sv, tv, this.settings, this.references);
             }
-
-            private static IDisposable CreateSynchronizer(object sv, object tv, CopyPropertiesSettings settings, TwoItemsTrackerReferenceCollection<IPropertySynchronizer> references)
-            {
-                if (sv == null || Copy.IsCopyableType(sv.GetType()))
-                {
-                    return null;
-                }
-
-                if (settings.ReferenceHandling == ReferenceHandling.Throw)
-                {
-                    throw new NotSupportedException("Specify how to handle reference types using ReferenceHandling");
-                }
-
-                if (ReferenceEquals(sv, tv))
-                {
-                    return null;
-                }
-
-                if (references != null)
-                {
-                    return references.GetOrAdd(
-                        sv,
-                        tv,
-                        () =>
-                        new PropertySynchronizer<INotifyPropertyChanged>(
-                            (INotifyPropertyChanged)sv,
-                            (INotifyPropertyChanged)tv,
-                            settings,
-                            references));
-                }
-
-                return new PropertySynchronizer<INotifyPropertyChanged>((INotifyPropertyChanged)sv, (INotifyPropertyChanged)tv, settings, references);
-            }
         }
 
         private class ItemsSynchronizer : IDisposable
@@ -219,7 +224,11 @@ namespace Gu.ChangeTracking
             private readonly ItemCollection<IDisposable> itemSynchronizers;
             private bool isSynchronizing;
 
-            private ItemsSynchronizer(IList source, IList target, CopyPropertiesSettings settings, TwoItemsTrackerReferenceCollection<IPropertySynchronizer> references)
+            private ItemsSynchronizer(
+                IList source, 
+                IList target, 
+                CopyPropertiesSettings settings, 
+                TwoItemsTrackerReferenceCollection<IPropertySynchronizer> references)
             {
                 this.source = source;
                 this.target = target;
@@ -238,14 +247,6 @@ namespace Gu.ChangeTracking
                 }
 
                 this.ResetItemSynchronizers();
-            }
-
-            private void OnTargetCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-            {
-                if (!this.isSynchronizing)
-                {
-                    throw new InvalidOperationException("You cannot modify the target collection when you have applied a PropertySynchronizer on it");
-                }
             }
 
             public void Dispose()
@@ -283,6 +284,14 @@ namespace Gu.ChangeTracking
                 }
 
                 return new ItemsSynchronizer((IList)source, (IList)target, settings, references);
+            }
+
+            private void OnTargetCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+            {
+                if (!this.isSynchronizing)
+                {
+                    throw new InvalidOperationException("You cannot modify the target collection when you have applied a PropertySynchronizer on it");
+                }
             }
 
             private void OnSourceCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
