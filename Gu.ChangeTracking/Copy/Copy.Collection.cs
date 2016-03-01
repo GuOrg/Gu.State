@@ -128,6 +128,7 @@
                             targetDict[key] = sv;
                             continue;
                         case ReferenceHandling.Structural:
+                        case ReferenceHandling.StructuralWithReferenceLoops:
                             if (tv == null)
                             {
                                 tv = CreateInstance<T>(sv, null);
