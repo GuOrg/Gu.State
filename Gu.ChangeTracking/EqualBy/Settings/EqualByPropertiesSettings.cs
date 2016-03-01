@@ -29,6 +29,11 @@
         public static EqualByPropertiesSettings Create<T>(T x, T y, BindingFlags bindingFlags, ReferenceHandling referenceHandling, string[] excludedProperties)
         {
             var type = x?.GetType() ?? y?.GetType() ?? typeof(T);
+            return Create(type, bindingFlags, referenceHandling, excludedProperties);
+        }
+
+        public static EqualByPropertiesSettings Create(Type type, BindingFlags bindingFlags, ReferenceHandling referenceHandling, string[] excludedProperties)
+        {
             var ignored = type.GetIgnoreProperties(bindingFlags, excludedProperties);
             if (ignored == null || ignored.Count == 0)
             {
