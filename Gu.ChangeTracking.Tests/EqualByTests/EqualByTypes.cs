@@ -323,7 +323,6 @@
             public T Value { get; }
         }
 
-
         public class WithSimpleFields
         {
             internal static readonly TestComparer Comparer = new TestComparer();
@@ -510,6 +509,17 @@
                                ? 0
                                : -1;
                 }
+            }
+        }
+
+
+        public class WithIndexerType
+        {
+            // ReSharper disable once UnusedParameter.Global
+            public int this[int index]
+            {
+                get { return 0; }
+                set { }
             }
         }
     }

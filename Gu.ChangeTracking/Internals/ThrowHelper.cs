@@ -130,19 +130,16 @@
                 {
                     messageBuilder.AppendLine($"  - Exclude the property {type.PrettyName()}.{member.Name}.");
                 }
+                else
+                {
+                    ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<CopyFieldsSettings, CopyPropertiesSettings>("{T}");
+                }
             }
 
             return messageBuilder;
         }
 
-        internal static StringBuilder AppendSuggestEqualBySettings<T>(this StringBuilder messageBuilder)
-            where T : EqualBySettings
-        {
-            messageBuilder.AppendLine($"* Use {typeof(T).Name} to specify {typeof(ReferenceHandling).Name}");
-            messageBuilder.AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Structural)} means that a deep equals is performed.");
-            messageBuilder.AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.References)} means that reference equality is used.");
-            return messageBuilder;
-        }
+
 
         private static StringBuilder AppendImmutableConditionsLines(this StringBuilder messageBuilder)
         {

@@ -53,29 +53,9 @@ namespace Gu.ChangeTracking
 
         public static bool FieldValues<T>(T x, T y, IEqualByFieldsSettings settings)
         {
-            if (settings.ReferenceHandling == ReferenceHandling.Throw)
-            {
-                var type = x?.GetType() ?? y?.GetType() ?? typeof(T);
-                if (typeof(IEnumerable).IsAssignableFrom(type))
-                {
-                    Throw.CannotCompareType(type, settings);
-                }
-
-                var fieldInfos = type.GetFields(settings.BindingFlags);
-                foreach (var fieldInfo in fieldInfos)
-                {
-                    if (settings.IsIgnoringField(fieldInfo))
-                    {
-                        continue;
-                    }
-
-                    if (!fieldInfo.FieldType.IsEquatable())
-                    {
-                        Throw.CannotCompareMember(type, fieldInfo);
-                    }
-                }
-            }
-
+            Verify.FieldTypes(x, y, settings);
+            Verify.Indexers(x?.GetType() ?? y?.GetType(), settings);
+            Verify.Enumerable(x, y, settings);
             if (x == null && y == null)
             {
                 return true;
@@ -91,11 +71,17 @@ namespace Gu.ChangeTracking
                 return false;
             }
 
+            if (IsEquatable(x.GetType()))
+            {
+                return Equals(x, y);
+            }
+
             return FieldValuesCore(x, y, settings);
         }
 
         private static bool FieldValuesCore(object x, object y, IEqualByFieldsSettings settings)
         {
+            Verify.Indexers(x?.GetType() ?? y?.GetType(), settings);
             if (x == null && y == null)
             {
                 return true;

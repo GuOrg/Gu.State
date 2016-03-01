@@ -79,11 +79,14 @@
     <Compile Include="EqualByTests\FieldValues\Classes.cs" />
     <Compile Include="EqualByTests\FieldValues\Collections.cs" />
     <Compile Include="EqualByTests\FieldValues\EqualByFieldsSettingsTests.cs" />
+    <Compile Include="EqualByTests\FieldValues\Verify.cs" />
     <Compile Include="EqualByTests\PropertyValues\Classes.cs" />
     <Compile Include="EqualByTests\PropertyValues\Collections.cs" />
     <Compile Include="EqualByTests\PropertyValues\Throws.cs" />
+    <Compile Include="EqualByTests\PropertyValues\Verify.cs" />
     <Compile Include="EqualByTests\ThrowsTests.cs" />
     <Compile Include="EqualByTests\FieldValues\Throws.cs" />
+    <Compile Include="EqualByTests\VerifyTests.cs" />
     <Compile Include="Internals\Stubs\IMutableInterface.cs" />
     <Compile Include="Internals\Stubs\WithImmutableImplementingMutableInterfaceExplicit.cs" />
     <Compile Include="Internals\Stubs\WithImmutableSubclassingMutable.cs" />
