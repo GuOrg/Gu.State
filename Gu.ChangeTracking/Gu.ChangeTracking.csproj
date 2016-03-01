@@ -161,5 +161,7 @@
       <Paket>True</Paket>
     </Analyzer>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="EqualBy\Diff\" />
+  </ItemGroup>
 </Project>

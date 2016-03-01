@@ -218,7 +218,7 @@
 
         [TestCase(ReferenceHandling.Structural)]
         [TestCase(ReferenceHandling.References)]
-        public void WithArrayWhenTargetArrayIsNull( ReferenceHandling referenceHandling)
+        public void WithArrayWhenTargetArrayIsNull(ReferenceHandling referenceHandling)
         {
             var x = new EqualByTypes.WithArrayProperty("a", 1, new[] { 1, 2 });
             var y = new EqualByTypes.WithArrayProperty("a", 1, null);
@@ -276,6 +276,20 @@
                 var result = this.EqualMethod(x, y, excluded, referenceHandling.Value);
                 Assert.AreEqual(expected, result);
             }
+        }
+
+        [TestCase("p", "c", true)]
+        [TestCase("", "c", false)]
+        [TestCase("p", "", false)]
+        public void ParentChild(string p, string c, bool expected)
+        {
+            var x = new EqualByTypes.Parent("p", new EqualByTypes.Child("c"));
+            var y = new EqualByTypes.Parent(p, new EqualByTypes.Child(c));
+            var result = this.EqualMethod(x, y, ReferenceHandling.StructuralWithReferenceLoops);
+            Assert.AreEqual(expected, result);
+
+            result = this.EqualMethod(y, x, ReferenceHandling.StructuralWithReferenceLoops);
+            Assert.AreEqual(expected, result);
         }
     }
 }
