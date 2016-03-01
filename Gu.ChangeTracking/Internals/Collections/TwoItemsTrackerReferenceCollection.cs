@@ -4,16 +4,17 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    internal class TwoItemsTrackerReferenceCollection
+    internal class TwoItemsTrackerReferenceCollection<T>
+         where T : IDisposable
     {
         private readonly List<TrackerReference> items = new List<TrackerReference>();
         private readonly object gate = new object();
 
-        internal IDisposable GetOrAdd(object item1, object item2, Func<IDisposable> creator)
+        internal IDisposable GetOrAdd(object item1, object item2, Func<T> creator)
         {
             lock (this.gate)
             {
-                var match = this.items.SingleOrDefault(x => ReferenceEquals(x.Item1, item1));
+                var match = this.Find(item1, item2);
                 if (match != null)
                 {
                     match.RefCount++;
@@ -21,8 +22,9 @@
                 }
 
                 var tracker = creator();
-                this.items.Add(new TrackerReference(item1, item2, tracker));
-                return tracker;
+                var trackerReference = new TrackerReference(item1, item2, tracker, this);
+                this.items.Add(trackerReference);
+                return trackerReference;
             }
         }
 
@@ -30,7 +32,7 @@
         {
             lock (this.gate)
             {
-                var match = this.items.SingleOrDefault(x => ReferenceEquals(x.Item1, item1) && ReferenceEquals(x.Item2, item2));
+                var match = this.Find(item1, item2);
                 if (match != null)
                 {
                     match.RefCount--;
@@ -43,24 +45,45 @@
             }
         }
 
+        private TrackerReference Find(object item1, object item2)
+        {
+            return this.items.SingleOrDefault(x => ReferenceEquals(x.Item1, item1) && ReferenceEquals(x.Item2, item2));
+        }
+
+        private void Remove(TrackerReference trackerReference)
+        {
+            this.items.Remove(trackerReference);
+        }
+
         private sealed class TrackerReference : IDisposable
         {
             internal readonly object Item1;
             internal readonly object Item2;
-            internal readonly IDisposable Tracker;
+            internal readonly T Tracker;
+            private readonly TwoItemsTrackerReferenceCollection<T> parent;
+
             internal int RefCount;
 
-            public TrackerReference(object item1, object item2, IDisposable tracker)
+            public TrackerReference(object item1, object item2, T tracker, TwoItemsTrackerReferenceCollection<T> parent)
             {
                 this.Item1 = item1;
                 this.Item2 = item2;
                 this.Tracker = tracker;
+                this.parent = parent;
                 this.RefCount = 1;
             }
 
             public void Dispose()
             {
-                this.Tracker.Dispose();
+                lock (this.parent.gate)
+                {
+                    this.RefCount--;
+                    if (this.RefCount == 0)
+                    {
+                        this.Tracker.Dispose();
+                        this.parent.Remove(this);
+                    }
+                }
             }
         }
     }

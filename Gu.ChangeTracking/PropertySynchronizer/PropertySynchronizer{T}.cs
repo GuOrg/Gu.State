@@ -10,7 +10,7 @@ namespace Gu.ChangeTracking
     /// <summary>
     /// This class tracks property changes in source and keeps target in sync
     /// </summary>
-    public class PropertySynchronizer<T> : IDisposable
+    public class PropertySynchronizer<T> : IPropertySynchronizer
         where T : class, INotifyPropertyChanged
     {
         private readonly PropertiesSynchronizer propertiesSynchronizer;
@@ -37,16 +37,22 @@ namespace Gu.ChangeTracking
         }
 
         public PropertySynchronizer(T source, T target, CopyPropertiesSettings settings)
+            : this(source, target, settings, settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops ? new TwoItemsTrackerReferenceCollection<IPropertySynchronizer>() : null)
+        {
+        }
+
+        private PropertySynchronizer(T source, T target, CopyPropertiesSettings settings, TwoItemsTrackerReferenceCollection<IPropertySynchronizer> references)
         {
             Ensure.NotSame(source, target, nameof(source), nameof(target));
             Ensure.NotNull(source, nameof(source));
             Ensure.NotNull(target, nameof(target));
             Ensure.SameType(source, target, nameof(source), nameof(target));
             Copy.VerifyCanCopyPropertyValues(source?.GetType() ?? typeof(T), settings);
+            references?.GetOrAdd(source, target, () => this);
             this.Settings = settings;
             Copy.PropertyValues(source, target, settings);
-            this.propertiesSynchronizer = PropertiesSynchronizer.Create(source, target, settings);
-            this.itemsSynchronizer = ItemsSynchronizer.Create(source, target, settings);
+            this.propertiesSynchronizer = PropertiesSynchronizer.Create(source, target, settings, references);
+            this.itemsSynchronizer = ItemsSynchronizer.Create(source, target, settings, references);
         }
 
         public CopyPropertiesSettings Settings { get; }
@@ -62,14 +68,16 @@ namespace Gu.ChangeTracking
             private readonly INotifyPropertyChanged source;
             private readonly INotifyPropertyChanged target;
             private readonly CopyPropertiesSettings settings;
+            private readonly TwoItemsTrackerReferenceCollection<IPropertySynchronizer> references;
             private readonly PropertyCollection propertySynchronizers;
 
-            private PropertiesSynchronizer(INotifyPropertyChanged source, INotifyPropertyChanged target, PropertyCollection propertySynchronizers, CopyPropertiesSettings settings)
+            private PropertiesSynchronizer(INotifyPropertyChanged source, INotifyPropertyChanged target, PropertyCollection propertySynchronizers, CopyPropertiesSettings settings, TwoItemsTrackerReferenceCollection<IPropertySynchronizer> references)
             {
                 source.PropertyChanged += this.OnSourcePropertyChanged;
                 this.source = source;
                 this.target = target;
                 this.settings = settings;
+                this.references = references;
                 this.propertySynchronizers = propertySynchronizers;
             }
 
@@ -79,7 +87,11 @@ namespace Gu.ChangeTracking
                 this.propertySynchronizers?.Dispose();
             }
 
-            internal static PropertiesSynchronizer Create(INotifyPropertyChanged source, INotifyPropertyChanged target, CopyPropertiesSettings settings)
+            internal static PropertiesSynchronizer Create(
+                INotifyPropertyChanged source,
+                INotifyPropertyChanged target,
+                CopyPropertiesSettings settings,
+                TwoItemsTrackerReferenceCollection<IPropertySynchronizer> references)
             {
                 if (source == null)
                 {
@@ -100,7 +112,7 @@ namespace Gu.ChangeTracking
                     {
                         var sv = propertyInfo.GetValue(source);
                         var tv = propertyInfo.GetValue(target);
-                        var synchronizer = CreateSynchronizer((INotifyPropertyChanged)sv, (INotifyPropertyChanged)tv, settings);
+                        var synchronizer = CreateSynchronizer((INotifyPropertyChanged)sv, (INotifyPropertyChanged)tv, settings, references);
                         if (items == null)
                         {
                             items = new List<PropertyCollection.PropertyAndDisposable>();
@@ -112,11 +124,11 @@ namespace Gu.ChangeTracking
 
                 if (items == null)
                 {
-                    return new PropertiesSynchronizer(source, target, null, settings);
+                    return new PropertiesSynchronizer(source, target, null, settings, references);
                 }
 
                 var propertyCollection = new PropertyCollection(items);
-                return new PropertiesSynchronizer(source, target, propertyCollection, settings);
+                return new PropertiesSynchronizer(source, target, propertyCollection, settings, references);
             }
 
             private void OnSourcePropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -161,10 +173,10 @@ namespace Gu.ChangeTracking
             {
                 var sv = (INotifyPropertyChanged)propertyInfo.GetValue(this.source);
                 var tv = (INotifyPropertyChanged)propertyInfo.GetValue(this.target);
-                this.propertySynchronizers[propertyInfo] = CreateSynchronizer(sv, tv, this.settings);
+                this.propertySynchronizers[propertyInfo] = CreateSynchronizer(sv, tv, this.settings, this.references);
             }
 
-            private static PropertySynchronizer<INotifyPropertyChanged> CreateSynchronizer(object sv, object tv, CopyPropertiesSettings settings)
+            private static IDisposable CreateSynchronizer(object sv, object tv, CopyPropertiesSettings settings, TwoItemsTrackerReferenceCollection<IPropertySynchronizer> references)
             {
                 if (sv == null || Copy.IsCopyableType(sv.GetType()))
                 {
@@ -181,7 +193,20 @@ namespace Gu.ChangeTracking
                     return null;
                 }
 
-                return new PropertySynchronizer<INotifyPropertyChanged>((INotifyPropertyChanged)sv, (INotifyPropertyChanged)tv, settings);
+                if (references != null)
+                {
+                    return references.GetOrAdd(
+                        sv,
+                        tv,
+                        () =>
+                        new PropertySynchronizer<INotifyPropertyChanged>(
+                            (INotifyPropertyChanged)sv,
+                            (INotifyPropertyChanged)tv,
+                            settings,
+                            references));
+                }
+
+                return new PropertySynchronizer<INotifyPropertyChanged>((INotifyPropertyChanged)sv, (INotifyPropertyChanged)tv, settings, references);
             }
         }
 
@@ -190,15 +215,16 @@ namespace Gu.ChangeTracking
             private readonly IList source;
             private readonly IList target;
             private readonly CopyPropertiesSettings settings;
-            private readonly ItemCollection<PropertySynchronizer<INotifyPropertyChanged>> itemSynchronizers;
-
+            private readonly TwoItemsTrackerReferenceCollection<IPropertySynchronizer> references;
+            private readonly ItemCollection<IDisposable> itemSynchronizers;
             private bool isSynchronizing;
 
-            private ItemsSynchronizer(IList source, IList target, CopyPropertiesSettings settings)
+            private ItemsSynchronizer(IList source, IList target, CopyPropertiesSettings settings, TwoItemsTrackerReferenceCollection<IPropertySynchronizer> references)
             {
                 this.source = source;
                 this.target = target;
                 this.settings = settings;
+                this.references = references;
                 ((INotifyCollectionChanged)source).CollectionChanged += this.OnSourceCollectionChanged;
                 var targetColChanged = target as INotifyCollectionChanged;
                 if (targetColChanged != null)
@@ -208,7 +234,7 @@ namespace Gu.ChangeTracking
 
                 if (!source.GetType().GetItemType().IsImmutable())
                 {
-                    this.itemSynchronizers = new ItemCollection<PropertySynchronizer<INotifyPropertyChanged>>();
+                    this.itemSynchronizers = new ItemCollection<IDisposable>();
                 }
 
                 this.ResetItemSynchronizers();
@@ -233,7 +259,7 @@ namespace Gu.ChangeTracking
                 }
             }
 
-            internal static ItemsSynchronizer Create(T source, T target, CopyPropertiesSettings settings)
+            internal static ItemsSynchronizer Create(T source, T target, CopyPropertiesSettings settings, TwoItemsTrackerReferenceCollection<IPropertySynchronizer> references)
             {
                 const string canOnlySynchronizeCollectionsThatAreIlistAndInotifycollectionchanged = "Can only synchronize collections that are IList and INotifyCollectionChanged";
                 if (!(source is IList))
@@ -256,7 +282,7 @@ namespace Gu.ChangeTracking
                     throw new NotSupportedException(canOnlySynchronizeCollectionsThatAreIlistAndInotifycollectionchanged);
                 }
 
-                return new ItemsSynchronizer((IList)source, (IList)target, settings);
+                return new ItemsSynchronizer((IList)source, (IList)target, settings, references);
             }
 
             private void OnSourceCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -370,7 +396,7 @@ namespace Gu.ChangeTracking
                 }
             }
 
-            private PropertySynchronizer<INotifyPropertyChanged> CreateItemSynchronizer(int index)
+            private IDisposable CreateItemSynchronizer(int index)
             {
                 var sv = this.source[index];
                 if (sv == null)
@@ -399,7 +425,20 @@ namespace Gu.ChangeTracking
                     return null;
                 }
 
-                return new PropertySynchronizer<INotifyPropertyChanged>((INotifyPropertyChanged)sv, (INotifyPropertyChanged)tv, this.settings);
+                if (this.references != null)
+                {
+                   return this.references.GetOrAdd(
+                        sv,
+                        tv,
+                        () =>
+                        new PropertySynchronizer<INotifyPropertyChanged>(
+                            (INotifyPropertyChanged)sv,
+                            (INotifyPropertyChanged)tv,
+                            this.settings,
+                            this.references));
+                }
+
+                return new PropertySynchronizer<INotifyPropertyChanged>((INotifyPropertyChanged)sv, (INotifyPropertyChanged)tv, this.settings, null);
             }
         }
     }
