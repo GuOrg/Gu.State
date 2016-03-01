@@ -243,7 +243,6 @@
             public T Value { get; }
         }
 
-
         public class WithSimpleFields
         {
             internal static readonly TestComparer Comparer = new TestComparer();
@@ -457,6 +456,35 @@
                 get { return 0; }
                 set { }
             }
+        }
+
+        public class Parent
+        {
+            public Parent(string name, Child child)
+            {
+                this.Name = name;
+                if (child != null)
+                {
+                    child.Parent = this;
+                }
+                this.Child = child;
+            }
+
+            public string Name { get; set; }
+
+            public Child Child { get; set; }
+        }
+
+        public class Child
+        {
+            public Child(string name)
+            {
+                this.Name = name;
+            }
+
+            public string Name { get; set; }
+
+            public Parent Parent { get; set; }
         }
     }
 }

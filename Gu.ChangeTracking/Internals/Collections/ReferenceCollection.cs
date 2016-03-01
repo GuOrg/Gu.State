@@ -2,34 +2,29 @@
 {
     using System.Collections.Generic;
 
-    public class ReferenceCollection
+    internal class ReferenceCollection
     {
-        private readonly HashSet<object> pairs = new HashSet<object>(ReferenceComparer.Default);
+        private readonly HashSet<object> items = new HashSet<object>(ReferenceComparer.Default);
 
-        public static bool IsReferenceType(object x)
+        internal void Add(object x)
         {
             if (x == null)
             {
-                return false;
+                return;
             }
 
             var type = x.GetType();
-            return !EqualBy.IsEquatable(type);
+            if (type.IsValueType || type.IsEnum)
+            {
+                return;
+            }
+
+            this.items.Add(x);
         }
 
-        public void Add(object x)
+        internal bool Contains(object x)
         {
-            this.pairs.Add(x);
-        }
-
-        public void Remove(object x)
-        {
-            this.pairs.Remove(x);
-        }
-
-        public bool Contains(object x)
-        {
-            return this.pairs.Contains(x);
+            return this.items.Contains(x);
         }
 
         private class ReferenceComparer : IEqualityComparer<object>

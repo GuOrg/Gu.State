@@ -58,18 +58,16 @@
             if (settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops)
             {
                 var referencePairs = new ReferencePairCollection();
-                referencePairs.Add(x, y);
                 return PropertiesValuesEquals(x, y, settings, referencePairs);
             }
-            else
-            {
-                return PropertiesValuesEquals(x, y, settings, null);
-            }
+
+            return PropertiesValuesEquals(x, y, settings, null);
         }
 
         private static bool PropertiesValuesEquals<T>(T x, T y, IEqualByPropertiesSettings settings, ReferencePairCollection referencePairs)
         {
             Verify.Indexers(x?.GetType() ?? y?.GetType(), settings);
+            referencePairs?.Add(x, y);
             if (ReferenceEquals(x, y))
             {
                 return true;

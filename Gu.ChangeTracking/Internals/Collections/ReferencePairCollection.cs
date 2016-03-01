@@ -3,32 +3,27 @@
     using System;
     using System.Collections.Generic;
 
-    public class ReferencePairCollection
+    internal class ReferencePairCollection
     {
         private readonly HashSet<ReferencePair> pairs = new HashSet<ReferencePair>();
 
-        public static bool IsReferenceType(object x)
+        internal void Add(object x, object y)
         {
-            if (x == null)
+            if (x == null || y == null)
             {
-                return false;
+                return;
             }
 
             var type = x.GetType();
-            return !EqualBy.IsEquatable(type);
-        }
+            if (type.IsValueType || type.IsEnum)
+            {
+                return;
+            }
 
-        public void Add(object x, object y)
-        {
             this.pairs.Add(new ReferencePair(x, y));
         }
 
-        public void Remove(object x, object y)
-        {
-            this.pairs.Remove(new ReferencePair(x, y));
-        }
-
-        public bool Contains(object x, object y)
+        internal bool Contains(object x, object y)
         {
             return this.pairs.Contains(new ReferencePair(x, y));
         }

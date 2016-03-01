@@ -434,7 +434,11 @@
             public Parent(string name, Child child)
             {
                 this.Name = name;
-                child.Parent = this;
+                if (child != null)
+                {
+                    child.Parent = this;
+                }
+
                 this.Child = child;
             }
 

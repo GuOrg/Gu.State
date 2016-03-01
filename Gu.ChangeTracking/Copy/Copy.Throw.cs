@@ -8,6 +8,15 @@
 
     public static partial class Copy
     {
+        internal static StringBuilder AppendCopyFailed<T>(this StringBuilder messageBuilder)
+            where T : CopySettings
+        {
+            var line = typeof(T) == typeof(CopyFieldsSettings)
+                ? $"Copy.{nameof(Copy.FieldValues)}(x, y) failed."
+                : $"Copy.{nameof(Copy.PropertyValues)}(x, y) failed.";
+            return messageBuilder.AppendLine(line);
+        }
+
         private static class Throw
         {
             // ReSharper disable once UnusedParameter.Local
@@ -22,7 +31,8 @@
             {
                 var errorBuilder = new StringBuilder();
                 AppendCannotCopyMember<T>(errorBuilder, sourceType, member);
-                throw new NotSupportedException(errorBuilder.ToString());
+                var message = errorBuilder.ToString();
+                throw new NotSupportedException(message);
             }
 
             // ReSharper disable once UnusedParameter.Local
@@ -38,11 +48,11 @@
                 MemberInfo member)
                 where T : CopySettings
             {
+                errorBuilder.AppendCopyFailed<T>();
                 Type memberType = null;
                 var propertyInfo = member as PropertyInfo;
                 if (propertyInfo != null)
                 {
-                    errorBuilder.AppendLine($"Copy.{nameof(PropertyValues)}(x, y) failed.");
                     if (propertyInfo.GetIndexParameters().Length > 0)
                     {
                         errorBuilder.AppendLine($"Indexers are not supported.");
@@ -57,7 +67,6 @@
                     var fieldInfo = member as FieldInfo;
                     if (fieldInfo != null)
                     {
-                        errorBuilder.AppendLine($"Copy.{nameof(FieldValues)}(x, y) failed.");
                         errorBuilder.AppendLine($"The field {sourceType.PrettyName()}.{member.Name} is not supported.");
                         errorBuilder.AppendLine($"The field is of type {fieldInfo.FieldType.PrettyName()}.");
                         memberType = fieldInfo.FieldType;
@@ -137,29 +146,15 @@
                 throw new NotSupportedException(errorBuilder.ToString());
             }
 
+            // ReSharper disable once UnusedParameter.Local
             internal static void AppendCannotCopyType<T>(StringBuilder errorBuilder, Type type, T settings)
                 where T : CopySettings
             {
-                if (settings is CopyPropertiesSettings)
-                {
-                    errorBuilder.AppendLine(
-                        $"Copy.{nameof(PropertyValues)}(x, y) does not support copying the type {type.PrettyName()}");
-                }
-                else if (settings is CopyFieldsSettings)
-                {
-                    errorBuilder.AppendLine(
-                        $"Copy.{nameof(FieldValues)}(x, y) does not support copying the type {type.PrettyName()}");
-                }
-                else
-                {
-                    ThrowHelper
-                        .ThrowThereIsABugInTheLibraryExpectedParameterOfTypes
-                        <CopyPropertiesSettings, CopyFieldsSettings>(nameof(settings));
-                }
-
-                errorBuilder.AppendSolveTheProblemBy()
-                    .AppendSuggestImmutableType(type)
-                    .AppendSuggestCopySettings<T>(type, null);
+                errorBuilder.AppendCopyFailed<T>()
+                            .AppendLine($"The type {type.PrettyName()} is not supported.")
+                            .AppendSolveTheProblemBy()
+                            .AppendSuggestImmutableType(type)
+                            .AppendSuggestCopySettings<T>(type, null);
             }
 
             internal static void CannotCopyItem<T>(IList source, IList target, int index, T settings)
@@ -175,7 +170,7 @@
                 else if (settings is CopyFieldsSettings)
                 {
                     errorBuilder.AppendLine(
-                        $"Copy.{nameof(FieldValues)}(x, y) does not support copying the type {itemType.PrettyName()}");
+                        $"Copy.{nameof(CopyFieldsValues)}(x, y) does not support copying the type {itemType.PrettyName()}");
                 }
                 else
                 {
@@ -206,7 +201,7 @@
                 else if (settings is CopyFieldsSettings)
                 {
                     errorBuilder.AppendLine(
-                        $"Copy.{nameof(FieldValues)}(x, y) does not support copying the type {itemType.PrettyName()}");
+                        $"Copy.{nameof(CopyFieldsValues)}(x, y) does not support copying the type {itemType.PrettyName()}");
                 }
                 else
                 {
