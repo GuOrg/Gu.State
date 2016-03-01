@@ -4,6 +4,7 @@ namespace Gu.ChangeTracking
     {
         Throw,
         References,
-        Structural
+        Structural,
+        StructuralWithReferenceLoops
     }
 }

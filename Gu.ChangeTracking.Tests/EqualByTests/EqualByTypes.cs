@@ -287,32 +287,6 @@
             public List<T> Items { get; set; } = new List<T>();
         }
 
-        public class WithProperty<T>
-        {
-            public WithProperty()
-            {
-            }
-
-            public WithProperty(T value)
-            {
-                this.Value = value;
-            }
-
-            public T Value { get; set; }
-        }
-
-        public class WithReadonlyField
-        {
-            public readonly int ReadonlyValue;
-            public int Value;
-
-            public WithReadonlyField(int readonlyValue, int value)
-            {
-                this.ReadonlyValue = readonlyValue;
-                this.Value = value;
-            }
-        }
-
         public class WithReadonlyProperty<T>
         {
             public WithReadonlyProperty(T value)
@@ -321,73 +295,6 @@
             }
 
             public T Value { get; }
-        }
-
-        public class WithSimpleFields
-        {
-            internal static readonly TestComparer Comparer = new TestComparer();
-
-            public WithSimpleFields()
-            {
-            }
-
-            public WithSimpleFields(int intValue, int? nullableIntValue, string stringValue, StringSplitOptions enumValue)
-            {
-                this.IntValue = intValue;
-                this.NullableIntValue = nullableIntValue;
-                this.StringValue = stringValue;
-                this.EnumValue = enumValue;
-            }
-
-            internal int IntValue;
-            internal int? NullableIntValue;
-            internal string StringValue;
-            internal StringSplitOptions EnumValue;
-
-            internal sealed class TestComparer : IEqualityComparer<WithSimpleFields>, IComparer
-            {
-                public bool Equals(WithSimpleFields x, WithSimpleFields y)
-                {
-                    if (ReferenceEquals(x, y))
-                    {
-                        return true;
-                    }
-                    if (ReferenceEquals(x, null))
-                    {
-                        return false;
-                    }
-                    if (ReferenceEquals(y, null))
-                    {
-                        return false;
-                    }
-                    if (x.GetType() != y.GetType())
-                    {
-                        return false;
-                    }
-                    return x.IntValue == y.IntValue && x.NullableIntValue == y.NullableIntValue && string.Equals(x.StringValue, y.StringValue) && x.EnumValue == y.EnumValue;
-                }
-
-                public int GetHashCode(WithSimpleFields obj)
-                {
-                    unchecked
-                    {
-                        var hashCode = obj.IntValue;
-                        hashCode = (hashCode * 397) ^ obj.NullableIntValue.GetHashCode();
-                        hashCode = (hashCode * 397) ^ (obj.StringValue != null
-                                                           ? obj.StringValue.GetHashCode()
-                                                           : 0);
-                        hashCode = (hashCode * 397) ^ (int)obj.EnumValue;
-                        return hashCode;
-                    }
-                }
-
-                int IComparer.Compare(object x, object y)
-                {
-                    return this.Equals((WithSimpleFields)x, (WithSimpleFields)y)
-                               ? 0
-                               : -1;
-                }
-            }
         }
 
         public class WithSimpleProperties : INotifyPropertyChanged
@@ -512,7 +419,6 @@
             }
         }
 
-
         public class WithIndexerType
         {
             // ReSharper disable once UnusedParameter.Global
@@ -521,6 +427,32 @@
                 get { return 0; }
                 set { }
             }
+        }
+
+        public class Parent
+        {
+            public Parent(string name, Child child)
+            {
+                this.Name = name;
+                child.Parent = this;
+                this.Child = child;
+            }
+
+            public string Name { get; }
+
+            public Child Child { get; set; }
+        }
+
+        public class Child
+        {
+            public Child(string name)
+            {
+                this.Name = name;
+            }
+
+            public string Name { get; }
+
+            public Parent Parent { get; set; }
         }
     }
 }

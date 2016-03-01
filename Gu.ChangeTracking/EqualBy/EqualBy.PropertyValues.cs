@@ -55,10 +55,19 @@
         {
             Verify.PropertyTypes(x, y, settings);
             Verify.Enumerable(x, y, settings);
-            return PropertiesValuesEquals(x, y, settings);
+            if (settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops)
+            {
+                var referencePairs = new ReferencePairCollection();
+                referencePairs.Add(x, y);
+                return PropertiesValuesEquals(x, y, settings, referencePairs);
+            }
+            else
+            {
+                return PropertiesValuesEquals(x, y, settings, null);
+            }
         }
 
-        private static bool PropertiesValuesEquals<T>(T x, T y, IEqualByPropertiesSettings settings)
+        private static bool PropertiesValuesEquals<T>(T x, T y, IEqualByPropertiesSettings settings, ReferencePairCollection referencePairs)
         {
             Verify.Indexers(x?.GetType() ?? y?.GetType(), settings);
             if (ReferenceEquals(x, y))
@@ -83,7 +92,7 @@
 
             if (x is IEnumerable)
             {
-                if (!EnumerableEquals(x, y, ItemPropertiesEquals, settings))
+                if (!EnumerableEquals(x, y, ItemPropertiesEquals, settings, referencePairs))
                 {
                     return false;
                 }
@@ -99,7 +108,12 @@
 
                 var xv = propertyInfo.GetValue(x);
                 var yv = propertyInfo.GetValue(y);
-                if (!PropertyValueEquals(xv, yv, propertyInfo, settings))
+                if (referencePairs?.Contains(xv, yv) == true)
+                {
+                    continue;
+                }
+
+                if (!PropertyValueEquals(xv, yv, propertyInfo, settings, referencePairs))
                 {
                     return false;
                 }
@@ -108,12 +122,12 @@
             return true;
         }
 
-        private static bool ItemPropertiesEquals(object x, object y, IEqualByPropertiesSettings settings)
+        private static bool ItemPropertiesEquals(object x, object y, IEqualByPropertiesSettings settings, ReferencePairCollection referencePairs)
         {
-            return PropertyValueEquals(x, y, null, settings);
+            return PropertyValueEquals(x, y, null, settings, referencePairs);
         }
 
-        private static bool PropertyValueEquals(object x, object y, PropertyInfo propertyInfo, IEqualByPropertiesSettings settings)
+        private static bool PropertyValueEquals(object x, object y, PropertyInfo propertyInfo, IEqualByPropertiesSettings settings, ReferencePairCollection referencePairs)
         {
             if (ReferenceEquals(x, y))
             {
@@ -135,7 +149,8 @@
                 case ReferenceHandling.References:
                     return ReferenceEquals(x, y);
                 case ReferenceHandling.Structural:
-                    return PropertiesValuesEquals(x, y, settings);
+                case ReferenceHandling.StructuralWithReferenceLoops:
+                    return PropertiesValuesEquals(x, y, settings, referencePairs);
                 case ReferenceHandling.Throw:
                     Throw.CannotCompareMember(x.GetType(), propertyInfo);
                     break;

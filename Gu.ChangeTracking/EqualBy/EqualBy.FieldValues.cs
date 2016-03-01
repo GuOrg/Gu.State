@@ -76,10 +76,19 @@ namespace Gu.ChangeTracking
                 return Equals(x, y);
             }
 
-            return FieldValuesCore(x, y, settings);
+            if (settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops)
+            {
+                var referencePairs = new ReferencePairCollection();
+                referencePairs.Add(x, y);
+                return FieldsValuesEquals(x, y, settings, referencePairs);
+            }
+            else
+            {
+                return FieldsValuesEquals(x, y, settings, null);
+            }
         }
 
-        private static bool FieldValuesCore(object x, object y, IEqualByFieldsSettings settings)
+        private static bool FieldsValuesEquals(object x, object y, IEqualByFieldsSettings settings, ReferencePairCollection referencePairs)
         {
             Verify.Indexers(x?.GetType() ?? y?.GetType(), settings);
             if (x == null && y == null)
@@ -99,7 +108,7 @@ namespace Gu.ChangeTracking
 
             if (x is IEnumerable)
             {
-                if (!EnumerableEquals(x, y, FieldItemEquals, settings))
+                if (!EnumerableEquals(x, y, FieldItemEquals, settings, referencePairs))
                 {
                     return false;
                 }
@@ -115,8 +124,12 @@ namespace Gu.ChangeTracking
 
                 var xv = fieldInfo.GetValue(x);
                 var yv = fieldInfo.GetValue(y);
+                if (referencePairs?.Contains(xv, yv) == true)
+                {
+                    continue;
+                }
 
-                if (!FieldValueEquals(xv, yv, fieldInfo, settings))
+                if (!FieldValueEquals(xv, yv, fieldInfo, settings, referencePairs))
                 {
                     return false;
                 }
@@ -125,12 +138,12 @@ namespace Gu.ChangeTracking
             return true;
         }
 
-        private static bool FieldItemEquals(object x, object y, IEqualByFieldsSettings settings)
+        private static bool FieldItemEquals(object x, object y, IEqualByFieldsSettings settings, ReferencePairCollection referencePairs)
         {
-            return FieldValueEquals(x, y, null, settings);
+            return FieldValueEquals(x, y, null, settings, referencePairs);
         }
 
-        private static bool FieldValueEquals(object x, object y, FieldInfo fieldInfo, IEqualByFieldsSettings settings)
+        private static bool FieldValueEquals(object x, object y, FieldInfo fieldInfo, IEqualByFieldsSettings settings, ReferencePairCollection referencePairs)
         {
             if (x == null && y == null)
             {
@@ -154,19 +167,10 @@ namespace Gu.ChangeTracking
                 switch (settings.ReferenceHandling)
                 {
                     case ReferenceHandling.References:
-                        if (ReferenceEquals(x, y))
-                        {
-                            return true;
-                        }
-
-                        return false;
+                        return ReferenceEquals(x, y);
                     case ReferenceHandling.Structural:
-                        if (FieldValuesCore(x, y, settings))
-                        {
-                            return true;
-                        }
-
-                        return false;
+                    case ReferenceHandling.StructuralWithReferenceLoops:
+                        return FieldsValuesEquals(x, y, settings, referencePairs);
                     case ReferenceHandling.Throw:
                         Throw.CannotCompareMember(x.GetType(), fieldInfo);
                         break;
