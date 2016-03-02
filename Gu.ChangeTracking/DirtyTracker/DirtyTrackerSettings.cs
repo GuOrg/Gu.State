@@ -12,11 +12,6 @@
         private readonly IgnoredTypes ignoredTypes;
         private readonly HashSet<PropertyInfo> ignoredProperties;
 
-        public DirtyTrackerSettings(Type type, string[] ignoreProperties, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
-            : this(type?.GetIgnoreProperties(bindingFlags, ignoreProperties), bindingFlags, referenceHandling)
-        {
-        }
-
         public DirtyTrackerSettings(IEnumerable<PropertyInfo> ignoredProperties, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
         {
             this.ignoredProperties = ignoredProperties != null
@@ -32,6 +27,23 @@
         public BindingFlags BindingFlags { get; }
 
         public ReferenceHandling ReferenceHandling { get; }
+
+        public static DirtyTrackerSettings Create<T>(T x, T y,string[] ignoreProperties,BindingFlags bindingFlags, ReferenceHandling referenceHandling)
+        {
+            var type = x?.GetType() ?? y?.GetType() ?? typeof(T);
+            return Create(type, ignoreProperties, bindingFlags, referenceHandling);
+        }
+
+        public static DirtyTrackerSettings Create(Type type, string[] ignoreProperties, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
+        {
+            var ignored = type.GetIgnoreProperties(bindingFlags, ignoreProperties);
+            if (ignored == null || ignored.Count == 0)
+            {
+                return GetOrCreate(bindingFlags, referenceHandling);
+            }
+
+            return new DirtyTrackerSettings(ignored, bindingFlags, referenceHandling);
+        }
 
         public static DirtyTrackerSettings GetOrCreate(ReferenceHandling referenceHandling)
         {

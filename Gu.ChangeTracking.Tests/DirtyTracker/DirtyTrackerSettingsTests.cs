@@ -1,10 +1,8 @@
 ﻿namespace Gu.ChangeTracking.Tests
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Linq;
 
     using NUnit.Framework;
 
@@ -16,7 +14,7 @@
             var type = typeof(DirtyTrackerTypes.ComplexType);
             var nameProperty = type.GetProperty(nameof(DirtyTrackerTypes.ComplexType.Name));
             var valueProperty = type.GetProperty(nameof(DirtyTrackerTypes.ComplexType.Value));
-            var settings = new DirtyTrackerSettings(type, new[] { nameProperty.Name }, Constants.DefaultPropertyBindingFlags, ReferenceHandling.Throw);
+            var settings = DirtyTrackerSettings.Create(type, new[] { nameProperty.Name }, Constants.DefaultPropertyBindingFlags, ReferenceHandling.Throw);
             Assert.AreEqual(true, settings.IsIgnoringProperty(nameProperty));
             Assert.AreEqual(false, settings.IsIgnoringProperty(valueProperty));
         }
