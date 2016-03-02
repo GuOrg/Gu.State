@@ -4,7 +4,6 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.Specialized;
-    using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
     using System.Text;
@@ -29,6 +28,63 @@
         internal static StringBuilder AppendSolveTheProblemBy(this StringBuilder errorBuilder)
         {
             return errorBuilder.AppendLine("Solve the problem by any of:");
+        }
+
+        internal static StringBuilder AppendExcludeType(this StringBuilder errorBuilder, Type type)
+        {
+            return errorBuilder.CreateIfNull()
+                               .AppendLine($"  - Exclude the type {type.PrettyName()}.");
+        }
+
+        internal static StringBuilder AppendExcludeMember(this StringBuilder errorBuilder, Type sourceType, MemberInfo memberInfo)
+        {
+            if (memberInfo == null)
+            {
+                return errorBuilder;
+            }
+
+            var fieldInfo = memberInfo as FieldInfo;
+            if (fieldInfo != null)
+            {
+                return errorBuilder.AppendExcludeField(sourceType, fieldInfo);
+            }
+
+            var propertyInfo = memberInfo as PropertyInfo;
+            if (propertyInfo != null)
+            {
+                return errorBuilder.AppendExcludeProperty(sourceType, propertyInfo);
+            }
+
+            Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<FieldInfo, PropertyInfo>(nameof(memberInfo));
+            throw new InvalidOperationException("Never getting here");
+        }
+
+        internal static StringBuilder AppendExcludeProperty(this StringBuilder errorBuilder, Type sourceType, PropertyInfo propertyInfo)
+        {
+            if (propertyInfo == null)
+            {
+                return errorBuilder;
+            }
+
+            return errorBuilder.CreateIfNull()
+                               .AppendLine($"  - Exclude the property {sourceType.PrettyName()}.{propertyInfo.Name}.");
+        }
+
+        internal static StringBuilder AppendExcludeField(this StringBuilder errorBuilder, Type sourceType, FieldInfo fieldInfo)
+        {
+            if (fieldInfo == null)
+            {
+                return errorBuilder;
+            }
+
+            return errorBuilder.CreateIfNull()
+                               .AppendLine($"  - Exclude the field {sourceType.PrettyName()}.{fieldInfo.Name}.");
+        }
+
+        internal static StringBuilder AppendTypeIsNotSupported(this StringBuilder errorBuilder, Type type)
+        {
+            return errorBuilder.CreateIfNull()
+                               .AppendLine($"The type {type.PrettyName()} is not supported.");
         }
 
         internal static StringBuilder AppendMemberIsNotSupported(this StringBuilder errorBuilder, Type sourceType, MemberInfo memberInfo)
@@ -58,6 +114,11 @@
 
         internal static StringBuilder AppendPropertyIsNotSupported(this StringBuilder errorBuilder, Type sourceType, PropertyInfo propertyInfo)
         {
+            if (propertyInfo == null)
+            {
+                return errorBuilder;
+            }
+
             errorBuilder = errorBuilder.CreateIfNull();
             if (propertyInfo.GetIndexParameters().Length > 0)
             {
