@@ -83,37 +83,10 @@
                 where T : CopySettings
             {
                 errorBuilder.CreateIfNull()
-                            .AppendCopyFailed<T>();
-                Type memberType = null;
-                var propertyInfo = member as PropertyInfo;
-                if (propertyInfo != null)
-                {
-                    if (propertyInfo.GetIndexParameters().Length > 0)
-                    {
-                        errorBuilder.AppendLine($"Indexers are not supported.");
-                    }
-
-                    errorBuilder.AppendLine($"The property {sourceType.PrettyName()}.{member.Name} is not supported.");
-                    errorBuilder.AppendLine($"The property is of type {propertyInfo.PropertyType.PrettyName()}.");
-                    memberType = propertyInfo.PropertyType;
-                }
-                else
-                {
-                    var fieldInfo = member as FieldInfo;
-                    if (fieldInfo != null)
-                    {
-                        errorBuilder.AppendLine($"The field {sourceType.PrettyName()}.{member.Name} is not supported.");
-                        errorBuilder.AppendLine($"The field is of type {fieldInfo.FieldType.PrettyName()}.");
-                        memberType = fieldInfo.FieldType;
-                    }
-                    else
-                    {
-                        Gu.ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<PropertyInfo, FieldInfo>(nameof(member));
-                    }
-                }
-
-                errorBuilder.AppendSolveTheProblemBy()
-                            .AppendSuggestImmutableType(memberType)
+                            .AppendCopyFailed<T>()
+                            .AppendMemberIsNotSupported(sourceType, member)
+                            .AppendSolveTheProblemBy()
+                            .AppendSuggestImmutableType(member.GetMemberType())
                             .AppendSuggestCopySettings<T>(sourceType, member);
             }
 
@@ -124,12 +97,10 @@
                 where T : CopySettings
             {
                 Debug.Assert(indexer.GetIndexParameters().Length > 0, "Must be an indexer");
-                errorBuilder.AppendCopyFailed<T>();
-                errorBuilder.AppendLine($"Indexers are not supported.");
-                errorBuilder.AppendLine($"The property {sourceType.PrettyName()}.{indexer.Name} is not supported.");
-                errorBuilder.AppendLine($"The property is of type {indexer.PropertyType.PrettyName()}.");
-
-                errorBuilder.AppendSolveTheProblemBy()
+                errorBuilder.CreateIfNull()
+                            .AppendCopyFailed<T>()
+                            .AppendPropertyIsNotSupported(sourceType, indexer)
+                            .AppendSolveTheProblemBy()
                             .AppendSuggestCopySettings<T>(sourceType, indexer);
             }
 
@@ -162,7 +133,7 @@
                     }
                     else
                     {
-                         Gu.ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<PropertyInfo, FieldInfo>(nameof(member));
+                        Gu.ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<PropertyInfo, FieldInfo>(nameof(member));
                     }
                 }
 
@@ -202,12 +173,11 @@
                 }
                 else if (settings is CopyFieldsSettings)
                 {
-                    errorBuilder.AppendLine(
-                        $"Copy.{nameof(CopyFieldsValues)}(x, y) does not support copying the type {itemType.PrettyName()}");
+                    errorBuilder.AppendLine($"Copy.{nameof(CopyFieldsValues)}(x, y) does not support copying the type {itemType.PrettyName()}");
                 }
                 else
                 {
-                     Gu.ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<CopyPropertiesSettings, CopyFieldsSettings>(nameof(settings));
+                    Gu.ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<CopyPropertiesSettings, CopyFieldsSettings>(nameof(settings));
                 }
 
                 errorBuilder.AppendLine($"The problem occurred at index: {index}")
@@ -226,8 +196,7 @@
                 var errorBuilder = new StringBuilder();
                 if (settings is CopyPropertiesSettings)
                 {
-                    errorBuilder.AppendLine(
-                        $"Copy.{nameof(PropertyValues)}(x, y) does not support copying the type {itemType.PrettyName()}");
+                    errorBuilder.AppendLine($"Copy.{nameof(PropertyValues)}(x, y) does not support copying the type {itemType.PrettyName()}");
                 }
                 else if (settings is CopyFieldsSettings)
                 {
@@ -236,12 +205,11 @@
                 }
                 else
                 {
-                     Gu.ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<CopyPropertiesSettings, CopyFieldsSettings>(nameof(settings));
+                    Gu.ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<CopyPropertiesSettings, CopyFieldsSettings>(nameof(settings));
                 }
 
                 errorBuilder.AppendLine($"The problem occurred for key: {key}")
-                    .AppendLine(
-                        $"Source list is of type: {source.GetType().PrettyName()} and target list is of type: {target.GetType().PrettyName()}")
+                    .AppendLine($"Source list is of type: {source.GetType().PrettyName()} and target list is of type: {target.GetType().PrettyName()}")
                     .AppendSolveTheProblemBy()
                     .AppendSuggestImplementIEquatable(itemType)
                     .AppendSuggestCopySettings<T>(itemType, null);

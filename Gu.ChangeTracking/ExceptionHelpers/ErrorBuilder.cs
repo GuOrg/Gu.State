@@ -31,6 +31,43 @@
             return errorBuilder.AppendLine("Solve the problem by any of:");
         }
 
+        internal static StringBuilder AppendMemberIsNotSupported(this StringBuilder errorBuilder, Type sourceType, MemberInfo memberInfo)
+        {
+            var fieldInfo = memberInfo as FieldInfo;
+            if (fieldInfo != null)
+            {
+                return errorBuilder.AppendFieldIsNotSupported(sourceType, fieldInfo);
+            }
+
+            var propertyInfo = memberInfo as PropertyInfo;
+            if (propertyInfo != null)
+            {
+                return errorBuilder.AppendPropertyIsNotSupported(sourceType, propertyInfo);
+            }
+
+            Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<FieldInfo, PropertyInfo>(nameof(memberInfo));
+            throw new InvalidOperationException("Never getting here");
+        }
+
+        internal static StringBuilder AppendFieldIsNotSupported(this StringBuilder errorBuilder, Type sourceType, FieldInfo fieldInfo)
+        {
+            return errorBuilder.CreateIfNull()
+                               .AppendLine($"The field {sourceType.PrettyName()}.{fieldInfo.Name} is not supported.")
+                               .AppendLine($"The field is of type {fieldInfo.FieldType.PrettyName()}.");
+        }
+
+        internal static StringBuilder AppendPropertyIsNotSupported(this StringBuilder errorBuilder, Type sourceType, PropertyInfo propertyInfo)
+        {
+            errorBuilder = errorBuilder.CreateIfNull();
+            if (propertyInfo.GetIndexParameters().Length > 0)
+            {
+                errorBuilder.AppendLine($"Indexers are not supported.");
+            }
+
+            return errorBuilder.AppendLine($"The property {sourceType.PrettyName()}.{propertyInfo.Name} is not supported.")
+                               .AppendLine($"The property is of type {propertyInfo.PropertyType.PrettyName()}.");
+        }
+
         internal static StringBuilder AppendSuggestionsForEnumerableLines(this StringBuilder errorBuilder, Type sourceType)
         {
             errorBuilder.AppendLine($"* Use ObservableCollection<T> or another collection type that notifies instead of {sourceType.PrettyName()}.");
