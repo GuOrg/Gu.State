@@ -1,7 +1,6 @@
 ﻿namespace Gu.ChangeTracking
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
@@ -85,7 +84,7 @@
                     switch (settings.ReferenceHandling)
                     {
                         case ReferenceHandling.Throw:
-                            Throw.AppendCannotCopyMember(errorBuilder, type, propertyInfo, settings);
+                            Copy.AppendCannotCopyMember(errorBuilder, type, propertyInfo, settings);
                             break;
                         case ReferenceHandling.References:
                             break;

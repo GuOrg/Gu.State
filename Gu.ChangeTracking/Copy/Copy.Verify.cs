@@ -16,14 +16,14 @@
                     switch (settings.ReferenceHandling)
                     {
                         case ReferenceHandling.Throw:
-                            Throw.AppendCannotCopyType(errorBuilder, type, settings);
+                            AppendCannotCopyType(errorBuilder, type, settings);
                             break;
                         case ReferenceHandling.References:
                         case ReferenceHandling.Structural:
                         case ReferenceHandling.StructuralWithReferenceLoops:
                             if (!IsCopyableCollectionType(type))
                             {
-                                Throw.AppendCannotCopyType(errorBuilder, type, settings);
+                                AppendCannotCopyType(errorBuilder, type, settings);
                             }
 
                             break;
@@ -59,12 +59,8 @@
                         continue;
                     }
 
-                    if (errorBuilder == null)
-                    {
-                        errorBuilder = new StringBuilder();
-                    }
-
-                    Throw.AppendCannotCopyIndexer<T>(errorBuilder, type, propertyInfo);
+                    errorBuilder = errorBuilder.CreateIfNull()
+                                               .AppendCannotCopyIndexer<T>(type, propertyInfo);
                 }
 
                 return errorBuilder;

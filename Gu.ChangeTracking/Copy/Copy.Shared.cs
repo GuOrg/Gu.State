@@ -46,8 +46,8 @@
             catch (Exception e)
             {
                 var errorBuilder = new StringBuilder();
-                errorBuilder.AppendCopyFailed<T>();
-                errorBuilder.AppendLine($"{typeof(Activator).Name}.{nameof(Activator.CreateInstance)} failed for type {sourceValue.GetType() .PrettyName()}.")
+                errorBuilder.AppendCopyFailed<T>()
+                            .AppendLine($"{typeof(Activator).Name}.{nameof(Activator.CreateInstance)} failed for type {sourceValue.GetType().PrettyName()}.")
                             .AppendSolveTheProblemBy()
                             .AppendLine($"* Add a parameterless constructor to {type.PrettyName()}, can be private.")
                             .AppendSuggestCopySettings<T>(type, member);

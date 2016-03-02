@@ -7,6 +7,52 @@
 
     public static partial class EqualBy
     {
+        private static StringBuilder AppendSuggestEqualBySettings<T>(this StringBuilder messageBuilder, Type type, MemberInfo member)
+            where T : IEqualBySettings
+        {
+            return messageBuilder.CreateIfNull()
+                                 .AppendLine($"* Use {typeof(T).Name} and specify how comparing is performed:")
+                                 .AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Structural)} means that a deep equals is performed.")
+                                 .AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.References)} means that reference equality is used.")
+                                 .AppendExcludeType(type)
+                                 .AppendExcludeMember(type, member);
+        }
+
+        private static StringBuilder AppendEqualByFailed<T>(this StringBuilder errorBuilder)
+            where T : IEqualBySettings
+        {
+            if (typeof(IEqualByPropertiesSettings).IsAssignableFrom(typeof(T)))
+            {
+                errorBuilder.AppendLine($"EqualBy.{nameof(PropertyValues)}(x, y) failed.");
+            }
+            else if (typeof(IEqualByFieldsSettings).IsAssignableFrom(typeof(T)))
+            {
+                errorBuilder.AppendLine($"EqualBy.{nameof(FieldValues)}(x, y) failed.");
+            }
+            else
+            {
+                Gu.ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<IEqualByPropertiesSettings, IEqualByFieldsSettings>("T");
+            }
+
+            return errorBuilder;
+        }
+
+        private static StringBuilder AppendCannotEquateIndexer<T>(
+           this StringBuilder errorBuilder,
+            Type sourceType,
+            PropertyInfo indexer)
+            where T : IEqualBySettings
+        {
+            var member = typeof(IEqualByPropertiesSettings).IsAssignableFrom(typeof(T))
+                             ? indexer
+                             : null;
+            return errorBuilder.CreateIfNull()
+                               .AppendEqualByFailed<T>()
+                               .AppendPropertyIsNotSupported(sourceType, indexer)
+                               .AppendSolveTheProblemBy()
+                               .AppendSuggestEqualBySettings<T>(sourceType, member);
+        }
+
         private static class Throw
         {
             internal static void CannotCompareMember(Type sourceType, MemberInfo member)
@@ -17,7 +63,8 @@
                 if (propertyInfo != null)
                 {
                     errorBuilder.AppendEqualByFailed<EqualByPropertiesSettings>();
-                    errorBuilder.AppendLine($"The property {sourceType.PrettyName()}.{propertyInfo.Name} is not supported.");
+                    errorBuilder.AppendLine(
+                        $"The property {sourceType.PrettyName()}.{propertyInfo.Name} is not supported.");
                     errorBuilder.AppendLine($"The property is of type {propertyInfo.PropertyType.PrettyName()}.");
                     memberType = propertyInfo.PropertyType;
                 }
@@ -27,13 +74,15 @@
                     if (fieldInfo != null)
                     {
                         errorBuilder.AppendEqualByFailed<EqualByFieldsSettings>();
-                        errorBuilder.AppendLine($"The field {sourceType.PrettyName()}.{fieldInfo.Name} is not supported.");
+                        errorBuilder.AppendLine(
+                            $"The field {sourceType.PrettyName()}.{fieldInfo.Name} is not supported.");
                         errorBuilder.AppendLine($"The field is of type {fieldInfo.FieldType.PrettyName()}.");
                         memberType = fieldInfo.FieldType;
                     }
                     else
                     {
-                         Gu.ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<PropertyInfo, FieldInfo>(nameof(member));
+                        Gu.ChangeTracking.Throw
+                          .ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<PropertyInfo, FieldInfo>(nameof(member));
                     }
                 }
 
@@ -61,23 +110,6 @@
                             .AppendSuggestEqualBySettings<EqualByPropertiesSettings>(type, null);
                 throw new NotSupportedException(errorBuilder.ToString());
             }
-
-            internal static void AppendCannotEquateIndexer<T>(
-                StringBuilder errorBuilder,
-                Type sourceType,
-                PropertyInfo indexer)
-                where T : IEqualBySettings
-            {
-                var member = typeof(IEqualByPropertiesSettings).IsAssignableFrom(typeof(T))
-                                 ? indexer
-                                 : null;
-                errorBuilder.AppendEqualByFailed<T>()
-                            .AppendLine($"Indexers are not supported.")
-                            .AppendLine($"The property {sourceType.PrettyName()}.{indexer.Name} is not supported.")
-                            .AppendLine($"The property is of type {indexer.PropertyType.PrettyName()}.")
-                            .AppendSolveTheProblemBy()
-                            .AppendSuggestEqualBySettings<T>(sourceType, member);
-            }
         }
 
         private static class Verify
@@ -104,7 +136,8 @@
                 var propertyInfos = type.GetProperties(Constants.DefaultFieldBindingFlags);
                 foreach (var propertyInfo in propertyInfos)
                 {
-                    if (propertyInfo.GetIndexParameters().Length == 0)
+                    if (propertyInfo.GetIndexParameters()
+                                    .Length == 0)
                     {
                         continue;
                     }
@@ -119,7 +152,7 @@
                         errorBuilder = new StringBuilder();
                     }
 
-                    Throw.AppendCannotEquateIndexer<T>(errorBuilder, type, propertyInfo);
+                    errorBuilder = errorBuilder.AppendCannotEquateIndexer<T>(type, propertyInfo);
                 }
 
                 return errorBuilder;
@@ -184,43 +217,6 @@
                     }
                 }
             }
-        }
-
-        private static StringBuilder AppendSuggestEqualBySettings<T>(this StringBuilder messageBuilder, Type type, MemberInfo member)
-            where T : IEqualBySettings
-        {
-            messageBuilder.AppendLine($"* Use {typeof(T).Name} and specify how comparing is performed:");
-            messageBuilder.AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Structural)} means that a deep equals is performed.");
-            messageBuilder.AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.References)} means that reference equality is used.");
-            messageBuilder.AppendLine($"  - Exclude the type {type.PrettyName()}.");
-            if (member != null)
-            {
-                var memberText = member is PropertyInfo
-                            ? "property"
-                            : "field";
-                messageBuilder.AppendLine($"  - Exclude the {memberText} {type.PrettyName()}.{member.Name}.");
-            }
-
-            return messageBuilder;
-        }
-
-        private static StringBuilder AppendEqualByFailed<T>(this StringBuilder errorBuilder)
-                    where T : IEqualBySettings
-        {
-            if (typeof(IEqualByPropertiesSettings).IsAssignableFrom(typeof(T)))
-            {
-                errorBuilder.AppendLine($"EqualBy.{nameof(PropertyValues)}(x, y) failed.");
-            }
-            else if (typeof(IEqualByFieldsSettings).IsAssignableFrom(typeof(T)))
-            {
-                errorBuilder.AppendLine($"EqualBy.{nameof(FieldValues)}(x, y) failed.");
-            }
-            else
-            {
-                 Gu.ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<IEqualByPropertiesSettings, IEqualByFieldsSettings>("T");
-            }
-
-            return errorBuilder;
         }
     }
 }
