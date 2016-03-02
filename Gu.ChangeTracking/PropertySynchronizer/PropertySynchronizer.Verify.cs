@@ -6,16 +6,19 @@
     {
         public static void VerifyCanSynchronize<T>(params string[] excludedProperties)
         {
-            Copy.VerifyCanCopyPropertyValues<T>(excludedProperties);
+            var settings = CopyPropertiesSettings.Create(typeof(T), excludedProperties, Constants.DefaultPropertyBindingFlags, ReferenceHandling.Throw);
+            VerifyCanSynchronize<T>(settings);
         }
 
         public static void VerifyCanSynchronize<T>(BindingFlags bindingFlags, params string[] excludedProperties)
         {
-            Copy.VerifyCanCopyPropertyValues<T>(bindingFlags, excludedProperties);
+            var settings = CopyPropertiesSettings.Create(typeof(T), excludedProperties, bindingFlags, ReferenceHandling.Throw);
+            VerifyCanSynchronize<T>(settings);
         }
 
         public static void VerifyCanSynchronize<T>(CopyPropertiesSettings settings)
         {
+            ChangeTracker.VerifyCanTrack<T>(settings);
             Copy.VerifyCanCopyPropertyValues<T>(settings);
         }
     }

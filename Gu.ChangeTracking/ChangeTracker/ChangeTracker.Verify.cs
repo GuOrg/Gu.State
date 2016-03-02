@@ -11,12 +11,22 @@
 
     public partial class ChangeTracker
     {
+        public static void VerifyCanTrack<T>(IIgnoringProperties settings)
+        {
+            VerifyCanTrack(typeof(T), settings);
+        }
+
+        public static void VerifyCanTrack(Type type, IIgnoringProperties settings)
+        {
+            Verify.IsTrackableType(type, settings);
+        }
+
         /// <summary>
         /// This class is used for failing fast and throwing with nice exception messages.
         /// </summary>
         private static class Verify
         {
-            private static readonly ConditionalWeakTable<ChangeTrackerSettings, ConcurrentSet<Type>> ValidTypesCache = new ConditionalWeakTable<ChangeTrackerSettings, ConcurrentSet<Type>>();
+            private static readonly ConditionalWeakTable<IIgnoringProperties, ConcurrentSet<Type>> ValidTypesCache = new ConditionalWeakTable<IIgnoringProperties, ConcurrentSet<Type>>();
 
             internal static void IsTrackableType(Type type, ChangeTracker tracker)
             {
@@ -26,6 +36,16 @@
                 }
 
                 IsTrackableType(type, tracker.Path, tracker.Settings);
+            }
+
+            internal static void IsTrackableType(Type type, IIgnoringProperties settings)
+            {
+                if (ValidTypesCache.GetOrCreateValue(settings).Contains(type))
+                {
+                    return;
+                }
+
+                IsTrackableType(type, new PropertyPath(type), settings);
             }
 
             internal static void IsTrackablePropertyValue(Type propertyValueType, PropertyInfo propertyInfo, ChangeTracker tracker)
@@ -50,7 +70,7 @@
                 IsTrackableType(itemType, path, tracker.Settings);
             }
 
-            private static void IsTrackableType(Type type, PropertyPath path, ChangeTrackerSettings settings)
+            private static void IsTrackableType(Type type, PropertyPath path, IIgnoringProperties settings)
             {
                 var checkedTypes = ValidTypesCache.GetOrCreateValue(settings);
                 if (checkedTypes.Contains(type))
@@ -100,7 +120,7 @@
                 }
             }
 
-            private static void CheckProperties(Type type, PropertyPath path, ChangeTrackerSettings settings)
+            private static void CheckProperties(Type type, PropertyPath path, IIgnoringProperties settings)
             {
                 var properties = PropertiesChangeTrackers.GetTrackProperties(type, settings)
                                          .ToArray();
@@ -117,7 +137,7 @@
                     {
                         IsTrackableIfEnumerable(propertyInfo.PropertyType, propertyPath);
                     }
-                    else if (!settings.IsIgnored(propertyInfo.PropertyType))
+                    else if (!settings.IsIgnoringProperty(propertyInfo))
                     {
                         IsPropertyChanged(propertyInfo.PropertyType, propertyPath);
                     }
@@ -126,7 +146,7 @@
                 }
             }
 
-            private static void CheckItemType(Type type, PropertyPath path, ChangeTrackerSettings settings)
+            private static void CheckItemType(Type type, PropertyPath path, IIgnoringProperties settings)
             {
                 if (!typeof(IEnumerable).IsAssignableFrom(type))
                 {

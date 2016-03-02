@@ -12,7 +12,7 @@
     /// Settings for how <see cref="ChangeTracker"/> tracks changes.
     /// </summary>
     [Serializable]
-    public class ChangeTrackerSettings
+    public class ChangeTrackerSettings : IIgnoringProperties
     {
         private readonly ConcurrentDictionary<string, SpecialType> specialTypes = new ConcurrentDictionary<string, SpecialType>();
         private readonly ConcurrentDictionary<string, SpecialProperty> specialProperties = new ConcurrentDictionary<string, SpecialProperty>();
@@ -159,7 +159,7 @@
         /// </summary>
         /// <param name="property">The type.</param>
         /// <returns>True if <paramref name="property"/> is ignored when tracking changes.</returns>
-        public bool IsIgnored(PropertyInfo property)
+        public bool IsIgnoringProperty(PropertyInfo property)
         {
             if (property == null || property.GetIndexParameters().Length > 0)
             {
