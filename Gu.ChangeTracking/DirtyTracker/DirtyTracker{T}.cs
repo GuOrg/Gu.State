@@ -41,7 +41,7 @@
         }
 
         public DirtyTracker(T x, T y, BindingFlags bindingFlags, params string[] ignoreProperties)
-            : this(x, y, new DirtyTrackerSettings(x?.GetType(), ignoreProperties, bindingFlags, ReferenceHandling.Throw))
+            : this(x, y, DirtyTrackerSettings.Create<T>(x,y, ignoreProperties, bindingFlags, ReferenceHandling.Throw))
         {
         }
 
