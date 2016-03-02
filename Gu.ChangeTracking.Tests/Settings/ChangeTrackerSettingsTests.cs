@@ -11,7 +11,7 @@
         {
             var settings = new ChangeTrackerSettings();
             settings.AddIgnoredProperty<Level>(x => x.Next);
-            Assert.IsTrue(settings.IsIgnored(typeof(Level).GetProperty(nameof(Level.Next))));
+            Assert.IsTrue(settings.IsIgnoringProperty(typeof(Level).GetProperty(nameof(Level.Next))));
         }
 
         [Test]

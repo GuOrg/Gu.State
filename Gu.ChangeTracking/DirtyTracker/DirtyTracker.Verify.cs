@@ -20,8 +20,7 @@
         public static void Verify<T>(BindingFlags bindingFlags, params string[] ignoreProperties)
                         where T : class, INotifyPropertyChanged
         {
-            //DirtyTrackerSettings.Create<T>(typeof(T), ignoreProperties, bindingFlags, ReferenceHandling.Throw);
-            var settings = new DirtyTrackerSettings(typeof(T).GetIgnoreProperties(bindingFlags, ignoreProperties), bindingFlags, ReferenceHandling.Throw);
+            var settings = DirtyTrackerSettings.Create(typeof(T), ignoreProperties, bindingFlags, ReferenceHandling.Throw);
             Verify<T>(settings);
         }
 

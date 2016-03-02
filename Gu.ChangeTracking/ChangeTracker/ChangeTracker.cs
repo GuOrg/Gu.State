@@ -194,15 +194,15 @@
                 return new PropertiesChangeTrackers(source, parent, null);
             }
 
-            internal static IEnumerable<PropertyInfo> GetTrackProperties(Type sourceType, ChangeTrackerSettings settings)
+            internal static IEnumerable<PropertyInfo> GetTrackProperties(Type sourceType, IIgnoringProperties settings)
             {
                 return sourceType.GetProperties(Constants.DefaultPropertyBindingFlags)
                                  .Where(p => IsTrackProperty(p, settings));
             }
 
-            private static bool IsTrackProperty(PropertyInfo propertyInfo, ChangeTrackerSettings settings)
+            private static bool IsTrackProperty(PropertyInfo propertyInfo, IIgnoringProperties settings)
             {
-                if (settings.IsIgnored(propertyInfo))
+                if (settings.IsIgnoringProperty(propertyInfo))
                 {
                     return false;
                 }
@@ -244,7 +244,7 @@
 
                 var propertyInfo = sender.GetType().GetProperty(e.PropertyName, Constants.DefaultPropertyBindingFlags);
 
-                if (this.parent.Settings.IsIgnored(propertyInfo))
+                if (this.parent.Settings.IsIgnoringProperty(propertyInfo))
                 {
                     return;
                 }
