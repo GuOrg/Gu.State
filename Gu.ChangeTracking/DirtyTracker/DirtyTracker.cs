@@ -3,7 +3,7 @@ namespace Gu.ChangeTracking
     using System.ComponentModel;
     using System.Reflection;
 
-    public static class DirtyTracker
+    public static partial class DirtyTracker
     {
         public static DirtyTracker<T> Track<T>(T x, T y, BindingFlags bindingFlags)
             where T : class, INotifyPropertyChanged
@@ -36,17 +36,6 @@ namespace Gu.ChangeTracking
             where T : class, INotifyPropertyChanged
         {
             return new DirtyTracker<T>(x, y, bindingFlags, ignoreProperties);
-        }
-
-        public static void Verify<T>(params string[] ignoreProperties) where T : class, INotifyPropertyChanged
-        {
-            DirtyTracker<T>.Verify(ignoreProperties);
-        }
-
-        public static void Verify<T>(BindingFlags bindingFlags, params string[] ignoreProperties)
-            where T : class, INotifyPropertyChanged
-        {
-            DirtyTracker<T>.Verify(bindingFlags, ignoreProperties);
         }
     }
 }

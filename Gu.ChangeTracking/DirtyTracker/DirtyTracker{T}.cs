@@ -51,7 +51,7 @@
             Ensure.NotNull(y, nameof(y));
             Ensure.NotSame(x, y, nameof(x), nameof(y));
             Ensure.SameType(x, y);
-            Verify(settings);
+            DirtyTracker.Verify<T>(settings);
             this.Settings = settings;
             this.propertyTracker = PropertiesDirtyTracker.Create(x, y, this);
             this.itemTrackers = ItemsDirtyTracker.Create(x, y, this);
@@ -66,57 +66,6 @@
         public IEnumerable<PropertyInfo> Diff => this.diff;
 
         public DirtyTrackerSettings Settings { get; }
-
-        /// <summary>
-        /// Check if <typeparamref name="T"/> can be tracked
-        /// </summary>
-        public static void Verify(params string[] ignoreProperties)
-        {
-            Verify(Constants.DefaultPropertyBindingFlags, ignoreProperties);
-        }
-
-        /// <summary>
-        /// Check if <typeparamref name="T"/> can be tracked
-        /// </summary>
-        public static void Verify(BindingFlags bindingFlags, params string[] ignoreProperties)
-        {
-            Verify(
-                new DirtyTrackerSettings(
-                    typeof(T).GetIgnoreProperties(bindingFlags, ignoreProperties),
-                    bindingFlags,
-                    ReferenceHandling.Throw));
-        }
-
-        public static void Verify(DirtyTrackerSettings settings)
-        {
-            if (typeof(IEnumerable).IsAssignableFrom(typeof(T)))
-            {
-                if (settings.ReferenceHandling == ReferenceHandling.Throw
-                    || (settings.ReferenceHandling != ReferenceHandling.Throw
-                        && !typeof(INotifyCollectionChanged).IsAssignableFrom(typeof(T))))
-                {
-                    throw new NotSupportedException(
-                        "Not supporting IEnumerable unless ReferenceHandling is specified and the collection is INotifyCollectionChanged");
-                }
-            }
-
-            foreach (var propertyInfo in typeof(T).GetProperties(settings.BindingFlags))
-            {
-                if (settings.IsIgnoringProperty(propertyInfo))
-                {
-                    continue;
-                }
-
-                if (!propertyInfo.PropertyType.IsImmutable() && settings.ReferenceHandling == ReferenceHandling.Throw)
-                {
-                    var message =
-                        $"Only equatable properties are supported without specifying {typeof(ReferenceHandling).Name}\r\n"
-                        + $"Property {typeof(T).Name}.{propertyInfo.Name} is not IEquatable<{propertyInfo.PropertyType.Name}>.\r\n"
-                        + "Use the overload DirtyTracker.Track(x, y, ReferenceHandling) if you want to track a graph";
-                    throw new NotSupportedException(message);
-                }
-            }
-        }
 
         public void Dispose()
         {
@@ -185,10 +134,7 @@
 
         private sealed class PropertiesDirtyTracker : IDisposable
         {
-            private static readonly IEnumerable<PropertyInfo> IndexerProperty = new[]
-                                                                                    {
-                                                                                        ItemDirtyTracker.IndexerProperty
-                                                                                    };
+            private static readonly IEnumerable<PropertyInfo> IndexerPropertySingletonCollection = new[] { ItemDirtyTracker.IndexerProperty };
 
             private readonly INotifyPropertyChanged x;
             private readonly INotifyPropertyChanged y;
@@ -260,7 +206,7 @@
 
                 if (type.IsImmutable())
                 {
-                    parent.diff.IntersectWith(IndexerProperty);
+                    parent.diff.IntersectWith(IndexerPropertySingletonCollection);
                     var before = parent.diff.Count;
                     foreach (var propertyInfo in type.GetProperties(parent.Settings.BindingFlags))
                     {
@@ -298,7 +244,7 @@
             private void Reset()
             {
                 var before = this.parent.diff.Count;
-                this.parent.diff.IntersectWith(IndexerProperty);
+                this.parent.diff.IntersectWith(IndexerPropertySingletonCollection);
                 foreach (var propertyInfo in this.x.GetType()
                                                  .GetProperties(this.parent.Settings.BindingFlags))
                 {
