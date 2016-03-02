@@ -39,14 +39,14 @@ namespace Gu.ChangeTracking
         public PropertySynchronizer(T source, T target, CopyPropertiesSettings settings)
             : this(source, target, settings, settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops ? new TwoItemsTrackerReferenceCollection<IPropertySynchronizer>() : null)
         {
+            Ensure.NotSame(source, target, nameof(source), nameof(target));
+            Ensure.SameType(source, target, nameof(source), nameof(target));
         }
 
         private PropertySynchronizer(T source, T target, CopyPropertiesSettings settings, TwoItemsTrackerReferenceCollection<IPropertySynchronizer> references)
         {
-            Ensure.NotSame(source, target, nameof(source), nameof(target));
             Ensure.NotNull(source, nameof(source));
             Ensure.NotNull(target, nameof(target));
-            Ensure.SameType(source, target, nameof(source), nameof(target));
             Copy.VerifyCanCopyPropertyValues(source?.GetType() ?? typeof(T), settings);
             references?.GetOrAdd(source, target, () => this);
             this.Settings = settings;

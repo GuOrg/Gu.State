@@ -75,7 +75,7 @@
             return this.ignoredProperties?.Contains(propertyInfo) == true;
         }
 
-        bool IEqualByPropertiesSettings.IsIgnoringProperty(PropertyInfo propertyInfo)
+        bool IIgnoringProperties.IsIgnoringProperty(PropertyInfo propertyInfo)
         {
             return this.IsIgnoringProperty(propertyInfo) || this.GetSpecialCopyProperty(propertyInfo) != null;
         }

@@ -15,7 +15,7 @@
     /// Tracks changes in a graph.
     /// Listens to nested Property and collection changes.
     /// </summary>
-    public class ChangeTracker : IChangeTracker
+    public partial class ChangeTracker : IChangeTracker
     {
         private static readonly PropertyChangedEventArgs ChangesEventArgs = new PropertyChangedEventArgs(nameof(Changes));
         private readonly ItemsChangeTrackers itemsChangeTrackers;
@@ -28,7 +28,7 @@
         {
             this.Settings = settings;
             this.Path = path;
-            Ensure.IsTrackableType(source.GetType(), this);
+            Verify.IsTrackableType(source.GetType(), this);
             this.propertiesChangeTrackers = PropertiesChangeTrackers.Create(source, this);
             this.itemsChangeTrackers = ItemsChangeTrackers.Create(source, this);
             if (this.propertiesChangeTrackers == null && this.itemsChangeTrackers == null)
@@ -172,7 +172,7 @@
                     return null;
                 }
 
-                Ensure.IsTrackableType(source.GetType(), parent);
+                Verify.IsTrackableType(source.GetType(), parent);
                 List<PropertyCollection.PropertyAndDisposable> items = null;
                 foreach (var propertyInfo in GetTrackProperties(sourceType, parent.Settings))
                 {
@@ -228,7 +228,7 @@
                     return null;
                 }
 
-                Ensure.IsTrackablePropertyValue(sv.GetType(), propertyInfo, parent);
+                Verify.IsTrackablePropertyValue(sv.GetType(), propertyInfo, parent);
                 var notifyPropertyChanged = sv as INotifyPropertyChanged;
                 return new PropertyChangeTracker(notifyPropertyChanged, propertyInfo, parent);
             }
@@ -307,7 +307,7 @@
                     return null;
                 }
 
-                Ensure.IsTrackableItemValue(source.GetType(), null, parent);
+                Verify.IsTrackableItemValue(source.GetType(), null, parent);
 
                 var incc = source as INotifyCollectionChanged;
                 var itemType = source.GetType().GetItemType();
@@ -343,7 +343,7 @@
                     return null;
                 }
 
-                Ensure.IsTrackableItemValue(itemType, index, parent);
+                Verify.IsTrackableItemValue(itemType, index, parent);
                 var inpc = sv as INotifyPropertyChanged;
                 return new ItemChangeTracker(inpc, index, parent);
             }
@@ -400,135 +400,6 @@
                 }
 
                 this.parent.Changes++;
-            }
-        }
-
-        /// <summary>
-        /// This class is used for failing fast and throwing with nice exception messages.
-        /// </summary>
-        private static class Ensure
-        {
-            private static readonly ConditionalWeakTable<ChangeTrackerSettings, ConcurrentSet<Type>> ValidTypesCache = new ConditionalWeakTable<ChangeTrackerSettings, ConcurrentSet<Type>>();
-
-            internal static void IsTrackableType(Type type, ChangeTracker tracker)
-            {
-                if (ValidTypesCache.GetOrCreateValue(tracker.Settings).Contains(type))
-                {
-                    return;
-                }
-
-                IsTrackableType(type, tracker.Path, tracker.Settings);
-            }
-
-            internal static void IsTrackablePropertyValue(Type propertyValueType, PropertyInfo propertyInfo, ChangeTracker tracker)
-            {
-                if (ValidTypesCache.GetOrCreateValue(tracker.Settings).Contains(propertyValueType))
-                {
-                    return;
-                }
-
-                var path = tracker.Path.WithProperty(propertyInfo);
-                IsTrackableType(propertyValueType, path, tracker.Settings);
-            }
-
-            internal static void IsTrackableItemValue(Type itemType, int? index, ChangeTracker tracker)
-            {
-                if (ValidTypesCache.GetOrCreateValue(tracker.Settings).Contains(itemType))
-                {
-                    return;
-                }
-
-                var path = tracker.Path.WithIndex(index);
-                IsTrackableType(itemType, path, tracker.Settings);
-            }
-
-            private static void IsTrackableType(Type type, PropertyPath path, ChangeTrackerSettings settings)
-            {
-                var checkedTypes = ValidTypesCache.GetOrCreateValue(settings);
-                if (checkedTypes.Contains(type))
-                {
-                    return;
-                }
-
-                CheckProperties(type, path, settings);
-                CheckItemType(type, path, settings);
-                checkedTypes.Add(type);
-            }
-
-            private static void IsTrackableIfEnumerable(Type type, PropertyPath propertyPath)
-            {
-                if (!typeof(IEnumerable).IsAssignableFrom(type))
-                {
-                    return;
-                }
-
-                if (!typeof(INotifyCollectionChanged).IsAssignableFrom(type) || !typeof(INotifyCollectionChanged).IsAssignableFrom(type))
-                {
-                    var messageBuilder = new StringBuilder();
-                    messageBuilder.AppendCreateFailed<ChangeTracker>(propertyPath)
-                                  .AppendSolveTheProblemBy()
-                                  .AppendSuggestionsForEnumerableLines(type)
-                                  .AppendSuggestImmutableType(propertyPath)
-                                  .AppendSuggestChangeTrackerSettings(type, propertyPath);
-
-                    var message = messageBuilder.ToString();
-                    throw new NotSupportedException(message);
-                }
-            }
-
-            private static void IsPropertyChanged(Type type, PropertyPath propertyPath)
-            {
-                if (!typeof(INotifyPropertyChanged).IsAssignableFrom(type))
-                {
-                    var messageBuilder = new StringBuilder();
-                    messageBuilder.AppendCreateFailed<ChangeTracker>(propertyPath)
-                                  .AppendSolveTheProblemBy()
-                                  .AppendSuggestImplement<INotifyPropertyChanged>(type)
-                                  .AppendSuggestImmutableType(propertyPath)
-                                  .AppendSuggestChangeTrackerSettings(type, propertyPath);
-
-                    var message = messageBuilder.ToString();
-                    throw new NotSupportedException(message);
-                }
-            }
-
-            private static void CheckProperties(Type type, PropertyPath path, ChangeTrackerSettings settings)
-            {
-                var properties = PropertiesChangeTrackers.GetTrackProperties(type, settings)
-                                         .ToArray();
-                foreach (var propertyInfo in properties)
-                {
-                    if (path.Path.OfType<PropertyItem>().Any(p => p.Property.PropertyType == type))
-                    {
-                        // stopping recursion if a type has self itemType as property
-                        continue;
-                    }
-
-                    var propertyPath = path.WithProperty(propertyInfo);
-                    if (typeof(IEnumerable).IsAssignableFrom(propertyInfo.PropertyType))
-                    {
-                        IsTrackableIfEnumerable(propertyInfo.PropertyType, propertyPath);
-                    }
-                    else if (!settings.IsIgnored(propertyInfo.PropertyType))
-                    {
-                        IsPropertyChanged(propertyInfo.PropertyType, propertyPath);
-                    }
-
-                    IsTrackableType(propertyInfo.PropertyType, propertyPath, settings);
-                }
-            }
-
-            private static void CheckItemType(Type type, PropertyPath path, ChangeTrackerSettings settings)
-            {
-                if (!typeof(IEnumerable).IsAssignableFrom(type))
-                {
-                    return;
-                }
-
-                IsTrackableIfEnumerable(type, path);
-                var itemType = type.GetItemType();
-                var propertyPath = path.WithIndex(null);
-                IsTrackableType(itemType, propertyPath, settings);
             }
         }
     }
