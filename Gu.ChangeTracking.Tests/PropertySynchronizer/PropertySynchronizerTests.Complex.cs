@@ -15,7 +15,7 @@
             {
                 var source = new WithComplexProperty("a", 1) { ComplexType = new ComplexType("b", 2) };
                 var target = new WithComplexProperty("c", 3) { ComplexType = new ComplexType("d", 4) };
-                using (PropertySynchronizer.Create(source, target, ReferenceHandling.Structural))
+                using (PropertySynchronizer.Create(source, target, referenceHandling: ReferenceHandling.Structural))
                 {
                     Assert.AreEqual("a", source.Name);
                     Assert.AreEqual("a", target.Name);
@@ -110,7 +110,7 @@
             {
                 var source = new WithTwoComplexProperties("a", 1) { ComplexValue1 = new ComplexType("a.1", 2), ComplexValue2 = new ComplexType("a.2", 3) };
                 var target = new WithTwoComplexProperties("b", 3) { ComplexValue1 = new ComplexType("b.1", 4) };
-                using (PropertySynchronizer.Create(source, target, ReferenceHandling.StructuralWithReferenceLoops))
+                using (PropertySynchronizer.Create(source, target, referenceHandling: ReferenceHandling.StructuralWithReferenceLoops))
                 {
                     Assert.AreEqual("a", source.Name);
                     Assert.AreEqual("a", target.Name);
@@ -139,7 +139,7 @@
                     Assert.AreEqual("a.2", source.ComplexValue2.Name);
                     Assert.AreEqual("a.2", target.ComplexValue2.Name);
 
-                    source.ComplexValue1.Name+="_";
+                    source.ComplexValue1.Name += "_";
                     Assert.AreEqual("a", source.Name);
                     Assert.AreEqual("a", target.Name);
                     Assert.AreEqual("a.1_", source.ComplexValue1.Name);
@@ -164,7 +164,7 @@
                     Assert.AreEqual(null, target.ComplexValue2);
                 }
 
-                source.Name+="_";
+                source.Name += "_";
                 Assert.AreEqual("a_", source.Name);
                 Assert.AreEqual("a", target.Name);
                 Assert.AreEqual(2, source.Value);
@@ -180,14 +180,14 @@
             {
                 var source = new Parent("a", new Child("b"));
                 var target = new Parent("b", new Child());
-                using (PropertySynchronizer.Create(source, target, ReferenceHandling.StructuralWithReferenceLoops))
+                using (PropertySynchronizer.Create(source, target, referenceHandling: ReferenceHandling.StructuralWithReferenceLoops))
                 {
                     Assert.AreEqual("a", source.Name);
                     Assert.AreEqual("a", target.Name);
                     Assert.AreEqual("b", source.Child.Name);
                     Assert.AreEqual("b", target.Child.Name);
 
-                    source.Name="a1";
+                    source.Name = "a1";
                     Assert.AreEqual("a1", source.Name);
                     Assert.AreEqual("a1", target.Name);
                     Assert.AreEqual("b", source.Child.Name);
@@ -227,7 +227,7 @@
             {
                 var source = new WithComplexProperty("a", 1) { ComplexType = new ComplexType("b", 2) };
                 var target = new WithComplexProperty("c", 3) { ComplexType = new ComplexType("d", 4) };
-                using (PropertySynchronizer.Create(source, target, ReferenceHandling.References))
+                using (PropertySynchronizer.Create(source, target, referenceHandling: ReferenceHandling.References))
                 {
                     Assert.AreEqual("a", source.Name);
                     Assert.AreEqual("a", target.Name);
@@ -275,7 +275,7 @@
                     ComplexType = new ComplexType("d", 4)
                 };
 
-                using (PropertySynchronizer.Create(source, target, ReferenceHandling.Structural))
+                using (PropertySynchronizer.Create(source, target, referenceHandling: ReferenceHandling.Structural))
                 {
                     Assert.AreEqual("a", source.Name);
                     Assert.AreEqual("a", target.Name);
@@ -367,12 +367,13 @@
                 {
                     ComplexType = new ComplexType("d", 4)
                 };
-                var excluded = new[] { typeof(WithComplexProperty).GetProperty(nameof(WithComplexProperty.Name)) };
-                var settings = new CopyPropertiesSettings(
-                    excluded,
-                    null,
+                var excluded = new[] { nameof(WithComplexProperty.Name) };
+                var settings = PropertiesSettings.Create(
+                    source,
+                    target,
                     Constants.DefaultPropertyBindingFlags,
-                    ReferenceHandling.Structural);
+                    ReferenceHandling.Structural,
+                    excluded);
                 using (PropertySynchronizer.Create(source, target, settings))
                 {
                     Assert.AreEqual("a", source.Name);
@@ -476,7 +477,7 @@
                 {
                     ComplexType = new ComplexType("d", 4)
                 };
-                using (PropertySynchronizer.Create(source, target, ReferenceHandling.Structural))
+                using (PropertySynchronizer.Create(source, target, referenceHandling: ReferenceHandling.Structural))
                 {
                     source.OnPropertyChanged("Missing");
                     Assert.AreEqual("a", source.Name);
@@ -518,7 +519,7 @@
                     ComplexType = new ComplexType("d", 4)
                 };
 
-                using (PropertySynchronizer.Create(source, target, ReferenceHandling.Structural))
+                using (PropertySynchronizer.Create(source, target, referenceHandling: ReferenceHandling.Structural))
                 {
                     source.SetFields("e", 5, new ComplexType("f", 6));
                     source.OnPropertyChanged(prop);
@@ -550,7 +551,7 @@
     "  - All field and property types must be immutable.\r\n" +
     "  - All indexers must be readonly.\r\n" +
     "  - Event fields are ignored.\r\n" +
-    "* Use CopyPropertiesSettings and specify how copying is performed:\r\n" +
+    "* Use PropertiesSettings and specify how copying is performed:\r\n" +
     "  - ReferenceHandling.Structural means that a deep copy is performed.\r\n" +
     "  - ReferenceHandling.References means that references are copied.\r\n" +
     "  - Exclude the type WithComplexProperty.\r\n" +

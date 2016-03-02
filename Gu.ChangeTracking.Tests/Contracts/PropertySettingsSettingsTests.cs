@@ -1,4 +1,4 @@
-﻿namespace Gu.ChangeTracking.Tests
+﻿namespace Gu.ChangeTracking.Tests.Contracts
 {
     using System;
     using System.Collections.Generic;
@@ -6,7 +6,7 @@
 
     using NUnit.Framework;
 
-    public class DirtyTrackerSettingsTests
+    public class PropertySettingsSettingsTests
     {
         [Test]
         public void Ignores()
@@ -14,7 +14,7 @@
             var type = typeof(DirtyTrackerTypes.ComplexType);
             var nameProperty = type.GetProperty(nameof(DirtyTrackerTypes.ComplexType.Name));
             var valueProperty = type.GetProperty(nameof(DirtyTrackerTypes.ComplexType.Value));
-            var settings = DirtyTrackerSettings.Create(type, new[] { nameProperty.Name }, Constants.DefaultPropertyBindingFlags, ReferenceHandling.Throw);
+            var settings = PropertiesSettings.Create(type, Constants.DefaultPropertyBindingFlags, ReferenceHandling.Throw, new[] { nameProperty.Name });
             Assert.AreEqual(true, settings.IsIgnoringProperty(nameProperty));
             Assert.AreEqual(false, settings.IsIgnoringProperty(valueProperty));
         }
@@ -22,7 +22,7 @@
         [Test]
         public void IgnoresNull()
         {
-            var settings = new DirtyTrackerSettings(null, Constants.DefaultPropertyBindingFlags, ReferenceHandling.Throw);
+            var settings = new PropertiesSettings(null, Constants.DefaultPropertyBindingFlags, ReferenceHandling.Throw);
             Assert.AreEqual(true, settings.IsIgnoringProperty(null));
         }
 
@@ -33,7 +33,7 @@
         [TestCase(typeof(Dictionary<int, int>))]
         public void IgnoresCollectionFields(Type type)
         {
-            var settings = DirtyTrackerSettings.GetOrCreate(ReferenceHandling.Structural);
+            var settings = PropertiesSettings.GetOrCreate();
             var propertyInfos = type.GetProperties(Constants.DefaultFieldBindingFlags);
             if (type != typeof(int[]))
             {

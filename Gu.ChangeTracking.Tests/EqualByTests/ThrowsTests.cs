@@ -19,7 +19,7 @@ namespace Gu.ChangeTracking.Tests.EqualByTests
             "The field is of type ComplexType.\r\n" +
             "Solve the problem by any of:\r\n" +
             "* Implement IEquatable<ComplexType> for ComplexType or use a type that does.\r\n" +
-            "* Use EqualByFieldsSettings and specify how comparing is performed:\r\n" +
+            "* Use FieldsSettings and specify how comparing is performed:\r\n" +
             "  - ReferenceHandling.Structural means that a deep equals is performed.\r\n" +
             "  - ReferenceHandling.References means that reference equality is used.\r\n" +
             "  - Exclude the type WithComplexProperty.\r\n" +
@@ -30,7 +30,7 @@ namespace Gu.ChangeTracking.Tests.EqualByTests
             "The property is of type ComplexType.\r\n" +
             "Solve the problem by any of:\r\n" +
             "* Implement IEquatable<ComplexType> for ComplexType or use a type that does.\r\n" +
-            "* Use EqualByFieldsSettings and specify how comparing is performed:\r\n" +
+            "* Use PropertiesSettings and specify how comparing is performed:\r\n" +
             "  - ReferenceHandling.Structural means that a deep equals is performed.\r\n" +
             "  - ReferenceHandling.References means that reference equality is used.\r\n" +
             "  - Exclude the type WithComplexProperty.\r\n" +
@@ -48,7 +48,7 @@ namespace Gu.ChangeTracking.Tests.EqualByTests
                                  "The property WithIndexerType.Item is not supported.\r\n" +
                                  "The property is of type int.\r\n" +
                                  "Solve the problem by any of:\r\n" +
-                                 "* Use IEqualByFieldsSettings and specify how comparing is performed:\r\n" +
+                                 "* Use FieldsSettings and specify how comparing is performed:\r\n" +
                                  "  - ReferenceHandling.Structural means that a deep equals is performed.\r\n" +
                                  "  - ReferenceHandling.References means that reference equality is used.\r\n" +
                                  "  - Exclude the type WithIndexerType.\r\n"
@@ -58,7 +58,7 @@ namespace Gu.ChangeTracking.Tests.EqualByTests
                                  "The property WithIndexerType.Item is not supported.\r\n" +
                                  "The property is of type int.\r\n" +
                                  "Solve the problem by any of:\r\n" +
-                                 "* Use IEqualByPropertiesSettings and specify how comparing is performed:\r\n" +
+                                 "* Use PropertiesSettings and specify how comparing is performed:\r\n" +
                                  "  - ReferenceHandling.Structural means that a deep equals is performed.\r\n" +
                                  "  - ReferenceHandling.References means that reference equality is used.\r\n" +
                                  "  - Exclude the type WithIndexerType.\r\n" +

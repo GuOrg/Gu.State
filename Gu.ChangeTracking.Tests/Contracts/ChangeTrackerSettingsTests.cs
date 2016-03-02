@@ -1,7 +1,9 @@
-﻿namespace Gu.ChangeTracking.Tests.Settings
+﻿namespace Gu.ChangeTracking.Tests.Contracts
 {
     using System;
+
     using Gu.ChangeTracking.Tests.ChangeTrackerStubs;
+
     using NUnit.Framework;
 
     public class ChangeTrackerSettingsTests

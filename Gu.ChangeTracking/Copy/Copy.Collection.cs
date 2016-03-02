@@ -7,7 +7,7 @@
     public static partial class Copy
     {
         private static void CopyCollectionItems<T>(object source, object target, Action<object, object, T, ReferencePairCollection> syncItem, T settings, ReferencePairCollection referencePairs)
-             where T : CopySettings
+             where T : IMemberSettings
         {
             var sl = source as IList;
             var tl = target as IList;
@@ -46,7 +46,7 @@
         private static class Collection
         {
             internal static void CopyListItems<T>(IList sourceList, IList targetList, Action<object, object, T, ReferencePairCollection> syncItem, T settings, ReferencePairCollection referencePairs)
-                where T : CopySettings
+                where T : IMemberSettings
             {
                 for (int i = 0; i < sourceList.Count; i++)
                 {
@@ -99,7 +99,7 @@
             }
 
             internal static void CopyDictionaryItems<T>(IDictionary sourceDict, IDictionary targetDict, Action<object, object, T, ReferencePairCollection> syncItem, T settings, ReferencePairCollection referencePairs)
-                where T : CopySettings
+                where T : IMemberSettings
             {
                 foreach (var key in sourceDict.Keys)
                 {

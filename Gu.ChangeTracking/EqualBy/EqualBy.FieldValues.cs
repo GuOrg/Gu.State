@@ -6,52 +6,40 @@ namespace Gu.ChangeTracking
 
     public static partial class EqualBy
     {
-        public static bool FieldValues<T>(T x, T y, BindingFlags bindingFlags)
+        /// <summary>
+        /// Compares x and y for equality using field values.
+        /// If a type implements IList the items of the list are compared.
+        /// Event fields are excluded.
+        /// For performance the overload with settings should be used and the settings should be cached.
+        /// </summary>
+        /// <typeparam name="T">The type to get ignore fields for settings for</typeparam>
+        /// <param name="x">The first instance</param>
+        /// <param name="y">The second instance</param>
+        /// <param name="bindingFlags">The binding flags to use when getting fields</param>
+        /// <param name="referenceHandling">
+        /// If Structural is used a deep equals is performed.
+        /// Default value is Throw
+        /// </param>
+        /// <param name="excludedFields">Names of fields on <typeparamref name="T"/> to exclude from copying</param>
+        /// <returns>True if <paramref name="x"/> and <paramref name="y"/> are equal</returns>
+        public static bool FieldValues<T>(T x, T y, BindingFlags bindingFlags = Constants.DefaultFieldBindingFlags, ReferenceHandling referenceHandling = ReferenceHandling.Throw, params string[] excludedFields)
         {
-            var settings = EqualByFieldsSettings.GetOrCreate(bindingFlags);
+            var settings = FieldsSettings.Create(x, y, bindingFlags, referenceHandling, excludedFields);
             return FieldValues(x, y, settings);
         }
 
         /// <summary>
         /// Compares x and y for equality using field values.
-        /// If a type implements IList the items of the list are compared
+        /// If a type implements IList the items of the list are compared.
+        /// Event fields are excluded.
+        /// For performance the overload with settings should be used and the settings should be cached.
         /// </summary>
-        /// <param name="referenceHandling">
-        /// Specifies how reference types are compared.
-        /// Structural compares field values recursively.
-        /// </param>
-        public static bool FieldValues<T>(T x, T y, ReferenceHandling referenceHandling)
-        {
-            var settings = EqualByFieldsSettings.GetOrCreate(referenceHandling);
-            return FieldValues(x, y, settings);
-        }
-
-        /// <summary>
-        /// Compares x and y for equality using field values.
-        /// If a type implements IList the items of the list are compared
-        /// </summary>
-        /// <param name="referenceHandling">
-        /// Specifies how reference types are compared.
-        /// Structural compares field values recursively.
-        /// </param>
-        public static bool FieldValues<T>(T x, T y, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
-        {
-            var settings = EqualByFieldsSettings.GetOrCreate(bindingFlags, referenceHandling);
-            return FieldValues(x, y, settings);
-        }
-
-        public static bool FieldValues<T>(T x, T y, params string[] excludedFields)
-        {
-            return FieldValues(x, y, Constants.DefaultFieldBindingFlags, excludedFields);
-        }
-
-        public static bool FieldValues<T>(T x, T y, BindingFlags bindingFlags, params string[] excludedFields)
-        {
-            var settings = EqualByFieldsSettings.Create(x, y, bindingFlags, ReferenceHandling.Throw, excludedFields);
-            return FieldValues(x, y, settings);
-        }
-
-        public static bool FieldValues<T>(T x, T y, IEqualByFieldsSettings settings)
+        /// <typeparam name="T">The type of <paramref name="x"/> and <paramref name="y"/></typeparam>
+        /// <param name="x">The first instance</param>
+        /// <param name="y">The second instance</param>
+        /// <param name="settings">Specifies how equality is performed.</param>
+        /// <returns>True if <paramref name="x"/> and <paramref name="y"/> are equal</returns>
+        public static bool FieldValues<T>(T x, T y, FieldsSettings settings)
         {
             Verify.FieldTypes(x, y, settings);
             Verify.Indexers(x?.GetType() ?? y?.GetType(), settings);
@@ -81,13 +69,11 @@ namespace Gu.ChangeTracking
                 var referencePairs = new ReferencePairCollection();
                 return FieldsValuesEquals(x, y, settings, referencePairs);
             }
-            else
-            {
-                return FieldsValuesEquals(x, y, settings, null);
-            }
+
+            return FieldsValuesEquals(x, y, settings, null);
         }
 
-        private static bool FieldsValuesEquals(object x, object y, IEqualByFieldsSettings settings, ReferencePairCollection referencePairs)
+        private static bool FieldsValuesEquals(object x, object y, FieldsSettings settings, ReferencePairCollection referencePairs)
         {
             Verify.Indexers(x?.GetType() ?? y?.GetType(), settings);
             referencePairs?.Add(x, y);
@@ -139,12 +125,12 @@ namespace Gu.ChangeTracking
             return true;
         }
 
-        private static bool FieldItemEquals(object x, object y, IEqualByFieldsSettings settings, ReferencePairCollection referencePairs)
+        private static bool FieldItemEquals(object x, object y, FieldsSettings settings, ReferencePairCollection referencePairs)
         {
             return FieldValueEquals(x, y, null, settings, referencePairs);
         }
 
-        private static bool FieldValueEquals(object x, object y, FieldInfo fieldInfo, IEqualByFieldsSettings settings, ReferencePairCollection referencePairs)
+        private static bool FieldValueEquals(object x, object y, FieldInfo fieldInfo, FieldsSettings settings, ReferencePairCollection referencePairs)
         {
             if (x == null && y == null)
             {

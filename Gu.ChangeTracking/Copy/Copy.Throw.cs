@@ -9,26 +9,26 @@
     public static partial class Copy
     {
         private static StringBuilder AppendCopyFailed<T>(this StringBuilder errorBuilder)
-            where T : CopySettings
+            where T : IMemberSettings
         {
-            if (typeof(CopyFieldsSettings).IsAssignableFrom(typeof(T)))
+            if (typeof(FieldsSettings).IsAssignableFrom(typeof(T)))
             {
                 return errorBuilder.CreateIfNull()
                                    .AppendLine($"Copy.{nameof(Copy.FieldValues)}(x, y) failed.");
             }
 
-            if (typeof(CopyPropertiesSettings).IsAssignableFrom(typeof(T)))
+            if (typeof(PropertiesSettings).IsAssignableFrom(typeof(T)))
             {
                 return errorBuilder.CreateIfNull()
                                    .AppendLine($"Copy.{nameof(Copy.PropertyValues)}(x, y) failed.");
             }
 
-            ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<CopyFieldsSettings, CopyPropertiesSettings>("{T}");
+            ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<FieldsSettings, PropertiesSettings>("{T}");
             throw new InvalidOperationException("Never getting here");
         }
 
         private static StringBuilder AppendSuggestCopySettings<T>(this StringBuilder errorBuilder, Type type, MemberInfo member)
-            where T : CopySettings
+            where T : IMemberSettings
         {
             errorBuilder = errorBuilder.CreateIfNull()
                                        .AppendLine($"* Use {typeof(T).Name} and specify how copying is performed:")
@@ -37,7 +37,7 @@
                                        .AppendExcludeType(type);
             if (member != null)
             {
-                if (typeof(T) == typeof(CopyFieldsSettings))
+                if (typeof(T) == typeof(FieldsSettings))
                 {
                     errorBuilder.AppendExcludeField(type, member as FieldInfo);
                     var indexer = member as PropertyInfo;
@@ -47,13 +47,13 @@
                         Debug.Assert(indexer.GetIndexParameters().Length > 0, "Must be an indexer");
                     }
                 }
-                else if (typeof(T) == typeof(CopyPropertiesSettings))
+                else if (typeof(T) == typeof(PropertiesSettings))
                 {
                     errorBuilder.AppendExcludeProperty(type, member as PropertyInfo);
                 }
                 else
                 {
-                    ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<CopyFieldsSettings, CopyPropertiesSettings>("{T}");
+                    ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<FieldsSettings, PropertiesSettings>("{T}");
                 }
             }
 
@@ -62,13 +62,13 @@
 
         // ReSharper disable once UnusedParameter.Local
         private static StringBuilder AppendCannotCopyMember<T>(this StringBuilder errorBuilder, Type sourceType, MemberInfo member, T settings)
-            where T : CopySettings
+            where T : IMemberSettings
         {
             return errorBuilder.AppendCannotCopyMember<T>(sourceType, member);
         }
 
         private static StringBuilder AppendCannotCopyMember<T>(this StringBuilder errorBuilder, Type sourceType, MemberInfo member)
-            where T : CopySettings
+            where T : IMemberSettings
         {
             return errorBuilder.CreateIfNull()
                                .AppendCopyFailed<T>()
@@ -82,7 +82,7 @@
             this StringBuilder errorBuilder,
             Type sourceType,
             PropertyInfo indexer)
-            where T : CopySettings
+            where T : IMemberSettings
         {
             Debug.Assert(indexer.GetIndexParameters().Length > 0, "Must be an indexer");
             return errorBuilder.CreateIfNull()
@@ -94,7 +94,7 @@
 
         // ReSharper disable once UnusedParameter.Local
         private static StringBuilder AppendCannotCopyType<T>(this StringBuilder errorBuilder, Type type, T settings)
-            where T : CopySettings
+            where T : IMemberSettings
         {
             return errorBuilder.CreateIfNull()
                                .AppendCopyFailed<T>()
@@ -108,13 +108,13 @@
         {
             // ReSharper disable once UnusedParameter.Local
             internal static void CannotCopyMember<T>(Type sourceType, MemberInfo member, T settings)
-                where T : CopySettings
+                where T : IMemberSettings
             {
                 CannotCopyMember<T>(sourceType, member);
             }
 
             internal static void CannotCopyMember<T>(Type sourceType, MemberInfo member)
-                where T : CopySettings
+                where T : IMemberSettings
             {
                 var errorBuilder = new StringBuilder().AppendCannotCopyMember<T>(sourceType, member);
                 var message = errorBuilder.ToString();
@@ -126,7 +126,7 @@
                 SourceAndTargetValue sourceAndTargetValue,
                 MemberInfo member,
                 T settings)
-                where T : CopySettings
+                where T : IMemberSettings
             {
                 var errorBuilder = new StringBuilder();
                 errorBuilder.AppendCopyFailed<T>();
@@ -160,7 +160,7 @@
             }
 
             internal static void CannotCopyType<T>(Type type, T settings)
-                where T : CopySettings
+                where T : IMemberSettings
             {
                 var errorBuilder = new StringBuilder();
                 AppendCannotCopyType(errorBuilder, type, settings);
@@ -168,22 +168,22 @@
             }
 
             internal static void CannotCopyItem<T>(IList source, IList target, int index, T settings)
-                where T : CopySettings
+                where T : IMemberSettings
             {
                 var itemType = source[index]?.GetType() ?? source.GetType().GetItemType();
                 var errorBuilder = new StringBuilder();
-                if (settings is CopyPropertiesSettings)
+                if (settings is PropertiesSettings)
                 {
                     errorBuilder.AppendLine(
                         $"Copy.{nameof(PropertyValues)}(x, y) does not support copying the type {itemType.PrettyName()}");
                 }
-                else if (settings is CopyFieldsSettings)
+                else if (settings is FieldsSettings)
                 {
                     errorBuilder.AppendLine($"Copy.{nameof(CopyFieldsValues)}(x, y) does not support copying the type {itemType.PrettyName()}");
                 }
                 else
                 {
-                    ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<CopyPropertiesSettings, CopyFieldsSettings>(nameof(settings));
+                    ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<PropertiesSettings, FieldsSettings>(nameof(settings));
                 }
 
                 errorBuilder.AppendLine($"The problem occurred at index: {index}")
@@ -196,22 +196,22 @@
             }
 
             internal static void CannotCopyItem<T>(IDictionary source, IDictionary target, object key, T settings)
-                where T : CopySettings
+                where T : IMemberSettings
             {
                 var itemType = source[key]?.GetType();
                 var errorBuilder = new StringBuilder();
-                if (settings is CopyPropertiesSettings)
+                if (settings is PropertiesSettings)
                 {
                     errorBuilder.AppendLine($"Copy.{nameof(PropertyValues)}(x, y) does not support copying the type {itemType.PrettyName()}");
                 }
-                else if (settings is CopyFieldsSettings)
+                else if (settings is FieldsSettings)
                 {
                     errorBuilder.AppendLine(
                         $"Copy.{nameof(CopyFieldsValues)}(x, y) does not support copying the type {itemType.PrettyName()}");
                 }
                 else
                 {
-                    ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<CopyPropertiesSettings, CopyFieldsSettings>(nameof(settings));
+                    ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<PropertiesSettings, FieldsSettings>(nameof(settings));
                 }
 
                 errorBuilder.AppendLine($"The problem occurred for key: {key}")
@@ -224,7 +224,7 @@
 
             // ReSharper disable once UnusedParameter.Local
             internal static void CannotCopyFixesSizeCollections<T>(ICollection source, ICollection target, T settings)
-                where T : CopySettings
+                where T : IMemberSettings
             {
                 var errorBuilder = new StringBuilder();
                 errorBuilder.AppendCopyFailed<T>()

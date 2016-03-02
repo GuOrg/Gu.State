@@ -1,64 +1,43 @@
 ﻿namespace Gu.ChangeTracking
 {
     using System;
-    using System.Collections;
-    using System.Collections.Specialized;
     using System.ComponentModel;
     using System.Reflection;
 
     public static partial class DirtyTracker
     {
-        public static void Verify<T>(params string[] ignoreProperties)
+        /// <summary>
+        /// Check if the properties of <typeparamref name="T"/> can be tracked.
+        /// This method will throw an exception if copy cannot be performed for <typeparamref name="T"/>
+        /// Read the exception message for detailed instructions about what is wrong.
+        /// Use this to fail fast or in unit tests.
+        /// </summary>
+        /// <typeparam name="T">The type to get ignore properties for settings for</typeparam>
+        /// <param name="bindingFlags">The binding flags to use when getting properties</param>
+        /// <param name="referenceHandling">
+        /// If Structural is used property values for sub properties are copied for the entire graph.
+        /// Activator.CreateInstance is sued to new up references so a default constructor is required, can be private
+        /// </param>
+        /// <param name="ignoreProperties">Names of properties on <typeparamref name="T"/> to exclude from copying</param>
+        public static void VerifyCanTrack<T>(
+            BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags,
+            ReferenceHandling referenceHandling = ReferenceHandling.Throw,
+            params string[] ignoreProperties)
             where T : class, INotifyPropertyChanged
         {
-            Verify<T>(Constants.DefaultPropertyBindingFlags, ignoreProperties);
+            var settings = PropertiesSettings.Create(typeof(T), bindingFlags, referenceHandling, ignoreProperties);
+            VerifyCanTrack<T>(settings);
         }
 
-        /// <summary>
-        /// Check if <typeparamref name="T"/> can be tracked
-        /// </summary>
-        public static void Verify<T>(BindingFlags bindingFlags, params string[] ignoreProperties)
+        public static void VerifyCanTrack<T>(PropertiesSettings settings)
                         where T : class, INotifyPropertyChanged
         {
-            var settings = DirtyTrackerSettings.Create(typeof(T), ignoreProperties, bindingFlags, ReferenceHandling.Throw);
-            Verify<T>(settings);
+            VerifyCanTrack(typeof(T), settings);
         }
 
-        public static void Verify<T>(DirtyTrackerSettings settings)
-                        where T : class, INotifyPropertyChanged
+        public static void VerifyCanTrack(Type type, PropertiesSettings settings)
         {
-            Verify(typeof(T), settings);
-        }
-
-        public static void Verify(Type type, DirtyTrackerSettings settings)
-        {
-            if (typeof(IEnumerable).IsAssignableFrom(type))
-            {
-                if (settings.ReferenceHandling == ReferenceHandling.Throw || 
-                    (settings.ReferenceHandling != ReferenceHandling.Throw
-                        && !typeof(INotifyCollectionChanged).IsAssignableFrom(type)))
-                {
-                    throw new NotSupportedException(
-                        "Not supporting IEnumerable unless ReferenceHandling is specified and the collection is INotifyCollectionChanged");
-                }
-            }
-
-            foreach (var propertyInfo in type.GetProperties(settings.BindingFlags))
-            {
-                if (settings.IsIgnoringProperty(propertyInfo))
-                {
-                    continue;
-                }
-
-                if (!propertyInfo.PropertyType.IsImmutable() && settings.ReferenceHandling == ReferenceHandling.Throw)
-                {
-                    var message =
-                        $"Only equatable properties are supported without specifying {typeof(ReferenceHandling).Name}\r\n"
-                        + $"Property {type.Name}.{propertyInfo.Name} is not IEquatable<{propertyInfo.PropertyType.Name}>.\r\n"
-                        + "Use the overload DirtyTracker.Track(x, y, ReferenceHandling) if you want to track a graph";
-                    throw new NotSupportedException(message);
-                }
-            }
+            ChangeTracker.VerifyCanTrack(type, settings);
         }
     }
 }

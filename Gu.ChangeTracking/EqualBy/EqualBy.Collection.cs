@@ -12,7 +12,7 @@
             Func<object, object, TSetting, ReferencePairCollection, bool> compareItem,
             TSetting settings,
             ReferencePairCollection referencePairs)
-    where TSetting : IEqualBySettings
+            where TSetting : class, IReferenceHandling
         {
             Debug.Assert(settings.ReferenceHandling != ReferenceHandling.Throw, "Should not get here");
 

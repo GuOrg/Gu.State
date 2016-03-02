@@ -9,7 +9,7 @@
         private static class Verify
         {
             public static void Enumerable<T>(Type type, T settings, StringBuilder errorBuilder)
-                where T : CopySettings
+                where T : IMemberSettings
             {
                 if (typeof(IEnumerable).IsAssignableFrom(type))
                 {
@@ -34,7 +34,7 @@
             }
 
             public static void Indexers<T>(Type type, T settings)
-                        where T : CopySettings
+                        where T : IMemberSettings
             {
                 var errorBuilder = Indexers(type, settings, null);
                 if (errorBuilder != null)
@@ -44,7 +44,7 @@
             }
 
             public static StringBuilder Indexers<T>(Type type, T settings, StringBuilder errorBuilder)
-                where T : CopySettings
+                where T : IMemberSettings
             {
                 var propertyInfos = type.GetProperties(Constants.DefaultFieldBindingFlags);
                 foreach (var propertyInfo in propertyInfos)

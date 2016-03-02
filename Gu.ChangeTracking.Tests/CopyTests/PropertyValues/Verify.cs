@@ -9,7 +9,7 @@
 
         public override void VerifyMethod<T>(ReferenceHandling referenceHandling)
         {
-            Copy.VerifyCanCopyPropertyValues<T>(referenceHandling);
+            Copy.VerifyCanCopyPropertyValues<T>(referenceHandling: referenceHandling);
         }
     }
 }

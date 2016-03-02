@@ -2,6 +2,9 @@
 {
     using System;
 
+    /// <summary>
+    /// Defines methods for comparing two instances
+    /// </summary>
     public static partial class EqualBy
     {
         internal static bool IsEquatable(Type type)

@@ -13,7 +13,7 @@
 
         public override void VerifyMethod<T>(ReferenceHandling referenceHandling)
         {
-            Copy.VerifyCanCopyFieldValues<T>(referenceHandling);
+            Copy.VerifyCanCopyFieldValues<T>(referenceHandling: referenceHandling);
         }
 
         [Test]

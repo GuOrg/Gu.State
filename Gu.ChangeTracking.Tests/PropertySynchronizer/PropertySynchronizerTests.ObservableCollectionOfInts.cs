@@ -15,7 +15,7 @@
             {
                 var source = new ObservableCollection<int> { 1, 2 };
                 var target = new ObservableCollection<int>();
-                using (var synchronizer = PropertySynchronizer.Create(source, target, referenceHandling))
+                using (var synchronizer = PropertySynchronizer.Create(source, target, referenceHandling: referenceHandling))
                 {
                     var itemsSynchronizerField = synchronizer.GetType().GetField("itemsSynchronizer", Constants.DefaultFieldBindingFlags);
                     Assert.NotNull(itemsSynchronizerField);
@@ -40,7 +40,7 @@
             {
                 var source = new ObservableCollection<int>();
                 var target = new ObservableCollection<int>();
-                using (PropertySynchronizer.Create(source, target, referenceHandling))
+                using (PropertySynchronizer.Create(source, target, referenceHandling: referenceHandling))
                 {
                     source.Add(1);
                     CollectionAssert.AreEqual(new[] { 1 }, source);
@@ -58,7 +58,7 @@
             {
                 var source = new ObservableCollection<int> { 1, 2 };
                 var target = new ObservableCollection<int> { 1, 2 };
-                using (PropertySynchronizer.Create(source, target, referenceHandling))
+                using (PropertySynchronizer.Create(source, target, referenceHandling: referenceHandling))
                 {
                     source.RemoveAt(1);
                     CollectionAssert.AreEqual(new[] { 1 }, source);
@@ -76,7 +76,7 @@
             {
                 var source = new ObservableCollection<int> { 1, 2 };
                 var target = new ObservableCollection<int> { 1, 2 };
-                using (PropertySynchronizer.Create(source, target, referenceHandling))
+                using (PropertySynchronizer.Create(source, target, referenceHandling: referenceHandling))
                 {
                     source.Insert(1, 3);
                     CollectionAssert.AreEqual(new[] { 1, 3, 2 }, source);
@@ -90,7 +90,7 @@
             {
                 var source = new ObservableCollection<int> { 1, 2 };
                 var target = new ObservableCollection<int> { 1, 2 };
-                using (PropertySynchronizer.Create(source, target, referenceHandling))
+                using (PropertySynchronizer.Create(source, target, referenceHandling: referenceHandling))
                 {
                     source.Move(1, 0);
                     CollectionAssert.AreEqual(new[] { 2, 1 }, source);
@@ -108,7 +108,7 @@
             {
                 var source = new ObservableCollection<int> { 1, 2 };
                 var target = new ObservableCollection<int> { 1, 2 };
-                using (PropertySynchronizer.Create(source, target, referenceHandling))
+                using (PropertySynchronizer.Create(source, target, referenceHandling: referenceHandling))
                 {
                     source[0] = 3;
                     CollectionAssert.AreEqual(new[] { 3, 2 }, source);
@@ -125,7 +125,7 @@
             {
                 var source = new ObservableCollection<int> { 1, 2 };
                 var target = new ObservableCollection<int> { 1, 2 };
-                using (PropertySynchronizer.Create(source, target, ReferenceHandling.Structural))
+                using (PropertySynchronizer.Create(source, target, referenceHandling: ReferenceHandling.Structural))
                 {
                     var exception = Assert.Throws<InvalidOperationException>(() => target.Add(3));
                     var expected = "You cannot modify the target collection when you have applied a PropertySynchronizer on it";

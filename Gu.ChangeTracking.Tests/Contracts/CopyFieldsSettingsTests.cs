@@ -1,4 +1,4 @@
-﻿namespace Gu.ChangeTracking.Tests.EqualByTests.FieldValues
+﻿namespace Gu.ChangeTracking.Tests.Contracts
 {
     using System;
     using System.Collections.Generic;
@@ -7,16 +7,16 @@
 
     using NUnit.Framework;
 
-    public class EqualByFieldsSettingsTests
+    public class CopyFieldsSettingsTests
     {
         [Test]
         public void Ignores()
         {
             var type = typeof(ComplexType);
-            var nameField = type.GetField(nameof(ComplexType.Name));
-            var valueField = type.GetField(nameof(ComplexType.Value));
-            var settings = new EqualByFieldsSettings(new[] { nameField }, Constants.DefaultFieldBindingFlags, ReferenceHandling.Throw);
+            var settings = FieldsSettings.Create(type, excludedFields: new[] { nameof(ComplexType.Name) });
+            var nameField = type.GetField(nameof(ComplexType.Name), Constants.DefaultFieldBindingFlags);
             Assert.AreEqual(true, settings.IsIgnoringField(nameField));
+            var valueField = type.GetField(nameof(ComplexType.Value), Constants.DefaultFieldBindingFlags);
             Assert.AreEqual(false, settings.IsIgnoringField(valueField));
         }
 
@@ -27,7 +27,7 @@
         [TestCase(typeof(Dictionary<int, int>))]
         public void IgnoresCollectionFields(Type type)
         {
-            var settings = EqualByFieldsSettings.GetOrCreate(ReferenceHandling.Structural);
+            var settings = FieldsSettings.GetOrCreate();
             var fieldInfos = type.GetFields(Constants.DefaultFieldBindingFlags);
             if (type != typeof(int[]))
             {
@@ -43,7 +43,7 @@
         [Test]
         public void IgnoresNull()
         {
-            var settings = new EqualByFieldsSettings(null, Constants.DefaultFieldBindingFlags, ReferenceHandling.Throw);
+            var settings = FieldsSettings.GetOrCreate();
             Assert.AreEqual(true, settings.IsIgnoringField(null));
         }
 
@@ -51,10 +51,10 @@
         [TestCase(BindingFlags.Public, ReferenceHandling.Structural)]
         public void Cache(BindingFlags bindingFlags, ReferenceHandling referenceHandling)
         {
-            var settings = EqualByFieldsSettings.GetOrCreate(bindingFlags, referenceHandling);
+            var settings = FieldsSettings.GetOrCreate(bindingFlags, referenceHandling);
             Assert.AreEqual(bindingFlags, settings.BindingFlags);
             Assert.AreEqual(referenceHandling, settings.ReferenceHandling);
-            var second = EqualByFieldsSettings.GetOrCreate(BindingFlags.Public, referenceHandling);
+            var second = FieldsSettings.GetOrCreate(BindingFlags.Public, referenceHandling);
             Assert.AreSame(settings, second);
         }
 
