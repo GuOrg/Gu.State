@@ -19,9 +19,9 @@ namespace Gu.ChangeTracking
 
         public ReferenceHandling ReferenceHandling { get; }
 
-        public bool IsIgnoringType(Type type)
+        public bool IsIgnoringDeclaringType(Type declaringType)
         {
-            return this.ignoredTypes.IsIgnoringType(type);
+            return this.ignoredTypes.IsIgnoringType(declaringType);
         }
     }
 }

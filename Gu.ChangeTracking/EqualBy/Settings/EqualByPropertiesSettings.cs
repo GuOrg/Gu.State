@@ -66,7 +66,7 @@
                 return true;
             }
 
-            if (this.IsIgnoringType(propertyInfo.DeclaringType))
+            if (this.IsIgnoringDeclaringType(propertyInfo.DeclaringType))
             {
                 return true;
             }

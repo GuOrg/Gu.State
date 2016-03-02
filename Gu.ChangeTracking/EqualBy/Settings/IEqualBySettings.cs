@@ -4,6 +4,6 @@ namespace Gu.ChangeTracking
 
     public interface IEqualBySettings : IBindingFlags, IReferenceHandling
     {
-        bool IsIgnoringType(Type type);
+        bool IsIgnoringDeclaringType(Type declaringType);
     }
 }

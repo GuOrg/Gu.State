@@ -67,7 +67,7 @@
 
         public bool IsIgnoringProperty(PropertyInfo propertyInfo)
         {
-            if (propertyInfo == null || this.IsIgnoringType(propertyInfo.DeclaringType))
+            if (propertyInfo == null || this.IsIgnoringDeclaringType(propertyInfo.DeclaringType))
             {
                 return true;
             }
