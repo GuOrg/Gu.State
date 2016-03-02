@@ -27,7 +27,7 @@
                   "  - All field and property types must be immutable.\r\n" +
                   "  - All indexers must be readonly.\r\n" +
                   "  - Event fields are ignored.\r\n" +
-                  "* Use CopyFieldsSettings and specify how copying is performed:\r\n" +
+                  "* Use FieldsSettings and specify how copying is performed:\r\n" +
                   "  - ReferenceHandling.Structural means that a deep copy is performed.\r\n" +
                   "  - ReferenceHandling.References means that references are copied.\r\n" +
                   "  - Exclude the type WithComplexProperty.\r\n" +
@@ -43,7 +43,7 @@
                   "  - All field and property types must be immutable.\r\n" +
                   "  - All indexers must be readonly.\r\n" +
                   "  - Event fields are ignored.\r\n" +
-                  "* Use CopyPropertiesSettings and specify how copying is performed:\r\n" +
+                  "* Use PropertiesSettings and specify how copying is performed:\r\n" +
                   "  - ReferenceHandling.Structural means that a deep copy is performed.\r\n" +
                   "  - ReferenceHandling.References means that references are copied.\r\n" +
                   "  - Exclude the type WithComplexProperty.\r\n" +
@@ -74,7 +74,7 @@
                   " - Target value: Gu.ChangeTracking.Tests.CopyTests.CopyTypes+Immutable.\r\n" +
                   "The field is of type Immutable.\r\n" +
                   "Solve the problem by any of:\r\n" +
-                  "* Use CopyFieldsSettings and specify how copying is performed:\r\n" +
+                  "* Use FieldsSettings and specify how copying is performed:\r\n" +
                   "  - ReferenceHandling.Structural means that a deep copy is performed.\r\n" +
                   "  - ReferenceHandling.References means that references are copied.\r\n" +
                   "  - Exclude the type WithReadonlyProperty<Immutable>.\r\n" +
@@ -86,7 +86,7 @@
                   " - Target value: Gu.ChangeTracking.Tests.CopyTests.CopyTypes+Immutable.\r\n" +
                   "The property is of type Immutable.\r\n" +
                   "Solve the problem by any of:\r\n" +
-                  "* Use CopyPropertiesSettings and specify how copying is performed:\r\n" +
+                  "* Use PropertiesSettings and specify how copying is performed:\r\n" +
                   "  - ReferenceHandling.Structural means that a deep copy is performed.\r\n" +
                   "  - ReferenceHandling.References means that references are copied.\r\n" +
                   "  - Exclude the type WithReadonlyProperty<Immutable>.\r\n" +
@@ -134,7 +134,7 @@
                                  "The property WithIndexerType.Item is not supported.\r\n" +
                                  "The property is of type int.\r\n" +
                                  "Solve the problem by any of:\r\n" +
-                                 "* Use CopyFieldsSettings and specify how copying is performed:\r\n" +
+                                 "* Use FieldsSettings and specify how copying is performed:\r\n" +
                                  "  - ReferenceHandling.Structural means that a deep copy is performed.\r\n" +
                                  "  - ReferenceHandling.References means that references are copied.\r\n" +
                                  "  - Exclude the type WithIndexerType.\r\n"
@@ -144,7 +144,7 @@
                                  "The property WithIndexerType.Item is not supported.\r\n" +
                                  "The property is of type int.\r\n" +
                                  "Solve the problem by any of:\r\n" +
-                                 "* Use CopyPropertiesSettings and specify how copying is performed:\r\n" +
+                                 "* Use PropertiesSettings and specify how copying is performed:\r\n" +
                                  "  - ReferenceHandling.Structural means that a deep copy is performed.\r\n" +
                                  "  - ReferenceHandling.References means that references are copied.\r\n" +
                                  "  - Exclude the type WithIndexerType.\r\n" +
@@ -164,7 +164,7 @@
                      "Activator.CreateInstance failed for type WithoutDefaultCtor.\r\n" +
                      "Solve the problem by any of:\r\n" +
                      "* Add a parameterless constructor to WithoutDefaultCtor, can be private.\r\n" +
-                     "* Use CopyFieldsSettings and specify how copying is performed:\r\n" +
+                     "* Use FieldsSettings and specify how copying is performed:\r\n" +
                      "  - ReferenceHandling.Structural means that a deep copy is performed.\r\n" +
                      "  - ReferenceHandling.References means that references are copied.\r\n" +
                      "  - Exclude the type WithoutDefaultCtor.\r\n" +
@@ -174,7 +174,7 @@
                      "Activator.CreateInstance failed for type WithoutDefaultCtor.\r\n" +
                      "Solve the problem by any of:\r\n" +
                      "* Add a parameterless constructor to WithoutDefaultCtor, can be private.\r\n" +
-                     "* Use CopyPropertiesSettings and specify how copying is performed:\r\n" +
+                     "* Use PropertiesSettings and specify how copying is performed:\r\n" +
                      "  - ReferenceHandling.Structural means that a deep copy is performed.\r\n" +
                      "  - ReferenceHandling.References means that references are copied.\r\n" +
                      "  - Exclude the type WithoutDefaultCtor.\r\n" +
@@ -183,7 +183,7 @@
             var x = new CopyTypes.WithProperty<CopyTypes.WithoutDefaultCtor>(new CopyTypes.WithoutDefaultCtor(1));
             var y = new CopyTypes.WithProperty<CopyTypes.WithoutDefaultCtor>(null);
 
-            var exception = Assert.Throws<NotSupportedException>(() => this.CopyMethod(x, y, ReferenceHandling.Structural));
+            var exception = Assert.Throws<NotSupportedException>(() => this.CopyMethod(x, y, referenceHandling: ReferenceHandling.Structural));
 
             Assert.AreEqual(expected, exception.Message);
         }

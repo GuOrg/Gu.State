@@ -5,49 +5,40 @@
 
     public static partial class Copy
     {
-        public static void FieldValues<T>(T source, T target, BindingFlags bindingFlags)
+        /// <summary>
+        /// Copies field values from source to target.
+        /// Event fields are excluded
+        /// </summary>
+        /// <typeparam name="T">The type to get ignore fields for settings for</typeparam>
+        /// <param name="source">The instance to copy field values from</param>
+        /// <param name="target">The instance to copy field values to</param>
+        /// <param name="bindingFlags">The binding flags to use when getting properties</param>
+        /// <param name="referenceHandling">
+        /// If Structural is used field values for sub fields are copied for the entire graph.
+        /// Activator.CreateInstance is sued to new up references so a default constructor is required, can be private
+        /// </param>
+        /// <param name="excludedFields">Names of fields on <typeparamref name="T"/> to exclude from copying</param>
+        public static void FieldValues<T>(
+            T source,
+            T target,
+            BindingFlags bindingFlags = Constants.DefaultFieldBindingFlags,
+            ReferenceHandling referenceHandling = ReferenceHandling.Throw,
+            params string[] excludedFields)
             where T : class
         {
-            var settings = CopyFieldsSettings.GetOrCreate(bindingFlags);
-            FieldValues(source, target, settings);
-        }
-
-        public static void FieldValues<T>(T source, T target, ReferenceHandling referenceHandling)
-            where T : class
-        {
-            var settings = CopyFieldsSettings.GetOrCreate(referenceHandling);
-            FieldValues(source, target, settings);
-        }
-
-        public static void FieldValues<T>(T source, T target, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
-            where T : class
-        {
-            var settings = CopyFieldsSettings.GetOrCreate(bindingFlags, referenceHandling);
+            var settings = FieldsSettings.Create(source, target, bindingFlags, referenceHandling, excludedFields);
             FieldValues(source, target, settings);
         }
 
         /// <summary>
         /// Copies field values from source to target.
-        /// Only valur types and string are allowed.
+        /// Event fields are excluded
         /// </summary>
-        public static void FieldValues<T>(T source, T target, params string[] excludedFields)
-            where T : class
-        {
-            FieldValues(source, target, Constants.DefaultFieldBindingFlags, excludedFields);
-        }
-
-        /// <summary>
-        /// Copies field values from source to target.
-        /// Only valur types and string are allowed.
-        /// </summary>
-        public static void FieldValues<T>(T source, T target, BindingFlags bindingFlags, params string[] excludedFields)
-            where T : class
-        {
-            var settings = CopyFieldsSettings.Create(source, target, bindingFlags, ReferenceHandling.Throw, excludedFields);
-            FieldValues(source, target, settings);
-        }
-
-        public static void FieldValues<T>(T source, T target, CopyFieldsSettings settings) 
+        /// <typeparam name="T">The type to get ignore fields for settings for</typeparam>
+        /// <param name="source">The instance to copy field values from</param>
+        /// <param name="target">The instance to copy field values to</param>
+        /// <param name="settings">Contains configuration for how to copy</param>
+        public static void FieldValues<T>(T source, T target, FieldsSettings settings)
             where T : class
         {
             if (settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops)
@@ -61,7 +52,7 @@
             }
         }
 
-        private static void CopyFieldsValues<T>(T source, T target, CopyFieldsSettings settings, ReferencePairCollection referencePairs)
+        private static void CopyFieldsValues<T>(T source, T target, FieldsSettings settings, ReferencePairCollection referencePairs)
             where T : class
         {
             Ensure.NotNull(source, nameof(source));
@@ -144,7 +135,7 @@
                             continue;
                         }
 
-                        targetValue = CreateInstance<CopyFieldsSettings>(sv, fieldInfo);
+                        targetValue = CreateInstance<FieldsSettings>(sv, fieldInfo);
                         CopyFieldsValues(sv, targetValue, settings, referencePairs);
                         fieldInfo.SetValue(target, targetValue);
                         continue;

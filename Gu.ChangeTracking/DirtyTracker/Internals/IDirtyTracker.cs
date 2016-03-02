@@ -2,7 +2,7 @@
 {
     internal interface IDirtyTracker : IDirtyTrackerNode
     {
-        DirtyTrackerSettings Settings { get; }
+        PropertiesSettings Settings { get; }
 
         void Update(IDirtyTrackerNode child);
     }

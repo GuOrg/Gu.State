@@ -9,48 +9,49 @@
     public static partial class Copy
     {
         /// <summary>
-        /// Check if the properties of <typeparamref name="T"/> can be synchronized.
-        /// Use this to fail fast.
+        /// Check if the properties of <typeparamref name="T"/> can be copied.
+        /// This method will throw an exception if copy cannot be performed for <typeparamref name="T"/>
+        /// Read the exception message for detailed instructions about what is wrong.
+        /// Use this to fail fast or in unit tests.
         /// </summary>
-        public static void VerifyCanCopyPropertyValues<T>(ReferenceHandling referenceHandling)
+        /// <typeparam name="T">The type to get ignore properties for settings for</typeparam>
+        /// <param name="bindingFlags">The binding flags to use when getting properties</param>
+        /// <param name="referenceHandling">
+        /// If Structural is used property values for sub properties are copied for the entire graph.
+        /// Activator.CreateInstance is sued to new up references so a default constructor is required, can be private
+        /// </param>
+        /// <param name="ignoreProperties">Names of properties on <typeparamref name="T"/> to exclude from copying</param>
+        public static void VerifyCanCopyPropertyValues<T>(
+            BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags,
+            ReferenceHandling referenceHandling = ReferenceHandling.Throw,
+            params string[] ignoreProperties)
         {
-            var settings = CopyPropertiesSettings.GetOrCreate(referenceHandling);
+            var settings = PropertiesSettings.Create<T>(bindingFlags, referenceHandling, ignoreProperties);
             VerifyCanCopyPropertyValues<T>(settings);
         }
 
         /// <summary>
-        /// Check if the properties of <typeparamref name="T"/> can be synchronized.
-        /// Use this to fail fast.
+        /// Check if the properties of <typeparamref name="T"/> can be copied.
+        /// This method will throw an exception if copy cannot be performed for <typeparamref name="T"/>
+        /// Read the exception message for detailed instructions about what is wrong.
+        /// Use this to fail fast or in unit tests.
         /// </summary>
-        public static void VerifyCanCopyPropertyValues<T>(params string[] excludedProperties)
-        {
-            VerifyCanCopyPropertyValues<T>(Constants.DefaultPropertyBindingFlags, excludedProperties);
-        }
-
-        /// <summary>
-        /// Check if the properties of <typeparamref name="T"/> can be synchronized.
-        /// Use this to fail fast.
-        /// </summary>
-        public static void VerifyCanCopyPropertyValues<T>(BindingFlags bindingFlags, params string[] excludedProperties)
-        {
-            var settings = CopyPropertiesSettings.Create(
-                typeof(T),
-                excludedProperties,
-                bindingFlags,
-                ReferenceHandling.Throw);
-            VerifyCanCopyPropertyValues<T>(settings);
-        }
-
-        /// <summary>
-        /// Check if the properties of <typeparamref name="T"/> can be synchronized.
-        /// Use this to fail fast.
-        /// </summary>
-        public static void VerifyCanCopyPropertyValues<T>(CopyPropertiesSettings settings)
+        /// <typeparam name="T">The type to check</typeparam>
+        /// <param name="settings">Contains configuration for how copy will be performed</param>
+        public static void VerifyCanCopyPropertyValues<T>(PropertiesSettings settings)
         {
             VerifyCanCopyPropertyValues(typeof(T), settings);
         }
 
-        public static void VerifyCanCopyPropertyValues(Type type, CopyPropertiesSettings settings)
+        /// <summary>
+        /// Check if the properties of <paramref name="type"/> can be copied.
+        /// This method will throw an exception if copy cannot be performed for <paramref name="type"/>
+        /// Read the exception message for detailed instructions about what is wrong.
+        /// Use this to fail fast or in unit tests.
+        /// </summary>
+        /// <param name="type">The type to check</param>
+        /// <param name="settings">Contains configuration for how copy will be performed</param>
+        public static void VerifyCanCopyPropertyValues(Type type, PropertiesSettings settings)
         {
             var errorBuilder = new StringBuilder();
             VerifyCanCopyPropertyValues(type, settings, errorBuilder, null);
@@ -64,7 +65,7 @@
 
         private static void VerifyCanCopyPropertyValues(
             Type type,
-            CopyPropertiesSettings settings,
+            PropertiesSettings settings,
             StringBuilder errorBuilder,
             List<Type> checkedTypes)
         {
@@ -84,7 +85,7 @@
                     switch (settings.ReferenceHandling)
                     {
                         case ReferenceHandling.Throw:
-                            Copy.AppendCannotCopyMember(errorBuilder, type, propertyInfo, settings);
+                            errorBuilder.AppendCannotCopyMember(type, propertyInfo, settings);
                             break;
                         case ReferenceHandling.References:
                             break;

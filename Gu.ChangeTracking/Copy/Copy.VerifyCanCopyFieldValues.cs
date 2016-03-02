@@ -8,37 +8,50 @@
 
     public static partial class Copy
     {
-        public static void VerifyCanCopyFieldValues<T>(ReferenceHandling referenceHandling)
+        /// <summary>
+        /// Check if the fields of <typeparamref name="T"/> can be copied.
+        /// This method will throw an exception if copy cannot be performed for <typeparamref name="T"/>
+        /// Read the exception message for detailed instructions about what is wrong.
+        /// Use this to fail fast or in unit tests.
+        /// </summary>
+        /// <typeparam name="T">The type to get ignore fields for settings for</typeparam>
+        /// <param name="bindingFlags">The binding flags to use when getting fields</param>
+        /// <param name="referenceHandling">
+        /// If Structural is used property values for sub properties are copied for the entire graph.
+        /// Activator.CreateInstance is sued to new up references so a default constructor is required, can be private
+        /// </param>
+        /// <param name="ignoreFields">Names of properties on <typeparamref name="T"/> to exclude from copying</param>
+        public static void VerifyCanCopyFieldValues<T>(
+            BindingFlags bindingFlags = Constants.DefaultFieldBindingFlags,
+            ReferenceHandling referenceHandling = ReferenceHandling.Throw,
+            params string[] ignoreFields)
         {
-            var settings = CopyFieldsSettings.GetOrCreate(referenceHandling);
+            var settings = FieldsSettings.Create<T>(bindingFlags, referenceHandling, ignoreFields);
             VerifyCanCopyFieldValues<T>(settings);
         }
 
         /// <summary>
-        /// Check if the fields of <typeparamref name="T"/> can be synchronized.
-        /// Use this to fail fast.
+        /// Check if the fields of <typeparamref name="T"/> can be copied.
+        /// This method will throw an exception if copy cannot be performed for <typeparamref name="T"/>
+        /// Read the exception message for detailed instructions about what is wrong.
+        /// Use this to fail fast or in unit tests.
         /// </summary>
-        public static void VerifyCanCopyFieldValues<T>(params string[] excludedFields)
-        {
-            VerifyCanCopyFieldValues<T>(Constants.DefaultFieldBindingFlags, excludedFields);
-        }
-
-        /// <summary>
-        /// Check if the fields of <typeparamref name="T"/> can be synchronized.
-        /// Use this to fail fast.
-        /// </summary>
-        public static void VerifyCanCopyFieldValues<T>(BindingFlags bindingFlags, params string[] ignoreFields)
-        {
-            var settings = CopyFieldsSettings.Create<T>(bindingFlags, ReferenceHandling.Throw, ignoreFields);
-            VerifyCanCopyFieldValues<T>(settings);
-        }
-
-        public static void VerifyCanCopyFieldValues<T>(CopyFieldsSettings settings)
+        /// <typeparam name="T">The type to get ignore fields for settings for</typeparam>
+        /// <param name="settings">Contains configuration for how copy is performed</param>
+        public static void VerifyCanCopyFieldValues<T>(FieldsSettings settings)
         {
             VerifyCanCopyFieldValues(typeof(T), settings);
         }
 
-        public static void VerifyCanCopyFieldValues(Type type, CopyFieldsSettings settings)
+        /// <summary>
+        /// Check if the fields of <paramref name="type"/> can be copied.
+        /// This method will throw an exception if copy cannot be performed for <paramref name="type"/>
+        /// Read the exception message for detailed instructions about what is wrong.
+        /// Use this to fail fast or in unit tests.
+        /// </summary>
+        /// <param name="type">The type to get ignore fields for settings for</param>
+        /// <param name="settings">Contains configuration for how copy is performed</param>
+        public static void VerifyCanCopyFieldValues(Type type, FieldsSettings settings)
         {
             var errorBuilder = new StringBuilder();
             VerifyCanCopyFieldValues(type, settings, errorBuilder, null);
@@ -51,7 +64,7 @@
 
         private static void VerifyCanCopyFieldValues(
             Type type,
-            CopyFieldsSettings settings,
+            FieldsSettings settings,
             StringBuilder errorBuilder,
             List<Type> checkedTypes)
         {

@@ -9,12 +9,12 @@
 
         public override void CopyMethod<T>(T source, T target, ReferenceHandling referenceHandling)
         {
-            Copy.FieldValues(source, target, referenceHandling);
+            Copy.FieldValues(source, target, referenceHandling: referenceHandling);
         }
 
         public override void CopyMethod<T>(T source, T target, params string[] excluded)
         {
-            Copy.FieldValues(source, target, excluded);
+            Copy.FieldValues(source, target, excludedFields: excluded);
         }
     }
 }

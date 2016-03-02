@@ -15,7 +15,7 @@
             {
                 var source = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
                 var target = new ObservableCollection<WithGetReadOnlyPropertySealed<int>>();
-                using (var synchronizer = PropertySynchronizer.Create(source, target, referenceHandling))
+                using (var synchronizer = PropertySynchronizer.Create(source, target, referenceHandling: referenceHandling))
                 {
                     var itemsSynchronizerField = synchronizer.GetType().GetField("itemsSynchronizer", Constants.DefaultFieldBindingFlags);
                     Assert.NotNull(itemsSynchronizerField);
@@ -41,7 +41,7 @@
             {
                 var source = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
                 var target = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
-                using (PropertySynchronizer.Create(source, target, ReferenceHandling.Structural))
+                using (PropertySynchronizer.Create(source, target, referenceHandling: ReferenceHandling.Structural))
                 {
                     var expected = new[] { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
                     CollectionAssert.AreEqual(expected, source);
@@ -60,7 +60,7 @@
             {
                 var source = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
                 var target = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
-                using (PropertySynchronizer.Create(source, target, ReferenceHandling.References))
+                using (PropertySynchronizer.Create(source, target, referenceHandling: ReferenceHandling.References))
                 {
                     var expected = new[] { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
                     CollectionAssert.AreEqual(expected, source);
@@ -80,7 +80,7 @@
             {
                 var source = new ObservableCollection<WithGetReadOnlyPropertySealed<int>>();
                 var target = new ObservableCollection<WithGetReadOnlyPropertySealed<int>>();
-                using (PropertySynchronizer.Create(source, target, referenceHandling))
+                using (PropertySynchronizer.Create(source, target, referenceHandling: referenceHandling))
                 {
                     source.Add(new WithGetReadOnlyPropertySealed<int>(1));
                     var expected = new[] { new WithGetReadOnlyPropertySealed<int>(1) };
@@ -96,7 +96,7 @@
             {
                 var source = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
                 var target = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
-                using (PropertySynchronizer.Create(source, target, referenceHandling))
+                using (PropertySynchronizer.Create(source, target, referenceHandling: referenceHandling))
                 {
                     source.RemoveAt(1);
                     var expected = new[] { new WithGetReadOnlyPropertySealed<int>(1) };
@@ -115,7 +115,7 @@
             {
                 var source = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
                 var target = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
-                using (PropertySynchronizer.Create(source, target, referenceHandling))
+                using (PropertySynchronizer.Create(source, target, referenceHandling: referenceHandling))
                 {
                     source.Insert(1, new WithGetReadOnlyPropertySealed<int>(3));
                     var expected = new[] { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(3), new WithGetReadOnlyPropertySealed<int>(2) };
@@ -133,7 +133,7 @@
             {
                 var source = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
                 var target = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
-                using (PropertySynchronizer.Create(source, target, referenceHandling))
+                using (PropertySynchronizer.Create(source, target, referenceHandling: referenceHandling))
                 {
                     source.Move(1, 0);
                     var expected = new[] { new WithGetReadOnlyPropertySealed<int>(2), new WithGetReadOnlyPropertySealed<int>(1) };
@@ -153,7 +153,7 @@
             {
                 var source = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
                 var target = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
-                using (PropertySynchronizer.Create(source, target, referenceHandling))
+                using (PropertySynchronizer.Create(source, target, referenceHandling: referenceHandling))
                 {
                     source[0] = new WithGetReadOnlyPropertySealed<int>(3);
                     var expected = new[] { new WithGetReadOnlyPropertySealed<int>(3), new WithGetReadOnlyPropertySealed<int>(2) };

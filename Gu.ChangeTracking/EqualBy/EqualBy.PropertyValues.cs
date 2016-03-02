@@ -6,9 +6,28 @@
 
     public static partial class EqualBy
     {
-        public static bool PropertyValues<T>(T x, T y, BindingFlags bindingFlags)
+        /// <summary>
+        /// Compares x and y for equality using property values.
+        /// If a type implements IList the items of the list are compared
+        /// </summary>
+        /// <typeparam name="T">The type to get ignore properties for settings for</typeparam>
+        /// <param name="x">The first instance</param>
+        /// <param name="y">The second instance</param>
+        /// <param name="bindingFlags">The binding flags to use when getting properties</param>
+        /// <param name="referenceHandling">
+        /// If Structural is used a deep equals is performed.
+        /// Default value is Throw
+        /// </param>
+        /// <param name="excludedProperties">Names of properties on <typeparamref name="T"/> to exclude from copying</param>
+        /// <returns>True if <paramref name="x"/> and <paramref name="y"/> are equal</returns>
+        public static bool PropertyValues<T>(
+            T x,
+            T y,
+            BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags,
+            ReferenceHandling referenceHandling = ReferenceHandling.Throw,
+            params string[] excludedProperties)
         {
-            var settings = EqualByPropertiesSettings.GetOrCreate(bindingFlags);
+            var settings = PropertiesSettings.Create(x, y, bindingFlags, referenceHandling, excludedProperties);
             return PropertyValues(x, y, settings);
         }
 
@@ -16,42 +35,12 @@
         /// Compares x and y for equality using property values.
         /// If a type implements IList the items of the list are compared
         /// </summary>
-        /// <param name="referenceHandling">
-        /// Specifies how reference types are compared.
-        /// Structural compares property values recursively.
-        /// </param>
-        public static bool PropertyValues<T>(T x, T y, ReferenceHandling referenceHandling)
-        {
-            var settings = EqualByPropertiesSettings.GetOrCreate(referenceHandling);
-            return PropertyValues(x, y, settings);
-        }
-
-        /// <summary>
-        /// Compares x and y for equality using property values.
-        /// If a type implements IList the items of the list are compared
-        /// </summary>
-        /// <param name="referenceHandling">
-        /// Specifies how reference types are compared.
-        /// Structural compares property values recursively.
-        /// </param>
-        public static bool PropertyValues<T>(T x, T y, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
-        {
-            var settings = EqualByPropertiesSettings.GetOrCreate(bindingFlags, referenceHandling);
-            return PropertyValues(x, y, settings);
-        }
-
-        public static bool PropertyValues<T>(T x, T y, params string[] excludedProperties)
-        {
-            return PropertyValues(x, y, Constants.DefaultPropertyBindingFlags, excludedProperties);
-        }
-
-        public static bool PropertyValues<T>(T x, T y, BindingFlags bindingFlags, params string[] excludedProperties)
-        {
-            var settings = EqualByPropertiesSettings.Create(x, y, bindingFlags, ReferenceHandling.Throw, excludedProperties);
-            return PropertyValues(x, y, settings);
-        }
-
-        public static bool PropertyValues<T>(T x, T y, IEqualByPropertiesSettings settings)
+        /// <typeparam name="T">The type of <paramref name="x"/> and <paramref name="y"/></typeparam>
+        /// <param name="x">The first instance</param>
+        /// <param name="y">The second instance</param>
+        /// <param name="settings">Specifies how equality is performed.</param>
+        /// <returns>True if <paramref name="x"/> and <paramref name="y"/> are equal</returns>
+        public static bool PropertyValues<T>(T x, T y, PropertiesSettings settings)
         {
             Verify.PropertyTypes(x, y, settings);
             Verify.Enumerable(x, y, settings);
@@ -64,7 +53,11 @@
             return PropertiesValuesEquals(x, y, settings, null);
         }
 
-        private static bool PropertiesValuesEquals<T>(T x, T y, IEqualByPropertiesSettings settings, ReferencePairCollection referencePairs)
+        private static bool PropertiesValuesEquals<T>(
+            T x,
+            T y,
+            PropertiesSettings settings,
+            ReferencePairCollection referencePairs)
         {
             Verify.Indexers(x?.GetType() ?? y?.GetType(), settings);
             referencePairs?.Add(x, y);
@@ -96,7 +89,8 @@
                 }
             }
 
-            var propertyInfos = x.GetType().GetProperties(settings.BindingFlags);
+            var propertyInfos = x.GetType()
+                                 .GetProperties(settings.BindingFlags);
             foreach (var propertyInfo in propertyInfos)
             {
                 if (settings.IsIgnoringProperty(propertyInfo))
@@ -120,12 +114,21 @@
             return true;
         }
 
-        private static bool ItemPropertiesEquals(object x, object y, IEqualByPropertiesSettings settings, ReferencePairCollection referencePairs)
+        private static bool ItemPropertiesEquals(
+            object x,
+            object y,
+            PropertiesSettings settings,
+            ReferencePairCollection referencePairs)
         {
             return PropertyValueEquals(x, y, null, settings, referencePairs);
         }
 
-        private static bool PropertyValueEquals(object x, object y, PropertyInfo propertyInfo, IEqualByPropertiesSettings settings, ReferencePairCollection referencePairs)
+        private static bool PropertyValueEquals(
+            object x,
+            object y,
+            PropertyInfo propertyInfo,
+            PropertiesSettings settings,
+            ReferencePairCollection referencePairs)
         {
             if (ReferenceEquals(x, y))
             {
@@ -153,7 +156,10 @@
                     Throw.CannotCompareMember(x.GetType(), propertyInfo);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);
+                    throw new ArgumentOutOfRangeException(
+                        nameof(settings.ReferenceHandling),
+                        settings.ReferenceHandling,
+                        null);
             }
 
             return true;

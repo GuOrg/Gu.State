@@ -5,6 +5,9 @@
     using System.Reflection;
     using System.Text;
 
+    /// <summary>
+    /// Defines methods for copying values from one instance to another
+    /// </summary>
     public static partial class Copy
     {
         internal static bool IsCopyableType(Type type)
@@ -12,13 +15,8 @@
             return type.IsImmutable();
         }
 
-        internal static bool IsCopyableCollectionType(Type type)
-        {
-            return typeof(IList).IsAssignableFrom(type) || typeof(IDictionary).IsAssignableFrom(type);
-        }
-
         internal static object CreateInstance<T>(object sourceValue, MemberInfo member)
-            where T : CopySettings
+            where T : IMemberSettings
         {
             if (sourceValue == null)
             {
@@ -54,6 +52,11 @@
                 var message = errorBuilder.ToString();
                 throw new NotSupportedException(message, e);
             }
+        }
+
+        private static bool IsCopyableCollectionType(Type type)
+        {
+            return typeof(IList).IsAssignableFrom(type) || typeof(IDictionary).IsAssignableFrom(type);
         }
     }
 }

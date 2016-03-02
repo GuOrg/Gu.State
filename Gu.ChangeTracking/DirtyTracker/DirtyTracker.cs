@@ -5,37 +5,22 @@ namespace Gu.ChangeTracking
 
     public static partial class DirtyTracker
     {
-        public static DirtyTracker<T> Track<T>(T x, T y, BindingFlags bindingFlags)
+        public static DirtyTracker<T> Track<T>(
+            T x,
+            T y,
+            BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags,
+            ReferenceHandling referenceHandling = ReferenceHandling.Throw,
+            params string[] ignoreProperties)
             where T : class, INotifyPropertyChanged
         {
-            var settings = DirtyTrackerSettings.GetOrCreate(bindingFlags);
+            var settings = PropertiesSettings.Create(x, y, bindingFlags, referenceHandling, ignoreProperties);
             return new DirtyTracker<T>(x, y, settings);
         }
 
-        public static DirtyTracker<T> Track<T>(T x, T y, ReferenceHandling referenceHandling)
+        public static DirtyTracker<T> Track<T>(T x, T y, PropertiesSettings settings)
             where T : class, INotifyPropertyChanged
         {
-            var settings = DirtyTrackerSettings.GetOrCreate(referenceHandling);
             return new DirtyTracker<T>(x, y, settings);
-        }
-
-        public static DirtyTracker<T> Track<T>(T x, T y, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
-            where T : class, INotifyPropertyChanged
-        {
-            var settings = DirtyTrackerSettings.GetOrCreate(bindingFlags, referenceHandling);
-            return new DirtyTracker<T>(x, y, settings);
-        }
-
-        public static DirtyTracker<T> Track<T>(T x, T y, params string[] ignoreProperties)
-            where T : class, INotifyPropertyChanged
-        {
-            return new DirtyTracker<T>(x, y, ignoreProperties);
-        }
-
-        public static DirtyTracker<T> Track<T>(T x, T y, BindingFlags bindingFlags, params string[] ignoreProperties)
-            where T : class, INotifyPropertyChanged
-        {
-            return new DirtyTracker<T>(x, y, bindingFlags, ignoreProperties);
         }
     }
 }

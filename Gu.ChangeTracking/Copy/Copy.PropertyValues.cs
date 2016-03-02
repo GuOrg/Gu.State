@@ -6,97 +6,38 @@
 
     public static partial class Copy
     {
-        public static void PropertyValues<T>(T source, T target, BindingFlags bindingFlags)
-            where T : class
-        {
-            var settings = CopyPropertiesSettings.GetOrCreate(bindingFlags, ReferenceHandling.Throw);
-            PropertyValues(source, target, settings);
-        }
-
         /// <summary>
         /// Copies property values from source to target.
         /// </summary>
+        /// <typeparam name="T">The type to get ignore properties for settings for</typeparam>
+        /// <param name="source">The instance to copy property values from</param>
+        /// <param name="target">The instance to copy property values to</param>
+        /// <param name="bindingFlags">The binding flags to use when getting properties</param>
         /// <param name="referenceHandling">
         /// If Structural is used property values for sub properties are copied for the entire graph.
         /// Activator.CreateInstance is sued to new up references so a default constructor is required, can be private
         /// </param>
-        public static void PropertyValues<T>(T source, T target, ReferenceHandling referenceHandling)
-            where T : class
-        {
-            var settings = CopyPropertiesSettings.GetOrCreate(Constants.DefaultPropertyBindingFlags, referenceHandling);
-            PropertyValues(source, target, settings);
-        }
-
-        /// <summary>
-        /// Copies property values from source to target.
-        /// </summary>
-        /// <param name="referenceHandling">
-        /// If Structural is used property values for sub properties are copied for the entire graph.
-        /// Activator.CreateInstance is sued to new up references so a default constructor is required, can be private
-        /// </param>
+        /// <param name="ignoreProperties">Names of properties on <typeparamref name="T"/> to exclude from copying</param>
         public static void PropertyValues<T>(
             T source,
             T target,
-            BindingFlags bindingFlags,
-            ReferenceHandling referenceHandling)
+            BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags,
+            ReferenceHandling referenceHandling = ReferenceHandling.Throw,
+            params string[] ignoreProperties)
             where T : class
         {
-            var settings = CopyPropertiesSettings.GetOrCreate(bindingFlags, referenceHandling);
+            var settings = PropertiesSettings.Create(source,target,bindingFlags, referenceHandling, ignoreProperties);
             PropertyValues(source, target, settings);
-        }
-
-        public static void PropertyValues<T>(T source, T target, params string[] excludedProperties)
-            where T : class
-        {
-            PropertyValues(source, target, Constants.DefaultPropertyBindingFlags, excludedProperties);
         }
 
         /// <summary>
         /// Copies property values from source to target.
-        /// Only value types and string are allowed.
         /// </summary>
-        public static void PropertyValues<T>(
-            T source,
-            T target,
-            BindingFlags bindingFlags,
-            params string[] excludedProperties)
-            where T : class
-        {
-            var settings = CopyPropertiesSettings.Create(typeof(T), excludedProperties, bindingFlags, ReferenceHandling.Throw);
-            PropertyValues(source, target, settings);
-        }
-
-        //public static void PropertyValues<T>(
-        //    T source,
-        //    T target,
-        //    IReadOnlyList<SpecialCopyProperty> specialCopyProperties,
-        //    params string[] excludedProperties)
-        //    where T : class
-        //{
-        //    PropertyValues(source, target, Constants.DefaultPropertyBindingFlags, specialCopyProperties, excludedProperties);
-        //}
-
-        ///// <summary>
-        ///// Copies property values from source to target.
-        ///// Only value types and string are allowed.
-        ///// </summary>
-        //public static void PropertyValues<T>(
-        //    T source,
-        //    T target,
-        //    BindingFlags bindingFlags,
-        //    IReadOnlyList<SpecialCopyProperty> specialCopyProperties,
-        //    params string[] excludedProperties)
-        //    where T : class
-        //{
-        //    var settings = CopyPropertiesSettings.Create(source, target, specialCopyProperties, bindingFlags, ReferenceHandling.Throw, excludedProperties);
-        //    PropertyValues(source, target, settings);
-        //}
-
-        /// <summary>
-        /// Copies property values from source to target.
-        /// Only value types and string are allowed.
-        /// </summary>
-        public static void PropertyValues<T>(T source, T target, CopyPropertiesSettings settings)
+        /// <typeparam name="T">The type to to copy</typeparam>
+        /// <param name="source">The instance to copy property values from</param>
+        /// <param name="target">The instance to copy property values to</param>
+        /// <param name="settings">Contains configuration for how copy will be performed</param>
+        public static void PropertyValues<T>(T source, T target, PropertiesSettings settings)
             where T : class
         {
             if (settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops)
@@ -110,7 +51,7 @@
             }
         }
 
-        private static void CopyPropertiesValues<T>(T source, T target, CopyPropertiesSettings settings, ReferencePairCollection referencePairs)
+        private static void CopyPropertiesValues<T>(T source, T target, PropertiesSettings settings, ReferencePairCollection referencePairs)
             where T : class
         {
             Ensure.NotNull(source, nameof(source));
@@ -130,11 +71,11 @@
             VerifyReadonlyPropertiesAreEqual(source, target, propertyInfos, settings, referencePairs);
         }
 
-        internal static void CopyWritablePropertiesValues(
+        private static void CopyWritablePropertiesValues(
             object source,
             object target,
             IReadOnlyList<PropertyInfo> propertyInfos,
-            CopyPropertiesSettings settings,
+            PropertiesSettings settings,
             ReferencePairCollection referencePairs)
         {
             foreach (var propertyInfo in propertyInfos)
@@ -200,7 +141,7 @@
                         var targetValue = propertyInfo.GetValue(target);
                         if (targetValue == null)
                         {
-                            targetValue = CreateInstance<CopyPropertiesSettings>(sourceValue, propertyInfo);
+                            targetValue = CreateInstance<PropertiesSettings>(sourceValue, propertyInfo);
                             CopyPropertiesValues(sourceValue, targetValue, settings, referencePairs);
                             propertyInfo.SetValue(target, targetValue, null);
                         }
@@ -219,16 +160,16 @@
             }
         }
 
-        internal static void VerifyReadonlyPropertiesAreEqual(
+        private static void VerifyReadonlyPropertiesAreEqual(
             object source,
             object target,
             IReadOnlyList<PropertyInfo> propertyInfos,
-            CopyPropertiesSettings settings,
+            PropertiesSettings settings,
             ReferencePairCollection referencePairs)
         {
             foreach (var propertyInfo in propertyInfos)
             {
-                if (settings.IsIgnoringProperty(propertyInfo) || settings.GetSpecialCopyProperty(propertyInfo) != null)
+                if (settings.IsIgnoringProperty(propertyInfo))
                 {
                     continue;
                 }
@@ -245,8 +186,7 @@
                     continue;
                 }
 
-                if (!sv.GetType()
-                       .IsImmutable())
+                if (sv?.GetType().IsImmutable() == false)
                 {
                     CopyPropertiesValues(sv, tv, settings, referencePairs);
                 }

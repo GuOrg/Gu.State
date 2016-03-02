@@ -19,7 +19,7 @@
 
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
-                using (var tracker = DirtyTracker.Track(x, y, ReferenceHandling.Structural))
+                using (var tracker = DirtyTracker.Track(x, y, referenceHandling: ReferenceHandling.Structural))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(false, tracker.IsDirty);
@@ -59,7 +59,7 @@
                 var y = new DirtyTrackerTypes.WithObservableCollectionProperties();
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
-                using (var tracker = DirtyTracker.Track(x, y, ReferenceHandling.Structural))
+                using (var tracker = DirtyTracker.Track(x, y, referenceHandling: ReferenceHandling.Structural))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(false, tracker.IsDirty);
@@ -97,7 +97,7 @@
                 var y = new DirtyTrackerTypes.WithObservableCollectionProperties(new DirtyTrackerTypes.ComplexType("a", 1));
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
-                using (var tracker = DirtyTracker.Track(x, y, ReferenceHandling.Structural))
+                using (var tracker = DirtyTracker.Track(x, y, referenceHandling: ReferenceHandling.Structural))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(true, tracker.IsDirty);
@@ -118,7 +118,7 @@
                 var x = new DirtyTrackerTypes.WithObservableCollectionProperties(new DirtyTrackerTypes.ComplexType("a", 1), new DirtyTrackerTypes.ComplexType("b", 2));
                 var y = new DirtyTrackerTypes.WithObservableCollectionProperties(new DirtyTrackerTypes.ComplexType("c", 3));
                 var changes = new List<string>();
-                using (var tracker = DirtyTracker.Track(x, y, ReferenceHandling.Structural))
+                using (var tracker = DirtyTracker.Track(x, y, referenceHandling: ReferenceHandling.Structural))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(true, tracker.IsDirty);
@@ -139,7 +139,7 @@
                 var y = new DirtyTrackerTypes.WithObservableCollectionProperties(new DirtyTrackerTypes.ComplexType("a", 1), new DirtyTrackerTypes.ComplexType("b", 2));
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
-                using (var tracker = DirtyTracker.Track(x, y, ReferenceHandling.Structural))
+                using (var tracker = DirtyTracker.Track(x, y, referenceHandling: ReferenceHandling.Structural))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(false, tracker.IsDirty);
@@ -167,7 +167,7 @@
                 var y = new DirtyTrackerTypes.WithObservableCollectionProperties(new DirtyTrackerTypes.ComplexType("c", 2), new DirtyTrackerTypes.ComplexType("d", 4), new DirtyTrackerTypes.ComplexType("e", 5));
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
-                using (var tracker = DirtyTracker.Track(x, y, ReferenceHandling.Structural))
+                using (var tracker = DirtyTracker.Track(x, y, referenceHandling: ReferenceHandling.Structural))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(true, tracker.IsDirty);
@@ -194,7 +194,7 @@
                 var y = new DirtyTrackerTypes.WithObservableCollectionProperties(new DirtyTrackerTypes.ComplexType("a", 1), new DirtyTrackerTypes.ComplexType("b", 2));
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
-                using (var tracker = DirtyTracker.Track(x, y, ReferenceHandling.Structural))
+                using (var tracker = DirtyTracker.Track(x, y, referenceHandling: ReferenceHandling.Structural))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(false, tracker.IsDirty);
@@ -222,7 +222,7 @@
                 var y = new DirtyTrackerTypes.WithObservableCollectionProperties(new DirtyTrackerTypes.ComplexType("a", 1), new DirtyTrackerTypes.ComplexType("b", 2));
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
-                using (var tracker = DirtyTracker.Track(x, y, ReferenceHandling.Structural))
+                using (var tracker = DirtyTracker.Track(x, y, referenceHandling: ReferenceHandling.Structural))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(false, tracker.IsDirty);
@@ -250,7 +250,7 @@
                 var y = new DirtyTrackerTypes.WithObservableCollectionProperties(new DirtyTrackerTypes.ComplexType("a", 1), new DirtyTrackerTypes.ComplexType("b", 2));
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
-                using (var tracker = DirtyTracker.Track(x, y, ReferenceHandling.Structural))
+                using (var tracker = DirtyTracker.Track(x, y, referenceHandling: ReferenceHandling.Structural))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(false, tracker.IsDirty);
@@ -278,7 +278,7 @@
                 var y = new DirtyTrackerTypes.WithObservableCollectionProperties();
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
-                using (var tracker = DirtyTracker.Track(x, y, ReferenceHandling.Structural))
+                using (var tracker = DirtyTracker.Track(x, y, referenceHandling: ReferenceHandling.Structural))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(false, tracker.IsDirty);

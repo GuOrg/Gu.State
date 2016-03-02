@@ -13,12 +13,12 @@
 
         public override void CopyMethod<T>(T source, T target, ReferenceHandling referenceHandling)
         {
-            Copy.FieldValues(source, target, referenceHandling);
+            Copy.FieldValues(source, target, referenceHandling: referenceHandling);
         }
 
         public override void CopyMethod<T>(T source, T target, params string[] excluded)
         {
-            Copy.FieldValues(source, target, excluded);
+            Copy.FieldValues(source, target, excludedFields: excluded);
         }
 
         [Test]
@@ -32,7 +32,7 @@
                            " - Target value: 3.\r\n" +
                            "The field is of type int.\r\n" +
                            "Solve the problem by any of:\r\n" +
-                           "* Use CopyFieldsSettings and specify how copying is performed:\r\n" +
+                           "* Use FieldsSettings and specify how copying is performed:\r\n" +
                            "  - ReferenceHandling.Structural means that a deep copy is performed.\r\n" +
                            "  - ReferenceHandling.References means that references are copied.\r\n" +
                            "  - Exclude the type WithReadonlyField.\r\n" +

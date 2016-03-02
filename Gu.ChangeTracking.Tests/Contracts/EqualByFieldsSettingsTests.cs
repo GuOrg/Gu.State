@@ -1,4 +1,4 @@
-﻿namespace Gu.ChangeTracking.Tests.CopyTests.FieldValues
+﻿namespace Gu.ChangeTracking.Tests.Contracts
 {
     using System;
     using System.Collections.Generic;
@@ -7,16 +7,16 @@
 
     using NUnit.Framework;
 
-    public class CopyFieldsSettingsTests
+    public class EqualByFieldsSettingsTests
     {
         [Test]
         public void Ignores()
         {
             var type = typeof(ComplexType);
-            var settings = CopyFieldsSettings.Create(type, Constants.DefaultFieldBindingFlags, ReferenceHandling.Throw, new[] { nameof(ComplexType.Name) });
-            var nameField = type.GetField(nameof(ComplexType.Name), Constants.DefaultFieldBindingFlags);
+            var nameField = type.GetField(nameof(ComplexType.Name));
+            var valueField = type.GetField(nameof(ComplexType.Value));
+            var settings = new FieldsSettings(new[] { nameField }, Constants.DefaultFieldBindingFlags, ReferenceHandling.Throw);
             Assert.AreEqual(true, settings.IsIgnoringField(nameField));
-            var valueField = type.GetField(nameof(ComplexType.Value), Constants.DefaultFieldBindingFlags);
             Assert.AreEqual(false, settings.IsIgnoringField(valueField));
         }
 
@@ -27,7 +27,7 @@
         [TestCase(typeof(Dictionary<int, int>))]
         public void IgnoresCollectionFields(Type type)
         {
-            var settings = CopyFieldsSettings.GetOrCreate(ReferenceHandling.Structural);
+            var settings = FieldsSettings.GetOrCreate();
             var fieldInfos = type.GetFields(Constants.DefaultFieldBindingFlags);
             if (type != typeof(int[]))
             {
@@ -43,7 +43,7 @@
         [Test]
         public void IgnoresNull()
         {
-            var settings = CopyFieldsSettings.GetOrCreate(Constants.DefaultPropertyBindingFlags, ReferenceHandling.Throw);
+            var settings = new FieldsSettings(null, Constants.DefaultFieldBindingFlags, ReferenceHandling.Throw);
             Assert.AreEqual(true, settings.IsIgnoringField(null));
         }
 
@@ -51,10 +51,10 @@
         [TestCase(BindingFlags.Public, ReferenceHandling.Structural)]
         public void Cache(BindingFlags bindingFlags, ReferenceHandling referenceHandling)
         {
-            var settings = CopyFieldsSettings.GetOrCreate(bindingFlags, referenceHandling);
+            var settings = FieldsSettings.GetOrCreate(bindingFlags, referenceHandling);
             Assert.AreEqual(bindingFlags, settings.BindingFlags);
             Assert.AreEqual(referenceHandling, settings.ReferenceHandling);
-            var second = CopyFieldsSettings.GetOrCreate(BindingFlags.Public, referenceHandling);
+            var second = FieldsSettings.GetOrCreate(BindingFlags.Public, referenceHandling);
             Assert.AreSame(settings, second);
         }
 

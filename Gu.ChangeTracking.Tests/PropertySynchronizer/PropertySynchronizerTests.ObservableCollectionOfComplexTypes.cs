@@ -16,7 +16,7 @@
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
                 var target = new ObservableCollection<ComplexType>();
-                using (PropertySynchronizer.Create(source, target, ReferenceHandling.Structural))
+                using (PropertySynchronizer.Create(source, target, referenceHandling: ReferenceHandling.Structural))
                 {
                     var expected = new[] { new ComplexType("a", 1), new ComplexType("b", 2) };
                     CollectionAssert.AreEqual(expected, source, ComplexType.Comparer);
@@ -46,7 +46,7 @@
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
                 var target = new ObservableCollection<ComplexType>();
-                using (PropertySynchronizer.Create(source, target, ReferenceHandling.StructuralWithReferenceLoops))
+                using (PropertySynchronizer.Create(source, target, referenceHandling: ReferenceHandling.StructuralWithReferenceLoops))
                 {
                     var expected = new[] { new ComplexType("a", 1), new ComplexType("b", 2) };
                     CollectionAssert.AreEqual(expected, source, ComplexType.Comparer);
@@ -90,7 +90,7 @@
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
                 var target = new ObservableCollection<ComplexType>();
-                using (PropertySynchronizer.Create(source, target, ReferenceHandling.References))
+                using (PropertySynchronizer.Create(source, target, referenceHandling: ReferenceHandling.References))
                 {
                     var expected = new[] { new ComplexType("a", 1), new ComplexType("b", 2) };
                     CollectionAssert.AreEqual(expected, source, ComplexType.Comparer);
@@ -121,7 +121,7 @@
             {
                 var source = new ObservableCollection<ComplexType>();
                 var target = new ObservableCollection<ComplexType>();
-                using (PropertySynchronizer.Create(source, target, referenceHandling))
+                using (PropertySynchronizer.Create(source, target, referenceHandling: referenceHandling))
                 {
                     source.Add(new ComplexType("a", 1));
                     var expected = new[] { new ComplexType("a", 1) };
@@ -141,7 +141,7 @@
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
                 var target = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
-                using (PropertySynchronizer.Create(source, target, referenceHandling))
+                using (PropertySynchronizer.Create(source, target, referenceHandling: referenceHandling))
                 {
                     source.RemoveAt(1);
                     var expected = new[] { new ComplexType("a", 1) };
@@ -159,7 +159,7 @@
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
                 var target = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
-                using (PropertySynchronizer.Create(source, target, referenceHandling))
+                using (PropertySynchronizer.Create(source, target, referenceHandling: referenceHandling))
                 {
                     source.Insert(1, new ComplexType("c", 3));
                     var expected = new[] { new ComplexType("a", 1), new ComplexType("c", 3), new ComplexType("b", 2) };
@@ -184,7 +184,7 @@
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
                 var target = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
-                using (PropertySynchronizer.Create(source, target, referenceHandling))
+                using (PropertySynchronizer.Create(source, target, referenceHandling: referenceHandling))
                 {
                     source.Move(1, 0);
                     var expected = new[] { new ComplexType("b", 2), new ComplexType("a", 1) };
@@ -204,7 +204,7 @@
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
                 var target = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
-                using (PropertySynchronizer.Create(source, target, referenceHandling))
+                using (PropertySynchronizer.Create(source, target, referenceHandling: referenceHandling))
                 {
                     source[0] = new ComplexType("c", 3);
                     var expected = new[] { new ComplexType("c", 3), new ComplexType("b", 2) };
@@ -223,7 +223,7 @@
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
                 var target = new ObservableCollection<ComplexType>();
-                using (PropertySynchronizer.Create(source, target, ReferenceHandling.Structural))
+                using (PropertySynchronizer.Create(source, target, referenceHandling: ReferenceHandling.Structural))
                 {
                     var expected = new List<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
                     CollectionAssert.AreEqual(expected, source, ComplexType.Comparer);

@@ -15,10 +15,10 @@
                 var x = new DirtyTrackerTypes.WithComplexProperty();
                 var y = new DirtyTrackerTypes.WithComplexProperty();
                 var exception = Assert.Throws<NotSupportedException>(() => DirtyTracker.Track(x, y));
-                var expectedMessage = "Only equatable properties are supported without specifying ReferenceHandling\r\n" +
+                var expected = "Only equatable properties are supported without specifying ReferenceHandling\r\n" +
                                       "Property WithComplexProperty.ComplexType is not IEquatable<ComplexType>.\r\n" +
                                       "Use the overload DirtyTracker.Track(x, y, ReferenceHandling) if you want to track a graph";
-                Assert.AreEqual(expectedMessage, exception.Message);
+                Assert.AreEqual(expected, exception.Message);
             }
 
             [Test]
@@ -28,7 +28,7 @@
                 var y = new DirtyTrackerTypes.WithComplexProperty();
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
-                using (var tracker = DirtyTracker.Track(x, y, ReferenceHandling.Structural))
+                using (var tracker = DirtyTracker.Track(x, y, referenceHandling: ReferenceHandling.Structural))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(false, tracker.IsDirty);

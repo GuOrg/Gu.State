@@ -16,7 +16,7 @@
                 var y = new DirtyTrackerTypes.WithImmutableProperty();
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
-                using (var tracker = DirtyTracker.Track(x, y, referenceHandling))
+                using (var tracker = DirtyTracker.Track(x, y, referenceHandling: referenceHandling))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(false, tracker.IsDirty);

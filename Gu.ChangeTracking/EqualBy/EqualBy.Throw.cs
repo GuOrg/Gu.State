@@ -8,7 +8,7 @@
     public static partial class EqualBy
     {
         private static StringBuilder AppendSuggestEqualBySettings<T>(this StringBuilder messageBuilder, Type type, MemberInfo member)
-            where T : IEqualBySettings
+            where T : class, IMemberSettings
         {
             return messageBuilder.CreateIfNull()
                                  .AppendLine($"* Use {typeof(T).Name} and specify how comparing is performed:")
@@ -19,19 +19,19 @@
         }
 
         private static StringBuilder AppendEqualByFailed<T>(this StringBuilder errorBuilder)
-            where T : IEqualBySettings
+            where T : class, IMemberSettings
         {
-            if (typeof(IEqualByPropertiesSettings).IsAssignableFrom(typeof(T)))
+            if (typeof(IIgnoringProperties).IsAssignableFrom(typeof(T)))
             {
                 errorBuilder.AppendLine($"EqualBy.{nameof(PropertyValues)}(x, y) failed.");
             }
-            else if (typeof(IEqualByFieldsSettings).IsAssignableFrom(typeof(T)))
+            else if (typeof(IIgnoringFields).IsAssignableFrom(typeof(T)))
             {
                 errorBuilder.AppendLine($"EqualBy.{nameof(FieldValues)}(x, y) failed.");
             }
             else
             {
-                Gu.ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<IEqualByPropertiesSettings, IEqualByFieldsSettings>("T");
+                Gu.ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<PropertiesSettings, FieldsSettings>("T");
             }
 
             return errorBuilder;
@@ -41,9 +41,9 @@
            this StringBuilder errorBuilder,
             Type sourceType,
             PropertyInfo indexer)
-            where T : IEqualBySettings
+            where T : class, IMemberSettings
         {
-            var member = typeof(IEqualByPropertiesSettings).IsAssignableFrom(typeof(T))
+            var member = typeof(PropertiesSettings).IsAssignableFrom(typeof(T))
                              ? indexer
                              : null;
             return errorBuilder.CreateIfNull()
@@ -62,7 +62,7 @@
                 var propertyInfo = member as PropertyInfo;
                 if (propertyInfo != null)
                 {
-                    errorBuilder.AppendEqualByFailed<EqualByPropertiesSettings>();
+                    errorBuilder.AppendEqualByFailed<PropertiesSettings>();
                     errorBuilder.AppendLine(
                         $"The property {sourceType.PrettyName()}.{propertyInfo.Name} is not supported.");
                     errorBuilder.AppendLine($"The property is of type {propertyInfo.PropertyType.PrettyName()}.");
@@ -73,7 +73,7 @@
                     var fieldInfo = member as FieldInfo;
                     if (fieldInfo != null)
                     {
-                        errorBuilder.AppendEqualByFailed<EqualByFieldsSettings>();
+                        errorBuilder.AppendEqualByFailed<FieldsSettings>();
                         errorBuilder.AppendLine(
                             $"The field {sourceType.PrettyName()}.{fieldInfo.Name} is not supported.");
                         errorBuilder.AppendLine($"The field is of type {fieldInfo.FieldType.PrettyName()}.");
@@ -88,26 +88,26 @@
 
                 errorBuilder.AppendSolveTheProblemBy()
                             .AppendSuggestImplementIEquatable(memberType)
-                            .AppendSuggestEqualBySettings<EqualByFieldsSettings>(sourceType, member);
+                            .AppendSuggestEqualBySettings<FieldsSettings>(sourceType, member);
                 var message = errorBuilder.ToString();
                 throw new NotSupportedException(message);
             }
 
             // ReSharper disable once UnusedParameter.Local
             internal static void CannotCompareType<T>(Type type, T settings)
-                where T : IEqualBySettings
+                where T : class, IMemberSettings
             {
                 CannotCompareType<T>(type);
             }
 
             internal static void CannotCompareType<T>(Type type)
-                where T : IEqualBySettings
+                where T : class, IMemberSettings
             {
                 var errorBuilder = new StringBuilder();
                 errorBuilder.AppendEqualByFailed<T>()
                             .AppendSolveTheProblemBy()
                             .AppendSuggestImplementIEquatable(type)
-                            .AppendSuggestEqualBySettings<EqualByPropertiesSettings>(type, null);
+                            .AppendSuggestEqualBySettings<PropertiesSettings>(type, null);
                 throw new NotSupportedException(errorBuilder.ToString());
             }
         }
@@ -115,7 +115,7 @@
         private static class Verify
         {
             public static void Indexers<T>(Type type, T settings)
-                where T : IEqualBySettings
+                where T : class, IMemberSettings
             {
                 if (type == null)
                 {
@@ -131,8 +131,9 @@
             }
 
             public static StringBuilder Indexers<T>(Type type, T settings, StringBuilder errorBuilder)
-                where T : IEqualBySettings
+                where T : class, IMemberSettings
             {
+                var ignoringDeclaredType = settings as IIgnoringDeclaredType;
                 var propertyInfos = type.GetProperties(Constants.DefaultFieldBindingFlags);
                 foreach (var propertyInfo in propertyInfos)
                 {
@@ -142,7 +143,7 @@
                         continue;
                     }
 
-                    if (settings.IsIgnoringDeclaringType(propertyInfo.DeclaringType))
+                    if (ignoringDeclaredType?.IsIgnoringDeclaringType(propertyInfo.DeclaringType) == true)
                     {
                         continue;
                     }
@@ -158,7 +159,8 @@
                 return errorBuilder;
             }
 
-            public static void Enumerable<T>(T x, T y, IEqualBySettings settings)
+            public static void Enumerable<T, TSetting>(T x, T y, TSetting settings)
+                 where TSetting : class, IMemberSettings
             {
                 if (settings.ReferenceHandling != ReferenceHandling.Throw)
                 {
@@ -172,7 +174,7 @@
                 }
             }
 
-            public static void PropertyTypes<T>(T x, T y, IEqualByPropertiesSettings settings)
+            public static void PropertyTypes<T>(T x, T y, PropertiesSettings settings)
             {
                 if (settings.ReferenceHandling != ReferenceHandling.Throw)
                 {
@@ -195,7 +197,7 @@
                 }
             }
 
-            public static void FieldTypes<T>(T x, T y, IEqualByFieldsSettings settings)
+            public static void FieldTypes<T>(T x, T y, FieldsSettings settings)
             {
                 if (settings.ReferenceHandling != ReferenceHandling.Throw)
                 {

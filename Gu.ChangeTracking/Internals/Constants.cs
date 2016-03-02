@@ -4,8 +4,8 @@
 
     internal static class Constants
     {
-        internal static readonly BindingFlags DefaultPropertyBindingFlags = BindingFlags.Instance | BindingFlags.Public;
+        internal const BindingFlags DefaultPropertyBindingFlags = BindingFlags.Instance | BindingFlags.Public;
 
-        internal static readonly BindingFlags DefaultFieldBindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+        internal const BindingFlags DefaultFieldBindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
     }
 }

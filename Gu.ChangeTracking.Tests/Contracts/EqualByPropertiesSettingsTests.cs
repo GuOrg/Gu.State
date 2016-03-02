@@ -1,4 +1,4 @@
-﻿namespace Gu.ChangeTracking.Tests.EqualByTests.PropertyValues
+﻿namespace Gu.ChangeTracking.Tests.Contracts
 {
     using System;
     using System.Collections;
@@ -17,7 +17,7 @@
             var type = typeof(ComplexType);
             var nameProperty = type.GetProperty(nameof(ComplexType.Name));
             var valueProperty = type.GetProperty(nameof(ComplexType.Value));
-            var settings = new EqualByPropertiesSettings(type, new[] { nameProperty.Name }, Constants.DefaultPropertyBindingFlags, ReferenceHandling.Throw);
+            var settings = new PropertiesSettings(new[] { nameProperty }, Constants.DefaultPropertyBindingFlags, ReferenceHandling.Throw);
             Assert.AreEqual(true, settings.IsIgnoringProperty(nameProperty));
             Assert.AreEqual(false, settings.IsIgnoringProperty(valueProperty));
         }
@@ -29,7 +29,7 @@
         [TestCase(typeof(Dictionary<int, int>))]
         public void IgnoresCollectionFields(Type type)
         {
-            var settings = EqualByPropertiesSettings.GetOrCreate(ReferenceHandling.Structural);
+            var settings = PropertiesSettings.GetOrCreate();
             var properties = type.GetProperties(Constants.DefaultFieldBindingFlags);
             if (type != typeof(int[]))
             {
@@ -45,7 +45,7 @@
         [Test]
         public void IgnoresNull()
         {
-            var settings = new EqualByPropertiesSettings(null, Constants.DefaultPropertyBindingFlags, ReferenceHandling.Throw);
+            var settings = new PropertiesSettings(null, Constants.DefaultPropertyBindingFlags, ReferenceHandling.Throw);
             Assert.AreEqual(true, settings.IsIgnoringProperty(null));
         }
 
@@ -55,7 +55,7 @@
             var type = typeof(List<int>);
             var countProperty = type.GetProperty(nameof(IList.Count));
             var indexerProperty = type.GetProperties().Single(x => x.GetIndexParameters().Length > 0);
-            var settings = new EqualByPropertiesSettings(null, Constants.DefaultPropertyBindingFlags, ReferenceHandling.Throw);
+            var settings = new PropertiesSettings(null, Constants.DefaultPropertyBindingFlags, ReferenceHandling.Throw);
             Assert.AreEqual(true, settings.IsIgnoringProperty(countProperty));
             Assert.AreEqual(true, settings.IsIgnoringProperty(indexerProperty));
         }
@@ -64,10 +64,10 @@
         [TestCase(BindingFlags.Public, ReferenceHandling.Structural)]
         public void Cache(BindingFlags bindingFlags, ReferenceHandling referenceHandling)
         {
-            var settings = EqualByPropertiesSettings.GetOrCreate(bindingFlags, referenceHandling);
+            var settings = PropertiesSettings.GetOrCreate(bindingFlags, referenceHandling);
             Assert.AreEqual(bindingFlags, settings.BindingFlags);
             Assert.AreEqual(referenceHandling, settings.ReferenceHandling);
-            var second = EqualByPropertiesSettings.GetOrCreate(BindingFlags.Public, referenceHandling);
+            var second = PropertiesSettings.GetOrCreate(BindingFlags.Public, referenceHandling);
             Assert.AreSame(settings, second);
         }
 

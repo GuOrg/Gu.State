@@ -25,33 +25,13 @@
 
         private bool disposed;
 
-        public DirtyTracker(T x, T y, ReferenceHandling referenceHandling)
-            : this(x, y, DirtyTrackerSettings.GetOrCreate(referenceHandling))
-        {
-        }
-
-        public DirtyTracker(T x, T y, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
-            : this(x, y, DirtyTrackerSettings.GetOrCreate(bindingFlags, referenceHandling))
-        {
-        }
-
-        public DirtyTracker(T x, T y, params string[] ignoreProperties)
-            : this(x, y, Constants.DefaultPropertyBindingFlags, ignoreProperties)
-        {
-        }
-
-        public DirtyTracker(T x, T y, BindingFlags bindingFlags, params string[] ignoreProperties)
-            : this(x, y, DirtyTrackerSettings.Create<T>(x,y, ignoreProperties, bindingFlags, ReferenceHandling.Throw))
-        {
-        }
-
-        public DirtyTracker(T x, T y, DirtyTrackerSettings settings)
+        public DirtyTracker(T x, T y, PropertiesSettings settings)
         {
             Ensure.NotNull(x, nameof(x));
             Ensure.NotNull(y, nameof(y));
             Ensure.NotSame(x, y, nameof(x), nameof(y));
             Ensure.SameType(x, y);
-            DirtyTracker.Verify<T>(settings);
+            DirtyTracker.VerifyCanTrack<T>(settings);
             this.Settings = settings;
             this.propertyTracker = PropertiesDirtyTracker.Create(x, y, this);
             this.itemTrackers = ItemsDirtyTracker.Create(x, y, this);
@@ -65,7 +45,7 @@
 
         public IEnumerable<PropertyInfo> Diff => this.diff;
 
-        public DirtyTrackerSettings Settings { get; }
+        public PropertiesSettings Settings { get; }
 
         public void Dispose()
         {

@@ -61,8 +61,8 @@
     <Compile Include="ChangeTracker\ChangeTrackerTests.PropertyChanged.cs" />
     <Compile Include="CopyTests\ClassesTests.cs" />
     <Compile Include="CopyTests\CopyTypes.cs" />
-    <Compile Include="CopyTests\FieldValues\CopyFieldsSettingsTests.cs" />
-    <Compile Include="CopyTests\PropertyValues\CopyPropertiesSettingsTests.cs" />
+    <Compile Include="Contracts\CopyFieldsSettingsTests.cs" />
+    <Compile Include="Contracts\CopyPropertiesSettingsTests.cs" />
     <Compile Include="CopyTests\FieldValues\Collections.cs" />
     <Compile Include="CopyTests\FieldValues\Throws.cs" />
     <Compile Include="CopyTests\FieldValues\Verify.cs" />
@@ -71,14 +71,14 @@
     <Compile Include="CopyTests\PropertyValues\Verify.cs" />
     <Compile Include="CopyTests\ThrowTests.cs" />
     <Compile Include="CopyTests\VerifyTests.cs" />
-    <Compile Include="DirtyTracker\DirtyTrackerSettingsTests.cs" />
+    <Compile Include="Contracts\PropertySettingsSettingsTests.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerTypes.cs" />
     <Compile Include="EqualByTests\ClassesTests.cs" />
     <Compile Include="EqualByTests\CollectionTests.cs" />
     <Compile Include="EqualByTests\EqualByTypes.cs" />
     <Compile Include="EqualByTests\FieldValues\Classes.cs" />
     <Compile Include="EqualByTests\FieldValues\Collections.cs" />
-    <Compile Include="EqualByTests\FieldValues\EqualByFieldsSettingsTests.cs" />
+    <Compile Include="Contracts\EqualByFieldsSettingsTests.cs" />
     <Compile Include="EqualByTests\PropertyValues\Classes.cs" />
     <Compile Include="EqualByTests\PropertyValues\Collections.cs" />
     <Compile Include="EqualByTests\PropertyValues\Throws.cs" />
@@ -96,7 +96,7 @@
     <Compile Include="DirtyTracker\DirtyTrackerTests.WithObservableCollectionProperty.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerTests.ObservableCollectionOfComplexType.cs" />
     <Compile Include="DirtyTracker\DirtyTrackerTests.ObservableCollectionOfInt.cs" />
-    <Compile Include="EqualByTests\PropertyValues\EqualByPropertiesSettingsTests.cs" />
+    <Compile Include="Contracts\EqualByPropertiesSettingsTests.cs" />
     <Compile Include="Internals\Stubs\WithGetPublicSet.cs" />
     <Compile Include="Internals\Stubs\WithGetReadOnlyPropertySealed.cs" />
     <Compile Include="Internals\Stubs\WithGetReadOnlyPropertyStruct.cs" />
@@ -139,7 +139,7 @@
     <Compile Include="EqualByTests\FieldValues\Classes_.FieldValues.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerTests.ObservableCollectionOfInts.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerTests.Complex.cs" />
-    <Compile Include="Settings\ChangeTrackerSettingsTests.cs" />
+    <Compile Include="Contracts\ChangeTrackerSettingsTests.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizerTests.Simple.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestHelpers.cs" />
@@ -246,7 +246,5 @@
       <Paket>True</Paket>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ChangeTracker\Internals\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>
