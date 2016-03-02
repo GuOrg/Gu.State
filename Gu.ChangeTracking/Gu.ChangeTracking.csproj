@@ -61,6 +61,7 @@
     <Compile Include="EqualBy\Settings\IEqualByFieldsSettings.cs" />
     <Compile Include="EqualBy\Settings\IEqualByPropertiesSettings.cs" />
     <Compile Include="EqualBy\Settings\IEqualBySettings.cs" />
+    <Compile Include="ExceptionHelpers\Throw.cs" />
     <Compile Include="Internals\BindingFlagsAndReferenceHandling.cs" />
     <Compile Include="Internals\Collections\ConcurrentSet.cs" />
     <Compile Include="Internals\Collections\IgnoredTypes.cs" />
@@ -75,7 +76,7 @@
     <Compile Include="Internals\PropertyPath\RootItem.cs" />
     <Compile Include="Internals\Collections\ReferencePairCollection.cs" />
     <Compile Include="Internals\SourceAndTargetValue.cs" />
-    <Compile Include="Internals\ThrowHelper.cs" />
+    <Compile Include="ExceptionHelpers\ErrorBuilder.cs" />
     <Compile Include="Internals\TypeExt.IsImmutable.cs" />
     <Compile Include="Internals\PropertyPath\PropertyPath.cs" />
     <Compile Include="PropertySynchronizer\IPropertySynchronizer.cs" />
