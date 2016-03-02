@@ -8,13 +8,47 @@
 
     public static partial class Copy
     {
-        internal static StringBuilder AppendCopyFailed<T>(this StringBuilder messageBuilder)
+        private static StringBuilder AppendCopyFailed<T>(this StringBuilder messageBuilder)
             where T : CopySettings
         {
             var line = typeof(T) == typeof(CopyFieldsSettings)
                 ? $"Copy.{nameof(Copy.FieldValues)}(x, y) failed."
                 : $"Copy.{nameof(Copy.PropertyValues)}(x, y) failed.";
             return messageBuilder.AppendLine(line);
+        }
+
+        private static StringBuilder AppendSuggestCopySettings<T>(this StringBuilder errorBuilder, Type type, MemberInfo member)
+            where T : CopySettings
+        {
+            errorBuilder.AppendLine($"* Use {typeof(T).Name} and specify how copying is performed:");
+            errorBuilder.AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Structural)} means that a deep copy is performed.");
+            errorBuilder.AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.References)} means that references are copied.");
+            errorBuilder.AppendLine($"  - Exclude the type {type.PrettyName()}.");
+            if (member != null)
+            {
+                if (typeof(T) == typeof(CopyFieldsSettings))
+                {
+                    var indexer = member as PropertyInfo;
+                    if (indexer == null)
+                    {
+                        errorBuilder.AppendLine($"  - Exclude the field {type.PrettyName()}.{member.Name}.");
+                    }
+                    else
+                    {
+                        Debug.Assert(indexer.GetIndexParameters().Length > 0, "Must be an indexer");
+                    }
+                }
+                else if (typeof(T) == typeof(CopyPropertiesSettings))
+                {
+                    errorBuilder.AppendLine($"  - Exclude the property {type.PrettyName()}.{member.Name}.");
+                }
+                else
+                {
+                    Gu.ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<CopyFieldsSettings, CopyPropertiesSettings>("{T}");
+                }
+            }
+
+            return errorBuilder;
         }
 
         private static class Throw
@@ -48,7 +82,8 @@
                 MemberInfo member)
                 where T : CopySettings
             {
-                errorBuilder.AppendCopyFailed<T>();
+                errorBuilder.CreateIfNull()
+                            .AppendCopyFailed<T>();
                 Type memberType = null;
                 var propertyInfo = member as PropertyInfo;
                 if (propertyInfo != null)
@@ -73,8 +108,7 @@
                     }
                     else
                     {
-                        ThrowHelper.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<PropertyInfo, FieldInfo>(
-                            nameof(member));
+                        Gu.ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<PropertyInfo, FieldInfo>(nameof(member));
                     }
                 }
 
@@ -128,8 +162,7 @@
                     }
                     else
                     {
-                        ThrowHelper.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<PropertyInfo, FieldInfo>(
-                            nameof(member));
+                         Gu.ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<PropertyInfo, FieldInfo>(nameof(member));
                     }
                 }
 
@@ -174,9 +207,7 @@
                 }
                 else
                 {
-                    ThrowHelper
-                        .ThrowThereIsABugInTheLibraryExpectedParameterOfTypes
-                        <CopyPropertiesSettings, CopyFieldsSettings>(nameof(settings));
+                     Gu.ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<CopyPropertiesSettings, CopyFieldsSettings>(nameof(settings));
                 }
 
                 errorBuilder.AppendLine($"The problem occurred at index: {index}")
@@ -205,9 +236,7 @@
                 }
                 else
                 {
-                    ThrowHelper
-                        .ThrowThereIsABugInTheLibraryExpectedParameterOfTypes
-                        <CopyPropertiesSettings, CopyFieldsSettings>(nameof(settings));
+                     Gu.ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<CopyPropertiesSettings, CopyFieldsSettings>(nameof(settings));
                 }
 
                 errorBuilder.AppendLine($"The problem occurred for key: {key}")
@@ -225,7 +254,7 @@
             {
                 var errorBuilder = new StringBuilder();
                 errorBuilder.AppendCopyFailed<T>()
-                            .AppendLine($"The collections are fixed size type: {source.GetType() .PrettyName()}")
+                            .AppendLine($"The collections are fixed size type: {source.GetType().PrettyName()}")
                             .AppendLine($"Source count: {source.Count}")
                             .AppendLine($"Target count: {target.Count}")
                             .AppendSolveTheProblemBy()
