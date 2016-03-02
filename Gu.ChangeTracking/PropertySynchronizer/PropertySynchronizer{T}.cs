@@ -72,10 +72,10 @@ namespace Gu.ChangeTracking
             private readonly PropertyCollection propertySynchronizers;
 
             private PropertiesSynchronizer(
-                INotifyPropertyChanged source, 
-                INotifyPropertyChanged target, 
-                PropertyCollection propertySynchronizers, 
-                CopyPropertiesSettings settings, 
+                INotifyPropertyChanged source,
+                INotifyPropertyChanged target,
+                PropertyCollection propertySynchronizers,
+                CopyPropertiesSettings settings,
                 TwoItemsTrackerReferenceCollection<IPropertySynchronizer> references)
             {
                 source.PropertyChanged += this.OnSourcePropertyChanged;
@@ -225,9 +225,9 @@ namespace Gu.ChangeTracking
             private bool isSynchronizing;
 
             private ItemsSynchronizer(
-                IList source, 
-                IList target, 
-                CopyPropertiesSettings settings, 
+                IList source,
+                IList target,
+                CopyPropertiesSettings settings,
                 TwoItemsTrackerReferenceCollection<IPropertySynchronizer> references)
             {
                 this.source = source;
@@ -436,15 +436,15 @@ namespace Gu.ChangeTracking
 
                 if (this.references != null)
                 {
-                   return this.references.GetOrAdd(
-                        sv,
-                        tv,
-                        () =>
-                        new PropertySynchronizer<INotifyPropertyChanged>(
-                            (INotifyPropertyChanged)sv,
-                            (INotifyPropertyChanged)tv,
-                            this.settings,
-                            this.references));
+                    return this.references.GetOrAdd(
+                         sv,
+                         tv,
+                         () =>
+                         new PropertySynchronizer<INotifyPropertyChanged>(
+                             (INotifyPropertyChanged)sv,
+                             (INotifyPropertyChanged)tv,
+                             this.settings,
+                             this.references));
                 }
 
                 return new PropertySynchronizer<INotifyPropertyChanged>((INotifyPropertyChanged)sv, (INotifyPropertyChanged)tv, this.settings, null);

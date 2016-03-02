@@ -49,6 +49,7 @@
     <Compile Include="Copy\Settings\CopyFieldsSettings.cs" />
     <Compile Include="Copy\Settings\CopyPropertiesSettings.cs" />
     <Compile Include="Copy\Settings\CopySettings.cs" />
+    <Compile Include="DirtyTracker\DirtyTracker.Verify.cs" />
     <Compile Include="DirtyTracker\Internals\AlwaysDirtyNode.cs" />
     <Compile Include="DirtyTracker\Internals\IDirtyTracker.cs" />
     <Compile Include="DirtyTracker\Internals\IDirtyTrackerNode.cs" />
