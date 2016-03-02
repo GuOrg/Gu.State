@@ -99,9 +99,9 @@
     <Compile Include="ChangeTracker\Contracts\IChangeTracker.cs" />
     <Compile Include="ChangeTracker\Contracts\IValueTracker.cs" />
     <Compile Include="ChangeTracker\ItemChangeTracker.cs" />
-    <Compile Include="Internals\Ensure.cs" />
-    <Compile Include="Internals\Ensure.string.cs" />
-    <Compile Include="Internals\Ensure.type.cs" />
+    <Compile Include="ExceptionHelpers\Ensure.cs" />
+    <Compile Include="ExceptionHelpers\Ensure.string.cs" />
+    <Compile Include="ExceptionHelpers\Ensure.type.cs" />
     <Compile Include="Internals\Reflection\PropertyInfoExt.cs" />
     <Compile Include="Internals\Reflection\TypeExt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
