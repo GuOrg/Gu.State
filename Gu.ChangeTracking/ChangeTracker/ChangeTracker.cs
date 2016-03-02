@@ -22,7 +22,7 @@
         private int changes;
         private bool disposed;
 
-        internal ChangeTracker(INotifyPropertyChanged source, ChangeTrackerSettings settings, PropertyPath path)
+        internal ChangeTracker(INotifyPropertyChanged source, PropertiesSettings settings, PropertyPath path)
         {
             this.Settings = settings;
             this.Path = path;
@@ -35,7 +35,7 @@
             }
         }
 
-        private ChangeTracker(INotifyPropertyChanged source, ChangeTrackerSettings settings)
+        private ChangeTracker(INotifyPropertyChanged source, PropertiesSettings settings)
             : this(source, settings, new PropertyPath(source.GetType()))
         {
         }
@@ -46,7 +46,7 @@
         /// <inheritdoc/>
         public event EventHandler Changed;
 
-        public ChangeTrackerSettings Settings { get; }
+        public PropertiesSettings Settings { get; }
 
         /// <inheritdoc/>
         public int Changes
@@ -78,7 +78,7 @@
         public static IChangeTracker Track(INotifyPropertyChanged root)
         {
             ChangeTracking.Ensure.NotNull(root, nameof(root));
-            return Track(root, ChangeTrackerSettings.Default);
+            return Track(root, PropertiesSettings.GetOrCreate());
         }
 
         /// <summary>
@@ -87,7 +87,7 @@
         /// <param name="root">The item to track changes for.</param>
         /// <param name="settings">Settings telling the tracker which types to ignore.</param>
         /// <returns>An <see cref="IValueTracker"/> that signals on changes in <paramref name="root"/></returns>
-        public static IChangeTracker Track(INotifyPropertyChanged root, ChangeTrackerSettings settings)
+        public static IChangeTracker Track(INotifyPropertyChanged root, PropertiesSettings settings)
         {
             ChangeTracking.Ensure.NotNull(root, nameof(root));
             ChangeTracking.Ensure.NotNull(settings, nameof(settings));
@@ -165,7 +165,7 @@
                 }
 
                 var sourceType = source.GetType();
-                if (parent.Settings.IsIgnored(sourceType))
+                if (parent.Settings.IsIgnoringDeclaringType(sourceType))
                 {
                     return null;
                 }
@@ -300,7 +300,7 @@
                 }
 
                 var sourceType = source.GetType();
-                if (parent.Settings.IsIgnored(sourceType))
+                if (parent.Settings.IsIgnoringDeclaringType(sourceType))
                 {
                     return null;
                 }
@@ -309,7 +309,7 @@
 
                 var incc = source as INotifyCollectionChanged;
                 var itemType = source.GetType().GetItemType();
-                if (itemType.IsImmutable() || parent.Settings.IsIgnored(itemType))
+                if (itemType.IsImmutable() || parent.Settings.IsIgnoringDeclaringType(itemType))
                 {
                     return new ItemsChangeTrackers(incc, parent, null);
                 }
@@ -336,7 +336,7 @@
 
                 var itemType = sv.GetType();
 
-                if (parent.Settings.IsIgnored(itemType))
+                if (parent.Settings.IsIgnoringDeclaringType(itemType))
                 {
                     return null;
                 }

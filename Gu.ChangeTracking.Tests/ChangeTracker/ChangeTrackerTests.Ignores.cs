@@ -86,7 +86,7 @@
             {
                 var changes = new List<object>();
                 var root = new DerivedClass();
-                var settings = new ChangeTrackerSettings();
+                var settings = PropertiesSettings.Create();
                 settings.AddIgnoredProperty<IBaseClass>(x => x.Excluded);
                 using (var tracker = ChangeTracker.Track(root, settings))
                 {

@@ -49,6 +49,7 @@
     <Compile Include="Contracts\IMemberSettings.cs" />
     <Compile Include="Contracts\IReferenceHandling.cs" />
     <Compile Include="Contracts\MemberSettings.cs" />
+    <Compile Include="Contracts\PropertiesSettingsBuilder.cs" />
     <Compile Include="Copy\Copy.Collection.cs" />
     <Compile Include="Copy\Copy.Shared.cs" />
     <Compile Include="Copy\Copy.Throw.cs" />
@@ -109,10 +110,10 @@
     <Compile Include="PropertySynchronizer\PropertySynchronizer{T}.cs" />
     <Compile Include="ChangeTracker\Settings\ChangeTrackerSettings.cs" />
     <Compile Include="Contracts\PropertiesSettings.cs" />
-    <Compile Include="ChangeTracker\Settings\SpecialProperty.cs" />
-    <Compile Include="ChangeTracker\Settings\SpecialType.cs" />
+    <Compile Include="Contracts\SpecialProperty.cs" />
+    <Compile Include="Contracts\SpecialType.cs" />
     <Compile Include="Copy\Copy.FieldValues.cs" />
-    <Compile Include="ChangeTracker\Settings\TrackAs.cs" />
+    <Compile Include="Contracts\TrackAs.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Copy\Copy.VerifyCanCopyPropertyValues.cs" />

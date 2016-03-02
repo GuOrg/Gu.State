@@ -1,5 +1,6 @@
 ﻿namespace Gu.ChangeTracking
 {
+    using System;
     using System.Reflection;
 
     public static partial class PropertySynchronizer
@@ -36,8 +37,21 @@
         /// <param name="settings">Contains configuration for how synchronization will be performed</param>
         public static void VerifyCanSynchronize<T>(PropertiesSettings settings)
         {
-            ChangeTracker.VerifyCanTrack<T>(settings);
-            Copy.VerifyCanCopyPropertyValues<T>(settings);
+            VerifyCanSynchronize(typeof(T), settings);
+        }
+
+        /// <summary>
+        /// Check if the properties of <paramref name="type"/> can be synchronized.
+        /// This method will throw an exception if synchronization cannot be performed for <paramref name="type"/>
+        /// Read the exception message for detailed instructions about what is wrong.
+        /// Use this to fail fast or in unit tests.
+        /// </summary>
+        /// <param name="type">The type to check</param>
+        /// <param name="settings">Contains configuration for how synchronization will be performed</param>
+        public static void VerifyCanSynchronize(Type type, PropertiesSettings settings)
+        {
+            ChangeTracker.VerifyCanTrack(type, settings);
+            Copy.VerifyCanCopyPropertyValues(type, settings);
         }
     }
 }

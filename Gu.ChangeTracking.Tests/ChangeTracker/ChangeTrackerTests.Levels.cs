@@ -15,7 +15,7 @@ namespace Gu.ChangeTracking.Tests
             {
                 var changes = new List<object>();
                 var root = new Level();
-                using (var tracker = ChangeTracker.Track(root, ChangeTrackerSettings.Default))
+                using (var tracker = ChangeTracker.Track(root, PropertiesSettings.GetOrCreate()))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
@@ -60,7 +60,7 @@ namespace Gu.ChangeTracking.Tests
             {
                 var changes = new List<object>();
                 var root = new SpecialCollection();
-                using (var tracker = ChangeTracker.Track(root, ChangeTrackerSettings.Default))
+                using (var tracker = ChangeTracker.Track(root, PropertiesSettings.GetOrCreate()))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
@@ -91,7 +91,7 @@ namespace Gu.ChangeTracking.Tests
             {
                 var changes = new List<object>();
                 var root = new Level();
-                using (var tracker = ChangeTracker.Track(root, ChangeTrackerSettings.Default))
+                using (var tracker = ChangeTracker.Track(root, PropertiesSettings.GetOrCreate()))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
@@ -122,7 +122,7 @@ namespace Gu.ChangeTracking.Tests
             {
                 var changes = new List<object>();
                 var root = new Level { Next = new Level { Next = new Level() } };
-                using (var tracker = ChangeTracker.Track(root, ChangeTrackerSettings.Default))
+                using (var tracker = ChangeTracker.Track(root, PropertiesSettings.GetOrCreate()))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);

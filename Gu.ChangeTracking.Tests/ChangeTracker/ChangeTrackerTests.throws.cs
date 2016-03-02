@@ -30,7 +30,7 @@ namespace Gu.ChangeTracking.Tests
                                "    Note that this means that the ChangeTracker does not track changes so you are responsible for any tracking needed.\r\n";
 
                 var root = new ObservableCollection<ComplexType>();
-                using (ChangeTracker.Track(root, ChangeTrackerSettings.Default))
+                using (ChangeTracker.Track(root, PropertiesSettings.GetOrCreate()))
                 {
                     var exception = Assert.Throws<NotSupportedException>(() => root.Add(new IllegalSubType()));
                     Assert.AreEqual(expected, exception.Message);
@@ -56,7 +56,7 @@ namespace Gu.ChangeTracking.Tests
                                "    Note that this means that the ChangeTracker does not track changes so you are responsible for any tracking needed.\r\n";
 
                 var root = new With<ComplexType>();
-                using (ChangeTracker.Track(root, ChangeTrackerSettings.Default))
+                using (ChangeTracker.Track(root, PropertiesSettings.GetOrCreate()))
                 {
                     var exception = Assert.Throws<NotSupportedException>(() => root.Value = new IllegalSubType());
                     Assert.AreEqual(expected, exception.Message);
@@ -81,7 +81,7 @@ namespace Gu.ChangeTracking.Tests
                                "    or:\r\n" +
                                "    settings.AddIgnoredProperty(typeof(WithIllegal).GetProperty(nameof(WithIllegal.Illegal)))\r\n" +
                                "    Note that this means that the ChangeTracker does not track changes so you are responsible for any tracking needed.\r\n";
-                var exception = Assert.Throws<NotSupportedException>(() => ChangeTracker.Track(item, ChangeTrackerSettings.Default));
+                var exception = Assert.Throws<NotSupportedException>(() => ChangeTracker.Track(item, PropertiesSettings.GetOrCreate()));
                 Assert.AreEqual(expected, exception.Message);
 
                 exception = Assert.Throws<NotSupportedException>(() => ChangeTracker.Track(item));
@@ -107,7 +107,7 @@ namespace Gu.ChangeTracking.Tests
                                "    settings.AddIgnoredType<IllegalEnumerable>()\r\n" +
                                "    Note that this means that the ChangeTracker does not track changes so you are responsible for any tracking needed.\r\n";
                 Assert.AreEqual(expected, exception.Message);
-                exception = Assert.Throws<NotSupportedException>(() => ChangeTracker.Track(item, ChangeTrackerSettings.Default));
+                exception = Assert.Throws<NotSupportedException>(() => ChangeTracker.Track(item, PropertiesSettings.GetOrCreate()));
                 Assert.AreEqual(expected, exception.Message);
             }
 
@@ -131,7 +131,7 @@ namespace Gu.ChangeTracking.Tests
                                "    settings.AddIgnoredProperty(typeof(With<List<int>>).GetProperty(nameof(With<List<int>>.Value)))\r\n" +
                                "    Note that this means that the ChangeTracker does not track changes so you are responsible for any tracking needed.\r\n";
                 Assert.AreEqual(expected, exception.Message);
-                exception = Assert.Throws<NotSupportedException>(() => ChangeTracker.Track(item, ChangeTrackerSettings.Default));
+                exception = Assert.Throws<NotSupportedException>(() => ChangeTracker.Track(item, PropertiesSettings.GetOrCreate()));
                 Assert.AreEqual(expected, exception.Message);
             }
         }
