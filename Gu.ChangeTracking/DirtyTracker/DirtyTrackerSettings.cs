@@ -51,8 +51,12 @@
 
         public bool IsIgnoringProperty(PropertyInfo propertyInfo)
         {
-            if (propertyInfo == null || propertyInfo.GetIndexParameters()
-                                                    .Length > 0)
+            if (propertyInfo == null)
+            {
+                return true;
+            }
+
+            if (this.ignoredTypes.IsIgnoringType(propertyInfo.DeclaringType))
             {
                 return true;
             }
@@ -65,9 +69,9 @@
             return this.ignoredProperties.Contains(propertyInfo);
         }
 
-        public bool IsIgnoringType(Type type)
+        public bool IsIgnoringDeclaringType(Type declaringType)
         {
-            return this.ignoredTypes.IsIgnoringType(type);
+            return this.ignoredTypes.IsIgnoringType(declaringType);
         }
     }
 }

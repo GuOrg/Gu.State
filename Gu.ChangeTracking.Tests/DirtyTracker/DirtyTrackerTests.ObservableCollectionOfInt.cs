@@ -14,7 +14,6 @@
             {
                 var x = new ObservableCollection<int>();
                 var y = new ObservableCollection<int>();
-                var countProperty = typeof(ObservableCollection<int>).GetProperty("Count");
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
                 using (var tracker = DirtyTracker.Track(x, y, ReferenceHandling.Structural))
@@ -26,14 +25,14 @@
 
                     x.Add(1);
                     Assert.AreEqual(true, tracker.IsDirty);
-                    CollectionAssert.AreEqual(new[] { countProperty, ItemDirtyTracker.IndexerProperty }, tracker.Diff);
-                    expectedChanges.AddRange(new[] { "IsDirty", "Diff", "Diff" });
+                    CollectionAssert.AreEqual(new[] { ItemDirtyTracker.IndexerProperty }, tracker.Diff);
+                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
                     y.Add(1);
                     Assert.AreEqual(false, tracker.IsDirty);
                     CollectionAssert.IsEmpty(tracker.Diff);
-                    expectedChanges.AddRange(new[] { "Diff", "IsDirty", "Diff" });
+                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
                 }
             }
@@ -43,7 +42,6 @@
             {
                 var x = new ObservableCollection<int>();
                 var y = new ObservableCollection<int>();
-                var countProperty = typeof(ObservableCollection<int>).GetProperty("Count");
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
                 using (var tracker = DirtyTracker.Track(x, y, ReferenceHandling.Structural))
@@ -55,14 +53,13 @@
 
                     x.Add(1);
                     Assert.AreEqual(true, tracker.IsDirty);
-                    CollectionAssert.AreEqual(new[] { countProperty, ItemDirtyTracker.IndexerProperty }, tracker.Diff);
-                    expectedChanges.AddRange(new[] { "IsDirty", "Diff", "Diff" });
+                    CollectionAssert.AreEqual(new[] { ItemDirtyTracker.IndexerProperty }, tracker.Diff);
+                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
                     y.Add(2);
                     Assert.AreEqual(true, tracker.IsDirty);
                     CollectionAssert.AreEqual(new[] { ItemDirtyTracker.IndexerProperty }, tracker.Diff);
-                    expectedChanges.Add("Diff");
                     CollectionAssert.AreEqual(expectedChanges, changes);
                 }
             }
@@ -72,20 +69,19 @@
             {
                 var x = new ObservableCollection<int> { 1, 2 };
                 var y = new ObservableCollection<int> { 1 };
-                var countProperty = typeof(ObservableCollection<int>).GetProperty("Count");
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
                 using (var tracker = DirtyTracker.Track(x, y, ReferenceHandling.Structural))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(true, tracker.IsDirty);
-                    CollectionAssert.AreEqual(new[] { countProperty, ItemDirtyTracker.IndexerProperty }, tracker.Diff);
+                    CollectionAssert.AreEqual(new[] { ItemDirtyTracker.IndexerProperty }, tracker.Diff);
                     CollectionAssert.IsEmpty(changes);
 
                     x.RemoveAt(1);
                     Assert.AreEqual(false, tracker.IsDirty);
                     CollectionAssert.IsEmpty(tracker.Diff);
-                    expectedChanges.AddRange(new[] { "Diff", "IsDirty", "Diff" });
+                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
                 }
             }
@@ -95,20 +91,18 @@
             {
                 var x = new ObservableCollection<int> { 1, 2 };
                 var y = new ObservableCollection<int> { 3 };
-                var countProperty = typeof(ObservableCollection<int>).GetProperty("Count");
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
                 using (var tracker = DirtyTracker.Track(x, y, ReferenceHandling.Structural))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(true, tracker.IsDirty);
-                    CollectionAssert.AreEqual(new[] { countProperty, ItemDirtyTracker.IndexerProperty }, tracker.Diff);
+                    CollectionAssert.AreEqual(new[] { ItemDirtyTracker.IndexerProperty }, tracker.Diff);
                     CollectionAssert.IsEmpty(changes);
 
                     x.RemoveAt(1);
                     Assert.AreEqual(true, tracker.IsDirty);
                     CollectionAssert.AreEqual(new[] { ItemDirtyTracker.IndexerProperty }, tracker.Diff);
-                    expectedChanges.AddRange(new[] { "Diff" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
                 }
             }
@@ -118,7 +112,6 @@
             {
                 var x = new ObservableCollection<int> { 1, 2 };
                 var y = new ObservableCollection<int> { 1, 2 };
-                var countProperty = typeof(ObservableCollection<int>).GetProperty("Count");
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
                 using (var tracker = DirtyTracker.Track(x, y, ReferenceHandling.Structural))
@@ -130,14 +123,14 @@
 
                     x.Clear();
                     Assert.AreEqual(true, tracker.IsDirty);
-                    CollectionAssert.AreEqual(new[] { countProperty, ItemDirtyTracker.IndexerProperty }, tracker.Diff);
-                    expectedChanges.AddRange(new[] { "IsDirty", "Diff", "Diff" });
+                    CollectionAssert.AreEqual(new[] { ItemDirtyTracker.IndexerProperty }, tracker.Diff);
+                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
                     y.Clear();
                     Assert.AreEqual(false, tracker.IsDirty);
                     CollectionAssert.IsEmpty(tracker.Diff);
-                    expectedChanges.AddRange(new[] { "Diff", "IsDirty", "Diff" });
+                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
                 }
             }
@@ -147,25 +140,24 @@
             {
                 var x = new ObservableCollection<int> { 1, 2 };
                 var y = new ObservableCollection<int> { 3, 4, 5 };
-                var countProperty = typeof(ObservableCollection<int>).GetProperty("Count");
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
                 using (var tracker = DirtyTracker.Track(x, y, ReferenceHandling.Structural))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(true, tracker.IsDirty);
-                    CollectionAssert.AreEqual(new[] { countProperty, ItemDirtyTracker.IndexerProperty }, tracker.Diff);
+                    CollectionAssert.AreEqual(new[] { ItemDirtyTracker.IndexerProperty }, tracker.Diff);
                     CollectionAssert.IsEmpty(changes);
 
                     x.Clear();
                     Assert.AreEqual(true, tracker.IsDirty);
-                    CollectionAssert.AreEqual(new[] { countProperty, ItemDirtyTracker.IndexerProperty }, tracker.Diff);
+                    CollectionAssert.AreEqual(new[] { ItemDirtyTracker.IndexerProperty }, tracker.Diff);
                     CollectionAssert.IsEmpty(changes);
 
                     y.Clear();
                     Assert.AreEqual(false, tracker.IsDirty);
                     CollectionAssert.IsEmpty(tracker.Diff);
-                    expectedChanges.AddRange(new[] { "Diff", "IsDirty", "Diff" });
+                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
                 }
             }

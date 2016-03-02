@@ -71,7 +71,7 @@
                 return true;
             }
 
-            if (this.IsIgnoringType(fieldInfo.DeclaringType))
+            if (this.IsIgnoringDeclaringType(fieldInfo.DeclaringType))
             {
                 return true;
             }

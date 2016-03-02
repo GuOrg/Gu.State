@@ -1,7 +1,9 @@
 ﻿namespace Gu.ChangeTracking.Tests
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Linq;
 
     using NUnit.Framework;
@@ -26,15 +28,24 @@
             Assert.AreEqual(true, settings.IsIgnoringProperty(null));
         }
 
-        [Test]
-        public void IgnoresIndexer()
+        [TestCase(typeof(List<int>))]
+        [TestCase(typeof(int[]))]
+        [TestCase(typeof(Collection<int>))]
+        [TestCase(typeof(ObservableCollection<int>))]
+        [TestCase(typeof(Dictionary<int, int>))]
+        public void IgnoresCollectionFields(Type type)
         {
-            var type = typeof(List<int>);
-            var countProperty = type.GetProperty(nameof(IList.Count));
-            var indexerProperty = type.GetProperties().Single(x => x.GetIndexParameters().Length > 0);
-            var settings = new DirtyTrackerSettings(null, Constants.DefaultPropertyBindingFlags, ReferenceHandling.Throw);
-            Assert.AreEqual(false, settings.IsIgnoringProperty(countProperty));
-            Assert.AreEqual(true, settings.IsIgnoringProperty(indexerProperty));
+            var settings = DirtyTrackerSettings.GetOrCreate(ReferenceHandling.Structural);
+            var propertyInfos = type.GetProperties(Constants.DefaultFieldBindingFlags);
+            if (type != typeof(int[]))
+            {
+                CollectionAssert.IsNotEmpty(propertyInfos);
+            }
+
+            foreach (var propertyInfo in propertyInfos)
+            {
+                Assert.AreEqual(true, settings.IsIgnoringProperty(propertyInfo));
+            }
         }
     }
 }

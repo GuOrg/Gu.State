@@ -142,7 +142,7 @@
                         continue;
                     }
 
-                    if (settings.IsIgnoringType(propertyInfo.DeclaringType))
+                    if (settings.IsIgnoringDeclaringType(propertyInfo.DeclaringType))
                     {
                         continue;
                     }
