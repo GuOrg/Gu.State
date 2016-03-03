@@ -19,7 +19,7 @@ namespace Gu.ChangeTracking
                 return propertyInfo.PropertyType;
             }
 
-            Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<FieldInfo, PropertyInfo>(nameof(memberInfo));
+            Throw.ExpectedParameterOfTypes<FieldInfo, PropertyInfo>(nameof(memberInfo));
             throw new InvalidOperationException("Never getting here");
         }
     }

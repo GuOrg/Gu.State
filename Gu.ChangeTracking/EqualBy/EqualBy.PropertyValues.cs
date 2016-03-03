@@ -41,12 +41,7 @@
         /// <returns>True if <paramref name="x"/> and <paramref name="y"/> are equal</returns>
         public static bool PropertyValues<T>(T x, T y, PropertiesSettings settings)
         {
-            var type = x?.GetType() ?? y?.GetType() ?? typeof(T);
-            ErrorBuilder.Start()
-                        .OnlyValidProperties(type, settings, IsPropertyValid)
-                        .OnlySupportedIndexers(type, settings)
-                        .HasReferenceHandlingIfEnumerable(type, settings)
-                        .ThrowIfHasErrors(type, settings);
+            VerifyCanEqualByPropertyValues(x, y, settings);
 
             if (settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops)
             {
@@ -63,11 +58,6 @@
             PropertiesSettings settings,
             ReferencePairCollection referencePairs)
         {
-            var type = x?.GetType() ?? y?.GetType();
-            ErrorBuilder.Start()
-                        .OnlySupportedIndexers(type, settings)
-                        .ThrowIfHasErrors<PropertiesSettings>(type, settings);
-
             referencePairs?.Add(x, y);
             if (ReferenceEquals(x, y))
             {
@@ -159,18 +149,16 @@
                     return ReferenceEquals(x, y);
                 case ReferenceHandling.Structural:
                 case ReferenceHandling.StructuralWithReferenceLoops:
+                    VerifyCanEqualByPropertyValues(x, y, settings);
                     return PropertiesValuesEquals(x, y, settings, referencePairs);
                 case ReferenceHandling.Throw:
-                    Throw.CannotCompareMember<PropertiesSettings>(x.GetType(), propertyInfo);
-                    break;
+                    throw ChangeTracking.Throw.ShouldNeverGetHere();
                 default:
                     throw new ArgumentOutOfRangeException(
                         nameof(settings.ReferenceHandling),
                         settings.ReferenceHandling,
                         null);
             }
-
-            return true;
         }
     }
 }

@@ -55,7 +55,7 @@
                 return errorBuilder.AppendExcludeProperty(sourceType, propertyInfo);
             }
 
-            throw Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<FieldInfo, PropertyInfo>(nameof(memberInfo));
+            throw Throw.ExpectedParameterOfTypes<FieldInfo, PropertyInfo>(nameof(memberInfo));
         }
 
         internal static StringBuilder AppendExcludeProperty(this StringBuilder errorBuilder, Type sourceType, PropertyInfo propertyInfo)
@@ -100,7 +100,7 @@
                 return errorBuilder.AppendPropertyIsNotSupported(sourceType, propertyInfo);
             }
 
-            throw Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<FieldInfo, PropertyInfo>(nameof(memberInfo));
+            throw Throw.ExpectedParameterOfTypes<FieldInfo, PropertyInfo>(nameof(memberInfo));
         }
 
         internal static StringBuilder AppendFieldIsNotSupported(this StringBuilder errorBuilder, Type sourceType, FieldInfo fieldInfo)
