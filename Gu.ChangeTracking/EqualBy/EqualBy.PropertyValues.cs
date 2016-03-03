@@ -24,10 +24,9 @@
             T x,
             T y,
             BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags,
-            ReferenceHandling referenceHandling = ReferenceHandling.Throw,
-            params string[] excludedProperties)
+            ReferenceHandling referenceHandling = ReferenceHandling.Throw)
         {
-            var settings = PropertiesSettings.Create(x, y, bindingFlags, referenceHandling, excludedProperties);
+            var settings = PropertiesSettings.GetOrCreate(bindingFlags, referenceHandling);
             return PropertyValues(x, y, settings);
         }
 
@@ -76,7 +75,7 @@
                 return false;
             }
 
-            if (IsEquatable(x.GetType()))
+            if (x.GetType().IsEquatable())
             {
                 return Equals(x, y);
             }
@@ -140,7 +139,7 @@
                 return false;
             }
 
-            if (IsEquatable(x.GetType()))
+            if (x.GetType().IsEquatable())
             {
                 return Equals(x, y);
             }
@@ -153,7 +152,7 @@
                 case ReferenceHandling.StructuralWithReferenceLoops:
                     return PropertiesValuesEquals(x, y, settings, referencePairs);
                 case ReferenceHandling.Throw:
-                    Throw.CannotCompareMember(x.GetType(), propertyInfo);
+                    Throw.CannotCompareMember<PropertiesSettings>(x.GetType(), propertyInfo);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(

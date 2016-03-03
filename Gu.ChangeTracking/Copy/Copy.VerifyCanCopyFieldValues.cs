@@ -20,13 +20,11 @@
         /// If Structural is used property values for sub properties are copied for the entire graph.
         /// Activator.CreateInstance is sued to new up references so a default constructor is required, can be private
         /// </param>
-        /// <param name="ignoreFields">Names of properties on <typeparamref name="T"/> to exclude from copying</param>
         public static void VerifyCanCopyFieldValues<T>(
             BindingFlags bindingFlags = Constants.DefaultFieldBindingFlags,
-            ReferenceHandling referenceHandling = ReferenceHandling.Throw,
-            params string[] ignoreFields)
+            ReferenceHandling referenceHandling = ReferenceHandling.Throw)
         {
-            var settings = FieldsSettings.Create<T>(bindingFlags, referenceHandling, ignoreFields);
+            var settings = FieldsSettings.GetOrCreate(bindingFlags, referenceHandling);
             VerifyCanCopyFieldValues<T>(settings);
         }
 

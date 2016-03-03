@@ -1,27 +1,24 @@
 ﻿namespace Gu.ChangeTracking.Tests.EqualByTests.PropertyValues
 {
+    using System;
     using System.Collections.Generic;
 
     public class Classes : ClassesTests
     {
-        public override bool EqualMethod<T>(T x, T y)
+        public override bool EqualMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excludedMembers = null, Type excludedType = null)
         {
-            return EqualBy.PropertyValues(x, y);
-        }
+            var builder = PropertiesSettings.Build();
+            if (excludedMembers != null)
+            {
+                builder.AddIgnoredProperty<T>(excludedMembers);
+            }
 
-        public override bool EqualMethod<T>(T x, T y, ReferenceHandling referenceHandling)
-        {
-            return EqualBy.PropertyValues(x, y, referenceHandling: referenceHandling);
-        }
+            if (excludedType != null)
+            {
+                builder.AddImmutableType(excludedType);
+            }
 
-        public override bool EqualMethod<T>(T x, T y, params string[] excluded)
-        {
-            return EqualBy.PropertyValues(x, y, excludedProperties: excluded);
-        }
-
-        public override bool EqualMethod<T>(T x, T y, string excluded, ReferenceHandling referenceHandling)
-        {
-            var settings = PropertiesSettings.Create(x, y, Constants.DefaultPropertyBindingFlags, referenceHandling, new[] { excluded });
+            var settings = builder.CreateSettings(referenceHandling);
             return EqualBy.PropertyValues(x, y, settings);
         }
 

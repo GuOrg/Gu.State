@@ -9,7 +9,7 @@
         /// <summary>
         /// Copies property values from source to target.
         /// </summary>
-        /// <typeparam name="T">The type to get ignore properties for settings for</typeparam>
+        /// <typeparam name="T">The type of <param name="source" /> and <param name="target" /></typeparam>
         /// <param name="source">The instance to copy property values from</param>
         /// <param name="target">The instance to copy property values to</param>
         /// <param name="bindingFlags">The binding flags to use when getting properties</param>
@@ -17,16 +17,14 @@
         /// If Structural is used property values for sub properties are copied for the entire graph.
         /// Activator.CreateInstance is sued to new up references so a default constructor is required, can be private
         /// </param>
-        /// <param name="ignoreProperties">Names of properties on <typeparamref name="T"/> to exclude from copying</param>
         public static void PropertyValues<T>(
             T source,
             T target,
             BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags,
-            ReferenceHandling referenceHandling = ReferenceHandling.Throw,
-            params string[] ignoreProperties)
+            ReferenceHandling referenceHandling = ReferenceHandling.Throw)
             where T : class
         {
-            var settings = PropertiesSettings.Create(source,target,bindingFlags, referenceHandling, ignoreProperties);
+            var settings = PropertiesSettings.GetOrCreate(bindingFlags, referenceHandling);
             PropertyValues(source, target, settings);
         }
 

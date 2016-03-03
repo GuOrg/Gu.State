@@ -67,7 +67,10 @@
             {
                 var source = new WithSimpleProperties { IntValue = 1, StringValue = "2" };
                 var target = new WithSimpleProperties { IntValue = 3, StringValue = "4" };
-                using (PropertySynchronizer.Create(source, target, ignoreProperties: nameof(WithSimpleProperties.StringValue)))
+                var settings = PropertiesSettings.Build()
+                                                 .AddIgnoredProperty<WithSimpleProperties>(x => x.StringValue)
+                                                 .CreateSettings();
+                using (PropertySynchronizer.Create(source, target, settings))
                 {
                     Assert.AreEqual(1, source.IntValue);
                     Assert.AreEqual(1, target.IntValue);

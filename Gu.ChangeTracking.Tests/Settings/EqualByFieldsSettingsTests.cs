@@ -1,4 +1,4 @@
-﻿namespace Gu.ChangeTracking.Tests.Contracts
+﻿namespace Gu.ChangeTracking.Tests.Settings
 {
     using System;
     using System.Collections.Generic;
@@ -15,7 +15,7 @@
             var type = typeof(ComplexType);
             var nameField = type.GetField(nameof(ComplexType.Name));
             var valueField = type.GetField(nameof(ComplexType.Value));
-            var settings = new FieldsSettings(new[] { nameField }, Constants.DefaultFieldBindingFlags, ReferenceHandling.Throw);
+            var settings = new FieldsSettings(new[] { nameField }, null, Constants.DefaultFieldBindingFlags, ReferenceHandling.Throw);
             Assert.AreEqual(true, settings.IsIgnoringField(nameField));
             Assert.AreEqual(false, settings.IsIgnoringField(valueField));
         }
@@ -43,7 +43,7 @@
         [Test]
         public void IgnoresNull()
         {
-            var settings = new FieldsSettings(null, Constants.DefaultFieldBindingFlags, ReferenceHandling.Throw);
+            var settings = FieldsSettings.GetOrCreate();
             Assert.AreEqual(true, settings.IsIgnoringField(null));
         }
 

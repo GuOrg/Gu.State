@@ -6,7 +6,7 @@
 
     using NUnit.Framework;
 
-    class IgnoredTypesTests
+    public class IgnoredTypesTests
     {
         [TestCase(typeof(List<int>))]
         [TestCase(typeof(int[]))]

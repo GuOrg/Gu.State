@@ -9,11 +9,10 @@ namespace Gu.ChangeTracking
             T x,
             T y,
             BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags,
-            ReferenceHandling referenceHandling = ReferenceHandling.Throw,
-            params string[] ignoreProperties)
+            ReferenceHandling referenceHandling = ReferenceHandling.Throw)
             where T : class, INotifyPropertyChanged
         {
-            var settings = PropertiesSettings.Create(x, y, bindingFlags, referenceHandling, ignoreProperties);
+            var settings = PropertiesSettings.GetOrCreate(bindingFlags, referenceHandling);
             return new DirtyTracker<T>(x, y, settings);
         }
 

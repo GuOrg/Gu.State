@@ -20,11 +20,10 @@ namespace Gu.ChangeTracking
         /// If Structural is used a deep equals is performed.
         /// Default value is Throw
         /// </param>
-        /// <param name="excludedFields">Names of fields on <typeparamref name="T"/> to exclude from copying</param>
         /// <returns>True if <paramref name="x"/> and <paramref name="y"/> are equal</returns>
-        public static bool FieldValues<T>(T x, T y, BindingFlags bindingFlags = Constants.DefaultFieldBindingFlags, ReferenceHandling referenceHandling = ReferenceHandling.Throw, params string[] excludedFields)
+        public static bool FieldValues<T>(T x, T y, BindingFlags bindingFlags = Constants.DefaultFieldBindingFlags, ReferenceHandling referenceHandling = ReferenceHandling.Throw)
         {
-            var settings = FieldsSettings.Create(x, y, bindingFlags, referenceHandling, excludedFields);
+            var settings = FieldsSettings.GetOrCreate(bindingFlags, referenceHandling);
             return FieldValues(x, y, settings);
         }
 
@@ -59,7 +58,7 @@ namespace Gu.ChangeTracking
                 return false;
             }
 
-            if (IsEquatable(x.GetType()))
+            if (x.GetType().IsEquatable())
             {
                 return Equals(x, y);
             }
@@ -132,6 +131,11 @@ namespace Gu.ChangeTracking
 
         private static bool FieldValueEquals(object x, object y, FieldInfo fieldInfo, FieldsSettings settings, ReferencePairCollection referencePairs)
         {
+            if (ReferenceEquals(x, y))
+            {
+                return true;
+            }
+
             if (x == null && y == null)
             {
                 return true;
@@ -142,28 +146,23 @@ namespace Gu.ChangeTracking
                 return false;
             }
 
-            if (IsEquatable(x.GetType()))
+            if (x.GetType().IsEquatable())
             {
-                if (!Equals(x, y))
-                {
-                    return false;
-                }
+                return Equals(x, y);
             }
-            else
+
+            switch (settings.ReferenceHandling)
             {
-                switch (settings.ReferenceHandling)
-                {
-                    case ReferenceHandling.References:
-                        return ReferenceEquals(x, y);
-                    case ReferenceHandling.Structural:
-                    case ReferenceHandling.StructuralWithReferenceLoops:
-                        return FieldsValuesEquals(x, y, settings, referencePairs);
-                    case ReferenceHandling.Throw:
-                        Throw.CannotCompareMember(x.GetType(), fieldInfo);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);
-                }
+                case ReferenceHandling.References:
+                    return ReferenceEquals(x, y);
+                case ReferenceHandling.Structural:
+                case ReferenceHandling.StructuralWithReferenceLoops:
+                    return FieldsValuesEquals(x, y, settings, referencePairs);
+                case ReferenceHandling.Throw:
+                    Throw.CannotCompareMember<FieldsSettings>(x.GetType(), fieldInfo);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);
             }
 
             return true;

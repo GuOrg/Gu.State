@@ -1,33 +1,24 @@
 ﻿namespace Gu.ChangeTracking.Tests.EqualByTests.FieldValues
 {
+    using System;
     using System.Collections.Generic;
 
     public class Classes : ClassesTests
     {
-        public override bool EqualMethod<T>(T x, T y)
+        public override bool EqualMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excludedMembers = null, Type excludedType = null)
         {
-            return EqualBy.FieldValues(x, y);
-        }
+            var builder = FieldsSettings.Build();
+            if (excludedMembers != null)
+            {
+                builder.AddIgnoredField<T>(excludedMembers);
+            }
 
-        public override bool EqualMethod<T>(T x, T y, ReferenceHandling referenceHandling)
-        {
-            return EqualBy.FieldValues(x, y, referenceHandling: referenceHandling);
-        }
+            if (excludedType != null)
+            {
+                builder.AddImmutableType(excludedType);
+            }
 
-        public override bool EqualMethod<T>(T x, T y, params string[] excluded)
-        {
-            return EqualBy.FieldValues(x, y, excludedFields: excluded);
-        }
-
-
-        public override bool EqualMethod<T>(T x, T y, string excluded, ReferenceHandling referenceHandling)
-        {
-            var settings = FieldsSettings.Create(
-                x,
-                y,
-                Constants.DefaultFieldBindingFlags,
-                referenceHandling,
-                new[] { excluded });
+            var settings = builder.CreateSettings(referenceHandling);
             return EqualBy.FieldValues(x, y, settings);
         }
 

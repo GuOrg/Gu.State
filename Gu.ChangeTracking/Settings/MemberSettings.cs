@@ -2,7 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
+
+    using Gu.ChangeTracking.Internals;
 
     public abstract class MemberSettings<T> : IMemberSettings
         where T : MemberInfo
@@ -11,14 +14,28 @@
         private readonly IgnoredTypes ignoredTypes;
         private readonly HashSet<T> ignoredMembers;
 
-        protected MemberSettings(IEnumerable<T> members, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
+        protected MemberSettings(
+            IEnumerable<T> ignoredMembers,
+            IEnumerable<Type> ignoredTypes,
+            BindingFlags bindingFlags,
+            ReferenceHandling referenceHandling)
         {
             this.BindingFlags = bindingFlags;
             this.ReferenceHandling = referenceHandling;
-            this.ignoredMembers = members != null
-                                      ? new HashSet<T>(members)
-                                      : null;
-            this.ignoredTypes = IgnoredTypes.Create(null);
+            var memberset = ignoredMembers as HashSet<T>;
+            if (memberset != null)
+            {
+                this.ignoredMembers = memberset;
+            }
+            else
+            {
+                if (ignoredMembers != null && ignoredMembers.Any())
+                {
+                    this.ignoredMembers = new HashSet<T>(ignoredMembers, MemberInfoComparer<T>.Default);
+                }
+            }
+
+            this.ignoredTypes = IgnoredTypes.Create(ignoredTypes);
         }
 
         public BindingFlags BindingFlags { get; }

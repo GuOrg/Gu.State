@@ -293,7 +293,7 @@
                     return AlwaysDirtyNode.For(propertyInfo);
                 }
 
-                if (EqualBy.IsEquatable(xv.GetType()))
+                if (xv.GetType().IsEquatable())
                 {
                     return Equals(xv, yv)
                                ? (IDirtyTrackerNode)NeverDirtyNode.For(ItemDirtyTracker.IndexerProperty)

@@ -6,19 +6,21 @@
 
     public class Throws : ThrowTests
     {
-        public override void CopyMethod<T>(T source, T target)
+        public override void CopyMethod<T>(T source, T target, ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excluded = null)
         {
-            Copy.PropertyValues(source, target);
-        }
+            var builder = PropertiesSettings.Build();
+            if (excluded != null)
+            {
+                builder.AddIgnoredProperty<T>(excluded);
+            }
 
-        public override void CopyMethod<T>(T source, T target, ReferenceHandling referenceHandling)
-        {
-            Copy.PropertyValues(source, target, referenceHandling: referenceHandling);
-        }
+            //if (excludedType != null)
+            //{
+            //    builder.AddImmutableType(excludedType);
+            //}
 
-        public override void CopyMethod<T>(T source, T target, params string[] excluded)
-        {
-            Copy.PropertyValues(source, target, ignoreProperties: excluded);
+            var settings = builder.CreateSettings(referenceHandling);
+            Copy.PropertyValues(source, target, settings);
         }
 
         [Test]

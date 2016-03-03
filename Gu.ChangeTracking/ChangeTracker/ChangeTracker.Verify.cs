@@ -11,12 +11,28 @@
 
     public partial class ChangeTracker
     {
-        public static void VerifyCanTrack<T>(IIgnoringProperties settings)
+        /// <summary>
+        /// Check if the properties of <typeparamref name="T"/> can be tracked.
+        /// This method will throw an exception if synchronization cannot be performed for <typeparamref name="T"/>
+        /// Read the exception message for detailed instructions about what is wrong.
+        /// Use this to fail fast or in unit tests.
+        /// </summary>
+        /// <typeparam name="T">The type to check</typeparam>
+        /// <param name="settings">Contains configuration for how tracking will be performed</param>
+        public static void VerifyCanTrack<T>(PropertiesSettings settings)
         {
             VerifyCanTrack(typeof(T), settings);
         }
 
-        public static void VerifyCanTrack(Type type, IIgnoringProperties settings)
+        /// <summary>
+        /// Check if the properties of <paramref name="type"/> can be tracked.
+        /// This method will throw an exception if trackling cannot be performed for <paramref name="type"/>
+        /// Read the exception message for detailed instructions about what is wrong.
+        /// Use this to fail fast or in unit tests.
+        /// </summary>
+        /// <param name="type">The type to check</param>
+        /// <param name="settings">Contains configuration for how tracking will be performed</param>
+        public static void VerifyCanTrack(Type type, PropertiesSettings settings)
         {
             Verify.IsTrackableType(type, settings);
         }
@@ -26,7 +42,7 @@
         /// </summary>
         private static class Verify
         {
-            private static readonly ConditionalWeakTable<IIgnoringProperties, ConcurrentSet<Type>> ValidTypesCache = new ConditionalWeakTable<IIgnoringProperties, ConcurrentSet<Type>>();
+            private static readonly ConditionalWeakTable<PropertiesSettings, ConcurrentSet<Type>> ValidTypesCache = new ConditionalWeakTable<PropertiesSettings, ConcurrentSet<Type>>();
 
             internal static void IsTrackableType(Type type, ChangeTracker tracker)
             {
@@ -38,7 +54,7 @@
                 IsTrackableType(type, tracker.Path, tracker.Settings);
             }
 
-            internal static void IsTrackableType(Type type, IIgnoringProperties settings)
+            internal static void IsTrackableType(Type type, PropertiesSettings settings)
             {
                 if (ValidTypesCache.GetOrCreateValue(settings).Contains(type))
                 {
@@ -70,7 +86,7 @@
                 IsTrackableType(itemType, path, tracker.Settings);
             }
 
-            private static void IsTrackableType(Type type, PropertyPath path, IIgnoringProperties settings)
+            private static void IsTrackableType(Type type, PropertyPath path, PropertiesSettings settings)
             {
                 var checkedTypes = ValidTypesCache.GetOrCreateValue(settings);
                 if (checkedTypes.Contains(type))
@@ -120,7 +136,7 @@
                 }
             }
 
-            private static void CheckProperties(Type type, PropertyPath path, IIgnoringProperties settings)
+            private static void CheckProperties(Type type, PropertyPath path, PropertiesSettings settings)
             {
                 var properties = PropertiesChangeTrackers.GetTrackProperties(type, settings)
                                          .ToArray();
@@ -146,7 +162,7 @@
                 }
             }
 
-            private static void CheckItemType(Type type, PropertyPath path, IIgnoringProperties settings)
+            private static void CheckItemType(Type type, PropertyPath path, PropertiesSettings settings)
             {
                 if (!typeof(IEnumerable).IsAssignableFrom(type))
                 {

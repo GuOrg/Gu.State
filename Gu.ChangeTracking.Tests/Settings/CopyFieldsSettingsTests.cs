@@ -1,4 +1,4 @@
-﻿namespace Gu.ChangeTracking.Tests.Contracts
+﻿namespace Gu.ChangeTracking.Tests.Settings
 {
     using System;
     using System.Collections.Generic;
@@ -13,7 +13,9 @@
         public void Ignores()
         {
             var type = typeof(ComplexType);
-            var settings = FieldsSettings.Create(type, excludedFields: new[] { nameof(ComplexType.Name) });
+            var settings = FieldsSettings.Build()
+                                         .AddIgnoredField<ComplexType>(nameof(ComplexType.Name))
+                                         .CreateSettings();
             var nameField = type.GetField(nameof(ComplexType.Name), Constants.DefaultFieldBindingFlags);
             Assert.AreEqual(true, settings.IsIgnoringField(nameField));
             var valueField = type.GetField(nameof(ComplexType.Value), Constants.DefaultFieldBindingFlags);

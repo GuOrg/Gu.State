@@ -2,19 +2,21 @@
 {
     public class Throws : ThrowTests
     {
-        public override void CopyMethod<T>(T source, T target)
+        public override void CopyMethod<T>(T source, T target, ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excluded = null)
         {
-            Copy.FieldValues(source, target);
-        }
+            var builder = FieldsSettings.Build();
+            if (excluded != null)
+            {
+                builder.AddIgnoredField<T>(excluded);
+            }
 
-        public override void CopyMethod<T>(T source, T target, ReferenceHandling referenceHandling)
-        {
-            Copy.FieldValues(source, target, referenceHandling: referenceHandling);
-        }
+            //if (excludedType != null)
+            //{
+            //    builder.AddImmutableType(excludedType);
+            //}
 
-        public override void CopyMethod<T>(T source, T target, params string[] excluded)
-        {
-            Copy.FieldValues(source, target, excludedFields: excluded);
+            var settings = builder.CreateSettings(referenceHandling);
+            Copy.FieldValues(source, target, settings);
         }
     }
 }

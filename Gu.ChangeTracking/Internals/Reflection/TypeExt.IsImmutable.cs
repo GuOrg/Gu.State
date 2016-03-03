@@ -7,7 +7,7 @@
 
     internal static partial class TypeExt
     {
-        private static readonly ConcurrentDictionary<Type, bool> CheckedTypes = new ConcurrentDictionary<Type, bool>
+        private static readonly ConcurrentDictionary<Type, bool> ImmutableCheckedTypes = new ConcurrentDictionary<Type, bool>
         {
             [typeof(Type)] = true,
             [typeof(CultureInfo)] = true,
@@ -30,13 +30,13 @@
 
         internal static bool IsImmutable(this Type type)
         {
-            return CheckedTypes.GetOrAdd(type, x => CheckIfIsImmutable(x, null));
+            return ImmutableCheckedTypes.GetOrAdd(type, x => CheckIfIsImmutable(x, null));
         }
 
         private static bool CheckIfIsImmutable(Type type, List<Type> checkedTypes)
         {
             bool result;
-            if (CheckedTypes.TryGetValue(type, out result))
+            if (ImmutableCheckedTypes.TryGetValue(type, out result))
             {
                 return result;
             }
@@ -45,19 +45,19 @@
             {
                 type = Nullable.GetUnderlyingType(type);
                 var isImmutable = CheckIfIsImmutable(type, checkedTypes);
-                CheckedTypes.TryAdd(type, isImmutable);
+                ImmutableCheckedTypes.TryAdd(type, isImmutable);
                 return isImmutable;
             }
 
             if (type.IsEnum)
             {
-                CheckedTypes.TryAdd(type, true);
+                ImmutableCheckedTypes.TryAdd(type, true);
                 return true;
             }
 
             if (!CanBeImmutable(type))
             {
-                CheckedTypes.TryAdd(type, false);
+                ImmutableCheckedTypes.TryAdd(type, false);
                 return false;
             }
 
@@ -67,13 +67,13 @@
                 if (!propertyInfo.IsGetReadOnly() ||
                     (propertyInfo.GetIndexParameters().Length > 0 && propertyInfo.SetMethod != null))
                 {
-                    CheckedTypes.TryAdd(type, false);
+                    ImmutableCheckedTypes.TryAdd(type, false);
                     return false;
                 }
 
                 if (!CanBeImmutable(propertyInfo.PropertyType))
                 {
-                    CheckedTypes.TryAdd(type, false);
+                    ImmutableCheckedTypes.TryAdd(type, false);
                     return false;
                 }
 
@@ -84,7 +84,7 @@
 
                 if (!CheckIfIsImmutable(propertyInfo.PropertyType, checkedTypes))
                 {
-                    CheckedTypes.TryAdd(type, false);
+                    ImmutableCheckedTypes.TryAdd(type, false);
                     return false;
                 }
             }
@@ -99,13 +99,13 @@
 
                 if (!fieldInfo.IsInitOnly)
                 {
-                    CheckedTypes.TryAdd(type, false);
+                    ImmutableCheckedTypes.TryAdd(type, false);
                     return false;
                 }
 
                 if (!CanBeImmutable(fieldInfo.FieldType))
                 {
-                    CheckedTypes.TryAdd(type, false);
+                    ImmutableCheckedTypes.TryAdd(type, false);
                     return false;
                 }
 
@@ -116,12 +116,12 @@
 
                 if (!CheckIfIsImmutable(fieldInfo.FieldType, checkedTypes))
                 {
-                    CheckedTypes.TryAdd(type, false);
+                    ImmutableCheckedTypes.TryAdd(type, false);
                     return false;
                 }
             }
 
-            CheckedTypes.TryAdd(type, true);
+            ImmutableCheckedTypes.TryAdd(type, true);
             return true;
         }
 

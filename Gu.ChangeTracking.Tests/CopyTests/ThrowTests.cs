@@ -6,11 +6,7 @@
 
     public abstract class ThrowTests
     {
-        public abstract void CopyMethod<T>(T source, T target) where T : class;
-
-        public abstract void CopyMethod<T>(T source, T target, ReferenceHandling referenceHandling) where T : class;
-
-        public abstract void CopyMethod<T>(T source, T target, params string[] excluded) where T : class;
+        public abstract void CopyMethod<T>(T source, T target, ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excluded = null) where T : class;
 
         [TestCase(null)]
         [TestCase(ReferenceHandling.Throw)]
