@@ -41,7 +41,7 @@
         /// <returns>True if <paramref name="x"/> and <paramref name="y"/> are equal</returns>
         public static bool PropertyValues<T>(T x, T y, PropertiesSettings settings)
         {
-            VerifyCanEqualByPropertyValues(x, y, settings);
+            Verify.CanEqualByPropertyValues(x, y, settings);
 
             if (settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops)
             {
@@ -149,7 +149,7 @@
                     return ReferenceEquals(x, y);
                 case ReferenceHandling.Structural:
                 case ReferenceHandling.StructuralWithReferenceLoops:
-                    VerifyCanEqualByPropertyValues(x, y, settings);
+                    Verify.CanEqualByPropertyValues(x, y, settings);
                     return PropertiesValuesEquals(x, y, settings, referencePairs);
                 case ReferenceHandling.Throw:
                     throw ChangeTracking.Throw.ShouldNeverGetHere();

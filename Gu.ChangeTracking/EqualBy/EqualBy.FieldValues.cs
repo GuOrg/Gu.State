@@ -40,7 +40,7 @@ namespace Gu.ChangeTracking
         /// <returns>True if <paramref name="x"/> and <paramref name="y"/> are equal</returns>
         public static bool FieldValues<T>(T x, T y, FieldsSettings settings)
         {
-            VerifyCanEqualByFieldValues(x, y, settings);
+            Verify.CanEqualByFieldValues(x, y, settings);
             if (x == null && y == null)
             {
                 return true;
@@ -154,7 +154,7 @@ namespace Gu.ChangeTracking
                     return ReferenceEquals(x, y);
                 case ReferenceHandling.Structural:
                 case ReferenceHandling.StructuralWithReferenceLoops:
-                    VerifyCanEqualByFieldValues(x, y, settings);
+                    Verify.CanEqualByFieldValues(x, y, settings);
                     return FieldsValuesEquals(x, y, settings, referencePairs);
                 case ReferenceHandling.Throw:
                     throw ChangeTracking.Throw.ThrowThereIsABugInTheLibrary("Should never get here");
