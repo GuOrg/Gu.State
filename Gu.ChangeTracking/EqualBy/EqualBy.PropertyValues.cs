@@ -41,8 +41,13 @@
         /// <returns>True if <paramref name="x"/> and <paramref name="y"/> are equal</returns>
         public static bool PropertyValues<T>(T x, T y, PropertiesSettings settings)
         {
-            Verify.PropertyTypes(x, y, settings);
-            Verify.Enumerable(x, y, settings);
+            var type = x?.GetType() ?? y?.GetType() ?? typeof(T);
+            ErrorBuilder.Start()
+                        .OnlyValidProperties(type, settings, IsPropertyValid)
+                        .OnlySupportedIndexers(type, settings)
+                        .HasReferenceHandlingIfEnumerable(type, settings)
+                        .ThrowIfHasErrors(type, settings);
+
             if (settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops)
             {
                 var referencePairs = new ReferencePairCollection();
@@ -58,7 +63,11 @@
             PropertiesSettings settings,
             ReferencePairCollection referencePairs)
         {
-            Verify.Indexers(x?.GetType() ?? y?.GetType(), settings);
+            var type = x?.GetType() ?? y?.GetType();
+            ErrorBuilder.Start()
+                        .OnlySupportedIndexers(type, settings)
+                        .ThrowIfHasErrors<PropertiesSettings>(type, settings);
+
             referencePairs?.Add(x, y);
             if (ReferenceEquals(x, y))
             {

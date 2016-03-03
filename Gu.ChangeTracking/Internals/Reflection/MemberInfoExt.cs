@@ -5,7 +5,7 @@ namespace Gu.ChangeTracking
 
     internal static class MemberInfoExt
     {
-        internal static Type GetMemberType(this MemberInfo memberInfo)
+        internal static Type MemberType(this MemberInfo memberInfo)
         {
             var fieldInfo = memberInfo as FieldInfo;
             if (fieldInfo != null)

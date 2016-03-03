@@ -54,6 +54,7 @@
         /// <param name="settings">Contains configuration for how tracking is performed</param>
         public static void VerifyCanTrack(Type type, PropertiesSettings settings)
         {
+            EqualBy.VerifyCanEqualByPropertyValues(type, settings);
             ChangeTracker.VerifyCanTrack(type, settings);
         }
     }

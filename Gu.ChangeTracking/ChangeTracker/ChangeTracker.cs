@@ -31,7 +31,7 @@
             this.itemsChangeTrackers = ItemsChangeTrackers.Create(source, this);
             if (this.propertiesChangeTrackers == null && this.itemsChangeTrackers == null)
             {
-                Gu.ChangeTracking.Throw.ThrowThereIsABugInTheLibrary("Created a tracker that does not track anything");
+                throw Gu.ChangeTracking.Throw.ThrowThereIsABugInTheLibrary("Created a tracker that does not track anything");
             }
         }
 

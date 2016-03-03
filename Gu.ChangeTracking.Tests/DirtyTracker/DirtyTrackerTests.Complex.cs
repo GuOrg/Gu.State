@@ -12,12 +12,20 @@
             [Test]
             public void ThrowsWithoutReferenceHandling()
             {
+                var expected = "EqualBy.PropertyValues(x, y) failed.\r\n" +
+                               "The property WithComplexProperty.ComplexType of type ComplexType is not supported.\r\n" +
+                               "Solve the problem by any of:\r\n" +
+                               "* Implement IEquatable<ComplexType> for ComplexType or use a type that does.\r\n" +
+                               "* Use PropertiesSettings and specify how comparing is performed:\r\n" +
+                               "  - ReferenceHandling.Structural means that a deep equals is performed.\r\n" +
+                               "  - ReferenceHandling.References means that reference equality is used.\r\n" +
+                               "  - Exclude the type WithComplexProperty.\r\n" +
+                               "  - Exclude the property WithComplexProperty.ComplexType.\r\n";
                 var x = new DirtyTrackerTypes.WithComplexProperty();
                 var y = new DirtyTrackerTypes.WithComplexProperty();
+
                 var exception = Assert.Throws<NotSupportedException>(() => DirtyTracker.Track(x, y));
-                var expected = "Only equatable properties are supported without specifying ReferenceHandling\r\n" +
-                                      "Property WithComplexProperty.ComplexType is not IEquatable<ComplexType>.\r\n" +
-                                      "Use the overload DirtyTracker.Track(x, y, ReferenceHandling) if you want to track a graph";
+
                 Assert.AreEqual(expected, exception.Message);
             }
 

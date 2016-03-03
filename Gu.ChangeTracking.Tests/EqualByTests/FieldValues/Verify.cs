@@ -2,12 +2,9 @@
 {
     using System;
 
-    using Gu.ChangeTracking.Tests.EqualByTests;
-
-    public class Throws : ThrowsTests
+    public class Verify : VerifyTests
     {
-
-        public override bool EqualByMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excludedMembers = null, Type excludedType = null)
+        public override void VerifyMethod<T>(ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excludedMembers = null, Type excludedType = null)
         {
             var builder = FieldsSettings.Build();
             if (excludedMembers != null)
@@ -21,7 +18,7 @@
             }
 
             var settings = builder.CreateSettings(referenceHandling);
-            return EqualBy.FieldValues(x, y, settings);
+            EqualBy.VerifyCanEqualByFieldValues<T>(settings);
         }
     }
 }

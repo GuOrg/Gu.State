@@ -59,6 +59,9 @@
     <Compile Include="ChangeTracker\ChangeTrackerTests.Shared.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerTests.Throws.cs" />
     <Compile Include="ChangeTracker\ChangeTrackerTests.PropertyChanged.cs" />
+    <Compile Include="EqualByTests\FieldValues\Verify.cs" />
+    <Compile Include="EqualByTests\PropertyValues\Verify.cs" />
+    <Compile Include="EqualByTests\VerifyTests.cs" />
     <Compile Include="Settings\MemberComparerTests.cs" />
     <Compile Include="Settings\PropertiesSettingsBuilderTests.cs" />
     <Compile Include="Settings\SettingsTypes.cs" />

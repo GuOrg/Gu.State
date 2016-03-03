@@ -23,8 +23,7 @@
                                    .AppendLine($"Copy.{nameof(Copy.PropertyValues)}(x, y) failed.");
             }
 
-            ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<FieldsSettings, PropertiesSettings>("{T}");
-            throw new InvalidOperationException("Never getting here");
+            throw ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<FieldsSettings, PropertiesSettings>("{T}");
         }
 
         private static StringBuilder AppendSuggestCopySettings<T>(this StringBuilder errorBuilder, Type type, MemberInfo member)
@@ -53,7 +52,7 @@
                 }
                 else
                 {
-                    ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<FieldsSettings, PropertiesSettings>("{T}");
+                    throw ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<FieldsSettings, PropertiesSettings>("{T}");
                 }
             }
 
@@ -74,7 +73,7 @@
                                .AppendCopyFailed<T>()
                                .AppendMemberIsNotSupported(sourceType, member)
                                .AppendSolveTheProblemBy()
-                               .AppendSuggestImmutableType(member.GetMemberType())
+                               .AppendSuggestImmutableType(member.MemberType())
                                .AppendSuggestCopySettings<T>(sourceType, member);
         }
 
@@ -150,7 +149,7 @@
                     }
                     else
                     {
-                        ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<PropertyInfo, FieldInfo>(nameof(member));
+                        throw ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<PropertyInfo, FieldInfo>(nameof(member));
                     }
                 }
 
@@ -183,14 +182,14 @@
                 }
                 else
                 {
-                    ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<PropertiesSettings, FieldsSettings>(nameof(settings));
+                    throw ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<PropertiesSettings, FieldsSettings>(nameof(settings));
                 }
 
                 errorBuilder.AppendLine($"The problem occurred at index: {index}")
                     .AppendLine(
                         $"Source list is of type: {source.GetType().PrettyName()} and target list is of type: {target.GetType().PrettyName()}")
                     .AppendSolveTheProblemBy()
-                    .AppendSuggestImplementIEquatable(itemType)
+                    .AppendSuggestImmutableType(itemType)
                     .AppendSuggestCopySettings<T>(itemType, null);
                 throw new NotSupportedException(errorBuilder.ToString());
             }
@@ -211,7 +210,7 @@
                 }
                 else
                 {
-                    ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<PropertiesSettings, FieldsSettings>(nameof(settings));
+                    throw ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<PropertiesSettings, FieldsSettings>(nameof(settings));
                 }
 
                 errorBuilder.AppendLine($"The problem occurred for key: {key}")
