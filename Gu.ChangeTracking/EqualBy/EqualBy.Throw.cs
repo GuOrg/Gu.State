@@ -55,7 +55,8 @@
 
         private static class Throw
         {
-            internal static void CannotCompareMember(Type sourceType, MemberInfo member)
+            internal static void CannotCompareMember<T>(Type sourceType, MemberInfo member)
+                where T : class, IMemberSettings
             {
                 var errorBuilder = new StringBuilder();
                 Type memberType = null;
@@ -74,8 +75,7 @@
                     if (fieldInfo != null)
                     {
                         errorBuilder.AppendEqualByFailed<FieldsSettings>();
-                        errorBuilder.AppendLine(
-                            $"The field {sourceType.PrettyName()}.{fieldInfo.Name} is not supported.");
+                        errorBuilder.AppendLine($"The field {sourceType.PrettyName()}.{fieldInfo.Name} is not supported.");
                         errorBuilder.AppendLine($"The field is of type {fieldInfo.FieldType.PrettyName()}.");
                         memberType = fieldInfo.FieldType;
                     }
@@ -88,7 +88,7 @@
 
                 errorBuilder.AppendSolveTheProblemBy()
                             .AppendSuggestImplementIEquatable(memberType)
-                            .AppendSuggestEqualBySettings<FieldsSettings>(sourceType, member);
+                            .AppendSuggestEqualBySettings<T>(sourceType, member);
                 var message = errorBuilder.ToString();
                 throw new NotSupportedException(message);
             }
@@ -192,7 +192,7 @@
 
                     if (!propertyInfo.PropertyType.IsEquatable())
                     {
-                        Throw.CannotCompareMember(type, propertyInfo);
+                        Throw.CannotCompareMember<PropertiesSettings>(type, propertyInfo);
                     }
                 }
             }
@@ -215,7 +215,7 @@
 
                     if (!fieldInfo.FieldType.IsEquatable())
                     {
-                        Throw.CannotCompareMember(type, fieldInfo);
+                        Throw.CannotCompareMember<FieldsSettings>(type, fieldInfo);
                     }
                 }
             }

@@ -15,7 +15,7 @@ namespace Gu.ChangeTracking.Tests
             {
                 var changes = new List<object>();
                 var root = new Level();
-                using (var tracker = ChangeTracker.Track(root, ChangeTrackerSettings.Default))
+                using (var tracker = ChangeTracker.Track(root, PropertiesSettings.GetOrCreate()))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
@@ -24,34 +24,34 @@ namespace Gu.ChangeTracking.Tests
 
                     var level = new Level();
                     root.Levels.Add(level);
+                    Assert.AreEqual(1, tracker.Changes);
+                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
+
+                    level.Value++;
                     Assert.AreEqual(2, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(2), changes);
 
-                    level.Value++;
+                    root.Levels.Add(level);
                     Assert.AreEqual(3, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(3), changes);
 
-                    root.Levels.Add(level);
-                    Assert.AreEqual(5, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(5), changes);
-
                     root.Levels.Add(new Level());
-                    Assert.AreEqual(7, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(7), changes);
+                    Assert.AreEqual(4, tracker.Changes);
+                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(4), changes);
 
                     root.Levels = new ObservableCollection<Level>();
-                    Assert.AreEqual(8, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(8), changes);
+                    Assert.AreEqual(5, tracker.Changes);
+                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(5), changes);
 
                     tracker.Dispose();
 
                     level.Value++;
-                    Assert.AreEqual(8, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(8), changes);
+                    Assert.AreEqual(5, tracker.Changes);
+                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(5), changes);
 
                     root.Levels.Add(new Level());
-                    Assert.AreEqual(8, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(8), changes);
+                    Assert.AreEqual(5, tracker.Changes);
+                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(5), changes);
                 }
             }
 
@@ -60,7 +60,7 @@ namespace Gu.ChangeTracking.Tests
             {
                 var changes = new List<object>();
                 var root = new SpecialCollection();
-                using (var tracker = ChangeTracker.Track(root, ChangeTrackerSettings.Default))
+                using (var tracker = ChangeTracker.Track(root, PropertiesSettings.GetOrCreate()))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
@@ -69,20 +69,20 @@ namespace Gu.ChangeTracking.Tests
 
                     var level = new Level();
                     root.Add(level);
+                    Assert.AreEqual(1, tracker.Changes);
+                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
+
+                    level.Value++;
                     Assert.AreEqual(2, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(2), changes);
+
+                    root.Remove(level);
+                    Assert.AreEqual(3, tracker.Changes);
+                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(3), changes);
 
                     level.Value++;
                     Assert.AreEqual(3, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(3), changes);
-
-                    root.Remove(level);
-                    Assert.AreEqual(5, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(5), changes);
-
-                    level.Value++;
-                    Assert.AreEqual(5, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(5), changes);
                 }
             }
 
@@ -91,7 +91,7 @@ namespace Gu.ChangeTracking.Tests
             {
                 var changes = new List<object>();
                 var root = new Level();
-                using (var tracker = ChangeTracker.Track(root, ChangeTrackerSettings.Default))
+                using (var tracker = ChangeTracker.Track(root, PropertiesSettings.GetOrCreate()))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
@@ -100,20 +100,20 @@ namespace Gu.ChangeTracking.Tests
 
                     var level = new Level();
                     root.Levels.Add(level);
+                    Assert.AreEqual(1, tracker.Changes);
+                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
+
+                    level.Value++;
                     Assert.AreEqual(2, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(2), changes);
+
+                    root.Levels.Clear();
+                    Assert.AreEqual(3, tracker.Changes);
+                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(3), changes);
 
                     level.Value++;
                     Assert.AreEqual(3, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(3), changes);
-
-                    root.Levels.Clear();
-                    Assert.AreEqual(5, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(5), changes);
-
-                    level.Value++;
-                    Assert.AreEqual(5, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(5), changes);
                 }
             }
 
@@ -122,7 +122,7 @@ namespace Gu.ChangeTracking.Tests
             {
                 var changes = new List<object>();
                 var root = new Level { Next = new Level { Next = new Level() } };
-                using (var tracker = ChangeTracker.Track(root, ChangeTrackerSettings.Default))
+                using (var tracker = ChangeTracker.Track(root, PropertiesSettings.GetOrCreate()))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
@@ -131,16 +131,16 @@ namespace Gu.ChangeTracking.Tests
 
                     var level = new Level();
                     root.Levels.Add(level);
+                    Assert.AreEqual(1, tracker.Changes);
+                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
+
+                    level.Next = new Level();
                     Assert.AreEqual(2, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(2), changes);
 
-                    level.Next = new Level();
+                    level.Next.Value++;
                     Assert.AreEqual(3, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(3), changes);
-
-                    level.Next.Value++;
-                    Assert.AreEqual(4, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(4), changes);
                 }
             }
         }

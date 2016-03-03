@@ -182,7 +182,7 @@
         {
             var lastProperty = propertyPath.Path.OfType<PropertyItem>()
                                            .LastOrDefault();
-            errorBuilder.AppendLine($"* Use {typeof(ChangeTrackerSettings).Name} and add a specialcase for {sourceType.PrettyName()} example:");
+            errorBuilder.AppendLine($"* Use {typeof(PropertiesSettings).Name} and add a specialcase for {sourceType.PrettyName()} example:");
             errorBuilder.AppendLine($"    settings.AddIgnoredType<{sourceType.PrettyName()}>()");
             if (lastProperty != null)
             {

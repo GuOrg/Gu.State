@@ -367,13 +367,9 @@
                 {
                     ComplexType = new ComplexType("d", 4)
                 };
-                var excluded = new[] { nameof(WithComplexProperty.Name) };
-                var settings = PropertiesSettings.Create(
-                    source,
-                    target,
-                    Constants.DefaultPropertyBindingFlags,
-                    ReferenceHandling.Structural,
-                    excluded);
+                var settings = PropertiesSettings.Build()
+                                                 .AddIgnoredProperty<WithComplexProperty>(nameof(WithComplexProperty.Name))
+                                                 .CreateSettings(ReferenceHandling.Structural);
                 using (PropertySynchronizer.Create(source, target, settings))
                 {
                     Assert.AreEqual("a", source.Name);

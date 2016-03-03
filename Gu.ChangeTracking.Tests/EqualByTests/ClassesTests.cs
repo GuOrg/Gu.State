@@ -7,13 +7,7 @@
 
     public abstract class ClassesTests
     {
-        public abstract bool EqualMethod<T>(T x, T y) where T : class;
-
-        public abstract bool EqualMethod<T>(T x, T y, ReferenceHandling referenceHandling) where T : class;
-
-        public abstract bool EqualMethod<T>(T x, T y, params string[] excluded) where T : class;
-
-        public abstract bool EqualMethod<T>(T x, T y, string excluded, ReferenceHandling referenceHandling);
+        public abstract bool EqualMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excludedMembers = null, Type excludedType = null) where T : class;
 
         public static IReadOnlyList<EqualByTestsShared.EqualsData> EqualsSource => EqualByTestsShared.EqualsSource;
 
@@ -258,7 +252,7 @@
         [TestCase(1, 1, ReferenceHandling.Throw, true)]
         [TestCase(1, 1, ReferenceHandling.Structural, true)]
         [TestCase(1, 1, ReferenceHandling.References, true)]
-        public void Ignores(int xv, int yv, ReferenceHandling? referenceHandling, bool expected)
+        public void IgnoresMember(int xv, int yv, ReferenceHandling? referenceHandling, bool expected)
         {
             var x = new EqualByTypes.WithSimpleProperties(xv, null, "3", StringSplitOptions.RemoveEmptyEntries);
             var y = new EqualByTypes.WithSimpleProperties(yv, 2, "3", StringSplitOptions.RemoveEmptyEntries);
@@ -267,14 +261,24 @@
                         : nameof(EqualByTypes.WithSimpleProperties.NullableIntValue);
             if (referenceHandling == null)
             {
-                var result = this.EqualMethod(x, y, excluded);
+                var result = this.EqualMethod(x, y, excludedMembers: excluded);
                 Assert.AreEqual(expected, result);
             }
             else
             {
-                var result = this.EqualMethod(x, y, excluded, referenceHandling.Value);
+                var result = this.EqualMethod(x, y, referenceHandling.Value, excluded);
                 Assert.AreEqual(expected, result);
             }
+        }
+
+        [TestCase("a", true)]
+        [TestCase("b", false)]
+        public void IgnoresType(string xv, bool expected)
+        {
+            var x = new EqualByTypes.WithComplexProperty(xv, 1, new EqualByTypes.ComplexType("b", 2));
+            var y = new EqualByTypes.WithComplexProperty("a", 1, new EqualByTypes.ComplexType("c", 2));
+            var result = this.EqualMethod(x, y, referenceHandling: ReferenceHandling.Structural, excludedType: typeof(EqualByTypes.ComplexType));
+            Assert.AreEqual(expected, result);
         }
 
         [TestCase("p", "c", true)]

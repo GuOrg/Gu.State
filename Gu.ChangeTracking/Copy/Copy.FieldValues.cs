@@ -17,16 +17,14 @@
         /// If Structural is used field values for sub fields are copied for the entire graph.
         /// Activator.CreateInstance is sued to new up references so a default constructor is required, can be private
         /// </param>
-        /// <param name="excludedFields">Names of fields on <typeparamref name="T"/> to exclude from copying</param>
         public static void FieldValues<T>(
             T source,
             T target,
             BindingFlags bindingFlags = Constants.DefaultFieldBindingFlags,
-            ReferenceHandling referenceHandling = ReferenceHandling.Throw,
-            params string[] excludedFields)
+            ReferenceHandling referenceHandling = ReferenceHandling.Throw)
             where T : class
         {
-            var settings = FieldsSettings.Create(source, target, bindingFlags, referenceHandling, excludedFields);
+            var settings = FieldsSettings.GetOrCreate(bindingFlags, referenceHandling);
             FieldValues(source, target, settings);
         }
 

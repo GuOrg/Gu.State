@@ -6,11 +6,7 @@
 
     public abstract class ClassesTests
     {
-        public abstract void CopyMethod<T>(T source, T target) where T : class;
-
-        public abstract void CopyMethod<T>(T source, T target, ReferenceHandling referenceHandling) where T : class;
-
-        public abstract void CopyMethod<T>(T source, T target, params string[] excluded) where T : class;
+        public abstract void CopyMethod<T>(T source, T target, ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excluded = null) where T : class;
 
         [Test]
         public void WithSimpleHappyPath()
@@ -240,7 +236,7 @@
             var excluded = this.GetType() == typeof(FieldValues.Classes)
                         ? "nullableIntValue"
                         : nameof(CopyTypes.WithSimpleProperties.NullableIntValue);
-            this.CopyMethod(source, target, excluded);
+            this.CopyMethod(source, target, excluded: excluded);
             Assert.AreEqual(1, source.IntValue);
             Assert.AreEqual(1, target.IntValue);
             Assert.AreEqual(2, source.NullableIntValue);

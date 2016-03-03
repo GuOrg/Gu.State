@@ -40,15 +40,18 @@
   <ItemGroup>
     <Compile Include="ChangeTracker\ChangeTracker.cs" />
     <Compile Include="ChangeTracker\ChangeTracker.Verify.cs" />
-    <Compile Include="ChangeTracker\Contracts\ISpecialCopyProperty.cs" />
+    <Compile Include="Contracts\ISpecialCopyProperty.cs" />
     <Compile Include="ChangeTracker\PropertyChangeTracker.cs" />
-    <Compile Include="Contracts\FieldsSettings.cs" />
+    <Compile Include="Settings\FieldsSettingsBuilder.cs" />
+    <Compile Include="Settings\FieldsSettings.cs" />
     <Compile Include="Contracts\IBindingFlags.cs" />
     <Compile Include="Contracts\IIgnoringDeclaredType.cs" />
     <Compile Include="Contracts\IIgnoringFields.cs" />
     <Compile Include="Contracts\IMemberSettings.cs" />
     <Compile Include="Contracts\IReferenceHandling.cs" />
-    <Compile Include="Contracts\MemberSettings.cs" />
+    <Compile Include="Settings\MemberSettings.cs" />
+    <Compile Include="Settings\PropertiesSettingsBuilder.cs" />
+    <Compile Include="Settings\Internals\MemberInfoComparer.cs" />
     <Compile Include="Copy\Copy.Collection.cs" />
     <Compile Include="Copy\Copy.Shared.cs" />
     <Compile Include="Copy\Copy.Throw.cs" />
@@ -79,6 +82,8 @@
     <Compile Include="Internals\PropertyPath\RootItem.cs" />
     <Compile Include="Internals\Collections\ReferencePairCollection.cs" />
     <Compile Include="Internals\Reflection\MemberInfoExt.cs" />
+    <Compile Include="Internals\Reflection\TypeExt.IsEquatable.cs" />
+    <Compile Include="Internals\Reflection\TypeExt.PrettyName.cs" />
     <Compile Include="Internals\SourceAndTargetValue.cs" />
     <Compile Include="ExceptionHelpers\ErrorBuilder.cs" />
     <Compile Include="Internals\Reflection\TypeExt.IsImmutable.cs" />
@@ -86,7 +91,7 @@
     <Compile Include="PropertySynchronizer\IPropertySynchronizer.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizer.Verify.cs" />
     <Compile Include="ReferenceHandling.cs" />
-    <Compile Include="Contracts\SpecialCopyProperty.cs" />
+    <Compile Include="Settings\SpecialCopyProperty.cs" />
     <Compile Include="Copy\Copy.PropertyValues.cs" />
     <Compile Include="EqualBy\EqualBy.FieldValues.cs" />
     <Compile Include="EqualBy\EqualBy.PropertyValues.cs" />
@@ -107,12 +112,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizer.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizer{T}.cs" />
-    <Compile Include="ChangeTracker\Settings\ChangeTrackerSettings.cs" />
-    <Compile Include="Contracts\PropertiesSettings.cs" />
-    <Compile Include="ChangeTracker\Settings\SpecialProperty.cs" />
-    <Compile Include="ChangeTracker\Settings\SpecialType.cs" />
+    <Compile Include="Settings\PropertiesSettings.cs" />
     <Compile Include="Copy\Copy.FieldValues.cs" />
-    <Compile Include="ChangeTracker\Settings\TrackAs.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Copy\Copy.VerifyCanCopyPropertyValues.cs" />

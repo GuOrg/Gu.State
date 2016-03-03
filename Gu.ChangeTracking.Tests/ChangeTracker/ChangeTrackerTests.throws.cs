@@ -23,14 +23,14 @@ namespace Gu.ChangeTracking.Tests
                                "  - All field and property types must be immutable.\r\n" +
                                "  - All indexers must be readonly.\r\n" +
                                "  - Event fields are ignored.\r\n" +
-                               "* Use ChangeTrackerSettings and add a specialcase for IllegalType example:\r\n" +
+                               "* Use PropertiesSettings and add a specialcase for IllegalType example:\r\n" +
                                "    settings.AddIgnoredType<IllegalType>()\r\n" +
                                "    or:\r\n" +
                                "    settings.AddIgnoredProperty(typeof(IllegalSubType).GetProperty(nameof(IllegalSubType.Illegal)))\r\n" +
                                "    Note that this means that the ChangeTracker does not track changes so you are responsible for any tracking needed.\r\n";
 
                 var root = new ObservableCollection<ComplexType>();
-                using (ChangeTracker.Track(root, ChangeTrackerSettings.Default))
+                using (ChangeTracker.Track(root, PropertiesSettings.GetOrCreate()))
                 {
                     var exception = Assert.Throws<NotSupportedException>(() => root.Add(new IllegalSubType()));
                     Assert.AreEqual(expected, exception.Message);
@@ -49,14 +49,14 @@ namespace Gu.ChangeTracking.Tests
                                "  - All field and property types must be immutable.\r\n" +
                                "  - All indexers must be readonly.\r\n" +
                                "  - Event fields are ignored.\r\n" +
-                               "* Use ChangeTrackerSettings and add a specialcase for IllegalType example:\r\n" +
+                               "* Use PropertiesSettings and add a specialcase for IllegalType example:\r\n" +
                                "    settings.AddIgnoredType<IllegalType>()\r\n" +
                                "    or:\r\n" +
                                "    settings.AddIgnoredProperty(typeof(IllegalSubType).GetProperty(nameof(IllegalSubType.Illegal)))\r\n" +
                                "    Note that this means that the ChangeTracker does not track changes so you are responsible for any tracking needed.\r\n";
 
                 var root = new With<ComplexType>();
-                using (ChangeTracker.Track(root, ChangeTrackerSettings.Default))
+                using (ChangeTracker.Track(root, PropertiesSettings.GetOrCreate()))
                 {
                     var exception = Assert.Throws<NotSupportedException>(() => root.Value = new IllegalSubType());
                     Assert.AreEqual(expected, exception.Message);
@@ -76,12 +76,12 @@ namespace Gu.ChangeTracking.Tests
                                "  - All field and property types must be immutable.\r\n" +
                                "  - All indexers must be readonly.\r\n" +
                                "  - Event fields are ignored.\r\n" +
-                               "* Use ChangeTrackerSettings and add a specialcase for IllegalType example:\r\n" +
+                               "* Use PropertiesSettings and add a specialcase for IllegalType example:\r\n" +
                                "    settings.AddIgnoredType<IllegalType>()\r\n" +
                                "    or:\r\n" +
                                "    settings.AddIgnoredProperty(typeof(WithIllegal).GetProperty(nameof(WithIllegal.Illegal)))\r\n" +
                                "    Note that this means that the ChangeTracker does not track changes so you are responsible for any tracking needed.\r\n";
-                var exception = Assert.Throws<NotSupportedException>(() => ChangeTracker.Track(item, ChangeTrackerSettings.Default));
+                var exception = Assert.Throws<NotSupportedException>(() => ChangeTracker.Track(item, PropertiesSettings.GetOrCreate()));
                 Assert.AreEqual(expected, exception.Message);
 
                 exception = Assert.Throws<NotSupportedException>(() => ChangeTracker.Track(item));
@@ -103,11 +103,11 @@ namespace Gu.ChangeTracking.Tests
                                "  - All field and property types must be immutable.\r\n" +
                                "  - All indexers must be readonly.\r\n" +
                                "  - Event fields are ignored.\r\n" +
-                               "* Use ChangeTrackerSettings and add a specialcase for IllegalEnumerable example:\r\n" +
+                               "* Use PropertiesSettings and add a specialcase for IllegalEnumerable example:\r\n" +
                                "    settings.AddIgnoredType<IllegalEnumerable>()\r\n" +
                                "    Note that this means that the ChangeTracker does not track changes so you are responsible for any tracking needed.\r\n";
                 Assert.AreEqual(expected, exception.Message);
-                exception = Assert.Throws<NotSupportedException>(() => ChangeTracker.Track(item, ChangeTrackerSettings.Default));
+                exception = Assert.Throws<NotSupportedException>(() => ChangeTracker.Track(item, PropertiesSettings.GetOrCreate()));
                 Assert.AreEqual(expected, exception.Message);
             }
 
@@ -125,13 +125,13 @@ namespace Gu.ChangeTracking.Tests
                                "  - All field and property types must be immutable.\r\n" +
                                "  - All indexers must be readonly.\r\n" +
                                "  - Event fields are ignored.\r\n" +
-                               "* Use ChangeTrackerSettings and add a specialcase for List<int> example:\r\n" +
+                               "* Use PropertiesSettings and add a specialcase for List<int> example:\r\n" +
                                "    settings.AddIgnoredType<List<int>>()\r\n" +
                                "    or:\r\n" +
                                "    settings.AddIgnoredProperty(typeof(With<List<int>>).GetProperty(nameof(With<List<int>>.Value)))\r\n" +
                                "    Note that this means that the ChangeTracker does not track changes so you are responsible for any tracking needed.\r\n";
                 Assert.AreEqual(expected, exception.Message);
-                exception = Assert.Throws<NotSupportedException>(() => ChangeTracker.Track(item, ChangeTrackerSettings.Default));
+                exception = Assert.Throws<NotSupportedException>(() => ChangeTracker.Track(item, PropertiesSettings.GetOrCreate()));
                 Assert.AreEqual(expected, exception.Message);
             }
         }

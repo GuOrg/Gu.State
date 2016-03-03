@@ -275,6 +275,13 @@
                 this.Value = value;
             }
 
+            public WithComplexProperty(string name, int value, ComplexType complexType)
+            {
+                this.Name = name;
+                this.Value = value;
+                this.ComplexType = complexType;
+            }
+
             public string Name { get; set; }
 
             public int Value { get; set; }
