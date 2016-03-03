@@ -6,17 +6,14 @@ namespace Gu.ChangeTracking.Tests.EqualByTests
 
     public abstract class ThrowsTests
     {
-        public abstract bool EqualByMethod<T>(T x, T y);
-
-        public abstract bool EqualByMethod<T>(T x, T y, ReferenceHandling referenceHandling);
+        public abstract bool EqualByMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excludedMembers = null, Type excludedType = null);
 
         [Test]
         public void ComplexValueThrowsWithoutReferenceHandling()
         {
             var expected = this.GetType() == typeof(FieldValues.Throws)
             ? "EqualBy.FieldValues(x, y) failed.\r\n" +
-            "The field WithComplexProperty.<ComplexType>k__BackingField is not supported.\r\n" +
-            "The field is of type ComplexType.\r\n" +
+            "The field WithComplexProperty.<ComplexType>k__BackingField of type ComplexType is not supported.\r\n" +
             "Solve the problem by any of:\r\n" +
             "* Implement IEquatable<ComplexType> for ComplexType or use a type that does.\r\n" +
             "* Use FieldsSettings and specify how comparing is performed:\r\n" +
@@ -26,8 +23,7 @@ namespace Gu.ChangeTracking.Tests.EqualByTests
             "  - Exclude the field WithComplexProperty.<ComplexType>k__BackingField.\r\n"
 
             : "EqualBy.PropertyValues(x, y) failed.\r\n" +
-            "The property WithComplexProperty.ComplexType is not supported.\r\n" +
-            "The property is of type ComplexType.\r\n" +
+            "The property WithComplexProperty.ComplexType of type ComplexType is not supported.\r\n" +
             "Solve the problem by any of:\r\n" +
             "* Implement IEquatable<ComplexType> for ComplexType or use a type that does.\r\n" +
             "* Use PropertiesSettings and specify how comparing is performed:\r\n" +
@@ -45,8 +41,7 @@ namespace Gu.ChangeTracking.Tests.EqualByTests
             var expected = this.GetType() == typeof(FieldValues.Throws)
                                ? "EqualBy.FieldValues(x, y) failed.\r\n" +
                                  "Indexers are not supported.\r\n" +
-                                 "The property WithIndexerType.Item is not supported.\r\n" +
-                                 "The property is of type int.\r\n" +
+                                 "The property WithIndexerType.Item of type int is an indexer and not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
                                  "* Use FieldsSettings and specify how comparing is performed:\r\n" +
                                  "  - ReferenceHandling.Structural means that a deep equals is performed.\r\n" +
@@ -55,8 +50,7 @@ namespace Gu.ChangeTracking.Tests.EqualByTests
 
                                : "EqualBy.PropertyValues(x, y) failed.\r\n" +
                                  "Indexers are not supported.\r\n" +
-                                 "The property WithIndexerType.Item is not supported.\r\n" +
-                                 "The property is of type int.\r\n" +
+                                 "The property WithIndexerType.Item of type int is an indexer and not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
                                  "* Use PropertiesSettings and specify how comparing is performed:\r\n" +
                                  "  - ReferenceHandling.Structural means that a deep equals is performed.\r\n" +

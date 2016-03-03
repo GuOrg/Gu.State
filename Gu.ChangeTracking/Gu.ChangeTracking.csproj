@@ -42,6 +42,11 @@
     <Compile Include="ChangeTracker\ChangeTracker.Verify.cs" />
     <Compile Include="Contracts\ISpecialCopyProperty.cs" />
     <Compile Include="ChangeTracker\PropertyChangeTracker.cs" />
+    <Compile Include="EqualBy\EqualBy.Verify.cs" />
+    <Compile Include="ExceptionHelpers\Errors.cs" />
+    <Compile Include="ExceptionHelpers\IErrors.cs" />
+    <Compile Include="ExceptionHelpers\StringBuilderExt.ErrorBuilder.cs" />
+    <Compile Include="ExceptionHelpers\ErrorBuilder.cs" />
     <Compile Include="Settings\FieldsSettingsBuilder.cs" />
     <Compile Include="Settings\FieldsSettings.cs" />
     <Compile Include="Contracts\IBindingFlags.cs" />
@@ -85,7 +90,7 @@
     <Compile Include="Internals\Reflection\TypeExt.IsEquatable.cs" />
     <Compile Include="Internals\Reflection\TypeExt.PrettyName.cs" />
     <Compile Include="Internals\SourceAndTargetValue.cs" />
-    <Compile Include="ExceptionHelpers\ErrorBuilder.cs" />
+    <Compile Include="ExceptionHelpers\StringBuilderExt.cs" />
     <Compile Include="Internals\Reflection\TypeExt.IsImmutable.cs" />
     <Compile Include="Internals\PropertyPath\PropertyPath.cs" />
     <Compile Include="PropertySynchronizer\IPropertySynchronizer.cs" />

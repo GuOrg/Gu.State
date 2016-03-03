@@ -40,9 +40,13 @@ namespace Gu.ChangeTracking
         /// <returns>True if <paramref name="x"/> and <paramref name="y"/> are equal</returns>
         public static bool FieldValues<T>(T x, T y, FieldsSettings settings)
         {
-            Verify.FieldTypes(x, y, settings);
-            Verify.Indexers(x?.GetType() ?? y?.GetType(), settings);
-            Verify.Enumerable(x, y, settings);
+            var type = x?.GetType() ?? y?.GetType() ?? typeof(T);
+            ErrorBuilder.Start()
+                        .OnlyValidFields(type, settings, IsFieldValid)
+                        .OnlySupportedIndexers(type, settings)
+                        .HasReferenceHandlingIfEnumerable(type, settings)
+                        .ThrowIfHasErrors<FieldsSettings>(type, settings);
+
             if (x == null && y == null)
             {
                 return true;
@@ -74,7 +78,10 @@ namespace Gu.ChangeTracking
 
         private static bool FieldsValuesEquals(object x, object y, FieldsSettings settings, ReferencePairCollection referencePairs)
         {
-            Verify.Indexers(x?.GetType() ?? y?.GetType(), settings);
+            var type = x?.GetType() ?? y?.GetType();
+            ErrorBuilder.Start()
+                        .OnlySupportedIndexers(type, settings)
+                        .ThrowIfHasErrors(type, settings);
             referencePairs?.Add(x, y);
 
             if (x == null && y == null)
