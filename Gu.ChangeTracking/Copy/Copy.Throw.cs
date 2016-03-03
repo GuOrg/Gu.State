@@ -23,7 +23,7 @@
                                    .AppendLine($"Copy.{nameof(Copy.PropertyValues)}(x, y) failed.");
             }
 
-            throw ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<FieldsSettings, PropertiesSettings>("{T}");
+            throw ChangeTracking.Throw.ExpectedParameterOfTypes<FieldsSettings, PropertiesSettings>("{T}");
         }
 
         private static StringBuilder AppendSuggestCopySettings<T>(this StringBuilder errorBuilder, Type type, MemberInfo member)
@@ -52,7 +52,7 @@
                 }
                 else
                 {
-                    throw ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<FieldsSettings, PropertiesSettings>("{T}");
+                    throw ChangeTracking.Throw.ExpectedParameterOfTypes<FieldsSettings, PropertiesSettings>("{T}");
                 }
             }
 
@@ -149,7 +149,7 @@
                     }
                     else
                     {
-                        throw ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<PropertyInfo, FieldInfo>(nameof(member));
+                        throw ChangeTracking.Throw.ExpectedParameterOfTypes<PropertyInfo, FieldInfo>(nameof(member));
                     }
                 }
 
@@ -182,7 +182,7 @@
                 }
                 else
                 {
-                    throw ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<PropertiesSettings, FieldsSettings>(nameof(settings));
+                    throw ChangeTracking.Throw.ExpectedParameterOfTypes<PropertiesSettings, FieldsSettings>(nameof(settings));
                 }
 
                 errorBuilder.AppendLine($"The problem occurred at index: {index}")
@@ -210,7 +210,7 @@
                 }
                 else
                 {
-                    throw ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<PropertiesSettings, FieldsSettings>(nameof(settings));
+                    throw ChangeTracking.Throw.ExpectedParameterOfTypes<PropertiesSettings, FieldsSettings>(nameof(settings));
                 }
 
                 errorBuilder.AppendLine($"The problem occurred for key: {key}")

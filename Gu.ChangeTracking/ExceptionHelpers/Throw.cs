@@ -4,9 +4,15 @@
 
     internal static class Throw
     {
-        internal static InvalidOperationException ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<T1, T2>(string parameterName)
+        internal static InvalidOperationException ExpectedParameterOfTypes<T1, T2>(string parameterName)
         {
             var message = $"Expected {nameof(parameterName)} to be either of {typeof(T1).PrettyName()} or {typeof(T2).PrettyName()}";
+            return ThrowThereIsABugInTheLibrary(message);
+        }
+
+        internal static InvalidOperationException ShouldNeverGetHere()
+        {
+            var message = "Sould never gete here";
             return ThrowThereIsABugInTheLibrary(message);
         }
 

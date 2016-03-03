@@ -40,13 +40,7 @@ namespace Gu.ChangeTracking
         /// <returns>True if <paramref name="x"/> and <paramref name="y"/> are equal</returns>
         public static bool FieldValues<T>(T x, T y, FieldsSettings settings)
         {
-            var type = x?.GetType() ?? y?.GetType() ?? typeof(T);
-            ErrorBuilder.Start()
-                        .OnlyValidFields(type, settings, IsFieldValid)
-                        .OnlySupportedIndexers(type, settings)
-                        .HasReferenceHandlingIfEnumerable(type, settings)
-                        .ThrowIfHasErrors<FieldsSettings>(type, settings);
-
+            VerifyCanEqualByFieldValues(x, y, settings);
             if (x == null && y == null)
             {
                 return true;
@@ -78,10 +72,6 @@ namespace Gu.ChangeTracking
 
         private static bool FieldsValuesEquals(object x, object y, FieldsSettings settings, ReferencePairCollection referencePairs)
         {
-            var type = x?.GetType() ?? y?.GetType();
-            ErrorBuilder.Start()
-                        .OnlySupportedIndexers(type, settings)
-                        .ThrowIfHasErrors(type, settings);
             referencePairs?.Add(x, y);
 
             if (x == null && y == null)
@@ -164,15 +154,13 @@ namespace Gu.ChangeTracking
                     return ReferenceEquals(x, y);
                 case ReferenceHandling.Structural:
                 case ReferenceHandling.StructuralWithReferenceLoops:
+                    VerifyCanEqualByFieldValues(x, y, settings);
                     return FieldsValuesEquals(x, y, settings, referencePairs);
                 case ReferenceHandling.Throw:
-                    Throw.CannotCompareMember<FieldsSettings>(x.GetType(), fieldInfo);
-                    break;
+                    throw ChangeTracking.Throw.ThrowThereIsABugInTheLibrary("Should never get here");
                 default:
                     throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);
             }
-
-            return true;
         }
     }
 }

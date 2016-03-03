@@ -91,7 +91,7 @@
                                    .AppendUnsupportedIndexers(type, errors.UnsupportedIndexers);
             }
 
-            throw Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<PropertiesSettings, FieldsSettings>("{T}");
+            throw Throw.ExpectedParameterOfTypes<PropertiesSettings, FieldsSettings>("{T}");
         }
 
         internal static StringBuilder AppendUnsupportedIndexers(this StringBuilder errorBuilder, Type type, IReadOnlyList<PropertyInfo> unSupportedIndexers)

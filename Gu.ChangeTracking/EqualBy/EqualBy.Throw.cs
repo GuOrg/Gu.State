@@ -30,7 +30,7 @@
             }
             else
             {
-                throw Gu.ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<PropertiesSettings, FieldsSettings>("T");
+                throw Gu.ChangeTracking.Throw.ExpectedParameterOfTypes<PropertiesSettings, FieldsSettings>("T");
             }
 
             return errorBuilder;
@@ -99,7 +99,7 @@
                     }
                     else
                     {
-                        throw Gu.ChangeTracking.Throw.ThrowThereIsABugInTheLibraryExpectedParameterOfTypes<PropertyInfo, FieldInfo>(nameof(member));
+                        throw Gu.ChangeTracking.Throw.ExpectedParameterOfTypes<PropertyInfo, FieldInfo>(nameof(member));
                     }
                 }
 
