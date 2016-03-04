@@ -5,7 +5,7 @@ namespace Gu.ChangeTracking
     using System.Reflection;
     using System.Text;
 
-    internal abstract class MemberError : Error
+    internal abstract class MemberError : Error, IFixWithEquatable, IExcludable
     {
         public MemberError(MemberInfo member, MemberPath path)
         {
@@ -16,6 +16,8 @@ namespace Gu.ChangeTracking
         public MemberInfo MemberInfo { get; }
 
         public MemberPath Path { get; }
+
+        Type IFixWithEquatable.Type => this.SourceType();
 
         public Type SourceType()
         {

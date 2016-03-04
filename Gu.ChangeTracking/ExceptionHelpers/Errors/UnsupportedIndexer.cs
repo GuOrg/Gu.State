@@ -6,7 +6,7 @@ namespace Gu.ChangeTracking
     using System.Text;
 
     [DebuggerDisplay("{GetType().Name} Indexer: {Indexer.Name}")]
-    internal class UnsupportedIndexer : TypeError
+    internal class UnsupportedIndexer : TypeError, IExcludable
     {
         public UnsupportedIndexer(Type type, PropertyInfo indexer)
             : base(type)
@@ -19,17 +19,12 @@ namespace Gu.ChangeTracking
 
         public StringBuilder AppendNotSupported(StringBuilder errorBuilder)
         {
-            return errorBuilder.AppendLine($"The property {this.Type.PrettyName()}.{this.Indexer.Name} of type {this.Indexer.PropertyType.PrettyName()} is an indexer and not supported.");
+            return errorBuilder.AppendLine($"  - The property {this.Type.PrettyName()}.{this.Indexer.Name} is an indexer and not supported.");
         }
 
-        public StringBuilder AppendSuggestExclude(StringBuilder errorBuilder, IMemberSettings settings)
+        StringBuilder IExcludable.AppendSuggestExclude(StringBuilder errorBuilder)
         {
-            if (settings is PropertiesSettings)
-            {
-                return errorBuilder.AppendLine($"  - Exclude the property {this.Type.PrettyName()}.{this.Indexer.Name}.");
-            }
-
-            return errorBuilder;
+            return errorBuilder.AppendLine($"  - Exclude the indexer property {this.Type.PrettyName()}.{this.Indexer.Name}.");
         }
     }
 }

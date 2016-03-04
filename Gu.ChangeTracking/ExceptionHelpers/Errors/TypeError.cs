@@ -3,7 +3,7 @@ namespace Gu.ChangeTracking
     using System;
     using System.Text;
 
-    internal abstract class TypeError : Error
+    internal abstract class TypeError : Error, IFixWithEquatable, IExcludable
     {
         public TypeError(Type type)
         {
@@ -12,7 +12,7 @@ namespace Gu.ChangeTracking
 
         public Type Type { get; }
 
-        public StringBuilder AppendSuggestExclude(StringBuilder errorBuilder)
+        StringBuilder IExcludable.AppendSuggestExclude(StringBuilder errorBuilder)
         {
             return errorBuilder.AppendLine($"  - Exclude the type {this.Type.PrettyName()}.");
         }

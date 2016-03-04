@@ -11,7 +11,7 @@
         internal static StringBuilder AppendSuggestFixFor<TError>(this StringBuilder errorBuilder, TypeErrors errors, Func<StringBuilder, TError, StringBuilder> fix)
             where TError : Error
         {
-            foreach (var up in errors.Errors.OfType<TError>())
+            foreach (var up in errors.OfType<TError>())
             {
                 errorBuilder = fix(errorBuilder.CreateIfNull(), up);
             }
@@ -21,8 +21,8 @@
 
         internal static StringBuilder AppendSuggestExcludeTypes(this StringBuilder errorBuilder, TypeErrors errors)
         {
-            var types = errors.Errors.OfType<TypeErrors>().Select(x => x.Type);
-            var memberTypes = errors.Errors.OfType<MemberError>().Select(x => x.MemberInfo.DeclaringType).Where(t => t != null);
+            var types = errors.OfType<TypeErrors>().Select(x => x.Type);
+            var memberTypes = errors.OfType<MemberError>().Select(x => x.MemberInfo.DeclaringType).Where(t => t != null);
             types = types.Concat(memberTypes)
                          .Distinct();
             foreach (var type in types)
@@ -36,19 +36,13 @@
 
         internal static StringBuilder AppendSuggestExclude(this StringBuilder errorBuilder, TypeErrors errors, IMemberSettings settings)
         {
-            foreach (var error in errors.OfType<TypeError>())
+            if (errors.OfType<IExcludable>().Any())
             {
-                error.AppendSuggestExclude(errorBuilder);
-            }
-
-            foreach (var error in errors.OfType<MemberError>())
-            {
-                error.AppendSuggestExclude(errorBuilder);
-            }
-
-            foreach (var error in errors.OfType<UnsupportedIndexer>())
-            {
-                error.AppendSuggestExclude(errorBuilder, settings);
+                errorBuilder.AppendLine("  - Exclude any or all of the following:");
+                foreach (var error in errors.OfType<IExcludable>())
+                {
+                    error.AppendSuggestExclude(errorBuilder);
+                }
             }
 
             return errorBuilder;
@@ -91,30 +85,16 @@
             return errorBuilder;
         }
 
-        private static StringBuilder AppendUnsupportedProperties(this StringBuilder errorBuilder, TypeErrors errors)
+        internal static StringBuilder AppendSuggestEquatable(this StringBuilder errorBuilder, TypeErrors errors)
         {
-            throw new NotImplementedException("message");
-            //foreach (var memberErrors in errors.Errors)
-            //{
-            //    var propertyInfo = (PropertyInfo)memberErrors.MemberInfo;
-            //    errorBuilder = errorBuilder.CreateIfNull()
-            //                               .AppendLine($"The property {errors.Type.PrettyName()}.{propertyInfo.Name} of type {propertyInfo.PropertyType.PrettyName()} is not supported.");
-            //}
-
-            //return errorBuilder;
-        }
-
-        private static StringBuilder AppendUnsupportedFields(this StringBuilder errorBuilder, Type type, IEnumerable<FieldInfo> unSupportedProperties)
-        {
-            if (unSupportedProperties == null)
+            const string format = "IEquatable<{0}>";
+            foreach (var type in errors.OfType<IFixWithEquatable>().Select(x => x.Type).Distinct())
             {
-                return errorBuilder;
-            }
-
-            foreach (var property in unSupportedProperties)
-            {
-                errorBuilder = errorBuilder.CreateIfNull()
-                                           .AppendLine($"The field {type.PrettyName()}.{property.Name} of type {property.FieldType.PrettyName()} is not supported.");
+                var iEquatable = string.Format(format, type.PrettyName());
+                var line = type.Assembly == typeof(int).Assembly
+                    ? $"* Use a type that implements {iEquatable} instead of {type.PrettyName()}."
+                    : $"* Implement {iEquatable}> for {type.PrettyName()} or use a type that does.";
+                errorBuilder.AppendLine(line);
             }
 
             return errorBuilder;

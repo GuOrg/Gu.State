@@ -44,6 +44,8 @@
     <Compile Include="ChangeTracker\PropertyChangeTracker.cs" />
     <Compile Include="EqualBy\EqualBy.Verify.cs" />
     <Compile Include="ExceptionHelpers\Errors\Error.cs" />
+    <Compile Include="ExceptionHelpers\Errors\IExcludable.cs" />
+    <Compile Include="ExceptionHelpers\Errors\IFixWithEquatable.cs" />
     <Compile Include="ExceptionHelpers\Errors\MemberError.cs" />
     <Compile Include="ExceptionHelpers\Errors\ReferenceLoop.cs" />
     <Compile Include="ExceptionHelpers\Errors\RequiresReferenceHandling.cs" />

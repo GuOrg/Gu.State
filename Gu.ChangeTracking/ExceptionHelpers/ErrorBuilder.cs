@@ -16,8 +16,8 @@ namespace Gu.ChangeTracking
         {
             if (typeof(IEnumerable).IsAssignableFrom(type) && settings.ReferenceHandling == ReferenceHandling.Throw)
             {
-                typeErrors = typeErrors.CreateIfNull(type);
-                typeErrors.Errors.Add(new RequiresReferenceHandling(type));
+                typeErrors = typeErrors.CreateIfNull(type)
+                                       .Add(new RequiresReferenceHandling(type));
             }
 
             return typeErrors;
@@ -45,8 +45,8 @@ namespace Gu.ChangeTracking
                     continue;
                 }
 
-                typeErrors = typeErrors.CreateIfNull(type);
-                typeErrors.Errors.Add(new UnsupportedIndexer(type, propertyInfo));
+                typeErrors = typeErrors.CreateIfNull(type)
+                                       .Add(new UnsupportedIndexer(type, propertyInfo));
             }
 
             return typeErrors;
@@ -82,7 +82,7 @@ namespace Gu.ChangeTracking
                     memberPath = new MemberPath(type);
                 }
 
-                CheckMember(ref typeErrors, type, settings, memberPath, getPropertyErrors, propertyInfo);
+                typeErrors = CheckMember(typeErrors, type, settings, memberPath, getPropertyErrors, propertyInfo);
             }
 
             return typeErrors;
@@ -113,14 +113,14 @@ namespace Gu.ChangeTracking
                     memberPath = new MemberPath(type);
                 }
 
-                CheckMember(ref typeErrors, type, settings, memberPath, getFieldErrors, fieldInfo);
+                typeErrors = CheckMember(typeErrors, type, settings, memberPath, getFieldErrors, fieldInfo);
             }
 
             return typeErrors;
         }
 
-        private static void CheckMember<TMember, TSettings>(
-            ref TypeErrors typeErrors,
+        private static TypeErrors CheckMember<TMember, TSettings>(
+            TypeErrors typeErrors,
             Type type,
             TSettings settings,
             MemberPath memberPath,
@@ -133,15 +133,15 @@ namespace Gu.ChangeTracking
             {
                 if (settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops)
                 {
-                    return;
+                    return typeErrors;
                 }
 
                 if (settings.ReferenceHandling == ReferenceHandling.Structural)
                 {
-                    typeErrors = typeErrors.CreateIfNull(type);
                     memberPath = memberPath.WithMember(memberInfo);
-                    typeErrors.Errors.Add(new ReferenceLoop(memberInfo, memberPath));
-                    return;
+                    typeErrors = typeErrors.CreateIfNull(type)
+                                           .Add(new ReferenceLoop(memberInfo, memberPath));
+                    return typeErrors;
                 }
             }
 
@@ -149,11 +149,12 @@ namespace Gu.ChangeTracking
             var propertyErrors = getMemberErrors(type, memberInfo, settings, memberPath);
             if (propertyErrors == null)
             {
-                return;
+                return typeErrors;
             }
 
-            typeErrors = typeErrors.CreateIfNull(type);
-            typeErrors.Errors.Add(propertyErrors);
+            typeErrors = typeErrors.CreateIfNull(type)
+                                   .Add(propertyErrors);
+            return typeErrors;
         }
 
         private static TypeErrors CreateIfNull(this TypeErrors errors, Type type)
