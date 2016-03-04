@@ -7,8 +7,6 @@
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
 
-    using Gu.ChangeTracking.Tests.PropertySynchronizerStubs;
-
     using JetBrains.Annotations;
 
     public static class SynchronizerTypes

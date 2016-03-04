@@ -1,7 +1,6 @@
 ﻿namespace Gu.ChangeTracking.Tests.EqualByTests
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
 
     public class EqualByTestsShared
