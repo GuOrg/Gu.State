@@ -17,12 +17,13 @@
                 if (match != null)
                 {
                     match.RefCount++;
-                    return match.Tracker;
+                    return match;
                 }
 
                 var tracker = creator();
-                this.items.Add(new TrackerReference(item, tracker));
-                return tracker;
+                var trackerReference = new TrackerReference(item, tracker, this);
+                this.items.Add(trackerReference);
+                return trackerReference;
             }
         }
 
@@ -47,18 +48,28 @@
         {
             internal readonly object Item;
             internal readonly IDisposable Tracker;
+            private readonly SingleItemTrackerReferenceCollection parent;
             internal int RefCount;
 
-            public TrackerReference(object item, IDisposable tracker)
+            public TrackerReference(object item, IDisposable tracker, SingleItemTrackerReferenceCollection parent)
             {
                 this.Item = item;
                 this.Tracker = tracker;
+                this.parent = parent;
                 this.RefCount = 1;
             }
 
             public void Dispose()
             {
-                this.Tracker.Dispose();
+                lock (this.parent.gate)
+                {
+                    this.RefCount--;
+                    if (this.RefCount == 0)
+                    {
+                        this.Tracker.Dispose();
+                        this.parent.Remove(this);
+                    }
+                }
             }
         }
     }
