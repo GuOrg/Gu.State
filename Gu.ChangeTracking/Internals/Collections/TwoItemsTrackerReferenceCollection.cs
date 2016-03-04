@@ -14,6 +14,7 @@
         {
             foreach (var trackerReference in this.items)
             {
+                trackerReference.RefCount = 0;
                 trackerReference.Tracker.Dispose();
             }
 
