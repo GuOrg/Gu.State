@@ -2,8 +2,6 @@
 {
     using System.Collections.Generic;
 
-    using Gu.ChangeTracking.Tests.PropertySynchronizerStubs;
-
     using NUnit.Framework;
 
     public partial class PropertySynchronizerTests

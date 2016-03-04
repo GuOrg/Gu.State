@@ -1,7 +1,6 @@
 ﻿namespace Gu.ChangeTracking.Tests
 {
     using System.Collections.ObjectModel;
-    using Gu.ChangeTracking.Tests.PropertySynchronizerStubs;
 
     using NUnit.Framework;
 
