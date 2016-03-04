@@ -18,6 +18,18 @@
         /// Use this to fail fast or in unit tests.
         /// </summary>
         /// <typeparam name="T">The type to check</typeparam>
+        public static void VerifyCanTrack<T>()
+        {
+            VerifyCanTrack<T>(PropertiesSettings.GetOrCreate());
+        }
+
+        /// <summary>
+        /// Check if the properties of <typeparamref name="T"/> can be tracked.
+        /// This method will throw an exception if synchronization cannot be performed for <typeparamref name="T"/>
+        /// Read the exception message for detailed instructions about what is wrong.
+        /// Use this to fail fast or in unit tests.
+        /// </summary>
+        /// <typeparam name="T">The type to check</typeparam>
         /// <param name="settings">Contains configuration for how tracking will be performed</param>
         public static void VerifyCanTrack<T>(PropertiesSettings settings)
         {
