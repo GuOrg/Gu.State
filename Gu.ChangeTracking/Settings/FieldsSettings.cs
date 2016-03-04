@@ -28,7 +28,7 @@
         {
         }
 
-        public IEnumerable<FieldInfo> IgnoredFields => this.IgnoredMembers;
+        public IEnumerable<FieldInfo> IgnoredFields => this.IgnoredMembers.Keys;
 
         public static FieldsSettingsBuilder Build()
         {
@@ -65,7 +65,7 @@
                 return true;
             }
 
-            return this.IsIgnoringMember(fieldInfo);
+            return this.IgnoredMembers.ContainsKey(fieldInfo);
         }
     }
 }

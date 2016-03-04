@@ -20,8 +20,6 @@
         /// <summary>
         /// http://stackoverflow.com/a/263416/1069200
         /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
         public int GetHashCode(T obj)
         {
             unchecked
