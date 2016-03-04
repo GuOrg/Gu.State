@@ -6,6 +6,11 @@
 
     public static partial class EqualBy
     {
+        internal static StringBuilder AppendSuggestImplementIEquatable(this StringBuilder errorBuilder, Type sourceType)
+        {
+            return errorBuilder.AppendSuggestImplement(sourceType, $"IEquatable<{sourceType.PrettyName()}>");
+        }
+
         private static StringBuilder AppendEqualByFailed<T>(this StringBuilder errorBuilder)
             where T : class, IMemberSettings
         {
@@ -28,11 +33,6 @@
         private static StringBuilder AppendSuggestImplementIEquatable(this StringBuilder errorBuilder, MemberInfo member)
         {
             return errorBuilder.AppendSuggestImplementIEquatable(member.MemberType());
-        }
-
-        internal static StringBuilder AppendSuggestImplementIEquatable(this StringBuilder errorBuilder, Type sourceType)
-        {
-            return errorBuilder.AppendSuggestImplement(sourceType, $"IEquatable<{sourceType.PrettyName()}>");
         }
 
         private static void ThrowIfHasErrors<TSetting>(this IErrors errors, Type type, TSetting settings)

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Reflection;
     using System.Text;
 
@@ -66,6 +67,7 @@
             {
                 foreach (var up in errors.UnsupportedIndexers)
                 {
+                    Debug.Assert(up.GetIndexParameters().Length > 0, "Must be an indexer");
                     errorBuilder = errorBuilder.CreateIfNull()
                                                .AppendExcludeProperty(errors.Type, up);
                 }

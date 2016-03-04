@@ -4,7 +4,13 @@
 
     public static class SettingsTypes
     {
-        public class ComplexType
+        public interface IComplexType
+        {
+            string Name { get; set; }
+            int Value { get; set; }
+        }
+
+        public class ComplexType : IComplexType
         {
             internal string name;
             internal int value;

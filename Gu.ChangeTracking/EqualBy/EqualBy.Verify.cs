@@ -35,17 +35,17 @@
 
         internal static class Verify
         {
-            internal static Errors GetPropertyErrors(Type type, PropertiesSettings settings)
-            {
-                return VerifyCore(settings, type)
-                    .OnlyValidProperties(type, settings, IsPropertyValid);
-            }
-
             internal static void CanEqualByPropertyValues<T>(T x, T y, PropertiesSettings settings)
             {
                 var type = x?.GetType() ?? y?.GetType() ?? typeof(T);
                 GetPropertyErrors(type, settings)
                     .ThrowIfHasErrors(type, settings);
+            }
+
+            internal static Errors GetPropertyErrors(Type type, PropertiesSettings settings)
+            {
+                return VerifyCore(settings, type)
+                    .OnlyValidProperties(type, settings, IsPropertyValid);
             }
 
             internal static void CanEqualByFieldValues<T>(T x, T y, FieldsSettings settings)
