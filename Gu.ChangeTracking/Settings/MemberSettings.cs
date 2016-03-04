@@ -38,6 +38,8 @@
 
         protected ConcurrentDictionary<T, bool> IgnoredMembers => this.ignoredMembers;
 
+        internal ConcurrentDictionary<Type, IErrors> EqualByErrors => new ConcurrentDictionary<Type, IErrors>();
+
         public bool IsIgnoringDeclaringType(Type declaringType)
         {
             return this.ignoredTypes.IsIgnoringType(declaringType);

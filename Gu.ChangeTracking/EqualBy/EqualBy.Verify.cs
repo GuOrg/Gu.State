@@ -48,10 +48,12 @@
                     .ThrowIfHasErrors(type, settings);
             }
 
-            internal static Errors GetPropertyErrors(Type type, PropertiesSettings settings)
+            internal static IErrors GetPropertyErrors(Type type, PropertiesSettings settings)
             {
-                return VerifyCore(settings, type)
-                    .OnlyValidProperties(type, settings, IsPropertyValid);
+                return settings.EqualByErrors.GetOrAdd(
+                    type,
+                    t => VerifyCore(settings, t)
+                             .OnlyValidProperties(t, settings, IsPropertyValid));
             }
 
             internal static void CanEqualByFieldValues<T>(T x, T y, FieldsSettings settings)
@@ -61,10 +63,12 @@
                     .ThrowIfHasErrors(type, settings);
             }
 
-            internal static Errors GetFieldsErrors(Type type, FieldsSettings settings)
+            internal static IErrors GetFieldsErrors(Type type, FieldsSettings settings)
             {
-                return VerifyCore(settings, type)
-                    .OnlyValidFields(type, settings, IsFieldValid);
+                return settings.EqualByErrors.GetOrAdd(
+                    type,
+                    t => VerifyCore(settings, t)
+                             .OnlyValidFields(t, settings, IsFieldValid));
             }
 
             private static Errors VerifyCore(IMemberSettings settings, Type type)
