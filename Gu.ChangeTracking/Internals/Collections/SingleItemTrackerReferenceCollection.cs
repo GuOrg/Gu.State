@@ -4,10 +4,21 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    internal class SingleItemTrackerReferenceCollection
+    internal sealed class SingleItemTrackerReferenceCollection : IDisposable
     {
         private readonly List<TrackerReference> items = new List<TrackerReference>();
         private readonly object gate = new object();
+
+        public void Dispose()
+        {
+            foreach (var trackerReference in this.items)
+            {
+                trackerReference.RefCount = 0;
+                trackerReference.Tracker.Dispose();
+            }
+
+            this.items.Clear();
+        }
 
         internal IDisposable GetOrAdd(object item, Func<IDisposable> creator)
         {
