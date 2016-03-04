@@ -4,7 +4,7 @@ namespace Gu.ChangeTracking
     using System.ComponentModel;
     using System.Reflection;
 
-    public static partial class PropertySynchronizer
+    public static partial class Synchronizer
     {
         /// <summary>
         /// Synchronizes property values from source to target.
@@ -18,7 +18,7 @@ namespace Gu.ChangeTracking
         /// Activator.CreateInstance is sued to new up references so a default constructor is required, can be private
         /// </param>
         /// <returns>A disposable that when disposed stops synchronizing</returns>
-        public static IDisposable Create<T>(
+        public static IDisposable CreatePropertySynchronizer<T>(
             T source,
             T target,
             BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags,
@@ -37,7 +37,7 @@ namespace Gu.ChangeTracking
         /// <param name="target">The instance to copy property values to</param>
         /// <param name="settings">Contains configuration for how synchronization will be performed</param>
         /// <returns>A disposable that when disposed stops synchronizing</returns>
-        public static IDisposable Create<T>(T source, T target, PropertiesSettings settings)
+        public static IDisposable CreatePropertySynchronizer<T>(T source, T target, PropertiesSettings settings)
             where T : class, INotifyPropertyChanged
         {
             return new PropertySynchronizer<T>(source, target, settings);
