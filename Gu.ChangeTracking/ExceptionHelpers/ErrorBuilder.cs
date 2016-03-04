@@ -6,24 +6,24 @@ namespace Gu.ChangeTracking
 
     internal static class ErrorBuilder
     {
-        public static Errors Start()
+        public static TypeErrors Start()
         {
             return null;
         }
 
-        public static Errors HasReferenceHandlingIfEnumerable<TSetting>(this Errors errors, Type type, TSetting settings)
+        public static TypeErrors CheckReferenceHandlingIfEnumerable<TSetting>(this TypeErrors typeErrors, Type type, TSetting settings)
             where TSetting : IMemberSettings
         {
             if (typeof(IEnumerable).IsAssignableFrom(type) && settings.ReferenceHandling == ReferenceHandling.Throw)
             {
-                errors = errors.Create(type);
-                ((IErrors)errors).UnsupportedTypes.Add(type);
+                typeErrors = typeErrors.CreateIfNull(type);
+                typeErrors.Errors.Add(new RequiresReferenceHandling(type));
             }
 
-            return errors;
+            return typeErrors;
         }
 
-        public static Errors OnlySupportedIndexers<T>(this Errors errors, Type type, T settings)
+        public static TypeErrors CheckIndexers<T>(this TypeErrors typeErrors, Type type, T settings)
             where T : IMemberSettings
         {
             var propertiesSettings = settings as PropertiesSettings;
@@ -45,15 +45,25 @@ namespace Gu.ChangeTracking
                     continue;
                 }
 
-                errors = errors.Create(type);
-                ((IErrors)errors).UnsupportedIndexers.Add(propertyInfo);
+                typeErrors = typeErrors.CreateIfNull(type);
+                typeErrors.Errors.Add(new UnsupportedIndexer(type, propertyInfo));
             }
 
-            return errors;
+            return typeErrors;
         }
 
-        public static Errors OnlyValidProperties(this Errors errors, Type type, PropertiesSettings settings, Func<PropertyInfo, PropertiesSettings, bool> isPropertyValid)
+        public static TypeErrors CheckProperties(
+            this TypeErrors typeErrors,
+            Type type,
+            PropertiesSettings settings,
+            MemberPath memberPath,
+            Func<Type, PropertyInfo, PropertiesSettings, MemberPath, TypeErrors> getPropertyErrors)
         {
+            if (settings.ReferenceHandling == ReferenceHandling.References)
+            {
+                return typeErrors;
+            }
+
             var propertyInfos = type.GetProperties(settings.BindingFlags);
             foreach (var propertyInfo in propertyInfos)
             {
@@ -67,44 +77,88 @@ namespace Gu.ChangeTracking
                     continue;
                 }
 
-                if (isPropertyValid(propertyInfo, settings))
+                if (memberPath == null)
                 {
-                    continue;
+                    memberPath = new MemberPath(type);
                 }
 
-                errors = errors.Create(type);
-                ((IErrors)errors).UnsupportedProperties.Add(propertyInfo);
+                CheckMember(ref typeErrors, type, settings, memberPath, getPropertyErrors, propertyInfo);
             }
 
-            return errors;
+            return typeErrors;
         }
 
-        public static Errors OnlyValidFields<T>(this Errors errors, Type type, T settings, Func<FieldInfo, T, bool> isPropertyValid)
-            where T : IMemberSettings
+        public static TypeErrors CheckFields(
+            this TypeErrors typeErrors,
+            Type type,
+            FieldsSettings settings,
+            MemberPath memberPath,
+            Func<Type, FieldInfo, FieldsSettings, MemberPath, TypeErrors> getFieldErrors)
         {
-            var fields = type.GetFields(settings.BindingFlags);
-            foreach (var field in fields)
+            if (settings.ReferenceHandling == ReferenceHandling.References)
             {
-                if (field.IsEventField())
-                {
-                    continue;
-                }
-
-                if (isPropertyValid(field, settings))
-                {
-                    continue;
-                }
-
-                errors = errors.Create(type);
-                ((IErrors)errors).UnsupportedFields.Add(field);
+                return typeErrors;
             }
 
-            return errors;
+            var fields = type.GetFields(settings.BindingFlags);
+            foreach (var fieldInfo in fields)
+            {
+                if (settings.IsIgnoringField(fieldInfo))
+                {
+                    continue;
+                }
+
+                if (memberPath == null)
+                {
+                    memberPath = new MemberPath(type);
+                }
+
+                CheckMember(ref typeErrors, type, settings, memberPath, getFieldErrors, fieldInfo);
+            }
+
+            return typeErrors;
         }
 
-        private static Errors Create(this IErrors errors, Type type)
+        private static void CheckMember<TMember, TSettings>(
+            ref TypeErrors typeErrors,
+            Type type,
+            TSettings settings,
+            MemberPath memberPath,
+            Func<Type, TMember, TSettings, MemberPath, TypeErrors> getMemberErrors,
+            TMember memberInfo)
+            where TMember : MemberInfo
+            where TSettings : class, IMemberSettings
         {
-            return (Errors)(errors ?? new Errors(type));
+            if (memberPath.Contains(memberInfo))
+            {
+                if (settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops)
+                {
+                    return;
+                }
+
+                if (settings.ReferenceHandling == ReferenceHandling.Structural)
+                {
+                    typeErrors = typeErrors.CreateIfNull(type);
+                    memberPath = memberPath.WithMember(memberInfo);
+                    typeErrors.Errors.Add(new ReferenceLoop(memberInfo, memberPath));
+                    return;
+                }
+            }
+
+            memberPath = memberPath.WithMember(memberInfo);
+            var propertyErrors = getMemberErrors(type, memberInfo, settings, memberPath);
+            if (propertyErrors == null)
+            {
+                return;
+            }
+
+            typeErrors = typeErrors.CreateIfNull(type);
+            typeErrors.Errors.Add(propertyErrors);
+        }
+
+        private static TypeErrors CreateIfNull(this TypeErrors errors, Type type)
+        {
+            return errors ?? new TypeErrors(type);
         }
     }
 }

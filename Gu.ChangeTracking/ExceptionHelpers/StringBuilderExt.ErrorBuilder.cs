@@ -2,20 +2,16 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
+    using System.Linq;
     using System.Reflection;
     using System.Text;
 
     internal static partial class StringBuilderExt
     {
-        internal static StringBuilder AppendSuggestFixForUnsupportedMembers(this StringBuilder errorBuilder, IErrors errors, Func<StringBuilder, MemberInfo, StringBuilder> fix)
+        internal static StringBuilder AppendSuggestFixFor<TError>(this StringBuilder errorBuilder, TypeErrors errors, Func<StringBuilder, TError, StringBuilder> fix)
+            where TError : Error
         {
-            foreach (var uf in errors.UnsupportedFields)
-            {
-                errorBuilder = fix(errorBuilder.CreateIfNull(), uf);
-            }
-
-            foreach (var up in errors.UnsupportedProperties)
+            foreach (var up in errors.Errors.OfType<TError>())
             {
                 errorBuilder = fix(errorBuilder.CreateIfNull(), up);
             }
@@ -23,82 +19,64 @@
             return errorBuilder;
         }
 
-        internal static StringBuilder AppendSuggestFixForUnsupportedTypes(this StringBuilder errorBuilder, IErrors errors, Func<StringBuilder, Type, StringBuilder> fix)
+        internal static StringBuilder AppendSuggestExcludeTypes(this StringBuilder errorBuilder, TypeErrors errors)
         {
-            foreach (var ut in errors.UnsupportedTypes)
+            var types = errors.Errors.OfType<TypeErrors>().Select(x => x.Type);
+            var memberTypes = errors.Errors.OfType<MemberError>().Select(x => x.MemberInfo.DeclaringType).Where(t => t != null);
+            types = types.Concat(memberTypes)
+                         .Distinct();
+            foreach (var type in types)
             {
-                errorBuilder = fix(errorBuilder.CreateIfNull(), ut);
+                errorBuilder = errorBuilder.CreateIfNull()
+                                           .AppendExcludeType(type);
             }
 
             return errorBuilder;
         }
 
-        internal static StringBuilder AppendSuggestExcludeUnsupportedTypes(this StringBuilder errorBuilder, IErrors errors)
+        internal static StringBuilder AppendSuggestExclude(this StringBuilder errorBuilder, TypeErrors errors, IMemberSettings settings)
         {
-            foreach (var ut in errors.UnsupportedTypes)
+            foreach (var error in errors.OfType<TypeError>())
             {
-                errorBuilder = errorBuilder.CreateIfNull()
-                                           .AppendExcludeType(ut);
+                error.AppendSuggestExclude(errorBuilder);
+            }
+
+            foreach (var error in errors.OfType<MemberError>())
+            {
+                error.AppendSuggestExclude(errorBuilder);
+            }
+
+            foreach (var error in errors.OfType<UnsupportedIndexer>())
+            {
+                error.AppendSuggestExclude(errorBuilder, settings);
             }
 
             return errorBuilder;
         }
 
-        internal static StringBuilder AppendSuggestExcludeUnsupportedMembers(this StringBuilder errorBuilder, IErrors errors)
+        internal static StringBuilder AppendErrors(this StringBuilder errorBuilder, TypeErrors errors)
         {
-            foreach (var uf in errors.UnsupportedFields)
+            foreach (var error in errors.OfType<MemberError>())
             {
-                errorBuilder = errorBuilder.CreateIfNull()
-                                           .AppendExcludeField(errors.Type, uf);
+                error.AppendNotSupported(errorBuilder);
             }
 
-            foreach (var up in errors.UnsupportedProperties)
+            if (errors.OfType<UnsupportedIndexer>()
+                      .Any())
             {
-                errorBuilder = errorBuilder.CreateIfNull()
-                                           .AppendExcludeProperty(errors.Type, up);
-            }
-
-            return errorBuilder;
-        }
-
-        internal static StringBuilder AppendSuggestExcludeUnsupportedIndexers(this StringBuilder errorBuilder, IErrors errors, IMemberSettings settings)
-        {
-            if (settings is PropertiesSettings)
-            {
-                foreach (var up in errors.UnsupportedIndexers)
+                errorBuilder.AppendLine("Indexers are not supported.");
+                foreach (var error in errors.OfType<UnsupportedIndexer>())
                 {
-                    Debug.Assert(up.GetIndexParameters().Length > 0, "Must be an indexer");
-                    errorBuilder = errorBuilder.CreateIfNull()
-                                               .AppendExcludeProperty(errors.Type, up);
+                    error.AppendNotSupported(errorBuilder);
                 }
             }
 
             return errorBuilder;
         }
 
-        internal static StringBuilder AppendUnsupportedMembers<TSettings>(this StringBuilder errorBuilder, Type type, IErrors errors)
-            where TSettings : class, IMemberSettings
+        internal static StringBuilder AppendUnsupportedIndexers(this StringBuilder errorBuilder, Type type, IEnumerable<PropertyInfo> unSupportedIndexers)
         {
-            if (typeof(TSettings).IsAssignableFrom(typeof(PropertiesSettings)))
-            {
-                return errorBuilder.CreateIfNull()
-                                   .AppendUnsupportedProperties(type, errors.UnsupportedProperties)
-                                   .AppendUnsupportedIndexers(type, errors.UnsupportedIndexers);
-            }
-
-            if (typeof(TSettings).IsAssignableFrom(typeof(FieldsSettings)))
-            {
-                return errorBuilder.CreateIfNull()
-                                   .AppendUnsupportedFields(type, errors.UnsupportedFields)
-                                   .AppendUnsupportedIndexers(type, errors.UnsupportedIndexers);
-            }
-
-            throw Throw.ExpectedParameterOfTypes<PropertiesSettings, FieldsSettings>("{T}");
-        }
-
-        internal static StringBuilder AppendUnsupportedIndexers(this StringBuilder errorBuilder, Type type, IReadOnlyList<PropertyInfo> unSupportedIndexers)
-        {
-            if (unSupportedIndexers == null || unSupportedIndexers.Count == 0)
+            if (unSupportedIndexers == null || !unSupportedIndexers.Any())
             {
                 return errorBuilder;
             }
@@ -113,23 +91,20 @@
             return errorBuilder;
         }
 
-        internal static StringBuilder AppendUnsupportedProperties(this StringBuilder errorBuilder, Type type, IReadOnlyList<PropertyInfo> unSupportedProperties)
+        private static StringBuilder AppendUnsupportedProperties(this StringBuilder errorBuilder, TypeErrors errors)
         {
-            if (unSupportedProperties == null)
-            {
-                return errorBuilder;
-            }
+            throw new NotImplementedException("message");
+            //foreach (var memberErrors in errors.Errors)
+            //{
+            //    var propertyInfo = (PropertyInfo)memberErrors.MemberInfo;
+            //    errorBuilder = errorBuilder.CreateIfNull()
+            //                               .AppendLine($"The property {errors.Type.PrettyName()}.{propertyInfo.Name} of type {propertyInfo.PropertyType.PrettyName()} is not supported.");
+            //}
 
-            foreach (var property in unSupportedProperties)
-            {
-                errorBuilder = errorBuilder.CreateIfNull()
-                                           .AppendLine($"The property {type.PrettyName()}.{property.Name} of type {property.PropertyType.PrettyName()} is not supported.");
-            }
-
-            return errorBuilder;
+            //return errorBuilder;
         }
 
-        internal static StringBuilder AppendUnsupportedFields(this StringBuilder errorBuilder, Type type, IReadOnlyList<FieldInfo> unSupportedProperties)
+        private static StringBuilder AppendUnsupportedFields(this StringBuilder errorBuilder, Type type, IEnumerable<FieldInfo> unSupportedProperties)
         {
             if (unSupportedProperties == null)
             {

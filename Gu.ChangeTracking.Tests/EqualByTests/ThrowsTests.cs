@@ -18,6 +18,7 @@ namespace Gu.ChangeTracking.Tests.EqualByTests
             "* Implement IEquatable<ComplexType> for ComplexType or use a type that does.\r\n" +
             "* Use FieldsSettings and specify how comparing is performed:\r\n" +
             "  - ReferenceHandling.Structural means that a deep equals is performed.\r\n" +
+            "  - ReferenceHandling.StructuralWithReferenceLoops means that a deep equals that handles reference loops is performed.\r\n" +
             "  - ReferenceHandling.References means that reference equality is used.\r\n" +
             "  - Exclude the type WithComplexProperty.\r\n" +
             "  - Exclude the field WithComplexProperty.<ComplexType>k__BackingField.\r\n"
@@ -28,6 +29,7 @@ namespace Gu.ChangeTracking.Tests.EqualByTests
             "* Implement IEquatable<ComplexType> for ComplexType or use a type that does.\r\n" +
             "* Use PropertiesSettings and specify how comparing is performed:\r\n" +
             "  - ReferenceHandling.Structural means that a deep equals is performed.\r\n" +
+            "  - ReferenceHandling.StructuralWithReferenceLoops means that a deep equals that handles reference loops is performed.\r\n" +
             "  - ReferenceHandling.References means that reference equality is used.\r\n" +
             "  - Exclude the type WithComplexProperty.\r\n" +
             "  - Exclude the property WithComplexProperty.ComplexType.\r\n";
@@ -45,6 +47,7 @@ namespace Gu.ChangeTracking.Tests.EqualByTests
                                  "Solve the problem by any of:\r\n" +
                                  "* Use FieldsSettings and specify how comparing is performed:\r\n" +
                                  "  - ReferenceHandling.Structural means that a deep equals is performed.\r\n" +
+                                 "  - ReferenceHandling.StructuralWithReferenceLoops means that a deep equals that handles reference loops is performed.\r\n" +
                                  "  - ReferenceHandling.References means that reference equality is used.\r\n" +
                                  "  - Exclude the type WithIndexerType.\r\n"
 
@@ -54,6 +57,7 @@ namespace Gu.ChangeTracking.Tests.EqualByTests
                                  "Solve the problem by any of:\r\n" +
                                  "* Use PropertiesSettings and specify how comparing is performed:\r\n" +
                                  "  - ReferenceHandling.Structural means that a deep equals is performed.\r\n" +
+                                 "  - ReferenceHandling.StructuralWithReferenceLoops means that a deep equals that handles reference loops is performed.\r\n" +
                                  "  - ReferenceHandling.References means that reference equality is used.\r\n" +
                                  "  - Exclude the type WithIndexerType.\r\n" +
                                  "  - Exclude the property WithIndexerType.Item.\r\n";
