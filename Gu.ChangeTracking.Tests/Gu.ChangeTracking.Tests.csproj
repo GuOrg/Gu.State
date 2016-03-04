@@ -62,6 +62,7 @@
     <Compile Include="EqualByTests\FieldValues\Verify.cs" />
     <Compile Include="EqualByTests\PropertyValues\Verify.cs" />
     <Compile Include="EqualByTests\VerifyTests.cs" />
+    <Compile Include="PropertySynchronizer\SynchronizerTypes.cs" />
     <Compile Include="Settings\MemberComparerTests.cs" />
     <Compile Include="Settings\PropertiesSettingsBuilderTests.cs" />
     <Compile Include="Settings\SettingsTypes.cs" />

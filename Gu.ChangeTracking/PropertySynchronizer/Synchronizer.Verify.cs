@@ -3,7 +3,7 @@
     using System;
     using System.Reflection;
 
-    public static partial class PropertySynchronizer
+    public static partial class Synchronizer
     {
         /// <summary>
         /// Check if the properties of <typeparamref name="T"/> can be synchronized.

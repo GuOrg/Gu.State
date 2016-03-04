@@ -13,15 +13,15 @@
             [Test]
             public void HappyPath()
             {
-                var source = new WithSimpleProperties
+                var source = new SynchronizerTypes.WithSimpleProperties
                 {
                     IntValue = 1,
                     NullableIntValue = 2,
                     StringValue = "3",
                     EnumValue = StringSplitOptions.RemoveEmptyEntries
                 };
-                var target = new WithSimpleProperties { IntValue = 3, NullableIntValue = 4 };
-                using (PropertySynchronizer.Create(source, target))
+                var target = new SynchronizerTypes.WithSimpleProperties { IntValue = 3, NullableIntValue = 4 };
+                using (Synchronizer.CreatePropertySynchronizer(source, target))
                 {
                     Assert.AreEqual(1, source.IntValue);
                     Assert.AreEqual(1, target.IntValue);
@@ -45,9 +45,9 @@
             [Test]
             public void WithCalculated()
             {
-                var source = new WithCalculatedProperty { Value = 1 };
-                var target = new WithCalculatedProperty { Value = 3 };
-                using (PropertySynchronizer.Create(source, target))
+                var source = new SynchronizerTypes.WithCalculatedProperty { Value = 1 };
+                var target = new SynchronizerTypes.WithCalculatedProperty { Value = 3 };
+                using (Synchronizer.CreatePropertySynchronizer(source, target))
                 {
                     Assert.AreEqual(1, source.Value);
                     Assert.AreEqual(1, target.Value);
@@ -65,12 +65,12 @@
             [Test]
             public void Excludes()
             {
-                var source = new WithSimpleProperties { IntValue = 1, StringValue = "2" };
-                var target = new WithSimpleProperties { IntValue = 3, StringValue = "4" };
+                var source = new SynchronizerTypes.WithSimpleProperties { IntValue = 1, StringValue = "2" };
+                var target = new SynchronizerTypes.WithSimpleProperties { IntValue = 3, StringValue = "4" };
                 var settings = PropertiesSettings.Build()
-                                                 .AddIgnoredProperty<WithSimpleProperties>(x => x.StringValue)
+                                                 .AddIgnoredProperty<SynchronizerTypes.WithSimpleProperties>(x => x.StringValue)
                                                  .CreateSettings();
-                using (PropertySynchronizer.Create(source, target, settings))
+                using (Synchronizer.CreatePropertySynchronizer(source, target, settings))
                 {
                     Assert.AreEqual(1, source.IntValue);
                     Assert.AreEqual(1, target.IntValue);
@@ -96,9 +96,9 @@
             [Test]
             public void HandlesMissingProperty()
             {
-                var source = new WithSimpleProperties { IntValue = 1, StringValue = "2" };
-                var target = new WithSimpleProperties { IntValue = 3, StringValue = "4" };
-                using (PropertySynchronizer.Create(source, target))
+                var source = new SynchronizerTypes.WithSimpleProperties { IntValue = 1, StringValue = "2" };
+                var target = new SynchronizerTypes.WithSimpleProperties { IntValue = 3, StringValue = "4" };
+                using (Synchronizer.CreatePropertySynchronizer(source, target))
                 {
                     Assert.AreEqual(1, source.IntValue);
                     Assert.AreEqual(1, target.IntValue);
@@ -123,9 +123,9 @@
             [TestCase("")]
             public void UpdatesAll(string prop)
             {
-                var source = new WithSimpleProperties { IntValue = 1, StringValue = "2" };
-                var target = new WithSimpleProperties { IntValue = 3, StringValue = "4" };
-                using (PropertySynchronizer.Create(source, target))
+                var source = new SynchronizerTypes.WithSimpleProperties { IntValue = 1, StringValue = "2" };
+                var target = new SynchronizerTypes.WithSimpleProperties { IntValue = 3, StringValue = "4" };
+                using (Synchronizer.CreatePropertySynchronizer(source, target))
                 {
                     Assert.AreEqual(1, source.IntValue);
                     Assert.AreEqual(1, target.IntValue);

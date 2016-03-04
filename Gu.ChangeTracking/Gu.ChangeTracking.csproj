@@ -47,6 +47,8 @@
     <Compile Include="ExceptionHelpers\IErrors.cs" />
     <Compile Include="ExceptionHelpers\StringBuilderExt.ErrorBuilder.cs" />
     <Compile Include="ExceptionHelpers\ErrorBuilder.cs" />
+    <Compile Include="PropertySynchronizer\PropertySynchronizer{T}.ItemsSynchronizers.cs" />
+    <Compile Include="PropertySynchronizer\PropertySynchronizer{T}.PropertiesSynchronizers.cs" />
     <Compile Include="Settings\FieldsSettingsBuilder.cs" />
     <Compile Include="Settings\FieldsSettings.cs" />
     <Compile Include="Contracts\IBindingFlags.cs" />
@@ -94,7 +96,7 @@
     <Compile Include="Internals\Reflection\TypeExt.IsImmutable.cs" />
     <Compile Include="Internals\PropertyPath\PropertyPath.cs" />
     <Compile Include="PropertySynchronizer\IPropertySynchronizer.cs" />
-    <Compile Include="PropertySynchronizer\PropertySynchronizer.Verify.cs" />
+    <Compile Include="PropertySynchronizer\Synchronizer.Verify.cs" />
     <Compile Include="ReferenceHandling.cs" />
     <Compile Include="Settings\SpecialCopyProperty.cs" />
     <Compile Include="Copy\Copy.PropertyValues.cs" />
@@ -115,7 +117,7 @@
     <Compile Include="Internals\Reflection\PropertyInfoExt.cs" />
     <Compile Include="Internals\Reflection\TypeExt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PropertySynchronizer\PropertySynchronizer.cs" />
+    <Compile Include="PropertySynchronizer\Synchronizer.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizer{T}.cs" />
     <Compile Include="Settings\PropertiesSettings.cs" />
     <Compile Include="Copy\Copy.FieldValues.cs" />
