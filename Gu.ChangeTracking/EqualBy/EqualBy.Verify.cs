@@ -5,9 +5,12 @@
 
     public static partial class EqualBy
     {
-        public static void VerifyCanEqualByPropertyValues<T>()
+        public static void VerifyCanEqualByPropertyValues<T>(
+            BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags,
+            ReferenceHandling referenceHandling = ReferenceHandling.Throw)
         {
-            VerifyCanEqualByPropertyValues<T>(PropertiesSettings.GetOrCreate());
+            var settings = PropertiesSettings.GetOrCreate(bindingFlags, referenceHandling);
+            VerifyCanEqualByPropertyValues<T>(settings);
         }
 
         public static void VerifyCanEqualByPropertyValues<T>(PropertiesSettings settings)
@@ -21,9 +24,12 @@
             Verify.GetPropertyErrors(type, settings).ThrowIfHasErrors(type, settings);
         }
 
-        public static void VerifyCanEqualByFieldValues<T>()
+        public static void VerifyCanEqualByFieldValues<T>(
+            BindingFlags bindingFlags = Constants.DefaultFieldBindingFlags,
+            ReferenceHandling referenceHandling = ReferenceHandling.Throw)
         {
-            VerifyCanEqualByFieldValues<T>(FieldsSettings.GetOrCreate());
+            var settings = FieldsSettings.GetOrCreate(bindingFlags, referenceHandling);
+            VerifyCanEqualByFieldValues<T>(settings);
         }
 
         public static void VerifyCanEqualByFieldValues<T>(FieldsSettings settings)
