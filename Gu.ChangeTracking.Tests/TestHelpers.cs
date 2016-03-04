@@ -1,5 +1,7 @@
 ﻿namespace Gu.ChangeTracking.Tests
 {
+    using NUnit.Framework;
+
     public static class TestHelpers
     {
         public static T GetFieldValue<T>(this object source, string fieldName)

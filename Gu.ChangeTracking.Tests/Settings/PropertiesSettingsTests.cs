@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Reflection;
-
+    using Gu.ChangeTracking.Tests.ChangeTrackerStubs;
     using NUnit.Framework;
 
     public class PropertiesSettingsTests
@@ -45,6 +45,16 @@
             nameProperty = typeof(SettingsTypes.Derived).GetProperty(nameof(SettingsTypes.Derived.Name));
             Assert.AreEqual(true, settings.IsIgnoringProperty(nameProperty));
             Assert.AreEqual(false, settings.IsIgnoringProperty(typeof(SettingsTypes.Derived).GetProperty(nameof(SettingsTypes.Derived.Value))));
+        }
+
+        [Test]
+        public void IgnoresInterfaceProperty()
+        {
+            var settings = PropertiesSettings.Build()
+                                 .AddIgnoredProperty<SettingsTypes.IComplexType>(x => x.Name)
+                                 .CreateSettings();
+            Assert.AreEqual(true, settings.IsIgnoringProperty(typeof(SettingsTypes.ComplexType).GetProperty(nameof(SettingsTypes.ComplexType.Name))));
+            Assert.AreEqual(true, settings.IsIgnoringProperty(typeof(SettingsTypes.IComplexType).GetProperty(nameof(SettingsTypes.ComplexType.Name))));
         }
 
         [Test]
