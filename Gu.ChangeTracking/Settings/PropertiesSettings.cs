@@ -26,7 +26,7 @@
         {
         }
 
-        public IEnumerable<PropertyInfo> IgnoredProperties => this.IgnoredMembers;
+        public IEnumerable<PropertyInfo> IgnoredProperties => this.IgnoredMembers.Keys;
 
         public static PropertiesSettingsBuilder Build()
         {
@@ -60,12 +60,36 @@
                 return true;
             }
 
-            return this.IsIgnoringMember(propertyInfo);
+            return this.IgnoredMembers.GetOrAdd(propertyInfo, this.GetIsIgnoring);
         }
 
         public SpecialCopyProperty GetSpecialCopyProperty(PropertyInfo propertyInfo)
         {
             return null;
+        }
+
+        private bool GetIsIgnoring(PropertyInfo propertyInfo)
+        {
+            foreach (var kvp in this.IgnoredMembers)
+            {
+                if (!kvp.Value)
+                {
+                    continue;
+                }
+
+                var ignoredProperty = kvp.Key;
+                if (ignoredProperty.Name != propertyInfo.Name)
+                {
+                    continue;
+                }
+
+                if (ignoredProperty.DeclaringType?.IsAssignableFrom(propertyInfo.DeclaringType) == true)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }
