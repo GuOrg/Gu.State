@@ -16,6 +16,7 @@
             {
                 trackerReference.Tracker.Dispose();
             }
+
             this.items.Clear();
         }
 
