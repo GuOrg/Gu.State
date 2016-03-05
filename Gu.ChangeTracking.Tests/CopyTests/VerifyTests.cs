@@ -44,11 +44,17 @@
                    : "Copy.PropertyValues(x, y) failed.\r\n" +
                      "The property WithComplexProperty.ComplexType of type ComplexType is not supported.\r\n" +
                      "Solve the problem by any of:\r\n" +
-                     "* Implement IEquatable<WithComplexProperty> for WithComplexProperty or use a type that does.\r\n" +
-                     "* Implement IEquatable<ComplexType> for ComplexType or use a type that does.\r\n" +
+                     "* Make ComplexType immutable or use an immutable type.\r\n" +
+                     "  - For immutable types the following must hold:\r\n" +
+                     "    - Must be a sealed class or a struct.\r\n" +
+                     "    - All fields and properties must be readonly.\r\n" +
+                     "    - All field and property types must be immutable.\r\n" +
+                     "    - All indexers must be readonly.\r\n" +
+                     "    - Event fields are ignored.\r\n" +
                      "* Use PropertiesSettings and specify how comparing is performed:\r\n" +
-                     "  - ReferenceHandling.Structural means that a deep equals is performed.\r\n" +
-                     "  - ReferenceHandling.StructuralWithReferenceLoops means that a deep equals that handles reference loops is performed.\r\n" +
+                     "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
+                     "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but tracks reference loops.\r\n" +
+                     "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
                      "  - ReferenceHandling.References means that reference equality is used.\r\n" +
                      "  - Exclude a combination of the following:\r\n" +
                      "    - The property WithComplexProperty.ComplexType.\r\n" +
