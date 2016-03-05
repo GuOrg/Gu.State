@@ -12,7 +12,7 @@ namespace Gu.ChangeTracking.Tests.Settings
         public void AddPropertyThrowsOnNested()
         {
             var builder = new PropertiesSettingsBuilder();
-            var exception = Assert.Throws<ArgumentException>(() => builder.AddIgnoredProperty<Level>(x => x.Next.Value));
+            var exception = Assert.Throws<ArgumentException>(() => builder.IgnoreProperty<Level>(x => x.Next.Value));
             var expected = "property must be a property expression like foo => foo.Bar\r\n" +
                            "Nested properties are not allowed";
             Assert.AreEqual(expected, exception.Message);

@@ -87,7 +87,8 @@ namespace Gu.ChangeTracking.Tests.EqualByTests
                                  "  - ReferenceHandling.Structural means that a deep equals is performed.\r\n" +
                                  "  - ReferenceHandling.StructuralWithReferenceLoops means that a deep equals that handles reference loops is performed.\r\n" +
                                  "  - ReferenceHandling.References means that reference equality is used.\r\n" +
-                                 "  - Exclude the type WithIndexerType.\r\n"
+                                 "  - Exclude any or all of the following:\r\n" +
+                                 "    - Exclude the type WithIndexerType.\r\n"
 
                                : "EqualBy.PropertyValues(x, y) failed.\r\n" +
                                  "Indexers are not supported.\r\n" +
@@ -97,8 +98,9 @@ namespace Gu.ChangeTracking.Tests.EqualByTests
                                  "  - ReferenceHandling.Structural means that a deep equals is performed.\r\n" +
                                  "  - ReferenceHandling.StructuralWithReferenceLoops means that a deep equals that handles reference loops is performed.\r\n" +
                                  "  - ReferenceHandling.References means that reference equality is used.\r\n" +
-                                 "  - Exclude the type WithIndexerType.\r\n" +
-                                 "  - Exclude the property WithIndexerType.Item.\r\n";
+                                 "  - Exclude any or all of the following:\r\n" +
+                                 "    - Exclude the type WithIndexerType.\r\n" +
+                                 "    - Exclude the property WithIndexerType.Item.\r\n";
 
             var exception = Assert.Throws<NotSupportedException>(() => this.VerifyMethod<EqualByTypes.WithIndexerType>(ReferenceHandling.Structural));
             Assert.AreEqual(expected, exception.Message);

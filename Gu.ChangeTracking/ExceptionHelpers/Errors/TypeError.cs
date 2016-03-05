@@ -14,7 +14,7 @@ namespace Gu.ChangeTracking
 
         StringBuilder IExcludable.AppendSuggestExclude(StringBuilder errorBuilder)
         {
-            return errorBuilder.AppendLine($"  - Exclude the type {this.Type.PrettyName()}.");
+            return errorBuilder.AppendLine($"    - Exclude the type {this.Type.PrettyName()}.");
         }
     }
 }

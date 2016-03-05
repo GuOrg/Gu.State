@@ -24,7 +24,7 @@ namespace Gu.ChangeTracking
 
         StringBuilder IExcludable.AppendSuggestExclude(StringBuilder errorBuilder)
         {
-            return errorBuilder.AppendLine($"  - Exclude the indexer property {this.Type.PrettyName()}.{this.Indexer.Name}.");
+            return errorBuilder.AppendLine($"    - Exclude the indexer property {this.Type.PrettyName()}.{this.Indexer.Name}.");
         }
     }
 }

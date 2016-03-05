@@ -53,13 +53,13 @@ namespace Gu.ChangeTracking
             var fieldInfo = this.MemberInfo as FieldInfo;
             if (fieldInfo != null)
             {
-                return errorBuilder.AppendLine($"  - Exclude the field {this.SourceType()?.PrettyName()}.{fieldInfo.Name}.");
+                return errorBuilder.AppendLine($"    - Exclude the field {this.SourceType()?.PrettyName()}.{fieldInfo.Name}.");
             }
 
             var propertyInfo = this.MemberInfo as PropertyInfo;
             if (propertyInfo != null)
             {
-                return errorBuilder.AppendLine($"  - Exclude the property {this.SourceType()?.PrettyName()}.{propertyInfo.Name}.");
+                return errorBuilder.AppendLine($"    - Exclude the property {this.SourceType()?.PrettyName()}.{propertyInfo.Name}.");
             }
 
             throw Throw.ExpectedParameterOfTypes<FieldInfo, PropertyInfo>(nameof(this.MemberInfo));
