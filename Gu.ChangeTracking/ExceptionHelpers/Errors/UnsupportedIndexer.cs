@@ -6,7 +6,7 @@ namespace Gu.ChangeTracking
     using System.Text;
 
     [DebuggerDisplay("{GetType().Name} Indexer: {Indexer.Name}")]
-    internal class UnsupportedIndexer : TypeError, IExcludable
+    internal sealed class UnsupportedIndexer : TypeError, INotSupported, IExcludableType, IExcludableMember, IFixWithEquatable
     {
         public UnsupportedIndexer(Type type, PropertyInfo indexer)
             : base(type)
@@ -17,14 +17,49 @@ namespace Gu.ChangeTracking
 
         public PropertyInfo Indexer { get; }
 
+        public static bool operator ==(UnsupportedIndexer left, UnsupportedIndexer right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(UnsupportedIndexer left, UnsupportedIndexer right)
+        {
+            return !Equals(left, right);
+        }
+
         public StringBuilder AppendNotSupported(StringBuilder errorBuilder)
         {
             return errorBuilder.AppendLine($"  - The property {this.Type.PrettyName()}.{this.Indexer.Name} is an indexer and not supported.");
         }
 
-        StringBuilder IExcludable.AppendSuggestExclude(StringBuilder errorBuilder)
+        StringBuilder IExcludableMember.AppendSuggestExclude(StringBuilder errorBuilder)
         {
-            return errorBuilder.AppendLine($"    - Exclude the indexer property {this.Type.PrettyName()}.{this.Indexer.Name}.");
+            return errorBuilder.AppendLine($"    - The indexer property {this.Type.PrettyName()}.{this.Indexer.Name}.");
+        }
+
+        private bool Equals(UnsupportedIndexer other)
+        {
+            return this.Indexer.Equals(other.Indexer);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            return obj is UnsupportedIndexer && this.Equals((UnsupportedIndexer)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return this.Indexer.GetHashCode();
         }
     }
 }

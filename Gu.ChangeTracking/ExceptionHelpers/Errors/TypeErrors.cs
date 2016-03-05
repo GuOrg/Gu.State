@@ -5,7 +5,7 @@ namespace Gu.ChangeTracking
     using System.Collections.Generic;
     using System.Linq;
 
-    internal class TypeErrors : Error, IEnumerable<Error>
+    internal sealed class TypeErrors : Error, IErrors
     {
         private readonly List<Error> errors = new List<Error>();
 
@@ -16,7 +16,7 @@ namespace Gu.ChangeTracking
 
         internal Type Type { get; }
 
-        internal IEnumerable<Error> AllErrors => this.errors.Concat(this.errors.OfType<TypeErrors>().SelectMany(x => x.AllErrors));
+        private IEnumerable<Error> AllErrors => this.errors.Concat(this.errors.OfType<IErrors>().SelectMany(es => es));
 
         public IEnumerator<Error> GetEnumerator()
         {

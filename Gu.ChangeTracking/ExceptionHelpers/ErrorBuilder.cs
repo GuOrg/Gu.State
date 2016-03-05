@@ -11,7 +11,7 @@ namespace Gu.ChangeTracking
             return null;
         }
 
-        public static TypeErrors CheckReferenceHandlingIfEnumerable<TSetting>(this TypeErrors typeErrors, Type type, TSetting settings)
+        internal static TypeErrors CheckReferenceHandlingIfEnumerable<TSetting>(this TypeErrors typeErrors, Type type, TSetting settings)
             where TSetting : IMemberSettings
         {
             if (typeof(IEnumerable).IsAssignableFrom(type) && settings.ReferenceHandling == ReferenceHandling.Throw)
@@ -23,7 +23,7 @@ namespace Gu.ChangeTracking
             return typeErrors;
         }
 
-        public static TypeErrors CheckIndexers<T>(this TypeErrors typeErrors, Type type, T settings)
+        internal static TypeErrors CheckIndexers<T>(this TypeErrors typeErrors, Type type, T settings)
             where T : IMemberSettings
         {
             var propertiesSettings = settings as PropertiesSettings;
@@ -52,12 +52,12 @@ namespace Gu.ChangeTracking
             return typeErrors;
         }
 
-        public static TypeErrors CheckProperties(
+        internal static TypeErrors CheckProperties(
             this TypeErrors typeErrors,
             Type type,
             PropertiesSettings settings,
             MemberPath memberPath,
-            Func<Type, PropertyInfo, PropertiesSettings, MemberPath, TypeErrors> getPropertyErrors)
+            Func<Type, PropertyInfo, PropertiesSettings, MemberPath, Error> getPropertyErrors)
         {
             if (settings.ReferenceHandling == ReferenceHandling.References)
             {
@@ -88,12 +88,12 @@ namespace Gu.ChangeTracking
             return typeErrors;
         }
 
-        public static TypeErrors CheckFields(
+        internal static TypeErrors CheckFields(
             this TypeErrors typeErrors,
             Type type,
             FieldsSettings settings,
             MemberPath memberPath,
-            Func<Type, FieldInfo, FieldsSettings, MemberPath, TypeErrors> getFieldErrors)
+            Func<Type, FieldInfo, FieldsSettings, MemberPath, Error> getFieldErrors)
         {
             if (settings.ReferenceHandling == ReferenceHandling.References)
             {
@@ -124,7 +124,7 @@ namespace Gu.ChangeTracking
             Type type,
             TSettings settings,
             MemberPath memberPath,
-            Func<Type, TMember, TSettings, MemberPath, TypeErrors> getMemberErrors,
+            Func<Type, TMember, TSettings, MemberPath, Error> getMemberErrors,
             TMember memberInfo)
             where TMember : MemberInfo
             where TSettings : class, IMemberSettings
@@ -146,14 +146,14 @@ namespace Gu.ChangeTracking
             }
 
             memberPath = memberPath.WithMember(memberInfo);
-            var propertyErrors = getMemberErrors(type, memberInfo, settings, memberPath);
-            if (propertyErrors == null)
+            var memberErrors = getMemberErrors(type, memberInfo, settings, memberPath);
+            if (memberErrors == null)
             {
                 return typeErrors;
             }
 
             typeErrors = typeErrors.CreateIfNull(type)
-                                   .Add(propertyErrors);
+                                   .Add(new MemberTypeErrors(memberInfo, memberPath, memberErrors));
             return typeErrors;
         }
 

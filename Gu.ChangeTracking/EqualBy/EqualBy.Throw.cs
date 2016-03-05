@@ -45,14 +45,14 @@
 
             var errorBuilder = new StringBuilder();
             errorBuilder.AppendEqualByFailed<TSetting>()
-                        .AppendErrors(errors)
+                        .AppendNotSupported(errors)
                         .AppendSolveTheProblemBy()
                         .AppendSuggestEquatable(errors)
                         .AppendLine($"* Use {typeof(TSetting).Name} and specify how comparing is performed:")
                         .AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Structural)} means that a deep equals is performed.")
                         .AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.StructuralWithReferenceLoops)} means that a deep equals that handles reference loops is performed.")
                         .AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.References)} means that reference equality is used.")
-                        .AppendSuggestExclude(errors, settings);
+                        .AppendSuggestExclude(errors);
 
             var message = errorBuilder.ToString();
             throw new NotSupportedException(message);

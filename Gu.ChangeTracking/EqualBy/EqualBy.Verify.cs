@@ -21,7 +21,8 @@
 
         public static void VerifyCanEqualByPropertyValues(Type type, PropertiesSettings settings)
         {
-            Verify.GetPropertiesErrors(type, settings).ThrowIfHasErrors(type, settings);
+            Verify.GetPropertiesErrors(type, settings)
+                  .ThrowIfHasErrors(type, settings);
         }
 
         public static void VerifyCanEqualByFieldValues<T>(
@@ -36,7 +37,7 @@
         {
             var type = typeof(T);
             Verify.GetFieldsErrors(type, settings)
-                .ThrowIfHasErrors(type, settings);
+                  .ThrowIfHasErrors(type, settings);
         }
 
         internal static class Verify
@@ -78,7 +79,7 @@
                                    .CheckIndexers(type, settings);
             }
 
-            private static TypeErrors GetPropertyErrors(Type type, PropertyInfo property, PropertiesSettings settings, MemberPath path)
+            private static Error GetPropertyErrors(Type type, PropertyInfo property, PropertiesSettings settings, MemberPath path)
             {
                 if (property.PropertyType.IsEquatable())
                 {
@@ -92,13 +93,13 @@
 
                 if (settings.ReferenceHandling == ReferenceHandling.Throw)
                 {
-                    return new TypeErrors(property.PropertyType);
+                    return new RequiresReferenceHandling(property.PropertyType);
                 }
 
                 return GetPropertiesErrors(property.PropertyType, settings, path);
             }
 
-            private static TypeErrors GetFieldErrors(Type type, FieldInfo field, FieldsSettings settings, MemberPath path)
+            private static Error GetFieldErrors(Type type, FieldInfo field, FieldsSettings settings, MemberPath path)
             {
                 if (field.FieldType.IsEquatable())
                 {
@@ -112,7 +113,7 @@
 
                 if (settings.ReferenceHandling == ReferenceHandling.Throw)
                 {
-                    return new TypeErrors(field.FieldType);
+                    return new RequiresReferenceHandling(field.FieldType);
                 }
 
                 return GetFieldsErrors(field.FieldType, settings, path);
