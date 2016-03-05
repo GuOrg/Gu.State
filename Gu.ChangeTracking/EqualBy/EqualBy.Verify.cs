@@ -21,7 +21,8 @@
 
         public static void VerifyCanEqualByPropertyValues(Type type, PropertiesSettings settings)
         {
-            Verify.GetPropertyErrors(type, settings).ThrowIfHasErrors(type, settings);
+            Verify.GetPropertiesErrors(type, settings)
+                  .ThrowIfHasErrors(type, settings);
         }
 
         public static void VerifyCanEqualByFieldValues<T>(
@@ -36,7 +37,7 @@
         {
             var type = typeof(T);
             Verify.GetFieldsErrors(type, settings)
-                .ThrowIfHasErrors(type, settings);
+                  .ThrowIfHasErrors(type, settings);
         }
 
         internal static class Verify
@@ -44,16 +45,16 @@
             internal static void CanEqualByPropertyValues<T>(T x, T y, PropertiesSettings settings)
             {
                 var type = x?.GetType() ?? y?.GetType() ?? typeof(T);
-                GetPropertyErrors(type, settings)
+                GetPropertiesErrors(type, settings)
                     .ThrowIfHasErrors(type, settings);
             }
 
-            internal static IErrors GetPropertyErrors(Type type, PropertiesSettings settings)
+            internal static TypeErrors GetPropertiesErrors(Type type, PropertiesSettings settings, MemberPath path = null)
             {
                 return settings.EqualByErrors.GetOrAdd(
                     type,
                     t => VerifyCore(settings, t)
-                             .OnlyValidProperties(t, settings, IsPropertyValid));
+                             .CheckProperties(t, settings, path, GetPropertyErrors));
             }
 
             internal static void CanEqualByFieldValues<T>(T x, T y, FieldsSettings settings)
@@ -63,39 +64,59 @@
                     .ThrowIfHasErrors(type, settings);
             }
 
-            internal static IErrors GetFieldsErrors(Type type, FieldsSettings settings)
+            internal static TypeErrors GetFieldsErrors(Type type, FieldsSettings settings, MemberPath path = null)
             {
                 return settings.EqualByErrors.GetOrAdd(
                     type,
                     t => VerifyCore(settings, t)
-                             .OnlyValidFields(t, settings, IsFieldValid));
+                             .CheckFields(t, settings, path, GetFieldErrors));
             }
 
-            private static Errors VerifyCore(IMemberSettings settings, Type type)
+            private static TypeErrors VerifyCore(IMemberSettings settings, Type type)
             {
                 return ErrorBuilder.Start()
-                                   .HasReferenceHandlingIfEnumerable(type, settings)
-                                   .OnlySupportedIndexers(type, settings);
+                                   .CheckReferenceHandlingIfEnumerable(type, settings)
+                                   .CheckIndexers(type, settings);
             }
 
-            private static bool IsPropertyValid(PropertyInfo property, PropertiesSettings settings)
+            private static Error GetPropertyErrors(Type type, PropertyInfo property, PropertiesSettings settings, MemberPath path)
             {
                 if (property.PropertyType.IsEquatable())
                 {
-                    return true;
+                    return null;
                 }
 
-                return settings.ReferenceHandling != ReferenceHandling.Throw;
+                if (settings.ReferenceHandling == ReferenceHandling.References)
+                {
+                    return null;
+                }
+
+                if (settings.ReferenceHandling == ReferenceHandling.Throw)
+                {
+                    return new RequiresReferenceHandling(property.PropertyType);
+                }
+
+                return GetPropertiesErrors(property.PropertyType, settings, path);
             }
 
-            private static bool IsFieldValid(FieldInfo field, FieldsSettings settings)
+            private static Error GetFieldErrors(Type type, FieldInfo field, FieldsSettings settings, MemberPath path)
             {
                 if (field.FieldType.IsEquatable())
                 {
-                    return true;
+                    return null;
                 }
 
-                return settings.ReferenceHandling != ReferenceHandling.Throw;
+                if (settings.ReferenceHandling == ReferenceHandling.References)
+                {
+                    return null;
+                }
+
+                if (settings.ReferenceHandling == ReferenceHandling.Throw)
+                {
+                    return new RequiresReferenceHandling(field.FieldType);
+                }
+
+                return GetFieldsErrors(field.FieldType, settings, path);
             }
         }
     }

@@ -22,7 +22,7 @@
         private int changes;
         private bool disposed;
 
-        internal ChangeTracker(INotifyPropertyChanged source, PropertiesSettings settings, PropertyPath path)
+        internal ChangeTracker(INotifyPropertyChanged source, PropertiesSettings settings, MemberPath path)
         {
             this.Settings = settings;
             this.Path = path;
@@ -36,7 +36,7 @@
         }
 
         private ChangeTracker(INotifyPropertyChanged source, PropertiesSettings settings)
-            : this(source, settings, new PropertyPath(source.GetType()))
+            : this(source, settings, new MemberPath(source.GetType()))
         {
         }
 
@@ -68,7 +68,7 @@
             }
         }
 
-        internal PropertyPath Path { get; }
+        internal MemberPath Path { get; }
 
         /// <summary>
         /// Creates a tracker that detects and notifies about changes of any property or subproperty of <paramref name="root"/>

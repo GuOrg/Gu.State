@@ -12,7 +12,7 @@
     {
         internal static readonly string ThereIsABugInTheLibrary = "There is a bug in the library as it:";
 
-        internal static StringBuilder AppendCreateFailed<T>(this StringBuilder errorBuilder, PropertyPath path)
+        internal static StringBuilder AppendCreateFailed<T>(this StringBuilder errorBuilder, MemberPath path)
         {
             if (path.Path.Count == 0)
             {
@@ -153,13 +153,13 @@
             return errorBuilder.AppendLine(line);
         }
 
-        internal static StringBuilder AppendSuggestImmutableType(this StringBuilder errorBuilder, PropertyPath propertyPath)
+        internal static StringBuilder AppendSuggestImmutableType(this StringBuilder errorBuilder, MemberPath memberPath)
         {
-            var lastProperty = propertyPath.Path.OfType<PropertyItem>()
+            var lastProperty = memberPath.Path.OfType<PropertyItem>()
                                             .LastOrDefault();
             var line = lastProperty != null
                         ? $"* Use an immutable type instead of {lastProperty.Property.PropertyType.PrettyName()}. For immutable types the following must hold:"
-                        : $"* Make {propertyPath.Root.Type.PrettyName()} immutable or use an immutable type. For immutable types the following must hold:";
+                        : $"* Make {memberPath.Root.Type.PrettyName()} immutable or use an immutable type. For immutable types the following must hold:";
 
             errorBuilder.AppendLine(line);
             return errorBuilder.AppendImmutableConditionsLines();
@@ -179,9 +179,9 @@
             return errorBuilder.AppendImmutableConditionsLines();
         }
 
-        internal static StringBuilder AppendSuggestChangeTrackerSettings(this StringBuilder errorBuilder, Type sourceType, PropertyPath propertyPath)
+        internal static StringBuilder AppendSuggestChangeTrackerSettings(this StringBuilder errorBuilder, Type sourceType, MemberPath memberPath)
         {
-            var lastProperty = propertyPath.Path.OfType<PropertyItem>()
+            var lastProperty = memberPath.Path.OfType<PropertyItem>()
                                            .LastOrDefault();
             errorBuilder.AppendLine($"* Use {typeof(PropertiesSettings).Name} and add a specialcase for {sourceType.PrettyName()} example:");
             errorBuilder.AppendLine($"    settings.AddIgnoredType<{sourceType.PrettyName()}>()");

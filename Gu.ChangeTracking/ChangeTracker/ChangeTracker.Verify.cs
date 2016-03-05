@@ -73,7 +73,7 @@
                     return;
                 }
 
-                IsTrackableType(type, new PropertyPath(type), settings);
+                IsTrackableType(type, new MemberPath(type), settings);
             }
 
             internal static void IsTrackablePropertyValue(Type propertyValueType, PropertyInfo propertyInfo, ChangeTracker tracker)
@@ -98,7 +98,7 @@
                 IsTrackableType(itemType, path, tracker.Settings);
             }
 
-            private static void IsTrackableType(Type type, PropertyPath path, PropertiesSettings settings)
+            private static void IsTrackableType(Type type, MemberPath path, PropertiesSettings settings)
             {
                 var checkedTypes = ValidTypesCache.GetOrCreateValue(settings);
                 if (checkedTypes.Contains(type))
@@ -111,7 +111,7 @@
                 checkedTypes.Add(type);
             }
 
-            private static void IsTrackableIfEnumerable(Type type, PropertyPath propertyPath)
+            private static void IsTrackableIfEnumerable(Type type, MemberPath memberPath)
             {
                 if (!typeof(IEnumerable).IsAssignableFrom(type))
                 {
@@ -121,34 +121,34 @@
                 if (!typeof(INotifyCollectionChanged).IsAssignableFrom(type) || !typeof(INotifyCollectionChanged).IsAssignableFrom(type))
                 {
                     var messageBuilder = new StringBuilder();
-                    messageBuilder.AppendCreateFailed<ChangeTracker>(propertyPath)
+                    messageBuilder.AppendCreateFailed<ChangeTracker>(memberPath)
                                   .AppendSolveTheProblemBy()
                                   .AppendSuggestionsForEnumerableLines(type)
-                                  .AppendSuggestImmutableType(propertyPath)
-                                  .AppendSuggestChangeTrackerSettings(type, propertyPath);
+                                  .AppendSuggestImmutableType(memberPath)
+                                  .AppendSuggestChangeTrackerSettings(type, memberPath);
 
                     var message = messageBuilder.ToString();
                     throw new NotSupportedException(message);
                 }
             }
 
-            private static void IsPropertyChanged(Type type, PropertyPath propertyPath)
+            private static void IsPropertyChanged(Type type, MemberPath memberPath)
             {
                 if (!typeof(INotifyPropertyChanged).IsAssignableFrom(type))
                 {
                     var messageBuilder = new StringBuilder();
-                    messageBuilder.AppendCreateFailed<ChangeTracker>(propertyPath)
+                    messageBuilder.AppendCreateFailed<ChangeTracker>(memberPath)
                                   .AppendSolveTheProblemBy()
                                   .AppendSuggestImplement<INotifyPropertyChanged>(type)
-                                  .AppendSuggestImmutableType(propertyPath)
-                                  .AppendSuggestChangeTrackerSettings(type, propertyPath);
+                                  .AppendSuggestImmutableType(memberPath)
+                                  .AppendSuggestChangeTrackerSettings(type, memberPath);
 
                     var message = messageBuilder.ToString();
                     throw new NotSupportedException(message);
                 }
             }
 
-            private static void CheckProperties(Type type, PropertyPath path, PropertiesSettings settings)
+            private static void CheckProperties(Type type, MemberPath path, PropertiesSettings settings)
             {
                 var properties = PropertiesChangeTrackers.GetTrackProperties(type, settings)
                                          .ToArray();
@@ -174,7 +174,7 @@
                 }
             }
 
-            private static void CheckItemType(Type type, PropertyPath path, PropertiesSettings settings)
+            private static void CheckItemType(Type type, MemberPath path, PropertiesSettings settings)
             {
                 if (!typeof(IEnumerable).IsAssignableFrom(type))
                 {

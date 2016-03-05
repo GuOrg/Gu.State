@@ -2,7 +2,7 @@ namespace Gu.ChangeTracking
 {
     using System.Reflection;
 
-    internal class PropertyItem : PathItem
+    internal class PropertyItem : PathItem , IMemberItem
     {
         public PropertyItem(PropertyInfo property)
         {
@@ -10,5 +10,7 @@ namespace Gu.ChangeTracking
         }
 
         public PropertyInfo Property { get; }
+
+        MemberInfo IMemberItem.Member => this.Property;
     }
 }

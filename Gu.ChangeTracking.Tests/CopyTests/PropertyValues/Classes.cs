@@ -9,12 +9,12 @@
             var builder = PropertiesSettings.Build();
             if (excluded != null)
             {
-                builder.AddIgnoredProperty<T>(excluded);
+                builder.IgnoreProperty<T>(excluded);
             }
 
             //if (excludedType != null)
             //{
-            //    builder.AddImmutableType(excludedType);
+            //    builder.IgnoreType(excludedType);
             //}
 
             var settings = builder.CreateSettings(referenceHandling);

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
 
@@ -22,12 +23,12 @@
             return new PropertiesSettings(this.ignoredProperties, this.ignoredTypes, bindingFlags, referenceHandling);
         }
 
-        public PropertiesSettingsBuilder AddImmutableType<T>()
+        public PropertiesSettingsBuilder IgnoreType<T>()
         {
-            return this.AddImmutableType(typeof(T));
+            return this.IgnoreType(typeof(T));
         }
 
-        public PropertiesSettingsBuilder AddImmutableType(Type type)
+        public PropertiesSettingsBuilder IgnoreType(Type type)
         {
             if (!this.ignoredTypes.Add(type))
             {
@@ -39,7 +40,7 @@
             return this;
         }
 
-        public PropertiesSettingsBuilder AddIgnoredProperty(PropertyInfo property)
+        public PropertiesSettingsBuilder IgnoreProperty(PropertyInfo property)
         {
             if (!this.ignoredProperties.Add(property))
             {
@@ -51,7 +52,7 @@
             return this;
         }
 
-        public PropertiesSettingsBuilder AddIgnoredProperty<TSource>(string name)
+        public PropertiesSettingsBuilder IgnoreProperty<TSource>(string name)
         {
             var propertyInfo = typeof(TSource).GetProperty(name, Constants.DefaultFieldBindingFlags);
             if (propertyInfo == null)
@@ -60,7 +61,7 @@
                               $"Nested properties are not allowed";
                 throw new ArgumentException(message);
             }
-            return this.AddIgnoredProperty(propertyInfo);
+            return this.IgnoreProperty(propertyInfo);
         }
 
         /// <summary>
@@ -68,7 +69,7 @@
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
         /// <param name="property"></param>
-        public PropertiesSettingsBuilder AddIgnoredProperty<TSource>(Expression<Func<TSource, object>> property)
+        public PropertiesSettingsBuilder IgnoreProperty<TSource>(Expression<Func<TSource, object>> property)
         {
             var memberExpression = property.Body as MemberExpression;
             if (memberExpression == null)
@@ -100,7 +101,17 @@
                 throw new ArgumentException(message);
             }
 
-            this.AddIgnoredProperty(propertyInfo);
+            this.IgnoreProperty(propertyInfo);
+            return this;
+        }
+
+        public PropertiesSettingsBuilder IgnoreIndexersFor<T>()
+        {
+            foreach (var indexer in typeof(T).GetProperties(Constants.DefaultFieldBindingFlags).Where(x=>x.GetIndexParameters().Length>0))
+            {
+                this.IgnoreProperty(indexer);
+            }
+
             return this;
         }
     }
