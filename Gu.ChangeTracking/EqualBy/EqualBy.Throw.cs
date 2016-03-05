@@ -35,7 +35,7 @@
             return errorBuilder.AppendSuggestImplementIEquatable(member.MemberType());
         }
 
-        private static void ThrowIfHasErrors<TSetting>(this IErrors errors, Type type, TSetting settings)
+        private static void ThrowIfHasErrors<TSetting>(this TypeErrors errors, Type type, TSetting settings)
             where TSetting : class, IMemberSettings
         {
             if (errors == null)
@@ -45,17 +45,14 @@
 
             var errorBuilder = new StringBuilder();
             errorBuilder.AppendEqualByFailed<TSetting>()
-                        .AppendUnsupportedMembers<TSetting>(type, errors)
+                        .AppendNotSupported(errors)
                         .AppendSolveTheProblemBy()
-                        .AppendSuggestFixForUnsupportedMembers(errors, AppendSuggestImplementIEquatable)
-                        .AppendSuggestFixForUnsupportedTypes(errors, AppendSuggestImplementIEquatable)
+                        .AppendSuggestEquatable(errors)
                         .AppendLine($"* Use {typeof(TSetting).Name} and specify how comparing is performed:")
                         .AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Structural)} means that a deep equals is performed.")
+                        .AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.StructuralWithReferenceLoops)} means that a deep equals that handles reference loops is performed.")
                         .AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.References)} means that reference equality is used.")
-                        .AppendExcludeType(type)
-                        .AppendSuggestExcludeUnsupportedTypes(errors)
-                        .AppendSuggestExcludeUnsupportedMembers(errors)
-                        .AppendSuggestExcludeUnsupportedIndexers(errors, settings);
+                        .AppendSuggestExclude(errors);
 
             var message = errorBuilder.ToString();
             throw new NotSupportedException(message);

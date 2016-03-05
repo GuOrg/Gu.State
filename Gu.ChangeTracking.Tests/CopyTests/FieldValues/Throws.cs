@@ -12,7 +12,7 @@
 
             //if (excludedType != null)
             //{
-            //    builder.AddImmutableType(excludedType);
+            //    builder.IgnoreType(excludedType);
             //}
 
             var settings = builder.CreateSettings(referenceHandling);

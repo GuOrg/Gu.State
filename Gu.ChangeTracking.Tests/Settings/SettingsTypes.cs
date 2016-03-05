@@ -115,6 +115,8 @@
                 get { return 0; }
                 set { }
             }
+
+            public string Name { get; set; }
         }
     }
 }

@@ -26,7 +26,7 @@ namespace Gu.ChangeTracking.Tests
                                "* Use PropertiesSettings and add a specialcase for IllegalType example:\r\n" +
                                "    settings.AddIgnoredType<IllegalType>()\r\n" +
                                "    or:\r\n" +
-                               "    settings.AddIgnoredProperty(typeof(IllegalSubType).GetProperty(nameof(IllegalSubType.Illegal)))\r\n" +
+                               "    settings.IgnoreProperty(typeof(IllegalSubType).GetProperty(nameof(IllegalSubType.Illegal)))\r\n" +
                                "    Note that this means that the ChangeTracker does not track changes so you are responsible for any tracking needed.\r\n";
 
                 var root = new ObservableCollection<ComplexType>();
@@ -52,7 +52,7 @@ namespace Gu.ChangeTracking.Tests
                                "* Use PropertiesSettings and add a specialcase for IllegalType example:\r\n" +
                                "    settings.AddIgnoredType<IllegalType>()\r\n" +
                                "    or:\r\n" +
-                               "    settings.AddIgnoredProperty(typeof(IllegalSubType).GetProperty(nameof(IllegalSubType.Illegal)))\r\n" +
+                               "    settings.IgnoreProperty(typeof(IllegalSubType).GetProperty(nameof(IllegalSubType.Illegal)))\r\n" +
                                "    Note that this means that the ChangeTracker does not track changes so you are responsible for any tracking needed.\r\n";
 
                 var root = new With<ComplexType>();
@@ -79,7 +79,7 @@ namespace Gu.ChangeTracking.Tests
                                "* Use PropertiesSettings and add a specialcase for IllegalType example:\r\n" +
                                "    settings.AddIgnoredType<IllegalType>()\r\n" +
                                "    or:\r\n" +
-                               "    settings.AddIgnoredProperty(typeof(WithIllegal).GetProperty(nameof(WithIllegal.Illegal)))\r\n" +
+                               "    settings.IgnoreProperty(typeof(WithIllegal).GetProperty(nameof(WithIllegal.Illegal)))\r\n" +
                                "    Note that this means that the ChangeTracker does not track changes so you are responsible for any tracking needed.\r\n";
                 var exception = Assert.Throws<NotSupportedException>(() => ChangeTracker.Track(item, PropertiesSettings.GetOrCreate()));
                 Assert.AreEqual(expected, exception.Message);
@@ -128,7 +128,7 @@ namespace Gu.ChangeTracking.Tests
                                "* Use PropertiesSettings and add a specialcase for List<int> example:\r\n" +
                                "    settings.AddIgnoredType<List<int>>()\r\n" +
                                "    or:\r\n" +
-                               "    settings.AddIgnoredProperty(typeof(With<List<int>>).GetProperty(nameof(With<List<int>>.Value)))\r\n" +
+                               "    settings.IgnoreProperty(typeof(With<List<int>>).GetProperty(nameof(With<List<int>>.Value)))\r\n" +
                                "    Note that this means that the ChangeTracker does not track changes so you are responsible for any tracking needed.\r\n";
                 Assert.AreEqual(expected, exception.Message);
                 exception = Assert.Throws<NotSupportedException>(() => ChangeTracker.Track(item, PropertiesSettings.GetOrCreate()));

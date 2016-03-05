@@ -366,7 +366,7 @@
                     ComplexType = new SynchronizerTypes.ComplexType("d", 4)
                 };
                 var settings = PropertiesSettings.Build()
-                                                 .AddIgnoredProperty<SynchronizerTypes.WithComplexProperty>(nameof(SynchronizerTypes.WithComplexProperty.Name))
+                                                 .IgnoreProperty<SynchronizerTypes.WithComplexProperty>(nameof(SynchronizerTypes.WithComplexProperty.Name))
                                                  .CreateSettings(ReferenceHandling.Structural);
                 using (Synchronizer.CreatePropertySynchronizer(source, target, settings))
                 {

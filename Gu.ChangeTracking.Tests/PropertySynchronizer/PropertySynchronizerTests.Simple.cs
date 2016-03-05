@@ -66,7 +66,7 @@
                 var source = new SynchronizerTypes.WithSimpleProperties { IntValue = 1, StringValue = "2" };
                 var target = new SynchronizerTypes.WithSimpleProperties { IntValue = 3, StringValue = "4" };
                 var settings = PropertiesSettings.Build()
-                                                 .AddIgnoredProperty<SynchronizerTypes.WithSimpleProperties>(x => x.StringValue)
+                                                 .IgnoreProperty<SynchronizerTypes.WithSimpleProperties>(x => x.StringValue)
                                                  .CreateSettings();
                 using (Synchronizer.CreatePropertySynchronizer(source, target, settings))
                 {

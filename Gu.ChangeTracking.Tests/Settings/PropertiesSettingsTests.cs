@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Linq;
     using System.Reflection;
 
     using NUnit.Framework;
@@ -27,17 +28,30 @@
             var nameProperty = type.GetProperty(nameof(SettingsTypes.ComplexType.Name));
             var valueProperty = type.GetProperty(nameof(SettingsTypes.ComplexType.Value));
             var settings = PropertiesSettings.Build()
-                                             .AddIgnoredProperty(nameProperty)
+                                             .IgnoreProperty(nameProperty)
                                              .CreateSettings();
             Assert.AreEqual(true, settings.IsIgnoringProperty(nameProperty));
             Assert.AreEqual(false, settings.IsIgnoringProperty(valueProperty));
         }
 
         [Test]
+        public void IgnoresIndexer()
+        {
+            var type = typeof(SettingsTypes.WithIndexerType);
+            var nameProperty = type.GetProperty(nameof(SettingsTypes.WithIndexerType.Name));
+            var indexerProperty = type.GetProperties().Single(x => x.GetIndexParameters().Length > 0);
+            var settings = PropertiesSettings.Build()
+                                             .IgnoreIndexersFor<SettingsTypes.WithIndexerType>()
+                                             .CreateSettings();
+            Assert.AreEqual(false, settings.IsIgnoringProperty(nameProperty));
+            Assert.AreEqual(true, settings.IsIgnoringProperty(indexerProperty));
+        }
+
+        [Test]
         public void IgnoresBaseClassPropertyLambda()
         {
             var settings = PropertiesSettings.Build()
-                                             .AddIgnoredProperty<SettingsTypes.ComplexType>(x => x.Name)
+                                             .IgnoreProperty<SettingsTypes.ComplexType>(x => x.Name)
                                              .CreateSettings();
             var nameProperty = typeof(SettingsTypes.ComplexType).GetProperty(nameof(SettingsTypes.ComplexType.Name));
             Assert.AreEqual(true, settings.IsIgnoringProperty(nameProperty));
@@ -51,7 +65,7 @@
         public void IgnoresInterfaceProperty()
         {
             var settings = PropertiesSettings.Build()
-                                 .AddIgnoredProperty<SettingsTypes.IComplexType>(x => x.Name)
+                                 .IgnoreProperty<SettingsTypes.IComplexType>(x => x.Name)
                                  .CreateSettings();
             Assert.AreEqual(true, settings.IsIgnoringProperty(typeof(SettingsTypes.ComplexType).GetProperty(nameof(SettingsTypes.ComplexType.Name))));
             Assert.AreEqual(true, settings.IsIgnoringProperty(typeof(SettingsTypes.IComplexType).GetProperty(nameof(SettingsTypes.ComplexType.Name))));
@@ -76,7 +90,7 @@
             var nameProperty = type.GetProperty(nameof(SettingsTypes.ComplexType.Name));
             var valueProperty = type.GetProperty(nameof(SettingsTypes.ComplexType.Value));
             var settings = PropertiesSettings.Build()
-                                             .AddImmutableType(type)
+                                             .IgnoreType(type)
                                              .CreateSettings();
             Assert.AreEqual(true, settings.IsIgnoringProperty(nameProperty));
             Assert.AreEqual(true, settings.IsIgnoringProperty(valueProperty));
@@ -87,7 +101,7 @@
         public void IgnoresBaseTypeBuilder()
         {
             var settings = PropertiesSettings.Build()
-                                             .AddImmutableType<SettingsTypes.ComplexType>()
+                                             .IgnoreType<SettingsTypes.ComplexType>()
                                              .CreateSettings();
             Assert.AreEqual(true, settings.IsIgnoringProperty(typeof(SettingsTypes.ComplexType).GetProperty(nameof(SettingsTypes.ComplexType.Name))));
             Assert.AreEqual(true, settings.IsIgnoringProperty(typeof(SettingsTypes.ComplexType).GetProperty(nameof(SettingsTypes.ComplexType.Value))));
