@@ -38,6 +38,9 @@
         public static void PropertyValues<T>(T source, T target, PropertiesSettings settings)
             where T : class
         {
+            Verify.CanCopyRoot(typeof(T));
+            var type = source?.GetType()?? target?.GetType() ?? typeof(T);
+            VerifyCanCopyPropertyValues(type, settings);
             if (settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops)
             {
                 var referencePairs = new ReferencePairCollection();

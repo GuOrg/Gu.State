@@ -1,7 +1,8 @@
 ﻿namespace Gu.ChangeTracking.Tests.CopyTests
 {
     using System;
-
+    using System.Collections.Generic;
+    using System.Linq;
     using NUnit.Framework;
 
     public abstract class ThrowTests
@@ -12,7 +13,7 @@
         [TestCase(ReferenceHandling.Throw)]
         public void WithComplexWithoutReferenceHandling(ReferenceHandling? referenceHandling)
         {
-            var expected = this.GetType() == typeof (FieldValues.Throws)
+            var expected = this.GetType() == typeof(FieldValues.Throws)
                 ? "Copy.FieldValues(x, y) failed.\r\n" +
                   "The field WithComplexProperty.<ComplexType>k__BackingField is not supported.\r\n" +
                   "The field is of type ComplexType.\r\n" +
@@ -63,7 +64,7 @@
         [TestCase(ReferenceHandling.References)]
         public void WithReadonlyImmutableThrows(ReferenceHandling referenceHandling)
         {
-            var expected = this.GetType() == typeof (FieldValues.Throws)
+            var expected = this.GetType() == typeof(FieldValues.Throws)
                 ? "Copy.FieldValues(x, y) failed.\r\n" +
                   "The readonly field WithReadonlyProperty<Immutable>.<Value>k__BackingField differs after copy.\r\n" +
                   " - Source value: Gu.ChangeTracking.Tests.CopyTests.CopyTypes+Immutable.\r\n" +
@@ -75,7 +76,7 @@
                   "  - ReferenceHandling.References means that references are copied.\r\n" +
                   "  - Exclude the type WithReadonlyProperty<Immutable>.\r\n" +
                   "  - Exclude the field WithReadonlyProperty<Immutable>.<Value>k__BackingField.\r\n"
-          
+
                   : "Copy.PropertyValues(x, y) failed.\r\n" +
                   "The readonly property WithReadonlyProperty<Immutable>.Value differs after copy.\r\n" +
                   " - Source value: Gu.ChangeTracking.Tests.CopyTests.CopyTypes+Immutable.\r\n" +
@@ -102,7 +103,7 @@
                                ? "Copy.FieldValues(x, y) failed.\r\n" +
                                  "The collections are fixed size type: Int32[]\r\n" +
                                  "Source count: 3\r\n" +
-                                 "Target count: 1\r\n" + 
+                                 "Target count: 1\r\n" +
                                  "Solve the problem by any of:\r\n" +
                                  "* Use a resizable collection like List<T>.\r\n" +
                                  "* Check that the collections are the same size before calling.\r\n"
@@ -183,5 +184,41 @@
 
             Assert.AreEqual(expected, exception.Message);
         }
+
+
+        [TestCase(null)]
+        [TestCase(ReferenceHandling.Throw)]
+        [TestCase(ReferenceHandling.Structural)]
+        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
+        [TestCase(ReferenceHandling.References)]
+        public void CanCopyEnumerableOfIntsThrows(ReferenceHandling? referenceHandling)
+        {
+            var expected = "Can only copy the members of collections implementing IList or IDictionary";
+
+            var x = Enumerable.Repeat(1, 2);
+            var y = Enumerable.Repeat(1, 2);
+            var exception = referenceHandling != null
+                ? Assert.Throws<NotSupportedException>(() => this.CopyMethod(x, y, referenceHandling.Value))
+                : Assert.Throws<NotSupportedException>(() => this.CopyMethod(x, y));
+            Assert.AreEqual(expected, exception.Message);
+        }
+
+        [TestCase(null)]
+        [TestCase(ReferenceHandling.Throw)]
+        [TestCase(ReferenceHandling.Structural)]
+        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
+        [TestCase(ReferenceHandling.References)]
+        public void CanCopyImmutable(ReferenceHandling? referenceHandling)
+        {
+            var expected = "Cannot copy the members of an immutable object";
+            var x = new CopyTypes.Immutable(1);
+            var y = new CopyTypes.Immutable(1);
+            var exception = referenceHandling != null
+                ? Assert.Throws<NotSupportedException>(() => this.CopyMethod(x, y, referenceHandling.Value))
+                : Assert.Throws<NotSupportedException>(() => this.CopyMethod(x, y));
+
+            Assert.AreEqual(expected, exception.Message);
+        }
+
     }
 }

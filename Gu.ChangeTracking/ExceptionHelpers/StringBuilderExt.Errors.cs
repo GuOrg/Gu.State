@@ -90,12 +90,12 @@
                 errorBuilder.AppendLine(line);
             }
 
-            errorBuilder.AppendLine("For immutable types the following must hold:")
-                        .AppendLine("  - Must be a sealed class or a struct.")
-                        .AppendLine("  - All fields and properties must be readonly.")
-                        .AppendLine("  - All field and property types must be immutable.")
-                        .AppendLine("  - All indexers must be readonly.")
-                        .AppendLine("  - Event fields are ignored.");
+            errorBuilder.AppendLine("  - For immutable types the following must hold:")
+                        .AppendLine("    - Must be a sealed class or a struct.")
+                        .AppendLine("    - All fields and properties must be readonly.")
+                        .AppendLine("    - All field and property types must be immutable.")
+                        .AppendLine("    - All indexers must be readonly.")
+                        .AppendLine("    - Event fields are ignored.");
             return errorBuilder;
         }
     }

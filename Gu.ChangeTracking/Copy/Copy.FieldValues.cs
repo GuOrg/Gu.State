@@ -39,6 +39,9 @@
         public static void FieldValues<T>(T source, T target, FieldsSettings settings)
             where T : class
         {
+            Verify.CanCopyRoot(typeof(T));
+            var type = source?.GetType() ?? target?.GetType() ?? typeof(T);
+            VerifyCanCopyFieldValues(type, settings);
             if (settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops)
             {
                 var referencePairs = new ReferencePairCollection();

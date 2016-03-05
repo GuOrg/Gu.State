@@ -51,7 +51,8 @@
         /// <param name="settings">Contains configuration for how copy will be performed</param>
         public static void VerifyCanCopyPropertyValues(Type type, PropertiesSettings settings)
         {
-            Copy.Verify.GetPropertiesErrors(type, settings)
+            Verify.CanCopyRoot(type);
+            Verify.GetPropertiesErrors(type, settings)
                   .ThrowIfHasErrors(settings);
         }
 
@@ -99,32 +100,35 @@
         /// <param name="settings">Contains configuration for how copy is performed</param>
         public static void VerifyCanCopyFieldValues(Type type, FieldsSettings settings)
         {
-            Copy.Verify.GetFieldsErrors(type, settings)
+            Verify.CanCopyRoot(type);
+            Verify.GetFieldsErrors(type, settings)
                   .ThrowIfHasErrors(settings);
         }
 
         private static TypeErrors CheckIsCopyableEnumerable<TSetting>(this TypeErrors typeErrors, Type type, TSetting settings)
             where TSetting : IMemberSettings
         {
-            if (typeof(IEnumerable).IsAssignableFrom(type))
+            if (!typeof(IEnumerable).IsAssignableFrom(type))
             {
-                switch (settings.ReferenceHandling)
-                {
-                    case ReferenceHandling.Throw:
-                    case ReferenceHandling.References:
-                        return typeErrors;
-                    case ReferenceHandling.Structural:
-                    case ReferenceHandling.StructuralWithReferenceLoops:
-                        if (!IsCopyableCollectionType(type))
-                        {
-                            return typeErrors = typeErrors.CreateIfNull(type)
-                                                     .Add(new NotCopyableCollection(type));
-                        }
+                return typeErrors;
+            }
 
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+            switch (settings.ReferenceHandling)
+            {
+                case ReferenceHandling.Throw:
+                case ReferenceHandling.References:
+                    return typeErrors;
+                case ReferenceHandling.Structural:
+                case ReferenceHandling.StructuralWithReferenceLoops:
+                    if (!IsCopyableCollectionType(type))
+                    {
+                        return typeErrors.CreateIfNull(type)
+                            .Add(new NotCopyableCollection(type));
+                    }
+
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
             return typeErrors;
@@ -236,6 +240,19 @@
                 }
 
                 return errorBuilder;
+            }
+
+            internal static void CanCopyRoot(Type type)
+            {
+                if (type.IsImmutable())
+                {
+                    throw new NotSupportedException("Cannot copy the members of an immutable object");
+                }
+
+                if (typeof(IEnumerable).IsAssignableFrom(type) && !IsCopyableCollectionType(type))
+                {
+                    throw new NotSupportedException("Can only copy the members of collections implementing IList or IDictionary");
+                }
             }
         }
     }
