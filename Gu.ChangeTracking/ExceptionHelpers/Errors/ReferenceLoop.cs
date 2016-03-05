@@ -6,7 +6,7 @@ namespace Gu.ChangeTracking
     using System.Text;
 
     [DebuggerDisplay("{GetType().Name} Indexer: {Path.PathString}")]
-    internal sealed class ReferenceLoop : MemberError, INotSupported, IExcludableType, IFixWithEquatable
+    internal sealed class ReferenceLoop : MemberError, INotSupported, IExcludableType, IFixWithEquatable, IFixWithImmutable
     {
         public ReferenceLoop(MemberInfo member, MemberPath path)
             : base(member, path)

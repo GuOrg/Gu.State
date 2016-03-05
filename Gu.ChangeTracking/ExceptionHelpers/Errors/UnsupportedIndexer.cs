@@ -6,7 +6,7 @@ namespace Gu.ChangeTracking
     using System.Text;
 
     [DebuggerDisplay("{GetType().Name} Indexer: {Indexer.Name}")]
-    internal sealed class UnsupportedIndexer : TypeError, INotSupported, IExcludableType, IExcludableMember, IFixWithEquatable
+    internal sealed class UnsupportedIndexer : TypeError, INotSupported, IExcludableType, IExcludableMember, IFixWithEquatable, IFixWithImmutable
     {
         public UnsupportedIndexer(Type type, PropertyInfo indexer)
             : base(type)

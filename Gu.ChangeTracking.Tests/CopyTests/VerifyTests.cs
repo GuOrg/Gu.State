@@ -27,14 +27,37 @@
         [TestCase(ReferenceHandling.Throw)]
         public void CanCopyWithComplexThrows(ReferenceHandling? referenceHandling)
         {
-            if (referenceHandling != null)
-            {
-                Assert.Throws<NotSupportedException>(() => this.VerifyMethod<CopyTypes.WithComplexProperty>(referenceHandling.Value));
-            }
-            else
-            {
-                Assert.Throws<NotSupportedException>(this.VerifyMethod<CopyTypes.WithComplexProperty>);
-            }
+            var expected = this.GetType() == typeof(FieldValues.Verify)
+                   ? "Copy.FieldValues(x, y) failed.\r\n" +
+                     "The field WithComplexProperty.<ComplexType>k__BackingField of type ComplexType is not supported.\r\n" +
+                     "Solve the problem by any of:\r\n" +
+                     "* Implement IEquatable<WithComplexProperty> for WithComplexProperty or use a type that does.\r\n" +
+                     "* Implement IEquatable<ComplexType> for ComplexType or use a type that does.\r\n" +
+                     "* Use FieldsSettings and specify how comparing is performed:\r\n" +
+                     "  - ReferenceHandling.Structural means that a deep equals is performed.\r\n" +
+                     "  - ReferenceHandling.StructuralWithReferenceLoops means that a deep equals that handles reference loops is performed.\r\n" +
+                     "  - ReferenceHandling.References means that reference equality is used.\r\n" +
+                     "  - Exclude a combination of the following:\r\n" +
+                     "    - The field WithComplexProperty.<ComplexType>k__BackingField.\r\n" +
+                     "    - The type ComplexType.\r\n"
+
+                   : "Copy.PropertyValues(x, y) failed.\r\n" +
+                     "The property WithComplexProperty.ComplexType of type ComplexType is not supported.\r\n" +
+                     "Solve the problem by any of:\r\n" +
+                     "* Implement IEquatable<WithComplexProperty> for WithComplexProperty or use a type that does.\r\n" +
+                     "* Implement IEquatable<ComplexType> for ComplexType or use a type that does.\r\n" +
+                     "* Use PropertiesSettings and specify how comparing is performed:\r\n" +
+                     "  - ReferenceHandling.Structural means that a deep equals is performed.\r\n" +
+                     "  - ReferenceHandling.StructuralWithReferenceLoops means that a deep equals that handles reference loops is performed.\r\n" +
+                     "  - ReferenceHandling.References means that reference equality is used.\r\n" +
+                     "  - Exclude a combination of the following:\r\n" +
+                     "    - The property WithComplexProperty.ComplexType.\r\n" +
+                     "    - The type ComplexType.\r\n";
+            var exception = referenceHandling != null
+                                ? Assert.Throws<NotSupportedException>(() => this.VerifyMethod<CopyTypes.WithComplexProperty>(referenceHandling.Value))
+                                : Assert.Throws<NotSupportedException>(this.VerifyMethod<CopyTypes.WithComplexProperty>);
+
+            Assert.AreEqual(expected, exception.Message);
         }
 
         [TestCase(ReferenceHandling.Structural)]

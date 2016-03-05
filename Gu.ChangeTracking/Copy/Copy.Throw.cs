@@ -26,6 +26,31 @@
             throw ChangeTracking.Throw.ExpectedParameterOfTypes<FieldsSettings, PropertiesSettings>("{T}");
         }
 
+        // ReSharper disable once UnusedParameter.Local
+        private static void ThrowIfHasErrors<TSetting>(this TypeErrors errors, TSetting settings)
+            where TSetting : class, IMemberSettings
+        {
+            if (errors == null)
+            {
+                return;
+            }
+
+            var errorBuilder = new StringBuilder();
+            errorBuilder.AppendCopyFailed<TSetting>()
+                        .AppendNotSupported(errors)
+                        .AppendSolveTheProblemBy()
+                        .AppendSuggestImmutable(errors)
+                        .AppendLine($"* Use {typeof(TSetting).Name} and specify how copying is performed:")
+                        .AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Structural)} means that a the entire graph is traversed and immutable property values are copied..")
+                        .AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.StructuralWithReferenceLoops)} means that a the entire graph is traversed and immutable property values are copied and reference loops are tracked.")
+                        .AppendLine("For structural Activator.CreateInstance is used so a parameterless constructor must be present, can be private.")
+                        .AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.References)} means that references are copied.")
+                        .AppendSuggestExclude(errors);
+
+            var message = errorBuilder.ToString();
+            throw new NotSupportedException(message);
+        }
+
         private static StringBuilder AppendSuggestCopySettings<T>(this StringBuilder errorBuilder, Type type, MemberInfo member)
             where T : IMemberSettings
         {
@@ -216,7 +241,7 @@
                 errorBuilder.AppendLine($"The problem occurred for key: {key}")
                     .AppendLine($"Source list is of type: {source.GetType().PrettyName()} and target list is of type: {target.GetType().PrettyName()}")
                     .AppendSolveTheProblemBy()
-                    .AppendSuggestImplementIEquatable(itemType)
+                    .AppendSuggestImmutableType(itemType)
                     .AppendSuggestCopySettings<T>(itemType, null);
                 throw new NotSupportedException(errorBuilder.ToString());
             }

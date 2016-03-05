@@ -36,28 +36,6 @@
                                .AppendLine($"  - Exclude the type {type.PrettyName()}.");
         }
 
-        internal static StringBuilder AppendExcludeMember(this StringBuilder errorBuilder, Type sourceType, MemberInfo memberInfo)
-        {
-            if (memberInfo == null)
-            {
-                return errorBuilder;
-            }
-
-            var fieldInfo = memberInfo as FieldInfo;
-            if (fieldInfo != null)
-            {
-                return errorBuilder.AppendExcludeField(sourceType, fieldInfo);
-            }
-
-            var propertyInfo = memberInfo as PropertyInfo;
-            if (propertyInfo != null)
-            {
-                return errorBuilder.AppendExcludeProperty(sourceType, propertyInfo);
-            }
-
-            throw Throw.ExpectedParameterOfTypes<FieldInfo, PropertyInfo>(nameof(memberInfo));
-        }
-
         internal static StringBuilder AppendExcludeProperty(this StringBuilder errorBuilder, Type sourceType, PropertyInfo propertyInfo)
         {
             if (propertyInfo == null)

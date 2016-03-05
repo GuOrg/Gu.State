@@ -1,5 +1,6 @@
 ﻿namespace Gu.ChangeTracking
 {
+    using System;
     using System.Linq;
     using System.Text;
 
@@ -66,6 +67,35 @@
                 errorBuilder.AppendLine(line);
             }
 
+            return errorBuilder;
+        }
+
+        internal static StringBuilder AppendSuggestImmutable(this StringBuilder errorBuilder, TypeErrors errors)
+        {
+            var immutables = errors.OfType<IFixWithImmutable>()
+                                   .Select(x => x.Type)
+                                   .Where(t => t != errors.Type)
+                                   .Distinct()
+                                   .ToArray();
+            if (immutables.Length == 0)
+            {
+                return errorBuilder;
+            }
+
+            foreach (var type in immutables)
+            {
+                var line = type.Assembly == typeof(int).Assembly
+                    ? $"* Use an immutable type instead of {type.PrettyName()}."
+                    : $"* Make {type.PrettyName()} immutable or use an immutable type.";
+                errorBuilder.AppendLine(line);
+            }
+
+            errorBuilder.AppendLine("For immutable types the following must hold:")
+                        .AppendLine("  - Must be a sealed class or a struct.")
+                        .AppendLine("  - All fields and properties must be readonly.")
+                        .AppendLine("  - All field and property types must be immutable.")
+                        .AppendLine("  - All indexers must be readonly.")
+                        .AppendLine("  - Event fields are ignored.");
             return errorBuilder;
         }
     }
