@@ -39,7 +39,7 @@
 
             if (source is IEnumerable || target is IEnumerable)
             {
-                Throw.CannotCopyType(source?.GetType() ?? target.GetType(), settings);
+                throw ChangeTracking.Throw.ShouldNeverGetHere("Should be checked before");
             }
         }
 
@@ -85,8 +85,7 @@
                             syncItem(sv, tv, settings, referencePairs);
                             continue;
                         case ReferenceHandling.Throw:
-                            Throw.CannotCopyItem(sourceList, targetList, i, settings);
-                            break;
+                            throw ChangeTracking.Throw.ShouldNeverGetHere();
                         default:
                             throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);
                     }
@@ -138,8 +137,7 @@
                             syncItem(sv, tv, settings, referencePairs);
                             continue;
                         case ReferenceHandling.Throw:
-                            Throw.CannotCopyItem(sourceDict, targetDict, key, settings);
-                            break;
+                            throw ChangeTracking.Throw.ShouldNeverGetHere();
                         default:
                             throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);
                     }

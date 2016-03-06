@@ -6,7 +6,7 @@ namespace Gu.ChangeTracking
     using System.Reflection;
     using System.Text;
 
-    internal sealed class MemberTypeErrors : MemberError, IErrors, IFixWithEquatable, IExcludableType, IExcludableMember, INotSupported
+    internal sealed class MemberTypeErrors : MemberError, IErrors, IFixWithEquatable, IFixWithImmutable, IExcludableType, IExcludableMember, INotSupported
     {
         public MemberTypeErrors(MemberInfo member, MemberPath path, Error error)
             : base(member, path)
@@ -17,6 +17,8 @@ namespace Gu.ChangeTracking
         public Error Error { get; }
 
         Type IFixWithEquatable.Type => this.SourceType();
+
+        Type IFixWithImmutable.Type => this.SourceType();
 
         Type IExcludableType.Type => this.MemberInfo.MemberType();
 

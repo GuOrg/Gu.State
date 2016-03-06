@@ -21,9 +21,9 @@
                                "  - ReferenceHandling.Structural means that a deep equals is performed.\r\n" +
                                "  - ReferenceHandling.StructuralWithReferenceLoops means that a deep equals that handles reference loops is performed.\r\n" +
                                "  - ReferenceHandling.References means that reference equality is used.\r\n" +
-                               "  - Exclude any or all of the following:\r\n" +
-                               "    - Exclude the property WithComplexProperty.ComplexType.\r\n" +
-                               "    - Exclude the type ComplexType.\r\n";
+                               "  - Exclude a combination of the following:\r\n" +
+                               "    - The property WithComplexProperty.ComplexType.\r\n" +
+                               "    - The type ComplexType.\r\n";
                 var x = new DirtyTrackerTypes.WithComplexProperty();
                 var y = new DirtyTrackerTypes.WithComplexProperty();
 

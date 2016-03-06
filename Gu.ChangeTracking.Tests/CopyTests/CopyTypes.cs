@@ -460,23 +460,36 @@
 
         public class Parent
         {
+            private Child child;
+
             public Parent(string name, Child child)
             {
                 this.Name = name;
-                if (child != null)
-                {
-                    child.Parent = this;
-                }
                 this.Child = child;
             }
 
             public string Name { get; set; }
 
-            public Child Child { get; set; }
+            public Child Child
+            {
+                get { return this.child; }
+                set
+                {
+                    if (value != null)
+                    {
+                        value.Parent = this;
+                    }
+                    this.child = value;
+                }
+            }
         }
 
         public class Child
         {
+            private Child()
+            {
+            }
+
             public Child(string name)
             {
                 this.Name = name;

@@ -73,6 +73,39 @@ namespace Gu.ChangeTracking.Tests.EqualByTests
             Assert.AreEqual(expected, exception.Message);
         }
 
+
+        [Test]
+        public void ListOfWithIndexers()
+        {
+            var expected = this.GetType() == typeof(FieldValues.Verify)
+                               ? "EqualBy.FieldValues(x, y) failed.\r\n" +
+                                 "Indexers are not supported.\r\n" +
+                                 "  - The property WithIndexerType.Item is an indexer and not supported.\r\n" +
+                                 "Solve the problem by any of:\r\n" +
+                                 "* Implement IEquatable<WithIndexerType> for WithIndexerType or use a type that does.\r\n" +
+                                 "* Use FieldsSettings and specify how comparing is performed:\r\n" +
+                                 "  - ReferenceHandling.Structural means that a deep equals is performed.\r\n" +
+                                 "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but handles reference loops.\r\n" +
+                                 "  - ReferenceHandling.References means that reference equality is used.\r\n" +
+                                 "  - Exclude a combination of the following:\r\n" +
+                                 "    - The indexer property WithIndexerType.Item.\r\n"
+
+                               : "EqualBy.PropertyValues(x, y) failed.\r\n" +
+                                 "Indexers are not supported.\r\n" +
+                                 "  - The property WithIndexerType.Item is an indexer and not supported.\r\n" +
+                                 "Solve the problem by any of:\r\n" +
+                                 "* Implement IEquatable<WithIndexerType> for WithIndexerType or use a type that does.\r\n" +
+                                 "* Use PropertiesSettings and specify how comparing is performed:\r\n" +
+                                 "  - ReferenceHandling.Structural means that a deep equals is performed.\r\n" +
+                                 "  - ReferenceHandling.StructuralWithReferenceLoops means that a deep equals that handles reference loops is performed.\r\n" +
+                                 "  - ReferenceHandling.References means that reference equality is used.\r\n" +
+                                 "  - Exclude a combination of the following:\r\n" +
+                                 "    - The indexer property WithIndexerType.Item.\r\n";
+
+            var exception = Assert.Throws<NotSupportedException>(() => this.VerifyMethod<EqualByTypes.WithListProperty<EqualByTypes.WithIndexerType>>(ReferenceHandling.Structural));
+            Assert.AreEqual(expected, exception.Message);
+        }
+
         [Test]
         public void DetectsReferenceLoop()
         {

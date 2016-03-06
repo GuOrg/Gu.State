@@ -1,16 +1,10 @@
 ﻿namespace Gu.ChangeTracking
 {
     using System;
-    using System.Reflection;
     using System.Text;
 
     public static partial class EqualBy
     {
-        internal static StringBuilder AppendSuggestImplementIEquatable(this StringBuilder errorBuilder, Type sourceType)
-        {
-            return errorBuilder.AppendSuggestImplement(sourceType, $"IEquatable<{sourceType.PrettyName()}>");
-        }
-
         private static StringBuilder AppendEqualByFailed<T>(this StringBuilder errorBuilder)
             where T : class, IMemberSettings
         {
@@ -30,12 +24,8 @@
             return errorBuilder;
         }
 
-        private static StringBuilder AppendSuggestImplementIEquatable(this StringBuilder errorBuilder, MemberInfo member)
-        {
-            return errorBuilder.AppendSuggestImplementIEquatable(member.MemberType());
-        }
-
-        private static void ThrowIfHasErrors<TSetting>(this TypeErrors errors, Type type, TSetting settings)
+        // ReSharper disable once UnusedParameter.Local
+        private static void ThrowIfHasErrors<TSetting>(this TypeErrors errors, TSetting settings)
             where TSetting : class, IMemberSettings
         {
             if (errors == null)

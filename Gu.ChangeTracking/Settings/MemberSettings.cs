@@ -36,9 +36,11 @@
 
         public ReferenceHandling ReferenceHandling { get; }
 
-        protected ConcurrentDictionary<T, bool> IgnoredMembers => this.ignoredMembers;
-
         internal ConcurrentDictionary<Type, TypeErrors> EqualByErrors => new ConcurrentDictionary<Type, TypeErrors>();
+
+        internal ConcurrentDictionary<Type, TypeErrors> CopyErrors => new ConcurrentDictionary<Type, TypeErrors>();
+
+        protected ConcurrentDictionary<T, bool> IgnoredMembers => this.ignoredMembers;
 
         public bool IsIgnoringDeclaringType(Type declaringType)
         {
