@@ -209,7 +209,6 @@
             Assert.AreEqual(expected, exception.Message);
         }
 
-
         [TestCase(null)]
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.Structural)]
@@ -243,6 +242,5 @@
 
             Assert.AreEqual(expected, exception.Message);
         }
-
     }
 }
