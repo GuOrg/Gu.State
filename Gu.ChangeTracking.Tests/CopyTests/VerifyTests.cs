@@ -130,7 +130,7 @@
         }
 
         [Test]
-        public void WithIndexer()
+        public void WithIndexerThrows()
         {
             var expected = this is FieldValues.Verify
                                ? "Copy.FieldValues(x, y) failed.\r\n" +

@@ -130,19 +130,24 @@
                                  "  - The property WithIndexerType.Item is an indexer and not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
                                  "* Use FieldsSettings and specify how copying is performed:\r\n" +
-                                 "  - ReferenceHandling.Structural means that a deep copy is performed.\r\n" +
+                                 "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
+                                 "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but tracks reference loops.\r\n" +
+                                 "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
                                  "  - ReferenceHandling.References means that references are copied.\r\n" +
-                                 "  - Exclude the type WithIndexerType.\r\n"
+                                 "  - Exclude a combination of the following:\r\n" +
+                                 "    - The indexer property WithIndexerType.Item.\r\n"
 
                                : "Copy.PropertyValues(x, y) failed.\r\n" +
                                  "Indexers are not supported.\r\n" +
                                  "  - The property WithIndexerType.Item is an indexer and not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
                                  "* Use PropertiesSettings and specify how copying is performed:\r\n" +
-                                 "  - ReferenceHandling.Structural means that a deep copy is performed.\r\n" +
+                                 "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
+                                 "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but tracks reference loops.\r\n" +
+                                 "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
                                  "  - ReferenceHandling.References means that references are copied.\r\n" +
-                                 "  - Exclude the type WithIndexerType.\r\n" +
-                                 "  - The indexer WithIndexerType.Item.\r\n";
+                                 "  - Exclude a combination of the following:\r\n" +
+                                 "    - The indexer property WithIndexerType.Item.\r\n";
             var source = new CopyTypes.WithIndexerType();
             var target = new CopyTypes.WithIndexerType();
 
