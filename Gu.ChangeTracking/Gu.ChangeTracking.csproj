@@ -43,7 +43,7 @@
     <Compile Include="ChangeTracker\ChangeTracker.PropertiesChangeTrackers.cs" />
     <Compile Include="ChangeTracker\ChangeTracker.Verify.cs" />
     <Compile Include="Contracts\ISpecialCopyProperty.cs" />
-    <Compile Include="ChangeTracker\PropertyChangeTracker.cs" />
+    <Compile Include="ChangeTracker\Internals\PropertyChangeTracker.cs" />
     <Compile Include="EqualBy\EqualBy.Verify.cs" />
     <Compile Include="ExceptionHelpers\Errors\CannotCopyFixesSizeCollectionsError.cs" />
     <Compile Include="ExceptionHelpers\Errors\CannotCreateInstanceError.cs" />
@@ -132,7 +132,7 @@
     <Compile Include="ChangeTracker\Contracts\IPropertyTracker.cs" />
     <Compile Include="ChangeTracker\Contracts\IChangeTracker.cs" />
     <Compile Include="ChangeTracker\Contracts\IValueTracker.cs" />
-    <Compile Include="ChangeTracker\ItemChangeTracker.cs" />
+    <Compile Include="ChangeTracker\Internals\ItemChangeTracker.cs" />
     <Compile Include="ExceptionHelpers\Ensure.cs" />
     <Compile Include="ExceptionHelpers\Ensure.string.cs" />
     <Compile Include="ExceptionHelpers\Ensure.type.cs" />

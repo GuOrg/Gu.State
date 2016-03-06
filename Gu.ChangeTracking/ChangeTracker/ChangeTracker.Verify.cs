@@ -18,9 +18,17 @@
         /// Use this to fail fast or in unit tests.
         /// </summary>
         /// <typeparam name="T">The type to check</typeparam>
-        public static void VerifyCanTrack<T>()
+        /// <param name="bindingFlags">The binding flags to use when getting properties</param>
+        /// <param name="referenceHandling">
+        /// If Structural is used property values for sub properties are copied for the entire graph.
+        /// Activator.CreateInstance is used to new up references so a default constructor is required, can be private
+        /// </param>
+        public static void VerifyCanTrack<T>(
+            BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags,
+            ReferenceHandling referenceHandling = ReferenceHandling.Throw)
         {
-            VerifyCanTrack<T>(PropertiesSettings.GetOrCreate());
+            var settings = PropertiesSettings.GetOrCreate(bindingFlags, referenceHandling);
+            VerifyCanTrack<T>(settings);
         }
 
         /// <summary>
