@@ -157,7 +157,7 @@ namespace Gu.ChangeTracking
             return typeErrors;
         }
 
-        private static TypeErrors CreateIfNull(this TypeErrors errors, Type type)
+        internal static TypeErrors CreateIfNull(this TypeErrors errors, Type type)
         {
             return errors ?? new TypeErrors(type);
         }

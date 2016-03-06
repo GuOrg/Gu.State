@@ -534,22 +534,24 @@
             [Test]
             public void WithComplexPropertyThrowsWithoutReferenceHandling()
             {
-                var expected =
-    "Copy.PropertyValues(x, y) failed.\r\n" +
-    "The property WithComplexProperty.ComplexType is not supported.\r\n" +
-    "The property is of type ComplexType.\r\n" +
-    "Solve the problem by any of:\r\n" +
-    "* Make ComplexType immutable or use an immutable type. For immutable types the following must hold:\r\n" +
-    "  - Must be a sealed class or a struct.\r\n" +
-    "  - All fields and properties must be readonly.\r\n" +
-    "  - All field and property types must be immutable.\r\n" +
-    "  - All indexers must be readonly.\r\n" +
-    "  - Event fields are ignored.\r\n" +
-    "* Use PropertiesSettings and specify how copying is performed:\r\n" +
-    "  - ReferenceHandling.Structural means that a deep copy is performed.\r\n" +
-    "  - ReferenceHandling.References means that references are copied.\r\n" +
-    "  - Exclude the type WithComplexProperty.\r\n" +
-    "  - Exclude the property WithComplexProperty.ComplexType.\r\n";
+                var expected = "Copy.PropertyValues(x, y) failed.\r\n" +
+                               "The property WithComplexProperty.ComplexType of type ComplexType is not supported.\r\n" +
+                               "Solve the problem by any of:\r\n" +
+                               "* Make ComplexType immutable or use an immutable type.\r\n" +
+                               "  - For immutable types the following must hold:\r\n" +
+                               "    - Must be a sealed class or a struct.\r\n" +
+                               "    - All fields and properties must be readonly.\r\n" +
+                               "    - All field and property types must be immutable.\r\n" +
+                               "    - All indexers must be readonly.\r\n" +
+                               "    - Event fields are ignored.\r\n" +
+                               "* Use PropertiesSettings and specify how copying is performed:\r\n" +
+                               "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
+                               "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but tracks reference loops.\r\n" +
+                               "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
+                               "  - ReferenceHandling.References means that references are copied.\r\n" +
+                               "  - Exclude a combination of the following:\r\n" +
+                               "    - The property WithComplexProperty.ComplexType.\r\n" +
+                               "    - The type ComplexType.\r\n";
                 var source = new SynchronizerTypes.WithComplexProperty();
                 var target = new SynchronizerTypes.WithComplexProperty();
                 var exception = Assert.Throws<NotSupportedException>(() => Synchronizer.CreatePropertySynchronizer(source, target));

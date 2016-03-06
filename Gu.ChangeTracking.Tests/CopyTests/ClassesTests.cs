@@ -276,7 +276,10 @@
         [Test]
         public void ParentChildWhenTargetChildIsNull()
         {
-            Assert.Inconclusive("Dunno if this can ever be handled");
+            if (this is FieldValues.Classes)
+            {
+                Assert.Inconclusive("Not supporting this");
+            }
             var source = new CopyTypes.Parent("p", new CopyTypes.Child("c"));
             var target = new CopyTypes.Parent(null, null);
             this.CopyMethod(source, target, ReferenceHandling.StructuralWithReferenceLoops);

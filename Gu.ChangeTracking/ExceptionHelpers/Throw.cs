@@ -12,8 +12,14 @@
 
         internal static InvalidOperationException ShouldNeverGetHere()
         {
-            var message = "Sould never gete here";
+            var message = "Should never gete here";
             return ThrowThereIsABugInTheLibrary(message);
+        }
+
+        internal static Exception ShouldNeverGetHere(string message)
+        {
+            var text = "Should never gete here\r\n" + message;
+            return ThrowThereIsABugInTheLibrary(text);
         }
 
         internal static InvalidOperationException ThrowThereIsABugInTheLibrary(string message)

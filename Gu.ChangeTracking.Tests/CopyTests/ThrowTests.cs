@@ -1,7 +1,7 @@
 ﻿namespace Gu.ChangeTracking.Tests.CopyTests
 {
     using System;
-
+    using System.Linq;
     using NUnit.Framework;
 
     public abstract class ThrowTests
@@ -12,58 +12,58 @@
         [TestCase(ReferenceHandling.Throw)]
         public void WithComplexWithoutReferenceHandling(ReferenceHandling? referenceHandling)
         {
-            var expected = this.GetType() == typeof (FieldValues.Throws)
-                ? "Copy.FieldValues(x, y) failed.\r\n" +
-                  "The field WithComplexProperty.<ComplexType>k__BackingField is not supported.\r\n" +
-                  "The field is of type ComplexType.\r\n" +
-                  "Solve the problem by any of:\r\n" +
-                  "* Make ComplexType immutable or use an immutable type. For immutable types the following must hold:\r\n" +
-                  "  - Must be a sealed class or a struct.\r\n" +
-                  "  - All fields and properties must be readonly.\r\n" +
-                  "  - All field and property types must be immutable.\r\n" +
-                  "  - All indexers must be readonly.\r\n" +
-                  "  - Event fields are ignored.\r\n" +
-                  "* Use FieldsSettings and specify how copying is performed:\r\n" +
-                  "  - ReferenceHandling.Structural means that a deep copy is performed.\r\n" +
-                  "  - ReferenceHandling.References means that references are copied.\r\n" +
-                  "  - Exclude the type WithComplexProperty.\r\n" +
-                  "  - Exclude the field WithComplexProperty.<ComplexType>k__BackingField.\r\n"
+            var expected = this is FieldValues.Throws
+                   ? "Copy.FieldValues(x, y) failed.\r\n" +
+                     "The field WithComplexProperty.<ComplexType>k__BackingField of type ComplexType is not supported.\r\n" +
+                     "Solve the problem by any of:\r\n" +
+                     "* Make ComplexType immutable or use an immutable type.\r\n" +
+                     "  - For immutable types the following must hold:\r\n" +
+                     "    - Must be a sealed class or a struct.\r\n" +
+                     "    - All fields and properties must be readonly.\r\n" +
+                     "    - All field and property types must be immutable.\r\n" +
+                     "    - All indexers must be readonly.\r\n" +
+                     "    - Event fields are ignored.\r\n" +
+                     "* Use FieldsSettings and specify how copying is performed:\r\n" +
+                     "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
+                     "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but tracks reference loops.\r\n" +
+                     "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
+                     "  - ReferenceHandling.References means that references are copied.\r\n" +
+                     "  - Exclude a combination of the following:\r\n" +
+                     "    - The field WithComplexProperty.<ComplexType>k__BackingField.\r\n" +
+                     "    - The type ComplexType.\r\n"
 
-                : "Copy.PropertyValues(x, y) failed.\r\n" +
-                  "The property WithComplexProperty.ComplexType is not supported.\r\n" +
-                  "The property is of type ComplexType.\r\n" +
-                  "Solve the problem by any of:\r\n" +
-                  "* Make ComplexType immutable or use an immutable type. For immutable types the following must hold:\r\n" +
-                  "  - Must be a sealed class or a struct.\r\n" +
-                  "  - All fields and properties must be readonly.\r\n" +
-                  "  - All field and property types must be immutable.\r\n" +
-                  "  - All indexers must be readonly.\r\n" +
-                  "  - Event fields are ignored.\r\n" +
-                  "* Use PropertiesSettings and specify how copying is performed:\r\n" +
-                  "  - ReferenceHandling.Structural means that a deep copy is performed.\r\n" +
-                  "  - ReferenceHandling.References means that references are copied.\r\n" +
-                  "  - Exclude the type WithComplexProperty.\r\n" +
-                  "  - Exclude the property WithComplexProperty.ComplexType.\r\n";
+                   : "Copy.PropertyValues(x, y) failed.\r\n" +
+                     "The property WithComplexProperty.ComplexType of type ComplexType is not supported.\r\n" +
+                     "Solve the problem by any of:\r\n" +
+                     "* Make ComplexType immutable or use an immutable type.\r\n" +
+                     "  - For immutable types the following must hold:\r\n" +
+                     "    - Must be a sealed class or a struct.\r\n" +
+                     "    - All fields and properties must be readonly.\r\n" +
+                     "    - All field and property types must be immutable.\r\n" +
+                     "    - All indexers must be readonly.\r\n" +
+                     "    - Event fields are ignored.\r\n" +
+                     "* Use PropertiesSettings and specify how copying is performed:\r\n" +
+                     "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
+                     "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but tracks reference loops.\r\n" +
+                     "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
+                     "  - ReferenceHandling.References means that references are copied.\r\n" +
+                     "  - Exclude a combination of the following:\r\n" +
+                     "    - The property WithComplexProperty.ComplexType.\r\n" +
+                     "    - The type ComplexType.\r\n";
             var source = new CopyTypes.WithComplexProperty();
             var target = new CopyTypes.WithComplexProperty();
 
-            if (referenceHandling == null)
-            {
-                var exception = Assert.Throws<NotSupportedException>(() => this.CopyMethod(source, target));
-                Assert.AreEqual(expected, exception.Message);
-            }
-            else
-            {
-                var exception = Assert.Throws<NotSupportedException>(() => this.CopyMethod(source, target, ReferenceHandling.Throw));
-                Assert.AreEqual(expected, exception.Message);
-            }
+            var exception = referenceHandling == null
+                ? Assert.Throws<NotSupportedException>(() => this.CopyMethod(source, target))
+                : Assert.Throws<NotSupportedException>(() => this.CopyMethod(source, target, referenceHandling.Value));
+            Assert.AreEqual(expected, exception.Message);
         }
 
         [TestCase(ReferenceHandling.Structural)]
         [TestCase(ReferenceHandling.References)]
         public void WithReadonlyImmutableThrows(ReferenceHandling referenceHandling)
         {
-            var expected = this.GetType() == typeof (FieldValues.Throws)
+            var expected = this is FieldValues.Throws
                 ? "Copy.FieldValues(x, y) failed.\r\n" +
                   "The readonly field WithReadonlyProperty<Immutable>.<Value>k__BackingField differs after copy.\r\n" +
                   " - Source value: Gu.ChangeTracking.Tests.CopyTests.CopyTypes+Immutable.\r\n" +
@@ -75,7 +75,7 @@
                   "  - ReferenceHandling.References means that references are copied.\r\n" +
                   "  - Exclude the type WithReadonlyProperty<Immutable>.\r\n" +
                   "  - Exclude the field WithReadonlyProperty<Immutable>.<Value>k__BackingField.\r\n"
-          
+
                   : "Copy.PropertyValues(x, y) failed.\r\n" +
                   "The readonly property WithReadonlyProperty<Immutable>.Value differs after copy.\r\n" +
                   " - Source value: Gu.ChangeTracking.Tests.CopyTests.CopyTypes+Immutable.\r\n" +
@@ -98,11 +98,11 @@
         [Test]
         public void ArrayOfIntsDifferentLengthsThrows()
         {
-            var expected = this.GetType() == typeof(FieldValues.Throws)
+            var expected = this is FieldValues.Throws
                                ? "Copy.FieldValues(x, y) failed.\r\n" +
                                  "The collections are fixed size type: Int32[]\r\n" +
                                  "Source count: 3\r\n" +
-                                 "Target count: 1\r\n" + 
+                                 "Target count: 1\r\n" +
                                  "Solve the problem by any of:\r\n" +
                                  "* Use a resizable collection like List<T>.\r\n" +
                                  "* Check that the collections are the same size before calling.\r\n"
@@ -124,27 +124,30 @@
         [Test]
         public void WithIndexer()
         {
-            var expected = this.GetType() == typeof(FieldValues.Throws)
+            var expected = this is FieldValues.Throws
                                ? "Copy.FieldValues(x, y) failed.\r\n" +
                                  "Indexers are not supported.\r\n" +
-                                 "The property WithIndexerType.Item is not supported.\r\n" +
-                                 "The property is of type int.\r\n" +
+                                 "  - The property WithIndexerType.Item is an indexer and not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
                                  "* Use FieldsSettings and specify how copying is performed:\r\n" +
-                                 "  - ReferenceHandling.Structural means that a deep copy is performed.\r\n" +
+                                 "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
+                                 "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but tracks reference loops.\r\n" +
+                                 "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
                                  "  - ReferenceHandling.References means that references are copied.\r\n" +
-                                 "  - Exclude the type WithIndexerType.\r\n"
+                                 "  - Exclude a combination of the following:\r\n" +
+                                 "    - The indexer property WithIndexerType.Item.\r\n"
 
                                : "Copy.PropertyValues(x, y) failed.\r\n" +
                                  "Indexers are not supported.\r\n" +
-                                 "The property WithIndexerType.Item is not supported.\r\n" +
-                                 "The property is of type int.\r\n" +
+                                 "  - The property WithIndexerType.Item is an indexer and not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
                                  "* Use PropertiesSettings and specify how copying is performed:\r\n" +
-                                 "  - ReferenceHandling.Structural means that a deep copy is performed.\r\n" +
+                                 "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
+                                 "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but tracks reference loops.\r\n" +
+                                 "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
                                  "  - ReferenceHandling.References means that references are copied.\r\n" +
-                                 "  - Exclude the type WithIndexerType.\r\n" +
-                                 "  - Exclude the property WithIndexerType.Item.\r\n";
+                                 "  - Exclude a combination of the following:\r\n" +
+                                 "    - The indexer property WithIndexerType.Item.\r\n";
             var source = new CopyTypes.WithIndexerType();
             var target = new CopyTypes.WithIndexerType();
 
@@ -155,7 +158,7 @@
         [Test]
         public void WhenDefaultConstructorIsMissing()
         {
-            var expected = this.GetType() == typeof(FieldValues.Throws)
+            var expected = this is FieldValues.Throws
                    ? "Copy.FieldValues(x, y) failed.\r\n" +
                      "Activator.CreateInstance failed for type WithoutDefaultCtor.\r\n" +
                      "Solve the problem by any of:\r\n" +
@@ -183,5 +186,41 @@
 
             Assert.AreEqual(expected, exception.Message);
         }
+
+
+        [TestCase(null)]
+        [TestCase(ReferenceHandling.Throw)]
+        [TestCase(ReferenceHandling.Structural)]
+        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
+        [TestCase(ReferenceHandling.References)]
+        public void CanCopyEnumerableOfIntsThrows(ReferenceHandling? referenceHandling)
+        {
+            var expected = "Can only copy the members of collections implementing IList or IDictionary";
+
+            var x = Enumerable.Repeat(1, 2);
+            var y = Enumerable.Repeat(1, 2);
+            var exception = referenceHandling != null
+                ? Assert.Throws<NotSupportedException>(() => this.CopyMethod(x, y, referenceHandling.Value))
+                : Assert.Throws<NotSupportedException>(() => this.CopyMethod(x, y));
+            Assert.AreEqual(expected, exception.Message);
+        }
+
+        [TestCase(null)]
+        [TestCase(ReferenceHandling.Throw)]
+        [TestCase(ReferenceHandling.Structural)]
+        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
+        [TestCase(ReferenceHandling.References)]
+        public void CanCopyImmutable(ReferenceHandling? referenceHandling)
+        {
+            var expected = "Cannot copy the members of an immutable object";
+            var x = new CopyTypes.Immutable(1);
+            var y = new CopyTypes.Immutable(1);
+            var exception = referenceHandling != null
+                ? Assert.Throws<NotSupportedException>(() => this.CopyMethod(x, y, referenceHandling.Value))
+                : Assert.Throws<NotSupportedException>(() => this.CopyMethod(x, y));
+
+            Assert.AreEqual(expected, exception.Message);
+        }
+
     }
 }
