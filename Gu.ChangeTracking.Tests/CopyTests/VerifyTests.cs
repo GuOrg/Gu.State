@@ -112,7 +112,7 @@
         [TestCase(ReferenceHandling.Structural)]
         [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
-        public void CanCopyImmutable(ReferenceHandling? referenceHandling)
+        public void CanCopyImmutableThrows(ReferenceHandling? referenceHandling)
         {
             var expected = "Cannot copy the members of an immutable object";
             var exception = referenceHandling != null
@@ -130,14 +130,46 @@
         }
 
         [Test]
+        public void WithIndexer()
+        {
+            var expected = this is FieldValues.Verify
+                               ? "Copy.FieldValues(x, y) failed.\r\n" +
+                                 "Indexers are not supported.\r\n" +
+                                 "  - The property WithIndexerType.Item is an indexer and not supported.\r\n" +
+                                 "Solve the problem by any of:\r\n" +
+                                 "* Use FieldsSettings and specify how copying is performed:\r\n" +
+                                 "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
+                                 "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but tracks reference loops.\r\n" +
+                                 "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
+                                 "  - ReferenceHandling.References means that references are copied.\r\n" +
+                                 "  - Exclude a combination of the following:\r\n" +
+                                 "    - The indexer property WithIndexerType.Item.\r\n"
+
+                               : "Copy.PropertyValues(x, y) failed.\r\n" +
+                                 "Indexers are not supported.\r\n" +
+                                 "  - The property WithIndexerType.Item is an indexer and not supported.\r\n" +
+                                 "Solve the problem by any of:\r\n" +
+                                 "* Use PropertiesSettings and specify how copying is performed:\r\n" +
+                                 "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
+                                 "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but tracks reference loops.\r\n" +
+                                 "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
+                                 "  - ReferenceHandling.References means that references are copied.\r\n" +
+                                 "  - Exclude a combination of the following:\r\n" +
+                                 "    - The indexer property WithIndexerType.Item.\r\n";
+
+            var exception = Assert.Throws<NotSupportedException>(() => this.VerifyMethod<CopyTypes.WithIndexerType>(ReferenceHandling.Structural));
+            Assert.AreEqual(expected, exception.Message);
+        }
+
+        [Test]
         public void DetectsReferenceLoop()
         {
             var expected = this.GetType() == typeof(FieldValues.Verify)
-                   ? "EqualBy.FieldValues(x, y) failed.\r\n" +
-                     "The field Parent.<Child>k__BackingField of type Child is not supported.\r\n" +
+                   ? "Copy.FieldValues(x, y) failed.\r\n" +
+                     "The field Parent.child of type Child is not supported.\r\n" +
                      "The field Child.<Parent>k__BackingField of type Parent is not supported.\r\n" +
-                     "The field Parent.<Child>k__BackingField of type Child is in a reference loop.\r\n" +
-                     "  - The loop is Parent.<Child>k__BackingField.<Parent>k__BackingField.<Child>k__BackingField...\r\n" +
+                     "The field Parent.child of type Child is in a reference loop.\r\n" +
+                     "  - The loop is Parent.child.<Parent>k__BackingField.child...\r\n" +
                      "Solve the problem by any of:\r\n" +
                      "* Make Child immutable or use an immutable type.\r\n" +
                      "  - For immutable types the following must hold:\r\n" +
@@ -152,7 +184,7 @@
                      "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
                      "  - ReferenceHandling.References means that references are copied.\r\n" +
                      "  - Exclude a combination of the following:\r\n" +
-                     "    - The field Parent.<Child>k__BackingField.\r\n" +
+                     "    - The field Parent.child.\r\n" +
                      "    - The field Child.<Parent>k__BackingField.\r\n" +
                      "    - The type Child.\r\n"
 

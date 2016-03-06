@@ -1,7 +1,6 @@
 ﻿namespace Gu.ChangeTracking.Tests.CopyTests
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using NUnit.Framework;
 
@@ -13,7 +12,7 @@
         [TestCase(ReferenceHandling.Throw)]
         public void WithComplexWithoutReferenceHandling(ReferenceHandling? referenceHandling)
         {
-            var expected = this.GetType() == typeof(FieldValues.Throws)
+            var expected = this is FieldValues.Throws
                    ? "Copy.FieldValues(x, y) failed.\r\n" +
                      "The field WithComplexProperty.<ComplexType>k__BackingField of type ComplexType is not supported.\r\n" +
                      "Solve the problem by any of:\r\n" +
@@ -64,7 +63,7 @@
         [TestCase(ReferenceHandling.References)]
         public void WithReadonlyImmutableThrows(ReferenceHandling referenceHandling)
         {
-            var expected = this.GetType() == typeof(FieldValues.Throws)
+            var expected = this is FieldValues.Throws
                 ? "Copy.FieldValues(x, y) failed.\r\n" +
                   "The readonly field WithReadonlyProperty<Immutable>.<Value>k__BackingField differs after copy.\r\n" +
                   " - Source value: Gu.ChangeTracking.Tests.CopyTests.CopyTypes+Immutable.\r\n" +
@@ -99,7 +98,7 @@
         [Test]
         public void ArrayOfIntsDifferentLengthsThrows()
         {
-            var expected = this.GetType() == typeof(FieldValues.Throws)
+            var expected = this is FieldValues.Throws
                                ? "Copy.FieldValues(x, y) failed.\r\n" +
                                  "The collections are fixed size type: Int32[]\r\n" +
                                  "Source count: 3\r\n" +
@@ -125,11 +124,10 @@
         [Test]
         public void WithIndexer()
         {
-            var expected = this.GetType() == typeof(FieldValues.Throws)
+            var expected = this is FieldValues.Throws
                                ? "Copy.FieldValues(x, y) failed.\r\n" +
                                  "Indexers are not supported.\r\n" +
-                                 "The property WithIndexerType.Item is not supported.\r\n" +
-                                 "The property is of type int.\r\n" +
+                                 "  - The property WithIndexerType.Item is an indexer and not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
                                  "* Use FieldsSettings and specify how copying is performed:\r\n" +
                                  "  - ReferenceHandling.Structural means that a deep copy is performed.\r\n" +
@@ -138,14 +136,13 @@
 
                                : "Copy.PropertyValues(x, y) failed.\r\n" +
                                  "Indexers are not supported.\r\n" +
-                                 "The property WithIndexerType.Item is not supported.\r\n" +
-                                 "The property is of type int.\r\n" +
+                                 "  - The property WithIndexerType.Item is an indexer and not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
                                  "* Use PropertiesSettings and specify how copying is performed:\r\n" +
                                  "  - ReferenceHandling.Structural means that a deep copy is performed.\r\n" +
                                  "  - ReferenceHandling.References means that references are copied.\r\n" +
                                  "  - Exclude the type WithIndexerType.\r\n" +
-                                 "  - Exclude the property WithIndexerType.Item.\r\n";
+                                 "  - The indexer WithIndexerType.Item.\r\n";
             var source = new CopyTypes.WithIndexerType();
             var target = new CopyTypes.WithIndexerType();
 
@@ -156,7 +153,7 @@
         [Test]
         public void WhenDefaultConstructorIsMissing()
         {
-            var expected = this.GetType() == typeof(FieldValues.Throws)
+            var expected = this is FieldValues.Throws
                    ? "Copy.FieldValues(x, y) failed.\r\n" +
                      "Activator.CreateInstance failed for type WithoutDefaultCtor.\r\n" +
                      "Solve the problem by any of:\r\n" +

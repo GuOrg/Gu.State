@@ -143,14 +143,10 @@
                         if (targetValue == null)
                         {
                             targetValue = CreateInstance<PropertiesSettings>(sourceValue, propertyInfo);
-                            CopyPropertiesValues(sourceValue, targetValue, settings, referencePairs);
                             propertyInfo.SetValue(target, targetValue, null);
                         }
-                        else
-                        {
-                            CopyPropertiesValues(sourceValue, targetValue, settings, referencePairs);
-                        }
 
+                        CopyPropertiesValues(sourceValue, targetValue, settings, referencePairs);
                         continue;
                     case ReferenceHandling.Throw:
                         Throw.CannotCopyMember(source.GetType(), propertyInfo, settings);
