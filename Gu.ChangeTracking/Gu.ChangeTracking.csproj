@@ -53,6 +53,7 @@
     <Compile Include="ExceptionHelpers\Errors\BaseClasses\MemberError.cs" />
     <Compile Include="ExceptionHelpers\Errors\MemberTypeErrors.cs" />
     <Compile Include="ExceptionHelpers\Errors\NotCopyableCollection.cs" />
+    <Compile Include="ExceptionHelpers\Errors\ReadonlyMemberDiffers.cs" />
     <Compile Include="ExceptionHelpers\Errors\ReferenceLoop.cs" />
     <Compile Include="ExceptionHelpers\Errors\RequiresReferenceHandling.cs" />
     <Compile Include="ExceptionHelpers\Errors\BaseClasses\TypeError.cs" />

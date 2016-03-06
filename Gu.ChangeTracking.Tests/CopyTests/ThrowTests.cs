@@ -10,7 +10,7 @@
 
         [TestCase(null)]
         [TestCase(ReferenceHandling.Throw)]
-        public void WithComplexWithoutReferenceHandling(ReferenceHandling? referenceHandling)
+        public void WithComplexThrows(ReferenceHandling? referenceHandling)
         {
             var expected = this is FieldValues.Throws
                    ? "Copy.FieldValues(x, y) failed.\r\n" +
@@ -66,27 +66,29 @@
             var expected = this is FieldValues.Throws
                 ? "Copy.FieldValues(x, y) failed.\r\n" +
                   "The readonly field WithReadonlyProperty<Immutable>.<Value>k__BackingField differs after copy.\r\n" +
-                  " - Source value: Gu.ChangeTracking.Tests.CopyTests.CopyTypes+Immutable.\r\n" +
-                  " - Target value: Gu.ChangeTracking.Tests.CopyTests.CopyTypes+Immutable.\r\n" +
-                  "The field is of type Immutable.\r\n" +
+                  " - Source value (Immutable): Gu.ChangeTracking.Tests.CopyTests.CopyTypes+Immutable.\r\n" +
+                  " - Target value (Immutable): Gu.ChangeTracking.Tests.CopyTests.CopyTypes+Immutable.\r\n" +
                   "Solve the problem by any of:\r\n" +
                   "* Use FieldsSettings and specify how copying is performed:\r\n" +
-                  "  - ReferenceHandling.Structural means that a deep copy is performed.\r\n" +
+                  "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
+                  "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but tracks reference loops.\r\n" +
+                  "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
                   "  - ReferenceHandling.References means that references are copied.\r\n" +
-                  "  - Exclude the type WithReadonlyProperty<Immutable>.\r\n" +
-                  "  - Exclude the field WithReadonlyProperty<Immutable>.<Value>k__BackingField.\r\n"
+                  "  - Exclude a combination of the following:\r\n" +
+                  "    - The field WithReadonlyProperty<Immutable>.<Value>k__BackingField.\r\n"
 
                   : "Copy.PropertyValues(x, y) failed.\r\n" +
-                  "The readonly property WithReadonlyProperty<Immutable>.Value differs after copy.\r\n" +
-                  " - Source value: Gu.ChangeTracking.Tests.CopyTests.CopyTypes+Immutable.\r\n" +
-                  " - Target value: Gu.ChangeTracking.Tests.CopyTests.CopyTypes+Immutable.\r\n" +
-                  "The property is of type Immutable.\r\n" +
-                  "Solve the problem by any of:\r\n" +
-                  "* Use PropertiesSettings and specify how copying is performed:\r\n" +
-                  "  - ReferenceHandling.Structural means that a deep copy is performed.\r\n" +
-                  "  - ReferenceHandling.References means that references are copied.\r\n" +
-                  "  - Exclude the type WithReadonlyProperty<Immutable>.\r\n" +
-                  "  - Exclude the property WithReadonlyProperty<Immutable>.Value.\r\n";
+                    "The readonly property WithReadonlyProperty<Immutable>.Value differs after copy.\r\n" +
+                    " - Source value (Immutable): Gu.ChangeTracking.Tests.CopyTests.CopyTypes+Immutable.\r\n" +
+                    " - Target value (Immutable): Gu.ChangeTracking.Tests.CopyTests.CopyTypes+Immutable.\r\n" +
+                    "Solve the problem by any of:\r\n" +
+                    "* Use PropertiesSettings and specify how copying is performed:\r\n" +
+                    "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
+                    "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but tracks reference loops.\r\n" +
+                    "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
+                    "  - ReferenceHandling.References means that references are copied.\r\n" +
+                    "  - Exclude a combination of the following:\r\n" +
+                    "    - The property WithReadonlyProperty<Immutable>.Value.\r\n";
 
             var source = new CopyTypes.WithReadonlyProperty<CopyTypes.Immutable>(new CopyTypes.Immutable(1));
             var target = new CopyTypes.WithReadonlyProperty<CopyTypes.Immutable>(new CopyTypes.Immutable(2));
