@@ -9,7 +9,7 @@
         /// <summary>
         /// Copies property values from source to target.
         /// </summary>
-        /// <typeparam name="T">The type of <param name="source" /> and <param name="target" /></typeparam>
+        /// <typeparam name="T">The type of <paramref name="source" /> and <paramref name="target" /></typeparam>
         /// <param name="source">The instance to copy property values from</param>
         /// <param name="target">The instance to copy property values to</param>
         /// <param name="bindingFlags">The binding flags to use when getting properties</param>
@@ -39,7 +39,7 @@
             where T : class
         {
             Verify.CanCopyRoot(typeof(T));
-            var type = source?.GetType()?? target?.GetType() ?? typeof(T);
+            var type = source?.GetType() ?? target?.GetType() ?? typeof(T);
             VerifyCanCopyPropertyValues(type, settings);
             if (settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops)
             {
@@ -58,7 +58,7 @@
             Ensure.NotNull(source, nameof(source));
             Ensure.NotNull(target, nameof(target));
             Ensure.SameType(source, target);
-            Verify.Indexers(source.GetType(), settings);
+            Verify.CanCopyPropertyValues(source, target, settings);
             if (referencePairs?.Contains(source, target) == true)
             {
                 return;
@@ -149,7 +149,7 @@
                         CopyPropertiesValues(sourceValue, targetValue, settings, referencePairs);
                         continue;
                     case ReferenceHandling.Throw:
-                        Throw.CannotCopyMember(source.GetType(), propertyInfo, settings);
+                        throw ChangeTracking.Throw.ShouldNeverGetHere();
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);

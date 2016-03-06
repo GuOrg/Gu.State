@@ -210,38 +210,6 @@
                 return GetFieldsErrors(field.FieldType, settings, path);
             }
 
-            public static void Indexers<T>(Type type, T settings) where T : IMemberSettings
-            {
-                var errorBuilder = Indexers(type, settings, null);
-                if (errorBuilder != null)
-                {
-                    throw new NotSupportedException(errorBuilder.ToString());
-                }
-            }
-
-            public static StringBuilder Indexers<T>(Type type, T settings, StringBuilder errorBuilder) where T : IMemberSettings
-            {
-                var propertyInfos = type.GetProperties(Constants.DefaultFieldBindingFlags);
-                foreach (var propertyInfo in propertyInfos)
-                {
-                    if (propertyInfo.GetIndexParameters()
-                                    .Length == 0)
-                    {
-                        continue;
-                    }
-
-                    if (settings.IsIgnoringDeclaringType(propertyInfo.DeclaringType))
-                    {
-                        continue;
-                    }
-
-                    errorBuilder = errorBuilder.CreateIfNull()
-                                               .AppendCannotCopyIndexer<T>(type, propertyInfo);
-                }
-
-                return errorBuilder;
-            }
-
             internal static void CanCopyRoot(Type type)
             {
                 if (type.IsImmutable())

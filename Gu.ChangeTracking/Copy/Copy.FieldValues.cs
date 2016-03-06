@@ -59,7 +59,7 @@
             Ensure.NotNull(source, nameof(source));
             Ensure.NotNull(target, nameof(target));
             Ensure.SameType(source, target);
-            Verify.Indexers(source.GetType(), settings);
+            Verify.CanCopyFieldValues(source, target, settings);
             if (referencePairs?.Contains(source, target) == true)
             {
                 return;
@@ -141,8 +141,7 @@
                         fieldInfo.SetValue(target, targetValue);
                         continue;
                     case ReferenceHandling.Throw:
-                        Throw.CannotCopyMember(source.GetType(), fieldInfo, settings);
-                        break;
+                        throw ChangeTracking.Throw.ShouldNeverGetHere();
                     default:
                         throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);
                 }

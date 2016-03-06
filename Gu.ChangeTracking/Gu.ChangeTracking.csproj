@@ -78,7 +78,6 @@
     <Compile Include="Copy\Copy.Shared.cs" />
     <Compile Include="Copy\Copy.Throw.cs" />
     <Compile Include="Copy\Copy.Verify.cs" />
-    <Compile Include="Copy\Copy.VerifyCanCopyFieldValues.cs" />
     <Compile Include="DirtyTracker\DirtyTracker.Verify.cs" />
     <Compile Include="DirtyTracker\Internals\AlwaysDirtyNode.cs" />
     <Compile Include="DirtyTracker\Internals\IDirtyTracker.cs" />
@@ -138,7 +137,6 @@
     <Compile Include="Copy\Copy.FieldValues.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Copy\Copy.VerifyCanCopyPropertyValues.cs" />
     <None Include="paket.references" />
     <None Include="paket.template" />
   </ItemGroup>

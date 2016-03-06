@@ -84,67 +84,8 @@
             return errorBuilder;
         }
 
-        // ReSharper disable once UnusedParameter.Local
-        private static StringBuilder AppendCannotCopyMember<T>(this StringBuilder errorBuilder, Type sourceType, MemberInfo member, T settings)
-            where T : IMemberSettings
-        {
-            return errorBuilder.AppendCannotCopyMember<T>(sourceType, member);
-        }
-
-        private static StringBuilder AppendCannotCopyMember<T>(this StringBuilder errorBuilder, Type sourceType, MemberInfo member)
-            where T : IMemberSettings
-        {
-            return errorBuilder.CreateIfNull()
-                               .AppendCopyFailed<T>()
-                               .AppendMemberIsNotSupported(sourceType, member)
-                               .AppendSolveTheProblemBy()
-                               .AppendSuggestImmutableType(member.MemberType())
-                               .AppendSuggestCopySettings<T>(sourceType, member);
-        }
-
-        private static StringBuilder AppendCannotCopyIndexer<T>(
-            this StringBuilder errorBuilder,
-            Type sourceType,
-            PropertyInfo indexer)
-            where T : IMemberSettings
-        {
-            Debug.Assert(indexer.GetIndexParameters().Length > 0, "Must be an indexer");
-            return errorBuilder.CreateIfNull()
-                           .AppendCopyFailed<T>()
-                           .AppendPropertyIsNotSupported(sourceType, indexer)
-                           .AppendSolveTheProblemBy()
-                           .AppendSuggestCopySettings<T>(sourceType, indexer);
-        }
-
-        // ReSharper disable once UnusedParameter.Local
-        private static StringBuilder AppendCannotCopyType<T>(this StringBuilder errorBuilder, Type type, T settings)
-            where T : IMemberSettings
-        {
-            return errorBuilder.CreateIfNull()
-                               .AppendCopyFailed<T>()
-                               .AppendTypeIsNotSupported(type)
-                               .AppendSolveTheProblemBy()
-                               .AppendSuggestImmutableType(type)
-                               .AppendSuggestCopySettings<T>(type, null);
-        }
-
         private static class Throw
         {
-            // ReSharper disable once UnusedParameter.Local
-            internal static void CannotCopyMember<T>(Type sourceType, MemberInfo member, T settings)
-                where T : IMemberSettings
-            {
-                CannotCopyMember<T>(sourceType, member);
-            }
-
-            internal static void CannotCopyMember<T>(Type sourceType, MemberInfo member)
-                where T : IMemberSettings
-            {
-                var errorBuilder = new StringBuilder().AppendCannotCopyMember<T>(sourceType, member);
-                var message = errorBuilder.ToString();
-                throw new NotSupportedException(message);
-            }
-
             // ReSharper disable once UnusedParameter.Local
             internal static void ReadonlyMemberDiffers<T>(
                 SourceAndTargetValue sourceAndTargetValue,
@@ -181,69 +122,6 @@
                 errorBuilder.AppendSolveTheProblemBy()
                     .AppendSuggestCopySettings<T>(member.DeclaringType, member);
                 throw new InvalidOperationException(errorBuilder.ToString());
-            }
-
-            internal static void CannotCopyType<T>(Type type, T settings)
-                where T : IMemberSettings
-            {
-                var errorBuilder = new StringBuilder();
-                AppendCannotCopyType(errorBuilder, type, settings);
-                throw new NotSupportedException(errorBuilder.ToString());
-            }
-
-            internal static void CannotCopyItem<T>(IList source, IList target, int index, T settings)
-                where T : IMemberSettings
-            {
-                var itemType = source[index]?.GetType() ?? source.GetType().GetItemType();
-                var errorBuilder = new StringBuilder();
-                if (settings is PropertiesSettings)
-                {
-                    errorBuilder.AppendLine(
-                        $"Copy.{nameof(PropertyValues)}(x, y) does not support copying the type {itemType.PrettyName()}");
-                }
-                else if (settings is FieldsSettings)
-                {
-                    errorBuilder.AppendLine($"Copy.{nameof(CopyFieldsValues)}(x, y) does not support copying the type {itemType.PrettyName()}");
-                }
-                else
-                {
-                    throw ChangeTracking.Throw.ExpectedParameterOfTypes<PropertiesSettings, FieldsSettings>(nameof(settings));
-                }
-
-                errorBuilder.AppendLine($"The problem occurred at index: {index}")
-                    .AppendLine(
-                        $"Source list is of type: {source.GetType().PrettyName()} and target list is of type: {target.GetType().PrettyName()}")
-                    .AppendSolveTheProblemBy()
-                    .AppendSuggestImmutableType(itemType)
-                    .AppendSuggestCopySettings<T>(itemType, null);
-                throw new NotSupportedException(errorBuilder.ToString());
-            }
-
-            internal static void CannotCopyItem<T>(IDictionary source, IDictionary target, object key, T settings)
-                where T : IMemberSettings
-            {
-                var itemType = source[key]?.GetType();
-                var errorBuilder = new StringBuilder();
-                if (settings is PropertiesSettings)
-                {
-                    errorBuilder.AppendLine($"Copy.{nameof(PropertyValues)}(x, y) does not support copying the type {itemType.PrettyName()}");
-                }
-                else if (settings is FieldsSettings)
-                {
-                    errorBuilder.AppendLine(
-                        $"Copy.{nameof(CopyFieldsValues)}(x, y) does not support copying the type {itemType.PrettyName()}");
-                }
-                else
-                {
-                    throw ChangeTracking.Throw.ExpectedParameterOfTypes<PropertiesSettings, FieldsSettings>(nameof(settings));
-                }
-
-                errorBuilder.AppendLine($"The problem occurred for key: {key}")
-                    .AppendLine($"Source list is of type: {source.GetType().PrettyName()} and target list is of type: {target.GetType().PrettyName()}")
-                    .AppendSolveTheProblemBy()
-                    .AppendSuggestImmutableType(itemType)
-                    .AppendSuggestCopySettings<T>(itemType, null);
-                throw new NotSupportedException(errorBuilder.ToString());
             }
 
             // ReSharper disable once UnusedParameter.Local
