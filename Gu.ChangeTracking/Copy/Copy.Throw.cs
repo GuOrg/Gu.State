@@ -49,6 +49,7 @@
                         .AppendSolveTheProblemBy()
                         .AppendSuggestImmutable(errors)
                         .AppendSuggestResizableCollection(errors)
+                        .AppendSuggestDefaultCtor(errors)
                         .AppendLine($"* Use {typeof(TSettings).Name} and specify how copying is performed:")
                         .AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Structural)} means that a the entire graph is traversed and immutable property values are copied.")
                         .AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.StructuralWithReferenceLoops)} same as Structural but tracks reference loops.")
@@ -60,6 +61,7 @@
             return message;
         }
 
+        [Obsolete]
         private static StringBuilder AppendSuggestCopySettings<T>(this StringBuilder errorBuilder, Type type, MemberInfo member)
             where T : IMemberSettings
         {
@@ -112,8 +114,8 @@
             }
 
             // ReSharper disable once UnusedParameter.Local
-            internal static void CannotCopyFixesSizeCollections<T>(IEnumerable source, IEnumerable target, T settings)
-                where T : class, IMemberSettings
+            internal static void CannotCopyFixesSizeCollections<TSettings>(IEnumerable source, IEnumerable target, TSettings settings)
+                where TSettings : class, IMemberSettings
             {
                 var typeErrors = new TypeErrors(null)
                                      {
@@ -122,6 +124,17 @@
 
                 var message = typeErrors.GetErrorText(settings);
                 throw new InvalidOperationException(message);
+            }
+
+            internal static InvalidOperationException CreateCannotCreateInstanceException<TSettings>(object sourceValue, MemberInfo member, TSettings settings, Exception exception)
+                                where TSettings : class, IMemberSettings
+            {
+                var typeErrors = new TypeErrors(null)
+                                     {
+                                         new CannotCreateInstanceError(sourceValue, member)
+                                     };
+                var message = typeErrors.GetErrorText(settings);
+                return new InvalidOperationException(message, exception);
             }
         }
     }

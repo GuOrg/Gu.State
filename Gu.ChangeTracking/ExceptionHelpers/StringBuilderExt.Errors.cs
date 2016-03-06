@@ -109,5 +109,15 @@
 
             return errorBuilder;
         }
+
+        internal static StringBuilder AppendSuggestDefaultCtor(this StringBuilder errorBuilder, TypeErrors errors)
+        {
+            foreach (var type in errors.OfType<CannotCreateInstanceError>().Select(x => x.Type).Distinct())
+            {
+                errorBuilder.AppendLine($"* Add a parameterless constructor to {type.PrettyName()}, can be private.");
+            }
+
+            return errorBuilder;
+        }
     }
 }

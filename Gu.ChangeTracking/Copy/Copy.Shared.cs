@@ -15,8 +15,8 @@
             return type.IsImmutable();
         }
 
-        internal static object CreateInstance<T>(object sourceValue, MemberInfo member)
-            where T : IMemberSettings
+        internal static object CreateInstance<TSettings>(object sourceValue, MemberInfo member, TSettings settings)
+            where TSettings : class, IMemberSettings
         {
             if (sourceValue == null)
             {
@@ -43,14 +43,7 @@
             }
             catch (Exception e)
             {
-                var errorBuilder = new StringBuilder();
-                errorBuilder.AppendCopyFailed<T>()
-                            .AppendLine($"{typeof(Activator).Name}.{nameof(Activator.CreateInstance)} failed for type {sourceValue.GetType().PrettyName()}.")
-                            .AppendSolveTheProblemBy()
-                            .AppendLine($"* Add a parameterless constructor to {type.PrettyName()}, can be private.")
-                            .AppendSuggestCopySettings<T>(type, member);
-                var message = errorBuilder.ToString();
-                throw new NotSupportedException(message, e);
+                throw Throw.CreateCannotCreateInstanceException(sourceValue, member, settings, e);
             }
         }
 

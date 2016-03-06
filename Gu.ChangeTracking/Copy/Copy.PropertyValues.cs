@@ -142,7 +142,7 @@
                         var targetValue = propertyInfo.GetValue(target);
                         if (targetValue == null)
                         {
-                            targetValue = CreateInstance<PropertiesSettings>(sourceValue, propertyInfo);
+                            targetValue = CreateInstance(sourceValue, propertyInfo, settings);
                             propertyInfo.SetValue(target, targetValue, null);
                         }
 

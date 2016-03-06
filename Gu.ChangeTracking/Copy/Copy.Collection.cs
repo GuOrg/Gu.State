@@ -46,7 +46,7 @@
         private static class Collection
         {
             internal static void CopyListItems<T>(IList sourceList, IList targetList, Action<object, object, T, ReferencePairCollection> syncItem, T settings, ReferencePairCollection referencePairs)
-                where T : IMemberSettings
+                where T : class, IMemberSettings
             {
                 for (int i = 0; i < sourceList.Count; i++)
                 {
@@ -78,7 +78,7 @@
                         case ReferenceHandling.StructuralWithReferenceLoops:
                             if (tv == null)
                             {
-                                tv = CreateInstance<T>(sv, null);
+                                tv = CreateInstance(sv, null, settings);
                                 SetListItem(targetList, i, tv);
                             }
 
@@ -98,7 +98,7 @@
             }
 
             internal static void CopyDictionaryItems<T>(IDictionary sourceDict, IDictionary targetDict, Action<object, object, T, ReferencePairCollection> syncItem, T settings, ReferencePairCollection referencePairs)
-                where T : IMemberSettings
+                where T : class, IMemberSettings
             {
                 foreach (var key in sourceDict.Keys)
                 {
@@ -130,7 +130,7 @@
                         case ReferenceHandling.StructuralWithReferenceLoops:
                             if (tv == null)
                             {
-                                tv = CreateInstance<T>(sv, null);
+                                tv = CreateInstance(sv, null, settings);
                                 targetDict[key] = tv;
                             }
 
