@@ -39,6 +39,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChangeTracker\ChangeTracker.cs" />
+    <Compile Include="ChangeTracker\ChangeTracker.ItemsChangeTrackers.cs" />
+    <Compile Include="ChangeTracker\ChangeTracker.PropertiesChangeTrackers.cs" />
     <Compile Include="ChangeTracker\ChangeTracker.Verify.cs" />
     <Compile Include="Contracts\ISpecialCopyProperty.cs" />
     <Compile Include="ChangeTracker\PropertyChangeTracker.cs" />
