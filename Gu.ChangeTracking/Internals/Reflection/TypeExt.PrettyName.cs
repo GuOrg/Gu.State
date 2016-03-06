@@ -44,6 +44,12 @@
                 return "null";
             }
 
+            if (type.IsArray)
+            {
+                var elementType = type.GetElementType();
+                return elementType.PrettyName() + "[]";
+            }
+
             string alias;
             if (Aliases.TryGetValue(type, out alias))
             {

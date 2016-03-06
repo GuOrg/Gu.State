@@ -4,9 +4,9 @@
     using System.Reflection;
     using System.Text;
 
-    internal sealed class ReadonlyMemberDiffers : Error, INotSupported, IExcludableMember, IExcludableType
+    internal sealed class ReadonlyMemberDiffersError : Error, INotSupported, IExcludableMember, IExcludableType
     {
-        public ReadonlyMemberDiffers(SourceAndTargetValue sourceAndTargetValue, MemberInfo member)
+        public ReadonlyMemberDiffersError(SourceAndTargetValue sourceAndTargetValue, MemberInfo member)
         {
             this.SourceAndTargetValue = sourceAndTargetValue;
             this.Member = member;

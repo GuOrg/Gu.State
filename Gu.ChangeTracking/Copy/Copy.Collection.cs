@@ -7,7 +7,7 @@
     public static partial class Copy
     {
         private static void CopyCollectionItems<T>(object source, object target, Action<object, object, T, ReferencePairCollection> syncItem, T settings, ReferencePairCollection referencePairs)
-             where T : IMemberSettings
+             where T : class, IMemberSettings
         {
             var sl = source as IList;
             var tl = target as IList;
