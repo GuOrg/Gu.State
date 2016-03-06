@@ -45,6 +45,7 @@
     <Compile Include="EqualBy\EqualBy.Verify.cs" />
     <Compile Include="ExceptionHelpers\Errors\CannotCopyFixesSizeCollectionsError.cs" />
     <Compile Include="ExceptionHelpers\Errors\CannotCreateInstanceError.cs" />
+    <Compile Include="ExceptionHelpers\Errors\CollectionError.cs" />
     <Compile Include="ExceptionHelpers\Errors\Contracts\IExcludableMember.cs" />
     <Compile Include="ExceptionHelpers\Errors\Contracts\IFixWithImmutable.cs" />
     <Compile Include="ExceptionHelpers\Errors\Contracts\INotSupported.cs" />
@@ -63,8 +64,10 @@
     <Compile Include="ExceptionHelpers\Errors\UnsupportedIndexer.cs" />
     <Compile Include="ExceptionHelpers\StringBuilderExt.Errors.cs" />
     <Compile Include="ExceptionHelpers\ErrorBuilder.cs" />
+    <Compile Include="Internals\MemberPath\CollectionItem.cs" />
     <Compile Include="Internals\MemberPath\FieldItem.cs" />
     <Compile Include="Internals\MemberPath\IMemberItem.cs" />
+    <Compile Include="Internals\MemberPath\ITypedNode.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizer{T}.ItemsSynchronizers.cs" />
     <Compile Include="PropertySynchronizer\PropertySynchronizer{T}.PropertiesSynchronizers.cs" />
     <Compile Include="Settings\FieldsSettingsBuilder.cs" />

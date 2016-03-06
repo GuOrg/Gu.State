@@ -14,7 +14,7 @@
                 errorBuilder.AppendLine("  - Exclude a combination of the following:");
                 foreach (var excludableMember in errors.OfType<IExcludableMember>().Distinct())
                 {
-                    excludableMember.AppendSuggestExclude(errorBuilder);
+                    excludableMember.AppendSuggestExcludeMember(errorBuilder);
                 }
 
                 foreach (var type in errors.OfType<IExcludableType>().Select(x => x.Type).Distinct())

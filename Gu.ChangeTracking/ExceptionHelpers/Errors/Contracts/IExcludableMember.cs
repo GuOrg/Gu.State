@@ -4,6 +4,6 @@ namespace Gu.ChangeTracking
 
     internal interface IExcludableMember
     {
-        StringBuilder AppendSuggestExclude(StringBuilder errorBuilder);
+        StringBuilder AppendSuggestExcludeMember(StringBuilder errorBuilder);
     }
 }

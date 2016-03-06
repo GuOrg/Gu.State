@@ -2,7 +2,7 @@ namespace Gu.ChangeTracking
 {
     using System.Reflection;
 
-    internal interface IMemberItem
+    internal interface IMemberItem : ITypedNode
     {
         MemberInfo Member { get; }
     }

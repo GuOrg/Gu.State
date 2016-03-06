@@ -39,7 +39,7 @@
 
             if (source is IEnumerable || target is IEnumerable)
             {
-                throw ChangeTracking.Throw.ShouldNeverGetHere("Should be checked before");
+                throw ChangeTracking.Throw.ShouldNeverGetHereException("Should be checked before");
             }
         }
 
@@ -85,7 +85,7 @@
                             syncItem(sv, tv, settings, referencePairs);
                             continue;
                         case ReferenceHandling.Throw:
-                            throw ChangeTracking.Throw.ShouldNeverGetHere();
+                            throw ChangeTracking.Throw.ShouldNeverGetHereException();
                         default:
                             throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);
                     }
@@ -137,7 +137,7 @@
                             syncItem(sv, tv, settings, referencePairs);
                             continue;
                         case ReferenceHandling.Throw:
-                            throw ChangeTracking.Throw.ShouldNeverGetHere();
+                            throw ChangeTracking.Throw.ShouldNeverGetHereException();
                         default:
                             throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);
                     }

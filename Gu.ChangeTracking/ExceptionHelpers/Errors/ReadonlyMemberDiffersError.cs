@@ -45,7 +45,7 @@
             return errorBuilder;
         }
 
-        public StringBuilder AppendSuggestExclude(StringBuilder errorBuilder)
+        public StringBuilder AppendSuggestExcludeMember(StringBuilder errorBuilder)
         {
             return MemberError.AppendSuggestExcludeMember(errorBuilder, this.Type, this.Member);
         }

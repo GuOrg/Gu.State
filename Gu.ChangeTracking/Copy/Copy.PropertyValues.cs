@@ -149,7 +149,7 @@
                         CopyPropertiesValues(sourceValue, targetValue, settings, referencePairs);
                         continue;
                     case ReferenceHandling.Throw:
-                        throw ChangeTracking.Throw.ShouldNeverGetHere();
+                        throw ChangeTracking.Throw.ShouldNeverGetHereException();
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);

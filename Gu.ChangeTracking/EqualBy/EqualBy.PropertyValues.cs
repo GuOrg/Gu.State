@@ -152,7 +152,7 @@
                     Verify.CanEqualByPropertyValues(x, y, settings);
                     return PropertiesValuesEquals(x, y, settings, referencePairs);
                 case ReferenceHandling.Throw:
-                    throw ChangeTracking.Throw.ShouldNeverGetHere();
+                    throw ChangeTracking.Throw.ShouldNeverGetHereException();
                 default:
                     throw new ArgumentOutOfRangeException(
                         nameof(settings.ReferenceHandling),

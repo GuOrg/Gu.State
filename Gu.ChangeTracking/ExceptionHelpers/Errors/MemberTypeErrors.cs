@@ -39,9 +39,9 @@ namespace Gu.ChangeTracking
             throw Throw.ExpectedParameterOfTypes<FieldInfo, PropertyInfo>(nameof(this.MemberInfo));
         }
 
-        StringBuilder IExcludableMember.AppendSuggestExclude(StringBuilder errorBuilder)
+        StringBuilder IExcludableMember.AppendSuggestExcludeMember(StringBuilder errorBuilder)
         {
-            return MemberError.AppendSuggestExcludeMember(errorBuilder, this.SourceType(), this.MemberInfo);
+            return AppendSuggestExcludeMember(errorBuilder, this.SourceType(), this.MemberInfo);
         }
 
         public IEnumerator<Error> GetEnumerator()

@@ -32,7 +32,7 @@ namespace Gu.ChangeTracking
             return errorBuilder.AppendLine($"  - The property {this.Type.PrettyName()}.{this.Indexer.Name} is an indexer and not supported.");
         }
 
-        StringBuilder IExcludableMember.AppendSuggestExclude(StringBuilder errorBuilder)
+        StringBuilder IExcludableMember.AppendSuggestExcludeMember(StringBuilder errorBuilder)
         {
             return errorBuilder.AppendLine($"    - The indexer property {this.Type.PrettyName()}.{this.Indexer.Name}.");
         }

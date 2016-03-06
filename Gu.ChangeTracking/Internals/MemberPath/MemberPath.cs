@@ -26,7 +26,11 @@
 
         internal RootItem Root { get; }
 
+        internal Type RootType => this.Root.Type;
+
         internal IReadOnlyList<PathItem> Path { get; }
+
+        internal Type LastNodeType => this.Path.OfType<ITypedNode>().LastOrDefault()?.Type ?? this.RootType;
 
         internal string PathString
         {
@@ -39,8 +43,17 @@
                     var propertyItem = pathItem as IMemberItem;
                     if (propertyItem != null)
                     {
-                        stringBuilder.Append('.');
-                        stringBuilder.Append(propertyItem.Member.Name);
+                        stringBuilder.Append('.')
+                                     .Append(propertyItem.Member.Name);
+                        continue;
+                    }
+
+                    var collectionItem = pathItem as CollectionItem;
+                    if (collectionItem != null)
+                    {
+                        stringBuilder.Append("[")
+                                     .Append(collectionItem.CollectionType.GetItemType().PrettyName())
+                                     .Append("]");
                         continue;
                     }
 
@@ -51,7 +64,7 @@
                         continue;
                     }
 
-                    throw new ArgumentOutOfRangeException();
+                    throw Throw.ShouldNeverGetHereException();
                 }
 
                 return stringBuilder.ToString();
@@ -70,6 +83,11 @@
 
         internal MemberPath WithMember(MemberInfo memberInfo)
         {
+            if (memberInfo == null)
+            {
+                return this;
+            }
+
             var fieldInfo = memberInfo as FieldInfo;
             if (fieldInfo != null)
             {
@@ -86,13 +104,28 @@
             throw Throw.ExpectedParameterOfTypes<FieldInfo, PropertyInfo>(nameof(memberInfo));
         }
 
+        public MemberPath WithCollectionItem(Type collectionType)
+        {
+            return new MemberPath(this.Root, this.Path.Concat(new[] { new CollectionItem(collectionType) }).ToArray());
+        }
+
         internal MemberPath WithProperty(PropertyInfo propertyInfo)
         {
+            if (propertyInfo == null)
+            {
+                return this;
+            }
+
             return new MemberPath(this.Root, this.Path.Concat(new[] { new PropertyItem(propertyInfo) }).ToArray());
         }
 
         internal MemberPath WithField(FieldInfo fieldInfo)
         {
+            if (fieldInfo == null)
+            {
+                return this;
+            }
+
             return new MemberPath(this.Root, this.Path.Concat(new[] { new FieldItem(fieldInfo) }).ToArray());
         }
 
@@ -103,6 +136,11 @@
 
         internal bool Contains(MemberInfo memberInfo)
         {
+            if (memberInfo == null)
+            {
+                return false;
+            }
+
             return this.Path.OfType<IMemberItem>()
                        .Any(x => x.Member == memberInfo);
         }
