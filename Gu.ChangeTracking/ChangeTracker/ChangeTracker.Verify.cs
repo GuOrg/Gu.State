@@ -86,11 +86,13 @@
                 {
                     if (!typeof(INotifyCollectionChanged).IsAssignableFrom(type))
                     {
+                        GetErrors(type, settings, path)
                         return new CollectionMustNotifyError(path);
                     }
                 }
                 else if (!typeof(INotifyPropertyChanged).IsAssignableFrom(type))
                 {
+                    GetErrors(type, settings, path)
                     return new TypeMustNotifyError(path);
                 }
 

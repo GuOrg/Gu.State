@@ -1,16 +1,20 @@
 namespace Gu.ChangeTracking
 {
+    using System.Collections;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Text;
 
-    internal sealed class TypeMustNotifyError : TypeError, IFixWithImmutable, IExcludableType, IExcludableMember, INotSupported
+    internal sealed class TypeMustNotifyError : TypeError, IErrors, IFixWithImmutable, IExcludableType, IExcludableMember, INotSupported
     {
         private readonly MemberPath path;
+        private readonly Error error;
 
-        public TypeMustNotifyError(MemberPath memberPath)
+        public TypeMustNotifyError(MemberPath memberPath, Error error)
             : base(memberPath.LastNodeType)
         {
             this.path = memberPath;
+            this.error = error;
         }
 
         public static bool operator ==(TypeMustNotifyError left, TypeMustNotifyError right)
@@ -21,6 +25,28 @@ namespace Gu.ChangeTracking
         public static bool operator !=(TypeMustNotifyError left, TypeMustNotifyError right)
         {
             return !Equals(left, right);
+        }
+
+        public IEnumerator<Error> GetEnumerator()
+        {
+            yield return this;
+            var errors = this.error as IErrors;
+            if (errors != null)
+            {
+                foreach (var e in errors)
+                {
+                    yield return e;
+                }
+            }
+            else
+            {
+                yield return this.error;
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
         }
 
         StringBuilder IExcludableMember.AppendSuggestExcludeMember(StringBuilder errorBuilder)
