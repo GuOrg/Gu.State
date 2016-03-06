@@ -11,7 +11,7 @@ namespace Gu.ChangeTracking
             return null;
         }
 
-        internal static TypeErrors CheckReferenceHandlingIfEnumerable<TSetting>(this TypeErrors typeErrors, Type type, TSetting settings)
+        internal static TypeErrors CheckReferenceHandling<TSetting>(this TypeErrors typeErrors, Type type, TSetting settings)
             where TSetting : IMemberSettings
         {
             if (typeof(IEnumerable).IsAssignableFrom(type) && settings.ReferenceHandling == ReferenceHandling.Throw)
@@ -52,7 +52,7 @@ namespace Gu.ChangeTracking
             return typeErrors;
         }
 
-        internal static TypeErrors CheckProperties(
+        internal static TypeErrors VerifyRecursive(
             this TypeErrors typeErrors,
             Type type,
             PropertiesSettings settings,
@@ -82,13 +82,13 @@ namespace Gu.ChangeTracking
                     memberPath = new MemberPath(type);
                 }
 
-                typeErrors = CheckMember(typeErrors, type, settings, memberPath, getPropertyErrors, propertyInfo);
+                typeErrors = VerifyRecursive(typeErrors, type, settings, memberPath, getPropertyErrors, propertyInfo);
             }
 
             return typeErrors;
         }
 
-        internal static TypeErrors CheckFields(
+        internal static TypeErrors VerifyRecursive(
             this TypeErrors typeErrors,
             Type type,
             FieldsSettings settings,
@@ -113,13 +113,13 @@ namespace Gu.ChangeTracking
                     memberPath = new MemberPath(type);
                 }
 
-                typeErrors = CheckMember(typeErrors, type, settings, memberPath, getFieldErrors, fieldInfo);
+                typeErrors = VerifyRecursive(typeErrors, type, settings, memberPath, getFieldErrors, fieldInfo);
             }
 
             return typeErrors;
         }
 
-        private static TypeErrors CheckMember<TMember, TSettings>(
+        private static TypeErrors VerifyRecursive<TMember, TSettings>(
             TypeErrors typeErrors,
             Type type,
             TSettings settings,

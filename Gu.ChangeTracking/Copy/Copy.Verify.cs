@@ -3,7 +3,6 @@
     using System;
     using System.Collections;
     using System.Reflection;
-    using System.Text;
 
     public static partial class Copy
     {
@@ -146,7 +145,7 @@
             internal static TypeErrors GetPropertiesErrors(Type type, PropertiesSettings settings, MemberPath path = null)
             {
                 return settings.CopyErrors.GetOrAdd(type, t => VerifyCore(settings, t)
-                                                                   .CheckProperties(t, settings, path, GetPropertyErrors));
+                                                                   .VerifyRecursive(t, settings, path, GetRecursivePropertiesErrors));
             }
 
             internal static void CanCopyFieldValues<T>(T x, T y, FieldsSettings settings)
@@ -159,18 +158,18 @@
             internal static TypeErrors GetFieldsErrors(Type type, FieldsSettings settings, MemberPath path = null)
             {
                 return settings.CopyErrors.GetOrAdd(type, t => VerifyCore(settings, t)
-                                                                   .CheckFields(t, settings, path, GetFieldErrors));
+                                                                   .VerifyRecursive(t, settings, path, GetRecursiveFieldsErrors));
             }
 
             private static TypeErrors VerifyCore(IMemberSettings settings, Type type)
             {
                 return ErrorBuilder.Start()
-                                   .CheckReferenceHandlingIfEnumerable(type, settings)
+                                   .CheckReferenceHandling(type, settings)
                                    .CheckIsCopyableEnumerable(type, settings)
                                    .CheckIndexers(type, settings);
             }
 
-            private static Error GetPropertyErrors(Type type, PropertyInfo property, PropertiesSettings settings, MemberPath path)
+            private static Error GetRecursivePropertiesErrors(Type type, PropertyInfo property, PropertiesSettings settings, MemberPath path)
             {
                 if (IsCopyableType(property.PropertyType))
                 {
@@ -190,7 +189,7 @@
                 return GetPropertiesErrors(property.PropertyType, settings, path);
             }
 
-            private static Error GetFieldErrors(Type type, FieldInfo field, FieldsSettings settings, MemberPath path)
+            private static Error GetRecursiveFieldsErrors(Type type, FieldInfo field, FieldsSettings settings, MemberPath path)
             {
                 if (IsCopyableType(field.FieldType))
                 {
