@@ -50,6 +50,17 @@
 
         internal static void IsAssignableFrom(object x, Type type, string parameterName)
         {
+            var xType = x as Type;
+            if (xType != null)
+            {
+                if (!type.IsAssignableFrom(xType))
+                {
+                    throw new ArgumentException($"Expected {parameterName} to be {type}", parameterName);
+                }
+
+                return;
+            }
+
             if (!type.IsInstanceOfType(x))
             {
                 throw new ArgumentException($"Expected {parameterName} to be {type}", parameterName);

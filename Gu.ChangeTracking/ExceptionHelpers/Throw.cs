@@ -10,13 +10,13 @@
             return ThrowThereIsABugInTheLibrary(message);
         }
 
-        internal static InvalidOperationException ShouldNeverGetHere()
+        internal static InvalidOperationException ShouldNeverGetHereException()
         {
             var message = "Should never gete here";
             return ThrowThereIsABugInTheLibrary(message);
         }
 
-        internal static Exception ShouldNeverGetHere(string message)
+        internal static Exception ShouldNeverGetHereException(string message)
         {
             var text = "Should never gete here\r\n" + message;
             return ThrowThereIsABugInTheLibrary(text);

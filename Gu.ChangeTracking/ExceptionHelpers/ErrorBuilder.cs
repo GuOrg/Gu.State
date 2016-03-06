@@ -57,12 +57,14 @@ namespace Gu.ChangeTracking
             Type type,
             PropertiesSettings settings,
             MemberPath memberPath,
-            Func<Type, PropertyInfo, PropertiesSettings, MemberPath, Error> getPropertyErrors)
+            Func<PropertiesSettings, MemberPath, Error> getPropertyErrors)
         {
             if (settings.ReferenceHandling == ReferenceHandling.References)
             {
                 return typeErrors;
             }
+
+            typeErrors = VerifyEnumerableRecursively(typeErrors, type, settings, memberPath, getPropertyErrors);
 
             var propertyInfos = type.GetProperties(settings.BindingFlags);
             foreach (var propertyInfo in propertyInfos)
@@ -82,7 +84,7 @@ namespace Gu.ChangeTracking
                     memberPath = new MemberPath(type);
                 }
 
-                typeErrors = VerifyRecursive(typeErrors, type, settings, memberPath, getPropertyErrors, propertyInfo);
+                typeErrors = VerifyMemberRecursively(typeErrors, type, settings, memberPath, getPropertyErrors, propertyInfo);
             }
 
             return typeErrors;
@@ -93,12 +95,14 @@ namespace Gu.ChangeTracking
             Type type,
             FieldsSettings settings,
             MemberPath memberPath,
-            Func<Type, FieldInfo, FieldsSettings, MemberPath, Error> getFieldErrors)
+            Func<FieldsSettings, MemberPath, Error> getFieldErrors)
         {
             if (settings.ReferenceHandling == ReferenceHandling.References)
             {
                 return typeErrors;
             }
+
+            typeErrors = VerifyEnumerableRecursively(typeErrors, type, settings, memberPath, getFieldErrors);
 
             var fields = type.GetFields(settings.BindingFlags);
             foreach (var fieldInfo in fields)
@@ -113,20 +117,46 @@ namespace Gu.ChangeTracking
                     memberPath = new MemberPath(type);
                 }
 
-                typeErrors = VerifyRecursive(typeErrors, type, settings, memberPath, getFieldErrors, fieldInfo);
+                typeErrors = VerifyMemberRecursively(typeErrors, type, settings, memberPath, getFieldErrors, fieldInfo);
             }
 
             return typeErrors;
         }
 
-        private static TypeErrors VerifyRecursive<TMember, TSettings>(
+        private static TypeErrors VerifyEnumerableRecursively<TSettings>(
             TypeErrors typeErrors,
             Type type,
             TSettings settings,
             MemberPath memberPath,
-            Func<Type, TMember, TSettings, MemberPath, Error> getMemberErrors,
-            TMember memberInfo)
-            where TMember : MemberInfo
+            Func<TSettings, MemberPath, Error> getErrorsRecursively)
+            where TSettings : class, IMemberSettings
+        {
+            if (typeof(IEnumerable).IsAssignableFrom(type))
+            {
+                memberPath = memberPath == null
+                                 ? new MemberPath(type)
+                                 : memberPath.WithCollectionItem(type);
+
+                var memberErrors = getErrorsRecursively(settings, memberPath);
+                if (memberErrors == null)
+                {
+                    return typeErrors;
+                }
+
+                typeErrors = typeErrors.CreateIfNull(type)
+                                       .Add(new CollectionError(memberPath, memberErrors));
+            }
+
+            return typeErrors;
+        }
+
+        private static TypeErrors VerifyMemberRecursively<TSettings>(
+            TypeErrors typeErrors,
+            Type type,
+            TSettings settings,
+            MemberPath memberPath,
+            Func<TSettings, MemberPath, Error> getErrorsRecursively,
+            MemberInfo memberInfo)
             where TSettings : class, IMemberSettings
         {
             if (memberPath.Contains(memberInfo))
@@ -146,7 +176,7 @@ namespace Gu.ChangeTracking
             }
 
             memberPath = memberPath.WithMember(memberInfo);
-            var memberErrors = getMemberErrors(type, memberInfo, settings, memberPath);
+            var memberErrors = getErrorsRecursively(settings, memberPath);
             if (memberErrors == null)
             {
                 return typeErrors;

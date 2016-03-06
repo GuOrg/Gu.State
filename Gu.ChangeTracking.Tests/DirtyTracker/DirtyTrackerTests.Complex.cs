@@ -19,7 +19,7 @@
                                "* Implement IEquatable<ComplexType> for ComplexType or use a type that does.\r\n" +
                                "* Use PropertiesSettings and specify how comparing is performed:\r\n" +
                                "  - ReferenceHandling.Structural means that a deep equals is performed.\r\n" +
-                               "  - ReferenceHandling.StructuralWithReferenceLoops means that a deep equals that handles reference loops is performed.\r\n" +
+                               "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but handles reference loops.\r\n" +
                                "  - ReferenceHandling.References means that reference equality is used.\r\n" +
                                "  - Exclude a combination of the following:\r\n" +
                                "    - The property WithComplexProperty.ComplexType.\r\n" +

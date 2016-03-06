@@ -1,8 +1,9 @@
 namespace Gu.ChangeTracking
 {
+    using System;
     using System.Reflection;
 
-    internal class PropertyItem : PathItem , IMemberItem
+    internal class PropertyItem : PathItem, IMemberItem
     {
         public PropertyItem(PropertyInfo property)
         {
@@ -12,5 +13,7 @@ namespace Gu.ChangeTracking
         public PropertyInfo Property { get; }
 
         MemberInfo IMemberItem.Member => this.Property;
+
+        Type ITypedNode.Type => this.Property.PropertyType;
     }
 }

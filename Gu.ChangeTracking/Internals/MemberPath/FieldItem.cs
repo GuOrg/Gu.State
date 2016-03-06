@@ -1,5 +1,6 @@
 namespace Gu.ChangeTracking
 {
+    using System;
     using System.Reflection;
 
     internal class FieldItem : PathItem, IMemberItem
@@ -12,5 +13,7 @@ namespace Gu.ChangeTracking
         public FieldInfo Field { get; }
 
         MemberInfo IMemberItem.Member => this.Field;
+
+        Type ITypedNode.Type => this.Field.FieldType;
     }
 }

@@ -169,9 +169,10 @@
                                    .CheckIndexers(type, settings);
             }
 
-            private static Error GetRecursivePropertiesErrors(Type type, PropertyInfo property, PropertiesSettings settings, MemberPath path)
+            private static Error GetRecursivePropertiesErrors(PropertiesSettings settings, MemberPath path)
             {
-                if (IsCopyableType(property.PropertyType))
+                var type = path.LastNodeType;
+                if (IsCopyableType(type))
                 {
                     return null;
                 }
@@ -183,15 +184,16 @@
 
                 if (settings.ReferenceHandling == ReferenceHandling.Throw)
                 {
-                    return new RequiresReferenceHandling(property.PropertyType);
+                    return new RequiresReferenceHandling(type);
                 }
 
-                return GetPropertiesErrors(property.PropertyType, settings, path);
+                return GetPropertiesErrors(type, settings, path);
             }
 
-            private static Error GetRecursiveFieldsErrors(Type type, FieldInfo field, FieldsSettings settings, MemberPath path)
+            private static Error GetRecursiveFieldsErrors(FieldsSettings settings, MemberPath path)
             {
-                if (IsCopyableType(field.FieldType))
+                var type = path.LastNodeType;
+                if (IsCopyableType(type))
                 {
                     return null;
                 }
@@ -203,10 +205,10 @@
 
                 if (settings.ReferenceHandling == ReferenceHandling.Throw)
                 {
-                    return new RequiresReferenceHandling(field.FieldType);
+                    return new RequiresReferenceHandling(type);
                 }
 
-                return GetFieldsErrors(field.FieldType, settings, path);
+                return GetFieldsErrors(type, settings, path);
             }
 
             internal static void CanCopyRoot(Type type)

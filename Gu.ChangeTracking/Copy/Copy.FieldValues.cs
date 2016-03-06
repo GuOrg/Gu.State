@@ -141,7 +141,7 @@
                         fieldInfo.SetValue(target, targetValue);
                         continue;
                     case ReferenceHandling.Throw:
-                        throw ChangeTracking.Throw.ShouldNeverGetHere();
+                        throw ChangeTracking.Throw.ShouldNeverGetHereException();
                     default:
                         throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);
                 }
