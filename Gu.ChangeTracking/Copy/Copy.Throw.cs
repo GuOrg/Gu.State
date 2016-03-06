@@ -35,12 +35,20 @@
                 return;
             }
 
+            var message = errors.GetErrorText(settings);
+            throw new NotSupportedException(message);
+        }
+
+        // ReSharper disable once UnusedParameter.Local
+        private static string GetErrorText<TSettings>(this TypeErrors errors, TSettings settings)
+            where TSettings : class, IMemberSettings
+        {
             var errorBuilder = new StringBuilder();
-            errorBuilder.AppendCopyFailed<TSetting>()
+            errorBuilder.AppendCopyFailed<TSettings>()
                         .AppendNotSupported(errors)
                         .AppendSolveTheProblemBy()
                         .AppendSuggestImmutable(errors)
-                        .AppendLine($"* Use {typeof(TSetting).Name} and specify how copying is performed:")
+                        .AppendLine($"* Use {typeof(TSettings).Name} and specify how copying is performed:")
                         .AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Structural)} means that a the entire graph is traversed and immutable property values are copied.")
                         .AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.StructuralWithReferenceLoops)} same as Structural but tracks reference loops.")
                         .AppendLine($"    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.")
@@ -48,7 +56,7 @@
                         .AppendSuggestExclude(errors);
 
             var message = errorBuilder.ToString();
-            throw new NotSupportedException(message);
+            return message;
         }
 
         private static StringBuilder AppendSuggestCopySettings<T>(this StringBuilder errorBuilder, Type type, MemberInfo member)
@@ -91,37 +99,15 @@
                 SourceAndTargetValue sourceAndTargetValue,
                 MemberInfo member,
                 T settings)
-                where T : IMemberSettings
+                where T : class, IMemberSettings
             {
-                var errorBuilder = new StringBuilder();
-                errorBuilder.AppendCopyFailed<T>();
-                var propertyInfo = member as PropertyInfo;
-                if (propertyInfo != null)
-                {
-                    errorBuilder.AppendLine($"The readonly property {sourceAndTargetValue.Source.GetType().PrettyName()}.{member.Name} differs after copy.");
-                    errorBuilder.AppendLine($" - Source value: {sourceAndTargetValue.SourceValue}.");
-                    errorBuilder.AppendLine($" - Target value: {sourceAndTargetValue.TargeteValue}.");
-                    errorBuilder.AppendLine($"The property is of type {propertyInfo.PropertyType.PrettyName()}.");
-                }
-                else
-                {
-                    var fieldInfo = member as FieldInfo;
-                    if (fieldInfo != null)
-                    {
-                        errorBuilder.AppendLine($"The readonly field {sourceAndTargetValue.Source.GetType().PrettyName()}.{member.Name} differs after copy.");
-                        errorBuilder.AppendLine($" - Source value: {sourceAndTargetValue.SourceValue}.");
-                        errorBuilder.AppendLine($" - Target value: {sourceAndTargetValue.TargeteValue}.");
-                        errorBuilder.AppendLine($"The field is of type {fieldInfo.FieldType.PrettyName()}.");
-                    }
-                    else
-                    {
-                        throw ChangeTracking.Throw.ExpectedParameterOfTypes<PropertyInfo, FieldInfo>(nameof(member));
-                    }
-                }
+                var typeErrors = new TypeErrors(sourceAndTargetValue.Source?.GetType())
+                                     {
+                                         new ReadonlyMemberDiffers(sourceAndTargetValue, member)
+                                     };
 
-                errorBuilder.AppendSolveTheProblemBy()
-                    .AppendSuggestCopySettings<T>(member.DeclaringType, member);
-                throw new InvalidOperationException(errorBuilder.ToString());
+                var message = typeErrors.GetErrorText(settings);
+                throw new InvalidOperationException(message);
             }
 
             // ReSharper disable once UnusedParameter.Local
