@@ -180,25 +180,31 @@
                      "Solve the problem by any of:\r\n" +
                      "* Add a parameterless constructor to WithoutDefaultCtor, can be private.\r\n" +
                      "* Use FieldsSettings and specify how copying is performed:\r\n" +
-                     "  - ReferenceHandling.Structural means that a deep copy is performed.\r\n" +
+                     "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
+                     "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but tracks reference loops.\r\n" +
+                     "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
                      "  - ReferenceHandling.References means that references are copied.\r\n" +
-                     "  - Exclude the type WithoutDefaultCtor.\r\n" +
-                     "  - Exclude the field WithoutDefaultCtor.<Value>k__BackingField.\r\n"
+                     "  - Exclude a combination of the following:\r\n" +
+                     "    - The field WithProperty<WithoutDefaultCtor>.<Value>k__BackingField.\r\n" +
+                     "    - The type WithoutDefaultCtor.\r\n"
 
                    : "Copy.PropertyValues(x, y) failed.\r\n" +
                      "Activator.CreateInstance failed for type WithoutDefaultCtor.\r\n" +
                      "Solve the problem by any of:\r\n" +
                      "* Add a parameterless constructor to WithoutDefaultCtor, can be private.\r\n" +
                      "* Use PropertiesSettings and specify how copying is performed:\r\n" +
-                     "  - ReferenceHandling.Structural means that a deep copy is performed.\r\n" +
+                     "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
+                     "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but tracks reference loops.\r\n" +
+                     "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
                      "  - ReferenceHandling.References means that references are copied.\r\n" +
-                     "  - Exclude the type WithoutDefaultCtor.\r\n" +
-                     "  - Exclude the property WithoutDefaultCtor.Value.\r\n";
+                     "  - Exclude a combination of the following:\r\n" +
+                     "    - The property WithProperty<WithoutDefaultCtor>.Value.\r\n" +
+                     "    - The type WithoutDefaultCtor.\r\n";
 
             var x = new CopyTypes.WithProperty<CopyTypes.WithoutDefaultCtor>(new CopyTypes.WithoutDefaultCtor(1));
             var y = new CopyTypes.WithProperty<CopyTypes.WithoutDefaultCtor>(null);
 
-            var exception = Assert.Throws<NotSupportedException>(() => this.CopyMethod(x, y, referenceHandling: ReferenceHandling.Structural));
+            var exception = Assert.Throws<InvalidOperationException>(() => this.CopyMethod(x, y, referenceHandling: ReferenceHandling.Structural));
 
             Assert.AreEqual(expected, exception.Message);
         }

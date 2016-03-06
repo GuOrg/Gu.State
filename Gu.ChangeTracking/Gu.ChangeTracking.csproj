@@ -44,6 +44,7 @@
     <Compile Include="ChangeTracker\PropertyChangeTracker.cs" />
     <Compile Include="EqualBy\EqualBy.Verify.cs" />
     <Compile Include="ExceptionHelpers\Errors\CannotCopyFixesSizeCollectionsError.cs" />
+    <Compile Include="ExceptionHelpers\Errors\CannotCreateInstanceError.cs" />
     <Compile Include="ExceptionHelpers\Errors\Contracts\IExcludableMember.cs" />
     <Compile Include="ExceptionHelpers\Errors\Contracts\IFixWithImmutable.cs" />
     <Compile Include="ExceptionHelpers\Errors\Contracts\INotSupported.cs" />

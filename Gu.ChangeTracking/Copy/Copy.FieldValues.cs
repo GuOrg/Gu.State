@@ -136,7 +136,7 @@
                             continue;
                         }
 
-                        targetValue = CreateInstance<FieldsSettings>(sv, fieldInfo);
+                        targetValue = CreateInstance(sv, fieldInfo, settings);
                         CopyFieldsValues(sv, targetValue, settings, referencePairs);
                         fieldInfo.SetValue(target, targetValue);
                         continue;
