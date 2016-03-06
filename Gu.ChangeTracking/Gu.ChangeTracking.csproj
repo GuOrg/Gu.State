@@ -48,6 +48,7 @@
     <Compile Include="ExceptionHelpers\Errors\CannotCopyFixesSizeCollectionsError.cs" />
     <Compile Include="ExceptionHelpers\Errors\CannotCreateInstanceError.cs" />
     <Compile Include="ExceptionHelpers\Errors\CollectionError.cs" />
+    <Compile Include="ExceptionHelpers\Errors\CollectionMustNotifyError.cs" />
     <Compile Include="ExceptionHelpers\Errors\Contracts\IExcludableMember.cs" />
     <Compile Include="ExceptionHelpers\Errors\Contracts\IFixWithImmutable.cs" />
     <Compile Include="ExceptionHelpers\Errors\Contracts\INotSupported.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="ExceptionHelpers\Errors\RequiresReferenceHandling.cs" />
     <Compile Include="ExceptionHelpers\Errors\BaseClasses\TypeError.cs" />
     <Compile Include="ExceptionHelpers\Errors\TypeErrors.cs" />
+    <Compile Include="ExceptionHelpers\Errors\TypeMustNotifyError.cs" />
     <Compile Include="ExceptionHelpers\Errors\UnsupportedIndexer.cs" />
     <Compile Include="ExceptionHelpers\StringBuilderExt.Errors.cs" />
     <Compile Include="ExceptionHelpers\ErrorBuilder.cs" />

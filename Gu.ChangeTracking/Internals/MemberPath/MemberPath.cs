@@ -71,6 +71,8 @@
             }
         }
 
+        public MemberInfo LastMember => this.Path.OfType<IMemberItem>().LastOrDefault().Member;
+
         public IEnumerator<PathItem> GetEnumerator()
         {
             return this.Path.GetEnumerator();

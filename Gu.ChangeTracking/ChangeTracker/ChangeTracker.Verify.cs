@@ -86,20 +86,12 @@
                 {
                     if (!typeof(INotifyCollectionChanged).IsAssignableFrom(type))
                     {
-                        return new CollectionMustNotifyError();
+                        return new CollectionMustNotifyError(path);
                     }
-
-                    return null;
                 }
-
-                if (settings.ReferenceHandling == ReferenceHandling.References)
+                else if (!typeof(INotifyPropertyChanged).IsAssignableFrom(type))
                 {
-                    return null;
-                }
-
-                if (settings.ReferenceHandling == ReferenceHandling.Throw)
-                {
-                    return new RequiresReferenceHandling(type);
+                    return new TypeMustNotifyError(path);
                 }
 
                 return GetErrors(type, settings, path);
