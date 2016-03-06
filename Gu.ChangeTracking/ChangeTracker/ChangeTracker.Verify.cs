@@ -64,6 +64,47 @@
         {
             private static readonly ConditionalWeakTable<PropertiesSettings, ConcurrentSet<Type>> ValidTypesCache = new ConditionalWeakTable<PropertiesSettings, ConcurrentSet<Type>>();
 
+            internal static TypeErrors GetErrors(Type type, PropertiesSettings settings, MemberPath path = null)
+            {
+                return settings.TrackableErrors.GetOrAdd(
+                    type,
+                    t => ErrorBuilder.Start()
+                                     .CheckReferenceHandling(type, settings)
+                                     .CheckIndexers(type, settings)
+                                     .VerifyRecursive(t, settings, path, GetRecursiveErrors));
+            }
+
+            private static Error GetRecursiveErrors(PropertiesSettings settings, MemberPath path)
+            {
+                var type = path.LastNodeType;
+                if (type.IsImmutable())
+                {
+                    return null;
+                }
+
+                if (typeof(IEnumerable).IsAssignableFrom(type))
+                {
+                    if (!typeof(INotifyCollectionChanged).IsAssignableFrom(type))
+                    {
+                        return new CollectionMustNotifyError();
+                    }
+
+                    return null;
+                }
+
+                if (settings.ReferenceHandling == ReferenceHandling.References)
+                {
+                    return null;
+                }
+
+                if (settings.ReferenceHandling == ReferenceHandling.Throw)
+                {
+                    return new RequiresReferenceHandling(type);
+                }
+
+                return GetErrors(type, settings, path);
+            }
+
             internal static void IsTrackableType(Type type, ChangeTracker tracker)
             {
                 if (ValidTypesCache.GetOrCreateValue(tracker.Settings).Contains(type))
