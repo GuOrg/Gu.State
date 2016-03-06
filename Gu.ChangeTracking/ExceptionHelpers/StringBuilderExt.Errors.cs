@@ -98,5 +98,16 @@
                         .AppendLine("    - Event fields are ignored.");
             return errorBuilder;
         }
+
+        internal static StringBuilder AppendSuggestResizableCollection(this StringBuilder errorBuilder, TypeErrors errors)
+        {
+            foreach (var type in errors.OfType<CannotCopyFixesSizeCollectionsError>().Select(x => x.Type).Distinct())
+            {
+                errorBuilder.AppendLine($"* Use a resizable collection like List<{type.GetItemType().PrettyName()}> instead of {type.PrettyName()}.")
+                            .AppendLine("* Check that the collections are the same size before calling.");
+            }
+
+            return errorBuilder;
+        }
     }
 }

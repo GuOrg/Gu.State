@@ -48,6 +48,7 @@
                         .AppendNotSupported(errors)
                         .AppendSolveTheProblemBy()
                         .AppendSuggestImmutable(errors)
+                        .AppendSuggestResizableCollection(errors)
                         .AppendLine($"* Use {typeof(TSettings).Name} and specify how copying is performed:")
                         .AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Structural)} means that a the entire graph is traversed and immutable property values are copied.")
                         .AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.StructuralWithReferenceLoops)} same as Structural but tracks reference loops.")
@@ -103,7 +104,7 @@
             {
                 var typeErrors = new TypeErrors(sourceAndTargetValue.Source?.GetType())
                                      {
-                                         new ReadonlyMemberDiffers(sourceAndTargetValue, member)
+                                         new ReadonlyMemberDiffersError(sourceAndTargetValue, member)
                                      };
 
                 var message = typeErrors.GetErrorText(settings);
@@ -111,18 +112,16 @@
             }
 
             // ReSharper disable once UnusedParameter.Local
-            internal static void CannotCopyFixesSizeCollections<T>(ICollection source, ICollection target, T settings)
-                where T : IMemberSettings
+            internal static void CannotCopyFixesSizeCollections<T>(IEnumerable source, IEnumerable target, T settings)
+                where T : class, IMemberSettings
             {
-                var errorBuilder = new StringBuilder();
-                errorBuilder.AppendCopyFailed<T>()
-                            .AppendLine($"The collections are fixed size type: {source.GetType().PrettyName()}")
-                            .AppendLine($"Source count: {source.Count}")
-                            .AppendLine($"Target count: {target.Count}")
-                            .AppendSolveTheProblemBy()
-                            .AppendLine("* Use a resizable collection like List<T>.")
-                            .AppendLine("* Check that the collections are the same size before calling.");
-                throw new InvalidOperationException(errorBuilder.ToString());
+                var typeErrors = new TypeErrors(null)
+                                     {
+                                         new CannotCopyFixesSizeCollectionsError(source, target)
+                                     };
+
+                var message = typeErrors.GetErrorText(settings);
+                throw new InvalidOperationException(message);
             }
         }
     }

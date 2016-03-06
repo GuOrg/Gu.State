@@ -3,13 +3,11 @@
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Reflection;
 
     public abstract class MemberSettings<T> : IMemberSettings
         where T : MemberInfo
     {
-        private static readonly T[] EmptyMembers = new T[0];
         private readonly IgnoredTypes ignoredTypes;
         private readonly ConcurrentDictionary<T, bool> ignoredMembers = new ConcurrentDictionary<T, bool>();
 

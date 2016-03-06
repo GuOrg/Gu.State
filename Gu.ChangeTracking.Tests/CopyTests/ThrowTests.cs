@@ -102,20 +102,34 @@
         {
             var expected = this is FieldValues.Throws
                                ? "Copy.FieldValues(x, y) failed.\r\n" +
-                                 "The collections are fixed size type: Int32[]\r\n" +
-                                 "Source count: 3\r\n" +
-                                 "Target count: 1\r\n" +
+                                 "The collections are fixed size type: int[]\r\n" +
+                                 "  - Source count: 3\r\n" +
+                                 "  - Target count: 1\r\n" +
                                  "Solve the problem by any of:\r\n" +
-                                 "* Use a resizable collection like List<T>.\r\n" +
-                                 "* Check that the collections are the same size before calling.\r\n"
+                                 "* Use a resizable collection like List<int> instead of int[].\r\n" +
+                                 "* Check that the collections are the same size before calling.\r\n" +
+                                 "* Use FieldsSettings and specify how copying is performed:\r\n" +
+                                 "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
+                                 "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but tracks reference loops.\r\n" +
+                                 "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
+                                 "  - ReferenceHandling.References means that references are copied.\r\n" +
+                                 "  - Exclude a combination of the following:\r\n" +
+                                 "    - The type int[].\r\n"
 
                                : "Copy.PropertyValues(x, y) failed.\r\n" +
-                                 "The collections are fixed size type: Int32[]\r\n" +
-                                 "Source count: 3\r\n" +
-                                 "Target count: 1\r\n" +
+                                 "The collections are fixed size type: int[]\r\n" +
+                                 "  - Source count: 3\r\n" +
+                                 "  - Target count: 1\r\n" +
                                  "Solve the problem by any of:\r\n" +
-                                 "* Use a resizable collection like List<T>.\r\n" +
-                                 "* Check that the collections are the same size before calling.\r\n";
+                                 "* Use a resizable collection like List<int> instead of int[].\r\n" +
+                                 "* Check that the collections are the same size before calling.\r\n" +
+                                 "* Use PropertiesSettings and specify how copying is performed:\r\n" +
+                                 "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
+                                 "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but tracks reference loops.\r\n" +
+                                 "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
+                                 "  - ReferenceHandling.References means that references are copied.\r\n" +
+                                 "  - Exclude a combination of the following:\r\n" +
+                                 "    - The type int[].\r\n";
             var source = new[] { 1, 2, 3 };
             var target = new[] { 4 };
 
