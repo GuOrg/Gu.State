@@ -28,6 +28,8 @@
 
         public IEnumerable<PropertyInfo> IgnoredProperties => this.IgnoredMembers.Keys;
 
+        internal ConcurrentDictionary<Type, TypeErrors> TrackableErrors => new ConcurrentDictionary<Type, TypeErrors>();
+
         public static PropertiesSettingsBuilder Build()
         {
             return new PropertiesSettingsBuilder();

@@ -135,6 +135,19 @@
 
         internal static class Verify
         {
+            internal static void CanCopyRoot(Type type)
+            {
+                if (type.IsImmutable())
+                {
+                    throw new NotSupportedException("Cannot copy the members of an immutable object");
+                }
+
+                if (typeof(IEnumerable).IsAssignableFrom(type) && !IsCopyableCollectionType(type))
+                {
+                    throw new NotSupportedException("Can only copy the members of collections implementing IList or IDictionary");
+                }
+            }
+
             internal static void CanCopyPropertyValues<T>(T x, T y, PropertiesSettings settings)
             {
                 var type = x?.GetType() ?? y?.GetType() ?? typeof(T);
@@ -209,19 +222,6 @@
                 }
 
                 return GetFieldsErrors(type, settings, path);
-            }
-
-            internal static void CanCopyRoot(Type type)
-            {
-                if (type.IsImmutable())
-                {
-                    throw new NotSupportedException("Cannot copy the members of an immutable object");
-                }
-
-                if (typeof(IEnumerable).IsAssignableFrom(type) && !IsCopyableCollectionType(type))
-                {
-                    throw new NotSupportedException("Can only copy the members of collections implementing IList or IDictionary");
-                }
             }
         }
     }
