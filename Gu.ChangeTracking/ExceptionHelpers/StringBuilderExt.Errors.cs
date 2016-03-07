@@ -71,17 +71,17 @@
 
         internal static StringBuilder AppendSuggestImmutable(this StringBuilder errorBuilder, TypeErrors errors)
         {
-            var immutables = errors.OfType<IFixWithImmutable>()
+            var fixableTypes = errors.OfType<IFixWithImmutable>()
                                    .Select(x => x.Type)
                                    .Where(t => t != errors.Type)
                                    .Distinct()
                                    .ToArray();
-            if (immutables.Length == 0)
+            if (fixableTypes.Length == 0)
             {
                 return errorBuilder;
             }
 
-            foreach (var type in immutables)
+            foreach (var type in fixableTypes)
             {
                 var line = type.Assembly == typeof(int).Assembly
                     ? $"* Use an immutable type instead of {type.PrettyName()}."

@@ -150,7 +150,6 @@
                         continue;
                     case ReferenceHandling.Throw:
                         throw ChangeTracking.Throw.ShouldNeverGetHereException();
-                        break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);
                 }

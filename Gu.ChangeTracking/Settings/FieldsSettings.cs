@@ -14,6 +14,7 @@
         /// Initializes a new instance of the <see cref="FieldsSettings"/> class.
         /// </summary>
         /// <param name="ignoredFields">The fields provided here will be ignored when the intsance of <see cref="FieldsSettings"/> is used</param>
+        /// <param name="ignoredTypes">The types to ignore</param>
         /// <param name="bindingFlags">The binding flags to use when getting properties</param>
         /// <param name="referenceHandling">
         /// If Structural is used property values for sub properties are copied for the entire graph.

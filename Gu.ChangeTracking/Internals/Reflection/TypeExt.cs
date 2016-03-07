@@ -40,7 +40,7 @@
             {
                 // instantiated generic type only
                 Type genericType = type.GetGenericTypeDefinition();
-                return object.ReferenceEquals(genericType, typeof(Nullable<>));
+                return ReferenceEquals(genericType, typeof(Nullable<>));
             }
 
             return false;
