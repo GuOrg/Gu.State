@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="Internals\Collections\DisposingMap.cs" />
     <Compile Include="Internals\Collections\ImmutableList.cs" />
+    <Compile Include="Internals\Collections\ReferencePair.cs" />
     <Compile Include="Track\Changes\ChangeTracker.cs" />
     <Compile Include="Track\Changes\ChangeTracker.ItemsChangeTrackers.cs" />
     <Compile Include="Track\Changes\ChangeTracker.PropertiesChangeTrackers.cs" />
@@ -109,7 +110,7 @@
     <Compile Include="Internals\Collections\IgnoredTypes.cs" />
     <Compile Include="Internals\Collections\DisposingList.cs" />
     <Compile Include="Internals\Collections\SingleItemTrackerReferenceCollection.cs" />
-    <Compile Include="Internals\Collections\TwoItemsTrackerReferenceCollection.cs" />
+    <Compile Include="Internals\Collections\RefCountCollection.cs" />
     <Compile Include="Internals\PaddedPairs.cs" />
     <Compile Include="Internals\MemberPath\IndexItem.cs" />
     <Compile Include="Internals\MemberPath\PathItem.cs" />

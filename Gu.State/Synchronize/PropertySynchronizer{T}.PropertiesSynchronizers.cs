@@ -8,12 +8,12 @@
 
     internal partial class PropertySynchronizer<T>
     {
-        private class PropertiesSynchronizer : IDisposable
+        private sealed class PropertiesSynchronizer : IDisposable
         {
             private readonly INotifyPropertyChanged source;
             private readonly INotifyPropertyChanged target;
             private readonly PropertiesSettings settings;
-            private readonly TwoItemsTrackerReferenceCollection<IPropertySynchronizer> references;
+            private readonly RefCountCollection<ReferencePair, IPropertySynchronizer> references;
             private readonly DisposingMap<PropertyInfo, IDisposable> propertySynchronizers;
 
             private PropertiesSynchronizer(
@@ -21,7 +21,7 @@
                 INotifyPropertyChanged target,
                 DisposingMap<PropertyInfo, IDisposable> propertySynchronizers,
                 PropertiesSettings settings,
-                TwoItemsTrackerReferenceCollection<IPropertySynchronizer> references)
+                RefCountCollection<ReferencePair, IPropertySynchronizer> references)
             {
                 source.PropertyChanged += this.OnSourcePropertyChanged;
                 this.source = source;
@@ -41,7 +41,7 @@
                 INotifyPropertyChanged source,
                 INotifyPropertyChanged target,
                 PropertiesSettings settings,
-                TwoItemsTrackerReferenceCollection<IPropertySynchronizer> references)
+                RefCountCollection<ReferencePair, IPropertySynchronizer> references)
             {
                 if (source == null)
                 {
@@ -75,7 +75,7 @@
                 return new PropertiesSynchronizer(source, target, propertyTrackers, settings, references);
             }
 
-            private static IDisposable CreateSynchronizer(object sv, object tv, PropertiesSettings settings, TwoItemsTrackerReferenceCollection<IPropertySynchronizer> references)
+            private static IDisposable CreateSynchronizer(object sv, object tv, PropertiesSettings settings, RefCountCollection<ReferencePair, IPropertySynchronizer> references)
             {
                 if (sv == null || Copy.IsCopyableType(sv.GetType()))
                 {
@@ -95,8 +95,7 @@
                 if (references != null)
                 {
                     return references.GetOrAdd(
-                        sv,
-                        tv,
+                        new ReferencePair(sv, tv),
                         () =>
                         new PropertySynchronizer<INotifyPropertyChanged>(
                             (INotifyPropertyChanged)sv,

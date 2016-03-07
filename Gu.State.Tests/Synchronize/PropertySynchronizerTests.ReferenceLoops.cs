@@ -15,7 +15,7 @@
             {
                 var source = new SynchronizerTypes.WithTwoComplexProperties("a", 1) { ComplexValue1 = new SynchronizerTypes.ComplexType("a.1", 2), ComplexValue2 = new SynchronizerTypes.ComplexType("a.2", 3) };
                 var target = new SynchronizerTypes.WithTwoComplexProperties("b", 3) { ComplexValue1 = new SynchronizerTypes.ComplexType("b.1", 4) };
-                using (Synchronize.CreatePropertySynchronizer(source, target, referenceHandling: ReferenceHandling.StructuralWithReferenceLoops))
+                using (Synchronize.PropertyValues(source, target, referenceHandling: ReferenceHandling.StructuralWithReferenceLoops))
                 {
                     Assert.AreEqual("a", source.Name);
                     Assert.AreEqual("a", target.Name);
@@ -85,7 +85,7 @@
             {
                 var source = new SynchronizerTypes.Parent("a", new SynchronizerTypes.Child("b"));
                 var target = new SynchronizerTypes.Parent("b", new SynchronizerTypes.Child());
-                using (Synchronize.CreatePropertySynchronizer(source, target, referenceHandling: ReferenceHandling.StructuralWithReferenceLoops))
+                using (Synchronize.PropertyValues(source, target, referenceHandling: ReferenceHandling.StructuralWithReferenceLoops))
                 {
                     Assert.AreEqual("a", source.Name);
                     Assert.AreEqual("a", target.Name);
@@ -134,7 +134,7 @@
                 var source = new ObservableCollection<INotifyCollectionChanged>();
                 source.Add(source);
                 var target = new ObservableCollection<INotifyCollectionChanged>();
-                using (Synchronize.CreatePropertySynchronizer(source, target, referenceHandling: ReferenceHandling.StructuralWithReferenceLoops))
+                using (Synchronize.PropertyValues(source, target, referenceHandling: ReferenceHandling.StructuralWithReferenceLoops))
                 {
                     Assert.AreEqual(1, source.Count);
                     Assert.AreEqual(1, target.Count);
@@ -150,7 +150,7 @@
                 source.Add(complexType);
                 source.Add(complexType);
                 var target = new ObservableCollection<SynchronizerTypes.ComplexType>();
-                using (Synchronize.CreatePropertySynchronizer(source, target, referenceHandling: ReferenceHandling.StructuralWithReferenceLoops))
+                using (Synchronize.PropertyValues(source, target, referenceHandling: ReferenceHandling.StructuralWithReferenceLoops))
                 {
                     var expected = new[] { new SynchronizerTypes.ComplexType("a", 1), new SynchronizerTypes.ComplexType("a", 1) };
                     CollectionAssert.AreEqual(expected, source, SynchronizerTypes.ComplexType.Comparer);

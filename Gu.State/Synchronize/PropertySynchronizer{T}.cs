@@ -20,18 +20,18 @@ namespace Gu.State
         /// <param name="settings">Contains configuration for how synchronization will be performed</param>
         /// <returns>A disposable that when disposed stops synchronizing</returns>
         public PropertySynchronizer(T source, T target, PropertiesSettings settings)
-            : this(source, target, settings, settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops ? new TwoItemsTrackerReferenceCollection<IPropertySynchronizer>() : null)
+            : this(source, target, settings, settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops ? new RefCountCollection<ReferencePair, IPropertySynchronizer>() : null)
         {
             Ensure.NotSame(source, target, nameof(source), nameof(target));
             Ensure.SameType(source, target, nameof(source), nameof(target));
         }
 
-        private PropertySynchronizer(T source, T target, PropertiesSettings settings, TwoItemsTrackerReferenceCollection<IPropertySynchronizer> references)
+        private PropertySynchronizer(T source, T target, PropertiesSettings settings, RefCountCollection<ReferencePair, IPropertySynchronizer> references)
         {
             Ensure.NotNull(source, nameof(source));
             Ensure.NotNull(target, nameof(target));
             Copy.VerifyCanCopyPropertyValues(source?.GetType() ?? typeof(T), settings);
-            references?.GetOrAdd(source, target, () => this);
+            references?.GetOrAdd(new ReferencePair(source, target), () => this);
             this.Settings = settings;
             Copy.PropertyValues(source, target, settings);
             this.propertiesSynchronizer = PropertiesSynchronizer.Create(source, target, settings, references);

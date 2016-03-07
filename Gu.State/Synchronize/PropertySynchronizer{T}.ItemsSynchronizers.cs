@@ -7,12 +7,12 @@
 
     internal partial class PropertySynchronizer<T>
     {
-        private class ItemsSynchronizer : IDisposable
+        private sealed class ItemsSynchronizer : IDisposable
         {
             private readonly IList source;
             private readonly IList target;
             private readonly PropertiesSettings settings;
-            private readonly TwoItemsTrackerReferenceCollection<IPropertySynchronizer> references;
+            private readonly RefCountCollection<ReferencePair, IPropertySynchronizer> references;
             private readonly DisposingList<IDisposable> itemSynchronizers;
             private bool isSynchronizing;
 
@@ -20,7 +20,7 @@
                 IList source,
                 IList target,
                 PropertiesSettings settings,
-                TwoItemsTrackerReferenceCollection<IPropertySynchronizer> references)
+                RefCountCollection<ReferencePair, IPropertySynchronizer> references)
             {
                 this.source = source;
                 this.target = target;
@@ -52,7 +52,11 @@
                 }
             }
 
-            internal static ItemsSynchronizer Create(T source, T target, PropertiesSettings settings, TwoItemsTrackerReferenceCollection<IPropertySynchronizer> references)
+            internal static ItemsSynchronizer Create(
+                T source, 
+                T target, 
+                PropertiesSettings settings,
+                RefCountCollection<ReferencePair, IPropertySynchronizer> references)
             {
                 if (!(source is IList))
                 {
@@ -228,8 +232,7 @@
                 if (this.references != null)
                 {
                     return this.references.GetOrAdd(
-                         sv,
-                         tv,
+                         new ReferencePair(sv, tv), 
                          () =>
                          new PropertySynchronizer<INotifyPropertyChanged>(
                              (INotifyPropertyChanged)sv,

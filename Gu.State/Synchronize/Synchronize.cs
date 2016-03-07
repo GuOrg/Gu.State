@@ -18,7 +18,7 @@ namespace Gu.State
         /// Activator.CreateInstance is sued to new up references so a default constructor is required, can be private
         /// </param>
         /// <returns>A disposable that when disposed stops synchronizing</returns>
-        public static IDisposable CreatePropertySynchronizer<T>(
+        public static IDisposable PropertyValues<T>(
             T source,
             T target,
             BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags,
@@ -37,7 +37,7 @@ namespace Gu.State
         /// <param name="target">The instance to copy property values to</param>
         /// <param name="settings">Contains configuration for how synchronization will be performed</param>
         /// <returns>A disposable that when disposed stops synchronizing</returns>
-        public static IDisposable CreatePropertySynchronizer<T>(T source, T target, PropertiesSettings settings)
+        public static IDisposable PropertyValues<T>(T source, T target, PropertiesSettings settings)
             where T : class, INotifyPropertyChanged
         {
             return new PropertySynchronizer<T>(source, target, settings);

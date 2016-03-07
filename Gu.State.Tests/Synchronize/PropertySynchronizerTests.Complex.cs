@@ -13,7 +13,7 @@
             {
                 var source = new SynchronizerTypes.WithComplexProperty("a", 1) { ComplexType = new SynchronizerTypes.ComplexType("b", 2) };
                 var target = new SynchronizerTypes.WithComplexProperty("c", 3) { ComplexType = new SynchronizerTypes.ComplexType("d", 4) };
-                using (Synchronize.CreatePropertySynchronizer(source, target, referenceHandling: ReferenceHandling.Structural))
+                using (Synchronize.PropertyValues(source, target, referenceHandling: ReferenceHandling.Structural))
                 {
                     Assert.AreEqual("a", source.Name);
                     Assert.AreEqual("a", target.Name);
@@ -108,7 +108,7 @@
             {
                 var source = new SynchronizerTypes.WithComplexProperty("a", 1) { ComplexType = new SynchronizerTypes.ComplexType("b", 2) };
                 var target = new SynchronizerTypes.WithComplexProperty("c", 3) { ComplexType = new SynchronizerTypes.ComplexType("d", 4) };
-                using (Synchronize.CreatePropertySynchronizer(source, target, referenceHandling: ReferenceHandling.References))
+                using (Synchronize.PropertyValues(source, target, referenceHandling: ReferenceHandling.References))
                 {
                     Assert.AreEqual("a", source.Name);
                     Assert.AreEqual("a", target.Name);
@@ -156,7 +156,7 @@
                     ComplexType = new SynchronizerTypes.ComplexType("d", 4)
                 };
 
-                using (Synchronize.CreatePropertySynchronizer(source, target, referenceHandling: ReferenceHandling.Structural))
+                using (Synchronize.PropertyValues(source, target, referenceHandling: ReferenceHandling.Structural))
                 {
                     Assert.AreEqual("a", source.Name);
                     Assert.AreEqual("a", target.Name);
@@ -251,7 +251,7 @@
                 var settings = PropertiesSettings.Build()
                                                  .IgnoreProperty<SynchronizerTypes.WithComplexProperty>(nameof(SynchronizerTypes.WithComplexProperty.Name))
                                                  .CreateSettings(ReferenceHandling.Structural);
-                using (Synchronize.CreatePropertySynchronizer(source, target, settings))
+                using (Synchronize.PropertyValues(source, target, settings))
                 {
                     Assert.AreEqual("a", source.Name);
                     Assert.AreEqual("c", target.Name);
@@ -354,7 +354,7 @@
                 {
                     ComplexType = new SynchronizerTypes.ComplexType("d", 4)
                 };
-                using (Synchronize.CreatePropertySynchronizer(source, target, referenceHandling: ReferenceHandling.Structural))
+                using (Synchronize.PropertyValues(source, target, referenceHandling: ReferenceHandling.Structural))
                 {
                     source.OnPropertyChanged("Missing");
                     Assert.AreEqual("a", source.Name);
@@ -396,7 +396,7 @@
                     ComplexType = new SynchronizerTypes.ComplexType("d", 4)
                 };
 
-                using (Synchronize.CreatePropertySynchronizer(source, target, referenceHandling: ReferenceHandling.Structural))
+                using (Synchronize.PropertyValues(source, target, referenceHandling: ReferenceHandling.Structural))
                 {
                     source.SetFields("e", 5, new SynchronizerTypes.ComplexType("f", 6));
                     source.OnPropertyChanged(prop);
@@ -436,7 +436,7 @@
                                "    - The type ComplexType.\r\n";
                 var source = new SynchronizerTypes.WithComplexProperty();
                 var target = new SynchronizerTypes.WithComplexProperty();
-                var exception = Assert.Throws<NotSupportedException>(() => Synchronize.CreatePropertySynchronizer(source, target));
+                var exception = Assert.Throws<NotSupportedException>(() => Synchronize.PropertyValues(source, target));
 
                 Assert.AreEqual(expected, exception.Message);
             }

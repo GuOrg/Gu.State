@@ -11,8 +11,6 @@ namespace Gu.State
         private readonly ConcurrentDictionary<TKey, TValue> items = new ConcurrentDictionary<TKey, TValue>();
         private bool disposed;
 
-        internal IEnumerable<TValue> Values => this.items.Values;
-         
         public void Dispose()
         {
             if (this.disposed)
@@ -34,7 +32,14 @@ namespace Gu.State
         internal void SetValue(TKey key, TValue value)
         {
             this.VerifyDisposed();
-            this.items.AddOrUpdate(key, value, new Updater(value).UpdateValue);
+            this.items.AddOrUpdate(
+                key,
+                k => value,
+                (k, v) =>
+                {
+                    v?.Dispose();
+                    return value;
+                });
         }
 
         private void VerifyDisposed()
@@ -42,22 +47,6 @@ namespace Gu.State
             if (this.disposed)
             {
                 throw new ObjectDisposedException(this.GetType().FullName);
-            }
-        }
-
-        private struct Updater
-        {
-            private readonly TValue newValue;
-
-            internal Updater(TValue newValue)
-            {
-                this.newValue = newValue;
-            }
-
-            internal TValue UpdateValue(TKey _, TValue oldValue)
-            {
-                oldValue?.Dispose();
-                return this.newValue;
             }
         }
     }
