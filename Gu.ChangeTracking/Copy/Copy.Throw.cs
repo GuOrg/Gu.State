@@ -13,14 +13,12 @@
         {
             if (typeof(FieldsSettings).IsAssignableFrom(typeof(T)))
             {
-                return errorBuilder.CreateIfNull()
-                                   .AppendLine($"Copy.{nameof(Copy.FieldValues)}(x, y) failed.");
+                return errorBuilder.AppendLine($"Copy.{nameof(Copy.FieldValues)}(x, y) failed.");
             }
 
             if (typeof(PropertiesSettings).IsAssignableFrom(typeof(T)))
             {
-                return errorBuilder.CreateIfNull()
-                                   .AppendLine($"Copy.{nameof(Copy.PropertyValues)}(x, y) failed.");
+                return errorBuilder.AppendLine($"Copy.{nameof(Copy.PropertyValues)}(x, y) failed.");
             }
 
             throw ChangeTracking.Throw.ExpectedParameterOfTypes<FieldsSettings, PropertiesSettings>("{T}");
