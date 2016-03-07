@@ -49,6 +49,7 @@
             {
                 return this.changes;
             }
+
             internal set
             {
                 if (value == this.changes)

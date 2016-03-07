@@ -33,7 +33,6 @@
             return enumerable;
         }
 
-
         public static bool IsNullable(this Type type)
         {
             if (type.IsGenericType && !type.IsGenericTypeDefinition)

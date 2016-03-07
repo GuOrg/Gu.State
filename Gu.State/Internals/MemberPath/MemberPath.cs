@@ -71,7 +71,7 @@
             }
         }
 
-        public MemberInfo LastMember => this.Path.OfType<IMemberItem>().LastOrDefault()?.Member;
+        internal MemberInfo LastMember => this.Path.OfType<IMemberItem>().LastOrDefault()?.Member;
 
         public IEnumerator<PathItem> GetEnumerator()
         {

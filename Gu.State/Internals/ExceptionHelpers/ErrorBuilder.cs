@@ -8,7 +8,7 @@ namespace Gu.State
 
     internal static class ErrorBuilder
     {
-        public static TypeErrors Start()
+        internal static TypeErrors Start()
         {
             return null;
         }
@@ -150,6 +150,11 @@ namespace Gu.State
             return typeErrors;
         }
 
+        internal static TypeErrors CreateIfNull(this TypeErrors errors, Type type)
+        {
+            return errors ?? new TypeErrors(type);
+        }
+
         private static TypeErrors VerifyEnumerableRecursively<TSettings>(
             TypeErrors typeErrors,
             Type type,
@@ -212,11 +217,6 @@ namespace Gu.State
             typeErrors = typeErrors.CreateIfNull(type)
                                    .Add(new MemberTypeErrors(memberInfo, memberPath, memberErrors));
             return typeErrors;
-        }
-
-        internal static TypeErrors CreateIfNull(this TypeErrors errors, Type type)
-        {
-            return errors ?? new TypeErrors(type);
         }
     }
 }

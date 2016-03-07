@@ -59,6 +59,7 @@
                               $"Nested Fields are not allowed";
                 throw new ArgumentException(message);
             }
+
             return this.AddIgnoredField(fieldInfo);
         }
     }

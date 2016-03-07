@@ -15,7 +15,7 @@ namespace Gu.State.Tests
             [Test]
             public void AddIllegalThrows()
             {
-                var expected =// "Track changes failed for item: ObservableCollection<ComplexType>[0].Illegal.\r\n" +
+                var expected = // "Track changes failed for item: ObservableCollection<ComplexType>[0].Illegal.\r\n" +
                                "Track changes failed.\r\n" +
                                "The property IllegalSubType.Illegal of type IllegalType is not supported.\r\n" +
                                "The type IllegalType does not notify changes.\r\n" +
@@ -47,7 +47,7 @@ namespace Gu.State.Tests
             [Test]
             public void SetIllegalThrows()
             {
-                var expected =// "Track changes failed for item: ObservableCollection<ComplexType>[0].Illegal.\r\n" +
+                var expected = // "Track changes failed for item: ObservableCollection<ComplexType>[0].Illegal.\r\n" +
                                "Track changes failed.\r\n" +
                                "The property IllegalSubType.Illegal of type IllegalType is not supported.\r\n" +
                                "The type IllegalType does not notify changes.\r\n" +
@@ -79,7 +79,7 @@ namespace Gu.State.Tests
             [Test]
             public void WithIllegal()
             {
-                var expected =// "Track changes failed for item: ObservableCollection<ComplexType>[0].Illegal.\r\n" +
+                var expected = // "Track changes failed for item: ObservableCollection<ComplexType>[0].Illegal.\r\n" +
                                "Track changes failed.\r\n" +
                                "The property WithIllegal.Illegal of type IllegalType is not supported.\r\n" +
                                "The type IllegalType does not notify changes.\r\n" +
@@ -139,7 +139,7 @@ namespace Gu.State.Tests
             [Test]
             public void WithListOfInts()
             {
-                var expected =// "Track changes failed for item: ObservableCollection<ComplexType>[0].Illegal.\r\n" +
+                var expected = // "Track changes failed for item: ObservableCollection<ComplexType>[0].Illegal.\r\n" +
                    "Track changes failed.\r\n" +
                    "The property With<List<int>>.Value of type List<int> is not supported.\r\n" +
                    "The collection type List<int> does not notify changes.\r\n" +

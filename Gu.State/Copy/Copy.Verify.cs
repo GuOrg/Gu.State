@@ -144,7 +144,7 @@
 
                 if (typeof(IEnumerable).IsAssignableFrom(type) && !IsCopyableCollectionType(type))
                 {
-                    throw new NotSupportedException("Can only copy the members of collections implementing IList or IDictionary");
+                    throw new NotSupportedException($"Can only copy the members of collections implementing {typeof(IList).Name} or {typeof(IDictionary).Name}");
                 }
             }
 

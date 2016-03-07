@@ -5,7 +5,7 @@ namespace Gu.State
     /// <summary>
     /// This class tracks property changes in source and keeps target in sync
     /// </summary>
-    public partial class PropertySynchronizer<T> : IPropertySynchronizer
+    internal sealed partial class PropertySynchronizer<T> : IPropertySynchronizer
         where T : class, INotifyPropertyChanged
     {
         private readonly PropertiesSynchronizer propertiesSynchronizer;

@@ -5,9 +5,8 @@
     using System.Collections.Specialized;
     using System.ComponentModel;
 
-    public partial class PropertySynchronizer<T>
+    internal partial class PropertySynchronizer<T>
     {
-
         private class ItemsSynchronizer : IDisposable
         {
             private readonly IList source;
@@ -55,12 +54,11 @@
 
             internal static ItemsSynchronizer Create(T source, T target, PropertiesSettings settings, TwoItemsTrackerReferenceCollection<IPropertySynchronizer> references)
             {
-                const string canOnlySynchronizeCollectionsThatAreIlistAndInotifycollectionchanged = "Can only synchronize collections that are IList and INotifyCollectionChanged";
                 if (!(source is IList))
                 {
                     if (source is INotifyCollectionChanged)
                     {
-                        throw new NotSupportedException(canOnlySynchronizeCollectionsThatAreIlistAndInotifycollectionchanged);
+                        throw Throw.ShouldNeverGetHereException($"Can only synchronize collections that are {typeof(IList).Name} and {typeof(INotifyCollectionChanged).Name}");
                     }
 
                     return null;
@@ -68,12 +66,12 @@
 
                 if (!(source is INotifyCollectionChanged))
                 {
-                    throw new NotSupportedException(canOnlySynchronizeCollectionsThatAreIlistAndInotifycollectionchanged);
+                    throw Throw.ShouldNeverGetHereException($"Can only synchronize collections that are {typeof(IList).Name} and {typeof(INotifyCollectionChanged).Name}");
                 }
 
                 if (!(target is IList))
                 {
-                    throw new NotSupportedException(canOnlySynchronizeCollectionsThatAreIlistAndInotifycollectionchanged);
+                    throw Throw.ShouldNeverGetHereException($"Can only synchronize collections that are {typeof(IList).Name} and {typeof(INotifyCollectionChanged).Name}");
                 }
 
                 return new ItemsSynchronizer((IList)source, (IList)target, settings, references);

@@ -73,7 +73,6 @@ namespace Gu.State.Tests.EqualByTests
             Assert.AreEqual(expected, exception.Message);
         }
 
-
         [Test]
         public void ListOfWithIndexers()
         {

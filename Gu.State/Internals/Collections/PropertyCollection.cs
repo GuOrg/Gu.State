@@ -15,6 +15,12 @@ namespace Gu.State
             this.items = items;
         }
 
+        internal IDisposable this[PropertyInfo index]
+        {
+            get { return this.items.Single(x => x.PropertyInfo == index).Synchronizer; }
+            set { this.items.Single(x => x.PropertyInfo == index).Synchronizer = value; }
+        }
+
         public bool Contains(PropertyInfo propertyInfo)
         {
             foreach (var item in this.items)
@@ -26,12 +32,6 @@ namespace Gu.State
             }
 
             return false;
-        }
-
-        internal IDisposable this[PropertyInfo index]
-        {
-            get { return this.items.Single(x => x.PropertyInfo == index).Synchronizer; }
-            set { this.items.Single(x => x.PropertyInfo == index).Synchronizer = value; }
         }
 
         public void Dispose()
