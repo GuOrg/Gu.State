@@ -61,40 +61,6 @@
             return message;
         }
 
-        [Obsolete]
-        private static StringBuilder AppendSuggestCopySettings<T>(this StringBuilder errorBuilder, Type type, MemberInfo member)
-            where T : IMemberSettings
-        {
-            errorBuilder = errorBuilder.CreateIfNull()
-                                       .AppendLine($"* Use {typeof(T).Name} and specify how copying is performed:")
-                                       .AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Structural)} means that a deep copy is performed.")
-                                       .AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.References)} means that references are copied.")
-                                       .AppendExcludeType(type);
-            if (member != null)
-            {
-                if (typeof(T) == typeof(FieldsSettings))
-                {
-                    errorBuilder.AppendExcludeField(type, member as FieldInfo);
-                    var indexer = member as PropertyInfo;
-
-                    if (indexer != null)
-                    {
-                        Debug.Assert(indexer.GetIndexParameters().Length > 0, "Must be an indexer");
-                    }
-                }
-                else if (typeof(T) == typeof(PropertiesSettings))
-                {
-                    errorBuilder.AppendExcludeProperty(type, member as PropertyInfo);
-                }
-                else
-                {
-                    throw ChangeTracking.Throw.ExpectedParameterOfTypes<FieldsSettings, PropertiesSettings>("{T}");
-                }
-            }
-
-            return errorBuilder;
-        }
-
         private static class Throw
         {
             // ReSharper disable once UnusedParameter.Local
