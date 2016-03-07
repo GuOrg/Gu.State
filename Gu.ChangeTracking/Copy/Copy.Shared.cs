@@ -3,7 +3,6 @@
     using System;
     using System.Collections;
     using System.Reflection;
-    using System.Text;
 
     /// <summary>
     /// Defines methods for copying values from one instance to another
