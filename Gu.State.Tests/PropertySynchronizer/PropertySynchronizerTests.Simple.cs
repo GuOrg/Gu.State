@@ -19,7 +19,7 @@
                     EnumValue = StringSplitOptions.RemoveEmptyEntries
                 };
                 var target = new SynchronizerTypes.WithSimpleProperties { IntValue = 3, NullableIntValue = 4 };
-                using (Synchronizer.CreatePropertySynchronizer(source, target))
+                using (Synchronize.CreatePropertySynchronizer(source, target))
                 {
                     Assert.AreEqual(1, source.IntValue);
                     Assert.AreEqual(1, target.IntValue);
@@ -45,7 +45,7 @@
             {
                 var source = new SynchronizerTypes.WithCalculatedProperty { Value = 1 };
                 var target = new SynchronizerTypes.WithCalculatedProperty { Value = 3 };
-                using (Synchronizer.CreatePropertySynchronizer(source, target))
+                using (Synchronize.CreatePropertySynchronizer(source, target))
                 {
                     Assert.AreEqual(1, source.Value);
                     Assert.AreEqual(1, target.Value);
@@ -68,7 +68,7 @@
                 var settings = PropertiesSettings.Build()
                                                  .IgnoreProperty<SynchronizerTypes.WithSimpleProperties>(x => x.StringValue)
                                                  .CreateSettings();
-                using (Synchronizer.CreatePropertySynchronizer(source, target, settings))
+                using (Synchronize.CreatePropertySynchronizer(source, target, settings))
                 {
                     Assert.AreEqual(1, source.IntValue);
                     Assert.AreEqual(1, target.IntValue);
@@ -96,7 +96,7 @@
             {
                 var source = new SynchronizerTypes.WithSimpleProperties { IntValue = 1, StringValue = "2" };
                 var target = new SynchronizerTypes.WithSimpleProperties { IntValue = 3, StringValue = "4" };
-                using (Synchronizer.CreatePropertySynchronizer(source, target))
+                using (Synchronize.CreatePropertySynchronizer(source, target))
                 {
                     Assert.AreEqual(1, source.IntValue);
                     Assert.AreEqual(1, target.IntValue);
@@ -123,7 +123,7 @@
             {
                 var source = new SynchronizerTypes.WithSimpleProperties { IntValue = 1, StringValue = "2" };
                 var target = new SynchronizerTypes.WithSimpleProperties { IntValue = 3, StringValue = "4" };
-                using (Synchronizer.CreatePropertySynchronizer(source, target))
+                using (Synchronize.CreatePropertySynchronizer(source, target))
                 {
                     Assert.AreEqual(1, source.IntValue);
                     Assert.AreEqual(1, target.IntValue);

@@ -13,7 +13,7 @@
             {
                 var source = new SynchronizerTypes.WithComplexProperty("a", 1) { ComplexType = new SynchronizerTypes.ComplexType("b", 2) };
                 var target = new SynchronizerTypes.WithComplexProperty("c", 3) { ComplexType = new SynchronizerTypes.ComplexType("d", 4) };
-                using (Synchronizer.CreatePropertySynchronizer(source, target, referenceHandling: ReferenceHandling.Structural))
+                using (Synchronize.CreatePropertySynchronizer(source, target, referenceHandling: ReferenceHandling.Structural))
                 {
                     Assert.AreEqual("a", source.Name);
                     Assert.AreEqual("a", target.Name);
@@ -108,7 +108,7 @@
             {
                 var source = new SynchronizerTypes.WithTwoComplexProperties("a", 1) { ComplexValue1 = new SynchronizerTypes.ComplexType("a.1", 2), ComplexValue2 = new SynchronizerTypes.ComplexType("a.2", 3) };
                 var target = new SynchronizerTypes.WithTwoComplexProperties("b", 3) { ComplexValue1 = new SynchronizerTypes.ComplexType("b.1", 4) };
-                using (Synchronizer.CreatePropertySynchronizer(source, target, referenceHandling: ReferenceHandling.StructuralWithReferenceLoops))
+                using (Synchronize.CreatePropertySynchronizer(source, target, referenceHandling: ReferenceHandling.StructuralWithReferenceLoops))
                 {
                     Assert.AreEqual("a", source.Name);
                     Assert.AreEqual("a", target.Name);
@@ -178,7 +178,7 @@
             {
                 var source = new SynchronizerTypes.Parent("a", new SynchronizerTypes.Child("b"));
                 var target = new SynchronizerTypes.Parent("b", new SynchronizerTypes.Child());
-                using (Synchronizer.CreatePropertySynchronizer(source, target, referenceHandling: ReferenceHandling.StructuralWithReferenceLoops))
+                using (Synchronize.CreatePropertySynchronizer(source, target, referenceHandling: ReferenceHandling.StructuralWithReferenceLoops))
                 {
                     Assert.AreEqual("a", source.Name);
                     Assert.AreEqual("a", target.Name);
@@ -225,7 +225,7 @@
             {
                 var source = new SynchronizerTypes.WithComplexProperty("a", 1) { ComplexType = new SynchronizerTypes.ComplexType("b", 2) };
                 var target = new SynchronizerTypes.WithComplexProperty("c", 3) { ComplexType = new SynchronizerTypes.ComplexType("d", 4) };
-                using (Synchronizer.CreatePropertySynchronizer(source, target, referenceHandling: ReferenceHandling.References))
+                using (Synchronize.CreatePropertySynchronizer(source, target, referenceHandling: ReferenceHandling.References))
                 {
                     Assert.AreEqual("a", source.Name);
                     Assert.AreEqual("a", target.Name);
@@ -273,7 +273,7 @@
                     ComplexType = new SynchronizerTypes.ComplexType("d", 4)
                 };
 
-                using (Synchronizer.CreatePropertySynchronizer(source, target, referenceHandling: ReferenceHandling.Structural))
+                using (Synchronize.CreatePropertySynchronizer(source, target, referenceHandling: ReferenceHandling.Structural))
                 {
                     Assert.AreEqual("a", source.Name);
                     Assert.AreEqual("a", target.Name);
@@ -368,7 +368,7 @@
                 var settings = PropertiesSettings.Build()
                                                  .IgnoreProperty<SynchronizerTypes.WithComplexProperty>(nameof(SynchronizerTypes.WithComplexProperty.Name))
                                                  .CreateSettings(ReferenceHandling.Structural);
-                using (Synchronizer.CreatePropertySynchronizer(source, target, settings))
+                using (Synchronize.CreatePropertySynchronizer(source, target, settings))
                 {
                     Assert.AreEqual("a", source.Name);
                     Assert.AreEqual("c", target.Name);
@@ -471,7 +471,7 @@
                 {
                     ComplexType = new SynchronizerTypes.ComplexType("d", 4)
                 };
-                using (Synchronizer.CreatePropertySynchronizer(source, target, referenceHandling: ReferenceHandling.Structural))
+                using (Synchronize.CreatePropertySynchronizer(source, target, referenceHandling: ReferenceHandling.Structural))
                 {
                     source.OnPropertyChanged("Missing");
                     Assert.AreEqual("a", source.Name);
@@ -513,7 +513,7 @@
                     ComplexType = new SynchronizerTypes.ComplexType("d", 4)
                 };
 
-                using (Synchronizer.CreatePropertySynchronizer(source, target, referenceHandling: ReferenceHandling.Structural))
+                using (Synchronize.CreatePropertySynchronizer(source, target, referenceHandling: ReferenceHandling.Structural))
                 {
                     source.SetFields("e", 5, new SynchronizerTypes.ComplexType("f", 6));
                     source.OnPropertyChanged(prop);
@@ -554,7 +554,7 @@
                                "    - The type ComplexType.\r\n";
                 var source = new SynchronizerTypes.WithComplexProperty();
                 var target = new SynchronizerTypes.WithComplexProperty();
-                var exception = Assert.Throws<NotSupportedException>(() => Synchronizer.CreatePropertySynchronizer(source, target));
+                var exception = Assert.Throws<NotSupportedException>(() => Synchronize.CreatePropertySynchronizer(source, target));
 
                 Assert.AreEqual(expected, exception.Message);
             }

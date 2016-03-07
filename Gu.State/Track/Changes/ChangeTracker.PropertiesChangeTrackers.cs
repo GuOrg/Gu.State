@@ -41,7 +41,7 @@
                     return null;
                 }
 
-                Verify.IsTrackableType(source.GetType(), parent);
+                Track.Verify.IsTrackableType(source.GetType(), parent);
                 List<PropertyCollection.PropertyAndDisposable> items = null;
                 foreach (var propertyInfo in GetTrackProperties(sourceType, parent.Settings))
                 {
@@ -97,7 +97,7 @@
                     return null;
                 }
 
-                Verify.IsTrackablePropertyValue(sv.GetType(), propertyInfo, parent);
+                Track.Verify.IsTrackablePropertyValue(sv.GetType(), propertyInfo, parent);
                 var notifyPropertyChanged = sv as INotifyPropertyChanged;
                 return new PropertyChangeTracker(notifyPropertyChanged, propertyInfo, parent);
             }

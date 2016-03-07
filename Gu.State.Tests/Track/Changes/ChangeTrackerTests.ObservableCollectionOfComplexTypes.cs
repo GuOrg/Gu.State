@@ -3,62 +3,80 @@ namespace Gu.State.Tests
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
 
+    using Gu.State.Tests.ChangeTrackerStubs;
+
     using NUnit.Framework;
 
     public partial class ChangeTrackerTests
     {
-        public class ObservableCollectionOfInts
+        public class ObservableCollectionOfComplexTypes
         {
             [Test]
             public void CreateAndDispose()
             {
                 var changes = new List<object>();
-                var root = new ObservableCollection<int>();
-                using (var tracker = ChangeTracker.Track(root))
+                var root = new ObservableCollection<ComplexType>();
+                using (var tracker = Track.Changes(root))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
                     Assert.AreEqual(0, tracker.Changes);
                     CollectionAssert.IsEmpty(changes);
 
-                    root.Add(1);
+                    root.Add(new ComplexType());
                     Assert.AreEqual(1, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
 
-                    root.Add(2);
+                    root[0].Value++;
                     Assert.AreEqual(2, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(2), changes);
+
+                    root.Add(new ComplexType());
+                    Assert.AreEqual(3, tracker.Changes);
+                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(3), changes);
 
                     tracker.Dispose();
 
-                    root.Add(3);
-                    Assert.AreEqual(2, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(2), changes);
+                    root.Add(new ComplexType());
+                    Assert.AreEqual(3, tracker.Changes);
+                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(3), changes);
                 }
 
-                root.Add(4);
-                CollectionAssert.AreEqual(CreateExpectedChangeArgs(2), changes);
+                root.Add(new ComplexType());
+                CollectionAssert.AreEqual(CreateExpectedChangeArgs(3), changes);
             }
 
             [Test]
             public void Add()
             {
                 var changes = new List<object>();
-                var root = new ObservableCollection<int>();
-                using (var tracker = ChangeTracker.Track(root))
+                var root = new ObservableCollection<ComplexType>();
+                using (var tracker = Track.Changes(root))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
                     Assert.AreEqual(0, tracker.Changes);
                     CollectionAssert.IsEmpty(changes);
 
-                    root.Add(1);
+                    root.Add(new ComplexType());
                     Assert.AreEqual(1, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
 
-                    root.Add(2);
+                    root.Add(new ComplexType());
                     Assert.AreEqual(2, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(2), changes);
+
+                    root[0].Value++;
+                    Assert.AreEqual(3, tracker.Changes);
+                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(3), changes);
+
+                    root[0].Value++;
+                    Assert.AreEqual(4, tracker.Changes);
+                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(4), changes);
+
+                    root[1].Value++;
+                    Assert.AreEqual(5, tracker.Changes);
+                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(5), changes);
                 }
             }
 
@@ -66,8 +84,8 @@ namespace Gu.State.Tests
             public void Remove()
             {
                 var changes = new List<object>();
-                var root = new ObservableCollection<int> { 1, 2 };
-                using (var tracker = ChangeTracker.Track(root))
+                var root = new ObservableCollection<ComplexType> { new ComplexType(), null };
+                using (var tracker = Track.Changes(root))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
@@ -78,7 +96,12 @@ namespace Gu.State.Tests
                     Assert.AreEqual(1, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
 
+                    var complexType = root[0];
                     root.RemoveAt(0);
+                    Assert.AreEqual(2, tracker.Changes);
+                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(2), changes);
+
+                    complexType.Value++;
                     Assert.AreEqual(2, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(2), changes);
                 }
@@ -88,8 +111,8 @@ namespace Gu.State.Tests
             public void Clear()
             {
                 var changes = new List<object>();
-                var root = new ObservableCollection<int> { 1, 2 };
-                using (var tracker = ChangeTracker.Track(root))
+                var root = new ObservableCollection<ComplexType> { new ComplexType(), null };
+                using (var tracker = Track.Changes(root))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
@@ -110,15 +133,15 @@ namespace Gu.State.Tests
             public void Replace()
             {
                 var changes = new List<object>();
-                var root = new ObservableCollection<int> { 1, 2 };
-                using (var tracker = ChangeTracker.Track(root))
+                var root = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType() };
+                using (var tracker = Track.Changes(root))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
                     Assert.AreEqual(0, tracker.Changes);
                     CollectionAssert.IsEmpty(changes);
 
-                    root[0] = 3;
+                    root[0] = new ComplexType();
                     Assert.AreEqual(1, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
                 }
@@ -128,8 +151,8 @@ namespace Gu.State.Tests
             public void Move()
             {
                 var changes = new List<object>();
-                var root = new ObservableCollection<int> { 1, 2 };
-                using (var tracker = ChangeTracker.Track(root))
+                var root = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType() };
+                using (var tracker = Track.Changes(root))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);

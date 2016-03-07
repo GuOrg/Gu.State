@@ -3,7 +3,7 @@
     using System;
     using System.Reflection;
 
-    public static partial class Synchronizer
+    public static partial class Synchronize
     {
         /// <summary>
         /// Check if the properties of <typeparamref name="T"/> can be synchronized.
@@ -48,7 +48,7 @@
         /// <param name="settings">Contains configuration for how synchronization will be performed</param>
         public static void VerifyCanSynchronize(Type type, PropertiesSettings settings)
         {
-            ChangeTracker.VerifyCanTrack(type, settings);
+            Track.VerifyCanTrackChanges(type, settings);
             Copy.VerifyCanCopyPropertyValues(type, settings);
         }
     }
