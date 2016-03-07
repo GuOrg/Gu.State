@@ -62,7 +62,7 @@
     <Compile Include="EqualByTests\FieldValues\Verify.cs" />
     <Compile Include="EqualByTests\PropertyValues\Verify.cs" />
     <Compile Include="EqualByTests\VerifyTests.cs" />
-    <Compile Include="PropertySynchronizer\SynchronizerTypes.cs" />
+    <Compile Include="Synchronize\SynchronizerTypes.cs" />
     <Compile Include="Settings\MemberComparerTests.cs" />
     <Compile Include="Settings\PropertiesSettingsBuilderTests.cs" />
     <Compile Include="Settings\SettingsTypes.cs" />
@@ -78,6 +78,7 @@
     <Compile Include="CopyTests\ThrowTests.cs" />
     <Compile Include="CopyTests\VerifyTests.cs" />
     <Compile Include="Settings\PropertiesSettingsTests.cs" />
+    <Compile Include="Track\Dirty\DirtyTrackerTests.Throws.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerTypes.cs" />
     <Compile Include="EqualByTests\ClassesTests.cs" />
     <Compile Include="EqualByTests\CollectionTests.cs" />
@@ -97,9 +98,9 @@
     <Compile Include="Track\Dirty\DirtyTrackerTests.ObservableCollectionOfComplexType.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerTests.ObservableCollectionOfInt.cs" />
     <Compile Include="Internals\TypeExtTests.cs" />
-    <Compile Include="PropertySynchronizer\PropertySynchronizerTests.ObservableCollectionOfImmutableTypes.cs" />
-    <Compile Include="PropertySynchronizer\PropertySynchronizerTests.WithObservableCollectionProperty.cs" />
-    <Compile Include="PropertySynchronizer\PropertySynchronizerTests.ObservableCollectionOfComplexTypes.cs" />
+    <Compile Include="Synchronize\PropertySynchronizerTests.ObservableCollectionOfImmutableTypes.cs" />
+    <Compile Include="Synchronize\PropertySynchronizerTests.WithObservableCollectionProperty.cs" />
+    <Compile Include="Synchronize\PropertySynchronizerTests.ObservableCollectionOfComplexTypes.cs" />
     <Compile Include="CopyTests\PropertyValues\Classes.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerTests.Complex.cs" />
     <Compile Include="EqualByTests\EqualByTestsShared.cs" />
@@ -118,9 +119,9 @@
     <Compile Include="Track\Changes\ChangeTrackerStubs\Level.cs" />
     <Compile Include="Track\Changes\ChangeTrackerStubs\SpecialCollection.cs" />
     <Compile Include="EqualByTests\FieldValues\Classes_.FieldValues.cs" />
-    <Compile Include="PropertySynchronizer\PropertySynchronizerTests.ObservableCollectionOfInts.cs" />
-    <Compile Include="PropertySynchronizer\PropertySynchronizerTests.Complex.cs" />
-    <Compile Include="PropertySynchronizer\PropertySynchronizerTests.Simple.cs" />
+    <Compile Include="Synchronize\PropertySynchronizerTests.ObservableCollectionOfInts.cs" />
+    <Compile Include="Synchronize\PropertySynchronizerTests.Complex.cs" />
+    <Compile Include="Synchronize\PropertySynchronizerTests.Simple.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestHelpers.cs" />
   </ItemGroup>

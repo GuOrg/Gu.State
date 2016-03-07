@@ -101,10 +101,14 @@ namespace Gu.State.Tests
                                "    - The type IllegalType.\r\n";
 
                 var item = new WithIllegal();
-                var exception = Assert.Throws<NotSupportedException>(() => Track.Changes(item, PropertiesSettings.GetOrCreate()));
+                var settings = PropertiesSettings.GetOrCreate();
+                var exception = Assert.Throws<NotSupportedException>(() => Track.Changes(item, settings));
                 Assert.AreEqual(expected, exception.Message);
 
                 exception = Assert.Throws<NotSupportedException>(() => Track.Changes(item));
+                Assert.AreEqual(expected, exception.Message);
+
+                exception = Assert.Throws<NotSupportedException>(() => Track.VerifyCanTrackChanges<WithIllegal>());
                 Assert.AreEqual(expected, exception.Message);
             }
 
@@ -126,6 +130,9 @@ namespace Gu.State.Tests
                 Assert.AreEqual(expected, exception.Message);
 
                 exception = Assert.Throws<NotSupportedException>(() => Track.Changes(item, PropertiesSettings.GetOrCreate()));
+                Assert.AreEqual(expected, exception.Message);
+
+                exception = Assert.Throws<NotSupportedException>(() => Track.VerifyCanTrackChanges<IllegalEnumerable>());
                 Assert.AreEqual(expected, exception.Message);
             }
 
@@ -157,6 +164,9 @@ namespace Gu.State.Tests
 
                 Assert.AreEqual(expected, exception.Message);
                 exception = Assert.Throws<NotSupportedException>(() => Track.Changes(item, PropertiesSettings.GetOrCreate()));
+                Assert.AreEqual(expected, exception.Message);
+
+                exception = Assert.Throws<NotSupportedException>(() => Track.VerifyCanTrackChanges<With<List<int>>>());
                 Assert.AreEqual(expected, exception.Message);
             }
         }
