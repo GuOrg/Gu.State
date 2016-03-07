@@ -55,6 +55,7 @@ Copies values from source to target.
 Immutable types are copied by value/reference.
 - Indexers are only supported for framework collection types.
 - Collections must implement `IList` or `IDictionary`
+
 #### FieldValues
 ```
 Copy.FieldValues(source, target);
@@ -77,7 +78,6 @@ Compares two instances.
 Types implementing `IEquatable` are compared using `object.Equals(x, y)`
 - Indexers are only supported for framework collection types.
 - Handles enumerables.
-
 
 #### FieldValues
 ```
