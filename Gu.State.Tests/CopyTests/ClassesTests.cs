@@ -246,47 +246,5 @@
             Assert.AreEqual(StringSplitOptions.RemoveEmptyEntries, source.EnumValue);
             Assert.AreEqual(StringSplitOptions.RemoveEmptyEntries, target.EnumValue);
         }
-
-        [TestCase("p", "c", true)]
-        [TestCase("", "c", false)]
-        [TestCase("p", "", false)]
-        public void ParentChild(string p, string c, bool expected)
-        {
-            var source = new CopyTypes.Parent("p", new CopyTypes.Child("c"));
-            var target = new CopyTypes.Parent(p, new CopyTypes.Child(c));
-            this.CopyMethod(source, target, ReferenceHandling.StructuralWithReferenceLoops);
-            Assert.AreEqual("p", source.Name);
-            Assert.AreEqual("p", target.Name);
-            Assert.AreEqual("c", source.Child.Name);
-            Assert.AreEqual("c", target.Child.Name);
-        }
-
-        [Test]
-        public void ParentChildWhenSourceChildIsNull()
-        {
-            var source = new CopyTypes.Parent("p", null);
-            var target = new CopyTypes.Parent(null, new CopyTypes.Child("c"));
-            this.CopyMethod(source, target, ReferenceHandling.StructuralWithReferenceLoops);
-            Assert.AreEqual("p", source.Name);
-            Assert.AreEqual("p", target.Name);
-            Assert.AreEqual(null, source.Child);
-            Assert.AreEqual(null, target.Child);
-        }
-
-        [Test]
-        public void ParentChildWhenTargetChildIsNull()
-        {
-            if (this is FieldValues.Classes)
-            {
-                Assert.Inconclusive("Not supporting this");
-            }
-            var source = new CopyTypes.Parent("p", new CopyTypes.Child("c"));
-            var target = new CopyTypes.Parent(null, null);
-            this.CopyMethod(source, target, ReferenceHandling.StructuralWithReferenceLoops);
-            Assert.AreEqual("p", source.Name);
-            Assert.AreEqual("p", target.Name);
-            Assert.AreEqual("c", source.Child.Name);
-            Assert.AreEqual("c", target.Child.Name);
-        }
     }
 }
