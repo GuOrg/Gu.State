@@ -157,7 +157,7 @@ namespace Gu.ChangeTracking
                     Verify.CanEqualByFieldValues(x, y, settings);
                     return FieldsValuesEquals(x, y, settings, referencePairs);
                 case ReferenceHandling.Throw:
-                    throw ChangeTracking.Throw.ThrowThereIsABugInTheLibrary("Should never get here");
+                    throw Throw.ThrowThereIsABugInTheLibrary("Should never get here");
                 default:
                     throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);
             }

@@ -10,7 +10,7 @@
         /// Compares x and y for equality using property values.
         /// If a type implements IList the items of the list are compared
         /// </summary>
-        /// <typeparam name="T">The type to get ignore properties for settings for</typeparam>
+        /// <typeparam name="T">The type to compare</typeparam>
         /// <param name="x">The first instance</param>
         /// <param name="y">The second instance</param>
         /// <param name="bindingFlags">The binding flags to use when getting properties</param>
@@ -18,7 +18,6 @@
         /// If Structural is used a deep equals is performed.
         /// Default value is Throw
         /// </param>
-        /// <param name="excludedProperties">Names of properties on <typeparamref name="T"/> to exclude from copying</param>
         /// <returns>True if <paramref name="x"/> and <paramref name="y"/> are equal</returns>
         public static bool PropertyValues<T>(
             T x,
@@ -152,7 +151,7 @@
                     Verify.CanEqualByPropertyValues(x, y, settings);
                     return PropertiesValuesEquals(x, y, settings, referencePairs);
                 case ReferenceHandling.Throw:
-                    throw ChangeTracking.Throw.ShouldNeverGetHereException();
+                    throw Throw.ShouldNeverGetHereException();
                 default:
                     throw new ArgumentOutOfRangeException(
                         nameof(settings.ReferenceHandling),

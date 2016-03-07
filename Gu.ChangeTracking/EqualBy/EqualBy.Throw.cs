@@ -18,7 +18,7 @@
             }
             else
             {
-                throw Gu.ChangeTracking.Throw.ExpectedParameterOfTypes<PropertiesSettings, FieldsSettings>("T");
+                throw Throw.ExpectedParameterOfTypes<PropertiesSettings, FieldsSettings>("T");
             }
 
             return errorBuilder;

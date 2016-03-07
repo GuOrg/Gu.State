@@ -24,7 +24,13 @@
 
         internal T this[int index]
         {
-            get { return this.items[index]; }
+            get
+            {
+                lock (this.gate)
+                {
+                    return this.items[index];
+                }
+            }
             set
             {
                 if (index < 0)

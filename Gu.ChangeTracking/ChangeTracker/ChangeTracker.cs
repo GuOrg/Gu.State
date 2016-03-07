@@ -25,7 +25,7 @@
             this.itemsChangeTrackers = ItemsChangeTrackers.Create(source, this);
             if (this.propertiesChangeTrackers == null && this.itemsChangeTrackers == null)
             {
-                throw Gu.ChangeTracking.Throw.ThrowThereIsABugInTheLibrary("Created a tracker that does not track anything");
+                throw ChangeTracking.Throw.ThrowThereIsABugInTheLibrary("Created a tracker that does not track anything");
             }
         }
 
@@ -68,10 +68,12 @@
         /// Creates a tracker that detects and notifies about changes of any property or subproperty of <paramref name="root"/>
         /// </summary>
         /// <param name="root">The item to track changes for.</param>
+        /// <param name="referenceHandling">
+        /// </param>
         /// <returns>An <see cref="IValueTracker"/> that signals on changes in <paramref name="root"/></returns>
         public static IChangeTracker Track(INotifyPropertyChanged root, ReferenceHandling referenceHandling = ReferenceHandling.Structural)
         {
-            ChangeTracking.Ensure.NotNull(root, nameof(root));
+            Ensure.NotNull(root, nameof(root));
             var settings = PropertiesSettings.GetOrCreate(referenceHandling: referenceHandling);
             return Track(root, settings);
         }
@@ -84,8 +86,8 @@
         /// <returns>An <see cref="IValueTracker"/> that signals on changes in <paramref name="root"/></returns>
         public static IChangeTracker Track(INotifyPropertyChanged root, PropertiesSettings settings)
         {
-            ChangeTracking.Ensure.NotNull(root, nameof(root));
-            ChangeTracking.Ensure.NotNull(settings, nameof(settings));
+            Ensure.NotNull(root, nameof(root));
+            Ensure.NotNull(settings, nameof(settings));
             return new ChangeTracker(root, settings);
         }
 

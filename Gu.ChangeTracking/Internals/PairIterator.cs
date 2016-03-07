@@ -65,7 +65,7 @@
                 {
                     if (this.mx && this.my)
                     {
-                        return CreatePair(x.Current, y.Current);
+                        return CreatePair(this.x.Current, this.y.Current);
                     }
                     else if (this.mx)
                     {

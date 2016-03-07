@@ -25,7 +25,7 @@
             var type = sourceValue.GetType();
             if (type.IsArray)
             {
-                var constructor = type.GetConstructor(new Type[] { typeof(int) });
+                var constructor = type.GetConstructor(new[] { typeof(int) });
                 var parameters = new[] { type.GetProperty("Length").GetValue(sourceValue) };
                 var array = constructor.Invoke(parameters);
                 return array;
