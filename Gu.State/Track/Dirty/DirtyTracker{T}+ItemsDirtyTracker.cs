@@ -39,7 +39,7 @@
                 }
             }
 
-            public bool IsDirty => this.itemTrackers.Items.Any(it => it?.IsDirty == true);
+            public bool IsDirty => this.itemTrackers.Exists(it => it?.IsDirty == true);
 
             public void Dispose()
             {
@@ -96,7 +96,7 @@
                             for (int i = 0; i < Math.Max(xList.Count, yList.Count); i++)
                             {
                                 var itemTracker = this.CreateItemTracker(i);
-                                this.itemTrackers[i] = itemTracker;
+                                this.itemTrackers.Insert(i, itemTracker);
                             }
 
                             break;

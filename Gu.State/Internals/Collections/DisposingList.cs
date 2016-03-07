@@ -21,21 +21,10 @@
 
         internal int Count => this.items.Count;
 
-        internal IReadOnlyList<T> Items => this.items;
-
         internal T this[int index]
         {
-            get
-            {
-                lock (this.items)
-                {
-                    return this.items[index];
-                }
-            }
-
             set
             {
-                this.VerifyDisposed();
                 if (index < 0)
                 {
                     throw new ArgumentOutOfRangeException(nameof(index));
@@ -60,6 +49,14 @@
             this.Clear();
         }
 
+        internal bool Exists(Predicate<T> func)
+        {
+            lock (this.items)
+            {
+                return this.items.Exists(func);
+            }
+        }
+
         internal void RemoveAt(int index)
         {
             lock (this.items)
@@ -75,7 +72,6 @@
             lock (this.items)
             {
                 this.VerifyDisposed();
-                this.FillTo(index);
                 this.items.Insert(index, item);
             }
         }
@@ -95,7 +91,7 @@
         {
             lock (this.items)
             {
-                for (int i = this.items.Count - 1; i >= 0; i--)
+                for (var i = this.items.Count - 1; i >= 0; i--)
                 {
                     this.items[i]?.Dispose();
                     this.items.RemoveAt(i);
@@ -105,17 +101,14 @@
 
         private void SetItem(int index, T item)
         {
-            this.FillTo(index);
-            this.TryGet(index)?.Dispose();
-            this.items[index] = item;
-        }
-
-        private void FillTo(int index)
-        {
-            while (this.items.Count <= index)
+            if (this.items.Count == index)
             {
-                this.items.Add(null);
+                this.items.Add(item);
+                return;
             }
+
+            this.items[index]?.Dispose();
+            this.items[index] = item;
         }
 
         private T TryGet(int index)
