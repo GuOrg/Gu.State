@@ -99,7 +99,7 @@ EqualBy.PropertyValues(source, target, ReferenceHandling.References);
 ##### PropertiesSettings.
 For more finegrained control there is an overload accepting a `PropertiesSettings`
 
-## PropertySynchronizer
+## Synchronize
 Keeps the property values of target in sync with source.
 For subproperties the following must hold:
 - Collections must implement INotifyCollectionChanged
