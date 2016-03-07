@@ -1,95 +1,112 @@
-# Gu.ChangeTracking
-Small library for tracking changes to object graphs.
+# Gu.State
+Library for managing state.
 
-## ChangeTracker
-Tracks changes in a graph, handles collections and nested properties.
-##### Sample 1, simplest use case.
+## Track
+Tracks changes in a graph.
+For subproperties the following must hold:
+- Collections must implement INotifyCollectionChanged
+- Types that are not collections and not immutable must implement INotifyPropertyChanged.
+- Indexers are only supported for framework collection types.
+
+##### Changes.
 
 ```
-using (var tracker = ChangeTracker.Track(foo))
+using (var tracker = Track.Changes(foo))
 {
     Assert.AreEqual(0, tracker.Changes);
     foo.SomeProperty.NestedCollection[0].Value++;
     Assert.AreEqual(1, tracker.Changes);
 }
+// no longer tracking after disposing.
 ```
 
-##### Sample 2, ignore immutable type
+##### IsDirty.
 
 ```
-var settings = ChangeTrackerSettings.Default;
-settings.AddImmutableType<Color>(); // we tell the tracker that Color is immutable like this.
-var foo = new WithColor();
-using (var tracker = ChangeTracker.Track(foo, settings))
+using (var tracker = Track.IsDirty(x, y))
 {
-    Assert.AreEqual(0, tracker.Changes);
-    foo.Name = "Johan";
-    Assert.AreEqual(1, tracker.Changes);
-
-    foo.Color = Color.Blue;
-    Assert.AreEqual(1, tracker.Changes); // no change 
+    Assert.AreEqual(false, tracker.IsDirty);
+    foo.SomeProperty.NestedCollection[0].Value++;
+    Assert.AreEqual(true, tracker.IsDirty);
 }
-```
-If we don't pass a setting we get the exception:
-
-```
-Create tracker failed for Gu.ChangeTracking.Tests.ChangeTrackerTests.PropertyChanged.WithColor.Color.
-Solve the problem by any of:
-* Add a specialcase to tracker setting example:
-    settings.AddSpecialType<System.Drawing.Color>(...)
-    or:    settings.AddSpecialProperty(typeof(WithColor).GetProperty(nameof(WithColor.Color))    Note that this requires you to track changes.
-* Implement INotifyPropertyChanged for Gu.ChangeTracking.Tests.ChangeTrackerTests.PropertyChanged.WithColor
-* Implement INotifyCollectionChanged for Gu.ChangeTracking.Tests.ChangeTrackerTests.PropertyChanged.WithColor
-* Add attribute [IgnoreChangesAttribute] to type Gu.ChangeTracking.Tests.ChangeTrackerTests.PropertyChanged.WithColor
-* Add attribute [IgnoreChangesAttribute] to property Gu.ChangeTracking.Tests.ChangeTrackerTests.PropertyChanged.WithColor.Color
+// no longer tracking after disposing.
 ```
 
-##### Sample 3, ignore property
+##### Verify.
 ```
-var settings = new ChangeTrackerSettings();
-var property = foo.GetType().GetProperty(nameof(Foo.IgnoredProperty));
-settings.AddExplicitProperty(property);
-using (var tracker = ChangeTracker.Track(foo, settings))
+Track.VerifyCanTrackIsDirty<T>(ReferenceHandling.Structural);
+Track.VerifyCanTrackChanges<T>(ReferenceHandling.Structural);
+```
+Use the verify methods in unit tests to assert that your types support tracking and that the correct settings are used.
+
+##### PropertiesSettings.
+For more finegrained control there is an overload accepting a `PropertiesSettings`
+```
+var settings = new PropertiesSettingsBuilder().IgnoreProperty<WithIllegal>(x => x.Illegal)
+                                              .CreateSettings(ReferenceHandling.Structural);
+using (var tracker = Track.Changes(withIllegalObject, settings))
 {
-    Assert.AreEqual(0, tracker.Changes);
-    foo.Value++;
-    Assert.AreEqual(1, tracker.Changes);
-
-    foo.IgnoredProperty++;
-    Assert.AreEqual(1, tracker.Changes);
+    ...
 }
-```
-
-## DirtyTracker
-Tracks changes to two instances of the same type and reports if they are different.
-Useful for edit views where a copy is edited and compared to the instance last saved to disk.
-The `DirtyTracker` is `IDisposable` and disposing stops listening.
-Notifies when there are changes to `IsDirty` and `Diff` via `INotifyPropertyChanged`
-Only simple properties { IEquatable<struct>, string } are supported for now.
-The constructor checks and throws. There is also a Vefify method that can be used to check if a type can be tracked.
-Sample:
-
-```c#
-var dirtyTracker = DirtyTracker.Track(x, y);
-// dirtyTracker.IsDirty true if any property differs between x and y. 
 ```
 
 ## Copy
-
+Copies values from source to target.
+Immutable types are copied by value/reference.
+- Indexers are only supported for framework collection types.
+- Collections must implement `IList` or `IDictionary`
 #### FieldValues
 ```
 Copy.FieldValues(source, target);
-Copy.FieldValues(source, target, "ignoreThisField");
-Copy.FieldValues(source, target, ReferenceHandling.Structural); // copies the field values for nested reference types. Used Activator.CreateInstance so a default ctor is required, can be private.
-Copy.FieldValues(source, target, ReferenceHandling.Reference); // copies references for nested reference types.
+Copy.FieldValues(source, target, ReferenceHandling.Structural); 
+Copy.FieldValues(source, target, ReferenceHandling.StructuralWithReferenceLoops); 
+Copy.FieldValues(source, target, ReferenceHandling.References);
 ```
 #### PropertyValues
 ```
 Copy.PropertyValues(source, target);
-Copy.PropertyValues(source, target, "IgnoreThisProperty");
-Copy.PropertyValues(source, target, ReferenceHandling.Structural); // copies the field values for nested reference types. Used Activator.CreateInstance so a default ctor is required, can be private.
-Copy.PropertyValues(source, target, ReferenceHandling.Reference); // copies references for nested reference types.
+Copy.PropertyValues(source, target, ReferenceHandling.Structural); 
+Copy.PropertyValues(source, target, ReferenceHandling.StructuralWithReferenceLoops); 
+Copy.PropertyValues(source, target, ReferenceHandling.References);
 ```
+##### PropertiesSettings.
+For more finegrained control there is an overload accepting a `PropertiesSettings`
+
+## EqualBy
+Compares two instances.
+Types implementing `IEquatable` are compared using `object.Equals(x, y)`
+- Indexers are only supported for framework collection types.
+- Handles enumerables.
+
+
+#### FieldValues
+```
+EqualBy.FieldValues(source, target);
+EqualBy.FieldValues(source, target, ReferenceHandling.Structural); 
+EqualBy.FieldValues(source, target, ReferenceHandling.StructuralWithReferenceLoops); 
+EqualBy.FieldValues(source, target, ReferenceHandling.References);
+```
+- Ignores event fields
+
+#### PropertyValues
+```
+EqualBy.PropertyValues(source, target);
+EqualBy.PropertyValues(source, target, ReferenceHandling.Structural); 
+EqualBy.PropertyValues(source, target, ReferenceHandling.StructuralWithReferenceLoops); 
+EqualBy.PropertyValues(source, target, ReferenceHandling.References);
+```
+
+##### PropertiesSettings.
+For more finegrained control there is an overload accepting a `PropertiesSettings`
 
 ## PropertySynchronizer
 Keeps the property values of target in sync with source.
+For subproperties the following must hold:
+- Collections must implement INotifyCollectionChanged
+- Types that are not collections and not immutable must implement INotifyPropertyChanged.
+- Indexers are only supported for framework collection types.
+```
+using (Synchronize.CreatePropertySynchronizer(source, target, referenceHandling: ReferenceHandling.Structural))
+{
+}
+```
