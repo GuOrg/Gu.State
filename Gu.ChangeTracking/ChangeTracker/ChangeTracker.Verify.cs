@@ -71,32 +71,8 @@
                     t => ErrorBuilder.Start()
                                      .CheckReferenceHandling(type, settings)
                                      .CheckIndexers(type, settings)
+                                     .CheckNotifies(type, settings)
                                      .VerifyRecursive(t, settings, path, GetRecursiveErrors));
-            }
-
-            private static Error GetRecursiveErrors(PropertiesSettings settings, MemberPath path)
-            {
-                var type = path.LastNodeType;
-                if (type.IsImmutable())
-                {
-                    return null;
-                }
-
-                if (typeof(IEnumerable).IsAssignableFrom(type))
-                {
-                    if (!typeof(INotifyCollectionChanged).IsAssignableFrom(type))
-                    {
-                        GetErrors(type, settings, path)
-                        return new CollectionMustNotifyError(path);
-                    }
-                }
-                else if (!typeof(INotifyPropertyChanged).IsAssignableFrom(type))
-                {
-                    GetErrors(type, settings, path)
-                    return new TypeMustNotifyError(path);
-                }
-
-                return GetErrors(type, settings, path);
             }
 
             internal static void IsTrackableType(Type type, ChangeTracker tracker)
@@ -139,6 +115,17 @@
 
                 var path = tracker.Path.WithIndex(index);
                 IsTrackableType(itemType, path, tracker.Settings);
+            }
+
+            private static Error GetRecursiveErrors(PropertiesSettings settings, MemberPath path)
+            {
+                var type = path.LastNodeType;
+                if (type.IsImmutable())
+                {
+                    return null;
+                }
+
+                return GetErrors(type, settings, path);
             }
 
             private static void IsTrackableType(Type type, MemberPath path, PropertiesSettings settings)
