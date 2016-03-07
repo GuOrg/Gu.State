@@ -106,7 +106,7 @@
             throw Throw.ExpectedParameterOfTypes<FieldInfo, PropertyInfo>(nameof(memberInfo));
         }
 
-        public MemberPath WithCollectionItem(Type collectionType)
+        internal MemberPath WithCollectionItem(Type collectionType)
         {
             return new MemberPath(this.Root, this.Path.Concat(new[] { new CollectionItem(collectionType) }).ToArray());
         }
