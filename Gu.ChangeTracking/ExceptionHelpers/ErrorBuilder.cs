@@ -2,6 +2,8 @@ namespace Gu.ChangeTracking
 {
     using System;
     using System.Collections;
+    using System.Collections.Specialized;
+    using System.ComponentModel;
     using System.Reflection;
 
     internal static class ErrorBuilder
@@ -23,8 +25,33 @@ namespace Gu.ChangeTracking
             return typeErrors;
         }
 
-        internal static TypeErrors CheckIndexers<T>(this TypeErrors typeErrors, Type type, T settings)
-            where T : IMemberSettings
+        internal static TypeErrors CheckNotifies<TSettings>(this TypeErrors typeErrors, Type type, TSettings settings)
+             where TSettings : IMemberSettings
+        {
+            if (typeof(IEnumerable).IsAssignableFrom(type))
+            {
+                if (!typeof(INotifyCollectionChanged).IsAssignableFrom(type))
+                {
+                    return typeErrors.CreateIfNull(type)
+                                           .Add(new CollectionMustNotifyError(type));
+                }
+            }
+            else if (!typeof(INotifyPropertyChanged).IsAssignableFrom(type))
+            {
+                if (settings.IsIgnoringDeclaringType(type))
+                {
+                    return typeErrors;
+                }
+
+                return typeErrors.CreateIfNull(type)
+                                 .Add(new TypeMustNotifyError(type));
+            }
+
+            return typeErrors;
+        }
+
+        internal static TypeErrors CheckIndexers<TSettings>(this TypeErrors typeErrors, Type type, TSettings settings)
+            where TSettings : IMemberSettings
         {
             var propertiesSettings = settings as PropertiesSettings;
             var propertyInfos = type.GetProperties(settings.BindingFlags);
