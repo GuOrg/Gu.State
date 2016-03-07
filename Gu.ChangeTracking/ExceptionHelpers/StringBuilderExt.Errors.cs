@@ -1,6 +1,5 @@
 ﻿namespace Gu.ChangeTracking
 {
-    using System;
     using System.Linq;
     using System.Text;
 
@@ -12,9 +11,9 @@
                 errors.OfType<IExcludableMember>().Any())
             {
                 errorBuilder.AppendLine("  - Exclude a combination of the following:");
-                foreach (var excludableMember in errors.OfType<IExcludableMember>().Distinct())
+                foreach (var member in errors.OfType<IExcludableMember>().Distinct())
                 {
-                    excludableMember.AppendSuggestExcludeMember(errorBuilder);
+                    member.AppendSuggestExcludeMember(errorBuilder);
                 }
 
                 foreach (var type in errors.OfType<IExcludableType>().Select(x => x.Type).Distinct())
@@ -96,6 +95,16 @@
                         .AppendLine("    - All field and property types must be immutable.")
                         .AppendLine("    - All indexers must be readonly.")
                         .AppendLine("    - Event fields are ignored.");
+            return errorBuilder;
+        }
+
+        internal static StringBuilder AppendSuggestNotify(this StringBuilder errorBuilder, TypeErrors errors)
+        {
+            foreach (var error in errors.OfType<IFixWithNotify>().Distinct())
+            {
+                error.AppendSuggestFixWithNotify(errorBuilder);
+            }
+
             return errorBuilder;
         }
 

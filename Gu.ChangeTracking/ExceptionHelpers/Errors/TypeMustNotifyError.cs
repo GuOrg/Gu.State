@@ -1,12 +1,10 @@
 namespace Gu.ChangeTracking
 {
     using System;
-    using System.Collections;
-    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Text;
 
-    internal sealed class TypeMustNotifyError : TypeError, IFixWithImmutable, IExcludableType, INotSupported
+    internal sealed class TypeMustNotifyError : TypeError, IFixWithImmutable, IExcludableType, INotSupported, IFixWithNotify
     {
         public TypeMustNotifyError(Type type)
             : base(type)
@@ -25,9 +23,15 @@ namespace Gu.ChangeTracking
 
         public StringBuilder AppendNotSupported(StringBuilder errorBuilder)
         {
-            var line = this.Type.Assembly == typeof(int).Assembly
-                           ? $"The type {this.Type.PrettyName()} does not notify changes. Use a type that implements {typeof(INotifyPropertyChanged).Name}."
-                           : $"The type {this.Type.PrettyName()} does not notify changes. Implement {typeof(INotifyPropertyChanged).Name} or use a type that implements {typeof(INotifyPropertyChanged).Name}.";
+            return errorBuilder.AppendLine($"The type {this.Type.PrettyName()} does not notify changes.");
+        }
+
+        public StringBuilder AppendSuggestFixWithNotify(StringBuilder errorBuilder)
+        {
+            var propChanged = typeof(INotifyPropertyChanged).Name;
+            var line = this.Type.Assembly == typeof(string).Assembly
+                           ? $"* Use a type that implements {propChanged} isntead of {this.Type.PrettyName()}."
+                           : $"* Implement {propChanged} for {this.Type.PrettyName()} or use a type that does.";
             return errorBuilder.AppendLine(line);
         }
 

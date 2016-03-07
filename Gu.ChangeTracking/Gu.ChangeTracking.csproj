@@ -41,6 +41,7 @@
     <Compile Include="ChangeTracker\ChangeTracker.cs" />
     <Compile Include="ChangeTracker\ChangeTracker.ItemsChangeTrackers.cs" />
     <Compile Include="ChangeTracker\ChangeTracker.PropertiesChangeTrackers.cs" />
+    <Compile Include="ChangeTracker\ChangeTracker.Throw.cs" />
     <Compile Include="ChangeTracker\ChangeTracker.Verify.cs" />
     <Compile Include="Contracts\ISpecialCopyProperty.cs" />
     <Compile Include="ChangeTracker\Internals\PropertyChangeTracker.cs" />
@@ -51,6 +52,7 @@
     <Compile Include="ExceptionHelpers\Errors\CollectionMustNotifyError.cs" />
     <Compile Include="ExceptionHelpers\Errors\Contracts\IExcludableMember.cs" />
     <Compile Include="ExceptionHelpers\Errors\Contracts\IFixWithImmutable.cs" />
+    <Compile Include="ExceptionHelpers\Errors\Contracts\IFixWithNotify.cs" />
     <Compile Include="ExceptionHelpers\Errors\Contracts\INotSupported.cs" />
     <Compile Include="ExceptionHelpers\Errors\BaseClasses\Error.cs" />
     <Compile Include="ExceptionHelpers\Errors\Contracts\IErrors.cs" />

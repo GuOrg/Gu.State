@@ -16,7 +16,7 @@
                 var withIllegalObject = new WithIllegal();
                 var propertyInfo = typeof(WithIllegal).GetProperty(nameof(WithIllegal.Illegal));
                 var settings = new PropertiesSettingsBuilder().IgnoreProperty(propertyInfo)
-                                                              .CreateSettings();
+                                                              .CreateSettings(ReferenceHandling.Structural);
 
                 using (var tracker = ChangeTracker.Track(withIllegalObject, settings))
                 {
@@ -41,7 +41,7 @@
                 var changes = new List<object>();
                 var withIllegalObject = new WithIllegal();
                 var settings = new PropertiesSettingsBuilder().IgnoreProperty<WithIllegal>(x => x.Illegal)
-                                                              .CreateSettings();
+                                                              .CreateSettings(ReferenceHandling.Structural);
                 using (var tracker = ChangeTracker.Track(withIllegalObject, settings))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
@@ -66,7 +66,7 @@
                 var root = new DerivedClass();
                 var settings = PropertiesSettings.Build()
                                                  .IgnoreProperty<ComplexType>(x => x.Excluded)
-                                                 .CreateSettings();
+                                                 .CreateSettings(ReferenceHandling.Structural);
                 using (var tracker = ChangeTracker.Track(root, settings))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
@@ -91,7 +91,7 @@
                 var root = new DerivedClass();
                 var settings = PropertiesSettings.Build()
                                                  .IgnoreProperty<IBaseClass>(x => x.Excluded)
-                                                 .CreateSettings();
+                                                 .CreateSettings(ReferenceHandling.Structural);
                 //settings.IgnoreProperty<IBaseClass>(x => x.Excluded);
                 using (var tracker = ChangeTracker.Track(root, settings))
                 {
@@ -117,7 +117,7 @@
                 var withIllegalObject = new WithIllegal();
                 var settings = PropertiesSettings.Build()
                                                  .IgnoreType<IllegalType>()
-                                                 .CreateSettings();
+                                                 .CreateSettings(ReferenceHandling.Structural);
                 using (var tracker = ChangeTracker.Track(withIllegalObject, settings))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
@@ -138,7 +138,7 @@
                 var root = new WithIllegal();
                 var settings = PropertiesSettings.Build()
                                                  .IgnoreType<IllegalType>()
-                                                 .CreateSettings();
+                                                 .CreateSettings(ReferenceHandling.Structural);
                 using (var tracker = ChangeTracker.Track(root, settings))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);

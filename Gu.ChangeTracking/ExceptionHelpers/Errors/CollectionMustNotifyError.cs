@@ -5,7 +5,7 @@ namespace Gu.ChangeTracking
     using System.Collections.Specialized;
     using System.Text;
 
-    internal sealed class CollectionMustNotifyError : TypeError, IFixWithImmutable, IExcludableType, INotSupported
+    internal sealed class CollectionMustNotifyError : TypeError, IFixWithImmutable, IExcludableType, INotSupported, IFixWithNotify
     {
         public CollectionMustNotifyError(Type type)
             : base(type)
@@ -24,9 +24,15 @@ namespace Gu.ChangeTracking
 
         public StringBuilder AppendNotSupported(StringBuilder errorBuilder)
         {
+            return errorBuilder.AppendLine($"The collection type {this.Type.PrettyName()} does not notify changes.");
+        }
+
+        public StringBuilder AppendSuggestFixWithNotify(StringBuilder errorBuilder)
+        {
+            var colChanged = typeof(INotifyCollectionChanged).Name;
             var line = this.Type.Assembly == typeof(List<>).Assembly
-                           ? $"The collection type {this.Type.PrettyName()} does not notify changes. Use a type that implements {typeof(INotifyCollectionChanged).Name}."
-                           : $"The collection type {this.Type.PrettyName()} does not notify changes. Implement {typeof(INotifyCollectionChanged).Name} or use a type that implements {typeof(INotifyCollectionChanged).Name}.";
+                           ? $"* Use a type that implements {colChanged} instead of {this.Type.PrettyName()}."
+                           : $"* Implement {colChanged} for {this.Type.PrettyName()} or use a type that does.";
             return errorBuilder.AppendLine(line);
         }
 

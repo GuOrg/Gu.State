@@ -75,10 +75,10 @@
         /// </summary>
         /// <param name="root">The item to track changes for.</param>
         /// <returns>An <see cref="IValueTracker"/> that signals on changes in <paramref name="root"/></returns>
-        public static IChangeTracker Track(INotifyPropertyChanged root)
+        public static IChangeTracker Track(INotifyPropertyChanged root, ReferenceHandling referenceHandling = ReferenceHandling.Structural)
         {
             ChangeTracking.Ensure.NotNull(root, nameof(root));
-            var settings = PropertiesSettings.GetOrCreate();
+            var settings = PropertiesSettings.GetOrCreate(referenceHandling: referenceHandling);
             return Track(root, settings);
         }
 
