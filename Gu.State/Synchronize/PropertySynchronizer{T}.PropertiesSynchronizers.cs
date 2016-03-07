@@ -14,12 +14,12 @@
             private readonly INotifyPropertyChanged target;
             private readonly PropertiesSettings settings;
             private readonly TwoItemsTrackerReferenceCollection<IPropertySynchronizer> references;
-            private readonly DisposingCollection<PropertyInfo, IDisposable> propertySynchronizers;
+            private readonly DisposingMap<PropertyInfo, IDisposable> propertySynchronizers;
 
             private PropertiesSynchronizer(
                 INotifyPropertyChanged source,
                 INotifyPropertyChanged target,
-                DisposingCollection<PropertyInfo, IDisposable> propertySynchronizers,
+                DisposingMap<PropertyInfo, IDisposable> propertySynchronizers,
                 PropertiesSettings settings,
                 TwoItemsTrackerReferenceCollection<IPropertySynchronizer> references)
             {
@@ -48,7 +48,7 @@
                     return null;
                 }
 
-                DisposingCollection<PropertyInfo, IDisposable> propertyTrackers = null;
+                DisposingMap<PropertyInfo, IDisposable> propertyTrackers = null;
                 foreach (var propertyInfo in source.GetType()
                                                    .GetProperties(settings.BindingFlags))
                 {
@@ -65,10 +65,10 @@
                         var synchronizer = CreateSynchronizer((INotifyPropertyChanged)sv, (INotifyPropertyChanged)tv, settings, references);
                         if (propertyTrackers == null)
                         {
-                            propertyTrackers = new DisposingCollection<PropertyInfo, IDisposable>();
+                            propertyTrackers = new DisposingMap<PropertyInfo, IDisposable>();
                         }
 
-                        propertyTrackers[propertyInfo] = synchronizer;
+                        propertyTrackers.SetValue(propertyInfo, synchronizer);
                     }
                 }
 
@@ -150,7 +150,8 @@
             {
                 var sv = (INotifyPropertyChanged)propertyInfo.GetValue(this.source);
                 var tv = (INotifyPropertyChanged)propertyInfo.GetValue(this.target);
-                this.propertySynchronizers[propertyInfo] = CreateSynchronizer(sv, tv, this.settings, this.references);
+                var synchronizer = CreateSynchronizer(sv, tv, this.settings, this.references);
+                this.propertySynchronizers.SetValue(propertyInfo, synchronizer);
             }
         }
     }

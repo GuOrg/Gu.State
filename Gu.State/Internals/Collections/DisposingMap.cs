@@ -2,36 +2,17 @@ namespace Gu.State
 {
     using System;
     using System.Collections.Concurrent;
-    using System.Diagnostics;
+    using System.Collections.Generic;
     using System.Linq;
 
-    internal sealed class DisposingCollection<TKey, TValue> : IDisposable
+    internal sealed class DisposingMap<TKey, TValue> : IDisposable
         where TValue : IDisposable
     {
         private readonly ConcurrentDictionary<TKey, TValue> items = new ConcurrentDictionary<TKey, TValue>();
         private bool disposed;
 
-        internal TValue this[TKey key]
-        {
-            get
-            {
-                this.VerifyDisposed();
-                TValue value;
-                if (this.items.TryGetValue(key, out value))
-                {
-                    return value;
-                }
-
-                throw new ArgumentOutOfRangeException(nameof(key));
-            }
-
-            set
-            {
-                this.VerifyDisposed();
-                this.items.AddOrUpdate(key, value, new Updater(value).UpdateValue);
-            }
-        }
-
+        internal IEnumerable<TValue> Values => this.items.Values;
+         
         public void Dispose()
         {
             if (this.disposed)
@@ -48,6 +29,12 @@ namespace Gu.State
                     item?.Dispose();
                 }
             }
+        }
+
+        internal void SetValue(TKey key, TValue value)
+        {
+            this.VerifyDisposed();
+            this.items.AddOrUpdate(key, value, new Updater(value).UpdateValue);
         }
 
         private void VerifyDisposed()
