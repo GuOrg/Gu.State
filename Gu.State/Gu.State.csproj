@@ -39,6 +39,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Internals\Collections\DisposingCollection.cs" />
     <Compile Include="Track\Changes\ChangeTracker.cs" />
     <Compile Include="Track\Changes\ChangeTracker.ItemsChangeTrackers.cs" />
     <Compile Include="Track\Changes\ChangeTracker.PropertiesChangeTrackers.cs" />
@@ -109,7 +110,6 @@
     <Compile Include="Internals\Collections\SingleItemTrackerReferenceCollection.cs" />
     <Compile Include="Internals\Collections\TwoItemsTrackerReferenceCollection.cs" />
     <Compile Include="Internals\PaddedPairs.cs" />
-    <Compile Include="Internals\Collections\PropertyCollection.cs" />
     <Compile Include="Internals\MemberPath\IndexItem.cs" />
     <Compile Include="Internals\MemberPath\PathItem.cs" />
     <Compile Include="Internals\MemberPath\PropertyItem.cs" />

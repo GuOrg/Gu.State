@@ -49,6 +49,7 @@
     <Compile Include="CopyTests\FieldValues\ReferenceLoops.cs" />
     <Compile Include="CopyTests\PropertyValues\ReferenceLoops.cs" />
     <Compile Include="CopyTests\ReferenceLoops.cs" />
+    <Compile Include="Internals\Collections\DisposingCollectionTests.cs" />
     <Compile Include="Synchronize\PropertySynchronizerTests.ReferenceLoops.cs" />
     <Compile Include="Track\Changes\ChangeTrackerStubs\IllegalSubType.cs" />
     <Compile Include="Track\Changes\ChangeTrackerStubs\Immutable.cs" />

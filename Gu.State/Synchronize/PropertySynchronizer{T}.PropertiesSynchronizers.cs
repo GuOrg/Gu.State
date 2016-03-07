@@ -14,12 +14,12 @@
             private readonly INotifyPropertyChanged target;
             private readonly PropertiesSettings settings;
             private readonly TwoItemsTrackerReferenceCollection<IPropertySynchronizer> references;
-            private readonly PropertyCollection propertySynchronizers;
+            private readonly DisposingCollection<PropertyInfo, IDisposable> propertySynchronizers;
 
             private PropertiesSynchronizer(
                 INotifyPropertyChanged source,
                 INotifyPropertyChanged target,
-                PropertyCollection propertySynchronizers,
+                DisposingCollection<PropertyInfo, IDisposable> propertySynchronizers,
                 PropertiesSettings settings,
                 TwoItemsTrackerReferenceCollection<IPropertySynchronizer> references)
             {
@@ -48,7 +48,7 @@
                     return null;
                 }
 
-                List<PropertyCollection.PropertyAndDisposable> items = null;
+                DisposingCollection<PropertyInfo, IDisposable> propertyTrackers = null;
                 foreach (var propertyInfo in source.GetType()
                                                    .GetProperties(settings.BindingFlags))
                 {
@@ -63,22 +63,16 @@
                         var sv = propertyInfo.GetValue(source);
                         var tv = propertyInfo.GetValue(target);
                         var synchronizer = CreateSynchronizer((INotifyPropertyChanged)sv, (INotifyPropertyChanged)tv, settings, references);
-                        if (items == null)
+                        if (propertyTrackers == null)
                         {
-                            items = new List<PropertyCollection.PropertyAndDisposable>();
+                            propertyTrackers = new DisposingCollection<PropertyInfo, IDisposable>();
                         }
 
-                        items.Add(new PropertyCollection.PropertyAndDisposable(propertyInfo, synchronizer));
+                        propertyTrackers[propertyInfo] = synchronizer;
                     }
                 }
 
-                if (items == null)
-                {
-                    return new PropertiesSynchronizer(source, target, null, settings, references);
-                }
-
-                var propertyCollection = new PropertyCollection(items);
-                return new PropertiesSynchronizer(source, target, propertyCollection, settings, references);
+                return new PropertiesSynchronizer(source, target, propertyTrackers, settings, references);
             }
 
             private static IDisposable CreateSynchronizer(object sv, object tv, PropertiesSettings settings, TwoItemsTrackerReferenceCollection<IPropertySynchronizer> references)
@@ -159,6 +153,5 @@
                 this.propertySynchronizers[propertyInfo] = CreateSynchronizer(sv, tv, this.settings, this.references);
             }
         }
-
     }
 }

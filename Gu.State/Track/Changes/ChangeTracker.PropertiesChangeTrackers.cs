@@ -12,9 +12,9 @@
         {
             private readonly INotifyPropertyChanged source;
             private readonly ChangeTracker parent;
-            private readonly PropertyCollection propertyTrackers;
+            private readonly DisposingCollection<PropertyInfo, IDisposable> propertyTrackers;
 
-            private PropertiesChangeTrackers(INotifyPropertyChanged source, ChangeTracker parent, PropertyCollection propertyTrackers)
+            private PropertiesChangeTrackers(INotifyPropertyChanged source, ChangeTracker parent, DisposingCollection<PropertyInfo, IDisposable> propertyTrackers)
             {
                 this.source = source;
                 this.parent = parent;
@@ -42,25 +42,19 @@
                 }
 
                 Track.Verify.IsTrackableType(source.GetType(), parent);
-                List<PropertyCollection.PropertyAndDisposable> items = null;
+                DisposingCollection<PropertyInfo, IDisposable> propertyTrackers = null;
                 foreach (var propertyInfo in GetTrackProperties(sourceType, parent.Settings))
                 {
                     var tracker = CreatePropertyTracker(source, propertyInfo, parent);
-                    if (items == null)
+                    if (propertyTrackers == null)
                     {
-                        items = new List<PropertyCollection.PropertyAndDisposable>(sourceType.GetProperties().Length);
+                        propertyTrackers = new DisposingCollection<PropertyInfo, IDisposable>();
                     }
 
-                    items.Add(new PropertyCollection.PropertyAndDisposable(propertyInfo, tracker));
+                    propertyTrackers[propertyInfo] = tracker;
                 }
 
-                if (items != null)
-                {
-                    var propertyCollection = new PropertyCollection(items);
-                    return new PropertiesChangeTrackers(source, parent, propertyCollection);
-                }
-
-                return new PropertiesChangeTrackers(source, parent, null);
+                return new PropertiesChangeTrackers(source, parent, propertyTrackers);
             }
 
             internal static IEnumerable<PropertyInfo> GetTrackProperties(Type sourceType, IIgnoringProperties settings)
