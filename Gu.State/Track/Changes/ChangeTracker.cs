@@ -5,7 +5,7 @@
 
     /// <summary>
     /// Tracks changes in a graph.
-    /// Listens to nested Property and collection changes.
+    /// Listens to nested property and collection changes.
     /// </summary>
     public partial class ChangeTracker : IChangeTracker
     {

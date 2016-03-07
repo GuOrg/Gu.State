@@ -48,7 +48,7 @@
 
                 var sourceList = (IList)source;
                 var itemTrackers = new DisposingList<ChangeTracker>(sourceList.Count);
-                for (int i = 0; i < sourceList.Count; i++)
+                for (var i = 0; i < sourceList.Count; i++)
                 {
                     var itemTracker = CreateItemTracker(sourceList, i, parent);
                     itemTrackers[i] = itemTracker;
@@ -67,12 +67,6 @@
                 }
 
                 var itemType = sv.GetType();
-
-                //if (parent.Settings.IsIgnoringDeclaringType(itemType))
-                //{
-                //    return null;
-                //}
-
                 Track.Verify.IsTrackableItemValue(itemType, index, parent);
                 var inpc = sv as INotifyPropertyChanged;
                 return new ItemChangeTracker(inpc, index, parent);
@@ -90,7 +84,7 @@
                 switch (e.Action)
                 {
                     case NotifyCollectionChangedAction.Add:
-                        for (int i = e.NewStartingIndex; i < e.NewStartingIndex + e.NewItems.Count; i++)
+                        for (var i = e.NewStartingIndex; i < e.NewStartingIndex + e.NewItems.Count; i++)
                         {
                             var itemTracker = CreateItemTracker(sourceList, i, this.parent);
                             this.itemTrackers[i] = itemTracker;
@@ -98,7 +92,7 @@
 
                         break;
                     case NotifyCollectionChangedAction.Remove:
-                        for (int i = e.OldStartingIndex; i < e.OldStartingIndex + e.OldItems.Count; i++)
+                        for (var i = e.OldStartingIndex; i < e.OldStartingIndex + e.OldItems.Count; i++)
                         {
                             this.itemTrackers.RemoveAt(i);
                         }
@@ -116,7 +110,7 @@
                         {
                             var xList = (IList)this.source;
                             this.itemTrackers.Clear();
-                            for (int i = 0; i < xList.Count; i++)
+                            for (var i = 0; i < xList.Count; i++)
                             {
                                 var itemTracker = CreateItemTracker(sourceList, i, this.parent);
                                 this.itemTrackers[i] = itemTracker;
