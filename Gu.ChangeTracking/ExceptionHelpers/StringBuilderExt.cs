@@ -58,53 +58,6 @@
                                .AppendLine($"  - Exclude the field {sourceType.PrettyName()}.{fieldInfo.Name}.");
         }
 
-        internal static StringBuilder AppendTypeIsNotSupported(this StringBuilder errorBuilder, Type type)
-        {
-            return errorBuilder.CreateIfNull()
-                               .AppendLine($"The type {type.PrettyName()} is not supported.");
-        }
-
-        internal static StringBuilder AppendMemberIsNotSupported(this StringBuilder errorBuilder, Type sourceType, MemberInfo memberInfo)
-        {
-            var fieldInfo = memberInfo as FieldInfo;
-            if (fieldInfo != null)
-            {
-                return errorBuilder.AppendFieldIsNotSupported(sourceType, fieldInfo);
-            }
-
-            var propertyInfo = memberInfo as PropertyInfo;
-            if (propertyInfo != null)
-            {
-                return errorBuilder.AppendPropertyIsNotSupported(sourceType, propertyInfo);
-            }
-
-            throw Throw.ExpectedParameterOfTypes<FieldInfo, PropertyInfo>(nameof(memberInfo));
-        }
-
-        internal static StringBuilder AppendFieldIsNotSupported(this StringBuilder errorBuilder, Type sourceType, FieldInfo fieldInfo)
-        {
-            return errorBuilder.CreateIfNull()
-                               .AppendLine($"The field {sourceType.PrettyName()}.{fieldInfo.Name} is not supported.")
-                               .AppendLine($"The field is of type {fieldInfo.FieldType.PrettyName()}.");
-        }
-
-        internal static StringBuilder AppendPropertyIsNotSupported(this StringBuilder errorBuilder, Type sourceType, PropertyInfo propertyInfo)
-        {
-            if (propertyInfo == null)
-            {
-                return errorBuilder;
-            }
-
-            errorBuilder = errorBuilder.CreateIfNull();
-            if (propertyInfo.GetIndexParameters().Length > 0)
-            {
-                errorBuilder.AppendLine($"Indexers are not supported.");
-            }
-
-            return errorBuilder.AppendLine($"The property {sourceType.PrettyName()}.{propertyInfo.Name} is not supported.")
-                               .AppendLine($"The property is of type {propertyInfo.PropertyType.PrettyName()}.");
-        }
-
         internal static StringBuilder AppendSuggestionsForEnumerableLines(this StringBuilder errorBuilder, Type sourceType)
         {
             errorBuilder.AppendLine($"* Use ObservableCollection<T> or another collection type that notifies instead of {sourceType.PrettyName()}.");
@@ -140,20 +93,6 @@
                         : $"* Make {memberPath.Root.Type.PrettyName()} immutable or use an immutable type. For immutable types the following must hold:";
 
             errorBuilder.AppendLine(line);
-            return errorBuilder.AppendImmutableConditionsLines();
-        }
-
-        internal static StringBuilder AppendSuggestImmutableType(this StringBuilder errorBuilder, Type type)
-        {
-            if (type.Assembly == typeof(string).Assembly)
-            {
-                errorBuilder.AppendLine($"* Use an immutable type instead of {type.PrettyName()}. For immutable types the following must hold:");
-            }
-            else
-            {
-                errorBuilder.AppendLine($"* Make {type.PrettyName()} immutable or use an immutable type. For immutable types the following must hold:");
-            }
-
             return errorBuilder.AppendImmutableConditionsLines();
         }
 

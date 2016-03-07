@@ -63,7 +63,7 @@ namespace Gu.ChangeTracking.Tests
             {
                 var changes = new List<object>();
                 var root = new WithObservableCollectionProperty<ComplexType>();
-                using (var tracker = ChangeTracker.Track(root, PropertiesSettings.GetOrCreate()))
+                using (var tracker = ChangeTracker.Track(root))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
@@ -87,7 +87,7 @@ namespace Gu.ChangeTracking.Tests
             {
                 var changes = new List<object>();
                 var root = new WithObservableCollectionProperty<ComplexType>();
-                using (var tracker = ChangeTracker.Track(root, PropertiesSettings.GetOrCreate()))
+                using (var tracker = ChangeTracker.Track(root))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
@@ -121,7 +121,7 @@ namespace Gu.ChangeTracking.Tests
             {
                 var changes = new List<object>();
                 var root = new WithObservableCollectionProperty<ComplexType> { Values = new ObservableCollection<ComplexType> { new ComplexType(), null } };
-                using (var tracker = ChangeTracker.Track(root, PropertiesSettings.GetOrCreate()))
+                using (var tracker = ChangeTracker.Track(root))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
@@ -148,7 +148,7 @@ namespace Gu.ChangeTracking.Tests
             {
                 var changes = new List<object>();
                 var root = new WithObservableCollectionProperty<ComplexType> { Values = new ObservableCollection<ComplexType> { new ComplexType(), null } };
-                using (var tracker = ChangeTracker.Track(root, PropertiesSettings.GetOrCreate()))
+                using (var tracker = ChangeTracker.Track(root))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
@@ -170,7 +170,7 @@ namespace Gu.ChangeTracking.Tests
             {
                 var changes = new List<object>();
                 var root = new WithObservableCollectionProperty<ComplexType> { Values = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType() } };
-                using (var tracker = ChangeTracker.Track(root, PropertiesSettings.GetOrCreate()))
+                using (var tracker = ChangeTracker.Track(root))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
@@ -188,7 +188,7 @@ namespace Gu.ChangeTracking.Tests
             {
                 var changes = new List<object>();
                 var root = new WithObservableCollectionProperty<ComplexType> { Values = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType() } };
-                using (var tracker = ChangeTracker.Track(root, PropertiesSettings.GetOrCreate()))
+                using (var tracker = ChangeTracker.Track(root))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);

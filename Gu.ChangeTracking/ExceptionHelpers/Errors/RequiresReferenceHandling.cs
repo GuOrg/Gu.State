@@ -2,7 +2,6 @@ namespace Gu.ChangeTracking
 {
     using System;
     using System.Diagnostics;
-    using System.Text;
 
     [DebuggerDisplay("{GetType().Name} Type: {Type}")]
     internal sealed class RequiresReferenceHandling : TypeError, IFixWithEquatable, IFixWithImmutable, IExcludableType
