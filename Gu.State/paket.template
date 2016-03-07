@@ -1,0 +1,9 @@
+﻿type project
+title Gu.State
+tags INotifyPropertyChanged, WPF
+projectUrl https://github.com/JohanLarsson/Gu.State
+licenseUrl http://opensource.org/licenses/MIT
+
+excludeddependencies
+  JetBrains.Annotations
+  StyleCop.Analyzers
