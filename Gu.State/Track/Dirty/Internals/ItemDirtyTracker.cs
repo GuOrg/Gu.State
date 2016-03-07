@@ -10,13 +10,13 @@
         internal static readonly PropertyInfo IndexerProperty = typeof(IList).GetProperties().Single(p => p.GetIndexParameters().Length > 0);
         private readonly IDirtyTracker parent;
 
-        public ItemDirtyTracker(INotifyPropertyChanged x, INotifyPropertyChanged y, IDirtyTracker parent)
+        internal ItemDirtyTracker(INotifyPropertyChanged x, INotifyPropertyChanged y, IDirtyTracker parent)
             : base(x, y, parent.Settings)
         {
             this.parent = parent;
         }
 
-        public PropertyInfo PropertyInfo => IndexerProperty;
+        internal PropertyInfo PropertyInfo => IndexerProperty;
 
         protected override void OnPropertyChanged(string propertyName = null)
         {
