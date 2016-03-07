@@ -108,5 +108,6 @@ For subproperties the following must hold:
 ```
 using (Synchronize.CreatePropertySynchronizer(source, target, referenceHandling: ReferenceHandling.Structural))
 {
+    ...
 }
 ```
