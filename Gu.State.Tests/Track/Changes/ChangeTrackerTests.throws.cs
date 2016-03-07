@@ -37,7 +37,7 @@ namespace Gu.State.Tests
                                "    - The type IllegalType.\r\n";
 
                 var root = new ObservableCollection<ComplexType>();
-                using (ChangeTracker.Track(root))
+                using (Track.Changes(root))
                 {
                     var exception = Assert.Throws<NotSupportedException>(() => root.Add(new IllegalSubType()));
                     Assert.AreEqual(expected, exception.Message);
@@ -69,7 +69,7 @@ namespace Gu.State.Tests
                                "    - The type IllegalType.\r\n";
 
                 var root = new With<ComplexType>();
-                using (ChangeTracker.Track(root))
+                using (Track.Changes(root))
                 {
                     var exception = Assert.Throws<NotSupportedException>(() => root.Value = new IllegalSubType());
                     Assert.AreEqual(expected, exception.Message);
@@ -101,10 +101,10 @@ namespace Gu.State.Tests
                                "    - The type IllegalType.\r\n";
 
                 var item = new WithIllegal();
-                var exception = Assert.Throws<NotSupportedException>(() => ChangeTracker.Track(item, PropertiesSettings.GetOrCreate()));
+                var exception = Assert.Throws<NotSupportedException>(() => Track.Changes(item, PropertiesSettings.GetOrCreate()));
                 Assert.AreEqual(expected, exception.Message);
 
-                exception = Assert.Throws<NotSupportedException>(() => ChangeTracker.Track(item));
+                exception = Assert.Throws<NotSupportedException>(() => Track.Changes(item));
                 Assert.AreEqual(expected, exception.Message);
             }
 
@@ -122,10 +122,10 @@ namespace Gu.State.Tests
                                "  - Exclude a combination of the following:\r\n";
 
                 var item = new IllegalEnumerable();
-                var exception = Assert.Throws<NotSupportedException>(() => ChangeTracker.Track(item));
+                var exception = Assert.Throws<NotSupportedException>(() => Track.Changes(item));
                 Assert.AreEqual(expected, exception.Message);
 
-                exception = Assert.Throws<NotSupportedException>(() => ChangeTracker.Track(item, PropertiesSettings.GetOrCreate()));
+                exception = Assert.Throws<NotSupportedException>(() => Track.Changes(item, PropertiesSettings.GetOrCreate()));
                 Assert.AreEqual(expected, exception.Message);
             }
 
@@ -153,10 +153,10 @@ namespace Gu.State.Tests
                    "    - The property With<List<int>>.Value.\r\n" +
                    "    - The type List<int>.\r\n";
                 var item = new With<List<int>>();
-                var exception = Assert.Throws<NotSupportedException>(() => ChangeTracker.Track(item));
+                var exception = Assert.Throws<NotSupportedException>(() => Track.Changes(item));
 
                 Assert.AreEqual(expected, exception.Message);
-                exception = Assert.Throws<NotSupportedException>(() => ChangeTracker.Track(item, PropertiesSettings.GetOrCreate()));
+                exception = Assert.Throws<NotSupportedException>(() => Track.Changes(item, PropertiesSettings.GetOrCreate()));
                 Assert.AreEqual(expected, exception.Message);
             }
         }

@@ -27,7 +27,7 @@
                 var x = new DirtyTrackerTypes.WithComplexProperty();
                 var y = new DirtyTrackerTypes.WithComplexProperty();
 
-                var exception = Assert.Throws<NotSupportedException>(() => DirtyTracker.Track(x, y));
+                var exception = Assert.Throws<NotSupportedException>(() => Track.IsDirty(x, y));
 
                 Assert.AreEqual(expected, exception.Message);
             }
@@ -39,7 +39,7 @@
                 var y = new DirtyTrackerTypes.WithComplexProperty();
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
-                using (var tracker = DirtyTracker.Track(x, y, referenceHandling: ReferenceHandling.Structural))
+                using (var tracker = Track.IsDirty(x, y, referenceHandling: ReferenceHandling.Structural))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(false, tracker.IsDirty);

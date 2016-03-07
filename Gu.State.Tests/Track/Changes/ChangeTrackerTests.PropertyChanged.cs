@@ -1,6 +1,7 @@
 ﻿namespace Gu.State.Tests
 {
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
 
     using Gu.State.Tests.ChangeTrackerStubs;
 
@@ -8,67 +9,14 @@
 
     public partial class ChangeTrackerTests
     {
-        public class Ignores
+        public class PropertyChanged
         {
             [Test]
-            public void IgnoresProperty()
+            public void NotifiesOnCurrentLevelAndStopsOnDisposed()
             {
                 var changes = new List<object>();
-                var withIllegalObject = new WithIllegal();
-                var propertyInfo = typeof(WithIllegal).GetProperty(nameof(WithIllegal.Illegal));
-                var settings = new PropertiesSettingsBuilder().IgnoreProperty(propertyInfo)
-                                                              .CreateSettings(ReferenceHandling.Structural);
-
-                using (var tracker = ChangeTracker.Track(withIllegalObject, settings))
-                {
-                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
-                    tracker.Changed += (_, e) => changes.Add(e);
-                    Assert.AreEqual(0, tracker.Changes);
-                    CollectionAssert.IsEmpty(changes);
-
-                    withIllegalObject.Value++;
-                    Assert.AreEqual(1, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
-
-                    withIllegalObject.Illegal = new IllegalType();
-                    Assert.AreEqual(1, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
-                }
-            }
-
-            [Test]
-            public void IgnoresPropertyLambda()
-            {
-                var changes = new List<object>();
-                var withIllegalObject = new WithIllegal();
-                var settings = new PropertiesSettingsBuilder().IgnoreProperty<WithIllegal>(x => x.Illegal)
-                                                              .CreateSettings(ReferenceHandling.Structural);
-                using (var tracker = ChangeTracker.Track(withIllegalObject, settings))
-                {
-                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
-                    tracker.Changed += (_, e) => changes.Add(e);
-                    Assert.AreEqual(0, tracker.Changes);
-                    CollectionAssert.IsEmpty(changes);
-
-                    withIllegalObject.Value++;
-                    Assert.AreEqual(1, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
-
-                    withIllegalObject.Illegal = new IllegalType();
-                    Assert.AreEqual(1, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
-                }
-            }
-
-            [Test]
-            public void IgnoresBaseClassPropertyLambda()
-            {
-                var changes = new List<object>();
-                var root = new DerivedClass();
-                var settings = PropertiesSettings.Build()
-                                                 .IgnoreProperty<ComplexType>(x => x.Excluded)
-                                                 .CreateSettings(ReferenceHandling.Structural);
-                using (var tracker = ChangeTracker.Track(root, settings))
+                var root = new Level();
+                using (var tracker = Track.Changes(root, ReferenceHandling.StructuralWithReferenceLoops))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
@@ -79,75 +27,130 @@
                     Assert.AreEqual(1, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
 
-                    root.Excluded++;
-                    Assert.AreEqual(1, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
-                }
-            }
-
-            [Test]
-            public void IgnoresInterfacePropertyLambda()
-            {
-                var changes = new List<object>();
-                var root = new DerivedClass();
-                var settings = PropertiesSettings.Build()
-                                                 .IgnoreProperty<IBaseClass>(x => x.Excluded)
-                                                 .CreateSettings(ReferenceHandling.Structural);
-                //settings.IgnoreProperty<IBaseClass>(x => x.Excluded);
-                using (var tracker = ChangeTracker.Track(root, settings))
-                {
-                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
-                    tracker.Changed += (_, e) => changes.Add(e);
-                    Assert.AreEqual(0, tracker.Changes);
-                    CollectionAssert.IsEmpty(changes);
-
+                    tracker.Dispose();
                     root.Value++;
                     Assert.AreEqual(1, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
-
-                    root.Excluded++;
-                    Assert.AreEqual(1, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
                 }
             }
 
             [Test]
-            public void IgnoresType()
+            public void WithImmutable()
             {
                 var changes = new List<object>();
-                var withIllegalObject = new WithIllegal();
-                var settings = PropertiesSettings.Build()
-                                                 .IgnoreType<IllegalType>()
-                                                 .CreateSettings(ReferenceHandling.Structural);
-                using (var tracker = ChangeTracker.Track(withIllegalObject, settings))
+                var root = new WithImmutable();
+
+                using (var tracker = Track.Changes(root))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
                     Assert.AreEqual(0, tracker.Changes);
                     CollectionAssert.IsEmpty(changes);
 
-                    withIllegalObject.Value++;
+                    root.Immutable = new Immutable();
                     Assert.AreEqual(1, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
                 }
             }
 
             [Test]
-            public void IgnoresTypeProperty()
+            public void NotifiesNextLevel()
             {
                 var changes = new List<object>();
-                var root = new WithIllegal();
-                var settings = PropertiesSettings.Build()
-                                                 .IgnoreType<IllegalType>()
-                                                 .CreateSettings(ReferenceHandling.Structural);
-                using (var tracker = ChangeTracker.Track(root, settings))
+                var level = new Level { Next = new Level() };
+                using (var tracker = Track.Changes(level, ReferenceHandling.StructuralWithReferenceLoops))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
                     Assert.AreEqual(0, tracker.Changes);
                     CollectionAssert.IsEmpty(changes);
 
-                    root.Value++;
+                    level.Next.Value++;
+                    Assert.AreEqual(1, tracker.Changes);
+                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
+                }
+            }
+
+            [Test]
+            public void NotifiesThreeLevels()
+            {
+                var changes = new List<object>();
+                var level = new Level { Next = new Level { Next = new Level() } };
+                using (var tracker = Track.Changes(level, ReferenceHandling.StructuralWithReferenceLoops))
+                {
+                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    tracker.Changed += (_, e) => changes.Add(e);
+                    Assert.AreEqual(0, tracker.Changes);
+                    CollectionAssert.IsEmpty(changes);
+
+                    level.Next.Value++;
+                    Assert.AreEqual(1, tracker.Changes);
+                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
+
+                    level.Next.Next.Value++;
+                    Assert.AreEqual(2, tracker.Changes);
+                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(2), changes);
+                }
+            }
+
+            [Test]
+            public void TracksCollectionItem()
+            {
+                var changes = new List<object>();
+                var root = new Level { Next = new Level { Levels = new ObservableCollection<Level>(new[] { new Level(), }) } };
+                using (var tracker = Track.Changes(root, ReferenceHandling.StructuralWithReferenceLoops))
+                {
+                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    tracker.Changed += (_, e) => changes.Add(e);
+                    Assert.AreEqual(0, tracker.Changes);
+                    CollectionAssert.IsEmpty(changes);
+
+                    root.Next.Levels[0].Value++;
+                    Assert.AreEqual(1, tracker.Changes);
+                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
+                }
+            }
+
+            [Test]
+            public void StartSubscribingToNextLevel()
+            {
+                var changes = new List<object>();
+                var level = new Level();
+                using (var tracker = Track.Changes(level, ReferenceHandling.StructuralWithReferenceLoops))
+                {
+                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    tracker.Changed += (_, e) => changes.Add(e);
+                    Assert.AreEqual(0, tracker.Changes);
+                    CollectionAssert.IsEmpty(changes);
+
+                    level.Next = new Level();
+                    Assert.AreEqual(1, tracker.Changes);
+                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
+
+                    level.Next.Value++;
+                    Assert.AreEqual(2, tracker.Changes);
+                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(2), changes);
+                }
+            }
+
+            [Test]
+            public void StopsSubscribingNextLevel()
+            {
+                var changes = new List<object>();
+                var level = new Level { Next = new Level() };
+                using (var tracker = Track.Changes(level, ReferenceHandling.StructuralWithReferenceLoops))
+                {
+                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    tracker.Changed += (_, e) => changes.Add(e);
+                    Assert.AreEqual(0, tracker.Changes);
+                    CollectionAssert.IsEmpty(changes);
+
+                    var next = level.Next;
+                    level.Next = null;
+                    Assert.AreEqual(1, tracker.Changes);
+                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
+
+                    next.Value++;
                     Assert.AreEqual(1, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
                 }

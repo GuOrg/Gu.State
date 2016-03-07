@@ -14,7 +14,7 @@
             {
                 var source = new ObservableCollection<SynchronizerTypes.WithGetReadOnlyPropertySealed<int>> { new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(1), new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(2) };
                 var target = new ObservableCollection<SynchronizerTypes.WithGetReadOnlyPropertySealed<int>>();
-                using (var synchronizer = Synchronizer.CreatePropertySynchronizer(source, target, referenceHandling: referenceHandling))
+                using (var synchronizer = Synchronize.CreatePropertySynchronizer(source, target, referenceHandling: referenceHandling))
                 {
                     var itemsSynchronizerField = synchronizer.GetType().GetField("itemsSynchronizer", Constants.DefaultFieldBindingFlags);
                     Assert.NotNull(itemsSynchronizerField);
@@ -40,7 +40,7 @@
             {
                 var source = new ObservableCollection<SynchronizerTypes.WithGetReadOnlyPropertySealed<int>> { new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(1), new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(2) };
                 var target = new ObservableCollection<SynchronizerTypes.WithGetReadOnlyPropertySealed<int>> { new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(1), new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(2) };
-                using (Synchronizer.CreatePropertySynchronizer(source, target, referenceHandling: ReferenceHandling.Structural))
+                using (Synchronize.CreatePropertySynchronizer(source, target, referenceHandling: ReferenceHandling.Structural))
                 {
                     var expected = new[] { new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(1), new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(2) };
                     CollectionAssert.AreEqual(expected, source);
@@ -59,7 +59,7 @@
             {
                 var source = new ObservableCollection<SynchronizerTypes.WithGetReadOnlyPropertySealed<int>> { new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(1), new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(2) };
                 var target = new ObservableCollection<SynchronizerTypes.WithGetReadOnlyPropertySealed<int>> { new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(1), new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(2) };
-                using (Synchronizer.CreatePropertySynchronizer(source, target, referenceHandling: ReferenceHandling.References))
+                using (Synchronize.CreatePropertySynchronizer(source, target, referenceHandling: ReferenceHandling.References))
                 {
                     var expected = new[] { new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(1), new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(2) };
                     CollectionAssert.AreEqual(expected, source);
@@ -79,7 +79,7 @@
             {
                 var source = new ObservableCollection<SynchronizerTypes.WithGetReadOnlyPropertySealed<int>>();
                 var target = new ObservableCollection<SynchronizerTypes.WithGetReadOnlyPropertySealed<int>>();
-                using (Synchronizer.CreatePropertySynchronizer(source, target, referenceHandling: referenceHandling))
+                using (Synchronize.CreatePropertySynchronizer(source, target, referenceHandling: referenceHandling))
                 {
                     source.Add(new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(1));
                     var expected = new[] { new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(1) };
@@ -95,7 +95,7 @@
             {
                 var source = new ObservableCollection<SynchronizerTypes.WithGetReadOnlyPropertySealed<int>> { new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(1), new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(2) };
                 var target = new ObservableCollection<SynchronizerTypes.WithGetReadOnlyPropertySealed<int>> { new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(1), new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(2) };
-                using (Synchronizer.CreatePropertySynchronizer(source, target, referenceHandling: referenceHandling))
+                using (Synchronize.CreatePropertySynchronizer(source, target, referenceHandling: referenceHandling))
                 {
                     source.RemoveAt(1);
                     var expected = new[] { new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(1) };
@@ -114,7 +114,7 @@
             {
                 var source = new ObservableCollection<SynchronizerTypes.WithGetReadOnlyPropertySealed<int>> { new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(1), new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(2) };
                 var target = new ObservableCollection<SynchronizerTypes.WithGetReadOnlyPropertySealed<int>> { new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(1), new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(2) };
-                using (Synchronizer.CreatePropertySynchronizer(source, target, referenceHandling: referenceHandling))
+                using (Synchronize.CreatePropertySynchronizer(source, target, referenceHandling: referenceHandling))
                 {
                     source.Insert(1, new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(3));
                     var expected = new[] { new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(1), new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(3), new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(2) };
@@ -132,7 +132,7 @@
             {
                 var source = new ObservableCollection<SynchronizerTypes.WithGetReadOnlyPropertySealed<int>> { new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(1), new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(2) };
                 var target = new ObservableCollection<SynchronizerTypes.WithGetReadOnlyPropertySealed<int>> { new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(1), new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(2) };
-                using (Synchronizer.CreatePropertySynchronizer(source, target, referenceHandling: referenceHandling))
+                using (Synchronize.CreatePropertySynchronizer(source, target, referenceHandling: referenceHandling))
                 {
                     source.Move(1, 0);
                     var expected = new[] { new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(2), new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(1) };
@@ -152,7 +152,7 @@
             {
                 var source = new ObservableCollection<SynchronizerTypes.WithGetReadOnlyPropertySealed<int>> { new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(1), new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(2) };
                 var target = new ObservableCollection<SynchronizerTypes.WithGetReadOnlyPropertySealed<int>> { new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(1), new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(2) };
-                using (Synchronizer.CreatePropertySynchronizer(source, target, referenceHandling: referenceHandling))
+                using (Synchronize.CreatePropertySynchronizer(source, target, referenceHandling: referenceHandling))
                 {
                     source[0] = new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(3);
                     var expected = new[] { new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(3), new SynchronizerTypes.WithGetReadOnlyPropertySealed<int>(2) };

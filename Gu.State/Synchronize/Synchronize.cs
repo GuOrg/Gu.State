@@ -4,12 +4,12 @@ namespace Gu.State
     using System.ComponentModel;
     using System.Reflection;
 
-    public static partial class Synchronizer
+    public static partial class Synchronize
     {
         /// <summary>
         /// Synchronizes property values from source to target.
         /// </summary>
-        /// <typeparam name="T">The type os <paramref name="source"/> and <param name="target"></param></typeparam>
+        /// <typeparam name="T">The type os <paramref name="source"/> and <paramref name="target"/></typeparam>
         /// <param name="source">The instance to copy property values from</param>
         /// <param name="target">The instance to copy property values to</param>
         /// <param name="bindingFlags">The binding flags to use when getting properties</param>
@@ -32,7 +32,7 @@ namespace Gu.State
         /// <summary>
         /// Synchronizes property values from source to target.
         /// </summary>
-        /// <typeparam name="T">The type os <paramref name="source"/> and <param name="target"></param></typeparam>
+        /// <typeparam name="T">The type os <paramref name="source"/> and <paramref name="target"/></typeparam>
         /// <param name="source">The instance to copy property values from</param>
         /// <param name="target">The instance to copy property values to</param>
         /// <param name="settings">Contains configuration for how synchronization will be performed</param>

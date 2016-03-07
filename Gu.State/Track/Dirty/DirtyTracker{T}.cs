@@ -31,7 +31,7 @@
             Ensure.NotNull(y, nameof(y));
             Ensure.NotSame(x, y, nameof(x), nameof(y));
             Ensure.SameType(x, y);
-            DirtyTracker.VerifyCanTrack<T>(settings);
+            Track.VerifyCanTrackIsDirty<T>(settings);
             this.Settings = settings;
             this.propertyTracker = PropertiesDirtyTracker.Create(x, y, this);
             this.itemTrackers = ItemsDirtyTracker.Create(x, y, this);
@@ -310,7 +310,7 @@
                 switch (this.parent.Settings.ReferenceHandling)
                 {
                     case ReferenceHandling.Throw:
-                        var message = $"{typeof(DirtyTracker).Name} does not support tracking an item of type {xv.GetType().Name}. Specify {typeof(ReferenceHandling).Name} if you want to track a graph";
+                        var message = $"{typeof(Track).Name} does not support tracking an item of type {xv.GetType().Name}. Specify {typeof(ReferenceHandling).Name} if you want to track a graph";
                         throw new NotSupportedException(message);
                     case ReferenceHandling.References:
                         return ReferenceEquals(xv, yv)
@@ -465,7 +465,7 @@
                 switch (this.parent.Settings.ReferenceHandling)
                 {
                     case ReferenceHandling.Throw:
-                        var message = $"{typeof(DirtyTracker).Name} does not support tracking an item of type {xv.GetType().Name}.\r\n" +
+                        var message = $"{typeof(Track).Name} does not support tracking an item of type {xv.GetType().Name}.\r\n" +
                                       $" Specify {typeof(ReferenceHandling).Name} if you want to track a graph";
                         throw new NotSupportedException(message);
                     case ReferenceHandling.References:

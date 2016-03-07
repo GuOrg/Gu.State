@@ -17,7 +17,7 @@ namespace Gu.State.Tests
             {
                 var source = new DirtyTrackerTypes.SimpleDirtyTrackClass { Value = 1, Excluded = 2 };
                 var target = new DirtyTrackerTypes.SimpleDirtyTrackClass { Value = 3, Excluded = 4 };
-                var tracker = DirtyTracker.Track(source, target);
+                var tracker = Track.IsDirty(source, target);
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
                 tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
@@ -69,7 +69,7 @@ namespace Gu.State.Tests
             {
                 var source = new DirtyTrackerTypes.SimpleDirtyTrackClass { Value = 1, Excluded = 2 };
                 var target = new DirtyTrackerTypes.SimpleDirtyTrackClass { Value = 3, Excluded = 4 };
-                var tracker = DirtyTracker.Track(source, target);
+                var tracker = Track.IsDirty(source, target);
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
                 tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);

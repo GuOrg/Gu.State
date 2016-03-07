@@ -16,7 +16,7 @@ namespace Gu.State.Tests
             {
                 var changes = new List<object>();
                 var root = new Level();
-                using (var tracker = ChangeTracker.Track(root, ReferenceHandling.StructuralWithReferenceLoops))
+                using (var tracker = Track.Changes(root, ReferenceHandling.StructuralWithReferenceLoops))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
@@ -61,7 +61,7 @@ namespace Gu.State.Tests
             {
                 var changes = new List<object>();
                 var root = new SpecialCollection();
-                using (var tracker = ChangeTracker.Track(root, ReferenceHandling.StructuralWithReferenceLoops))
+                using (var tracker = Track.Changes(root, ReferenceHandling.StructuralWithReferenceLoops))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
@@ -92,7 +92,7 @@ namespace Gu.State.Tests
             {
                 var changes = new List<object>();
                 var root = new Level();
-                using (var tracker = ChangeTracker.Track(root, ReferenceHandling.StructuralWithReferenceLoops))
+                using (var tracker = Track.Changes(root, ReferenceHandling.StructuralWithReferenceLoops))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
@@ -123,7 +123,7 @@ namespace Gu.State.Tests
             {
                 var changes = new List<object>();
                 var root = new Level { Next = new Level { Next = new Level() } };
-                using (var tracker = ChangeTracker.Track(root, ReferenceHandling.StructuralWithReferenceLoops))
+                using (var tracker = Track.Changes(root, ReferenceHandling.StructuralWithReferenceLoops))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);

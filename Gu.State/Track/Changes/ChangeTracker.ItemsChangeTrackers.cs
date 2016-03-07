@@ -36,12 +36,8 @@
                 }
 
                 var sourceType = source.GetType();
-                //if (parent.Settings.IsIgnoringDeclaringType(sourceType))
-                //{
-                //    return null;
-                //}
 
-                Verify.IsTrackableItemValue(sourceType, null, parent);
+                Track.Verify.IsTrackableItemValue(sourceType, null, parent);
 
                 var incc = source as INotifyCollectionChanged;
                 var itemType = source.GetType().GetItemType();
@@ -72,12 +68,12 @@
 
                 var itemType = sv.GetType();
 
-                if (parent.Settings.IsIgnoringDeclaringType(itemType))
-                {
-                    return null;
-                }
+                //if (parent.Settings.IsIgnoringDeclaringType(itemType))
+                //{
+                //    return null;
+                //}
 
-                Verify.IsTrackableItemValue(itemType, index, parent);
+                Track.Verify.IsTrackableItemValue(itemType, index, parent);
                 var inpc = sv as INotifyPropertyChanged;
                 return new ItemChangeTracker(inpc, index, parent);
             }
