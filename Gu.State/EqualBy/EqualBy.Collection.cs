@@ -33,6 +33,7 @@
                     {
                         continue;
                     }
+
                     if (!compareItem(xv, yv, settings, referencePairs))
                     {
                         return false;

@@ -69,7 +69,6 @@
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
 
-
             public sealed class TestComparer : IEqualityComparer<ComplexType>, IComparer<ComplexType>, IComparer
             {
                 public bool Equals(ComplexType x, ComplexType y)
@@ -285,7 +284,6 @@
 
             public T Value { get; }
         }
-
 
         public class WithImmutableProperty : INotifyPropertyChanged
         {

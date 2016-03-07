@@ -156,7 +156,9 @@
                 var targetValue = fieldInfo.GetValue(target);
                 if (!Equals(sourceValue, targetValue))
                 {
-                    var message = $"Field {source.GetType().Name}.{fieldInfo.Name} differs but cannot be updated because it is readonly.\r\n" + $"Provide {typeof(Copy).Name}.{nameof(CopyFieldsValues)}(x, y, nameof({source.GetType().Name}.{fieldInfo.Name}))";
+                    var message = $"Field {source.GetType().Name}.{fieldInfo.Name} differs but cannot be updated because it is readonly.\r\n" +
+                                  $"Provide {typeof(Copy).Name}.{nameof(CopyFieldsValues)}(x, y, nameof({source.GetType().Name}.{fieldInfo.Name}))";
+
                     throw new InvalidOperationException(message);
                 }
             }

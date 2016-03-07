@@ -54,6 +54,7 @@
                 return;
             }
 
+            GC.SuppressFinalize(this);
             this.disposed = true;
             this.Dispose(true);
         }
@@ -160,6 +161,13 @@
                 }
             }
 
+            public void Dispose()
+            {
+                this.x.PropertyChanged -= this.OnTrackedPropertyChanged;
+                this.y.PropertyChanged -= this.OnTrackedPropertyChanged;
+                this.propertyTrackers?.Dispose();
+            }
+
             internal static PropertiesDirtyTracker Create(
                 INotifyPropertyChanged x,
                 INotifyPropertyChanged y,
@@ -208,13 +216,6 @@
                 }
 
                 return new PropertiesDirtyTracker(x, y, parent);
-            }
-
-            public void Dispose()
-            {
-                this.x.PropertyChanged -= this.OnTrackedPropertyChanged;
-                this.y.PropertyChanged -= this.OnTrackedPropertyChanged;
-                this.propertyTrackers?.Dispose();
             }
 
             /// <summary>
@@ -357,6 +358,13 @@
 
             public bool IsDirty => this.itemTrackers.Any(it => it?.IsDirty == true);
 
+            public void Dispose()
+            {
+                this.x.CollectionChanged -= this.OnTrackedCollectionChanged;
+                this.y.CollectionChanged -= this.OnTrackedCollectionChanged;
+                this.itemTrackers?.Dispose();
+            }
+
             internal static ItemsDirtyTracker Create(object x, object y, DirtyTracker<T> parent)
             {
                 var xCollectionChanged = x as INotifyCollectionChanged;
@@ -367,13 +375,6 @@
                 }
 
                 return null;
-            }
-
-            public void Dispose()
-            {
-                this.x.CollectionChanged -= this.OnTrackedCollectionChanged;
-                this.y.CollectionChanged -= this.OnTrackedCollectionChanged;
-                this.itemTrackers?.Dispose();
             }
 
             private void OnTrackedCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

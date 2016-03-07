@@ -522,7 +522,6 @@
                     Assert.AreEqual(5, source.Value);
                     Assert.AreEqual(5, target.Value);
 
-
                     Assert.AreNotSame(source.ComplexType, target.ComplexType);
                     Assert.AreEqual("f", source.ComplexType.Name);
                     Assert.AreEqual("f", target.ComplexType.Name);

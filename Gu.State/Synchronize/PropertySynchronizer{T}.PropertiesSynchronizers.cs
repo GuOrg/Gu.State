@@ -6,7 +6,7 @@
     using System.ComponentModel;
     using System.Reflection;
 
-    public partial class PropertySynchronizer<T>
+    internal partial class PropertySynchronizer<T>
     {
         private class PropertiesSynchronizer : IDisposable
         {

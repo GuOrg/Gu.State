@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>Gu.State.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,7 +32,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\Gu.State.xml</DocumentationFile>
     <RunCodeAnalysis>true</RunCodeAnalysis>
-    <CodeAnalysisRuleSet>ExtendedCorrectnessRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>Gu.State.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -105,7 +106,7 @@
     <Compile Include="Internals\Collections\ItemCollection.cs" />
     <Compile Include="Internals\Collections\SingleItemTrackerReferenceCollection.cs" />
     <Compile Include="Internals\Collections\TwoItemsTrackerReferenceCollection.cs" />
-    <Compile Include="Internals\PairIterator.cs" />
+    <Compile Include="Internals\PaddedPairs.cs" />
     <Compile Include="Internals\Collections\PropertyCollection.cs" />
     <Compile Include="Internals\MemberPath\IndexItem.cs" />
     <Compile Include="Internals\MemberPath\PathItem.cs" />
@@ -147,6 +148,7 @@
     <Compile Include="Copy\Copy.FieldValues.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Gu.State.ruleset" />
     <None Include="paket.references" />
     <None Include="paket.template" />
   </ItemGroup>

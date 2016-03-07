@@ -59,8 +59,8 @@
         {
             internal readonly object Item;
             internal readonly IDisposable Tracker;
-            private readonly SingleItemTrackerReferenceCollection parent;
             internal int RefCount;
+            private readonly SingleItemTrackerReferenceCollection parent;
 
             public TrackerReference(object item, IDisposable tracker, SingleItemTrackerReferenceCollection parent)
             {

@@ -61,6 +61,7 @@
                               $"Nested properties are not allowed";
                 throw new ArgumentException(message);
             }
+
             return this.IgnoreProperty(propertyInfo);
         }
 
@@ -107,7 +108,7 @@
 
         public PropertiesSettingsBuilder IgnoreIndexersFor<T>()
         {
-            foreach (var indexer in typeof(T).GetProperties(Constants.DefaultFieldBindingFlags).Where(x=>x.GetIndexParameters().Length>0))
+            foreach (var indexer in typeof(T).GetProperties(Constants.DefaultFieldBindingFlags).Where(x => x.GetIndexParameters().Length > 0))
             {
                 this.IgnoreProperty(indexer);
             }
