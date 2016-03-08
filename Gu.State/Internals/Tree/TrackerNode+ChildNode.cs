@@ -37,11 +37,12 @@
 
             internal INode<TKey, TTracker> Parent { get; }
 
-            public void AddChild(TKey key, Func<TTracker> trackerFactory)
+            public INode<TKey, TTracker> AddChild(TKey childKey, Func<TTracker> trackerFactory)
             {
-                var tracker = this.Root.Cache.GetOrAdd(key, trackerFactory);
-                var node = new ChildNode<TKey, TTracker>(key, tracker, this);
-                this.children.Value.SetValue(key, node);
+                var tracker = this.Root.Cache.GetOrAdd(childKey, trackerFactory);
+                var node = new ChildNode<TKey, TTracker>(childKey, tracker, this);
+                this.children.Value.SetValue(childKey, node);
+                return node;
             }
 
             public void RemoveChild(TKey key)

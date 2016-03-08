@@ -83,8 +83,8 @@
     <Compile Include="Internals\MemberPath\FieldItem.cs" />
     <Compile Include="Internals\MemberPath\IMemberItem.cs" />
     <Compile Include="Internals\MemberPath\ITypedNode.cs" />
-    <Compile Include="Synchronize\PropertySynchronizer{T}.ItemsSynchronizers.cs" />
-    <Compile Include="Synchronize\PropertySynchronizer{T}.PropertiesSynchronizers.cs" />
+    <Compile Include="Synchronize\PropertySynchronizer{T}+ItemsSynchronizers.cs" />
+    <Compile Include="Synchronize\PropertySynchronizer{T}+PropertiesSynchronizers.cs" />
     <Compile Include="Settings\FieldsSettingsBuilder.cs" />
     <Compile Include="Settings\FieldsSettings.cs" />
     <Compile Include="Contracts\IBindingFlags.cs" />

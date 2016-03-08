@@ -1,4 +1,4 @@
-﻿namespace Gu.State.Tests.Sandbox
+﻿namespace Gu.State.Tests.Internals.Tree
 {
     using Moq;
 
@@ -9,8 +9,13 @@
         [Test]
         public void TestName()
         {
-            var changeTrackerMock = new Mock<ITracker>();
-            var root = TrackerNode.CreateRoot(Mock.Of<IReference>(), changeTrackerMock.Object);
+            var rootTrackerMock = new Mock<ITracker>();
+            var rootRef = Mock.Of<IReference>();
+            var root = TrackerNode.CreateRoot(rootRef, rootTrackerMock.Object);
+            var childRef = Mock.Of<IReference>();
+            var childTrackerMock = new Mock<ITracker>();
+            root.AddChild(childRef, () => childTrackerMock.Object);
+
         }
     }
 }

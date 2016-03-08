@@ -23,21 +23,17 @@
 
             public RefCountCollection<TKey, TTracker> Cache { get; }
 
-            public void AddChild(TKey key, Func<TTracker> trackerFactory)
+            public INode<TKey, TTracker> AddChild(TKey childKey, Func<TTracker> trackerFactory)
             {
-                var tracker = this.Cache.GetOrAdd(key, trackerFactory);
-                var node = new ChildNode<TKey, TTracker>(key, tracker, this);
-                this.children.Value.SetValue(key, node);
+                var tracker = this.Cache.GetOrAdd(childKey, trackerFactory);
+                var node = new ChildNode<TKey, TTracker>(childKey, tracker, this);
+                this.children.Value.SetValue(childKey, node);
+                return node;
             }
 
             public void RemoveChild(TKey key)
             {
                 this.children.Value.SetValue(key, null);
-            }
-
-            internal static RootNode<TKey, TTracker> CreateRoot(TKey key, TTracker tracker)
-            {
-                return new RootNode<TKey, TTracker>(key, tracker, new RefCountCollection<TKey, TTracker>());
             }
 
             public void Dispose()
@@ -48,7 +44,11 @@
                     this.children.Value.Dispose();
                 }
             }
-        }
 
+            internal static RootNode<TKey, TTracker> CreateRoot(TKey key, TTracker tracker)
+            {
+                return new RootNode<TKey, TTracker>(key, tracker, new RefCountCollection<TKey, TTracker>());
+            }
+        }
     }
 }

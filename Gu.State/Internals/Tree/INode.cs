@@ -9,7 +9,7 @@ namespace Gu.State
 
         TTracker Tracker { get; }
 
-        void AddChild(TKey key, Func<TTracker> trackerFactory);
+        INode<TKey, TTracker> AddChild(TKey childKey, Func<TTracker> trackerFactory);
 
         void RemoveChild(TKey key);
     }
