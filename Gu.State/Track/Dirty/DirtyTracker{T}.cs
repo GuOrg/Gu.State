@@ -1,12 +1,9 @@
 ﻿namespace Gu.State
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
-    using System.Collections.Specialized;
     using System.ComponentModel;
     using System.Diagnostics;
-    using System.Linq;
     using System.Reflection;
     using System.Runtime.CompilerServices;
 
@@ -19,7 +16,7 @@
     public partial class DirtyTracker<T> : INotifyPropertyChanged, IDirtyTracker
         where T : class, INotifyPropertyChanged
     {
-        private readonly HashSet<PropertyInfo> diff = new HashSet<PropertyInfo>();
+        private readonly ConcurrentSet<PropertyInfo> diff = new ConcurrentSet<PropertyInfo>();
         private readonly PropertiesDirtyTracker propertiesTrackers;
         private readonly ItemsDirtyTracker itemsTrackers;
 

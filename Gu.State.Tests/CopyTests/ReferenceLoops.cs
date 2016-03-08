@@ -1,6 +1,5 @@
 ﻿namespace Gu.State.Tests.CopyTests
 {
-    using System;
     using System.Collections;
     using System.Collections.ObjectModel;
 

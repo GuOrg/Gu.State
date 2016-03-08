@@ -1,6 +1,5 @@
 ﻿namespace Gu.State.Tests
 {
-    using System;
     using System.Collections.ObjectModel;
     using System.Collections.Specialized;
 
