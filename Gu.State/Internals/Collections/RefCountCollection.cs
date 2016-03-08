@@ -26,10 +26,20 @@
             this.items.Clear();
         }
 
-        internal IDisposable GetOrAdd(TKey key, Func<TValue> creator)
+        public bool TryAdd(TKey key, TValue tracker)
+        {
+            var reference = new Reference(key, tracker, this);
+            return this.items.TryAdd(key, reference);
+        }
+
+        internal TValue GetOrAdd(TKey key, Func<TValue> creator)
         {
             this.VerifyDisposed();
-            return this.items.AddOrUpdate(key, k => new Reference(k, creator(), this), this.Update).Tracker;
+            var reference = this.items.AddOrUpdate(
+                key,
+                k => new Reference(k, creator(), this),
+                this.Update);
+            return reference.Tracker;
         }
 
         private void VerifyDisposed()

@@ -16,7 +16,7 @@
     public partial class DirtyTracker<T> : INotifyPropertyChanged, IDirtyTracker
         where T : class, INotifyPropertyChanged
     {
-        private readonly ConcurrentSet<PropertyInfo> diff = new ConcurrentSet<PropertyInfo>();
+        private readonly HashSet<PropertyInfo> diff = new HashSet<PropertyInfo>();
         private readonly PropertiesDirtyTracker propertiesTrackers;
         private readonly ItemsDirtyTracker itemsTrackers;
 

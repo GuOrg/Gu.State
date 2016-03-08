@@ -42,6 +42,13 @@
     <Compile Include="Internals\Collections\DisposingMap.cs" />
     <Compile Include="Internals\Collections\ImmutableList.cs" />
     <Compile Include="Internals\Collections\ReferencePair.cs" />
+    <Compile Include="Internals\Tree\INode.cs" />
+    <Compile Include="Internals\Tree\IReference.cs" />
+    <Compile Include="Internals\Tree\IRootNode.cs" />
+    <Compile Include="Internals\Tree\ITracker.cs" />
+    <Compile Include="Internals\Tree\TrackerNode+ChildNode.cs" />
+    <Compile Include="Internals\Tree\TrackerNode+RootNode.cs" />
+    <Compile Include="Internals\Tree\TrackerNode.cs" />
     <Compile Include="Track\Changes\ChangeTracker.cs" />
     <Compile Include="Track\Changes\ChangeTracker.ItemsChangeTrackers.cs" />
     <Compile Include="Track\Changes\ChangeTracker.PropertiesChangeTrackers.cs" />

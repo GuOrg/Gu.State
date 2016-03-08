@@ -50,6 +50,7 @@
     <Compile Include="CopyTests\PropertyValues\ReferenceLoops.cs" />
     <Compile Include="CopyTests\ReferenceLoops.cs" />
     <Compile Include="Internals\Collections\DisposingCollectionTests.cs" />
+    <Compile Include="Internals\Tree\TreeTests.cs" />
     <Compile Include="Synchronize\PropertySynchronizerTests.ReferenceLoops.cs" />
     <Compile Include="Track\Changes\ChangeTrackerStubs\IllegalSubType.cs" />
     <Compile Include="Track\Changes\ChangeTrackerStubs\Immutable.cs" />
@@ -231,5 +232,8 @@
       <Private>True</Private>
       <Paket>True</Paket>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Sandbox\" />
   </ItemGroup>
 </Project>
