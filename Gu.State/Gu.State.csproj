@@ -45,6 +45,7 @@
     <Compile Include="Internals\Tree\INode.cs" />
     <Compile Include="Internals\Tree\IReference.cs" />
     <Compile Include="Internals\Tree\IRootNode.cs" />
+    <Compile Include="Internals\Tree\ItemReference.cs" />
     <Compile Include="Internals\Tree\ITracker.cs" />
     <Compile Include="Internals\Tree\TrackerNode+ChildNode.cs" />
     <Compile Include="Internals\Tree\TrackerNode+RootNode.cs" />

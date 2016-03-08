@@ -2,7 +2,7 @@
 {
     using System;
 
-    internal struct ReferencePair : IEquatable<ReferencePair>
+    internal struct ReferencePair : IReference, IEquatable<ReferencePair>
     {
         internal readonly object X;
         internal readonly object Y;
@@ -26,6 +26,11 @@
         public bool Equals(ReferencePair other)
         {
             return ReferenceEquals(this.X, other.X) && ReferenceEquals(this.Y, other.Y);
+        }
+
+        public bool Equals(IReference other)
+        {
+           return this.Equals((object)other);
         }
 
         public override bool Equals(object obj)

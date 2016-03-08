@@ -28,7 +28,7 @@
                 this.propertyTrackers?.Dispose();
             }
 
-            internal static PropertiesChangeTrackers Create(INotifyPropertyChanged source, ChangeTracker parent)
+            internal static PropertiesChangeTrackers Create(INotifyPropertyChanged source, PropertiesSettings settings, INode<ItemReference, ITracker> parentNode)
             {
                 if (source == null)
                 {
@@ -36,16 +36,16 @@
                 }
 
                 var sourceType = source.GetType();
-                if (parent.Settings.IsIgnoringDeclaringType(sourceType))
+                if (settings.IsIgnoringDeclaringType(sourceType))
                 {
                     return null;
                 }
 
-                Track.Verify.IsTrackableType(source.GetType(), parent);
+                Track.Verify.IsTrackableType(source.GetType(), settings);
                 DisposingMap<PropertyInfo, IDisposable> propertyTrackers = null;
-                foreach (var propertyInfo in GetTrackProperties(sourceType, parent.Settings))
+                foreach (var propertyInfo in GetTrackProperties(sourceType, settings))
                 {
-                    var tracker = CreatePropertyTracker(source, propertyInfo, parent);
+                    var tracker = CreatePropertyTracker(source, propertyInfo, settings);
                     if (propertyTrackers == null)
                     {
                         propertyTrackers = new DisposingMap<PropertyInfo, IDisposable>();
@@ -54,7 +54,7 @@
                     propertyTrackers.SetValue(propertyInfo, tracker);
                 }
 
-                return new PropertiesChangeTrackers(source, parent, propertyTrackers);
+                return new PropertiesChangeTrackers(source, settings, propertyTrackers);
             }
 
             internal static IEnumerable<PropertyInfo> GetTrackProperties(Type sourceType, IIgnoringProperties settings)

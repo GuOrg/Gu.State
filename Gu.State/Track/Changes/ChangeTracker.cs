@@ -7,31 +7,34 @@
     /// Tracks changes in a graph.
     /// Listens to nested property and collection changes.
     /// </summary>
-    public partial class ChangeTracker : IChangeTracker
+    public partial class ChangeTracker : IChangeTracker, ITracker
     {
         private static readonly PropertyChangedEventArgs ChangesEventArgs = new PropertyChangedEventArgs(nameof(Changes));
-        private readonly ItemsChangeTrackers itemsChangeTrackers;
-        private readonly PropertiesChangeTrackers propertiesChangeTrackers;
 
         private int changes;
         private bool disposed;
 
+        private INode<ItemReference, ITracker> node;
+
         public ChangeTracker(INotifyPropertyChanged source, PropertiesSettings settings)
-            : this(source, settings, new MemberPath(source.GetType()))
+            : this(source, settings, null)
         {
         }
 
-        internal ChangeTracker(INotifyPropertyChanged source, PropertiesSettings settings, MemberPath path)
+        internal ChangeTracker(INotifyPropertyChanged source, PropertiesSettings settings, INode<ItemReference, ITracker> node)
         {
             this.Settings = settings;
-            this.Path = path;
             Track.Verify.IsTrackableType(source.GetType(), this);
-            this.propertiesChangeTrackers = PropertiesChangeTrackers.Create(source, this);
-            this.itemsChangeTrackers = ItemsChangeTrackers.Create(source, this);
-            if (this.propertiesChangeTrackers == null && this.itemsChangeTrackers == null)
-            {
-                throw State.Throw.ThrowThereIsABugInTheLibrary("Created a tracker that does not track anything");
-            }
+            this.node = node ?? TrackerNode.CreateRoot(new ItemReference(source), (ITracker)this);
+            this.node.AddChild(new ItemReference(source, "Properties"), () => PropertiesChangeTrackers.Create(source, settings, this.node));
+            //this.node.AddChild(new ItemReference(source, "Items"), () => ItemsChangeTrackers.Create(source, settings));
+
+            throw new NotImplementedException("Check referencehandling, dont create tree if referecnes");
+            throw new NotImplementedException("Assert that something is tracked");
+            //if (this.propertiesChangeTrackers == null && this.itemsChangeTrackers == null)
+            //{
+            //    throw State.Throw.ThrowThereIsABugInTheLibrary("Created a tracker that does not track anything");
+            //}
         }
 
         /// <inheritdoc/>
@@ -39,6 +42,11 @@
 
         /// <inheritdoc/>
         public event EventHandler Changed;
+
+        void ITracker.ChildChanged(ITracker child)
+        {
+            this.Changes++;
+        }
 
         public PropertiesSettings Settings { get; }
 
@@ -50,7 +58,7 @@
                 return this.changes;
             }
 
-            internal set
+            private set
             {
                 if (value == this.changes)
                 {
@@ -62,8 +70,6 @@
                 this.OnChanged();
             }
         }
-
-        internal MemberPath Path { get; }
 
         /// <summary>
         /// Dispose(true); //I am calling you from Dispose, it's safe
@@ -85,8 +91,7 @@
         {
             if (disposing)
             {
-                this.propertiesChangeTrackers?.Dispose();
-                this.itemsChangeTrackers?.Dispose();
+                this.node.Dispose();
             }
         }
 
