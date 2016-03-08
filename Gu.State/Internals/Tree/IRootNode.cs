@@ -2,9 +2,9 @@ namespace Gu.State
 {
     using System;
 
-    internal interface IRootNode<TKey, TTracker> : IDisposable
+    internal interface IRootNode<TTracker> : IDisposable
         where TTracker : ITracker
     {
-        RefCountCollection<TKey, TTracker> Cache { get; }
+        RefCountCollection<IReference, TTracker> Cache { get; }
     }
 }

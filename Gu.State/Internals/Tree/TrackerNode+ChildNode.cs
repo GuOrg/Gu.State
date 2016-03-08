@@ -4,16 +4,15 @@
 
     internal static partial class TrackerNode
     {
-        private sealed class ChildNode<TKey, TTracker> : INode<TKey, TTracker>
-            where TKey : IReference
+        private sealed class ChildNode<TTracker> : INode<TTracker>
             where TTracker : ITracker
         {
-            private readonly TKey key;
-            private readonly Lazy<DisposingMap<TKey, ChildNode<TKey, TTracker>>> children = new Lazy<DisposingMap<TKey, ChildNode<TKey, TTracker>>>(() => new DisposingMap<TKey, ChildNode<TKey, TTracker>>());
+            private readonly object source;
+            private readonly Lazy<DisposingMap<IReference, ChildNode<TTracker>>> children = new Lazy<DisposingMap<TKey, ChildNode<TKey, TTracker>>>(() => new DisposingMap<TKey, ChildNode<TKey, TTracker>>());
 
-            internal ChildNode(TKey key, TTracker tracker, INode<TKey, TTracker> parent)
+            internal ChildNode(TKey source, TTracker tracker, INode<TKey, TTracker> parent)
             {
-                this.key = key;
+                this.source = source;
                 this.Tracker = tracker;
                 this.Parent = parent;
                 this.Tracker.Changed += this.OnTrackerChanged;
@@ -52,7 +51,7 @@
 
             public void Dispose()
             {
-                this.Parent.RemoveChild(this.key);
+                this.Parent.RemoveChild(this.source);
                 this.Tracker.Changed += this.OnTrackerChanged;
                 if (this.children.IsValueCreated)
                 {

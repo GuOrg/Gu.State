@@ -10,11 +10,9 @@
     public partial class ChangeTracker : IChangeTracker, ITracker
     {
         private static readonly PropertyChangedEventArgs ChangesEventArgs = new PropertyChangedEventArgs(nameof(Changes));
-
+        private readonly INode<ItemReference, ITracker> node;
         private int changes;
         private bool disposed;
-
-        private INode<ItemReference, ITracker> node;
 
         public ChangeTracker(INotifyPropertyChanged source, PropertiesSettings settings)
             : this(source, settings, null)
@@ -25,9 +23,9 @@
         {
             this.Settings = settings;
             Track.Verify.IsTrackableType(source.GetType(), this);
-            this.node = node ?? TrackerNode.CreateRoot(new ItemReference(source), (ITracker)this);
-            this.node.AddChild(new ItemReference(source, "Properties"), () => PropertiesChangeTrackers.Create(source, settings, this.node));
-            //this.node.AddChild(new ItemReference(source, "Items"), () => ItemsChangeTrackers.Create(source, settings));
+            this.node = node ?? TrackerNode.CreateRoot(source, (ITracker)this);
+            this.node.AddChild(source, () => PropertiesChangeTrackers.Create(source, settings, this.node));
+            this.node.AddChild(source, () => ItemsChangeTrackers.Create(source, settings, this.node));
 
             throw new NotImplementedException("Check referencehandling, dont create tree if referecnes");
             throw new NotImplementedException("Assert that something is tracked");

@@ -2,15 +2,15 @@ namespace Gu.State
 {
     using System;
 
-    internal interface INode<TKey, TTracker> : IDisposable
+    internal interface INode<TTracker> : IDisposable
         where TTracker : ITracker
     {
-        IRootNode<TKey, TTracker> Root { get; }
+        IRootNode<TTracker> Root { get; }
 
         TTracker Tracker { get; }
 
-        INode<TKey, TTracker> AddChild(TKey childKey, Func<TTracker> trackerFactory);
+        INode<TTracker> AddChild(object source, Func<TTracker> trackerFactory);
 
-        void RemoveChild(TKey key);
+        void RemoveChild(object key);
     }
 }

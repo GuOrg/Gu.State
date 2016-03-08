@@ -2,11 +2,10 @@ namespace Gu.State
 {
     internal static partial class TrackerNode
     {
-        internal static INode<TKey, TTracker> CreateRoot<TKey, TTracker>(TKey key, TTracker tracker)
-            where TKey : IReference
+        internal static INode<TTracker> CreateRoot<TTracker>(object source, TTracker tracker)
             where TTracker : ITracker
         {
-            return RootNode<TKey, TTracker>.CreateRoot(key, tracker);
+            return RootNode<TTracker>.CreateRoot(source, tracker);
         }
     }
 }
