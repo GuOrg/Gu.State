@@ -12,9 +12,9 @@
         {
             private readonly INotifyPropertyChanged source;
             private readonly ChangeTracker parent;
-            private readonly PropertyCollection propertyTrackers;
+            private readonly DisposingMap<PropertyInfo, IDisposable> propertyTrackers;
 
-            private PropertiesChangeTrackers(INotifyPropertyChanged source, ChangeTracker parent, PropertyCollection propertyTrackers)
+            private PropertiesChangeTrackers(INotifyPropertyChanged source, ChangeTracker parent, DisposingMap<PropertyInfo, IDisposable> propertyTrackers)
             {
                 this.source = source;
                 this.parent = parent;
@@ -42,25 +42,19 @@
                 }
 
                 Track.Verify.IsTrackableType(source.GetType(), parent);
-                List<PropertyCollection.PropertyAndDisposable> items = null;
+                DisposingMap<PropertyInfo, IDisposable> items = null;
                 foreach (var propertyInfo in GetTrackProperties(sourceType, parent.Settings))
                 {
                     var tracker = CreatePropertyTracker(source, propertyInfo, parent);
                     if (items == null)
                     {
-                        items = new List<PropertyCollection.PropertyAndDisposable>(sourceType.GetProperties().Length);
+                        items = new DisposingMap<PropertyInfo, IDisposable>();
                     }
 
-                    items.Add(new PropertyCollection.PropertyAndDisposable(propertyInfo, tracker));
+                    items.SetValue(propertyInfo, tracker);
                 }
 
-                if (items != null)
-                {
-                    var propertyCollection = new PropertyCollection(items);
-                    return new PropertiesChangeTrackers(source, parent, propertyCollection);
-                }
-
-                return new PropertiesChangeTrackers(source, parent, null);
+                return new PropertiesChangeTrackers(source, parent, items);
             }
 
             internal static IEnumerable<PropertyInfo> GetTrackProperties(Type sourceType, IIgnoringProperties settings)
@@ -120,8 +114,8 @@
 
                 if (IsTrackProperty(propertyInfo, this.parent.Settings))
                 {
-                    var propertyTracker = CreatePropertyTracker(this.source, propertyInfo, this.parent);
-                    this.propertyTrackers[propertyInfo] = propertyTracker;
+                    var tracker = CreatePropertyTracker(this.source, propertyInfo, this.parent);
+                    this.propertyTrackers.SetValue(propertyInfo, tracker);
                 }
 
                 this.parent.Changes++;
@@ -138,7 +132,8 @@
                 {
                     // might be worth it to check if Source ReferenceEquals to avoid creating a new tracker here.
                     // Probably not a big problem as I expect PropertyChanged.Invoke(string.Empty) to be rare.
-                    this.propertyTrackers[propertyInfo] = CreatePropertyTracker(this.source, propertyInfo, this.parent);
+                    var tracker = CreatePropertyTracker(this.source, propertyInfo, this.parent);
+                    this.propertyTrackers.SetValue(propertyInfo, tracker);
                 }
             }
         }
