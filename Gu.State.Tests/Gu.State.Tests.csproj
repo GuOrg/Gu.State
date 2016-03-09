@@ -51,6 +51,7 @@
     <Compile Include="CopyTests\ReferenceLoops.cs" />
     <Compile Include="Internals\Collections\DisposingListTests.cs" />
     <Compile Include="Internals\Collections\DisposingMapTests.cs" />
+    <Compile Include="Internals\Collections\RefCountCollectionTests.cs" />
     <Compile Include="Track\Changes\ChangeTrackerStubs\IllegalSubType.cs" />
     <Compile Include="Track\Changes\ChangeTrackerStubs\Immutable.cs" />
     <Compile Include="Track\Changes\ChangeTrackerStubs\With.cs" />

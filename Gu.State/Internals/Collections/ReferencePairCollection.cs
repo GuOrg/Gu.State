@@ -5,7 +5,7 @@
 
     internal class ReferencePairCollection
     {
-        private readonly HashSet<ReferencePair> pairs = new HashSet<ReferencePair>();
+        private readonly ConcurrentSet<ReferencePair> pairs = new ConcurrentSet<ReferencePair>();
 
         internal void Add(object x, object y)
         {

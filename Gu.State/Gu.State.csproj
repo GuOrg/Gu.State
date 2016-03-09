@@ -41,6 +41,9 @@
   <ItemGroup>
     <Compile Include="Internals\Collections\DisposingMap{TKey, TValue}.cs" />
     <Compile Include="Internals\Collections\ImmutableList{T}.cs" />
+    <Compile Include="Internals\Collections\IRefCounted.cs" />
+    <Compile Include="Internals\Collections\RefCountCollection.cs" />
+    <Compile Include="Internals\Collections\ReferenceComparer.cs" />
     <Compile Include="Track\Changes\ChangeTracker.cs" />
     <Compile Include="Track\Changes\ChangeTracker.ItemsChangeTrackers.cs" />
     <Compile Include="Track\Changes\ChangeTracker.PropertiesChangeTrackers.cs" />
