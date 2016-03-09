@@ -13,7 +13,7 @@
             private readonly INotifyCollectionChanged x;
             private readonly INotifyCollectionChanged y;
             private readonly DirtyTracker<T> parent;
-            private readonly ItemCollection<IDirtyTrackerNode> itemTrackers;
+            private readonly DisposingList<IDirtyTrackerNode> itemTrackers;
 
             private ItemsDirtyTracker(INotifyCollectionChanged x, INotifyCollectionChanged y, DirtyTracker<T> parent)
             {
@@ -25,7 +25,7 @@
                 var xList = (IList)x;
                 var yList = (IList)y;
                 bool anyDirty = false;
-                this.itemTrackers = new ItemCollection<IDirtyTrackerNode>();
+                this.itemTrackers = new DisposingList<IDirtyTrackerNode>();
                 for (int i = 0; i < Math.Max(xList.Count, yList.Count); i++)
                 {
                     var itemTracker = this.CreateItemTracker(i);
@@ -39,7 +39,7 @@
                 }
             }
 
-            public bool IsDirty => this.itemTrackers.Any(it => it?.IsDirty == true);
+            public bool IsDirty => this.itemTrackers.Exists(it => it?.IsDirty == true);
 
             public void Dispose()
             {

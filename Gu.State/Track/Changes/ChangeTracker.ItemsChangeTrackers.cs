@@ -12,9 +12,9 @@
         {
             private readonly INotifyCollectionChanged source;
             private readonly ChangeTracker parent;
-            private readonly ItemCollection<ChangeTracker> itemTrackers;
+            private readonly DisposingList<ChangeTracker> itemTrackers;
 
-            private ItemsChangeTrackers(INotifyCollectionChanged source, ChangeTracker parent, ItemCollection<ChangeTracker> itemTrackers)
+            private ItemsChangeTrackers(INotifyCollectionChanged source, ChangeTracker parent, DisposingList<ChangeTracker> itemTrackers)
             {
                 this.source = source;
                 this.parent = parent;
@@ -47,7 +47,7 @@
                 }
 
                 var sourceList = (IList)source;
-                var itemTrackers = new ItemCollection<ChangeTracker>(sourceList.Count);
+                var itemTrackers = new DisposingList<ChangeTracker>(sourceList.Count);
                 for (int i = 0; i < sourceList.Count; i++)
                 {
                     var itemTracker = CreateItemTracker(sourceList, i, parent);

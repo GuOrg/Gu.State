@@ -13,7 +13,7 @@
             private readonly IList target;
             private readonly PropertiesSettings settings;
             private readonly TwoItemsTrackerReferenceCollection<IPropertySynchronizer> references;
-            private readonly ItemCollection<IDisposable> itemSynchronizers;
+            private readonly DisposingList<IDisposable> itemSynchronizers;
             private bool isSynchronizing;
 
             private ItemsSynchronizer(
@@ -35,7 +35,7 @@
 
                 if (!source.GetType().GetItemType().IsImmutable())
                 {
-                    this.itemSynchronizers = new ItemCollection<IDisposable>();
+                    this.itemSynchronizers = new DisposingList<IDisposable>();
                 }
 
                 this.ResetItemSynchronizers();
