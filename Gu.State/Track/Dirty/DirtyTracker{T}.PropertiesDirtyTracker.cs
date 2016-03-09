@@ -15,7 +15,7 @@
             private readonly INotifyPropertyChanged x;
             private readonly INotifyPropertyChanged y;
             private readonly DirtyTracker<T> parent;
-            private readonly PropertyCollection propertyTrackers;
+            private readonly DisposingMap<PropertyInfo, IDisposable> propertyTrackers;
 
             private PropertiesDirtyTracker(INotifyPropertyChanged x, INotifyPropertyChanged y, DirtyTracker<T> parent)
             {
@@ -24,7 +24,6 @@
                 this.parent = parent;
                 x.PropertyChanged += this.OnTrackedPropertyChanged;
                 y.PropertyChanged += this.OnTrackedPropertyChanged;
-                List<PropertyCollection.PropertyAndDisposable> items = null;
                 foreach (var propertyInfo in x.GetType()
                                               .GetProperties(parent.Settings.BindingFlags))
                 {
@@ -34,12 +33,12 @@
                     }
 
                     var tracker = this.CreatePropertyTracker(propertyInfo);
-                    if (items == null)
+                    if (this.propertyTrackers == null)
                     {
-                        items = new List<PropertyCollection.PropertyAndDisposable>();
+                        this.propertyTrackers = new DisposingMap<PropertyInfo, IDisposable>();
                     }
 
-                    items.Add(new PropertyCollection.PropertyAndDisposable(propertyInfo, tracker));
+                    this.propertyTrackers.SetValue(propertyInfo, tracker);
                     if (tracker.IsDirty)
                     {
                         parent.diff.Add(propertyInfo);
@@ -48,11 +47,6 @@
                     {
                         parent.diff.Remove(propertyInfo);
                     }
-                }
-
-                if (items != null)
-                {
-                    this.propertyTrackers = new PropertyCollection(items);
                 }
             }
 
@@ -130,7 +124,7 @@
                     }
 
                     var propertyTracker = this.CreatePropertyTracker(propertyInfo);
-                    this.propertyTrackers[propertyInfo] = propertyTracker;
+                    this.propertyTrackers.SetValue(propertyInfo, propertyTracker);
                     if (propertyTracker.IsDirty)
                     {
                         this.parent.diff.Add(propertyInfo);
@@ -162,7 +156,7 @@
 
                 var before = this.parent.diff.Count;
                 var propertyTracker = this.CreatePropertyTracker(propertyInfo);
-                this.propertyTrackers[propertyInfo] = propertyTracker;
+                this.propertyTrackers.SetValue(propertyInfo, propertyTracker);
                 if (propertyTracker.IsDirty)
                 {
                     this.parent.diff.Add(propertyInfo);
@@ -219,6 +213,5 @@
                 }
             }
         }
-
     }
 }

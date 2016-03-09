@@ -111,7 +111,6 @@
     <Compile Include="Internals\Collections\SingleItemTrackerReferenceCollection.cs" />
     <Compile Include="Internals\Collections\TwoItemsTrackerReferenceCollection.cs" />
     <Compile Include="Internals\PaddedPairs.cs" />
-    <Compile Include="Internals\Collections\PropertyCollection.cs" />
     <Compile Include="Internals\MemberPath\IndexItem.cs" />
     <Compile Include="Internals\MemberPath\PathItem.cs" />
     <Compile Include="Internals\MemberPath\PropertyItem.cs" />
