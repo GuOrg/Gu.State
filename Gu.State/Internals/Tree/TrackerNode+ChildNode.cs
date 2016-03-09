@@ -8,9 +8,9 @@
             where TTracker : ITracker
         {
             private readonly object source;
-            private readonly Lazy<DisposingMap<IReference, ChildNode<TTracker>>> children = new Lazy<DisposingMap<TKey, ChildNode<TKey, TTracker>>>(() => new DisposingMap<TKey, ChildNode<TKey, TTracker>>());
+            private readonly Lazy<DisposingMap<IReference, ChildNode<TTracker>>> children = new Lazy<DisposingMap<IReference, ChildNode<TTracker>>>(() => new DisposingMap<IReference, ChildNode<TTracker>>());
 
-            internal ChildNode(TKey source, TTracker tracker, INode<TKey, TTracker> parent)
+            internal ChildNode(object source, TTracker tracker, INode<TTracker> parent)
             {
                 this.source = source;
                 this.Tracker = tracker;
@@ -18,11 +18,11 @@
                 this.Tracker.Changed += this.OnTrackerChanged;
             }
 
-            public IRootNode<TKey, TTracker> Root
+            public IRootNode<TTracker> Root
             {
                 get
                 {
-                    var rootNode = this.Parent as IRootNode<TKey, TTracker>;
+                    var rootNode = this.Parent as IRootNode<TTracker>;
                     if (rootNode != null)
                     {
                         return rootNode;
@@ -34,13 +34,13 @@
 
             public TTracker Tracker { get; }
 
-            internal INode<TKey, TTracker> Parent { get; }
+            internal INode<TTracker> Parent { get; }
 
-            public INode<TKey, TTracker> AddChild(TKey childKey, Func<TTracker> trackerFactory)
+            public INode<TTracker> AddChild(object source, Func<TTracker> trackerFactory)
             {
-                var tracker = this.Root.Cache.GetOrAdd(childKey, trackerFactory);
-                var node = new ChildNode<TKey, TTracker>(childKey, tracker, this);
-                this.children.Value.SetValue(childKey, node);
+                var tracker = this.Root.Cache.GetOrAdd(source, trackerFactory);
+                var node = new ChildNode<TTracker>(source, tracker, this);
+                this.children.Value.SetValue(source, node);
                 return node;
             }
 

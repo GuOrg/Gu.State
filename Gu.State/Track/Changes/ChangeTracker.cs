@@ -10,7 +10,7 @@
     public partial class ChangeTracker : IChangeTracker, ITracker
     {
         private static readonly PropertyChangedEventArgs ChangesEventArgs = new PropertyChangedEventArgs(nameof(Changes));
-        private readonly INode<ItemReference, ITracker> node;
+        private readonly INode<ITracker> node;
         private int changes;
         private bool disposed;
 
@@ -19,7 +19,7 @@
         {
         }
 
-        internal ChangeTracker(INotifyPropertyChanged source, PropertiesSettings settings, INode<ItemReference, ITracker> node)
+        internal ChangeTracker(INotifyPropertyChanged source, PropertiesSettings settings, INode<ITracker> node)
         {
             this.Settings = settings;
             Track.Verify.IsTrackableType(source.GetType(), this);

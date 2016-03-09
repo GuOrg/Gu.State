@@ -12,12 +12,12 @@
         {
             private readonly INotifyPropertyChanged source;
             private readonly PropertiesSettings settings;
-            private readonly INode<ItemReference, ITracker> node;
+            private readonly INode<ITracker> node;
 
             private PropertiesChangeTrackers(
                 INotifyPropertyChanged source,
                 PropertiesSettings settings,
-                INode<ItemReference, ITracker> node)
+                INode<ITracker> node)
             {
                 this.source = source;
                 this.settings = settings;
@@ -26,14 +26,7 @@
 
                 foreach (var propertyInfo in GetTrackProperties(source.GetType(), settings))
                 {
-                    var tracker = CreatePropertyTracker(source, propertyInfo, settings, node);
-                    node.AddChild(new ItemReference(), )
-                    if (propertyTrackers == null)
-                    {
-                        propertyTrackers = new DisposingMap<PropertyInfo, IDisposable>();
-                    }
-
-                    propertyTrackers.SetValue(propertyInfo, tracker);
+                    CreatePropertyTracker(source, propertyInfo, settings, node);
                 }
             }
 
@@ -42,13 +35,13 @@
             public void Dispose()
             {
                 this.source.PropertyChanged -= this.OnTrackedPropertyChanged;
-                this.propertyTrackers?.Dispose();
+                this.node.Dispose();
             }
 
             internal static PropertiesChangeTrackers Create(
                 INotifyPropertyChanged source,
                 PropertiesSettings settings,
-                INode<ItemReference, ITracker> parentNode)
+                INode<ITracker> parentNode)
             {
                 if (source == null)
                 {
@@ -89,7 +82,8 @@
             private static PropertyChangeTracker CreatePropertyTracker(
                 object source,
                 PropertyInfo propertyInfo,
-                PropertiesSettings settings)
+                PropertiesSettings settings,
+                INode<ITracker> node)
             {
                 if (!IsTrackProperty(propertyInfo, settings))
                 {
@@ -125,7 +119,7 @@
 
                 if (IsTrackProperty(propertyInfo, this.settings))
                 {
-                    CreatePropertyTracker(this.source, propertyInfo, this.node);
+                    CreatePropertyTracker(this.source, propertyInfo, this.settings, this.node);
                 }
 
                 this.OnChanged();
@@ -133,12 +127,7 @@
 
             private void Reset()
             {
-                if (this.propertyTrackers == null)
-                {
-                    return;
-                }
-
-                foreach (var propertyInfo in GetTrackProperties(this.source?.GetType(), this.parent.Settings))
+                foreach (var propertyInfo in GetTrackProperties(this.source?.GetType(), this.settings))
                 {
                     // might be worth it to check if Source ReferenceEquals to avoid creating a new tracker here.
                     // Probably not a big problem as I expect PropertyChanged.Invoke(string.Empty) to be rare.
