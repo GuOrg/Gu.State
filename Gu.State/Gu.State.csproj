@@ -45,8 +45,8 @@
     <Compile Include="Internals\Collections\RefCountCollection.cs" />
     <Compile Include="Internals\Collections\ReferenceComparer.cs" />
     <Compile Include="Track\Changes\ChangeTracker.cs" />
-    <Compile Include="Track\Changes\ChangeTracker.ItemsChangeTrackers.cs" />
-    <Compile Include="Track\Changes\ChangeTracker.PropertiesChangeTrackers.cs" />
+    <Compile Include="Track\Changes\ChangeTracker+ItemsChangeTrackers.cs" />
+    <Compile Include="Track\Changes\ChangeTracker+PropertiesChangeTrackers.cs" />
     <Compile Include="Contracts\ISpecialCopyProperty.cs" />
     <Compile Include="Track\Changes\Internals\PropertyChangeTracker.cs" />
     <Compile Include="EqualBy\EqualBy.Verify.cs" />
