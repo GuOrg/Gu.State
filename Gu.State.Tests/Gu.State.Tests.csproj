@@ -46,6 +46,9 @@
     </When>
   </Choose>
   <ItemGroup>
+    <Compile Include="CopyTests\FieldValues\ReferenceLoops.cs" />
+    <Compile Include="CopyTests\PropertyValues\ReferenceLoops.cs" />
+    <Compile Include="CopyTests\ReferenceLoops.cs" />
     <Compile Include="Track\Changes\ChangeTrackerStubs\IllegalSubType.cs" />
     <Compile Include="Track\Changes\ChangeTrackerStubs\Immutable.cs" />
     <Compile Include="Track\Changes\ChangeTrackerStubs\With.cs" />
