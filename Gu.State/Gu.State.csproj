@@ -89,6 +89,8 @@
     <Compile Include="Copy\Copy.Shared.cs" />
     <Compile Include="Copy\Copy.Throw.cs" />
     <Compile Include="Copy\Copy.Verify.cs" />
+    <Compile Include="Track\Dirty\DirtyTracker{T}+ItemsDirtyTracker.cs" />
+    <Compile Include="Track\Dirty\DirtyTracker{T}.PropertiesDirtyTracker.cs" />
     <Compile Include="Track\Track.Verify.cs" />
     <Compile Include="Track\Dirty\Internals\AlwaysDirtyNode.cs" />
     <Compile Include="Track\Dirty\Internals\IDirtyTracker.cs" />
