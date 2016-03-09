@@ -39,6 +39,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Internals\Collections\DisposingMap{TKey, TValue}.cs" />
+    <Compile Include="Internals\Collections\ImmutableList{T}.cs" />
     <Compile Include="Track\Changes\ChangeTracker.cs" />
     <Compile Include="Track\Changes\ChangeTracker.ItemsChangeTrackers.cs" />
     <Compile Include="Track\Changes\ChangeTracker.PropertiesChangeTrackers.cs" />
