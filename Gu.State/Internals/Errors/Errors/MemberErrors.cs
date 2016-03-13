@@ -1,10 +1,8 @@
 namespace Gu.State
 {
-    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Reflection;
-    using System.Text;
 
     [DebuggerDisplay("{GetType().Name} Member: {Path.LastMember.DeclaringType.Name}.{Path.LastMember.Name}")]
     internal sealed class MemberErrors : Error, IWithErrors, IExcludableMember, INotsupportedMember
@@ -12,16 +10,18 @@ namespace Gu.State
         private static readonly Error[] EmptyErrors = new Error[0];
 
         public MemberErrors(MemberInfo memberInfo)
+            : this(new MemberPath(null).WithMember(memberInfo), null)
         {
-            this.Path = new MemberPath(null).WithMember(memberInfo);
-            this.Errors = EmptyErrors;
         }
 
         public MemberErrors(MemberPath path, TypeErrors errors)
         {
             this.Path = path;
-            this.Errors = new[] { errors };
+            this.Error = errors;
+            this.Errors = errors == null ? EmptyErrors : new[] { errors };
         }
+
+        public TypeErrors Error { get;  }
 
         public MemberPath Path { get; }
 

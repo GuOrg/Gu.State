@@ -2,6 +2,7 @@ namespace Gu.State
 {
     using System;
     using System.Collections;
+    using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.ComponentModel;
     using System.Linq;
@@ -26,6 +27,16 @@ namespace Gu.State
 
         internal static TypeErrors Merge(this TypeErrors first, TypeErrors other)
         {
+            if (first == null)
+            {
+                return other;
+            }
+
+            if (other == null)
+            {
+                return first;
+            }
+
             if (first == other)
             {
                 return first;
@@ -33,7 +44,8 @@ namespace Gu.State
 
             if (first.Type == other.Type)
             {
-                return new TypeErrors(first.Type, first.Errors.Concat(other.Errors).Distinct().ToList());
+                var errors = new MergedErrors(first.Errors, other.Errors);
+                return new TypeErrors(first.Type, errors);
             }
 
             return new TypeErrors(null, new[] { first, other });

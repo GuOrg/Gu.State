@@ -49,6 +49,7 @@
     <Compile Include="Internals\Errors\Errors\Contracts\IExcludableMember.cs" />
     <Compile Include="Internals\Errors\Errors\Contracts\INotsupportedMember.cs" />
     <Compile Include="Internals\Errors\Errors\TypeErrors.cs" />
+    <Compile Include="Internals\Errors\MergedErrors.cs" />
     <Compile Include="Internals\Errors\WithErrorsExt.cs" />
     <Compile Include="Track\Changes\ChangeTracker.cs" />
     <Compile Include="Track\Changes\ChangeTracker+ItemsChangeTrackers.cs" />
