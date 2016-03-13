@@ -35,7 +35,7 @@
                 Assert.AreEqual(expected, actual);
 
                 Assert.AreEqual(1, typeErrors.Errors.Count);
-                Assert.AreEqual(7, typeErrors.AllErrors);
+                Assert.AreEqual(7, typeErrors.AllErrors.Count);
             }
         }
     }
