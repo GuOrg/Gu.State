@@ -94,7 +94,7 @@
             return allErrors;
         }
 
-        private static void Add(IReadOnlyCollection<Error> errors, List<Error> allErrors)
+        private static void Add(IReadOnlyCollection<Error> errors, List<Error> allErrors, List<IWithErrors> withErrors = null)
         {
             if (errors == null)
             {
@@ -108,7 +108,24 @@
                     allErrors.Add(error);
                 }
 
-                Add((error as IWithErrors)?.Errors, allErrors);
+                var we = error as IWithErrors;
+                if (we != null)
+                {
+                    if (withErrors == null)
+                    {
+                        withErrors = new List<IWithErrors>();
+                    }
+                    else
+                    {
+                        if (withErrors.Any(e => ReferenceEquals(e, error)))
+                        {
+                            continue;
+                        }
+                    }
+
+                    withErrors.Add(we);
+                    Add(we.Errors, allErrors, withErrors);
+                }
             }
         }
 
