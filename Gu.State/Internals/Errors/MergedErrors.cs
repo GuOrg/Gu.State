@@ -10,8 +10,8 @@
 
         internal MergedErrors(IEnumerable<Error> first, IEnumerable<Error> other)
         {
-            this.errors = new List<Error>(first);
-            foreach (var error in other)
+            this.errors = new List<Error>();
+            foreach (var error in first.Concat(other))
             {
                 this.Merge(error);
             }

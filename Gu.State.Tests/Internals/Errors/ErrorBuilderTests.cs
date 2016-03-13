@@ -63,7 +63,8 @@
                                            .Add(TypeMustNotifyError.GetOrCreate(rootType))
                                            .Finnish();
             var merged = ErrorBuilder.Merge(refLoopErrors, notifyErrors);
-            Assert.Fail();
+            Assert.AreEqual(2, merged.Errors.Count);
+            Assert.AreEqual(8, merged.AllErrors.Count);
         }
 
         [Test]
@@ -93,7 +94,8 @@
                                            .Add(memberErrors)
                                            .Finnish();
             var merged = ErrorBuilder.Merge(refLoopErrors, notifyErrors);
-            Assert.Fail();
+            Assert.AreEqual(2, merged.Errors.Count);
+            Assert.AreEqual(8, merged.AllErrors.Count);
         }
     }
 }

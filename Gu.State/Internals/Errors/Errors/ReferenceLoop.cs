@@ -6,24 +6,25 @@ namespace Gu.State
     using System.Reflection;
     using System.Text;
 
-    [DebuggerDisplay("{GetType().Name} Loop: {Path.PathString}")]
+    [DebuggerDisplay("{GetType().Name} Loop: {Path.PathString()}")]
     internal sealed class ReferenceLoop : Error, INotSupported, IWithErrors
     {
         public ReferenceLoop(MemberPath path)
         {
             this.Path = path;
-            var errors = new List<Error> { new TypeErrors(path.RootType) };
-            foreach (var node in path.Path.OfType<ITypedNode>())
-            {
-                var memberItem = node as IMemberItem;
-                if (memberItem != null)
-                {
-                    errors.Add(new MemberErrors(memberItem.Member));
-                }
+            var errors = new List<Error>();
+            var typeErrors = path.OfType<ITypedNode>()
+                                   .Select(x => x.Type)
+                                   .Append(path.RootType)
+                                   .Distinct()
+                                   .Select(t => new TypeErrors(t));
+            errors.AddRange(typeErrors);
 
-                errors.Add(new TypeErrors(node.Type));
-            }
-
+            var memberErrors = path.OfType<IMemberItem>()
+                                     .Select(x => x.Member)
+                                     .Distinct()
+                                     .Select(m => new MemberErrors(m));
+            errors.AddRange(memberErrors);
             this.Errors = errors;
         }
 
