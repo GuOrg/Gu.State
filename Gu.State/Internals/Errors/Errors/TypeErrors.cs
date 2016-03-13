@@ -29,10 +29,7 @@ namespace Gu.State
         {
             this.Type = type;
             this.Errors = errors;
-            var allErrors = new HashSet<Error> { this };
-            GetAllErrors(errors, allErrors);
-            allErrors.Add(this);
-            this.AllErrors = allErrors.ToList();
+            this.AllErrors = MergedErrors.MergeAll(this, errors);
         }
 
         internal Type Type { get; }
@@ -40,26 +37,5 @@ namespace Gu.State
         public IReadOnlyCollection<Error> Errors { get; }
 
         internal IReadOnlyCollection<Error> AllErrors { get; }
-
-        private static void GetAllErrors(
-            IReadOnlyCollection<Error> errors,
-            HashSet<Error> allErrors)
-        {
-            if (errors == null)
-            {
-                return;
-            }
-
-            foreach (var error in errors)
-            {
-                if (!allErrors.Add(error))
-                {
-                    continue;
-                }
-
-                var withErrors = error as IWithErrors;
-                GetAllErrors(withErrors?.Errors, allErrors);
-            }
-        }
     }
 }
