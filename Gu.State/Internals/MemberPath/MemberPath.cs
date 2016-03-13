@@ -8,7 +8,7 @@
     using System.Reflection;
     using System.Text;
 
-    [DebuggerDisplay("PropertyPath: {PathString}")]
+    [DebuggerDisplay("PropertyPath: {PathString()}")]
     internal class MemberPath : IEnumerable<PathItem>
     {
         private static readonly PathItem[] EmptyPath = new PathItem[0];
@@ -18,7 +18,7 @@
         {
         }
 
-        internal MemberPath(RootItem root, IReadOnlyList<PathItem> path)
+        internal MemberPath(RootItem root, IEnumerable<PathItem> path)
         {
             this.Root = root;
             this.Path = path ?? EmptyPath;
@@ -28,48 +28,9 @@
 
         internal Type RootType => this.Root.Type;
 
-        internal IReadOnlyList<PathItem> Path { get; }
+        internal IEnumerable<PathItem> Path { get; }
 
         internal Type LastNodeType => this.Path.OfType<ITypedNode>().LastOrDefault()?.Type ?? this.RootType;
-
-        internal string PathString
-        {
-            get
-            {
-                var stringBuilder = new StringBuilder();
-                stringBuilder.Append(this.Root.Type.PrettyName());
-                foreach (var pathItem in this.Path)
-                {
-                    var propertyItem = pathItem as IMemberItem;
-                    if (propertyItem != null)
-                    {
-                        stringBuilder.Append('.')
-                                     .Append(propertyItem.Member.Name);
-                        continue;
-                    }
-
-                    var collectionItem = pathItem as CollectionItem;
-                    if (collectionItem != null)
-                    {
-                        stringBuilder.Append("[")
-                                     .Append(collectionItem.CollectionType.GetItemType().PrettyName())
-                                     .Append("]");
-                        continue;
-                    }
-
-                    var indexItem = pathItem as IndexItem;
-                    if (indexItem != null)
-                    {
-                        stringBuilder.Append($"[{indexItem.Index}]");
-                        continue;
-                    }
-
-                    throw Throw.ShouldNeverGetHereException();
-                }
-
-                return stringBuilder.ToString();
-            }
-        }
 
         internal MemberInfo LastMember => this.Path.OfType<IMemberItem>().LastOrDefault()?.Member;
 
@@ -81,6 +42,42 @@
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
+        }
+
+        internal string PathString()
+        {
+            var stringBuilder = new StringBuilder();
+            stringBuilder.Append(this.Root.Type.PrettyName());
+            foreach (var pathItem in this.Path)
+            {
+                var propertyItem = pathItem as IMemberItem;
+                if (propertyItem != null)
+                {
+                    stringBuilder.Append('.')
+                                 .Append(propertyItem.Member.Name);
+                    continue;
+                }
+
+                var collectionItem = pathItem as CollectionItem;
+                if (collectionItem != null)
+                {
+                    stringBuilder.Append("[")
+                                 .Append(collectionItem.CollectionType.GetItemType().PrettyName())
+                                 .Append("]");
+                    continue;
+                }
+
+                var indexItem = pathItem as IndexItem;
+                if (indexItem != null)
+                {
+                    stringBuilder.Append($"[{indexItem.Index}]");
+                    continue;
+                }
+
+                throw Throw.ShouldNeverGetHereException();
+            }
+
+            return stringBuilder.ToString();
         }
 
         internal MemberPath WithMember(MemberInfo memberInfo)
@@ -108,43 +105,46 @@
 
         internal MemberPath WithCollectionItem(Type collectionType)
         {
-            return new MemberPath(this.Root, this.Path.Concat(new[] { new CollectionItem(collectionType) }).ToArray());
+            return new MemberPath(this.Root, this.Path.Append(new CollectionItem(collectionType)));
         }
 
         internal MemberPath WithProperty(PropertyInfo propertyInfo)
         {
-            if (propertyInfo == null)
-            {
-                return this;
-            }
-
-            return new MemberPath(this.Root, this.Path.Concat(new[] { new PropertyItem(propertyInfo) }).ToArray());
+            Debug.Assert(propertyInfo != null, nameof(propertyInfo));
+            //Debug.Assert(this.LastNodeType.GetProperties().Contains(propertyInfo) != false, "Must contain property");
+            return new MemberPath(this.Root, this.Path.Append(new PropertyItem(propertyInfo)));
         }
 
         internal MemberPath WithField(FieldInfo fieldInfo)
         {
-            if (fieldInfo == null)
-            {
-                return this;
-            }
-
-            return new MemberPath(this.Root, this.Path.Concat(new[] { new FieldItem(fieldInfo) }).ToArray());
+            Debug.Assert(fieldInfo != null, nameof(fieldInfo));
+            //Debug.Assert(this.LastNodeType.GetFields().Contains(fieldInfo) != false, "Must contain property");
+            return new MemberPath(this.Root, this.Path.Append(new FieldItem(fieldInfo)));
         }
 
         internal MemberPath WithIndex(int? index)
         {
-            return new MemberPath(this.Root, this.Path.Concat(new[] { new IndexItem(index) }).ToArray());
+            return new MemberPath(this.Root, this.Path.Append(new IndexItem(index)));
         }
 
-        internal bool Contains(MemberInfo memberInfo)
+        public bool HasLoop()
         {
-            if (memberInfo == null)
+            var lastOrDefault = this.Path.OfType<IMemberItem>()
+                                    .LastOrDefault();
+            if (lastOrDefault == null)
             {
                 return false;
             }
 
-            return this.Path.OfType<IMemberItem>()
-                       .Any(x => x.Member == memberInfo);
+            foreach (var item in this.Path.OfType<IMemberItem>().SkipLast())
+            {
+                if (item.Member == lastOrDefault.Member)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

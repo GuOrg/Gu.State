@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections;
+    using System.Linq;
     using System.Reflection;
     using System.Text;
 
@@ -28,6 +29,11 @@
             where TSetting : class, IMemberSettings
         {
             if (errors == null)
+            {
+                return;
+            }
+
+            if (errors.Errors.Count == 1 && ReferenceEquals(errors.Errors.Single(), RequiresReferenceHandling.Other))
             {
                 return;
             }
@@ -67,10 +73,8 @@
                 T settings)
                 where T : class, IMemberSettings
             {
-                var typeErrors = new TypeErrors(sourceAndTargetValue.Source?.GetType())
-                                     {
-                                         new ReadonlyMemberDiffersError(sourceAndTargetValue, member)
-                                     };
+                var error = new ReadonlyMemberDiffersError(sourceAndTargetValue, member);
+                var typeErrors = new TypeErrors(sourceAndTargetValue.Source?.GetType(), error);
 
                 var message = typeErrors.GetErrorText(settings);
                 throw new InvalidOperationException(message);
@@ -80,11 +84,8 @@
             internal static void CannotCopyFixesSizeCollections<TSettings>(IEnumerable source, IEnumerable target, TSettings settings)
                 where TSettings : class, IMemberSettings
             {
-                var typeErrors = new TypeErrors(null)
-                                     {
-                                         new CannotCopyFixesSizeCollectionsError(source, target)
-                                     };
-
+                var error = new CannotCopyFixesSizeCollectionsError(source, target);
+                var typeErrors = new TypeErrors(target.GetType(), error);
                 var message = typeErrors.GetErrorText(settings);
                 throw new InvalidOperationException(message);
             }
@@ -92,10 +93,9 @@
             internal static InvalidOperationException CreateCannotCreateInstanceException<TSettings>(object sourceValue, MemberInfo member, TSettings settings, Exception exception)
                                 where TSettings : class, IMemberSettings
             {
-                var typeErrors = new TypeErrors(null)
-                                     {
-                                         new CannotCreateInstanceError(sourceValue, member)
-                                     };
+                var cannotCopyError = new CannotCreateInstanceError(sourceValue);
+                var memberErrors = new MemberErrors(member);
+                var typeErrors = new TypeErrors(sourceValue.GetType(), new Error[] { memberErrors, cannotCopyError });
                 var message = typeErrors.GetErrorText(settings);
                 return new InvalidOperationException(message, exception);
             }

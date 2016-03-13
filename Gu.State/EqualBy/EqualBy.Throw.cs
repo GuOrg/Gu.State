@@ -1,6 +1,7 @@
 ﻿namespace Gu.State
 {
     using System;
+    using System.Linq;
     using System.Text;
 
     public static partial class EqualBy
@@ -24,11 +25,42 @@
             return errorBuilder;
         }
 
+        private static StringBuilder AppendSuggestReferenceHandling(
+            this StringBuilder errorBuilder,
+            TypeErrors errors,
+            IMemberSettings settings)
+        {
+            var structuralWithReferenceLoops = $"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.StructuralWithReferenceLoops)} same as Structural but handles reference loops.";
+            var referecnes = $"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.References)} means that reference equality is used.";
+            if (settings.ReferenceHandling == ReferenceHandling.Throw)
+            {
+                if (errors.AllErrors.OfType<RequiresReferenceHandling>().Any())
+                {
+                    return errorBuilder.AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Structural)} means that a deep equals is performed.")
+                                       .AppendLine(structuralWithReferenceLoops)
+                                       .AppendLine(referecnes);
+                }
+            }
+
+            if (errors.AllErrors.OfType<ReferenceLoop>().Any())
+            {
+                return errorBuilder.AppendLine(structuralWithReferenceLoops)
+                                   .AppendLine(referecnes);
+            }
+
+            return errorBuilder;
+        }
+
         // ReSharper disable once UnusedParameter.Local
         private static void ThrowIfHasErrors<TSetting>(this TypeErrors errors, TSetting settings)
             where TSetting : class, IMemberSettings
         {
             if (errors == null)
+            {
+                return;
+            }
+
+            if (errors.Errors.Count == 1 && ReferenceEquals(errors.Errors.Single(), RequiresReferenceHandling.Other))
             {
                 return;
             }
@@ -39,9 +71,7 @@
                         .AppendSolveTheProblemBy()
                         .AppendSuggestEquatable(errors)
                         .AppendLine($"* Use {typeof(TSetting).Name} and specify how comparing is performed:")
-                        .AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Structural)} means that a deep equals is performed.")
-                        .AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.StructuralWithReferenceLoops)} same as Structural but handles reference loops.")
-                        .AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.References)} means that reference equality is used.")
+                        .AppendSuggestReferenceHandling(errors, settings)
                         .AppendSuggestExclude(errors);
 
             var message = errorBuilder.ToString();

@@ -104,7 +104,7 @@
                   .ThrowIfHasErrors(settings);
         }
 
-        private static TypeErrors CheckIsCopyableEnumerable<TSetting>(this TypeErrors typeErrors, Type type, TSetting settings)
+        private static ErrorBuilder.TypeErrorsBuilder CheckIsCopyableEnumerable<TSetting>(this ErrorBuilder.TypeErrorsBuilder typeErrors, Type type, TSetting settings)
             where TSetting : IMemberSettings
         {
             if (!typeof(IEnumerable).IsAssignableFrom(type))
@@ -122,7 +122,7 @@
                     if (!IsCopyableCollectionType(type))
                     {
                         return typeErrors.CreateIfNull(type)
-                            .Add(new NotCopyableCollection(type));
+                                         .Add(new NotCopyableCollection(type));
                     }
 
                     break;
@@ -158,7 +158,8 @@
             internal static TypeErrors GetPropertiesErrors(Type type, PropertiesSettings settings, MemberPath path = null)
             {
                 return settings.CopyErrors.GetOrAdd(type, t => VerifyCore(settings, t)
-                                                                   .VerifyRecursive(t, settings, path, GetRecursivePropertiesErrors));
+                                                                   .VerifyRecursive(t, settings, path, GetRecursivePropertiesErrors)
+                                                                   .Finnish());
             }
 
             internal static void CanCopyFieldValues<T>(T x, T y, FieldsSettings settings)
@@ -171,18 +172,19 @@
             internal static TypeErrors GetFieldsErrors(Type type, FieldsSettings settings, MemberPath path = null)
             {
                 return settings.CopyErrors.GetOrAdd(type, t => VerifyCore(settings, t)
-                                                                   .VerifyRecursive(t, settings, path, GetRecursiveFieldsErrors));
+                                                                   .VerifyRecursive(t, settings, path, GetRecursiveFieldsErrors)
+                                                                   .Finnish());
             }
 
-            private static TypeErrors VerifyCore(IMemberSettings settings, Type type)
+            private static ErrorBuilder.TypeErrorsBuilder VerifyCore(IMemberSettings settings, Type type)
             {
                 return ErrorBuilder.Start()
-                                   .CheckReferenceHandling(type, settings)
+                                   .CheckReferenceHandling(type, settings, t => !IsCopyableType(t))
                                    .CheckIsCopyableEnumerable(type, settings)
                                    .CheckIndexers(type, settings);
             }
 
-            private static Error GetRecursivePropertiesErrors(PropertiesSettings settings, MemberPath path)
+            private static TypeErrors GetRecursivePropertiesErrors(PropertiesSettings settings, MemberPath path)
             {
                 var type = path.LastNodeType;
                 if (IsCopyableType(type))
@@ -193,17 +195,12 @@
                 if (settings.ReferenceHandling == ReferenceHandling.References)
                 {
                     return null;
-                }
-
-                if (settings.ReferenceHandling == ReferenceHandling.Throw)
-                {
-                    return new RequiresReferenceHandling(type);
                 }
 
                 return GetPropertiesErrors(type, settings, path);
             }
 
-            private static Error GetRecursiveFieldsErrors(FieldsSettings settings, MemberPath path)
+            private static TypeErrors GetRecursiveFieldsErrors(FieldsSettings settings, MemberPath path)
             {
                 var type = path.LastNodeType;
                 if (IsCopyableType(type))
@@ -214,11 +211,6 @@
                 if (settings.ReferenceHandling == ReferenceHandling.References)
                 {
                     return null;
-                }
-
-                if (settings.ReferenceHandling == ReferenceHandling.Throw)
-                {
-                    return new RequiresReferenceHandling(type);
                 }
 
                 return GetFieldsErrors(type, settings, path);
