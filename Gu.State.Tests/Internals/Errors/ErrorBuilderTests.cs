@@ -32,5 +32,68 @@
             Assert.AreEqual(type, errors.Type);
             CollectionAssert.AreEqual(new[] { TypeMustNotifyError.GetOrCreate(type) }, errors.Errors);
         }
+
+        [Test]
+        public void MergeSame()
+        {
+            var errors = new TypeErrors(typeof(ErrorTypes.With<int>));
+            var merged = ErrorBuilder.Merge(errors, errors);
+            Assert.AreSame(merged, errors);
+        }
+
+        [Test]
+        public void RefLoopAndMustNotify()
+        {
+            var rootType = typeof(ErrorTypes.With<ErrorTypes.Parent>);
+            var valueProperty = rootType.GetProperty(nameof(ErrorTypes.With<ErrorTypes.Parent>.Value));
+            var childProperty = typeof(ErrorTypes.Parent).GetProperty(nameof(ErrorTypes.Parent.Child));
+            var parentProperty = typeof(ErrorTypes.Child).GetProperty(nameof(ErrorTypes.Child.Parent));
+            var path = new MemberPath(rootType)
+                            .WithProperty(valueProperty)
+                            .WithProperty(childProperty)
+                            .WithProperty(parentProperty)
+                            .WithProperty(childProperty);
+            var referenceLoop = new ReferenceLoop(path);
+            var refLoopErrors = ErrorBuilder.Start()
+                                     .CreateIfNull(rootType)
+                                     .Add(referenceLoop)
+                                     .Finnish();
+            var notifyErrors = ErrorBuilder.Start()
+                                           .CreateIfNull(rootType)
+                                           .Add(TypeMustNotifyError.GetOrCreate(rootType))
+                                           .Finnish();
+            var merged = ErrorBuilder.Merge(refLoopErrors, notifyErrors);
+            Assert.Fail();
+        }
+
+        [Test]
+        public void RefLoopAndMemberErrors()
+        {
+            var rootType = typeof(ErrorTypes.With<ErrorTypes.Parent>);
+            var valueProperty = rootType.GetProperty(nameof(ErrorTypes.With<ErrorTypes.Parent>.Value));
+            var parentType = typeof(ErrorTypes.Parent);
+            var childProperty = parentType.GetProperty(nameof(ErrorTypes.Parent.Child));
+            var parentProperty = typeof(ErrorTypes.Child).GetProperty(nameof(ErrorTypes.Child.Parent));
+            var path = new MemberPath(rootType)
+                            .WithProperty(valueProperty);
+
+            var loopPath = path.WithProperty(childProperty)
+                               .WithProperty(parentProperty)
+                               .WithProperty(childProperty);
+            var referenceLoop = new ReferenceLoop(loopPath);
+            var refLoopErrors = ErrorBuilder.Start()
+                                     .CreateIfNull(rootType)
+                                     .Add(referenceLoop)
+                                     .Finnish();
+            var typeMustNotifyError = TypeMustNotifyError.GetOrCreate(parentType);
+            var typeErrors = new TypeErrors( parentType, typeMustNotifyError);
+            var memberErrors = new MemberErrors(path, typeErrors);
+            var notifyErrors = ErrorBuilder.Start()
+                                           .CreateIfNull(rootType)
+                                           .Add(memberErrors)
+                                           .Finnish();
+            var merged = ErrorBuilder.Merge(refLoopErrors, notifyErrors);
+            Assert.Fail();
+        }
     }
 }
