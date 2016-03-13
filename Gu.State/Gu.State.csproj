@@ -44,36 +44,36 @@
     <Compile Include="Internals\Collections\IRefCounted.cs" />
     <Compile Include="Internals\Collections\RefCountCollection.cs" />
     <Compile Include="Internals\Collections\ReferenceComparer.cs" />
+    <Compile Include="Internals\EnumerableExt.cs" />
+    <Compile Include="Internals\Errors\ErrorBuilder+TypeErrorsBuilder.cs" />
+    <Compile Include="Internals\Errors\Errors\Contracts\IExcludableMember.cs" />
+    <Compile Include="Internals\Errors\Errors\Contracts\INotsupportedMember.cs" />
+    <Compile Include="Internals\Errors\Errors\TypeErrors.cs" />
+    <Compile Include="Internals\Errors\WithErrorsExt.cs" />
     <Compile Include="Track\Changes\ChangeTracker.cs" />
     <Compile Include="Track\Changes\ChangeTracker+ItemsChangeTrackers.cs" />
     <Compile Include="Track\Changes\ChangeTracker+PropertiesChangeTrackers.cs" />
     <Compile Include="Contracts\ISpecialCopyProperty.cs" />
     <Compile Include="Track\Changes\Internals\PropertyChangeTracker.cs" />
     <Compile Include="EqualBy\EqualBy.Verify.cs" />
-    <Compile Include="Internals\ExceptionHelpers\Errors\CannotCopyFixesSizeCollectionsError.cs" />
-    <Compile Include="Internals\ExceptionHelpers\Errors\CannotCreateInstanceError.cs" />
-    <Compile Include="Internals\ExceptionHelpers\Errors\CollectionError.cs" />
-    <Compile Include="Internals\ExceptionHelpers\Errors\CollectionMustNotifyError.cs" />
-    <Compile Include="Internals\ExceptionHelpers\Errors\Contracts\IExcludableMember.cs" />
-    <Compile Include="Internals\ExceptionHelpers\Errors\Contracts\IFixWithImmutable.cs" />
-    <Compile Include="Internals\ExceptionHelpers\Errors\Contracts\IFixWithNotify.cs" />
-    <Compile Include="Internals\ExceptionHelpers\Errors\Contracts\INotSupported.cs" />
-    <Compile Include="Internals\ExceptionHelpers\Errors\BaseClasses\Error.cs" />
-    <Compile Include="Internals\ExceptionHelpers\Errors\Contracts\IErrors.cs" />
-    <Compile Include="Internals\ExceptionHelpers\Errors\Contracts\IExcludableType.cs" />
-    <Compile Include="Internals\ExceptionHelpers\Errors\Contracts\IFixWithEquatable.cs" />
-    <Compile Include="Internals\ExceptionHelpers\Errors\BaseClasses\MemberError.cs" />
-    <Compile Include="Internals\ExceptionHelpers\Errors\MemberTypeErrors.cs" />
-    <Compile Include="Internals\ExceptionHelpers\Errors\NotCopyableCollection.cs" />
-    <Compile Include="Internals\ExceptionHelpers\Errors\ReadonlyMemberDiffersError.cs" />
-    <Compile Include="Internals\ExceptionHelpers\Errors\ReferenceLoop.cs" />
-    <Compile Include="Internals\ExceptionHelpers\Errors\RequiresReferenceHandling.cs" />
-    <Compile Include="Internals\ExceptionHelpers\Errors\BaseClasses\TypeError.cs" />
-    <Compile Include="Internals\ExceptionHelpers\Errors\TypeErrors.cs" />
-    <Compile Include="Internals\ExceptionHelpers\Errors\TypeMustNotifyError.cs" />
-    <Compile Include="Internals\ExceptionHelpers\Errors\UnsupportedIndexer.cs" />
-    <Compile Include="Internals\ExceptionHelpers\StringBuilderExt.Errors.cs" />
-    <Compile Include="Internals\ExceptionHelpers\ErrorBuilder.cs" />
+    <Compile Include="Internals\Errors\Errors\CannotCopyFixesSizeCollectionsError.cs" />
+    <Compile Include="Internals\Errors\Errors\CannotCreateInstanceError.cs" />
+    <Compile Include="Internals\Errors\Errors\CollectionErrors.cs" />
+    <Compile Include="Internals\Errors\Errors\CollectionMustNotifyError.cs" />
+    <Compile Include="Internals\Errors\Errors\Contracts\IFixWithImmutable.cs" />
+    <Compile Include="Internals\Errors\Errors\Contracts\IFixWithNotify.cs" />
+    <Compile Include="Internals\Errors\Errors\Contracts\INotSupported.cs" />
+    <Compile Include="Internals\Errors\Errors\BaseClasses\Error.cs" />
+    <Compile Include="Internals\Errors\Errors\Contracts\IWithErrors.cs" />
+    <Compile Include="Internals\Errors\Errors\MemberErrors.cs" />
+    <Compile Include="Internals\Errors\Errors\NotCopyableCollection.cs" />
+    <Compile Include="Internals\Errors\Errors\ReadonlyMemberDiffersError.cs" />
+    <Compile Include="Internals\Errors\Errors\ReferenceLoop.cs" />
+    <Compile Include="Internals\Errors\Errors\RequiresReferenceHandling.cs" />
+    <Compile Include="Internals\Errors\Errors\TypeMustNotifyError.cs" />
+    <Compile Include="Internals\Errors\Errors\UnsupportedIndexer.cs" />
+    <Compile Include="Internals\Errors\StringBuilderExt.Errors.cs" />
+    <Compile Include="Internals\Errors\ErrorBuilder.cs" />
     <Compile Include="Internals\MemberPath\CollectionItem.cs" />
     <Compile Include="Internals\MemberPath\FieldItem.cs" />
     <Compile Include="Internals\MemberPath\IMemberItem.cs" />
@@ -106,7 +106,7 @@
     <Compile Include="EqualBy\EqualBy.Collection.cs" />
     <Compile Include="EqualBy\EqualBy.Throw.cs" />
     <Compile Include="Contracts\IIgnoringProperties.cs" />
-    <Compile Include="Internals\ExceptionHelpers\Throw.cs" />
+    <Compile Include="Internals\Errors\Throw.cs" />
     <Compile Include="Internals\BindingFlagsAndReferenceHandling.cs" />
     <Compile Include="Internals\Collections\ConcurrentSet.cs" />
     <Compile Include="Internals\Collections\IgnoredTypes.cs" />
@@ -123,7 +123,7 @@
     <Compile Include="Internals\Reflection\TypeExt.IsEquatable.cs" />
     <Compile Include="Internals\Reflection\TypeExt.PrettyName.cs" />
     <Compile Include="Internals\SourceAndTargetValue.cs" />
-    <Compile Include="Internals\ExceptionHelpers\StringBuilderExt.cs" />
+    <Compile Include="Internals\Errors\StringBuilderExt.cs" />
     <Compile Include="Internals\Reflection\TypeExt.IsImmutable.cs" />
     <Compile Include="Internals\MemberPath\MemberPath.cs" />
     <Compile Include="Synchronize\IPropertySynchronizer.cs" />
@@ -142,9 +142,9 @@
     <Compile Include="Track\Changes\Contracts\IChangeTracker.cs" />
     <Compile Include="Track\Changes\Contracts\IValueTracker.cs" />
     <Compile Include="Track\Changes\Internals\ItemChangeTracker.cs" />
-    <Compile Include="Internals\ExceptionHelpers\Ensure.cs" />
-    <Compile Include="Internals\ExceptionHelpers\Ensure.string.cs" />
-    <Compile Include="Internals\ExceptionHelpers\Ensure.type.cs" />
+    <Compile Include="Internals\Ensure\Ensure.cs" />
+    <Compile Include="Internals\Ensure\Ensure.string.cs" />
+    <Compile Include="Internals\Ensure\Ensure.type.cs" />
     <Compile Include="Internals\Reflection\PropertyInfoExt.cs" />
     <Compile Include="Internals\Reflection\TypeExt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -168,6 +168,7 @@
   -->
   <ItemGroup>
     <Folder Include="EqualBy\Diff\" />
+    <Folder Include="Settings\Errors\" />
   </ItemGroup>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v2.0' Or $(TargetFrameworkVersion) == 'v3.0' Or $(TargetFrameworkVersion) == 'v3.5' Or $(TargetFrameworkVersion) == 'v4.0' Or $(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1')">

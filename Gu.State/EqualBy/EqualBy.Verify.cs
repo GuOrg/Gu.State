@@ -70,7 +70,8 @@
                 return settings.EqualByErrors.GetOrAdd(
                     type,
                     t => VerifyCore(settings, t)
-                             .VerifyRecursive(t, settings, path, GetRecursivePropertiesErrors));
+                             .VerifyRecursive(t, settings, path, GetRecursivePropertiesErrors)
+                             .Finnish());
             }
 
             internal static void CanEqualByFieldValues<T>(T x, T y, FieldsSettings settings)
@@ -85,17 +86,18 @@
                 return settings.EqualByErrors.GetOrAdd(
                     type,
                     t => VerifyCore(settings, t)
-                             .VerifyRecursive(t, settings, path, GetRecursiveFieldsErrors));
+                             .VerifyRecursive(t, settings, path, GetRecursiveFieldsErrors)
+                             .Finnish());
             }
 
-            private static TypeErrors VerifyCore(IMemberSettings settings, Type type)
+            private static ErrorBuilder.TypeErrorsBuilder VerifyCore(IMemberSettings settings, Type type)
             {
                 return ErrorBuilder.Start()
-                                   .CheckReferenceHandling(type, settings)
+                                   .CheckReferenceHandling(type, settings, t => !t.IsEquatable())
                                    .CheckIndexers(type, settings);
             }
 
-            private static Error GetRecursivePropertiesErrors(PropertiesSettings settings, MemberPath path)
+            private static TypeErrors GetRecursivePropertiesErrors(PropertiesSettings settings, MemberPath path)
             {
                 var type = path.LastNodeType;
                 if (type.IsEquatable())
@@ -106,17 +108,12 @@
                 if (settings.ReferenceHandling == ReferenceHandling.References)
                 {
                     return null;
-                }
-
-                if (settings.ReferenceHandling == ReferenceHandling.Throw)
-                {
-                    return new RequiresReferenceHandling(type);
                 }
 
                 return GetPropertiesErrors(type, settings, path);
             }
 
-            private static Error GetRecursiveFieldsErrors(FieldsSettings settings, MemberPath path)
+            private static TypeErrors GetRecursiveFieldsErrors(FieldsSettings settings, MemberPath path)
             {
                 var type = path.LastNodeType;
                 if (type.IsEquatable())
@@ -127,11 +124,6 @@
                 if (settings.ReferenceHandling == ReferenceHandling.References)
                 {
                     return null;
-                }
-
-                if (settings.ReferenceHandling == ReferenceHandling.Throw)
-                {
-                    return new RequiresReferenceHandling(type);
                 }
 
                 return GetFieldsErrors(type, settings, path);

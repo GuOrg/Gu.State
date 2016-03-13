@@ -28,7 +28,9 @@
 
         public IEnumerable<PropertyInfo> IgnoredProperties => this.IgnoredMembers.Keys;
 
-        internal ConcurrentDictionary<Type, TypeErrors> TrackableErrors => new ConcurrentDictionary<Type, TypeErrors>();
+        internal ConcurrentDictionary<Type, TypeErrors> TrackableErrors { get; } = new ConcurrentDictionary<Type, TypeErrors>();
+
+        internal RefCountCollection<ChangeTracker> Trackers { get; } = new RefCountCollection<ChangeTracker>();
 
         public static PropertiesSettingsBuilder Build()
         {

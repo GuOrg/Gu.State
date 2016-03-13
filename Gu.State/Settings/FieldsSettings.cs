@@ -7,8 +7,7 @@
 
     public class FieldsSettings : MemberSettings<FieldInfo>, IIgnoringFields
     {
-        private static readonly ConcurrentDictionary<BindingFlagsAndReferenceHandling, FieldsSettings> Cache =
-            new ConcurrentDictionary<BindingFlagsAndReferenceHandling, FieldsSettings>();
+        private static readonly ConcurrentDictionary<BindingFlagsAndReferenceHandling, FieldsSettings> Cache = new ConcurrentDictionary<BindingFlagsAndReferenceHandling, FieldsSettings>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FieldsSettings"/> class.

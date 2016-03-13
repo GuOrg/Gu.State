@@ -289,6 +289,11 @@
             public ComplexType ComplexType { get; set; }
         }
 
+        public class WithProperty<T>
+        {
+            public T Value { get; set; }
+        }
+
         public class WithListProperty<T>
         {
             public List<T> Items { get; set; } = new List<T>();

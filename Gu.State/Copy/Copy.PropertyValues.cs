@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Reflection;
 
     public static partial class Copy
@@ -38,6 +39,9 @@
         public static void PropertyValues<T>(T source, T target, PropertiesSettings settings)
             where T : class
         {
+            Ensure.NotNull(source, nameof(source));
+            Ensure.NotNull(target, nameof(target));
+            Ensure.SameType(source, target, nameof(source), nameof(target));
             Verify.CanCopyRoot(typeof(T));
             var type = source?.GetType() ?? target?.GetType() ?? typeof(T);
             VerifyCanCopyPropertyValues(type, settings);
@@ -55,9 +59,9 @@
         private static void CopyPropertiesValues<T>(T source, T target, PropertiesSettings settings, ReferencePairCollection referencePairs)
             where T : class
         {
-            Ensure.NotNull(source, nameof(source));
-            Ensure.NotNull(target, nameof(target));
-            Ensure.SameType(source, target);
+            Debug.Assert(source != null, nameof(source));
+            Debug.Assert(target != null, nameof(target));
+            Debug.Assert(source.GetType() == target.GetType(), "Must be same type");
             Verify.CanCopyPropertyValues(source, target, settings);
             if (referencePairs?.Contains(source, target) == true)
             {

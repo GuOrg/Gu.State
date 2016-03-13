@@ -113,9 +113,7 @@
                                  "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
                                  "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but tracks reference loops.\r\n" +
                                  "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
-                                 "  - ReferenceHandling.References means that references are copied.\r\n" +
-                                 "  - Exclude a combination of the following:\r\n" +
-                                 "    - The type int[].\r\n"
+                                 "  - ReferenceHandling.References means that references are copied.\r\n"
 
                                : "Copy.PropertyValues(x, y) failed.\r\n" +
                                  "The collections are fixed size type: int[]\r\n" +
@@ -128,9 +126,7 @@
                                  "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
                                  "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but tracks reference loops.\r\n" +
                                  "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
-                                 "  - ReferenceHandling.References means that references are copied.\r\n" +
-                                 "  - Exclude a combination of the following:\r\n" +
-                                 "    - The type int[].\r\n";
+                                 "  - ReferenceHandling.References means that references are copied.\r\n";
             var source = new[] { 1, 2, 3 };
             var target = new[] { 4 };
 
@@ -178,6 +174,7 @@
             var expected = this is FieldValues.Throws
                    ? "Copy.FieldValues(x, y) failed.\r\n" +
                      "Activator.CreateInstance failed for type WithoutDefaultCtor.\r\n" +
+                     "The field WithProperty<WithoutDefaultCtor>.<Value>k__BackingField of type WithoutDefaultCtor is not supported.\r\n" +
                      "Solve the problem by any of:\r\n" +
                      "* Add a parameterless constructor to WithoutDefaultCtor, can be private.\r\n" +
                      "* Use FieldsSettings and specify how copying is performed:\r\n" +
@@ -186,11 +183,11 @@
                      "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
                      "  - ReferenceHandling.References means that references are copied.\r\n" +
                      "  - Exclude a combination of the following:\r\n" +
-                     "    - The field WithProperty<WithoutDefaultCtor>.<Value>k__BackingField.\r\n" +
-                     "    - The type WithoutDefaultCtor.\r\n"
+                     "    - The field WithProperty<WithoutDefaultCtor>.<Value>k__BackingField.\r\n"
 
                    : "Copy.PropertyValues(x, y) failed.\r\n" +
                      "Activator.CreateInstance failed for type WithoutDefaultCtor.\r\n" +
+                     "The property WithProperty<WithoutDefaultCtor>.Value of type WithoutDefaultCtor is not supported.\r\n" +
                      "Solve the problem by any of:\r\n" +
                      "* Add a parameterless constructor to WithoutDefaultCtor, can be private.\r\n" +
                      "* Use PropertiesSettings and specify how copying is performed:\r\n" +
@@ -199,8 +196,7 @@
                      "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
                      "  - ReferenceHandling.References means that references are copied.\r\n" +
                      "  - Exclude a combination of the following:\r\n" +
-                     "    - The property WithProperty<WithoutDefaultCtor>.Value.\r\n" +
-                     "    - The type WithoutDefaultCtor.\r\n";
+                     "    - The property WithProperty<WithoutDefaultCtor>.Value.\r\n";
 
             var x = new CopyTypes.WithProperty<CopyTypes.WithoutDefaultCtor>(new CopyTypes.WithoutDefaultCtor(1));
             var y = new CopyTypes.WithProperty<CopyTypes.WithoutDefaultCtor>(null);

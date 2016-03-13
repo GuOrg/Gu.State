@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel;
+    using System.Linq;
     using System.Reflection;
     using System.Text;
 
@@ -39,7 +40,7 @@
         /// </summary>
         /// <typeparam name="T">The type to track</typeparam>
         /// <param name="settings">Contains configuration for how tracking is performed</param>
-        public static void VerifyCanTrackIsDirty<T>(PropertiesSettings settings) 
+        public static void VerifyCanTrackIsDirty<T>(PropertiesSettings settings)
             where T : class, INotifyPropertyChanged
         {
             VerifyCanTrackIsDirty(typeof(T), settings);
@@ -134,17 +135,19 @@
                 var errors = GetErrors(propertyValueType, tracker.Settings, path);
                 if (errors != null)
                 {
-                    Throw.IfHasErrors(errors, tracker.Settings);
+                    var typeErrors = new TypeErrors(propertyInfo.DeclaringType, errors);
+                    Throw.IfHasErrors(typeErrors, tracker.Settings);
                 }
             }
 
-            internal static void IsTrackableItemValue(Type itemType, int? index, ChangeTracker tracker)
+            internal static void IsTrackableItemValue(Type collectionType, Type itemType, int? index, ChangeTracker tracker)
             {
                 var path = tracker.Path.WithIndex(index);
                 var errors = GetErrors(itemType, tracker.Settings, path);
                 if (errors != null)
                 {
-                    Throw.IfHasErrors(errors, tracker.Settings);
+                    var typeErrors = new TypeErrors(collectionType, errors);
+                    Throw.IfHasErrors(typeErrors, tracker.Settings);
                 }
             }
 
@@ -153,13 +156,14 @@
                 return settings.TrackableErrors.GetOrAdd(
                     type,
                     t => ErrorBuilder.Start()
-                                     .CheckReferenceHandling(type, settings)
+                                     .CheckReferenceHandling(type, settings, x => !x.IsImmutable())
                                      .CheckIndexers(type, settings)
                                      .CheckNotifies(type, settings)
-                                     .VerifyRecursive(t, settings, path, GetRecursiveErrors));
+                                     .VerifyRecursive(t, settings, path, GetRecursiveErrors)
+                                     .Finnish());
             }
 
-            private static Error GetRecursiveErrors(PropertiesSettings settings, MemberPath path)
+            private static TypeErrors GetRecursiveErrors(PropertiesSettings settings, MemberPath path)
             {
                 var type = path.LastNodeType;
                 if (type.IsImmutable())
@@ -183,6 +187,11 @@
                 where TSetting : class, IMemberSettings
             {
                 if (errors == null)
+                {
+                    return;
+                }
+
+                if (errors.Errors.Count == 1 && ReferenceEquals(errors.Errors.Single(), RequiresReferenceHandling.Other))
                 {
                     return;
                 }

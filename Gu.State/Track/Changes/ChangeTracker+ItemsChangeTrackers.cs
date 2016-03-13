@@ -37,7 +37,7 @@
 
                 var sourceType = source.GetType();
 
-                Track.Verify.IsTrackableItemValue(sourceType, null, parent);
+                Track.Verify.IsTrackableType(sourceType, parent.Settings);
 
                 var incc = source as INotifyCollectionChanged;
                 var itemType = source.GetType().GetItemType();
@@ -67,13 +67,7 @@
                 }
 
                 var itemType = sv.GetType();
-
-                //if (parent.Settings.IsIgnoringDeclaringType(itemType))
-                //{
-                //    return null;
-                //}
-
-                Track.Verify.IsTrackableItemValue(itemType, index, parent);
+                Track.Verify.IsTrackableItemValue(source.GetType(), itemType, index, parent);
                 var inpc = sv as INotifyPropertyChanged;
                 return new ItemChangeTracker(inpc, index, parent);
             }

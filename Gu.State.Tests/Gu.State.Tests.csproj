@@ -52,6 +52,14 @@
     <Compile Include="Internals\Collections\DisposingListTests.cs" />
     <Compile Include="Internals\Collections\DisposingMapTests.cs" />
     <Compile Include="Internals\Collections\RefCountCollectionTests.cs" />
+    <Compile Include="Internals\Errors\ErrorBuilderTests.WithReferenceLoop.cs" />
+    <Compile Include="Internals\Errors\ErrorBuilderTests.CheckReferenceHandling.cs" />
+    <Compile Include="Internals\Errors\ErrorBuilderTests.CheckNotifies.cs" />
+    <Compile Include="Internals\Errors\ErrorBuilderTests.CheckIndexers.cs" />
+    <Compile Include="Internals\Errors\ErrorBuilderTests.cs" />
+    <Compile Include="Internals\Errors\ErrorTypes.cs" />
+    <Compile Include="Internals\MemberPath\MemberPathTests.cs" />
+    <Compile Include="Internals\MemberPath\MemberPathTypes.cs" />
     <Compile Include="Track\Changes\ChangeTrackerStubs\IllegalSubType.cs" />
     <Compile Include="Track\Changes\ChangeTrackerStubs\Immutable.cs" />
     <Compile Include="Track\Changes\ChangeTrackerStubs\With.cs" />

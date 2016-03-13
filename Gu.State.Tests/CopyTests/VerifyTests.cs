@@ -166,10 +166,10 @@
         {
             var expected = this.GetType() == typeof(FieldValues.Verify)
                    ? "Copy.FieldValues(x, y) failed.\r\n" +
-                     "The field Parent.child of type Child is not supported.\r\n" +
-                     "The field Child.<Parent>k__BackingField of type Parent is not supported.\r\n" +
                      "The field Parent.child of type Child is in a reference loop.\r\n" +
                      "  - The loop is Parent.child.<Parent>k__BackingField.child...\r\n" +
+                     "The field Parent.child of type Child is not supported.\r\n" +
+                     "The field Child.<Parent>k__BackingField of type Parent is not supported.\r\n" +
                      "Solve the problem by any of:\r\n" +
                      "* Make Child immutable or use an immutable type.\r\n" +
                      "  - For immutable types the following must hold:\r\n" +
@@ -189,10 +189,10 @@
                      "    - The type Child.\r\n"
 
                    : "Copy.PropertyValues(x, y) failed.\r\n" +
-                     "The property Parent.Child of type Child is not supported.\r\n" +
-                     "The property Child.Parent of type Parent is not supported.\r\n" +
                      "The property Parent.Child of type Child is in a reference loop.\r\n" +
                      "  - The loop is Parent.Child.Parent.Child...\r\n" +
+                     "The property Parent.Child of type Child is not supported.\r\n" +
+                     "The property Child.Parent of type Parent is not supported.\r\n" +
                      "Solve the problem by any of:\r\n" +
                      "* Make Child immutable or use an immutable type.\r\n" +
                      "  - For immutable types the following must hold:\r\n" +

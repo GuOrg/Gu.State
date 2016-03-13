@@ -17,10 +17,11 @@ namespace Gu.State.Tests
             {
                 var expected = // "Track changes failed for item: ObservableCollection<ComplexType>[0].Illegal.\r\n" +
                                "Track changes failed.\r\n" +
-                               "The property IllegalSubType.Illegal of type IllegalType is not supported.\r\n" +
                                "The type IllegalType does not notify changes.\r\n" +
+                               "The property IllegalSubType.Illegal of type IllegalType is not supported.\r\n" +
                                "Solve the problem by any of:\r\n" +
                                "* Implement INotifyPropertyChanged for IllegalType or use a type that does.\r\n" +
+                               "* Make IllegalSubType immutable or use an immutable type.\r\n" +
                                "* Make IllegalType immutable or use an immutable type.\r\n" +
                                "  - For immutable types the following must hold:\r\n" +
                                "    - Must be a sealed class or a struct.\r\n" +
@@ -34,6 +35,7 @@ namespace Gu.State.Tests
                                "  - ReferenceHandling.References means that only the root level changes are tracked.\r\n" +
                                "  - Exclude a combination of the following:\r\n" +
                                "    - The property IllegalSubType.Illegal.\r\n" +
+                               "    - The type IllegalSubType.\r\n" +
                                "    - The type IllegalType.\r\n";
 
                 var root = new ObservableCollection<ComplexType>();
@@ -49,10 +51,11 @@ namespace Gu.State.Tests
             {
                 var expected = // "Track changes failed for item: ObservableCollection<ComplexType>[0].Illegal.\r\n" +
                                "Track changes failed.\r\n" +
-                               "The property IllegalSubType.Illegal of type IllegalType is not supported.\r\n" +
                                "The type IllegalType does not notify changes.\r\n" +
+                               "The property IllegalSubType.Illegal of type IllegalType is not supported.\r\n" +
                                "Solve the problem by any of:\r\n" +
                                "* Implement INotifyPropertyChanged for IllegalType or use a type that does.\r\n" +
+                               "* Make IllegalSubType immutable or use an immutable type.\r\n" +
                                "* Make IllegalType immutable or use an immutable type.\r\n" +
                                "  - For immutable types the following must hold:\r\n" +
                                "    - Must be a sealed class or a struct.\r\n" +
@@ -66,6 +69,7 @@ namespace Gu.State.Tests
                                "  - ReferenceHandling.References means that only the root level changes are tracked.\r\n" +
                                "  - Exclude a combination of the following:\r\n" +
                                "    - The property IllegalSubType.Illegal.\r\n" +
+                               "    - The type IllegalSubType.\r\n" +
                                "    - The type IllegalType.\r\n";
 
                 var root = new With<ComplexType>();
@@ -81,8 +85,8 @@ namespace Gu.State.Tests
             {
                 var expected = // "Track changes failed for item: ObservableCollection<ComplexType>[0].Illegal.\r\n" +
                                "Track changes failed.\r\n" +
-                               "The property WithIllegal.Illegal of type IllegalType is not supported.\r\n" +
                                "The type IllegalType does not notify changes.\r\n" +
+                               "The property WithIllegal.Illegal of type IllegalType is not supported.\r\n" +
                                "Solve the problem by any of:\r\n" +
                                "* Implement INotifyPropertyChanged for IllegalType or use a type that does.\r\n" +
                                "* Make IllegalType immutable or use an immutable type.\r\n" +
@@ -122,8 +126,7 @@ namespace Gu.State.Tests
                                "* Use PropertiesSettings and specify how change tracking is performed:\r\n" +
                                "  - ReferenceHandling.Structural means that a the entire graph is tracked.\r\n" +
                                "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but handles reference loops.\r\n" +
-                               "  - ReferenceHandling.References means that only the root level changes are tracked.\r\n" +
-                               "  - Exclude a combination of the following:\r\n";
+                               "  - ReferenceHandling.References means that only the root level changes are tracked.\r\n";
 
                 var item = new IllegalEnumerable();
                 var exception = Assert.Throws<NotSupportedException>(() => Track.Changes(item));
@@ -141,8 +144,8 @@ namespace Gu.State.Tests
             {
                 var expected = // "Track changes failed for item: ObservableCollection<ComplexType>[0].Illegal.\r\n" +
                    "Track changes failed.\r\n" +
-                   "The property With<List<int>>.Value of type List<int> is not supported.\r\n" +
                    "The collection type List<int> does not notify changes.\r\n" +
+                   "The property With<List<int>>.Value of type List<int> is not supported.\r\n" +
                    "Solve the problem by any of:\r\n" +
                    "* Use a type that implements INotifyCollectionChanged instead of List<int>.\r\n" +
                    "* Use an immutable type instead of List<int>.\r\n" +
