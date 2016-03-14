@@ -7,7 +7,7 @@
     /// Tracks changes in a graph.
     /// Listens to nested Property and collection changes.
     /// </summary>
-    public partial class ChangeTrackerOld : IChangeTracker
+    public partial class ChangeTracker : IChangeTracker
     {
         private static readonly PropertyChangedEventArgs ChangesEventArgs = new PropertyChangedEventArgs(nameof(Changes));
         private readonly ItemsChangeTrackers itemsChangeTrackers;
@@ -16,12 +16,12 @@
         private int changes;
         private bool disposed;
 
-        public ChangeTrackerOld(INotifyPropertyChanged source, PropertiesSettings settings)
+        public ChangeTracker(INotifyPropertyChanged source, PropertiesSettings settings)
             : this(source, settings, new MemberPath(source.GetType()))
         {
         }
 
-        internal ChangeTrackerOld(INotifyPropertyChanged source, PropertiesSettings settings, MemberPath path)
+        internal ChangeTracker(INotifyPropertyChanged source, PropertiesSettings settings, MemberPath path)
         {
             this.Settings = settings;
             this.Path = path;

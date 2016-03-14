@@ -52,7 +52,7 @@ namespace Gu.State
         {
             Ensure.NotNull(root, nameof(root));
             Ensure.NotNull(settings, nameof(settings));
-            return new ChangeTrackerOld(root, settings);
+            return new ChangeTracker(root, settings);
         }
     }
 }

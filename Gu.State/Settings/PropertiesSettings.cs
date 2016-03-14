@@ -30,7 +30,7 @@
 
         internal ConcurrentDictionary<Type, TypeErrors> TrackableErrors { get; } = new ConcurrentDictionary<Type, TypeErrors>();
 
-        internal RefCountCollection<ChangeTrackerOld> Trackers { get; } = new RefCountCollection<ChangeTrackerOld>();
+        internal RefCountCollection<IChangeTrackerNode> Trackers { get; } = new RefCountCollection<IChangeTrackerNode>();
 
         public static PropertiesSettingsBuilder Build()
         {

@@ -111,7 +111,7 @@
         /// </summary>
         internal static class Verify
         {
-            internal static void IsTrackableType(Type type, ChangeTrackerOld tracker)
+            internal static void IsTrackableType(Type type, ChangeTracker tracker)
             {
                 var errors = GetErrors(type, tracker.Settings, tracker.Path);
                 if (errors != null)
@@ -129,7 +129,7 @@
                 }
             }
 
-            internal static void IsTrackablePropertyValue(Type propertyValueType, PropertyInfo propertyInfo, ChangeTrackerOld tracker)
+            internal static void IsTrackablePropertyValue(Type propertyValueType, PropertyInfo propertyInfo, ChangeTracker tracker)
             {
                 var path = tracker.Path.WithProperty(propertyInfo);
                 var errors = GetErrors(propertyValueType, tracker.Settings, path);
@@ -140,7 +140,7 @@
                 }
             }
 
-            internal static void IsTrackableItemValue(Type collectionType, Type itemType, int? index, ChangeTrackerOld tracker)
+            internal static void IsTrackableItemValue(Type collectionType, Type itemType, int? index, ChangeTracker tracker)
             {
                 var path = tracker.Path.WithIndex(index);
                 var errors = GetErrors(itemType, tracker.Settings, path);

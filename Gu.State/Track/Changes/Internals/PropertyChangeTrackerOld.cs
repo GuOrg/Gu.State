@@ -5,16 +5,16 @@ namespace Gu.State
     using System.Reflection;
 
     [DebuggerDisplay("PropertyTracker Property: {PropertyInfo.Name}")]
-    internal class PropertyChangeTrackerOld : ChangeTrackerOld
+    internal class PropertyChangeTrackerOld : ChangeTracker
     {
-        public PropertyChangeTrackerOld(INotifyPropertyChanged source, PropertyInfo propertyInfo, ChangeTrackerOld parent)
+        public PropertyChangeTrackerOld(INotifyPropertyChanged source, PropertyInfo propertyInfo, ChangeTracker parent)
             : base(source, parent.Settings, parent.Path.WithProperty(propertyInfo))
         {
             this.Parent = parent;
             this.PropertyInfo = propertyInfo;
         }
 
-        internal ChangeTrackerOld Parent { get; }
+        internal ChangeTracker Parent { get; }
 
         public PropertyInfo PropertyInfo { get; }
 

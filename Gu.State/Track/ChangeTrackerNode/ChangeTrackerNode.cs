@@ -3,16 +3,17 @@
     using System;
     using System.Collections.Specialized;
     using System.ComponentModel;
+    using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
 
-    internal sealed class ChangeTracker : IDisposable
+    internal sealed class ChangeTrackerNode : IChangeTrackerNode, IDisposable
     {
         private readonly object source;
         private readonly PropertiesSettings settings;
         private PropertyInfo[] resetProperties;
 
-        private ChangeTracker(object source, PropertiesSettings settings)
+        private ChangeTrackerNode(object source, PropertiesSettings settings)
         {
             this.source = source;
             this.settings = settings;
@@ -41,7 +42,7 @@
 
         public event EventHandler<EventArgs> Change;
 
-        public void Dispose()
+        void IDisposable.Dispose()
         {
             var inpc = this.source as INotifyPropertyChanged;
             if (inpc != null)
@@ -54,6 +55,13 @@
             {
                 incc.CollectionChanged -= this.OnTrackedCollectionChanged;
             }
+        }
+
+        internal static IRefCounted<IChangeTrackerNode> GetOrCreate<TOwner>(TOwner owner, object source, PropertiesSettings settings)
+        {
+            Debug.Assert(source != null, "Cannot track null");
+            Debug.Assert(source is INotifyPropertyChanged || source is INotifyCollectionChanged, "Must notify");
+            return settings.Trackers.GetOrAdd(owner, source, () => new ChangeTrackerNode(source, settings));
         }
 
         private void OnTrackedCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
