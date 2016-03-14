@@ -2,10 +2,8 @@ namespace Gu.State
 {
     using System;
     using System.Collections;
-    using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.ComponentModel;
-    using System.Linq;
     using System.Reflection;
 
     internal static partial class ErrorBuilder
@@ -44,6 +42,16 @@ namespace Gu.State
 
             if (first.Type == other.Type)
             {
+                if (first.Errors.Count == 0)
+                {
+                    return other;
+                }
+
+                if (other.Errors.Count == 0)
+                {
+                    return first;
+                }
+
                 var errors = new MergedErrors(first.Errors, other.Errors);
                 return new TypeErrors(first.Type, errors);
             }
