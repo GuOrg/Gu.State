@@ -51,11 +51,11 @@
     <Compile Include="Internals\Errors\Errors\TypeErrors.cs" />
     <Compile Include="Internals\Errors\MergedErrors.cs" />
     <Compile Include="Internals\Errors\WithErrorsExt.cs" />
-    <Compile Include="Track\Changes\ChangeTracker.cs" />
+    <Compile Include="Track\Changes\ChangeTrackerOld.cs" />
     <Compile Include="Track\Changes\ChangeTracker+ItemsChangeTrackers.cs" />
     <Compile Include="Track\Changes\ChangeTracker+PropertiesChangeTrackers.cs" />
     <Compile Include="Contracts\ISpecialCopyProperty.cs" />
-    <Compile Include="Track\Changes\Internals\PropertyChangeTracker.cs" />
+    <Compile Include="Track\Changes\Internals\PropertyChangeTrackerOld.cs" />
     <Compile Include="EqualBy\EqualBy.Verify.cs" />
     <Compile Include="Internals\Errors\Errors\CannotCopyFixesSizeCollectionsError.cs" />
     <Compile Include="Internals\Errors\Errors\CannotCreateInstanceError.cs" />
@@ -95,8 +95,14 @@
     <Compile Include="Copy\Copy.Shared.cs" />
     <Compile Include="Copy\Copy.Throw.cs" />
     <Compile Include="Copy\Copy.Verify.cs" />
+    <Compile Include="Track\ChangeTracker\EventArgs\AddEventArgs.cs" />
+    <Compile Include="Track\ChangeTracker\EventArgs\MoveEventArgs.cs" />
+    <Compile Include="Track\ChangeTracker\EventArgs\RemoveEventArgs.cs" />
+    <Compile Include="Track\ChangeTracker\EventArgs\ResetEventArgs.cs" />
+    <Compile Include="Track\ChangeTracker\EventArgs\UpdateEventArgs.cs" />
     <Compile Include="Track\Dirty\DirtyTracker{T}+ItemsDirtyTracker.cs" />
     <Compile Include="Track\Dirty\DirtyTracker{T}.PropertiesDirtyTracker.cs" />
+    <Compile Include="Track\ChangeTracker\ChangeTracker.cs" />
     <Compile Include="Track\Track.Verify.cs" />
     <Compile Include="Track\Dirty\Internals\AlwaysDirtyNode.cs" />
     <Compile Include="Track\Dirty\Internals\IDirtyTracker.cs" />
@@ -142,7 +148,7 @@
     <Compile Include="Track\Changes\Contracts\IPropertyTracker.cs" />
     <Compile Include="Track\Changes\Contracts\IChangeTracker.cs" />
     <Compile Include="Track\Changes\Contracts\IValueTracker.cs" />
-    <Compile Include="Track\Changes\Internals\ItemChangeTracker.cs" />
+    <Compile Include="Track\Changes\Internals\ItemChangeTrackerOld.cs" />
     <Compile Include="Internals\Ensure\Ensure.cs" />
     <Compile Include="Internals\Ensure\Ensure.string.cs" />
     <Compile Include="Internals\Ensure\Ensure.type.cs" />
