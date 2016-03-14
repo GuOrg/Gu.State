@@ -6,15 +6,15 @@
     using System.ComponentModel;
     using System.Diagnostics;
 
-    public partial class ChangeTrackerOld
+    public partial class ChangeTracker
     {
         private sealed class ItemsChangeTrackers : IDisposable
         {
             private readonly INotifyCollectionChanged source;
-            private readonly ChangeTrackerOld parent;
-            private readonly DisposingList<ChangeTrackerOld> itemTrackers;
+            private readonly ChangeTracker parent;
+            private readonly DisposingList<ChangeTracker> itemTrackers;
 
-            private ItemsChangeTrackers(INotifyCollectionChanged source, ChangeTrackerOld parent, DisposingList<ChangeTrackerOld> itemTrackers)
+            private ItemsChangeTrackers(INotifyCollectionChanged source, ChangeTracker parent, DisposingList<ChangeTracker> itemTrackers)
             {
                 this.source = source;
                 this.parent = parent;
@@ -28,7 +28,7 @@
                 this.itemTrackers?.Dispose();
             }
 
-            internal static ItemsChangeTrackers Create(object source, ChangeTrackerOld parent)
+            internal static ItemsChangeTrackers Create(object source, ChangeTracker parent)
             {
                 if (!(source is IEnumerable))
                 {
@@ -47,7 +47,7 @@
                 }
 
                 var sourceList = (IList)source;
-                var itemTrackers = new DisposingList<ChangeTrackerOld>(sourceList.Count);
+                var itemTrackers = new DisposingList<ChangeTracker>(sourceList.Count);
                 for (int i = 0; i < sourceList.Count; i++)
                 {
                     var itemTracker = CreateItemTracker(sourceList, i, parent);
@@ -57,7 +57,7 @@
                 return new ItemsChangeTrackers(incc, parent, itemTrackers);
             }
 
-            private static ItemChangeTrackerOld CreateItemTracker(IList source, int index, ChangeTrackerOld parent)
+            private static ItemChangeTrackerOld CreateItemTracker(IList source, int index, ChangeTracker parent)
             {
                 Debug.Assert(!source.GetType().GetItemType().IsImmutable(), "Creating a tracker for an immutable type would be wasteful");
                 var sv = source[index];

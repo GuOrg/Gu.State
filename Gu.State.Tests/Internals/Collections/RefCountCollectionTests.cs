@@ -13,8 +13,8 @@ namespace Gu.State.Tests.Internals.Collections
         {
             var collection = new RefCountCollection<IDisposable>();
             var s1 = new object();
-            var tracker1 = collection.GetOrAdd(s1, () => new Mock<IDisposable>().Object);
-            var tracker2 = collection.GetOrAdd(s1, () => new Mock<IDisposable>().Object);
+            var tracker1 = collection.GetOrAdd(this, s1, () => new Mock<IDisposable>().Object);
+            var tracker2 = collection.GetOrAdd(this, s1, () => new Mock<IDisposable>().Object);
             Assert.AreSame(tracker1, tracker2);
         }
 
@@ -23,9 +23,9 @@ namespace Gu.State.Tests.Internals.Collections
         {
             var collection = new RefCountCollection<IDisposable>();
             var s1 = new object();
-            var tracker1 = collection.GetOrAdd(s1, () => new Mock<IDisposable>().Object);
+            var tracker1 = collection.GetOrAdd(this, s1, () => new Mock<IDisposable>().Object);
             var s2 = new object();
-            var tracker2 = collection.GetOrAdd(s2, () => new Mock<IDisposable>().Object);
+            var tracker2 = collection.GetOrAdd(this, s2, () => new Mock<IDisposable>().Object);
             Assert.AreNotSame(tracker1, tracker2);
         }
 
@@ -35,9 +35,9 @@ namespace Gu.State.Tests.Internals.Collections
             var collection = new RefCountCollection<IDisposable>();
             var trackers = new[] { new Mock<IDisposable>(), new Mock<IDisposable>() };
             var s1 = new object();
-            var tracker1 = collection.GetOrAdd(s1, () => trackers[0].Object);
+            var tracker1 = collection.GetOrAdd(this, s1, () => trackers[0].Object);
             var s2 = new object();
-            var tracker2 = collection.GetOrAdd(s2, () => trackers[1].Object);
+            var tracker2 = collection.GetOrAdd(this, s2, () => trackers[1].Object);
             Assert.AreNotSame(tracker1, tracker2);
             collection.Dispose();
             trackers[0].Verify(x => x.Dispose(), Times.Once);
@@ -49,9 +49,9 @@ namespace Gu.State.Tests.Internals.Collections
         {
             var collection = new RefCountCollection<IDisposable>();
             var s1 = new object();
-            var tracker1 = collection.GetOrAdd(s1, () => new Mock<IDisposable>().Object);
+            var tracker1 = collection.GetOrAdd(this, s1, () => new Mock<IDisposable>().Object);
             tracker1.Dispose();
-            var tracker2 = collection.GetOrAdd(s1, () => new Mock<IDisposable>().Object);
+            var tracker2 = collection.GetOrAdd(this, s1, () => new Mock<IDisposable>().Object);
             Assert.AreNotSame(tracker1, tracker2);
         }
     }

@@ -4,9 +4,9 @@ namespace Gu.State
     using System.Diagnostics;
 
     [DebuggerDisplay("ItemChangeTracker")]
-    internal class ItemChangeTrackerOld : ChangeTrackerOld
+    internal class ItemChangeTrackerOld : ChangeTracker
     {
-        public ItemChangeTrackerOld(INotifyPropertyChanged source, int index, ChangeTrackerOld parent)
+        public ItemChangeTrackerOld(INotifyPropertyChanged source, int index, ChangeTracker parent)
             : base(source, parent.Settings, parent.Path.WithIndex(index))
         {
             this.Index = index;
@@ -15,7 +15,7 @@ namespace Gu.State
 
         public int Index { get; }
 
-        internal ChangeTrackerOld Parent { get; }
+        internal ChangeTracker Parent { get; }
 
         protected override void OnPropertyChanged(PropertyChangedEventArgs e)
         {

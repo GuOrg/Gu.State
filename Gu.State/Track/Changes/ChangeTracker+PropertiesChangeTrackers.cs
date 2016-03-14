@@ -6,15 +6,15 @@
     using System.Linq;
     using System.Reflection;
 
-    public partial class ChangeTrackerOld
+    public partial class ChangeTracker
     {
         private sealed class PropertiesChangeTrackers : IDisposable
         {
             private readonly INotifyPropertyChanged source;
-            private readonly ChangeTrackerOld parent;
+            private readonly ChangeTracker parent;
             private readonly DisposingMap<PropertyInfo, IDisposable> propertyTrackers;
 
-            private PropertiesChangeTrackers(INotifyPropertyChanged source, ChangeTrackerOld parent, DisposingMap<PropertyInfo, IDisposable> propertyTrackers)
+            private PropertiesChangeTrackers(INotifyPropertyChanged source, ChangeTracker parent, DisposingMap<PropertyInfo, IDisposable> propertyTrackers)
             {
                 this.source = source;
                 this.parent = parent;
@@ -28,7 +28,7 @@
                 this.propertyTrackers?.Dispose();
             }
 
-            internal static PropertiesChangeTrackers Create(INotifyPropertyChanged source, ChangeTrackerOld parent)
+            internal static PropertiesChangeTrackers Create(INotifyPropertyChanged source, ChangeTracker parent)
             {
                 if (source == null)
                 {
@@ -78,7 +78,7 @@
                 return true;
             }
 
-            private static PropertyChangeTrackerOld CreatePropertyTracker(object source, PropertyInfo propertyInfo, ChangeTrackerOld parent)
+            private static PropertyChangeTrackerOld CreatePropertyTracker(object source, PropertyInfo propertyInfo, ChangeTracker parent)
             {
                 if (!IsTrackProperty(propertyInfo, parent.Settings))
                 {

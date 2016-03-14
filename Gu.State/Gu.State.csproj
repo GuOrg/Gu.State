@@ -39,6 +39,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Internals\Collections\CanDispose.cs" />
     <Compile Include="Internals\Collections\DisposingMap{TKey, TValue}.cs" />
     <Compile Include="Internals\Collections\ImmutableList{T}.cs" />
     <Compile Include="Internals\Collections\IRefCounted.cs" />
@@ -51,7 +52,7 @@
     <Compile Include="Internals\Errors\Errors\TypeErrors.cs" />
     <Compile Include="Internals\Errors\MergedErrors.cs" />
     <Compile Include="Internals\Errors\WithErrorsExt.cs" />
-    <Compile Include="Track\Changes\ChangeTrackerOld.cs" />
+    <Compile Include="Track\Changes\ChangeTracker.cs" />
     <Compile Include="Track\Changes\ChangeTracker+ItemsChangeTrackers.cs" />
     <Compile Include="Track\Changes\ChangeTracker+PropertiesChangeTrackers.cs" />
     <Compile Include="Contracts\ISpecialCopyProperty.cs" />
@@ -95,14 +96,15 @@
     <Compile Include="Copy\Copy.Shared.cs" />
     <Compile Include="Copy\Copy.Throw.cs" />
     <Compile Include="Copy\Copy.Verify.cs" />
-    <Compile Include="Track\ChangeTracker\EventArgs\AddEventArgs.cs" />
-    <Compile Include="Track\ChangeTracker\EventArgs\MoveEventArgs.cs" />
-    <Compile Include="Track\ChangeTracker\EventArgs\RemoveEventArgs.cs" />
-    <Compile Include="Track\ChangeTracker\EventArgs\ResetEventArgs.cs" />
-    <Compile Include="Track\ChangeTracker\EventArgs\UpdateEventArgs.cs" />
+    <Compile Include="Track\ChangeTrackerNode\EventArgs\AddEventArgs.cs" />
+    <Compile Include="Track\ChangeTrackerNode\EventArgs\MoveEventArgs.cs" />
+    <Compile Include="Track\ChangeTrackerNode\EventArgs\RemoveEventArgs.cs" />
+    <Compile Include="Track\ChangeTrackerNode\EventArgs\ResetEventArgs.cs" />
+    <Compile Include="Track\ChangeTrackerNode\EventArgs\UpdateEventArgs.cs" />
+    <Compile Include="Track\ChangeTrackerNode\IChangeTrackerNode.cs" />
     <Compile Include="Track\Dirty\DirtyTracker{T}+ItemsDirtyTracker.cs" />
     <Compile Include="Track\Dirty\DirtyTracker{T}.PropertiesDirtyTracker.cs" />
-    <Compile Include="Track\ChangeTracker\ChangeTracker.cs" />
+    <Compile Include="Track\ChangeTrackerNode\ChangeTrackerNode.cs" />
     <Compile Include="Track\Track.Verify.cs" />
     <Compile Include="Track\Dirty\Internals\AlwaysDirtyNode.cs" />
     <Compile Include="Track\Dirty\Internals\IDirtyTracker.cs" />
