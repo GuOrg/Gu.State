@@ -6,15 +6,15 @@
     using System.Linq;
     using System.Reflection;
 
-    public partial class ChangeTracker
+    public partial class ChangeTrackerOld
     {
         private sealed class PropertiesChangeTrackers : IDisposable
         {
             private readonly INotifyPropertyChanged source;
-            private readonly ChangeTracker parent;
+            private readonly ChangeTrackerOld parent;
             private readonly DisposingMap<PropertyInfo, IDisposable> propertyTrackers;
 
-            private PropertiesChangeTrackers(INotifyPropertyChanged source, ChangeTracker parent, DisposingMap<PropertyInfo, IDisposable> propertyTrackers)
+            private PropertiesChangeTrackers(INotifyPropertyChanged source, ChangeTrackerOld parent, DisposingMap<PropertyInfo, IDisposable> propertyTrackers)
             {
                 this.source = source;
                 this.parent = parent;
@@ -28,7 +28,7 @@
                 this.propertyTrackers?.Dispose();
             }
 
-            internal static PropertiesChangeTrackers Create(INotifyPropertyChanged source, ChangeTracker parent)
+            internal static PropertiesChangeTrackers Create(INotifyPropertyChanged source, ChangeTrackerOld parent)
             {
                 if (source == null)
                 {
@@ -78,7 +78,7 @@
                 return true;
             }
 
-            private static PropertyChangeTracker CreatePropertyTracker(object source, PropertyInfo propertyInfo, ChangeTracker parent)
+            private static PropertyChangeTrackerOld CreatePropertyTracker(object source, PropertyInfo propertyInfo, ChangeTrackerOld parent)
             {
                 if (!IsTrackProperty(propertyInfo, parent.Settings))
                 {
@@ -93,7 +93,7 @@
 
                 Track.Verify.IsTrackablePropertyValue(sv.GetType(), propertyInfo, parent);
                 var notifyPropertyChanged = sv as INotifyPropertyChanged;
-                return new PropertyChangeTracker(notifyPropertyChanged, propertyInfo, parent);
+                return new PropertyChangeTrackerOld(notifyPropertyChanged, propertyInfo, parent);
             }
 
             private void OnTrackedPropertyChanged(object sender, PropertyChangedEventArgs e)
