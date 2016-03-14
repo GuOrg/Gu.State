@@ -38,6 +38,7 @@ namespace Gu.State.Tests.Internals.Collections
             var tracker1 = collection.GetOrAdd(s1, () => trackers[0].Object);
             var s2 = new object();
             var tracker2 = collection.GetOrAdd(s2, () => trackers[1].Object);
+            Assert.AreNotSame(tracker1, tracker2);
             collection.Dispose();
             trackers[0].Verify(x => x.Dispose(), Times.Once);
             trackers[1].Verify(x => x.Dispose(), Times.Once);
