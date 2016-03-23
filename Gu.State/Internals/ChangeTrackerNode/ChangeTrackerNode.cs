@@ -142,12 +142,6 @@
                 return;
             }
 
-            if (propertyInfo.PropertyType.IsImmutable())
-            {
-                this.OnChange();
-                return;
-            }
-
             this.OnChange();
             this.OnPropertyChange(new PropertyChangeEventArgs(propertyInfo));
         }

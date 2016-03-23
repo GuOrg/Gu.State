@@ -5,7 +5,7 @@ namespace Gu.State
     using System.Reflection;
 
     [DebuggerDisplay("AlwaysDirtyNode Property: {PropertyInfo.Name}")]
-    internal class AlwaysDirtyNode : IDirtyTrackerNode
+    internal sealed class AlwaysDirtyNode : IDirtyTrackerNode
     {
         private static readonly Dictionary<PropertyInfo, AlwaysDirtyNode> Cache = new Dictionary<PropertyInfo, AlwaysDirtyNode>();
 
