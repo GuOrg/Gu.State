@@ -39,12 +39,13 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Internals\Collections\CanDispose.cs" />
     <Compile Include="Internals\Collections\DisposingMap{TKey, TValue}.cs" />
     <Compile Include="Internals\Collections\ImmutableList{T}.cs" />
+    <Compile Include="Internals\Collections\IRefCountable.cs" />
     <Compile Include="Internals\Collections\IRefCounted.cs" />
     <Compile Include="Internals\Collections\RefCountCollection.cs" />
     <Compile Include="Internals\Collections\ReferenceComparer.cs" />
+    <Compile Include="Internals\Disposer.cs" />
     <Compile Include="Internals\EnumerableExt.cs" />
     <Compile Include="Internals\Errors\ErrorBuilder+TypeErrorsBuilder.cs" />
     <Compile Include="Internals\Errors\Errors\Contracts\IExcludableMember.cs" />
@@ -52,11 +53,9 @@
     <Compile Include="Internals\Errors\Errors\TypeErrors.cs" />
     <Compile Include="Internals\Errors\MergedErrors.cs" />
     <Compile Include="Internals\Errors\WithErrorsExt.cs" />
+    <Compile Include="Track\Changes\ChangeNode.cs" />
     <Compile Include="Track\Changes\ChangeTracker.cs" />
-    <Compile Include="Track\Changes\ChangeTracker+ItemsChangeTrackers.cs" />
-    <Compile Include="Track\Changes\ChangeTracker+PropertiesChangeTrackers.cs" />
     <Compile Include="Contracts\ISpecialCopyProperty.cs" />
-    <Compile Include="Track\Changes\Internals\PropertyChangeTrackerOld.cs" />
     <Compile Include="EqualBy\EqualBy.Verify.cs" />
     <Compile Include="Internals\Errors\Errors\CannotCopyFixesSizeCollectionsError.cs" />
     <Compile Include="Internals\Errors\Errors\CannotCreateInstanceError.cs" />
@@ -100,8 +99,7 @@
     <Compile Include="Track\ChangeTrackerNode\EventArgs\MoveEventArgs.cs" />
     <Compile Include="Track\ChangeTrackerNode\EventArgs\RemoveEventArgs.cs" />
     <Compile Include="Track\ChangeTrackerNode\EventArgs\ResetEventArgs.cs" />
-    <Compile Include="Track\ChangeTrackerNode\EventArgs\UpdateEventArgs.cs" />
-    <Compile Include="Track\ChangeTrackerNode\IChangeTrackerNode.cs" />
+    <Compile Include="Track\ChangeTrackerNode\EventArgs\PropertyChangeEventArgs.cs" />
     <Compile Include="Track\Dirty\DirtyTracker{T}+ItemsDirtyTracker.cs" />
     <Compile Include="Track\Dirty\DirtyTracker{T}.PropertiesDirtyTracker.cs" />
     <Compile Include="Track\ChangeTrackerNode\ChangeTrackerNode.cs" />
@@ -147,10 +145,7 @@
     <Compile Include="Internals\Constants.cs" />
     <Compile Include="Track\Track.cs" />
     <Compile Include="Track\Dirty\DirtyTracker{T}.cs" />
-    <Compile Include="Track\Changes\Contracts\IPropertyTracker.cs" />
-    <Compile Include="Track\Changes\Contracts\IChangeTracker.cs" />
-    <Compile Include="Track\Changes\Contracts\IValueTracker.cs" />
-    <Compile Include="Track\Changes\Internals\ItemChangeTrackerOld.cs" />
+    <Compile Include="Contracts\IChangeTracker.cs" />
     <Compile Include="Internals\Ensure\Ensure.cs" />
     <Compile Include="Internals\Ensure\Ensure.string.cs" />
     <Compile Include="Internals\Ensure\Ensure.type.cs" />

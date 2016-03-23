@@ -10,11 +10,11 @@
         public void SetDisposesOld()
         {
             var disposableMock1 = new Mock<IDisposable>();
-            var collection = new DisposingMap<int, IDisposable>();
-            collection.SetValue(1, disposableMock1.Object);
+            var collection = new DisposingMap<IDisposable>();
+            collection.SetValue(0, disposableMock1.Object);
             disposableMock1.Verify(x => x.Dispose(), Times.Never);
             var disposableMock2 = new Mock<IDisposable>();
-            collection.SetValue(1, disposableMock2.Object);
+            collection.SetValue(0, disposableMock2.Object);
 
             disposableMock1.Verify(x => x.Dispose(), Times.Once);
             disposableMock2.Verify(x => x.Dispose(), Times.Never);
@@ -24,11 +24,11 @@
         public void SetNullDisposesOld()
         {
             var disposableMock1 = new Mock<IDisposable>();
-            var collection = new DisposingMap<int, IDisposable>();
-            collection.SetValue(1, disposableMock1.Object);
+            var collection = new DisposingMap<IDisposable>();
+            collection.SetValue(0, disposableMock1.Object);
 
             disposableMock1.Verify(x => x.Dispose(), Times.Never);
-            collection.SetValue(1, null);
+            collection.SetValue(0, null);
 
             disposableMock1.Verify(x => x.Dispose(), Times.Once);
         }
@@ -37,8 +37,8 @@
         public void Dispose()
         {
             var disposableMock1 = new Mock<IDisposable>();
-            var collection = new DisposingMap<int, IDisposable>();
-            collection.SetValue(1, disposableMock1.Object);
+            var collection = new DisposingMap<IDisposable>();
+            collection.SetValue(0, disposableMock1.Object);
 
             collection.Dispose();
             disposableMock1.Verify(x => x.Dispose(), Times.Once);

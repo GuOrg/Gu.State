@@ -10,8 +10,8 @@ namespace Gu.State.Tests
             var objects = new List<object>();
             for (int i = 0; i < n; i++)
             {
-                objects.Add("Changes");
                 objects.Add(EventArgs.Empty);
+                objects.Add("Changes");
             }
 
             return objects;

@@ -4,10 +4,12 @@ namespace Gu.State
 
     internal struct ResetEventArgs
     {
+        private static readonly IList Empty = new object[0];
+
         public ResetEventArgs(IList oldItems, IList newItems)
         {
-            this.OldItems = oldItems;
-            this.NewItems = newItems;
+            this.OldItems = oldItems ?? Empty;
+            this.NewItems = newItems ?? Empty;
         }
 
         public IList OldItems { get; }

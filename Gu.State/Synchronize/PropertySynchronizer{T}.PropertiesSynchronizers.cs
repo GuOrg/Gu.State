@@ -14,12 +14,12 @@
             private readonly INotifyPropertyChanged target;
             private readonly PropertiesSettings settings;
             private readonly TwoItemsTrackerReferenceCollection<IPropertySynchronizer> references;
-            private readonly DisposingMap<PropertyInfo, IDisposable> propertySynchronizers;
+            private readonly DisposingMap<IDisposable> propertySynchronizers;
 
             private PropertiesSynchronizer(
                 INotifyPropertyChanged source,
                 INotifyPropertyChanged target,
-                DisposingMap<PropertyInfo, IDisposable> propertySynchronizers,
+                DisposingMap<IDisposable> propertySynchronizers,
                 PropertiesSettings settings,
                 TwoItemsTrackerReferenceCollection<IPropertySynchronizer> references)
             {
@@ -48,7 +48,7 @@
                     return null;
                 }
 
-                DisposingMap<PropertyInfo, IDisposable> items = null;
+                DisposingMap<IDisposable> items = null;
                 foreach (var propertyInfo in source.GetType()
                                                    .GetProperties(settings.BindingFlags))
                 {
@@ -65,7 +65,7 @@
                         var synchronizer = CreateSynchronizer((INotifyPropertyChanged)sv, (INotifyPropertyChanged)tv, settings, references);
                         if (items == null)
                         {
-                            items = new DisposingMap<PropertyInfo, IDisposable>();
+                            items = new DisposingMap<IDisposable>();
                         }
 
                         items.SetValue(propertyInfo, synchronizer);

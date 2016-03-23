@@ -114,6 +114,16 @@
             }
         }
 
+        public class IllegalType
+        {
+            public int Value { get; set; }
+        }
+
+        public class IllegalSubType : ComplexType
+        {
+            public IllegalType Illegal { get; set; }
+        }
+
         public class SimpleDirtyTrackClass : INotifyPropertyChanged
         {
             private int value;
