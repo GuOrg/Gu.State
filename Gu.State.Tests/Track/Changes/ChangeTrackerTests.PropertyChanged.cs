@@ -3,9 +3,9 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
 
-    using Gu.State.Tests.ChangeTrackerStubs;
-
     using NUnit.Framework;
+
+    using static ChangeTrackerTypes;
 
     public partial class ChangeTrackerTests
     {
@@ -38,7 +38,7 @@
             public void WithImmutable()
             {
                 var changes = new List<object>();
-                var root = new WithImmutable();
+                var root = new With<Immutable>();
 
                 using (var tracker = Track.Changes(root))
                 {
@@ -47,7 +47,7 @@
                     Assert.AreEqual(0, tracker.Changes);
                     CollectionAssert.IsEmpty(changes);
 
-                    root.Immutable = new Immutable();
+                    root.Value = new Immutable();
                     Assert.AreEqual(1, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
                 }
@@ -115,19 +115,19 @@
             public void StartSubscribingToNextLevel()
             {
                 var changes = new List<object>();
-                var level = new Level();
-                using (var tracker = Track.Changes(level, ReferenceHandling.StructuralWithReferenceLoops))
+                var root = new Level();
+                using (var tracker = Track.Changes(root))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
                     Assert.AreEqual(0, tracker.Changes);
                     CollectionAssert.IsEmpty(changes);
 
-                    level.Next = new Level();
+                    root.Next = new Level();
                     Assert.AreEqual(1, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
 
-                    level.Next.Value++;
+                    root.Next.Value++;
                     Assert.AreEqual(2, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(2), changes);
                 }
@@ -138,7 +138,7 @@
             {
                 var changes = new List<object>();
                 var level = new Level { Next = new Level() };
-                using (var tracker = Track.Changes(level, ReferenceHandling.StructuralWithReferenceLoops))
+                using (var tracker = Track.Changes(level))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);

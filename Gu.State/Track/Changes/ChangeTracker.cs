@@ -7,31 +7,20 @@
     /// Tracks changes in a graph.
     /// Listens to nested Property and collection changes.
     /// </summary>
-    public partial class ChangeTracker : IChangeTracker
+    public sealed class ChangeTracker : IChangeTracker
     {
         private static readonly PropertyChangedEventArgs ChangesEventArgs = new PropertyChangedEventArgs(nameof(Changes));
-        private readonly ItemsChangeTrackers itemsChangeTrackers;
-        private readonly PropertiesChangeTrackers propertiesChangeTrackers;
-
-        private int changes;
+        private readonly IRefCounted<ChangeNode> node;
         private bool disposed;
 
         public ChangeTracker(INotifyPropertyChanged source, PropertiesSettings settings)
-            : this(source, settings, new MemberPath(source.GetType()))
         {
-        }
-
-        internal ChangeTracker(INotifyPropertyChanged source, PropertiesSettings settings, MemberPath path)
-        {
+            Ensure.NotNull(source, nameof(source));
+            Ensure.NotNull(settings, nameof(settings));
+            Track.Verify.IsTrackableType(source.GetType(), settings);
             this.Settings = settings;
-            this.Path = path;
-            Track.Verify.IsTrackableType(source.GetType(), this);
-            this.propertiesChangeTrackers = PropertiesChangeTrackers.Create(source, this);
-            this.itemsChangeTrackers = ItemsChangeTrackers.Create(source, this);
-            if (this.propertiesChangeTrackers == null && this.itemsChangeTrackers == null)
-            {
-                throw Throw.ThrowThereIsABugInTheLibrary("Created a tracker that does not track anything");
-            }
+            this.node = ChangeNode.GetOrCreate(this, source, settings);
+            this.node.Tracker.Changed += this.OnNodeChange;
         }
 
         /// <inheritdoc/>
@@ -43,27 +32,7 @@
         public PropertiesSettings Settings { get; }
 
         /// <inheritdoc/>
-        public int Changes
-        {
-            get
-            {
-                return this.changes;
-            }
-
-            internal set
-            {
-                if (value == this.changes)
-                {
-                    return;
-                }
-
-                this.changes = value;
-                this.OnPropertyChanged(ChangesEventArgs);
-                this.OnChanged();
-            }
-        }
-
-        internal MemberPath Path { get; }
+        public int Changes => this.node.Tracker.Changes;
 
         /// <summary>
         /// Dispose(true); //I am calling you from Dispose, it's safe
@@ -77,35 +46,14 @@
             }
 
             this.disposed = true;
-            this.Dispose(true);
-            GC.SuppressFinalize(this);
+            this.node.Tracker.Changed -= this.OnNodeChange;
+            this.node.RemoveOwner(this);
         }
 
-        protected virtual void Dispose(bool disposing)
+        private void OnNodeChange(object sender, EventArgs e)
         {
-            if (disposing)
-            {
-                this.propertiesChangeTrackers?.Dispose();
-                this.itemsChangeTrackers?.Dispose();
-            }
-        }
-
-        protected void VerifyDisposed()
-        {
-            if (this.disposed)
-            {
-                throw new ObjectDisposedException(this.GetType().FullName);
-            }
-        }
-
-        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
-        {
-            this.PropertyChanged?.Invoke(this, e);
-        }
-
-        private void OnChanged()
-        {
-            this.Changed?.Invoke(this, EventArgs.Empty);
+            this.Changed?.Invoke(this, e);
+            this.PropertyChanged?.Invoke(this, ChangesEventArgs);
         }
     }
 }

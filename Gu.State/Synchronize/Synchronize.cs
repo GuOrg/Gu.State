@@ -15,7 +15,7 @@ namespace Gu.State
         /// <param name="bindingFlags">The binding flags to use when getting properties</param>
         /// <param name="referenceHandling">
         /// If Structural is used property values for sub properties are copied for the entire graph.
-        /// Activator.CreateInstance is sued to new up references so a default constructor is required, can be private
+        /// Activator.CreateInstance is used to new up references so a default constructor is required, can be private
         /// </param>
         /// <returns>A disposable that when disposed stops synchronizing</returns>
         public static IDisposable PropertyValues<T>(

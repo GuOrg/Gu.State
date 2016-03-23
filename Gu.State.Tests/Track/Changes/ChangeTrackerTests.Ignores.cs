@@ -2,8 +2,6 @@
 {
     using System.Collections.Generic;
 
-    using Gu.State.Tests.ChangeTrackerStubs;
-
     using NUnit.Framework;
 
     public partial class ChangeTrackerTests
@@ -14,8 +12,8 @@
             public void IgnoresProperty()
             {
                 var changes = new List<object>();
-                var withIllegalObject = new WithIllegal();
-                var propertyInfo = typeof(WithIllegal).GetProperty(nameof(WithIllegal.Illegal));
+                var withIllegalObject = new ChangeTrackerTypes.WithIllegal();
+                var propertyInfo = typeof(ChangeTrackerTypes.WithIllegal).GetProperty(nameof(ChangeTrackerTypes.WithIllegal.Illegal));
                 var settings = new PropertiesSettingsBuilder().IgnoreProperty(propertyInfo)
                                                               .CreateSettings(ReferenceHandling.Structural);
 
@@ -30,7 +28,7 @@
                     Assert.AreEqual(1, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
 
-                    withIllegalObject.Illegal = new IllegalType();
+                    withIllegalObject.Illegal = new ChangeTrackerTypes.IllegalType();
                     Assert.AreEqual(1, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
                 }
@@ -40,8 +38,8 @@
             public void IgnoresPropertyLambda()
             {
                 var changes = new List<object>();
-                var withIllegalObject = new WithIllegal();
-                var settings = new PropertiesSettingsBuilder().IgnoreProperty<WithIllegal>(x => x.Illegal)
+                var withIllegalObject = new ChangeTrackerTypes.WithIllegal();
+                var settings = new PropertiesSettingsBuilder().IgnoreProperty<ChangeTrackerTypes.WithIllegal>(x => x.Illegal)
                                                               .CreateSettings(ReferenceHandling.Structural);
                 using (var tracker = Track.Changes(withIllegalObject, settings))
                 {
@@ -54,7 +52,7 @@
                     Assert.AreEqual(1, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
 
-                    withIllegalObject.Illegal = new IllegalType();
+                    withIllegalObject.Illegal = new ChangeTrackerTypes.IllegalType();
                     Assert.AreEqual(1, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
                 }
@@ -64,9 +62,9 @@
             public void IgnoresBaseClassPropertyLambda()
             {
                 var changes = new List<object>();
-                var root = new DerivedClass();
+                var root = new ChangeTrackerTypes.DerivedClass();
                 var settings = PropertiesSettings.Build()
-                                                 .IgnoreProperty<ComplexType>(x => x.Excluded)
+                                                 .IgnoreProperty<ChangeTrackerTypes.ComplexType>(x => x.Excluded)
                                                  .CreateSettings(ReferenceHandling.Structural);
                 using (var tracker = Track.Changes(root, settings))
                 {
@@ -89,9 +87,9 @@
             public void IgnoresInterfacePropertyLambda()
             {
                 var changes = new List<object>();
-                var root = new DerivedClass();
+                var root = new ChangeTrackerTypes.DerivedClass();
                 var settings = PropertiesSettings.Build()
-                                                 .IgnoreProperty<IBaseClass>(x => x.Excluded)
+                                                 .IgnoreProperty<ChangeTrackerTypes.IBaseClass>(x => x.Excluded)
                                                  .CreateSettings(ReferenceHandling.Structural);
                 //settings.IgnoreProperty<IBaseClass>(x => x.Excluded);
                 using (var tracker = Track.Changes(root, settings))
@@ -115,9 +113,9 @@
             public void IgnoresType()
             {
                 var changes = new List<object>();
-                var withIllegalObject = new WithIllegal();
+                var withIllegalObject = new ChangeTrackerTypes.WithIllegal();
                 var settings = PropertiesSettings.Build()
-                                                 .IgnoreType<IllegalType>()
+                                                 .IgnoreType<ChangeTrackerTypes.IllegalType>()
                                                  .CreateSettings(ReferenceHandling.Structural);
                 using (var tracker = Track.Changes(withIllegalObject, settings))
                 {
@@ -136,9 +134,9 @@
             public void IgnoresTypeProperty()
             {
                 var changes = new List<object>();
-                var root = new WithIllegal();
+                var root = new ChangeTrackerTypes.WithIllegal();
                 var settings = PropertiesSettings.Build()
-                                                 .IgnoreType<IllegalType>()
+                                                 .IgnoreType<ChangeTrackerTypes.IllegalType>()
                                                  .CreateSettings(ReferenceHandling.Structural);
                 using (var tracker = Track.Changes(root, settings))
                 {

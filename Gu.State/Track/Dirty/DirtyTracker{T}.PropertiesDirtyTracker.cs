@@ -15,7 +15,7 @@
             private readonly INotifyPropertyChanged x;
             private readonly INotifyPropertyChanged y;
             private readonly DirtyTracker<T> parent;
-            private readonly DisposingMap<PropertyInfo, IDisposable> propertyTrackers;
+            private readonly DisposingMap<IDisposable> propertyTrackers;
 
             private PropertiesDirtyTracker(INotifyPropertyChanged x, INotifyPropertyChanged y, DirtyTracker<T> parent)
             {
@@ -35,7 +35,7 @@
                     var tracker = this.CreatePropertyTracker(propertyInfo);
                     if (this.propertyTrackers == null)
                     {
-                        this.propertyTrackers = new DisposingMap<PropertyInfo, IDisposable>();
+                        this.propertyTrackers = new DisposingMap<IDisposable>();
                     }
 
                     this.propertyTrackers.SetValue(propertyInfo, tracker);

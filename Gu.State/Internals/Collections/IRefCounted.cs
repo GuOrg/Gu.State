@@ -1,11 +1,11 @@
 ﻿namespace Gu.State
 {
-    using System;
-    interface IRefCounted<TValue> : IDisposable
+    interface IRefCounted<TValue>
+        where TValue : IRefCountable
     {
         TValue Tracker { get; }
 
-        CanDispose RemoveOwner<TOwner>(TOwner owner)
+        void RemoveOwner<TOwner>(TOwner owner)
             where TOwner : class;
     }
 }

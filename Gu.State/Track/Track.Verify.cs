@@ -111,12 +111,13 @@
         /// </summary>
         internal static class Verify
         {
-            internal static void IsTrackableType(Type type, ChangeTracker tracker)
+            internal static void IsTrackableValue(object value, PropertiesSettings settings)
             {
-                var errors = GetErrors(type, tracker.Settings, tracker.Path);
+                var errors = GetErrors(value.GetType(), settings, null);
                 if (errors != null)
                 {
-                    Throw.IfHasErrors(errors, tracker.Settings);
+                    var typeErrors = new TypeErrors(null, errors);
+                    Throw.IfHasErrors(typeErrors, settings);
                 }
             }
 
@@ -126,28 +127,6 @@
                 if (errors != null)
                 {
                     Throw.IfHasErrors(errors, settings);
-                }
-            }
-
-            internal static void IsTrackablePropertyValue(Type propertyValueType, PropertyInfo propertyInfo, ChangeTracker tracker)
-            {
-                var path = tracker.Path.WithProperty(propertyInfo);
-                var errors = GetErrors(propertyValueType, tracker.Settings, path);
-                if (errors != null)
-                {
-                    var typeErrors = new TypeErrors(propertyInfo.DeclaringType, errors);
-                    Throw.IfHasErrors(typeErrors, tracker.Settings);
-                }
-            }
-
-            internal static void IsTrackableItemValue(Type collectionType, Type itemType, int? index, ChangeTracker tracker)
-            {
-                var path = tracker.Path.WithIndex(index);
-                var errors = GetErrors(itemType, tracker.Settings, path);
-                if (errors != null)
-                {
-                    var typeErrors = new TypeErrors(collectionType, errors);
-                    Throw.IfHasErrors(typeErrors, tracker.Settings);
                 }
             }
 
@@ -201,7 +180,7 @@
             }
 
             // ReSharper disable once UnusedParameter.Local
-            internal static string GetErrorText<TSettings>(TypeErrors errors, TSettings settings)
+            private static string GetErrorText<TSettings>(TypeErrors errors, TSettings settings)
                 where TSettings : class, IMemberSettings
             {
                 var errorBuilder = new StringBuilder();

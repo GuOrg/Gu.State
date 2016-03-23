@@ -3,9 +3,9 @@ namespace Gu.State.Tests
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
 
-    using Gu.State.Tests.ChangeTrackerStubs;
-
     using NUnit.Framework;
+
+    using static ChangeTrackerTypes;
 
     public partial class ChangeTrackerTests
     {

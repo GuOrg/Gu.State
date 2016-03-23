@@ -1,22 +1,27 @@
 ﻿namespace Gu.State
 {
     using System;
+    using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
 
-    internal sealed class ChangeTrackerNode : IChangeTrackerNode, IDisposable
+    internal sealed class ChangeTrackerNode : IRefCountable
     {
-        private readonly object source;
-        private readonly PropertiesSettings settings;
-        private PropertyInfo[] resetProperties;
+        private bool disposed;
 
         private ChangeTrackerNode(object source, PropertiesSettings settings)
         {
-            this.source = source;
-            this.settings = settings;
+            this.Source = source;
+            this.Settings = settings;
+            this.TrackProperties = this.Source.GetType()
+                                       .GetProperties()
+                                       .Where(p => !this.Settings.IsIgnoringProperty(p))
+                                       .Where(p => !p.PropertyType.IsImmutable())
+                                       .ToArray();
+
             var inpc = source as INotifyPropertyChanged;
             if (inpc != null)
             {
@@ -30,37 +35,50 @@
             }
         }
 
-        public event EventHandler<UpdateEventArgs> ChildUpdate;
+        public event EventHandler<PropertyChangeEventArgs> PropertyChange;
 
-        public event EventHandler<ResetEventArgs> ChildReset;
+        public event EventHandler<ResetEventArgs> Reset;
 
-        public event EventHandler<AddEventArgs> ChildAdd;
+        public event EventHandler<AddEventArgs> Add;
 
-        public event EventHandler<RemoveEventArgs> ChildRemove;
+        public event EventHandler<RemoveEventArgs> Remove;
 
-        public event EventHandler<MoveEventArgs> ChildMove;
+        public event EventHandler<MoveEventArgs> Move;
 
         public event EventHandler<EventArgs> Change;
 
+        public object Source { get; }
+
+        public IReadOnlyCollection<PropertyInfo> TrackProperties { get; }
+
+        public PropertiesSettings Settings { get; }
+
         void IDisposable.Dispose()
         {
-            var inpc = this.source as INotifyPropertyChanged;
+            if (this.disposed)
+            {
+                return;
+            }
+
+            this.disposed = true;
+            var inpc = this.Source as INotifyPropertyChanged;
             if (inpc != null)
             {
                 inpc.PropertyChanged -= this.OnTrackedPropertyChanged;
             }
 
-            var incc = this.source as INotifyCollectionChanged;
+            var incc = this.Source as INotifyCollectionChanged;
             if (incc != null)
             {
                 incc.CollectionChanged -= this.OnTrackedCollectionChanged;
             }
         }
 
-        internal static IRefCounted<IChangeTrackerNode> GetOrCreate<TOwner>(TOwner owner, object source, PropertiesSettings settings)
+        internal static IRefCounted<ChangeTrackerNode> GetOrCreate<TOwner>(TOwner owner, object source, PropertiesSettings settings)
         {
             Debug.Assert(source != null, "Cannot track null");
             Debug.Assert(source is INotifyPropertyChanged || source is INotifyCollectionChanged, "Must notify");
+            Track.Verify.IsTrackableValue(source, settings);
             return settings.Trackers.GetOrAdd(owner, source, () => new ChangeTrackerNode(source, settings));
         }
 
@@ -79,27 +97,27 @@
                 case NotifyCollectionChangedAction.Add:
                     for (var i = 0; i < e.NewItems.Count; i++)
                     {
-                        this.OnChildAdd(new AddEventArgs(e.NewStartingIndex + i, e.NewItems[i]));
+                        this.OnAdd(new AddEventArgs(e.NewStartingIndex + i, e.NewItems[i]));
                     }
 
                     break;
                 case NotifyCollectionChangedAction.Remove:
                     for (var i = 0; i < e.OldItems.Count; i++)
                     {
-                        this.OnChildRemove(new RemoveEventArgs(e.OldStartingIndex + i, e.OldItems[i]));
+                        this.OnRemove(new RemoveEventArgs(e.OldStartingIndex + i, e.OldItems[i]));
                     }
 
                     break;
                 case NotifyCollectionChangedAction.Replace:
-                    this.OnChildAdd(new AddEventArgs(e.NewStartingIndex, e.NewItems[0]));
-                    this.OnChildRemove(new RemoveEventArgs(e.OldStartingIndex, e.OldItems[0]));
+                    this.OnAdd(new AddEventArgs(e.NewStartingIndex, e.NewItems[0]));
+                    this.OnRemove(new RemoveEventArgs(e.OldStartingIndex, e.OldItems[0]));
                     break;
                 case NotifyCollectionChangedAction.Move:
-                    this.OnChildMove(new MoveEventArgs(e.OldStartingIndex, e.NewStartingIndex));
+                    this.OnMove(new MoveEventArgs(e.OldStartingIndex, e.NewStartingIndex));
                     break;
                 case NotifyCollectionChangedAction.Reset:
                     {
-                        this.OnChildReset(new ResetEventArgs(e.OldItems, e.NewItems));
+                        this.OnReset(new ResetEventArgs(e.OldItems, e.NewItems));
                         break;
                     }
 
@@ -117,9 +135,9 @@
                 return;
             }
 
-            var propertyInfo = sender.GetType().GetProperty(e.PropertyName, this.settings.BindingFlags);
+            var propertyInfo = sender.GetType().GetProperty(e.PropertyName, this.Settings.BindingFlags);
 
-            if (this.settings.IsIgnoringProperty(propertyInfo))
+            if (this.Settings.IsIgnoringProperty(propertyInfo))
             {
                 return;
             }
@@ -131,26 +149,17 @@
             }
 
             this.OnChange();
-            this.OnChildUpdate(new UpdateEventArgs(propertyInfo, propertyInfo.GetValue(this.source)));
+            this.OnPropertyChange(new PropertyChangeEventArgs(propertyInfo));
         }
 
         private void OnResetProperties()
         {
-            var handler = this.ChildUpdate;
+            var handler = this.PropertyChange;
             if (handler != null)
             {
-                if (this.resetProperties == null)
+                foreach (var propertyInfo in this.TrackProperties)
                 {
-                    this.resetProperties = this.source.GetType()
-                                               .GetProperties()
-                                               .Where(p => !this.settings.IsIgnoringProperty(p))
-                                               .Where(p => !p.PropertyType.IsImmutable())
-                                               .ToArray();
-                }
-
-                foreach (var propertyInfo in this.resetProperties)
-                {
-                    var trackEventArgs = new UpdateEventArgs(propertyInfo, propertyInfo.GetValue(this.source));
+                    var trackEventArgs = new PropertyChangeEventArgs(propertyInfo);
                     handler.Invoke(this, trackEventArgs);
                 }
             }
@@ -161,29 +170,29 @@
             this.Change?.Invoke(this, EventArgs.Empty);
         }
 
-        private void OnChildUpdate(UpdateEventArgs e)
+        private void OnPropertyChange(PropertyChangeEventArgs e)
         {
-            this.ChildUpdate?.Invoke(this, e);
+            this.PropertyChange?.Invoke(this, e);
         }
 
-        private void OnChildReset(ResetEventArgs e)
+        private void OnReset(ResetEventArgs e)
         {
-            this.ChildReset?.Invoke(this, e);
+            this.Reset?.Invoke(this, e);
         }
 
-        private void OnChildAdd(AddEventArgs e)
+        private void OnAdd(AddEventArgs e)
         {
-            this.ChildAdd?.Invoke(this, e);
+            this.Add?.Invoke(this, e);
         }
 
-        private void OnChildRemove(RemoveEventArgs e)
+        private void OnRemove(RemoveEventArgs e)
         {
-            this.ChildRemove?.Invoke(this, e);
+            this.Remove?.Invoke(this, e);
         }
 
-        private void OnChildMove(MoveEventArgs e)
+        private void OnMove(MoveEventArgs e)
         {
-            this.ChildMove?.Invoke(this, e);
+            this.Move?.Invoke(this, e);
         }
     }
 }
