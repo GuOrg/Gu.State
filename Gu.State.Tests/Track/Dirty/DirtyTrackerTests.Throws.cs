@@ -3,6 +3,8 @@
     using System;
     using NUnit.Framework;
 
+    using static DirtyTrackerTypes;
+
     public partial class DirtyTrackerTests
     {
         public class Throws
@@ -22,8 +24,8 @@
                                "  - Exclude a combination of the following:\r\n" +
                                "    - The property WithComplexProperty.ComplexType.\r\n" +
                                "    - The type ComplexType.\r\n";
-                var x = new DirtyTrackerTypes.WithComplexProperty();
-                var y = new DirtyTrackerTypes.WithComplexProperty();
+                var x = new WithComplexProperty();
+                var y = new WithComplexProperty();
 
                 var exception = Assert.Throws<NotSupportedException>(() => Track.IsDirty(x, y));
                 Assert.AreEqual(expected, exception.Message);
@@ -31,10 +33,10 @@
                 exception = Assert.Throws<NotSupportedException>(() => Track.IsDirty(x, y, referenceHandling: ReferenceHandling.Throw));
                 Assert.AreEqual(expected, exception.Message);
 
-                exception = Assert.Throws<NotSupportedException>(() => Track.VerifyCanTrackIsDirty<DirtyTrackerTypes.WithComplexProperty>());
+                exception = Assert.Throws<NotSupportedException>(() => Track.VerifyCanTrackIsDirty<WithComplexProperty>());
                 Assert.AreEqual(expected, exception.Message);
 
-                exception = Assert.Throws<NotSupportedException>(() => Track.VerifyCanTrackIsDirty<DirtyTrackerTypes.WithComplexProperty>(referenceHandling: ReferenceHandling.Throw));
+                exception = Assert.Throws<NotSupportedException>(() => Track.VerifyCanTrackIsDirty<WithComplexProperty>(referenceHandling: ReferenceHandling.Throw));
                 Assert.AreEqual(expected, exception.Message);
             }
         }

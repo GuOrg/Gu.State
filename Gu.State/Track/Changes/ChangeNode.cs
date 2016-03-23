@@ -6,6 +6,7 @@
     using System.Collections.Specialized;
     using System.ComponentModel;
     using System.Diagnostics;
+    using System.Linq;
     using System.Reflection;
 
     internal sealed class ChangeNode : IRefCountable, IChangeTracker
@@ -123,7 +124,10 @@
 
         private void OnTrackedPropertyChange(object sender, PropertyChangeEventArgs e)
         {
-            this.UpdatePropertyNode(e.PropertyInfo);
+            if (this.node.Tracker.TrackProperties.Contains(e.PropertyInfo))
+            {
+                this.UpdatePropertyNode(e.PropertyInfo);
+            }
         }
 
         private void OnTrackedAdd(object sender, AddEventArgs e)
