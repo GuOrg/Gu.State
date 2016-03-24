@@ -39,10 +39,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Contracts\IDiff.cs" />
-    <Compile Include="Contracts\IIndexDiff.cs" />
-    <Compile Include="Contracts\IPropertyDiff.cs" />
     <Compile Include="Diff\Diff.cs" />
+    <Compile Include="Diff\PropertyDiff.cs" />
     <Compile Include="Internals\Collections\DisposingMap{TKey, TValue}.cs" />
     <Compile Include="Internals\Collections\ImmutableList{T}.cs" />
     <Compile Include="Internals\Collections\IRefCountable.cs" />

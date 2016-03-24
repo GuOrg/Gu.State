@@ -39,7 +39,7 @@
                     }
 
                     throw new NotImplementedException("message");
-                    
+
                     //this.xNode.Tracker.Add += this.OnTrackedAdd;
                     //this.xNode.Tracker.Remove += this.OnTrackedRemove;
                     //this.xNode.Tracker.Move += this.OnTrackedMove;
@@ -71,16 +71,19 @@
 
             private set
             {
-                if (Equals(value, this.diff))
+                lock (this.gate)
                 {
-                    return;
-                }
+                    if (Equals(value, this.diff))
+                    {
+                        return;
+                    }
 
-                var wasEmpty = this.diff.IsEmpty;
-                this.diff = value;
-                if (wasEmpty != this.diff.IsEmpty)
-                {
-                    this.OnPropertyChanged(IsDirtyPropertyChangedEventArgs);
+                    var wasEmpty = this.diff.IsEmpty;
+                    this.diff = value;
+                    if (wasEmpty != this.diff.IsEmpty)
+                    {
+                        this.OnPropertyChanged(IsDirtyPropertyChangedEventArgs);
+                    }
                 }
             }
         }
@@ -134,9 +137,8 @@
             if (this.TrackProperties.Contains(propertyInfo) &&
                (this.Settings.ReferenceHandling == ReferenceHandling.Structural || this.Settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops))
             {
-                var refCounted = this.CreateChild(xValue, yValue);
+                var refCounted = this.CreateChild(xValue, yValue, propertyInfo);
                 this.children.SetValue(propertyInfo, refCounted);
-                throw new NotImplementedException("message");
             }
             else
             {
@@ -149,30 +151,39 @@
             }
         }
 
-        private IDisposable CreateChild(object xValue, object yValue)
+        private IDisposable CreateChild(object xValue, object yValue, object key)
         {
             var childNode = GetOrCreate(this, xValue, yValue, this.Settings);
-            childNode.Tracker.ChildChanged += this.OnChildChange;
+            EventHandler<DirtyTrackerNode> trackerOnChildChanged = (sender, args) => this.OnChildChange(sender, args, key);
+            childNode.Tracker.ChildChanged += trackerOnChildChanged;
             var disposable = new Disposer(() =>
             {
                 childNode.RemoveOwner(this);
-                childNode.Tracker.ChildChanged -= this.OnChildChange;
+                childNode.Tracker.ChildChanged -= trackerOnChildChanged;
             });
             return disposable;
         }
 
-        private void OnChildChange(object sender, DirtyTrackerNode originalSource)
+        private void OnChildChange(object sender, DirtyTrackerNode originalSource, object key)
         {
             if (ReferenceEquals(this, originalSource))
             {
                 return;
             }
+            lock (this.gate)
+            {
+                var propertyInfo = key as PropertyInfo;
+                if (propertyInfo != null)
+                {
+                    var xValue = propertyInfo.GetValue(this.xNode.Tracker.Source);
+                    var yValue = propertyInfo.GetValue(this.yNode.Tracker.Source);
+                    this.Diff = this.diff.With(propertyInfo, xValue, yValue);
+                }
+
+                this.ChildChanged?.Invoke(this, originalSource);
+            }
 
             throw new NotImplementedException("message");
-            //this.Diff = this.diff.With()
-            //this.Changes++;
-            //this.Changed?.Invoke(this, EventArgs.Empty);
-            this.ChildChanged?.Invoke(this, originalSource);
         }
 
         [NotifyPropertyChangedInvocator]

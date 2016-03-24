@@ -4,24 +4,25 @@
     using System.Linq;
     using System.Reflection;
 
-    public class Diff : IDiff
+    public class Diff
     {
-        public static readonly Diff Empty = new Diff(new IDiff[0]);
+        protected static readonly Diff[] EmptyDiffs = new Diff[0];
+        public static readonly Diff Empty = new Diff(EmptyDiffs);
 
-        internal Diff(IReadOnlyCollection<IDiff> diffs)
+        internal Diff(IReadOnlyCollection<Diff> diffs)
         {
             this.Diffs = diffs;
         }
 
-        public IReadOnlyCollection<IDiff> Diffs { get; }
+        public IReadOnlyCollection<Diff> Diffs { get; }
 
         public bool IsEmpty => this.Diffs.Count == 0;
 
         public Diff Without(PropertyInfo propertyInfo)
         {
-            if (this.Diffs.OfType<IPropertyDiff>().Any(x => x.PropertyInfo == propertyInfo))
+            if (this.Diffs.OfType<PropertyDiff>().Any(x => x.PropertyInfo == propertyInfo))
             {
-                return new Diff(this.Diffs.Where(x => (x as IPropertyDiff)?.PropertyInfo != propertyInfo).ToArray());
+                return new Diff(this.Diffs.Where(x => (x as PropertyDiff)?.PropertyInfo != propertyInfo).ToArray());
             }
 
             return this;
@@ -29,7 +30,13 @@
 
         public Diff With(PropertyInfo propertyInfo, object xValue, object yValue)
         {
-            throw new System.NotImplementedException();
+            if (this.Diffs.OfType<PropertyDiff>().Any(x => x.PropertyInfo == propertyInfo))
+            {
+                var diffs = this.Diffs.Where(x => (x as PropertyDiff)?.PropertyInfo != propertyInfo).Append(new PropertyDiff(propertyInfo, xValue, yValue)).ToArray();
+                return new Diff(diffs);
+            }
+
+            return new Diff(this.Diffs.Append(new PropertyDiff(propertyInfo, xValue, yValue)).ToArray());
         }
 
         ///// <summary>
