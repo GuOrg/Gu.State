@@ -9,13 +9,10 @@
     using System.Linq;
     using System.Reflection;
 
-    internal sealed class ChangeNode : IRefCountable, IChangeTracker
+    internal sealed class ChangeNode : IRefCountable
     {
-        private static readonly PropertyChangedEventArgs ChangesPropertyEventArgs = new PropertyChangedEventArgs(nameof(Changes));
         private readonly IRefCounted<ChangeTrackerNode> node;
         private readonly DisposingMap<IDisposable> children = new DisposingMap<IDisposable>();
-
-        private int changes;
 
         private ChangeNode(object source, PropertiesSettings settings)
         {
@@ -62,27 +59,6 @@
 
         public event EventHandler Changed;
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public int Changes
-        {
-            get
-            {
-                return this.changes;
-            }
-
-            private set
-            {
-                if (value == this.changes)
-                {
-                    return;
-                }
-
-                this.changes = value;
-                this.PropertyChanged?.Invoke(this, ChangesPropertyEventArgs);
-            }
-        }
-
         private IReadOnlyCollection<PropertyInfo> TrackProperties => this.node.Tracker.TrackProperties;
 
         private PropertiesSettings Settings => this.node.Tracker.Settings;
@@ -108,7 +84,6 @@
 
         private void OnTrackerChange(object sender, EventArgs e)
         {
-            this.Changes++;
             this.Changed?.Invoke(this, EventArgs.Empty);
             this.ChildChanged?.Invoke(this, this);
         }
@@ -120,7 +95,6 @@
                 return;
             }
 
-            this.Changes++;
             this.Changed?.Invoke(this, EventArgs.Empty);
             this.ChildChanged?.Invoke(this, originalSource);
         }

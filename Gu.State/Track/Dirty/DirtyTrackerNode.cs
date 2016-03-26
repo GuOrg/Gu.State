@@ -170,6 +170,7 @@
             {
                 return;
             }
+
             lock (this.gate)
             {
                 var propertyInfo = key as PropertyInfo;
