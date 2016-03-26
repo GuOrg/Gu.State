@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Diff\Diff.cs" />
+    <Compile Include="Diff\IndexDiff.cs" />
     <Compile Include="Diff\PropertyDiff.cs" />
     <Compile Include="Internals\Collections\DisposingMap{TKey, TValue}.cs" />
     <Compile Include="Internals\Collections\ImmutableList{T}.cs" />

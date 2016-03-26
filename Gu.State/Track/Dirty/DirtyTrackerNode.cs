@@ -28,7 +28,6 @@
             switch (settings.ReferenceHandling)
             {
                 case ReferenceHandling.Throw:
-                    break;
                 case ReferenceHandling.References:
                     break;
                 case ReferenceHandling.Structural:

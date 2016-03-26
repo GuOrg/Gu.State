@@ -14,8 +14,8 @@
 
         public PropertyInfo PropertyInfo { get; }
 
-        public object X { get; set; }
+        public object X { get; }
 
-        public object Y { get; set; }
+        public object Y { get; }
     }
 }
