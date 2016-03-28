@@ -3,11 +3,9 @@
     using System;
     using System.Collections.Generic;
 
-    using Gu.State.Tests.EqualByTests;
-
     public class Classes : ClassesTests
     {
-        public override bool EqualMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excludedMembers = null, Type excludedType = null)
+        public override Diff DiffMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excludedMembers = null, Type excludedType = null)
         {
             var builder = PropertiesSettings.Build();
             if (excludedMembers != null)
@@ -21,9 +19,9 @@
             }
 
             var settings = builder.CreateSettings(referenceHandling);
-            return EqualBy.PropertyValues(x, y, settings);
+            return DiffBy.PropertyValues(x, y, settings);
         }
 
-        public new static IReadOnlyList<EqualByTestsShared.EqualsData> EqualsSource => EqualByTestsShared.EqualsSource;
+        public new static IReadOnlyList<DiffTestsShared.DiffData> DiffSource => DiffTestsShared.DiffSource;
     }
 }

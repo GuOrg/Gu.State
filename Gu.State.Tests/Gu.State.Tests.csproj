@@ -58,7 +58,6 @@
     <Compile Include="DiffTests\FieldValues\Throws.cs" />
     <Compile Include="DiffTests\FieldValues\Verify.cs" />
     <Compile Include="DiffTests\PropertyValues\Classes.cs" />
-    <Compile Include="DiffTests\PropertyValues\Classes_.PropertyValues.cs" />
     <Compile Include="DiffTests\PropertyValues\Collections.cs" />
     <Compile Include="DiffTests\PropertyValues\Throws.cs" />
     <Compile Include="DiffTests\PropertyValues\Verify.cs" />

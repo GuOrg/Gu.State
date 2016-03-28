@@ -9,7 +9,7 @@
 
     public abstract class ClassesTests
     {
-        public abstract bool DiffMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excludedMembers = null, Type excludedType = null) where T : class;
+        public abstract Diff DiffMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excludedMembers = null, Type excludedType = null) where T : class;
 
         public static IReadOnlyList<DiffTestsShared.DiffData> DiffSource => DiffTestsShared.DiffSource;
 
@@ -19,28 +19,28 @@
             Assert.AreEqual(data.Equals, this.DiffMethod(data.Source, data.Target));
         }
 
-        [TestCase("b", "b", true)]
-        [TestCase("b", "c", false)]
-        public void WithSimpleHappyPath(string xn, string yn, bool expected)
+        [TestCase("b", "b", "meh")]
+        [TestCase("b", "c", "")]
+        public void WithSimpleHappyPath(string xn, string yn, string expected)
         {
             var x = new WithSimpleProperties(1, 2, xn, StringSplitOptions.RemoveEmptyEntries);
             var y = new WithSimpleProperties(1, 2, yn, StringSplitOptions.RemoveEmptyEntries);
             var result = this.DiffMethod(x, y);
-            Assert.AreEqual(expected, result);
+            Assert.AreEqual(expected, result.ToString());
 
             result = this.DiffMethod(x, y, ReferenceHandling.Throw);
-            Assert.AreEqual(expected, result);
+            Assert.AreEqual(expected, result.ToString());
 
             result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(expected, result);
+            Assert.AreEqual(expected, result.ToString());
 
             result = this.DiffMethod(x, y, ReferenceHandling.References);
-            Assert.AreEqual(expected, result);
+            Assert.AreEqual(expected, result.ToString());
         }
 
-        [TestCase("b", "b", true)]
-        [TestCase("b", "c", false)]
-        public void WithComplexStructural(string xn, string yn, bool expected)
+        [TestCase("b", "b", "meh")]
+        [TestCase("b", "c", "")]
+        public void WithComplexStructural(string xn, string yn, string expected)
         {
             var x = new WithComplexProperty("a", 1)
             {
@@ -52,7 +52,7 @@
                 ComplexType = new ComplexType { Name = yn, Value = 2 }
             };
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(expected, result);
+            Assert.AreEqual(expected, result.ToString());
         }
 
         [Test]
@@ -62,10 +62,10 @@
             var y = new WithComplexProperty { Name = "a", Value = 1 };
             this.DiffMethod(x, y, ReferenceHandling.Structural);
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(true, result);
+            Assert.AreEqual("", result.ToString());
 
             result = this.DiffMethod(x, y, ReferenceHandling.References);
-            Assert.AreEqual(true, result);
+            Assert.AreEqual("", result.ToString());
         }
 
         [Test]
@@ -110,10 +110,10 @@
                 ComplexType = x.ComplexType
             };
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(true, result);
+            Assert.AreEqual("", result.ToString());
 
             result = this.DiffMethod(x, y, ReferenceHandling.References);
-            Assert.AreEqual(true, result);
+            Assert.AreEqual("", result.ToString());
         }
 
         [Test]

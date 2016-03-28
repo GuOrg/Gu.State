@@ -11,7 +11,7 @@
 
     public abstract class CollectionTests
     {
-        public abstract bool DiffMethod<T>(T source, T target, ReferenceHandling referenceHandling) where T : class;
+        public abstract Diff DiffMethod<T>(T source, T target, ReferenceHandling referenceHandling) where T : class;
 
         [TestCase("1, 2, 3", "1, 2, 3", true)]
         [TestCase("1, 2, 3", "1, 2", false)]

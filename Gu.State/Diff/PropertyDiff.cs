@@ -4,6 +4,14 @@
 
     public class PropertyDiff : Diff
     {
+        public PropertyDiff(PropertyInfo propertyInfo, object xValue, object yValue, Diff diff)
+            : base(diff.Diffs)
+        {
+            this.PropertyInfo = propertyInfo;
+            this.X = xValue;
+            this.Y = yValue;
+        }
+
         public PropertyDiff(PropertyInfo propertyInfo, object xValue, object yValue)
             : base(EmptyDiffs)
         {

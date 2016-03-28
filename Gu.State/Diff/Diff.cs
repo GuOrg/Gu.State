@@ -1,10 +1,11 @@
 ﻿namespace Gu.State
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
 
-    public class Diff
+    public partial class Diff
     {
         protected static readonly Diff[] EmptyDiffs = new Diff[0];
         public static readonly Diff Empty = new Diff(EmptyDiffs);
@@ -16,7 +17,7 @@
 
         public IReadOnlyCollection<Diff> Diffs { get; }
 
-        public bool IsEmpty => this.Diffs.Count == 0;
+        public virtual bool IsEmpty => this.Diffs.Count == 0;
 
         public Diff Without(PropertyInfo propertyInfo)
         {
@@ -39,49 +40,14 @@
             return new Diff(this.Diffs.Append(new PropertyDiff(propertyInfo, xValue, yValue)).ToArray());
         }
 
-        ///// <summary>
-        ///// Compares x and y for equality using property values.
-        ///// If a type implements IList the items of the list are compared
-        ///// </summary>
-        ///// <typeparam name="T">The type to compare</typeparam>
-        ///// <param name="x">The first instance</param>
-        ///// <param name="y">The second instance</param>
-        ///// <param name="referenceHandling">
-        ///// If Structural is used a deep equals is performed.
-        ///// Default value is Throw
-        ///// </param>
-        ///// <param name="bindingFlags">The binding flags to use when getting properties</param>
-        ///// <returns>True if <paramref name="x"/> and <paramref name="y"/> are equal</returns>
-        //public static Diff PropertyValues<T>(
-        //    T x,
-        //    T y,
-        //    ReferenceHandling referenceHandling = ReferenceHandling.Throw,
-        //    BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
-        //{
-        //    var settings = PropertiesSettings.GetOrCreate(bindingFlags, referenceHandling);
-        //    return PropertyValues(x, y, settings);
-        //}
+        public override string ToString()
+        {
+            if (this.IsEmpty)
+            {
+                return string.Empty;
+            }
 
-        ///// <summary>
-        ///// Compares x and y for equality using property values.
-        ///// If a type implements IList the items of the list are compared
-        ///// </summary>
-        ///// <typeparam name="T">The type of <paramref name="x"/> and <paramref name="y"/></typeparam>
-        ///// <param name="x">The first instance</param>
-        ///// <param name="y">The second instance</param>
-        ///// <param name="settings">Specifies how equality is performed.</param>
-        ///// <returns>True if <paramref name="x"/> and <paramref name="y"/> are equal</returns>
-        //public static Diff PropertyValues<T>(T x, T y, PropertiesSettings settings)
-        //{
-        //    EqualBy.Verify.CanEqualByPropertyValues(x, y, settings);
-
-        //    if (settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops)
-        //    {
-        //        var referencePairs = new ReferencePairCollection();
-        //        return PropertiesValuesEquals(x, y, settings, referencePairs);
-        //    }
-
-        //    return PropertiesValuesEquals(x, y, settings, null);
-        //}
+            throw new NotImplementedException();
+        }
     }
 }

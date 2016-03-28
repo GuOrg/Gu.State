@@ -8,7 +8,7 @@ namespace Gu.State.Tests.DiffTests
 
     public abstract class ThrowsTests
     {
-        public abstract bool DiffMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excludedMembers = null, Type excludedType = null);
+        public abstract Diff DiffMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excludedMembers = null, Type excludedType = null);
 
         [Test]
         public void ComplexValueThrowsWithoutReferenceHandling()
