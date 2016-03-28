@@ -21,6 +21,8 @@
             this.valueDiff = new ValueDiff(xValue, yValue);
         }
 
+        public override bool IsEmpty => false;
+
         public PropertyInfo PropertyInfo { get; }
 
         public object X => this.valueDiff.X;

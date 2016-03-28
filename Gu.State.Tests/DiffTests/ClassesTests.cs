@@ -20,7 +20,7 @@
         }
 
         [TestCase("b", "b", "")]
-        [TestCase("b", "c", "WithSimpleProperties StringValue: b c")]
+        [TestCase("b", "c", "WithSimpleProperties\r\n StringValue: b c")]
         public void WithSimpleHappyPath(string xn, string yn, string expected)
         {
             var x = new WithSimpleProperties(1, 2, xn, StringSplitOptions.RemoveEmptyEntries);

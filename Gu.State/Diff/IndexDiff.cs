@@ -13,6 +13,8 @@ namespace Gu.State
             this.valueDiff = new ValueDiff(xValue, yValue);
         }
 
+        public override bool IsEmpty => false;
+
         public int Index { get; }
 
         public object X => this.valueDiff.X;

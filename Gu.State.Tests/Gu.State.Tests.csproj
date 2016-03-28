@@ -62,6 +62,7 @@
     <Compile Include="DiffTests\PropertyValues\Collections.cs" />
     <Compile Include="DiffTests\PropertyValues\Throws.cs" />
     <Compile Include="DiffTests\PropertyValues\Verify.cs" />
+    <Compile Include="DiffTests\Sandbox.cs" />
     <Compile Include="DiffTests\ThrowsTests.cs" />
     <Compile Include="DiffTests\VerifyTests.cs" />
     <Compile Include="Internals\Collections\DisposingListTests.cs" />

@@ -180,7 +180,6 @@
   </Target>
   -->
   <ItemGroup>
-    <Folder Include="EqualBy\Diff\" />
     <Folder Include="Settings\Errors\" />
   </ItemGroup>
   <Choose>
