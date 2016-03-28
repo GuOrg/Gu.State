@@ -14,5 +14,10 @@
         public object X { get; }
 
         public object Y { get; }
+
+        public override string ToString()
+        {
+            return $"x: {this.X ?? "null"} y: {this.Y ?? "null"}";
+        }
     }
 }

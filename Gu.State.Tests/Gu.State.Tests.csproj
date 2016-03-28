@@ -51,6 +51,7 @@
     <Compile Include="CopyTests\ReferenceLoops.cs" />
     <Compile Include="DiffTests\ClassesTests.cs" />
     <Compile Include="DiffTests\CollectionTests.cs" />
+    <Compile Include="DiffTests\DiffTests.ToString.cs" />
     <Compile Include="DiffTests\DiffTestsShared.cs" />
     <Compile Include="DiffTests\DiffTypes.cs" />
     <Compile Include="DiffTests\FieldValues\Classes.cs" />
