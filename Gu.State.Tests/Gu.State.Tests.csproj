@@ -115,10 +115,8 @@
     <Compile Include="CopyTests\PropertyValues\Classes.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerTests.Complex.cs" />
     <Compile Include="EqualByTests\EqualByTestsShared.cs" />
-    <Compile Include="EqualByTests\PropertyValues\Classes_.PropertyValues.cs" />
     <Compile Include="CopyTests\FieldValues\Classes.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerTests.Simple.cs" />
-    <Compile Include="EqualByTests\FieldValues\Classes_.FieldValues.cs" />
     <Compile Include="Synchronize\PropertySynchronizerTests.ObservableCollectionOfInts.cs" />
     <Compile Include="Synchronize\PropertySynchronizerTests.Complex.cs" />
     <Compile Include="Synchronize\PropertySynchronizerTests.Simple.cs" />
