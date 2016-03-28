@@ -4,7 +4,7 @@
 
     using static DiffTypes;
 
-    public class DiffTests
+    public class DiffToStringTests
     {
         [Test]
         public void Empty()

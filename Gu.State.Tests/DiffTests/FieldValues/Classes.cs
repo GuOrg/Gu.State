@@ -3,25 +3,25 @@
     using System;
     using System.Collections.Generic;
 
-    //public class Classes : ClassesTests
-    //{
-    //    public override bool DiffMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excludedMembers = null, Type excludedType = null)
-    //    {
-    //        var builder = FieldsSettings.Build();
-    //        if (excludedMembers != null)
-    //        {
-    //            builder.AddIgnoredField<T>(excludedMembers);
-    //        }
+    public class Classes : ClassesTests
+    {
+        public override Diff DiffMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excludedMembers = null, Type excludedType = null)
+        {
+            var builder = FieldsSettings.Build();
+            if (excludedMembers != null)
+            {
+                builder.AddIgnoredField<T>(excludedMembers);
+            }
 
-    //        if (excludedType != null)
-    //        {
-    //            builder.AddImmutableType(excludedType);
-    //        }
+            if (excludedType != null)
+            {
+                builder.AddImmutableType(excludedType);
+            }
 
-    //        var settings = builder.CreateSettings(referenceHandling);
-    //        return Diff.FieldValues(x, y, settings);
-    //    }
+            var settings = builder.CreateSettings(referenceHandling);
+            return DiffBy.FieldValues(x, y, settings);
+        }
 
-    //    public new static IReadOnlyList<DiffTestsShared.EqualsData> EqualsSource => DiffTestsShared.EqualsSource;
-    //}
+        public new static IReadOnlyList<DiffTestsShared.DiffData> DiffSource => DiffTestsShared.DiffSource;
+    }
 }

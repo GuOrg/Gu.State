@@ -5,7 +5,7 @@
     using System.Linq;
     using System.Reflection;
 
-    public partial class Diff
+    public class Diff
     {
         protected static readonly Diff[] EmptyDiffs = new Diff[0];
         public static readonly Diff Empty = new Diff(EmptyDiffs);

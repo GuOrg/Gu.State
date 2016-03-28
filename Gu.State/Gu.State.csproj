@@ -40,7 +40,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Diff\Diff.cs" />
-    <Compile Include="Diff\Diff.PropertyValues.cs" />
+    <Compile Include="Diff\DiffBy.FieldValues.cs" />
+    <Compile Include="Diff\DiffBy.PropertyValues.cs" />
     <Compile Include="Diff\IndexDiff.cs" />
     <Compile Include="Diff\PropertyDiff.cs" />
     <Compile Include="Diff\TypeDiff.cs" />
