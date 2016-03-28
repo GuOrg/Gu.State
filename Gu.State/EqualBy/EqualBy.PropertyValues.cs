@@ -13,17 +13,17 @@
         /// <typeparam name="T">The type to compare</typeparam>
         /// <param name="x">The first instance</param>
         /// <param name="y">The second instance</param>
-        /// <param name="bindingFlags">The binding flags to use when getting properties</param>
         /// <param name="referenceHandling">
         /// If Structural is used a deep equals is performed.
         /// Default value is Throw
         /// </param>
+        /// <param name="bindingFlags">The binding flags to use when getting properties</param>
         /// <returns>True if <paramref name="x"/> and <paramref name="y"/> are equal</returns>
         public static bool PropertyValues<T>(
             T x,
             T y,
-            BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags,
-            ReferenceHandling referenceHandling = ReferenceHandling.Throw)
+            ReferenceHandling referenceHandling = ReferenceHandling.Throw,
+            BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
         {
             var settings = PropertiesSettings.GetOrCreate(bindingFlags, referenceHandling);
             return PropertyValues(x, y, settings);

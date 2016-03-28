@@ -9,17 +9,14 @@
     using System.Linq;
     using System.Reflection;
 
-    internal sealed class ChangeNode : IRefCountable, IChangeTracker
+    internal sealed class ChangeNode : IRefCountable
     {
-        private static readonly PropertyChangedEventArgs ChangesPropertyEventArgs = new PropertyChangedEventArgs(nameof(Changes));
         private readonly IRefCounted<ChangeTrackerNode> node;
         private readonly DisposingMap<IDisposable> children = new DisposingMap<IDisposable>();
 
-        private int changes;
-
-        private ChangeNode(Func<ChangeNode, IRefCounted<ChangeTrackerNode>> node)
+        private ChangeNode(object source, PropertiesSettings settings)
         {
-            this.node = node(this);
+            this.node = ChangeTrackerNode.GetOrCreate(this, source, settings);
             this.node.Tracker.Change += this.OnTrackerChange;
             switch (this.node.Tracker.Settings.ReferenceHandling)
             {
@@ -34,7 +31,7 @@
                     this.node.Tracker.Remove += this.OnTrackedRemove;
                     this.node.Tracker.Move += this.OnTrackedMove;
                     this.node.Tracker.Reset += this.OnTrackedReset;
-                    foreach (var property in this.node.Tracker.TrackProperties)
+                    foreach (var property in this.TrackProperties)
                     {
                         this.UpdatePropertyNode(property);
                     }
@@ -42,8 +39,7 @@
                     var list = this.node.Tracker.Source as IList;
                     if (list != null)
                     {
-                        var itemType = list.GetType()
-                                           .GetItemType();
+                        var itemType = list.GetType().GetItemType();
                         if (!itemType.IsImmutable() && !this.node.Tracker.Settings.IsIgnoringDeclaringType(itemType))
                         {
                             for (int i = 0; i < list.Count; i++)
@@ -63,26 +59,9 @@
 
         public event EventHandler Changed;
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        private IReadOnlyCollection<PropertyInfo> TrackProperties => this.node.Tracker.TrackProperties;
 
-        public int Changes
-        {
-            get
-            {
-                return this.changes;
-            }
-
-            private set
-            {
-                if (value == this.changes)
-                {
-                    return;
-                }
-
-                this.changes = value;
-                this.PropertyChanged?.Invoke(this, ChangesPropertyEventArgs);
-            }
-        }
+        private PropertiesSettings Settings => this.node.Tracker.Settings;
 
         public void Dispose()
         {
@@ -100,12 +79,11 @@
         {
             Debug.Assert(source != null, "Cannot track null");
             Debug.Assert(source is INotifyPropertyChanged || source is INotifyCollectionChanged, "Must notify");
-            return settings.ChangeNodes.GetOrAdd(owner, source, () => new ChangeNode(x => ChangeTrackerNode.GetOrCreate(x, source, settings)));
+            return settings.ChangeNodes.GetOrAdd(owner, source, () => new ChangeNode(source, settings));
         }
 
         private void OnTrackerChange(object sender, EventArgs e)
         {
-            this.Changes++;
             this.Changed?.Invoke(this, EventArgs.Empty);
             this.ChildChanged?.Invoke(this, this);
         }
@@ -117,14 +95,14 @@
                 return;
             }
 
-            this.Changes++;
             this.Changed?.Invoke(this, EventArgs.Empty);
             this.ChildChanged?.Invoke(this, originalSource);
         }
 
         private void OnTrackedPropertyChange(object sender, PropertyChangeEventArgs e)
         {
-            if (this.node.Tracker.TrackProperties.Contains(e.PropertyInfo))
+            if (this.TrackProperties.Contains(e.PropertyInfo) &&
+               (this.Settings.ReferenceHandling == ReferenceHandling.Structural || this.Settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops))
             {
                 this.UpdatePropertyNode(e.PropertyInfo);
             }

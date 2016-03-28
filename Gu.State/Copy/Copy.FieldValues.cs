@@ -21,8 +21,8 @@
         public static void FieldValues<T>(
             T source,
             T target,
-            BindingFlags bindingFlags = Constants.DefaultFieldBindingFlags,
-            ReferenceHandling referenceHandling = ReferenceHandling.Throw)
+            ReferenceHandling referenceHandling = ReferenceHandling.Throw,
+            BindingFlags bindingFlags = Constants.DefaultFieldBindingFlags)
             where T : class
         {
             var settings = FieldsSettings.GetOrCreate(bindingFlags, referenceHandling);

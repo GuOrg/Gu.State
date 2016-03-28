@@ -21,8 +21,8 @@
         public static void PropertyValues<T>(
             T source,
             T target,
-            BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags,
-            ReferenceHandling referenceHandling = ReferenceHandling.Throw)
+            ReferenceHandling referenceHandling = ReferenceHandling.Throw,
+            BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
             where T : class
         {
             var settings = PropertiesSettings.GetOrCreate(bindingFlags, referenceHandling);

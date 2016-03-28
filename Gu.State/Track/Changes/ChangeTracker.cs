@@ -13,6 +13,8 @@
         private readonly IRefCounted<ChangeNode> node;
         private bool disposed;
 
+        private int changes;
+
         public ChangeTracker(INotifyPropertyChanged source, PropertiesSettings settings)
         {
             Ensure.NotNull(source, nameof(source));
@@ -32,7 +34,24 @@
         public PropertiesSettings Settings { get; }
 
         /// <inheritdoc/>
-        public int Changes => this.node.Tracker.Changes;
+        public int Changes
+        {
+            get
+            {
+                return this.changes;
+            }
+
+            private set
+            {
+                if (value == this.changes)
+                {
+                    return;
+                }
+
+                this.changes = value;
+                this.PropertyChanged?.Invoke(this, ChangesEventArgs);
+            }
+        }
 
         /// <summary>
         /// Dispose(true); //I am calling you from Dispose, it's safe
@@ -53,7 +72,7 @@
         private void OnNodeChange(object sender, EventArgs e)
         {
             this.Changed?.Invoke(this, e);
-            this.PropertyChanged?.Invoke(this, ChangesEventArgs);
+            this.Changes++;
         }
     }
 }
