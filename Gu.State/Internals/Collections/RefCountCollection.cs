@@ -33,11 +33,13 @@
             where TKey : class
         {
             this.VerifyDisposed();
-            var reference = this.items.AddOrUpdate(
-                key,
-                k => new RefCounted(owner, k, creator(), this),
-                (k, v) => this.Update(owner, v));
-            return reference;
+            return this.GetOrAdd(owner, (object)key, creator);
+        }
+
+        internal IRefCounted<TValue> GetOrAdd<TOwner>(TOwner owner, ReferencePair key, Func<TValue> creator)
+        {
+            this.VerifyDisposed();
+            return this.GetOrAdd(owner, (object)key, creator);
         }
 
         private void VerifyDisposed()
@@ -46,6 +48,15 @@
             {
                 throw new ObjectDisposedException(this.GetType().FullName);
             }
+        }
+
+        private IRefCounted<TValue> GetOrAdd<TOwner>(TOwner owner, object key, Func<TValue> creator)
+        {
+            var reference = this.items.AddOrUpdate(
+                key,
+                k => new RefCounted(owner, k, creator(), this),
+                (k, v) => this.Update(owner, v));
+            return reference;
         }
 
         private RefCounted Update(object owner, RefCounted value)

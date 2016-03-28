@@ -10,20 +10,20 @@ namespace Gu.State
         /// </summary>
         /// <param name="x">The first item to track changes for and compare to <paramref name="y"/>.</param>
         /// <param name="y">The othe item to track changes for and compare to <paramref name="x"/>.</param>
-        /// <param name="bindingFlags">
-        /// The <see cref="BindingFlags"/> to use when getting properties to track
-        /// </param>
         /// <param name="referenceHandling">
         /// - Structural or StructuralWithReferenceLoops is used property values for sub properties are tracked for the entire graph.
         /// - References tracks only one level and uses reference equality.
         /// - Throw throws and exception if there are nested trackable types
         /// </param>
+        /// <param name="bindingFlags">
+        /// The <see cref="BindingFlags"/> to use when getting properties to track
+        /// </param>
         /// <returns>An <see cref="IChangeTracker"/> that signals on differences between in <paramref name="x"/> and <paramref name="y"/></returns>
         public static DirtyTracker<T> IsDirty<T>(
             T x,
             T y,
-            BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags,
-            ReferenceHandling referenceHandling = ReferenceHandling.Throw)
+            ReferenceHandling referenceHandling = ReferenceHandling.Throw,
+            BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
             where T : class, INotifyPropertyChanged
         {
             var settings = PropertiesSettings.GetOrCreate(bindingFlags, referenceHandling);

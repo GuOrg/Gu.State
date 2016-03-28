@@ -39,12 +39,16 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Diff\Diff.cs" />
+    <Compile Include="Diff\IndexDiff.cs" />
+    <Compile Include="Diff\PropertyDiff.cs" />
     <Compile Include="Internals\Collections\DisposingMap{TKey, TValue}.cs" />
     <Compile Include="Internals\Collections\ImmutableList{T}.cs" />
     <Compile Include="Internals\Collections\IRefCountable.cs" />
     <Compile Include="Internals\Collections\IRefCounted.cs" />
     <Compile Include="Internals\Collections\RefCountCollection.cs" />
     <Compile Include="Internals\Collections\ReferenceComparer.cs" />
+    <Compile Include="Internals\Collections\ReferencePair.cs" />
     <Compile Include="Internals\Disposer.cs" />
     <Compile Include="Internals\EnumerableExt.cs" />
     <Compile Include="Internals\Errors\ErrorBuilder+TypeErrorsBuilder.cs" />
@@ -100,7 +104,7 @@
     <Compile Include="Internals\ChangeTrackerNode\EventArgs\RemoveEventArgs.cs" />
     <Compile Include="Internals\ChangeTrackerNode\EventArgs\ResetEventArgs.cs" />
     <Compile Include="Internals\ChangeTrackerNode\EventArgs\PropertyChangeEventArgs.cs" />
-    <Compile Include="Track\Dirty\Internals\DirtyTrackerNode.cs" />
+    <Compile Include="Track\Dirty\DirtyTrackerNode.cs" />
     <Compile Include="Track\Dirty\DirtyTracker{T}+ItemsDirtyTracker.cs" />
     <Compile Include="Track\Dirty\DirtyTracker{T}.PropertiesDirtyTracker.cs" />
     <Compile Include="Internals\ChangeTrackerNode\ChangeTrackerNode.cs" />
