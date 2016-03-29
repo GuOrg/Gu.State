@@ -1,27 +1,22 @@
 ﻿namespace Gu.State
 {
-    using System;
     using System.Reflection;
 
     public class PropertyDiff : Diff
     {
         private readonly ValueDiff valueDiff;
 
-        public PropertyDiff(PropertyInfo propertyInfo, object xValue, object yValue, Diff diff)
+        public PropertyDiff(PropertyInfo propertyInfo, object xValue, object yValue)
+            : this(propertyInfo, new ValueDiff(xValue, yValue))
+        {
+        }
+
+        public PropertyDiff(PropertyInfo propertyInfo, ValueDiff diff)
             : base(diff.Diffs)
         {
             this.PropertyInfo = propertyInfo;
-            this.valueDiff = new ValueDiff(xValue, yValue);
+            this.valueDiff = diff;
         }
-
-        public PropertyDiff(PropertyInfo propertyInfo, object xValue, object yValue)
-            : base(EmptyDiffs)
-        {
-            this.PropertyInfo = propertyInfo;
-            this.valueDiff = new ValueDiff(xValue, yValue);
-        }
-
-        public override bool IsEmpty => false;
 
         public PropertyInfo PropertyInfo { get; }
 
@@ -31,12 +26,7 @@
 
         public override string ToString()
         {
-            if (this.Diffs.Count == 0)
-            {
-                return $"{this.PropertyInfo.Name} {this.valueDiff}";
-            }
-
-            throw new NotImplementedException("message");
+            return $"{this.PropertyInfo.Name} {this.valueDiff}";
         }
     }
 }

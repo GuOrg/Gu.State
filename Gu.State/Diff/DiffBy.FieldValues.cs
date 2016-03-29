@@ -3,7 +3,7 @@
     using System;
     using System.Reflection;
 
-    public partial class DiffBy
+    public static partial class DiffBy
     {
         /// <summary>
         /// Compares x and y for equality using field values.

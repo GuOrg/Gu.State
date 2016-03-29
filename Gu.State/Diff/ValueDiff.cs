@@ -1,15 +1,21 @@
 ﻿namespace Gu.State
 {
+    using System.Collections.Generic;
+
     public class ValueDiff : Diff
     {
         public ValueDiff(object xValue, object yValue)
-            : base(EmptyDiffs)
         {
             this.X = xValue;
             this.Y = yValue;
         }
 
-        public override bool IsEmpty => false;
+        public ValueDiff(object xValue, object yValue, IReadOnlyCollection<Diff> diffs)
+            : base(diffs)
+        {
+            this.X = xValue;
+            this.Y = yValue;
+        }
 
         public object X { get; }
 

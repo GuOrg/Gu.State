@@ -5,7 +5,7 @@
     using System.Collections.Generic;
     using System.Reflection;
 
-    public partial class DiffBy
+    public static partial class DiffBy
     {
         /// <summary>
         /// Compares x and y for equality using property values.
@@ -43,41 +43,28 @@
         {
             EqualBy.Verify.CanEqualByPropertyValues(x, y, settings);
 
+            ValueDiff diff;
+            if (TryGetValueDiff(x, y, out diff))
+            {
+                return diff;
+            }
+
             var pairs = settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops
                             ? new ReferencePairCollection()
                             : null;
-            return PropertiesValuesDiff(x, y, settings, pairs);
+            var diffs = SubDiffs(x, y, settings, pairs);
+            return diffs == null
+                       ? null
+                       : new ValueDiff(x, y, diffs);
         }
 
-        private static Diff PropertiesValuesDiff<T>(
+        private static IReadOnlyCollection<Diff> SubDiffs<T>(
             T x,
             T y,
             PropertiesSettings settings,
             ReferencePairCollection referencePairs)
         {
             referencePairs?.Add(x, y);
-            if (ReferenceEquals(x, y))
-            {
-                return Diff.Empty;
-            }
-
-            if (x == null || y == null)
-            {
-                return new ValueDiff(x, y);
-            }
-
-            if (x.GetType() != y.GetType())
-            {
-                return new ValueDiff(x, y);
-            }
-
-            if (x.GetType().IsEquatable())
-            {
-                return Equals(x, y)
-                           ? Diff.Empty
-                           : new ValueDiff(x, y);
-            }
-
             if (x is IEnumerable)
             {
                 throw new NotImplementedException();
@@ -104,7 +91,7 @@
                 }
 
                 var propDiff = PropertyValueDiff(xv, yv, propertyInfo, settings, referencePairs);
-                if (propDiff.IsEmpty)
+                if (propDiff == null)
                 {
                     continue;
                 }
@@ -117,7 +104,7 @@
                 diffs.Add(propDiff);
             }
 
-            return diffs == null ? Diff.Empty : new Diff(diffs);
+            return diffs;
         }
 
         private static Diff ItemPropertiesDiff(
@@ -136,32 +123,25 @@
             PropertiesSettings settings,
             ReferencePairCollection referencePairs)
         {
-            if (ReferenceEquals(xValue, yValue))
+            ValueDiff diff;
+            if (TryGetValueDiff(xValue, yValue, out diff))
             {
-                return Diff.Empty;
-            }
-
-            if (xValue == null || yValue == null)
-            {
-                return new PropertyDiff(propertyInfo, xValue, yValue);
-            }
-
-            if (xValue.GetType().IsEquatable())
-            {
-                return Equals(xValue, yValue) ? Diff.Empty : new PropertyDiff(propertyInfo, xValue, yValue);
+                return diff == null
+                           ? null
+                           : new PropertyDiff(propertyInfo, diff);
             }
 
             switch (settings.ReferenceHandling)
             {
                 case ReferenceHandling.References:
-                    return ReferenceEquals(xValue, yValue) ? Diff.Empty : new PropertyDiff(propertyInfo, xValue, yValue);
+                    return ReferenceEquals(xValue, yValue) ? null : new PropertyDiff(propertyInfo, xValue, yValue);
                 case ReferenceHandling.Structural:
                 case ReferenceHandling.StructuralWithReferenceLoops:
                     EqualBy.Verify.CanEqualByPropertyValues(xValue, yValue, settings);
-                    var diff = PropertiesValuesDiff(xValue, yValue, settings, referencePairs);
-                    return diff.IsEmpty
-                               ? diff
-                               : new PropertyDiff(propertyInfo, xValue, yValue, diff);
+                    var diffs = SubDiffs(xValue, yValue, settings, referencePairs);
+                    return diff == null
+                               ? null
+                               : new PropertyDiff(propertyInfo, new ValueDiff(xValue, yValue, diffs));
 
                 case ReferenceHandling.Throw:
                     throw Throw.ShouldNeverGetHereException();

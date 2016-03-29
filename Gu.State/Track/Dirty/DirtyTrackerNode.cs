@@ -17,7 +17,7 @@
         private readonly IRefCounted<ChangeTrackerNode> yNode;
         private readonly DisposingMap<IDisposable> children = new DisposingMap<IDisposable>();
         private readonly object gate = new object();
-        private Diff diff = Diff.Empty;
+        private Diff diff;
 
         private DirtyTrackerNode(object x, object y, PropertiesSettings settings)
         {
@@ -59,7 +59,7 @@
 
         public event EventHandler<DirtyTrackerNode> ChildChanged;
 
-        public bool IsDirty => this.Diff.IsEmpty;
+        public bool IsDirty => this.Diff != null;
 
         public Diff Diff
         {
@@ -77,12 +77,8 @@
                         return;
                     }
 
-                    var wasEmpty = this.diff.IsEmpty;
                     this.diff = value;
-                    if (wasEmpty != this.diff.IsEmpty)
-                    {
-                        this.OnPropertyChanged(IsDirtyPropertyChangedEventArgs);
-                    }
+                    this.OnPropertyChanged(IsDirtyPropertyChangedEventArgs);
                 }
             }
         }

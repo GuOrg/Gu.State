@@ -1,19 +1,14 @@
 namespace Gu.State
 {
-    using System;
-
     public class IndexDiff : Diff
     {
         private readonly ValueDiff valueDiff;
 
         public IndexDiff(int index, object xValue, object yValue)
-            : base(EmptyDiffs)
         {
             this.Index = index;
             this.valueDiff = new ValueDiff(xValue, yValue);
         }
-
-        public override bool IsEmpty => false;
 
         public int Index { get; }
 
@@ -23,12 +18,7 @@ namespace Gu.State
 
         public override string ToString()
         {
-            if (this.Diffs.Count == 0)
-            {
-                return $"{this.Index} {this.valueDiff}";
-            }
-
-            throw new NotImplementedException("message");
+            return $"{this.Index} {this.valueDiff}";
         }
     }
 }

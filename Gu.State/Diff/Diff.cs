@@ -1,23 +1,21 @@
 ﻿namespace Gu.State
 {
     using System;
+    using System.CodeDom.Compiler;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
 
     public class Diff
     {
-        protected static readonly Diff[] EmptyDiffs = new Diff[0];
-        public static readonly Diff Empty = new Diff(EmptyDiffs);
+        private static readonly IReadOnlyCollection<Diff> Empty = new Diff[0];
 
-        internal Diff(IReadOnlyCollection<Diff> diffs)
+        internal Diff(IReadOnlyCollection<Diff> diffs = null)
         {
-            this.Diffs = diffs;
+            this.Diffs = diffs ?? Empty;
         }
 
         public IReadOnlyCollection<Diff> Diffs { get; }
-
-        public virtual bool IsEmpty => this.Diffs.Count == 0;
 
         public Diff Without(PropertyInfo propertyInfo)
         {
@@ -42,11 +40,6 @@
 
         public override string ToString()
         {
-            if (this.IsEmpty)
-            {
-                return string.Empty;
-            }
-
             throw new NotImplementedException();
         }
     }

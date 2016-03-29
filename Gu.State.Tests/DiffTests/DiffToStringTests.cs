@@ -6,12 +6,6 @@
 
     public class DiffToStringTests
     {
-        [Test]
-        public void Empty()
-        {
-            Assert.AreEqual("", Diff.Empty.ToString());
-        }
-
         [TestCase("a", "b", "StringValue x: a y: b")]
         [TestCase(null, "b", "StringValue x: null y: b")]
         public void PropertyDiff(string x, string y, string expected)
