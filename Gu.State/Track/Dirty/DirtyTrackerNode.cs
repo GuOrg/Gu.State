@@ -139,9 +139,10 @@
             {
                 lock (this.gate)
                 {
-                    this.Diff = EqualBy.PropertyValues(xValue, yValue, this.Settings)
-                                    ? this.diff.Without(propertyInfo)
-                                    : this.diff.With(propertyInfo, xValue, yValue);
+                    throw new NotImplementedException("message");
+                    //this.Diff = EqualBy.PropertyValues(xValue, yValue, this.Settings)
+                    //                ? this.diff.Without(propertyInfo)
+                    //                : this.diff.With(propertyInfo, xValue, yValue);
                 }
             }
         }
@@ -171,9 +172,10 @@
                 var propertyInfo = key as PropertyInfo;
                 if (propertyInfo != null)
                 {
-                    var xValue = propertyInfo.GetValue(this.xNode.Tracker.Source);
-                    var yValue = propertyInfo.GetValue(this.yNode.Tracker.Source);
-                    this.Diff = this.diff.With(propertyInfo, xValue, yValue);
+                    throw new NotImplementedException("message");
+                    //var xValue = propertyInfo.GetValue(this.xNode.Tracker.Source);
+                    //var yValue = propertyInfo.GetValue(this.yNode.Tracker.Source);
+                    //this.Diff = this.diff.With(propertyInfo, xValue, yValue);
                 }
 
                 this.ChildChanged?.Invoke(this, originalSource);

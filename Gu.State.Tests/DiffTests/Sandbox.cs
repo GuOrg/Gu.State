@@ -24,12 +24,14 @@
             Assert.AreEqual(x.StringValue, propertyDiff.X);
             Assert.AreEqual(y.StringValue, propertyDiff.Y);
             CollectionAssert.IsEmpty(propertyDiff.Diffs);
+            Console.Write(result);
 
-            Assert.Inconclusive();
-            var expected = new StringBuilder().AppendLine("WithSimpleProperties")
-                                              .Append(" StringValue: b c")
-                                              .ToString();
+            var expected = "x: Gu.State.Tests.DiffTests.DiffTypes+WithSimpleProperties y: Gu.State.Tests.DiffTests.DiffTypes+WithSimpleProperties diffs: 1";
             Assert.AreEqual(expected, result.ToString());
+
+            expected = "WithSimpleProperties StringValue x: a y: b";
+            var actual = result.ToString("", " ");
+            Assert.AreEqual(expected, actual);
         }
 
         [Test]
@@ -42,10 +44,11 @@
             Assert.AreEqual(x, result.X);
             Assert.AreEqual(y, result.Y);
             CollectionAssert.IsEmpty(result.Diffs);
-
-            Assert.Inconclusive();
-            var expected = "int x: 1 y: 2";
+            var expected = "x: 1 y: 2 diffs: 0";
             Assert.AreEqual(expected, result.ToString());
+
+            expected = "int x: 1 y: 2";
+            Assert.AreEqual(expected, result.ToString("", ""));
         }
     }
 }

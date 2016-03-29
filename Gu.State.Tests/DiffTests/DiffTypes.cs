@@ -92,7 +92,8 @@
 
         public class ComplexType
         {
-            public static readonly TestComparer Comparer = new TestComparer();
+            private string name;
+            private int value;
 
             public ComplexType()
             {
@@ -104,52 +105,16 @@
                 this.Value = value;
             }
 
-            public string Name { get; set; }
-
-            public int Value { get; set; }
-
-            public sealed class TestComparer : IEqualityComparer<ComplexType>, IComparer<ComplexType>, IComparer
+            public string Name
             {
-                public bool Equals(ComplexType x, ComplexType y)
-                {
-                    if (ReferenceEquals(x, y))
-                    {
-                        return true;
-                    }
-                    if (ReferenceEquals(x, null))
-                    {
-                        return false;
-                    }
-                    if (ReferenceEquals(y, null))
-                    {
-                        return false;
-                    }
-                    if (x.GetType() != y.GetType())
-                    {
-                        return false;
-                    }
-                    return string.Equals(x.Name, y.Name) && x.Value == y.Value;
-                }
+                get { return this.name; }
+                set { this.name = value; }
+            }
 
-                public int GetHashCode(ComplexType obj)
-                {
-                    unchecked
-                    {
-                        return ((obj.Name?.GetHashCode() ?? 0) * 397) ^ obj.Value;
-                    }
-                }
-
-                public int Compare(ComplexType x, ComplexType y)
-                {
-                    return this.Equals(x, y)
-                               ? 0
-                               : -1;
-                }
-
-                int IComparer.Compare(object x, object y)
-                {
-                    return this.Compare((ComplexType)x, (ComplexType)y);
-                }
+            public int Value
+            {
+                get { return this.value; }
+                set { this.value = value; }
             }
         }
 

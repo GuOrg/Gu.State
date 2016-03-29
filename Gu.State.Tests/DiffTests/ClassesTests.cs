@@ -19,29 +19,31 @@
             Assert.AreEqual(data.Equals, this.DiffMethod(data.Source, data.Target));
         }
 
-        [TestCase("b", "b", "")]
-        [TestCase("b", "c", "WithSimpleProperties\r\n StringValue: b c")]
+        [TestCase("b", "b", null)]
+        [TestCase("b", "c", "WithSimpleProperties <member> x: b y: c")]
         public void WithSimpleHappyPath(string xn, string yn, string expected)
         {
+            expected = expected?.Replace("<member>", this is FieldValues.Classes ? "stringValue" : "StringValue");
             var x = new WithSimpleProperties(1, 2, xn, StringSplitOptions.RemoveEmptyEntries);
             var y = new WithSimpleProperties(1, 2, yn, StringSplitOptions.RemoveEmptyEntries);
             var result = this.DiffMethod(x, y);
-            Assert.AreEqual(expected, result.ToString());
+            Assert.AreEqual(expected, result?.ToString("", " "));
 
             result = this.DiffMethod(x, y, ReferenceHandling.Throw);
-            Assert.AreEqual(expected, result.ToString());
+            Assert.AreEqual(expected, result?.ToString("", " "));
 
             result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(expected, result.ToString());
+            Assert.AreEqual(expected, result?.ToString("", " "));
 
             result = this.DiffMethod(x, y, ReferenceHandling.References);
-            Assert.AreEqual(expected, result.ToString());
+            Assert.AreEqual(expected, result?.ToString("", " "));
         }
 
-        [TestCase("b", "b", "meh")]
-        [TestCase("b", "c", "")]
+        [TestCase("b", "b", null)]
+        [TestCase("b", "c", "WithComplexProperty ComplexType <member> x: b y: c")]
         public void WithComplexStructural(string xn, string yn, string expected)
         {
+            expected = expected?.Replace("<member>", this is FieldValues.Classes ? "name" : "Name");
             var x = new WithComplexProperty("a", 1)
             {
                 ComplexType = new ComplexType { Name = xn, Value = 2 }
@@ -51,8 +53,12 @@
             {
                 ComplexType = new ComplexType { Name = yn, Value = 2 }
             };
+
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(expected, result.ToString());
+            Assert.AreEqual(expected, result?.ToString("", " "));
+
+            result = this.DiffMethod(x, y, ReferenceHandling.StructuralWithReferenceLoops);
+            Assert.AreEqual(expected, result?.ToString("", " "));
         }
 
         [Test]

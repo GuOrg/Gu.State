@@ -1,12 +1,9 @@
 ﻿namespace Gu.State
 {
-    using System;
     using System.CodeDom.Compiler;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
 
-    public class Diff
+    public abstract class Diff
     {
         private static readonly IReadOnlyCollection<Diff> Empty = new Diff[0];
 
@@ -17,30 +14,29 @@
 
         public IReadOnlyCollection<Diff> Diffs { get; }
 
-        public Diff Without(PropertyInfo propertyInfo)
-        {
-            if (this.Diffs.OfType<PropertyDiff>().Any(x => x.PropertyInfo == propertyInfo))
-            {
-                return new Diff(this.Diffs.Where(x => (x as PropertyDiff)?.PropertyInfo != propertyInfo).ToArray());
-            }
+        public abstract string ToString(string tabString, string newLine);
 
-            return this;
-        }
+        internal abstract IndentedTextWriter WriteDiffs(IndentedTextWriter writer);
 
-        public Diff With(PropertyInfo propertyInfo, object xValue, object yValue)
-        {
-            if (this.Diffs.OfType<PropertyDiff>().Any(x => x.PropertyInfo == propertyInfo))
-            {
-                var diffs = this.Diffs.Where(x => (x as PropertyDiff)?.PropertyInfo != propertyInfo).Append(new PropertyDiff(propertyInfo, xValue, yValue)).ToArray();
-                return new Diff(diffs);
-            }
+        //public Diff Without(PropertyInfo propertyInfo)
+        //{
+        //    if (this.Diffs.OfType<PropertyDiff>().Any(x => x.PropertyInfo == propertyInfo))
+        //    {
+        //        return new Diff(this.Diffs.Where(x => (x as PropertyDiff)?.PropertyInfo != propertyInfo).ToArray());
+        //    }
 
-            return new Diff(this.Diffs.Append(new PropertyDiff(propertyInfo, xValue, yValue)).ToArray());
-        }
+        //    return this;
+        //}
 
-        public override string ToString()
-        {
-            throw new NotImplementedException();
-        }
+        //public Diff With(PropertyInfo propertyInfo, object xValue, object yValue)
+        //{
+        //    if (this.Diffs.OfType<PropertyDiff>().Any(x => x.PropertyInfo == propertyInfo))
+        //    {
+        //        var diffs = this.Diffs.Where(x => (x as PropertyDiff)?.PropertyInfo != propertyInfo).Append(new PropertyDiff(propertyInfo, xValue, yValue)).ToArray();
+        //        return new Diff(diffs);
+        //    }
+
+        //    return new Diff(this.Diffs.Append(new PropertyDiff(propertyInfo, xValue, yValue)).ToArray());
+        //}
     }
 }

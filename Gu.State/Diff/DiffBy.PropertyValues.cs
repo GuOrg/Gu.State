@@ -139,7 +139,7 @@
                 case ReferenceHandling.StructuralWithReferenceLoops:
                     EqualBy.Verify.CanEqualByPropertyValues(xValue, yValue, settings);
                     var diffs = SubDiffs(xValue, yValue, settings, referencePairs);
-                    return diff == null
+                    return diffs == null
                                ? null
                                : new PropertyDiff(propertyInfo, new ValueDiff(xValue, yValue, diffs));
 
