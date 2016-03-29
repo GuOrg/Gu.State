@@ -39,17 +39,12 @@
         /// <returns>Diff.Empty if <paramref name="x"/> and <paramref name="y"/> are equal</returns>
         public static Diff FieldValues<T>(T x, T y, FieldsSettings settings)
         {
-            EqualBy.Verify.CanEqualByFieldValues(x, y, settings);
             throw new NotImplementedException("message");
-            
-            //if (settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops)
-            //{
-            //    var referencePairs = new ReferencePairCollection();
-            //    return FieldssValuesDiff(x, y, settings, referencePairs);
-            //}
-
+            //EqualBy.Verify.CanEqualByFieldValues(x, y, settings);
+            //var pairs = settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops
+            //    ? new ReferencePairCollection()
+            //    : null;
             //return FieldssValuesDiff(x, y, settings, null);
         }
-
     }
 }

@@ -41,14 +41,10 @@
         public static bool PropertyValues<T>(T x, T y, PropertiesSettings settings)
         {
             Verify.CanEqualByPropertyValues(x, y, settings);
-
-            if (settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops)
-            {
-                var referencePairs = new ReferencePairCollection();
-                return PropertiesValuesEquals(x, y, settings, referencePairs);
-            }
-
-            return PropertiesValuesEquals(x, y, settings, null);
+            var pairs = settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops
+                            ? new ReferencePairCollection()
+                            : null;
+            return PropertiesValuesEquals(x, y, settings, pairs);
         }
 
         private static bool PropertiesValuesEquals<T>(

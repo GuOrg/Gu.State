@@ -43,13 +43,10 @@
         {
             EqualBy.Verify.CanEqualByPropertyValues(x, y, settings);
 
-            if (settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops)
-            {
-                var referencePairs = new ReferencePairCollection();
-                return PropertiesValuesDiff(x, y, settings, referencePairs);
-            }
-
-            return PropertiesValuesDiff(x, y, settings, null);
+            var pairs = settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops
+                            ? new ReferencePairCollection()
+                            : null;
+            return PropertiesValuesDiff(x, y, settings, pairs);
         }
 
         private static Diff PropertiesValuesDiff<T>(
