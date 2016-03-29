@@ -11,14 +11,6 @@
     {
         public abstract Diff DiffMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excludedMembers = null, Type excludedType = null) where T : class;
 
-        public static IReadOnlyList<DiffTestsShared.DiffData> DiffSource => DiffTestsShared.DiffSource;
-
-        [TestCaseSource(nameof(DiffSource))]
-        public void PropertyValuesHappyPath(DiffTestsShared.DiffData data)
-        {
-            Assert.AreEqual(data.Equals, this.DiffMethod(data.Source, data.Target));
-        }
-
         [TestCase("b", "b", null)]
         [TestCase("b", "c", "WithSimpleProperties <member> x: b y: c")]
         public void WithSimpleHappyPath(string xn, string yn, string expected)
@@ -68,36 +60,42 @@
             var y = new WithComplexProperty { Name = "a", Value = 1 };
             this.DiffMethod(x, y, ReferenceHandling.Structural);
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual("", result.ToString());
+            Assert.AreEqual(null, result);
 
             result = this.DiffMethod(x, y, ReferenceHandling.References);
-            Assert.AreEqual("", result.ToString());
+            Assert.AreEqual(null, result);
         }
 
         [Test]
         public void WithComplexStructuralWhenXIsNull()
         {
+            var expected = this is FieldValues.Classes
+                               ? "WithComplexProperty complexType x: Gu.State.Tests.DiffTests.DiffTypes+ComplexType y: null"
+                               : "WithComplexProperty ComplexType x: Gu.State.Tests.DiffTests.DiffTypes+ComplexType y: null";
             var x = new WithComplexProperty { Name = "a", Value = 1, ComplexType = new ComplexType("b", 1) };
             var y = new WithComplexProperty { Name = "a", Value = 1 };
             this.DiffMethod(x, y, ReferenceHandling.Structural);
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(false, result);
+            Assert.AreEqual(expected, result.ToString("", " "));
 
             result = this.DiffMethod(x, y, ReferenceHandling.References);
-            Assert.AreEqual(false, result);
+            Assert.AreEqual(expected, result.ToString("", " "));
         }
 
         [Test]
         public void WithComplexStructuralWhenYIsNull()
         {
+            var expected = this is FieldValues.Classes
+                   ? "WithComplexProperty complexType x: null y: Gu.State.Tests.DiffTests.DiffTypes+ComplexType"
+                   : "WithComplexProperty ComplexType x: null y: Gu.State.Tests.DiffTests.DiffTypes+ComplexType";
             var x = new WithComplexProperty { Name = "a", Value = 1 };
             var y = new WithComplexProperty { Name = "a", Value = 1, ComplexType = new ComplexType("b", 1) };
             this.DiffMethod(x, y, ReferenceHandling.Structural);
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(false, result);
+            Assert.AreEqual(expected, result.ToString("", " "));
 
             result = this.DiffMethod(x, y, ReferenceHandling.References);
-            Assert.AreEqual(false, result);
+            Assert.AreEqual(expected, result.ToString("", " "));
         }
 
         [TestCase(ReferenceHandling.Structural)]
@@ -118,12 +116,12 @@
                 ComplexType = x.ComplexType
             };
             var result = this.DiffMethod(x, y, referenceHandling);
-            Assert.AreEqual("", result.ToString());
+            Assert.AreEqual(null, result);
         }
 
-        [TestCase(ReferenceHandling.Structural, "")]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops, "")]
-        [TestCase(ReferenceHandling.References, "WithComplexProperty\r\n ComplexType x: ComplexType y: ComplexType")]
+        [TestCase(ReferenceHandling.Structural, null)]
+        [TestCase(ReferenceHandling.StructuralWithReferenceLoops, null)]
+        [TestCase(ReferenceHandling.References, "WithComplexProperty ComplexType x: ComplexType y: ComplexType")]
         public void WithComplexReferenceWhenNotSame(ReferenceHandling referenceHandling, string expected)
         {
             var x = new WithComplexProperty
@@ -139,7 +137,7 @@
                 ComplexType = new ComplexType { Name = "b", Value = 2 }
             };
             var result = this.DiffMethod(x, y, referenceHandling);
-            Assert.AreEqual(expected, result.ToString());
+            Assert.AreEqual(expected, result?.ToString("", " "));
         }
 
         [TestCase(1, 1, null, "")]

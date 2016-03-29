@@ -1,7 +1,6 @@
 ﻿namespace Gu.State.Tests.DiffTests.FieldValues
 {
     using System;
-    using System.Collections.Generic;
 
     public class Classes : ClassesTests
     {
@@ -21,7 +20,5 @@
             var settings = builder.CreateSettings(referenceHandling);
             return DiffBy.FieldValues(x, y, settings);
         }
-
-        public new static IReadOnlyList<DiffTestsShared.DiffData> DiffSource => DiffTestsShared.DiffSource;
     }
 }

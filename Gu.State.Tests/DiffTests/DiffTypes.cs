@@ -230,6 +230,12 @@
 
         public class WithComplexProperty
         {
+            private ComplexType complexType;
+
+            private int value;
+
+            private string name;
+
             public WithComplexProperty()
             {
             }
@@ -247,11 +253,23 @@
                 this.ComplexType = complexType;
             }
 
-            public string Name { get; set; }
+            public string Name
+            {
+                get { return this.name; }
+                set { this.name = value; }
+            }
 
-            public int Value { get; set; }
+            public int Value
+            {
+                get { return this.value; }
+                set { this.value = value; }
+            }
 
-            public ComplexType ComplexType { get; set; }
+            public ComplexType ComplexType
+            {
+                get { return this.complexType; }
+                set { this.complexType = value; }
+            }
         }
 
         public class WithProperty<T>

@@ -65,16 +65,8 @@
             ReferencePairCollection referencePairs)
         {
             referencePairs?.Add(x, y);
-            if (x is IEnumerable)
-            {
-                throw new NotImplementedException();
-                //if (!EnumerableDiff(x, y, ItemPropertiesDiff, settings, referencePairs))
-                //{
-                //    return false;
-                //}
-            }
+            List<Diff> diffs = Enumerable.Diffs(x, y, settings, referencePairs, ItemPropertiesDiff);
 
-            List<Diff> diffs = null;
             var propertyInfos = x.GetType().GetProperties(settings.BindingFlags);
             foreach (var propertyInfo in propertyInfos)
             {
