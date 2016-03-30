@@ -99,13 +99,24 @@
             return diffs;
         }
 
-        private static Diff ItemPropertiesDiff(
+        private static ValueDiff ItemPropertiesDiff(
             object x,
             object y,
             PropertiesSettings settings,
             ReferencePairCollection referencePairs)
         {
-            return PropertyValueDiff(x, y, null, settings, referencePairs);
+            EqualBy.Verify.CanEqualByPropertyValues(x, y, settings);
+
+            ValueDiff diff;
+            if (TryGetValueDiff(x, y, out diff))
+            {
+                return diff;
+            }
+
+            var diffs = SubDiffs(x, y, settings, referencePairs);
+            return diffs == null
+                       ? null
+                       : new ValueDiff(x, y, diffs);
         }
 
         private static Diff PropertyValueDiff(

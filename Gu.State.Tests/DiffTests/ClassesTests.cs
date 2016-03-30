@@ -4,6 +4,7 @@
     using System.Collections.Generic;
 
     using NUnit.Framework;
+    using NUnit.Framework.Constraints;
 
     using static DiffTypes;
 
@@ -121,9 +122,10 @@
 
         [TestCase(ReferenceHandling.Structural, null)]
         [TestCase(ReferenceHandling.StructuralWithReferenceLoops, null)]
-        [TestCase(ReferenceHandling.References, "WithComplexProperty ComplexType x: ComplexType y: ComplexType")]
+        [TestCase(ReferenceHandling.References, "WithComplexProperty <member> x: Gu.State.Tests.DiffTests.DiffTypes+ComplexType y: Gu.State.Tests.DiffTests.DiffTypes+ComplexType")]
         public void WithComplexReferenceWhenNotSame(ReferenceHandling referenceHandling, string expected)
         {
+            expected = expected?.Replace("<member>", this is FieldValues.Classes ? "complexType" : "ComplexType");
             var x = new WithComplexProperty
             {
                 Name = "a",
@@ -140,24 +142,25 @@
             Assert.AreEqual(expected, result?.ToString("", " "));
         }
 
-        [TestCase(1, 1, null, "")]
-        [TestCase(1, 2, null, "meh")]
-        [TestCase(1, 1, ReferenceHandling.Throw, "")]
-        [TestCase(1, 1, ReferenceHandling.Structural, "")]
-        [TestCase(1, 1, ReferenceHandling.References, "")]
+        [TestCase(1, 1, null, null)]
+        [TestCase(1, 2, null, "WithComplexProperty <member> x: 1 y: 2")]
+        [TestCase(1, 1, ReferenceHandling.Throw, null)]
+        [TestCase(1, 1, ReferenceHandling.Structural, null)]
+        [TestCase(1, 1, ReferenceHandling.References, null)]
         public void WithReadonlyIntHappyPath(int xv, int yv, ReferenceHandling? referenceHandling, string expected)
         {
+            expected = expected?.Replace("<member>", this is FieldValues.Classes ? "Value" : "Value");
             var x = new WithReadonlyProperty<int>(xv);
             var y = new WithReadonlyProperty<int>(yv);
             if (referenceHandling == null)
             {
                 var result = this.DiffMethod(x, y);
-                Assert.AreEqual(expected, result.ToString());
+                Assert.AreEqual(expected, result?.ToString());
             }
             else
             {
                 var result = this.DiffMethod(x, y, referenceHandling.Value);
-                Assert.AreEqual(expected, result.ToString());
+                Assert.AreEqual(expected, result?.ToString());
             }
         }
 

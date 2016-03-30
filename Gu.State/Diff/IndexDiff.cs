@@ -8,9 +8,14 @@ namespace Gu.State
         private readonly ValueDiff valueDiff;
 
         public IndexDiff(int index, object xValue, object yValue)
+            : this(index, new ValueDiff(xValue, yValue))
+        {
+        }
+
+        public IndexDiff(int index, ValueDiff valueDiff)
         {
             this.Index = index;
-            this.valueDiff = new ValueDiff(xValue, yValue);
+            this.valueDiff = valueDiff;
         }
 
         public int Index { get; }
