@@ -143,35 +143,36 @@
         }
 
         [TestCase(1, 1, null, null)]
-        [TestCase(1, 2, null, "WithComplexProperty <member> x: 1 y: 2")]
+        [TestCase(1, 2, null, "WithReadonlyProperty<int> <member> x: 1 y: 2")]
         [TestCase(1, 1, ReferenceHandling.Throw, null)]
         [TestCase(1, 1, ReferenceHandling.Structural, null)]
         [TestCase(1, 1, ReferenceHandling.References, null)]
         public void WithReadonlyIntHappyPath(int xv, int yv, ReferenceHandling? referenceHandling, string expected)
         {
-            expected = expected?.Replace("<member>", this is FieldValues.Classes ? "Value" : "Value");
+            expected = expected?.Replace("<member>", this is FieldValues.Classes ? "<Value>k__BackingField" : "Value");
             var x = new WithReadonlyProperty<int>(xv);
             var y = new WithReadonlyProperty<int>(yv);
             if (referenceHandling == null)
             {
                 var result = this.DiffMethod(x, y);
-                Assert.AreEqual(expected, result?.ToString());
+                Assert.AreEqual(expected, result?.ToString("", " "));
             }
             else
             {
                 var result = this.DiffMethod(x, y, referenceHandling.Value);
-                Assert.AreEqual(expected, result?.ToString());
+                Assert.AreEqual(expected, result?.ToString("", " "));
             }
         }
 
-        [TestCase("a", "a", "")]
-        [TestCase("a", "b", "meh")]
+        [TestCase("a", "a", null)]
+        [TestCase("a", "b", "WithReadonlyProperty<ComplexType> <member> Name x: a y: b")]
         public void WithReadonlyComplex(string xv, string yv, string expected)
         {
+            expected = expected?.Replace("<member>", this is FieldValues.Classes ? "<Value>k__BackingField" : "Value");
             var x = new WithReadonlyProperty<ComplexType>(new ComplexType(xv, 1));
             var y = new WithReadonlyProperty<ComplexType>(new ComplexType(yv, 1));
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(expected, result.ToString());
+            Assert.AreEqual(expected, result?.ToString("", " "));
         }
 
         [Test]
@@ -180,19 +181,17 @@
             var x = new WithListProperty<int> { Items = { 1, 2, 3 } };
             var y = new WithListProperty<int>();
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(false, result);
+            Assert.AreEqual("WithListProperty<int> Items [0] x: 1 y: missing item [1] x: 2 y: missing item [2] x: 3 y: missing item", result?.ToString("", " "));
         }
 
-        [Test]
-        public void WithListOfIntsNullToNull()
+        [TestCase(ReferenceHandling.Structural)]
+        [TestCase(ReferenceHandling.References)]
+        public void WithListOfIntsNullToNull(ReferenceHandling referenceHandling)
         {
             var x = new WithListProperty<int> { Items = null };
             var y = new WithListProperty<int> { Items = null };
-            var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(true, result);
-
-            result = this.DiffMethod(x, y, ReferenceHandling.References);
-            Assert.AreEqual(true, result);
+            var result = this.DiffMethod(x, y, referenceHandling);
+            Assert.AreEqual(null, result);
         }
 
         [Test]
@@ -201,10 +200,13 @@
             var x = new WithListProperty<int> { Items = new List<int>() };
             var y = new WithListProperty<int> { Items = new List<int>() };
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(true, result);
+            Assert.AreEqual(null, result);
 
             result = this.DiffMethod(x, y, ReferenceHandling.References);
-            Assert.AreEqual(false, result);
+            var expected = this is FieldValues.Classes
+                               ? "WithListProperty<int> <Items>k__BackingField x: System.Collections.Generic.List`1[System.Int32] y: System.Collections.Generic.List`1[System.Int32]"
+                               : "WithListProperty<int> Items x: System.Collections.Generic.List`1[System.Int32] y: System.Collections.Generic.List`1[System.Int32]";
+            Assert.AreEqual(expected, result.ToString("", " "));
         }
 
         [Test]
@@ -213,7 +215,10 @@
             var x = new WithListProperty<int> { Items = { 1, 2, 3 } };
             var y = new WithListProperty<int> { Items = null };
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(false, result);
+            var expected = this is FieldValues.Classes
+                               ? "WithListProperty<int> <Items>k__BackingField x: System.Collections.Generic.List`1[System.Int32] y: null"
+                               : "WithListProperty<int> Items x: System.Collections.Generic.List`1[System.Int32] y: null";
+            Assert.AreEqual(expected, result.ToString("", " "));
         }
 
         [TestCase(ReferenceHandling.Structural)]
@@ -224,7 +229,7 @@
             var y = new WithArrayProperty("a", 1, null);
 
             var result = this.DiffMethod(x, y, referenceHandling);
-            Assert.AreEqual(false, result);
+            Assert.AreEqual("", result.ToString("", " "));
         }
 
         [Test]
@@ -233,7 +238,10 @@
             var x = new WithListProperty<int> { Items = { 1, 2, 3 } };
             var y = new WithListProperty<int> { Items = { 1, 2, 3, 4 } };
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(false, result);
+            var expected = this is FieldValues.Classes
+                   ? "WithListProperty<int> <Items>k__BackingField [3] x: missing item y: 4"
+                   : "WithListProperty<int> Items [3] x: missing item y: 4";
+            Assert.AreEqual(expected, result.ToString("", " "));
         }
 
         [Test]
@@ -242,7 +250,7 @@
             var x = new WithListProperty<ComplexType> { Items = { new ComplexType("a", 1) } };
             var y = new WithListProperty<ComplexType> { Items = { new ComplexType("a", 1) } };
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(true, result);
+            Assert.AreEqual(null, result);
         }
 
         [Test]
@@ -251,16 +259,20 @@
             var source = new WithListProperty<ComplexType> { Items = { new ComplexType("a", 1) } };
             var target = new WithListProperty<ComplexType> { Items = { new ComplexType("a", 1), new ComplexType("a", 1) } };
             var result = this.DiffMethod(source, target, ReferenceHandling.Structural);
-            Assert.AreEqual(false, result);
+            var expected = this is FieldValues.Classes
+                               ? "WithComplexProperty complexType x: null y: Gu.State.Tests.DiffTests.DiffTypes+ComplexType"
+                               : "WithComplexProperty ComplexType x: null y: Gu.State.Tests.DiffTests.DiffTypes+ComplexType";
+            Assert.AreEqual(expected, result.ToString("", " "));
         }
 
-        [TestCase(1, 1, null, "")]
-        [TestCase(1, 2, null, "meh")]
-        [TestCase(1, 1, ReferenceHandling.Throw, "")]
-        [TestCase(1, 1, ReferenceHandling.Structural, "")]
-        [TestCase(1, 1, ReferenceHandling.References, "")]
+        [TestCase(1, 1, null, null)]
+        [TestCase(1, 2, null, "WithSimpleProperties <member> x: 1 y: 2")]
+        [TestCase(1, 1, ReferenceHandling.Throw, null)]
+        [TestCase(1, 1, ReferenceHandling.Structural, null)]
+        [TestCase(1, 1, ReferenceHandling.References, null)]
         public void IgnoresMember(int xv, int yv, ReferenceHandling? referenceHandling, string expected)
         {
+            expected = expected?.Replace("<member>", this is FieldValues.Classes ? "<Value>k__BackingField" : "IntValue");
             var x = new WithSimpleProperties(xv, null, "3", StringSplitOptions.RemoveEmptyEntries);
             var y = new WithSimpleProperties(yv, 2, "3", StringSplitOptions.RemoveEmptyEntries);
             var excluded = this.GetType() == typeof(EqualByTests.FieldValues.Classes)
@@ -269,37 +281,39 @@
             if (referenceHandling == null)
             {
                 var result = this.DiffMethod(x, y, excludedMembers: excluded);
-                Assert.AreEqual(expected, result.ToString());
+                Assert.AreEqual(expected, result?.ToString("", " "));
             }
             else
             {
                 var result = this.DiffMethod(x, y, referenceHandling.Value, excluded);
-                Assert.AreEqual(expected, result.ToString());
+                Assert.AreEqual(expected, result?.ToString("", " "));
             }
         }
 
-        [TestCase("a", "")]
-        [TestCase("b", "meh")]
+        [TestCase("a", null)]
+        [TestCase("b", "WithComplexProperty <member> x: b y: a")]
         public void IgnoresType(string xv, string expected)
         {
+            expected = expected?.Replace("<member>", this is FieldValues.Classes ? "<Name>k__BackingField" : "Name");
             var x = new WithComplexProperty(xv, 1, new ComplexType("b", 2));
             var y = new WithComplexProperty("a", 1, new ComplexType("c", 2));
             var result = this.DiffMethod(x, y, referenceHandling: ReferenceHandling.Structural, excludedType: typeof(ComplexType));
-            Assert.AreEqual(expected, result.ToString());
+            Assert.AreEqual(expected, result?.ToString("", " "));
         }
 
-        [TestCase("p", "c", "")]
-        [TestCase("", "c", "meh")]
-        [TestCase("p", "", "meh")]
+        [TestCase("p", "c", null)]
+        [TestCase("", "c", "Parent Name x: p y: ")]
+        [TestCase("p", "", "Parent Child Name x: c y: ")]
         public void ParentChild(string p, string c, string expected)
         {
+            expected = expected?.Replace("<member>", this is FieldValues.Classes ? "<Value>k__BackingField" : "Value");
             var x = new Parent("p", new Child("c"));
             var y = new Parent(p, new Child(c));
             var result = this.DiffMethod(x, y, ReferenceHandling.StructuralWithReferenceLoops);
-            Assert.AreEqual(expected, result.ToString());
+            Assert.AreEqual(expected, result?.ToString("", " "));
 
             result = this.DiffMethod(y, x, ReferenceHandling.StructuralWithReferenceLoops);
-            Assert.AreEqual(expected, result.ToString());
+            Assert.AreEqual(expected, result?.ToString("", " "));
         }
 
         [Test]
@@ -308,13 +322,13 @@
             var x = new Parent("p", new Child("c"));
             var y = new Parent("p", null);
             var result = this.DiffMethod(x, y, ReferenceHandling.StructuralWithReferenceLoops);
-            Assert.AreEqual(false, result);
+            Assert.AreEqual("", result.ToString("", " "));
 
             //result = this.EqualMethod(y, x, ReferenceHandling.Structural);
             //Assert.AreEqual(false, result);
 
             result = this.DiffMethod(y, x, ReferenceHandling.References);
-            Assert.AreEqual(false, result);
+            Assert.AreEqual("", result.ToString("", " "));
         }
 
         [Test]
@@ -323,13 +337,13 @@
             var x = new Parent("p", null);
             var y = new Parent("p", new Child("c"));
             var result = this.DiffMethod(x, y, ReferenceHandling.StructuralWithReferenceLoops);
-            Assert.AreEqual(false, result);
+            Assert.AreEqual("", result.ToString("", " "));
 
             //result = this.EqualMethod(y, x, ReferenceHandling.Structural);
             //Assert.AreEqual(false, result);
 
             result = this.DiffMethod(y, x, ReferenceHandling.References);
-            Assert.AreEqual(false, result);
+            Assert.AreEqual("", result.ToString("", " "));
         }
     }
 }

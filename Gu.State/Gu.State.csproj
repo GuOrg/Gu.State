@@ -44,7 +44,9 @@
     <Compile Include="Diff\DiffBy.FieldValues.cs" />
     <Compile Include="Diff\DiffBy.PropertyValues.cs" />
     <Compile Include="Diff\DiffBy.Shared.cs" />
+    <Compile Include="Diff\FieldDiff.cs" />
     <Compile Include="Diff\IndexDiff.cs" />
+    <Compile Include="Diff\MemberDiff.cs" />
     <Compile Include="Diff\PropertyDiff.cs" />
     <Compile Include="Diff\ValueDiff.cs" />
     <Compile Include="Internals\Collections\DisposingMap{TKey, TValue}.cs" />

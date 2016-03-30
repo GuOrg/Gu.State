@@ -17,12 +17,12 @@
                 Func<object, object, TSettings, ReferencePairCollection, ValueDiff> itemDiff)
                 where TSettings : IMemberSettings
             {
-                Debug.Assert(settings.ReferenceHandling != ReferenceHandling.Throw, "Should not get here");
                 if (!(x is IEnumerable) || !(y is IEnumerable))
                 {
                     return null;
                 }
 
+                Debug.Assert(settings.ReferenceHandling != ReferenceHandling.Throw, "Should not get here");
                 var xl = x as IList;
                 var yl = y as IList;
                 if (xl != null && yl != null)
