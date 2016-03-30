@@ -4,6 +4,7 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Linq;
 
     public static partial class DiffBy
     {
@@ -69,7 +70,46 @@
                 Func<object, object, TSettings, ReferencePairCollection, ValueDiff> itemDiff)
                 where TSettings : IMemberSettings
             {
-                throw new NotImplementedException();
+                List<Diff> diffs = null;
+                foreach (var key in x.Keys.OfType<object>().Concat(y.Keys.OfType<object>()).Distinct())
+                {
+                    IndexDiff diff = null;
+                    if (!x.Contains(key))
+                    {
+                        diff = new IndexDiff(key, PaddedPairs.MissingItem, y[key]);
+                    }
+                    else if (!y.Contains(key))
+                    {
+                        diff = new IndexDiff(key, x[key], PaddedPairs.MissingItem);
+                    }
+                    else
+                    {
+                        var xv = x[key];
+                        var yv = y[key];
+                        if (referencePairs?.Contains(xv, yv) == true)
+                        {
+                            continue;
+                        }
+
+                        var id = itemDiff(xv, yv, settings, referencePairs);
+                        if (id != null)
+                        {
+                            diff = new IndexDiff(key, id);
+                        }
+                    }
+
+                    if (diff != null)
+                    {
+                        if (diffs == null)
+                        {
+                            diffs = new List<Diff>();
+                        }
+
+                        diffs.Add(diff);
+                    }
+                }
+
+                return diffs;
             }
 
             private static List<Diff> Diffs<TSettings>(

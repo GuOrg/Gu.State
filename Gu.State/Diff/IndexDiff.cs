@@ -7,18 +7,18 @@ namespace Gu.State
     {
         private readonly ValueDiff valueDiff;
 
-        public IndexDiff(int index, object xValue, object yValue)
+        public IndexDiff(object index, object xValue, object yValue)
             : this(index, new ValueDiff(xValue, yValue))
         {
         }
 
-        public IndexDiff(int index, ValueDiff valueDiff)
+        public IndexDiff(object index, ValueDiff valueDiff)
         {
             this.Index = index;
             this.valueDiff = valueDiff;
         }
 
-        public int Index { get; }
+        public object Index { get; }
 
         public object X => this.valueDiff.X;
 

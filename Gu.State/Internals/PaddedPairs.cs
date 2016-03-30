@@ -6,7 +6,7 @@
 
     internal class PaddedPairs : IEnumerable<PaddedPairs.Pair<object>>
     {
-        public static readonly object NullObject = new MissingItem();
+        public static readonly object MissingItem = new Missing();
         private readonly IEnumerable x;
         private readonly IEnumerable y;
 
@@ -69,11 +69,11 @@
                     }
                     else if (this.mx)
                     {
-                        return CreatePair(this.x.Current, NullObject);
+                        return CreatePair(this.x.Current, MissingItem);
                     }
                     else if (this.my)
                     {
-                        return CreatePair(NullObject, this.y.Current);
+                        return CreatePair(MissingItem, this.y.Current);
                     }
                     else
                     {
@@ -104,7 +104,7 @@
             }
         }
 
-        private class MissingItem
+        private class Missing
         {
             public override string ToString()
             {
