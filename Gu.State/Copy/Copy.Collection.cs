@@ -57,7 +57,7 @@
                         continue;
                     }
 
-                    if (IsCopyableType(sv.GetType()))
+                    if (settings.IsImmutable(sv.GetType()))
                     {
                         SetListItem(targetList, i, sv);
                         continue;
@@ -109,7 +109,7 @@
                         continue;
                     }
 
-                    if (IsCopyableType(sv.GetType()))
+                    if (settings.IsImmutable(sv.GetType()))
                     {
                         targetDict[key] = sv;
                         continue;

@@ -69,7 +69,7 @@
                 return false;
             }
 
-            if (x.GetType().IsEquatable())
+            if (settings.IsEquatable(x.GetType()))
             {
                 return Equals(x, y);
             }
@@ -133,7 +133,7 @@
                 return false;
             }
 
-            if (x.GetType().IsEquatable())
+            if (settings.IsEquatable(x.GetType()))
             {
                 return Equals(x, y);
             }

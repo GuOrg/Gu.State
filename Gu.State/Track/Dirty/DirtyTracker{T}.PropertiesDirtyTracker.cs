@@ -50,6 +50,8 @@
                 }
             }
 
+            public PropertiesSettings Settings => this.parent.Settings;
+
             public void Dispose()
             {
                 this.x.PropertyChanged -= this.OnTrackedPropertyChanged;
@@ -81,7 +83,7 @@
                     return null;
                 }
 
-                if (type.IsImmutable())
+                if (parent.Settings.IsImmutable(type))
                 {
                     parent.diff.IntersectWith(IndexerPropertySingletonCollection);
                     var before = parent.diff.Count;
@@ -183,14 +185,14 @@
                     return AlwaysDirtyNode.For(propertyInfo);
                 }
 
-                if (xv.GetType().IsEquatable())
+                if (this.Settings.IsEquatable(xv.GetType()))
                 {
                     return Equals(xv, yv)
                                ? (IDirtyTrackerNode)NeverDirtyNode.For(ItemDirtyTracker.IndexerProperty)
                                : AlwaysDirtyNode.For(ItemDirtyTracker.IndexerProperty);
                 }
 
-                if (xv.GetType().IsImmutable())
+                if (this.Settings.IsEquatable(xv.GetType()))
                 {
                     return EqualBy.PropertyValues(xv, yv, this.parent.Settings)
                                ? (IDirtyTrackerNode)NeverDirtyNode.For(ItemDirtyTracker.IndexerProperty)

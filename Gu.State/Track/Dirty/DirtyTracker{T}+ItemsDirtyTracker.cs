@@ -138,7 +138,7 @@
                     return AlwaysDirtyNode.For(ItemDirtyTracker.IndexerProperty);
                 }
 
-                if (xv.GetType().IsImmutable())
+                if (this.parent.Settings.IsImmutable(xv.GetType()))
                 {
                     return EqualBy.PropertyValues(xv, yv, this.parent.Settings)
                                ? (IDirtyTrackerNode)NeverDirtyNode.For(ItemDirtyTracker.IndexerProperty)

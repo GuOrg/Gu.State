@@ -42,7 +42,7 @@
             Ensure.NotNull(source, nameof(source));
             Ensure.NotNull(target, nameof(target));
             Ensure.SameType(source, target, nameof(source), nameof(target));
-            Verify.CanCopyRoot(typeof(T));
+            Verify.CanCopyRoot(typeof(T), settings);
             var type = source?.GetType() ?? target?.GetType() ?? typeof(T);
             VerifyCanCopyPropertyValues(type, settings);
             var pairs = settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops
@@ -100,7 +100,7 @@
                 var sv = propertyInfo.GetValue(source);
                 if (!propertyInfo.CanWrite)
                 {
-                    if (propertyInfo.PropertyType.IsImmutable())
+                    if (settings.IsImmutable(propertyInfo.PropertyType))
                     {
                         continue;
                     }
@@ -114,7 +114,7 @@
                     continue;
                 }
 
-                if (IsCopyableType(propertyInfo.PropertyType))
+                if (settings.IsImmutable(propertyInfo.PropertyType))
                 {
                     propertyInfo.SetValue(target, sv);
                     continue;
@@ -181,7 +181,7 @@
                     continue;
                 }
 
-                if (sv?.GetType().IsImmutable() == false)
+                if (settings.IsImmutable(sv?.GetType()) == false)
                 {
                     CopyPropertiesValues(sv, tv, settings, referencePairs);
                 }

@@ -50,7 +50,7 @@
         /// <param name="settings">Contains configuration for how copy will be performed</param>
         public static void VerifyCanCopyPropertyValues(Type type, PropertiesSettings settings)
         {
-            Verify.CanCopyRoot(type);
+            Verify.CanCopyRoot(type, settings);
             Verify.GetPropertiesErrors(type, settings)
                   .ThrowIfHasErrors(settings);
         }
@@ -99,7 +99,7 @@
         /// <param name="settings">Contains configuration for how copy is performed</param>
         public static void VerifyCanCopyFieldValues(Type type, FieldsSettings settings)
         {
-            Verify.CanCopyRoot(type);
+            Verify.CanCopyRoot(type, settings);
             Verify.GetFieldsErrors(type, settings)
                   .ThrowIfHasErrors(settings);
         }
@@ -135,9 +135,10 @@
 
         internal static class Verify
         {
-            internal static void CanCopyRoot(Type type)
+            internal static void CanCopyRoot<TSettings>(Type type, TSettings settings)
+                where TSettings : IMemberSettings
             {
-                if (type.IsImmutable())
+                if (settings.IsImmutable(type))
                 {
                     throw new NotSupportedException("Cannot copy the members of an immutable object");
                 }
@@ -179,7 +180,7 @@
             private static ErrorBuilder.TypeErrorsBuilder VerifyCore(IMemberSettings settings, Type type)
             {
                 return ErrorBuilder.Start()
-                                   .CheckReferenceHandling(type, settings, t => !IsCopyableType(t))
+                                   .CheckReferenceHandling(type, settings, t => !settings.IsImmutable(t))
                                    .CheckIsCopyableEnumerable(type, settings)
                                    .CheckIndexers(type, settings);
             }
@@ -187,7 +188,7 @@
             private static TypeErrors GetRecursivePropertiesErrors(PropertiesSettings settings, MemberPath path)
             {
                 var type = path.LastNodeType;
-                if (IsCopyableType(type))
+                if (settings.IsImmutable(type))
                 {
                     return null;
                 }
@@ -203,7 +204,7 @@
             private static TypeErrors GetRecursiveFieldsErrors(FieldsSettings settings, MemberPath path)
             {
                 var type = path.LastNodeType;
-                if (IsCopyableType(type))
+                if (settings.IsImmutable(type))
                 {
                     return null;
                 }

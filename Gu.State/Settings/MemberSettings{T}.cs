@@ -5,7 +5,7 @@
     using System.Collections.Generic;
     using System.Reflection;
 
-    public abstract class MemberSettings<T> : IMemberSettings
+    public abstract class MemberSettings<T> : MemberSettings, IMemberSettings
         where T : MemberInfo
     {
         private readonly IgnoredTypes ignoredTypes;
@@ -33,6 +33,10 @@
         public BindingFlags BindingFlags { get; }
 
         public ReferenceHandling ReferenceHandling { get; }
+
+        public bool IsEquatable(Type type) => IsEquatableCore(type);
+
+        public bool IsImmutable(Type type) => IsImmutableCore(type);
 
         internal ConcurrentDictionary<Type, TypeErrors> EqualByErrors { get; } = new ConcurrentDictionary<Type, TypeErrors>();
 

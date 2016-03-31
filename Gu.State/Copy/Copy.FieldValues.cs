@@ -43,7 +43,7 @@
             Ensure.NotNull(source, nameof(source));
             Ensure.NotNull(target, nameof(target));
             Ensure.SameType(source, target, nameof(source), nameof(target));
-            Verify.CanCopyRoot(typeof(T));
+            Verify.CanCopyRoot(typeof(T), settings);
             var type = source?.GetType() ?? target?.GetType() ?? typeof(T);
             VerifyCanCopyFieldValues(type, settings);
             var pairs = settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops
@@ -90,7 +90,7 @@
                         continue;
                     }
 
-                    if (fieldInfo.FieldType.IsImmutable())
+                    if (settings.IsImmutable(fieldInfo.FieldType))
                     {
                         if (!EqualBy.FieldValues(sv, tv, settings))
                         {
@@ -109,7 +109,7 @@
                     Throw.ReadonlyMemberDiffers(new SourceAndTargetValue(source, sv, target, tv), fieldInfo, settings);
                 }
 
-                if (IsCopyableType(fieldInfo.FieldType) && !fieldInfo.IsInitOnly)
+                if (settings.IsImmutable(fieldInfo.FieldType) && !fieldInfo.IsInitOnly)
                 {
                     FieldValue(source, target, fieldInfo);
                     continue;

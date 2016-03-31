@@ -4,7 +4,7 @@
     using System.Collections.Concurrent;
     using System.Globalization;
 
-    internal static partial class TypeExt
+    public abstract partial class MemberSettings
     {
         private static readonly ConcurrentDictionary<Type, bool> EquatableCheckedTypes = new ConcurrentDictionary<Type, bool>
         {
@@ -27,7 +27,7 @@
             [typeof(byte)] = true,
         };
 
-        public static bool IsEquatable(this Type type)
+        protected static bool IsEquatableCore(Type type)
         {
             if (type == null)
             {
@@ -43,7 +43,7 @@
             if (type.IsNullable())
             {
                 var underlyingType = Nullable.GetUnderlyingType(type);
-                result = IsEquatable(underlyingType);
+                result = IsEquatableCore(underlyingType);
                 EquatableCheckedTypes.TryAdd(type, result);
                 return result;
             }

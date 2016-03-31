@@ -2,7 +2,8 @@
 {
     public static partial class DiffBy
     {
-        private static bool TryGetValueDiff(object x, object y, out ValueDiff diff)
+        private static bool TryGetValueDiff<TSettings>(object x, object y, TSettings settings, out ValueDiff diff)
+            where TSettings : IMemberSettings
         {
             if (ReferenceEquals(x, y))
             {
@@ -22,7 +23,7 @@
                 return true;
             }
 
-            if (x.GetType().IsEquatable())
+            if (settings.IsEquatable(x.GetType()))
             {
                 diff = Equals(x, y)
                            ? null

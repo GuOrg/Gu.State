@@ -135,7 +135,7 @@
                 return settings.TrackableErrors.GetOrAdd(
                     type,
                     t => ErrorBuilder.Start()
-                                     .CheckReferenceHandling(type, settings, x => !x.IsImmutable())
+                                     .CheckReferenceHandling(type, settings, x => !settings.IsImmutable(x))
                                      .CheckIndexers(type, settings)
                                      .CheckNotifies(type, settings)
                                      .VerifyRecursive(t, settings, path, GetRecursiveErrors)
@@ -145,7 +145,7 @@
             private static TypeErrors GetRecursiveErrors(PropertiesSettings settings, MemberPath path)
             {
                 var type = path.LastNodeType;
-                if (type.IsImmutable())
+                if (settings.IsImmutable(type))
                 {
                     return null;
                 }

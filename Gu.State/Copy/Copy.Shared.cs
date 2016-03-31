@@ -9,11 +9,6 @@
     /// </summary>
     public static partial class Copy
     {
-        internal static bool IsCopyableType(Type type)
-        {
-            return type.IsImmutable();
-        }
-
         internal static object CreateInstance<TSettings>(object sourceValue, MemberInfo member, TSettings settings)
             where TSettings : class, IMemberSettings
         {
@@ -31,7 +26,7 @@
                 return array;
             }
 
-            if (type.IsImmutable())
+            if (settings.IsImmutable(type))
             {
                 return sourceValue;
             }
