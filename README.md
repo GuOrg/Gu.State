@@ -32,19 +32,19 @@ Types implementing `IEquatable` are compared using `object.Equals(x, y)`
 
 #### FieldValues
 ```
-EqualBy.FieldValues(source, target);
-EqualBy.FieldValues(source, target, ReferenceHandling.Structural); 
-EqualBy.FieldValues(source, target, ReferenceHandling.StructuralWithReferenceLoops); 
-EqualBy.FieldValues(source, target, ReferenceHandling.References);
+EqualBy.FieldValues(x, y);
+EqualBy.FieldValues(x, y, ReferenceHandling.Structural); 
+EqualBy.FieldValues(x, y, ReferenceHandling.StructuralWithReferenceLoops); 
+EqualBy.FieldValues(x, y, ReferenceHandling.References);
 ```
 - Ignores event fields
 
 #### PropertyValues
 ```
-EqualBy.PropertyValues(source, target);
-EqualBy.PropertyValues(source, target, ReferenceHandling.Structural); 
-EqualBy.PropertyValues(source, target, ReferenceHandling.StructuralWithReferenceLoops); 
-EqualBy.PropertyValues(source, target, ReferenceHandling.References);
+EqualBy.PropertyValues(x, y);
+EqualBy.PropertyValues(x, y, ReferenceHandling.Structural); 
+EqualBy.PropertyValues(x, y, ReferenceHandling.StructuralWithReferenceLoops); 
+EqualBy.PropertyValues(x, y, ReferenceHandling.References);
 ```
 
 ##### PropertiesSettings.
@@ -59,19 +59,19 @@ Types implementing `IEquatable` are compared using `object.Equals(x, y)`
 
 #### FieldValues
 ```
-DiffBy.FieldValues(source, target);
-DiffBy.FieldValues(source, target, ReferenceHandling.Structural); 
-DiffBy.FieldValues(source, target, ReferenceHandling.StructuralWithReferenceLoops); 
-DiffBy.FieldValues(source, target, ReferenceHandling.References);
+DiffBy.FieldValues(x, y);
+DiffBy.FieldValues(x, y, ReferenceHandling.Structural); 
+DiffBy.FieldValues(x, y, ReferenceHandling.StructuralWithReferenceLoops); 
+DiffBy.FieldValues(x, y, ReferenceHandling.References);
 ```
 - Ignores event fields
 
 #### PropertyValues
 ```
-DiffBy.PropertyValues(source, target);
-DiffBy.PropertyValues(source, target, ReferenceHandling.Structural); 
-DiffBy.PropertyValues(source, target, ReferenceHandling.StructuralWithReferenceLoops); 
-DiffBy.PropertyValues(source, target, ReferenceHandling.References);
+DiffBy.PropertyValues(x, y);
+DiffBy.PropertyValues(x, y, ReferenceHandling.Structural); 
+DiffBy.PropertyValues(x, y, ReferenceHandling.StructuralWithReferenceLoops); 
+DiffBy.PropertyValues(x, y, ReferenceHandling.References);
 ```
 
 ## Track
