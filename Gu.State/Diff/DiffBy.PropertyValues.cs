@@ -40,6 +40,9 @@
         /// <returns>Diff.Empty if <paramref name="x"/> and <paramref name="y"/> are equal</returns>
         public static ValueDiff PropertyValues<T>(T x, T y, PropertiesSettings settings)
         {
+            Ensure.NotNull(x, nameof(x));
+            Ensure.NotNull(y, nameof(y));   
+            Ensure.NotNull(settings, nameof(settings));
             EqualBy.Verify.CanEqualByPropertyValues(x, y, settings, typeof(DiffBy).Name, nameof(PropertyValues));
 
             ValueDiff diff;
