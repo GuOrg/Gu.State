@@ -10,7 +10,7 @@ namespace Gu.State.Tests.EqualByTests
         [Test]
         public void ComplexValueThrowsWithoutReferenceHandling()
         {
-            var expected = this.GetType() == typeof(FieldValues.Verify)
+            var expected = this is FieldValues.Verify
                                ? "EqualBy.FieldValues(x, y) failed.\r\n" +
                                  "The field WithProperty<ComplexType>.<Value>k__BackingField of type ComplexType is not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
@@ -45,7 +45,7 @@ namespace Gu.State.Tests.EqualByTests
         [Test]
         public void WithIndexer()
         {
-            var expected = this.GetType() == typeof(FieldValues.Verify)
+            var expected = this is FieldValues.Verify
                                ? "EqualBy.FieldValues(x, y) failed.\r\n" +
                                  "Indexers are not supported.\r\n" +
                                  "  - The property WithIndexerType.Item is an indexer and not supported.\r\n" +
@@ -71,7 +71,7 @@ namespace Gu.State.Tests.EqualByTests
         [Test]
         public void ListOfWithIndexers()
         {
-            var expected = this.GetType() == typeof(FieldValues.Verify)
+            var expected = this is FieldValues.Verify
                                ? "EqualBy.FieldValues(x, y) failed.\r\n" +
                                  "The field WithListProperty<WithIndexerType>.<Items>k__BackingField of type List<WithIndexerType> is not supported.\r\n" +
                                  "Indexers are not supported.\r\n" +

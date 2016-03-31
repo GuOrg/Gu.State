@@ -3,14 +3,26 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Linq;
     using System.Reflection;
 
     using NUnit.Framework;
 
-    public class CopyFieldsSettingsTests
+    public class FieldsSettingsTests
     {
         [Test]
         public void Ignores()
+        {
+            var type = typeof(ComplexType);
+            var nameField = type.GetField(nameof(ComplexType.Name));
+            var valueField = type.GetField(nameof(ComplexType.Value));
+            var settings = new FieldsSettings(new[] { nameField }, null, Constants.DefaultFieldBindingFlags, ReferenceHandling.Throw);
+            Assert.AreEqual(true, settings.IsIgnoringField(nameField));
+            Assert.AreEqual(false, settings.IsIgnoringField(valueField));
+        }
+
+        [Test]
+        public void IgnoresWithBuilder()
         {
             var type = typeof(ComplexType);
             var settings = FieldsSettings.Build()
@@ -21,6 +33,7 @@
             var valueField = type.GetField(nameof(ComplexType.Value), Constants.DefaultFieldBindingFlags);
             Assert.AreEqual(false, settings.IsIgnoringField(valueField));
         }
+
 
         [TestCase(typeof(List<int>))]
         [TestCase(typeof(int[]))]
@@ -39,6 +52,28 @@
             foreach (var fieldInfo in fieldInfos)
             {
                 Assert.AreEqual(true, settings.IsIgnoringField(fieldInfo));
+            }
+        }
+
+        [Test]
+        public void IgnoresIteratorFields()
+        {
+            var enumaberbles = new object[]
+                                   {
+                                       Enumerable.Repeat(1, 0),
+                                       new[] { 1 }.Where(x => x > 1),
+                                       new[] { 1 }.Select(x => x)
+                                   };
+            foreach (var enumerable in enumaberbles)
+            {
+                var type = enumerable.GetType();
+                var settings = FieldsSettings.GetOrCreate();
+                var fieldInfos = type.GetFields(Constants.DefaultFieldBindingFlags);
+                CollectionAssert.IsNotEmpty(fieldInfos);
+                foreach (var fieldInfo in fieldInfos)
+                {
+                    Assert.AreEqual(true, settings.IsIgnoringField(fieldInfo));
+                }
             }
         }
 

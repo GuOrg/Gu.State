@@ -1,6 +1,7 @@
 ﻿namespace Gu.State
 {
     using System;
+    using System.Collections;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Reflection;
@@ -55,7 +56,7 @@
 
         public bool IsIgnoringField(FieldInfo fieldInfo)
         {
-            if (fieldInfo == null || fieldInfo.IsEventField())
+            if (fieldInfo == null || fieldInfo.IsEventField() || typeof(IEnumerator).IsAssignableFrom(fieldInfo.DeclaringType))
             {
                 return true;
             }
