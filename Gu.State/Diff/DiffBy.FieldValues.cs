@@ -40,7 +40,7 @@
         /// <returns>Diff.Empty if <paramref name="x"/> and <paramref name="y"/> are equal</returns>
         public static Diff FieldValues<T>(T x, T y, FieldsSettings settings)
         {
-            EqualBy.Verify.CanEqualByFieldValues(x, y, settings);
+            EqualBy.Verify.CanEqualByFieldValues(x, y, settings, typeof(DiffBy).Name, nameof(FieldValues));
             ValueDiff diff;
             if (TryGetValueDiff(x, y, out diff))
             {
@@ -116,7 +116,7 @@
                            : new ValueDiff(x, y);
             }
 
-            EqualBy.Verify.CanEqualByFieldValues(x, y, settings);
+            EqualBy.Verify.CanEqualByFieldValues(x, y, settings, typeof(DiffBy).Name, nameof(FieldValues));
             var diffs = SubDiffs(x, y, settings, referencePairs);
             return diffs == null
                        ? null

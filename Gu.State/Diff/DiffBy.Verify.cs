@@ -14,7 +14,7 @@
 
         public static void VerifyCanDiffByFieldValues<T>(FieldsSettings settings)
         {
-            EqualBy.VerifyCanEqualByFieldValues<T>(settings);
+            EqualBy.VerifyCanEqualByFieldValues<T>(settings, typeof(DiffBy).Name, nameof(FieldValues));
         }
 
         public static void VerifyCanDiffByPropertyValues<T>(
@@ -27,7 +27,7 @@
 
         public static void VerifyCanDiffByPropertyValues<T>(PropertiesSettings settings)
         {
-            EqualBy.VerifyCanEqualByPropertyValues<T>(settings);
+            EqualBy.VerifyCanEqualByPropertyValues<T>(settings, typeof(DiffBy).Name, nameof(DiffBy.PropertyValues));
         }
     }
 }

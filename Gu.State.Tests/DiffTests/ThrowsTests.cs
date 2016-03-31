@@ -14,7 +14,7 @@ namespace Gu.State.Tests.DiffTests
         public void ComplexValueThrowsWithoutReferenceHandling()
         {
             var expected = this is FieldValues.Throws
-                               ? "EqualBy.FieldValues(x, y) failed.\r\n" +
+                               ? "DiffBy.FieldValues(x, y) failed.\r\n" +
                                  "The field WithComplexProperty.complexType of type ComplexType is not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
                                  "* Implement IEquatable<WithComplexProperty> for WithComplexProperty or use a type that does.\r\n" +
@@ -27,7 +27,7 @@ namespace Gu.State.Tests.DiffTests
                                  "    - The field WithComplexProperty.complexType.\r\n" +
                                  "    - The type ComplexType.\r\n"
 
-                               : "EqualBy.PropertyValues(x, y) failed.\r\n" +
+                               : "DiffBy.PropertyValues(x, y) failed.\r\n" +
                                  "The property WithComplexProperty.ComplexType of type ComplexType is not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
                                  "* Implement IEquatable<WithComplexProperty> for WithComplexProperty or use a type that does.\r\n" +
@@ -49,7 +49,7 @@ namespace Gu.State.Tests.DiffTests
         public void WithIllegalIndexer()
         {
             var expected = this is DiffTests.FieldValues.Throws
-                               ? "EqualBy.FieldValues(x, y) failed.\r\n" +
+                               ? "DiffBy.FieldValues(x, y) failed.\r\n" +
                                  "Indexers are not supported.\r\n" +
                                  "  - The property WithIndexerType.Item is an indexer and not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
@@ -58,7 +58,7 @@ namespace Gu.State.Tests.DiffTests
                                  "  - Exclude a combination of the following:\r\n" +
                                  "    - The indexer property WithIndexerType.Item.\r\n"
 
-                               : "EqualBy.PropertyValues(x, y) failed.\r\n" +
+                               : "DiffBy.PropertyValues(x, y) failed.\r\n" +
                                  "Indexers are not supported.\r\n" +
                                  "  - The property WithIndexerType.Item is an indexer and not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
@@ -77,7 +77,7 @@ namespace Gu.State.Tests.DiffTests
         public void WithIllegalIndexerProperty()
         {
             var expected = this is DiffTests.FieldValues.Throws
-                               ? "EqualBy.FieldValues(x, y) failed.\r\n" +
+                               ? "DiffBy.FieldValues(x, y) failed.\r\n" +
                                  "The field WithProperty<WithIndexerType>.<Value>k__BackingField of type WithIndexerType is not supported.\r\n" +
                                  "Indexers are not supported.\r\n" +
                                  "  - The property WithIndexerType.Item is an indexer and not supported.\r\n" +
@@ -90,7 +90,7 @@ namespace Gu.State.Tests.DiffTests
                                  "    - The indexer property WithIndexerType.Item.\r\n" +
                                  "    - The type WithIndexerType.\r\n"
 
-                               : "EqualBy.PropertyValues(x, y) failed.\r\n" +
+                               : "DiffBy.PropertyValues(x, y) failed.\r\n" +
                                  "The property WithProperty<WithIndexerType>.Value of type WithIndexerType is not supported.\r\n" +
                                  "Indexers are not supported.\r\n" +
                                  "  - The property WithIndexerType.Item is an indexer and not supported.\r\n" +
@@ -114,7 +114,7 @@ namespace Gu.State.Tests.DiffTests
         public void DetectsReferenceLoop()
         {
             var expected = this is DiffTests.FieldValues.Throws
-                   ? "EqualBy.FieldValues(x, y) failed.\r\n" +
+                   ? "DiffBy.FieldValues(x, y) failed.\r\n" +
                      "The field Parent.<Child>k__BackingField of type Child is in a reference loop.\r\n" +
                      "  - The loop is Parent.<Child>k__BackingField.<Parent>k__BackingField.<Child>k__BackingField...\r\n" +
                      "The field Parent.<Child>k__BackingField of type Child is not supported.\r\n" +
@@ -130,7 +130,7 @@ namespace Gu.State.Tests.DiffTests
                      "    - The field Child.<Parent>k__BackingField.\r\n" +
                      "    - The type Child.\r\n"
 
-                   : "EqualBy.PropertyValues(x, y) failed.\r\n" +
+                   : "DiffBy.PropertyValues(x, y) failed.\r\n" +
                      "The property Parent.Child of type Child is in a reference loop.\r\n" +
                      "  - The loop is Parent.Child.Parent.Child...\r\n" +
                      "The property Parent.Child of type Child is not supported.\r\n" +

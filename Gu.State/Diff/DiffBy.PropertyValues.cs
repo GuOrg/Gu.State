@@ -40,7 +40,7 @@
         /// <returns>Diff.Empty if <paramref name="x"/> and <paramref name="y"/> are equal</returns>
         public static Diff PropertyValues<T>(T x, T y, PropertiesSettings settings)
         {
-            EqualBy.Verify.CanEqualByPropertyValues(x, y, settings);
+            EqualBy.Verify.CanEqualByPropertyValues(x, y, settings, typeof(DiffBy).Name, nameof(PropertyValues));
 
             ValueDiff diff;
             if (TryGetValueDiff(x, y, out diff))
@@ -117,7 +117,7 @@
                            : new ValueDiff(x, y);
             }
 
-            EqualBy.Verify.CanEqualByPropertyValues(x, y, settings);
+            EqualBy.Verify.CanEqualByPropertyValues(x, y, settings, typeof(DiffBy).Name, nameof(PropertyValues));
             var diffs = SubDiffs(x, y, settings, referencePairs);
             return diffs == null
                        ? null
@@ -145,7 +145,7 @@
                     return ReferenceEquals(xValue, yValue) ? null : new PropertyDiff(propertyInfo, xValue, yValue);
                 case ReferenceHandling.Structural:
                 case ReferenceHandling.StructuralWithReferenceLoops:
-                    EqualBy.Verify.CanEqualByPropertyValues(xValue, yValue, settings);
+                    EqualBy.Verify.CanEqualByPropertyValues(xValue, yValue, settings, typeof(DiffBy).Name, nameof(PropertyValues));
                     var diffs = SubDiffs(xValue, yValue, settings, referencePairs);
                     return diffs == null
                                ? null
