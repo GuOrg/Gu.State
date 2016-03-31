@@ -55,9 +55,9 @@
             }
         }
 
-        public event EventHandler<ChangeNode> ChildChanged;
-
         public event EventHandler Changed;
+
+        public event EventHandler<ChangeNode> BubbleChange;
 
         private IReadOnlyCollection<PropertyInfo> TrackProperties => this.node.Tracker.TrackProperties;
 
@@ -85,10 +85,10 @@
         private void OnTrackerChange(object sender, EventArgs e)
         {
             this.Changed?.Invoke(this, EventArgs.Empty);
-            this.ChildChanged?.Invoke(this, this);
+            this.BubbleChange?.Invoke(this, this);
         }
 
-        private void OnChildChange(object sender, ChangeNode originalSource)
+        private void OnBubbleChange(object sender, ChangeNode originalSource)
         {
             if (ReferenceEquals(this, originalSource))
             {
@@ -96,7 +96,7 @@
             }
 
             this.Changed?.Invoke(this, EventArgs.Empty);
-            this.ChildChanged?.Invoke(this, originalSource);
+            this.BubbleChange?.Invoke(this, originalSource);
         }
 
         private void OnTrackedPropertyChange(object sender, PropertyChangeEventArgs e)
@@ -166,11 +166,11 @@
         private IDisposable CreateChild(object child)
         {
             var childNode = GetOrCreate(this, child, this.node.Tracker.Settings);
-            childNode.Tracker.ChildChanged += this.OnChildChange;
+            childNode.Tracker.BubbleChange += this.OnBubbleChange;
             var disposable = new Disposer(() =>
                 {
                     childNode.RemoveOwner(this);
-                    childNode.Tracker.ChildChanged -= this.OnChildChange;
+                    childNode.Tracker.BubbleChange -= this.OnBubbleChange;
                 });
             return disposable;
         }

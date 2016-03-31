@@ -19,6 +19,7 @@
         private readonly DisposingMap<IDisposable> children = new DisposingMap<IDisposable>();
         private readonly object gate = new object();
         private ValueDiff diff;
+        private bool isBubbling;
 
         private DirtyTrackerNode(object x, object y, PropertiesSettings settings)
         {
@@ -59,7 +60,9 @@
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public event EventHandler<DirtyTrackerNode> ChildChanged;
+        public event EventHandler Changed;
+
+        public event EventHandler<DirtyTrackerNode> BubbleChange;
 
         public bool IsDirty => this.Diff != null;
 
@@ -82,6 +85,12 @@
                     var before = this.diff;
                     this.diff = value;
                     this.OnPropertyChanged(DiffPropertyChangedEventArgs);
+                    this.Changed?.Invoke(this, EventArgs.Empty);
+                    if (!this.isBubbling)
+                    {
+                        this.BubbleChange?.Invoke(this, this);
+                    }
+
                     if (value == null || before == null)
                     {
                         this.OnPropertyChanged(IsDirtyPropertyChangedEventArgs);
@@ -157,38 +166,59 @@
         private IDisposable CreateChild(object xValue, object yValue, object key)
         {
             var childNode = GetOrCreate(this, xValue, yValue, this.Settings);
-            EventHandler<DirtyTrackerNode> trackerOnChildChanged = (sender, args) => this.OnChildChange(sender, args, key);
-            childNode.Tracker.ChildChanged += trackerOnChildChanged;
+            EventHandler<DirtyTrackerNode> trackerOnBubbleChange = (sender, args) => this.OnBubbleChange(sender, args, key);
+            childNode.Tracker.BubbleChange += trackerOnBubbleChange;
             var disposable = new Disposer(() =>
             {
                 childNode.RemoveOwner(this);
-                childNode.Tracker.ChildChanged -= trackerOnChildChanged;
+                childNode.Tracker.BubbleChange -= trackerOnBubbleChange;
             });
             return disposable;
         }
 
-        private void OnChildChange(object sender, DirtyTrackerNode originalSource, object key)
+        private void OnBubbleChange(object sender, DirtyTrackerNode originalSource, object key)
         {
             if (ReferenceEquals(this, originalSource))
             {
                 return;
             }
 
-            lock (this.gate)
+            var node = (DirtyTrackerNode)sender;
+            var propertyInfo = key as PropertyInfo;
+            if (propertyInfo != null)
             {
-                var propertyInfo = key as PropertyInfo;
-                if (propertyInfo != null)
+                lock (this.gate)
                 {
-                    throw new NotImplementedException("message");
-                    //var xValue = propertyInfo.GetValue(this.xNode.Tracker.Source);
-                    //var yValue = propertyInfo.GetValue(this.yNode.Tracker.Source);
-                    //this.Diff = this.diff.With(propertyInfo, xValue, yValue);
+                    this.isBubbling = true;
+                    try
+                    {
+                        this.Diff = node.diff == null
+                            ? this.diff.Without(propertyInfo)
+                            : this.diff.With(this.xNode.Tracker.Source, this.yNode.Tracker.Source, propertyInfo, node.diff);
+                    }
+                    finally
+                    {
+                        this.isBubbling = false;
+                    }
                 }
-
-                this.ChildChanged?.Invoke(this, originalSource);
+            }
+            else
+            {
+                var index = (int)key;
+                this.isBubbling = true;
+                try
+                {
+                    this.Diff = node.diff == null
+                        ? this.diff.Without(index)
+                        : this.diff.With(this.xNode.Tracker.Source, this.yNode.Tracker.Source, index, node.diff);
+                }
+                finally
+                {
+                    this.isBubbling = false;
+                }
             }
 
-            throw new NotImplementedException("message");
+            this.BubbleChange?.Invoke(this, originalSource);
         }
 
         [NotifyPropertyChangedInvocator]
