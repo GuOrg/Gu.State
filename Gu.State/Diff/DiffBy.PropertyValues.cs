@@ -38,7 +38,7 @@
         /// <param name="y">The second instance</param>
         /// <param name="settings">Specifies how equality is performed.</param>
         /// <returns>Diff.Empty if <paramref name="x"/> and <paramref name="y"/> are equal</returns>
-        public static Diff PropertyValues<T>(T x, T y, PropertiesSettings settings)
+        public static ValueDiff PropertyValues<T>(T x, T y, PropertiesSettings settings)
         {
             EqualBy.Verify.CanEqualByPropertyValues(x, y, settings, typeof(DiffBy).Name, nameof(PropertyValues));
 

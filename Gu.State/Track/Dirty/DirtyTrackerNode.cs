@@ -12,12 +12,13 @@
 
     internal sealed class DirtyTrackerNode : IRefCountable, INotifyPropertyChanged
     {
+        private static readonly PropertyChangedEventArgs DiffPropertyChangedEventArgs = new PropertyChangedEventArgs(nameof(Diff));
         private static readonly PropertyChangedEventArgs IsDirtyPropertyChangedEventArgs = new PropertyChangedEventArgs(nameof(IsDirty));
         private readonly IRefCounted<ChangeTrackerNode> xNode;
         private readonly IRefCounted<ChangeTrackerNode> yNode;
         private readonly DisposingMap<IDisposable> children = new DisposingMap<IDisposable>();
         private readonly object gate = new object();
-        private Diff diff;
+        private ValueDiff diff;
 
         private DirtyTrackerNode(object x, object y, PropertiesSettings settings)
         {
@@ -25,6 +26,7 @@
             this.yNode = ChangeTrackerNode.GetOrCreate(this, y, settings);
             this.xNode.Tracker.PropertyChange += this.OnTrackedPropertyChange;
             this.yNode.Tracker.PropertyChange += this.OnTrackedPropertyChange;
+            this.diff = DiffBy.PropertyValues(x, y, settings);
             switch (settings.ReferenceHandling)
             {
                 case ReferenceHandling.Throw:
@@ -61,7 +63,7 @@
 
         public bool IsDirty => this.Diff != null;
 
-        public Diff Diff
+        public ValueDiff Diff
         {
             get
             {
@@ -77,8 +79,13 @@
                         return;
                     }
 
+                    var before = this.diff;
                     this.diff = value;
-                    this.OnPropertyChanged(IsDirtyPropertyChangedEventArgs);
+                    this.OnPropertyChanged(DiffPropertyChangedEventArgs);
+                    if (value == null || before == null)
+                    {
+                        this.OnPropertyChanged(IsDirtyPropertyChangedEventArgs);
+                    }
                 }
             }
         }
@@ -129,21 +136,21 @@
 
             var xValue = propertyInfo.GetValue(this.xNode.Tracker.Source);
             var yValue = propertyInfo.GetValue(this.yNode.Tracker.Source);
+
             if (this.TrackProperties.Contains(propertyInfo) &&
                (this.Settings.ReferenceHandling == ReferenceHandling.Structural || this.Settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops))
             {
                 var refCounted = this.CreateChild(xValue, yValue, propertyInfo);
                 this.children.SetValue(propertyInfo, refCounted);
             }
-            else
+
+            var propertyValueDiff = DiffBy.PropertyValues(xValue, yValue, this.Settings);
+
+            lock (this.gate)
             {
-                lock (this.gate)
-                {
-                    throw new NotImplementedException("message");
-                    //this.Diff = EqualBy.PropertyValues(xValue, yValue, this.Settings)
-                    //                ? this.diff.Without(propertyInfo)
-                    //                : this.diff.With(propertyInfo, xValue, yValue);
-                }
+                this.Diff = propertyValueDiff == null
+                                ? this.diff.Without(propertyInfo)
+                                : this.diff.With(this.xNode.Tracker.Source, this.yNode.Tracker.Source, propertyInfo, propertyValueDiff);
             }
         }
 

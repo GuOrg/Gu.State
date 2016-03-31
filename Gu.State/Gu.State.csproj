@@ -50,6 +50,7 @@
     <Compile Include="Diff\MemberDiff.cs" />
     <Compile Include="Diff\PropertyDiff.cs" />
     <Compile Include="Diff\ValueDiff.cs" />
+    <Compile Include="Diff\ValueDiffExt.cs" />
     <Compile Include="Internals\Collections\DisposingMap{TKey, TValue}.cs" />
     <Compile Include="Internals\Collections\ImmutableList{T}.cs" />
     <Compile Include="Internals\Collections\IRefCountable.cs" />

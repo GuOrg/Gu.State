@@ -1,5 +1,6 @@
 ﻿namespace Gu.State
 {
+    using System;
     using System.Collections.Generic;
 
     internal static class EnumerableExt
@@ -18,6 +19,21 @@
 
                 previous = element;
                 first = false;
+            }
+        }
+
+        internal static IEnumerable<TSource> Except<TSource, TValue>(this IEnumerable<TSource> source, Func<TValue, bool> filter)
+            where TValue : class, TSource
+        {
+            foreach (var item in source)
+            {
+                var value = item as TValue;
+                if (value != null && filter(value))
+                {
+                    continue;
+                }
+
+                yield return item;
             }
         }
 

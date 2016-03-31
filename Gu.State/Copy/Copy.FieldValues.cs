@@ -13,11 +13,11 @@
         /// <typeparam name="T">The type to get ignore fields for settings for</typeparam>
         /// <param name="source">The instance to copy field values from</param>
         /// <param name="target">The instance to copy field values to</param>
-        /// <param name="bindingFlags">The binding flags to use when getting properties</param>
         /// <param name="referenceHandling">
         /// If Structural is used field values for sub fields are copied for the entire graph.
         /// Activator.CreateInstance is sued to new up references so a default constructor is required, can be private
         /// </param>
+        /// <param name="bindingFlags">The binding flags to use when getting properties</param>
         public static void FieldValues<T>(
             T source,
             T target,

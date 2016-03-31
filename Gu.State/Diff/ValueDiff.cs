@@ -3,6 +3,7 @@
     using System.CodeDom.Compiler;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
 
     public class ValueDiff : Diff
     {
