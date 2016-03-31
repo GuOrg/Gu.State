@@ -42,7 +42,7 @@
         {
             EqualBy.Verify.CanEqualByFieldValues(x, y, settings, typeof(DiffBy).Name, nameof(FieldValues));
             ValueDiff diff;
-            if (TryGetValueDiff(x, y, out diff))
+            if (TryGetValueDiff(x, y, settings, out diff))
             {
                 return diff;
             }
@@ -104,7 +104,7 @@
             ReferencePairCollection referencePairs)
         {
             ValueDiff diff;
-            if (TryGetValueDiff(x, y, out diff))
+            if (TryGetValueDiff(x, y, settings, out diff))
             {
                 return diff;
             }
@@ -131,7 +131,7 @@
             ReferencePairCollection referencePairs)
         {
             ValueDiff diff;
-            if (TryGetValueDiff(xValue, yValue, out diff))
+            if (TryGetValueDiff(xValue, yValue, settings, out diff))
             {
                 return diff == null
                            ? null

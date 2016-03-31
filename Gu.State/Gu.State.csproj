@@ -100,7 +100,7 @@
     <Compile Include="Contracts\IIgnoringFields.cs" />
     <Compile Include="Contracts\IMemberSettings.cs" />
     <Compile Include="Contracts\IReferenceHandling.cs" />
-    <Compile Include="Settings\MemberSettings.cs" />
+    <Compile Include="Settings\MemberSettings{T}.cs" />
     <Compile Include="Settings\PropertiesSettingsBuilder.cs" />
     <Compile Include="Settings\Internals\MemberInfoComparer.cs" />
     <Compile Include="Copy\Copy.Collection.cs" />
@@ -140,11 +140,11 @@
     <Compile Include="Internals\MemberPath\RootItem.cs" />
     <Compile Include="Internals\Collections\ReferencePairCollection.cs" />
     <Compile Include="Internals\Reflection\MemberInfoExt.cs" />
-    <Compile Include="Internals\Reflection\TypeExt.IsEquatable.cs" />
+    <Compile Include="Settings\MemberSettings.IsEquatable.cs" />
     <Compile Include="Internals\Reflection\TypeExt.PrettyName.cs" />
     <Compile Include="Internals\SourceAndTargetValue.cs" />
     <Compile Include="Internals\Errors\StringBuilderExt.cs" />
-    <Compile Include="Internals\Reflection\TypeExt.IsImmutable.cs" />
+    <Compile Include="Settings\MemberSettings.IsImmutable.cs" />
     <Compile Include="Internals\MemberPath\MemberPath.cs" />
     <Compile Include="Synchronize\IPropertySynchronizer.cs" />
     <Compile Include="Synchronize\Synchronize.Verify.cs" />

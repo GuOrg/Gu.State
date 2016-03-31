@@ -60,7 +60,7 @@ namespace Gu.State
                 return false;
             }
 
-            if (x.GetType().IsEquatable())
+            if (settings.IsEquatable(x.GetType()))
             {
                 return Equals(x, y);
             }
@@ -144,7 +144,7 @@ namespace Gu.State
                 return false;
             }
 
-            if (x.GetType().IsEquatable())
+            if (settings.IsEquatable(x.GetType()))
             {
                 return Equals(x, y);
             }

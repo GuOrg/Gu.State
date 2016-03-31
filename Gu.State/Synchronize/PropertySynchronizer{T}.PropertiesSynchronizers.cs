@@ -58,7 +58,7 @@
                         continue;
                     }
 
-                    if (!Copy.IsCopyableType(propertyInfo.PropertyType))
+                    if (!settings.IsImmutable(propertyInfo.PropertyType))
                     {
                         var sv = propertyInfo.GetValue(source);
                         var tv = propertyInfo.GetValue(target);
@@ -77,7 +77,7 @@
 
             private static IDisposable CreateSynchronizer(object sv, object tv, PropertiesSettings settings, TwoItemsTrackerReferenceCollection<IPropertySynchronizer> references)
             {
-                if (sv == null || Copy.IsCopyableType(sv.GetType()))
+                if (sv == null || settings.IsImmutable(sv.GetType()))
                 {
                     return null;
                 }
@@ -135,7 +135,7 @@
                     return;
                 }
 
-                if (!Copy.IsCopyableType(propertyInfo.PropertyType))
+                if (!this.settings.IsImmutable(propertyInfo.PropertyType))
                 {
                     Copy.PropertyValues(this.source, this.target, this.settings);
                     this.UpdateSubPropertySynchronizer(propertyInfo);

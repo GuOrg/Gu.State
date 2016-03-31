@@ -5,7 +5,7 @@
     using System.Collections.Generic;
     using System.Globalization;
 
-    internal static partial class TypeExt
+    public abstract partial class MemberSettings
     {
         private static readonly ConcurrentDictionary<Type, bool> ImmutableCheckedTypes = new ConcurrentDictionary<Type, bool>
         {
@@ -28,7 +28,7 @@
             [typeof(byte)] = true,
         };
 
-        internal static bool IsImmutable(this Type type)
+        protected static bool IsImmutableCore(Type type)
         {
             return ImmutableCheckedTypes.GetOrAdd(type, x => CheckIfIsImmutable(x, null));
         }

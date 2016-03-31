@@ -33,7 +33,7 @@
                     targetColChanged.CollectionChanged += this.OnTargetCollectionChanged;
                 }
 
-                if (!source.GetType().GetItemType().IsImmutable())
+                if (!settings.IsImmutable(source.GetType().GetItemType()))
                 {
                     this.itemSynchronizers = new DisposingList<IDisposable>();
                 }
@@ -97,7 +97,7 @@
                             object tv = null;
                             if (sv != null)
                             {
-                                if (Copy.IsCopyableType(sv.GetType()))
+                                if (this.settings.IsImmutable(sv.GetType()))
                                 {
                                     tv = sv;
                                 }
@@ -204,7 +204,7 @@
                     return null;
                 }
 
-                if (Copy.IsCopyableType(sv.GetType()))
+                if (this.settings.IsImmutable(sv.GetType()))
                 {
                     throw new InvalidOperationException("Should not create synchronizers for copy types");
                 }

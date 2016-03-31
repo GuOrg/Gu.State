@@ -64,7 +64,7 @@
         public static void VerifyCanEqualByFieldValues<T>(FieldsSettings settings, string className, string methodName)
         {
             var type = typeof(T);
-            VerifyCanEqualByFieldValues(type, settings,className, methodName);
+            VerifyCanEqualByFieldValues(type, settings, className, methodName);
         }
 
         public static void VerifyCanEqualByFieldValues(Type type, FieldsSettings settings)
@@ -125,14 +125,14 @@
             private static ErrorBuilder.TypeErrorsBuilder VerifyCore(IMemberSettings settings, Type type)
             {
                 return ErrorBuilder.Start()
-                                   .CheckReferenceHandling(type, settings, t => !t.IsEquatable())
+                                   .CheckReferenceHandling(type, settings, t => !settings.IsEquatable(t))
                                    .CheckIndexers(type, settings);
             }
 
             private static TypeErrors GetRecursivePropertiesErrors(PropertiesSettings settings, MemberPath path)
             {
                 var type = path.LastNodeType;
-                if (type.IsEquatable())
+                if (settings.IsEquatable(type))
                 {
                     return null;
                 }
@@ -148,7 +148,7 @@
             private static TypeErrors GetRecursiveFieldsErrors(FieldsSettings settings, MemberPath path)
             {
                 var type = path.LastNodeType;
-                if (type.IsEquatable())
+                if (settings.IsEquatable(type))
                 {
                     return null;
                 }

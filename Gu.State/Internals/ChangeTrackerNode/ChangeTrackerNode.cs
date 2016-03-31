@@ -19,7 +19,7 @@
             this.TrackProperties = this.Source.GetType()
                                        .GetProperties()
                                        .Where(p => !this.Settings.IsIgnoringProperty(p))
-                                       .Where(p => !p.PropertyType.IsImmutable())
+                                       .Where(p => !settings.IsImmutable(p.PropertyType))
                                        .ToArray();
 
             var inpc = source as INotifyPropertyChanged;
@@ -85,9 +85,8 @@
         private void OnTrackedCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             this.OnChange();
-            if (sender.GetType()
-                      .GetItemType()
-                      .IsImmutable())
+            var itemType = sender.GetType().GetItemType();
+            if (this.Settings.IsImmutable(itemType))
             {
                 return;
             }

@@ -40,7 +40,7 @@
                     if (list != null)
                     {
                         var itemType = list.GetType().GetItemType();
-                        if (!itemType.IsImmutable() && !this.node.Tracker.Settings.IsIgnoringDeclaringType(itemType))
+                        if (!settings.IsImmutable(itemType) && !this.node.Tracker.Settings.IsIgnoringDeclaringType(itemType))
                         {
                             for (int i = 0; i < list.Count; i++)
                             {
