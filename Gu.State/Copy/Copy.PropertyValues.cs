@@ -45,15 +45,10 @@
             Verify.CanCopyRoot(typeof(T));
             var type = source?.GetType() ?? target?.GetType() ?? typeof(T);
             VerifyCanCopyPropertyValues(type, settings);
-            if (settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops)
-            {
-                var referencePairs = new ReferencePairCollection();
-                CopyPropertiesValues(source, target, settings, referencePairs);
-            }
-            else
-            {
-                CopyPropertiesValues(source, target, settings, null);
-            }
+            var pairs = settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops
+                            ? new ReferencePairCollection()
+                            : null;
+            CopyPropertiesValues(source, target, settings, pairs);
         }
 
         private static void CopyPropertiesValues<T>(T source, T target, PropertiesSettings settings, ReferencePairCollection referencePairs)

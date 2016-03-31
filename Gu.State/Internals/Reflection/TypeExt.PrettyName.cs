@@ -8,6 +8,7 @@
     {
         private static readonly IReadOnlyDictionary<Type, string> Aliases = new Dictionary<Type, string>
         {
+            [typeof(string)] = "string",
             [typeof(bool)] = "bool",
             [typeof(bool?)] = "bool?",
             [typeof(byte)] = "byte",

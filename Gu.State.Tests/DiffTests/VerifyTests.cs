@@ -1,53 +1,55 @@
-namespace Gu.State.Tests.EqualByTests
+namespace Gu.State.Tests.DiffTests
 {
     using System;
 
     using NUnit.Framework;
 
-    public abstract class ThrowsTests
+    using static DiffTypes;
+
+    public abstract class VerifyTests
     {
-        public abstract bool EqualByMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excludedMembers = null, Type excludedType = null);
+        public abstract void VerifyMethod<T>(ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excludedMembers = null, Type excludedType = null);
 
         [Test]
         public void ComplexValueThrowsWithoutReferenceHandling()
         {
-            var expected = this is FieldValues.Throws
-                               ? "EqualBy.FieldValues(x, y) failed.\r\n" +
-                                 "The field WithComplexProperty.<ComplexType>k__BackingField of type ComplexType is not supported.\r\n" +
+            var expected = this is DiffTests.FieldValues.Verify
+                               ? "DiffBy.FieldValues(x, y) failed.\r\n" +
+                                 "The field WithProperty<ComplexType>.<Value>k__BackingField of type ComplexType is not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
-                                 "* Implement IEquatable<WithComplexProperty> for WithComplexProperty or use a type that does.\r\n" +
+                                 "* Implement IEquatable<WithProperty<ComplexType>> for WithProperty<ComplexType> or use a type that does.\r\n" +
                                  "* Implement IEquatable<ComplexType> for ComplexType or use a type that does.\r\n" +
                                  "* Use FieldsSettings and specify how comparing is performed:\r\n" +
                                  "  - ReferenceHandling.Structural means that a deep equals is performed.\r\n" +
                                  "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but handles reference loops.\r\n" +
                                  "  - ReferenceHandling.References means that reference equality is used.\r\n" +
                                  "  - Exclude a combination of the following:\r\n" +
-                                 "    - The field WithComplexProperty.<ComplexType>k__BackingField.\r\n" +
+                                 "    - The field WithProperty<ComplexType>.<Value>k__BackingField.\r\n" +
                                  "    - The type ComplexType.\r\n"
 
-                               : "EqualBy.PropertyValues(x, y) failed.\r\n" +
-                                 "The property WithComplexProperty.ComplexType of type ComplexType is not supported.\r\n" +
+                               : "DiffBy.PropertyValues(x, y) failed.\r\n" +
+                                 "The property WithProperty<ComplexType>.Value of type ComplexType is not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
-                                 "* Implement IEquatable<WithComplexProperty> for WithComplexProperty or use a type that does.\r\n" +
+                                 "* Implement IEquatable<WithProperty<ComplexType>> for WithProperty<ComplexType> or use a type that does.\r\n" +
                                  "* Implement IEquatable<ComplexType> for ComplexType or use a type that does.\r\n" +
                                  "* Use PropertiesSettings and specify how comparing is performed:\r\n" +
                                  "  - ReferenceHandling.Structural means that a deep equals is performed.\r\n" +
                                  "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but handles reference loops.\r\n" +
                                  "  - ReferenceHandling.References means that reference equality is used.\r\n" +
                                  "  - Exclude a combination of the following:\r\n" +
-                                 "    - The property WithComplexProperty.ComplexType.\r\n" +
+                                 "    - The property WithProperty<ComplexType>.Value.\r\n" +
                                  "    - The type ComplexType.\r\n";
-            var exception = Assert.Throws<NotSupportedException>(() => this.EqualByMethod<EqualByTypes.WithComplexProperty>(null, null));
+            var exception = Assert.Throws<NotSupportedException>(() => this.VerifyMethod<WithProperty<ComplexType>>());
             Assert.AreEqual(expected, exception.Message);
 
-            Assert.DoesNotThrow(() => this.EqualByMethod<EqualByTypes.ComplexType>(null, null));
+            Assert.DoesNotThrow(() => this.VerifyMethod<ComplexType>());
         }
 
         [Test]
-        public void WithIllegalIndexer()
+        public void WithIndexer()
         {
-            var expected = this is FieldValues.Throws
-                               ? "EqualBy.FieldValues(x, y) failed.\r\n" +
+            var expected = this is DiffTests.FieldValues.Verify
+                               ? "DiffBy.FieldValues(x, y) failed.\r\n" +
                                  "Indexers are not supported.\r\n" +
                                  "  - The property WithIndexerType.Item is an indexer and not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
@@ -56,7 +58,7 @@ namespace Gu.State.Tests.EqualByTests
                                  "  - Exclude a combination of the following:\r\n" +
                                  "    - The indexer property WithIndexerType.Item.\r\n"
 
-                               : "EqualBy.PropertyValues(x, y) failed.\r\n" +
+                               : "DiffBy.PropertyValues(x, y) failed.\r\n" +
                                  "Indexers are not supported.\r\n" +
                                  "  - The property WithIndexerType.Item is an indexer and not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
@@ -64,55 +66,54 @@ namespace Gu.State.Tests.EqualByTests
                                  "* Use PropertiesSettings and specify how comparing is performed:\r\n" +
                                  "  - Exclude a combination of the following:\r\n" +
                                  "    - The indexer property WithIndexerType.Item.\r\n";
-            var source = new EqualByTypes.WithIndexerType();
-            var target = new EqualByTypes.WithIndexerType();
 
-            var exception = Assert.Throws<NotSupportedException>(() => this.EqualByMethod(source, target, ReferenceHandling.Structural));
+            var exception = Assert.Throws<NotSupportedException>(() => this.VerifyMethod<WithIndexerType>(ReferenceHandling.Structural));
             Assert.AreEqual(expected, exception.Message);
         }
 
         [Test]
-        public void WithIllegalIndexerProperty()
+        public void ListOfWithIndexers()
         {
-            var expected = this is FieldValues.Throws
-                               ? "EqualBy.FieldValues(x, y) failed.\r\n" +
-                                 "The field WithProperty<WithIndexerType>.<Value>k__BackingField of type WithIndexerType is not supported.\r\n" +
+            var expected = this is DiffTests.FieldValues.Verify
+                               ? "DiffBy.FieldValues(x, y) failed.\r\n" +
+                                 "The field WithListProperty<WithIndexerType>.<Items>k__BackingField of type List<WithIndexerType> is not supported.\r\n" +
                                  "Indexers are not supported.\r\n" +
                                  "  - The property WithIndexerType.Item is an indexer and not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
-                                 "* Implement IEquatable<WithProperty<WithIndexerType>> for WithProperty<WithIndexerType> or use a type that does.\r\n" +
+                                 "* Implement IEquatable<WithListProperty<WithIndexerType>> for WithListProperty<WithIndexerType> or use a type that does.\r\n" +
+                                 "* Use a type that implements IEquatable<> instead of List<WithIndexerType>.\r\n" +
                                  "* Implement IEquatable<WithIndexerType> for WithIndexerType or use a type that does.\r\n" +
                                  "* Use FieldsSettings and specify how comparing is performed:\r\n" +
                                  "  - Exclude a combination of the following:\r\n" +
-                                 "    - The field WithProperty<WithIndexerType>.<Value>k__BackingField.\r\n" +
+                                 "    - The field WithListProperty<WithIndexerType>.<Items>k__BackingField.\r\n" +
                                  "    - The indexer property WithIndexerType.Item.\r\n" +
+                                 "    - The type List<WithIndexerType>.\r\n" +
                                  "    - The type WithIndexerType.\r\n"
 
-                               : "EqualBy.PropertyValues(x, y) failed.\r\n" +
-                                 "The property WithProperty<WithIndexerType>.Value of type WithIndexerType is not supported.\r\n" +
+                               : "DiffBy.PropertyValues(x, y) failed.\r\n" +
+                                 "The property WithListProperty<WithIndexerType>.Items of type List<WithIndexerType> is not supported.\r\n" +
                                  "Indexers are not supported.\r\n" +
                                  "  - The property WithIndexerType.Item is an indexer and not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
-                                 "* Implement IEquatable<WithProperty<WithIndexerType>> for WithProperty<WithIndexerType> or use a type that does.\r\n" +
+                                 "* Implement IEquatable<WithListProperty<WithIndexerType>> for WithListProperty<WithIndexerType> or use a type that does.\r\n" +
+                                 "* Use a type that implements IEquatable<> instead of List<WithIndexerType>.\r\n" +
                                  "* Implement IEquatable<WithIndexerType> for WithIndexerType or use a type that does.\r\n" +
                                  "* Use PropertiesSettings and specify how comparing is performed:\r\n" +
                                  "  - Exclude a combination of the following:\r\n" +
-                                 "    - The property WithProperty<WithIndexerType>.Value.\r\n" +
+                                 "    - The property WithListProperty<WithIndexerType>.Items.\r\n" +
                                  "    - The indexer property WithIndexerType.Item.\r\n" +
+                                 "    - The type List<WithIndexerType>.\r\n" +
                                  "    - The type WithIndexerType.\r\n";
-            ;
-            var source = new EqualByTypes.WithProperty<EqualByTypes.WithIndexerType>();
-            var target = new EqualByTypes.WithProperty<EqualByTypes.WithIndexerType>();
 
-            var exception = Assert.Throws<NotSupportedException>(() => this.EqualByMethod(source, target, ReferenceHandling.Structural));
+            var exception = Assert.Throws<NotSupportedException>(() => this.VerifyMethod<WithListProperty<WithIndexerType>>(ReferenceHandling.Structural));
             Assert.AreEqual(expected, exception.Message);
         }
 
         [Test]
         public void DetectsReferenceLoop()
         {
-            var expected = this is FieldValues.Throws
-                   ? "EqualBy.FieldValues(x, y) failed.\r\n" +
+            var expected = this is DiffTests.FieldValues.Verify
+                   ? "DiffBy.FieldValues(x, y) failed.\r\n" +
                      "The field Parent.<Child>k__BackingField of type Child is in a reference loop.\r\n" +
                      "  - The loop is Parent.<Child>k__BackingField.<Parent>k__BackingField.<Child>k__BackingField...\r\n" +
                      "The field Parent.<Child>k__BackingField of type Child is not supported.\r\n" +
@@ -128,7 +129,7 @@ namespace Gu.State.Tests.EqualByTests
                      "    - The field Child.<Parent>k__BackingField.\r\n" +
                      "    - The type Child.\r\n"
 
-                   : "EqualBy.PropertyValues(x, y) failed.\r\n" +
+                   : "DiffBy.PropertyValues(x, y) failed.\r\n" +
                      "The property Parent.Child of type Child is in a reference loop.\r\n" +
                      "  - The loop is Parent.Child.Parent.Child...\r\n" +
                      "The property Parent.Child of type Child is not supported.\r\n" +
@@ -143,14 +144,11 @@ namespace Gu.State.Tests.EqualByTests
                      "    - The property Parent.Child.\r\n" +
                      "    - The property Child.Parent.\r\n" +
                      "    - The type Child.\r\n";
-
-            var x = new EqualByTypes.Parent("p", new EqualByTypes.Child("c"));
-            var y = new EqualByTypes.Parent("p", new EqualByTypes.Child("c"));
-            var exception = Assert.Throws<NotSupportedException>(() => this.EqualByMethod(x, y, ReferenceHandling.Structural));
+            var exception = Assert.Throws<NotSupportedException>(() => this.VerifyMethod<Parent>(ReferenceHandling.Structural));
             Assert.AreEqual(expected, exception.Message);
 
-            Assert.AreEqual(true, this.EqualByMethod(x, y, ReferenceHandling.StructuralWithReferenceLoops));
-            Assert.AreEqual(false, this.EqualByMethod(x, y, ReferenceHandling.References));
+            Assert.DoesNotThrow(() => this.VerifyMethod<Parent>(ReferenceHandling.StructuralWithReferenceLoops));
+            Assert.DoesNotThrow(() => this.VerifyMethod<Parent>(ReferenceHandling.References));
         }
     }
 }

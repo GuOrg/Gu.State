@@ -30,10 +30,21 @@
             VerifyCanEqualByPropertyValues(type, settings);
         }
 
+        public static void VerifyCanEqualByPropertyValues<T>(PropertiesSettings settings, string className, string methodName)
+        {
+            var type = typeof(T);
+            VerifyCanEqualByPropertyValues(type, settings, className, methodName);
+        }
+
         public static void VerifyCanEqualByPropertyValues(Type type, PropertiesSettings settings)
         {
+            VerifyCanEqualByPropertyValues(type, settings, typeof(EqualBy).Name, nameof(EqualBy.PropertyValues));
+        }
+
+        public static void VerifyCanEqualByPropertyValues(Type type, PropertiesSettings settings, string className, string methodName)
+        {
             Verify.GetPropertiesErrors(type, settings)
-                  .ThrowIfHasErrors(settings);
+                  .ThrowIfHasErrors(settings, className, methodName);
         }
 
         public static void VerifyCanEqualByFieldValues<T>(
@@ -50,19 +61,35 @@
             VerifyCanEqualByFieldValues(type, settings);
         }
 
+        public static void VerifyCanEqualByFieldValues<T>(FieldsSettings settings, string className, string methodName)
+        {
+            var type = typeof(T);
+            VerifyCanEqualByFieldValues(type, settings,className, methodName);
+        }
+
         public static void VerifyCanEqualByFieldValues(Type type, FieldsSettings settings)
         {
+            VerifyCanEqualByFieldValues(type, settings, typeof(EqualBy).Name, nameof(EqualBy.FieldValues));
+        }
+
+        public static void VerifyCanEqualByFieldValues(Type type, FieldsSettings settings, string className, string methodName)
+        {
             Verify.GetFieldsErrors(type, settings)
-                  .ThrowIfHasErrors(settings);
+                  .ThrowIfHasErrors(settings, className, methodName);
         }
 
         internal static class Verify
         {
             internal static void CanEqualByPropertyValues<T>(T x, T y, PropertiesSettings settings)
             {
+                CanEqualByPropertyValues(x, y, settings, typeof(EqualBy).Name, nameof(EqualBy.PropertyValues));
+            }
+
+            internal static void CanEqualByPropertyValues<T>(T x, T y, PropertiesSettings settings, string className, string methodName)
+            {
                 var type = x?.GetType() ?? y?.GetType() ?? typeof(T);
                 GetPropertiesErrors(type, settings)
-                    .ThrowIfHasErrors(settings);
+                    .ThrowIfHasErrors(settings, className, methodName);
             }
 
             internal static TypeErrors GetPropertiesErrors(Type type, PropertiesSettings settings, MemberPath path = null)
@@ -76,9 +103,14 @@
 
             internal static void CanEqualByFieldValues<T>(T x, T y, FieldsSettings settings)
             {
+                CanEqualByFieldValues(x, y, settings, typeof(EqualBy).Name, nameof(EqualBy.FieldValues));
+            }
+
+            internal static void CanEqualByFieldValues<T>(T x, T y, FieldsSettings settings, string className, string methodName)
+            {
                 var type = x?.GetType() ?? y?.GetType() ?? typeof(T);
                 GetFieldsErrors(type, settings)
-                    .ThrowIfHasErrors(settings);
+                    .ThrowIfHasErrors(settings, className, methodName);
             }
 
             internal static TypeErrors GetFieldsErrors(Type type, FieldsSettings settings, MemberPath path = null)

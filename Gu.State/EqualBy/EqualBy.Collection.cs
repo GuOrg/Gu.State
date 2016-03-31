@@ -20,15 +20,61 @@
             var yl = y as IList;
             if (xl != null && yl != null)
             {
-                if (xl.Count != yl.Count)
+                return Collection.Equals(xl, yl, compareItem, settings, referencePairs);
+            }
+
+            if (xl != null || yl != null)
+            {
+                return false;
+            }
+
+            var xd = x as IDictionary;
+            var yd = y as IDictionary;
+            if (xd != null && yd != null)
+            {
+                return Collection.Equals(xd, yd, compareItem, settings, referencePairs);
+            }
+
+            if (xd != null || yd != null)
+            {
+                return false;
+            }
+
+            var xe = x as IEnumerable;
+            var ye = y as IEnumerable;
+            if (xe != null && ye != null)
+            {
+                return Collection.Equals(xe, ye, compareItem, settings, referencePairs);
+            }
+
+            if (xe != null || ye != null)
+            {
+                return false;
+            }
+
+            var message = "There is a bug in the library as it:\r\n" +
+                          $"Could not compare enumerables of type {x.GetType().PrettyName()}";
+            throw new InvalidOperationException(message);
+        }
+
+        private static class Collection
+        {
+            internal static bool Equals<TSetting>(
+                IList x,
+                IList y,
+                Func<object, object, TSetting, ReferencePairCollection, bool> compareItem,
+                TSetting settings,
+                ReferencePairCollection referencePairs)
+            {
+                if (x.Count != y.Count)
                 {
                     return false;
                 }
 
-                for (int i = 0; i < xl.Count; i++)
+                for (int i = 0; i < x.Count; i++)
                 {
-                    var xv = xl[i];
-                    var yv = yl[i];
+                    var xv = x[i];
+                    var yv = y[i];
                     if (referencePairs?.Contains(xv, yv) == true)
                     {
                         continue;
@@ -39,44 +85,67 @@
                         return false;
                     }
                 }
-            }
-            else if (xl != null || yl != null)
-            {
-                return false;
-            }
-            else
-            {
-                var xe = x as IEnumerable;
-                var ye = y as IEnumerable;
-                if (xe != null && ye != null)
-                {
-                    foreach (var pair in new PaddedPairs(xe, ye))
-                    {
-                        if (referencePairs?.Contains(pair.X, pair.Y) == true)
-                        {
-                            continue;
-                        }
 
-                        if (!compareItem(pair.X, pair.Y, settings, referencePairs))
-                        {
-                            return false;
-                        }
-                    }
-                }
-                else if (xe != null || ye != null)
+                return true;
+            }
+
+            internal static bool Equals<TSetting>(
+                IDictionary x,
+                IDictionary y,
+                Func<object, object, TSetting, ReferencePairCollection, bool> compareItem,
+                TSetting settings,
+                ReferencePairCollection referencePairs)
+            {
+                if (x.Count != y.Count)
                 {
                     return false;
                 }
-                else
+
+                foreach (var key in x.Keys)
                 {
-                    var message = "There is a bug in the library as it:\r\n" +
-                                  $"Could not compare enumerables of type {x.GetType().PrettyName()}";
-                    throw new InvalidOperationException(message);
+                    if (!y.Contains(key))
+                    {
+                        return false;
+                    }
+
+                    var xv = x[key];
+                    var yv = y[key];
+                    if (referencePairs?.Contains(xv, yv) == true)
+                    {
+                        continue;
+                    }
+
+                    if (!compareItem(xv, yv, settings, referencePairs))
+                    {
+                        return false;
+                    }
                 }
+
+                return true;
             }
 
-            return true;
-        }
+            internal static bool Equals<TSetting>(
+                IEnumerable x,
+                IEnumerable y,
+                Func<object, object, TSetting, ReferencePairCollection, bool> compareItem,
+                TSetting settings,
+                ReferencePairCollection referencePairs)
+            {
+                foreach (var pair in new PaddedPairs(x, y))
+                {
+                    if (referencePairs?.Contains(pair.X, pair.Y) == true)
+                    {
+                        continue;
+                    }
 
+                    if (!compareItem(pair.X, pair.Y, settings, referencePairs))
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+        }
     }
 }

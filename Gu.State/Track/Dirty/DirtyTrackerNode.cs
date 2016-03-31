@@ -17,7 +17,7 @@
         private readonly IRefCounted<ChangeTrackerNode> yNode;
         private readonly DisposingMap<IDisposable> children = new DisposingMap<IDisposable>();
         private readonly object gate = new object();
-        private Diff diff = Diff.Empty;
+        private Diff diff;
 
         private DirtyTrackerNode(object x, object y, PropertiesSettings settings)
         {
@@ -59,7 +59,7 @@
 
         public event EventHandler<DirtyTrackerNode> ChildChanged;
 
-        public bool IsDirty => this.Diff.IsEmpty;
+        public bool IsDirty => this.Diff != null;
 
         public Diff Diff
         {
@@ -77,12 +77,8 @@
                         return;
                     }
 
-                    var wasEmpty = this.diff.IsEmpty;
                     this.diff = value;
-                    if (wasEmpty != this.diff.IsEmpty)
-                    {
-                        this.OnPropertyChanged(IsDirtyPropertyChangedEventArgs);
-                    }
+                    this.OnPropertyChanged(IsDirtyPropertyChangedEventArgs);
                 }
             }
         }
@@ -143,9 +139,10 @@
             {
                 lock (this.gate)
                 {
-                    this.Diff = EqualBy.PropertyValues(xValue, yValue, this.Settings)
-                                    ? this.diff.Without(propertyInfo)
-                                    : this.diff.With(propertyInfo, xValue, yValue);
+                    throw new NotImplementedException("message");
+                    //this.Diff = EqualBy.PropertyValues(xValue, yValue, this.Settings)
+                    //                ? this.diff.Without(propertyInfo)
+                    //                : this.diff.With(propertyInfo, xValue, yValue);
                 }
             }
         }
@@ -175,9 +172,10 @@
                 var propertyInfo = key as PropertyInfo;
                 if (propertyInfo != null)
                 {
-                    var xValue = propertyInfo.GetValue(this.xNode.Tracker.Source);
-                    var yValue = propertyInfo.GetValue(this.yNode.Tracker.Source);
-                    this.Diff = this.diff.With(propertyInfo, xValue, yValue);
+                    throw new NotImplementedException("message");
+                    //var xValue = propertyInfo.GetValue(this.xNode.Tracker.Source);
+                    //var yValue = propertyInfo.GetValue(this.yNode.Tracker.Source);
+                    //this.Diff = this.diff.With(propertyInfo, xValue, yValue);
                 }
 
                 this.ChildChanged?.Invoke(this, originalSource);

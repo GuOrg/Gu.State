@@ -2,20 +2,18 @@
 {
     using System.Reflection;
 
-    public class PropertyDiff : Diff
+    public class PropertyDiff : MemberDiff<PropertyInfo>
     {
         public PropertyDiff(PropertyInfo propertyInfo, object xValue, object yValue)
-            : base(EmptyDiffs)
+            : this(propertyInfo, new ValueDiff(xValue, yValue))
         {
-            this.PropertyInfo = propertyInfo;
-            this.X = xValue;
-            this.Y = yValue;
         }
 
-        public PropertyInfo PropertyInfo { get; }
+        public PropertyDiff(PropertyInfo propertyInfo, ValueDiff diff)
+            : base(propertyInfo, diff)
+        {
+        }
 
-        public object X { get; }
-
-        public object Y { get; }
+        public PropertyInfo PropertyInfo => base.MemberyInfo;
     }
 }

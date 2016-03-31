@@ -55,7 +55,7 @@
             var fieldInfo = typeof(TSource).GetField(name, Constants.DefaultFieldBindingFlags);
             if (fieldInfo == null)
             {
-                var message = $"{name} must be a property on {typeof(TSource).Name}\r\n" +
+                var message = $"{name} must be a field on {typeof(TSource).Name}\r\n" +
                               $"Nested Fields are not allowed";
                 throw new ArgumentException(message);
             }

@@ -1,26 +1,28 @@
 namespace Gu.State
 {
-    using System;
     using System.CodeDom.Compiler;
     using System.IO;
+    using System.Reflection;
 
-    public class IndexDiff : Diff
+    public abstract class MemberDiff<T> : Diff
+        where T : MemberInfo
     {
+
         private readonly ValueDiff valueDiff;
 
-        public IndexDiff(object index, object xValue, object yValue)
-            : this(index, new ValueDiff(xValue, yValue))
+        public MemberDiff(T memberInfo, object xValue, object yValue)
+            : this(memberInfo, new ValueDiff(xValue, yValue))
         {
         }
 
-        public IndexDiff(object index, ValueDiff valueDiff)
-            :base(valueDiff.Diffs)
+        public MemberDiff(T memberInfo, ValueDiff diff)
+            : base(diff.Diffs)
         {
-            this.Index = index;
-            this.valueDiff = valueDiff;
+            this.MemberyInfo = memberInfo;
+            this.valueDiff = diff;
         }
 
-        public object Index { get; }
+        protected T MemberyInfo { get; }
 
         public object X => this.valueDiff.X;
 
@@ -28,19 +30,19 @@ namespace Gu.State
 
         public override string ToString()
         {
-            return $"[{this.Index}] {this.valueDiff} diffs: {this.Diffs.Count}";
+            return $"{this.MemberyInfo.Name} {this.valueDiff} diffs: {this.Diffs.Count}";
         }
 
         public override string ToString(string tabString, string newLine)
         {
             if (this.Diffs.Count == 0)
             {
-                return $"{this.Index} x: {this.X ?? "null"} y: {this.Y ?? "null"}";
+                return $"{this.MemberyInfo.Name} x: {this.X ?? "null"} y: {this.Y ?? "null"}";
             }
 
             using (var writer = new IndentedTextWriter(new StringWriter(), tabString) { NewLine = newLine })
             {
-                writer.WriteLine(this.Index);
+                writer.Write(this.MemberyInfo.Name);
                 this.WriteDiffs(writer);
                 return writer.InnerWriter.ToString();
             }
@@ -50,11 +52,11 @@ namespace Gu.State
         {
             if (this.Diffs.Count == 0)
             {
-                writer.Write($"[{this.Index}] x: {this.X ?? "null"} y: {this.Y ?? "null"}");
+                writer.Write($"{this.MemberyInfo.Name} x: {this.X ?? "null"} y: {this.Y ?? "null"}");
                 return writer;
             }
 
-            writer.Write($"[{this.Index}]");
+            writer.Write(this.MemberyInfo.Name);
             writer.Indent++;
             foreach (var diff in this.Diffs)
             {
