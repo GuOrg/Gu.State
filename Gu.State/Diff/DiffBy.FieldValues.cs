@@ -103,14 +103,20 @@
             FieldsSettings settings,
             ReferencePairCollection referencePairs)
         {
-            EqualBy.Verify.CanEqualByFieldValues(x, y, settings);
-
             ValueDiff diff;
             if (TryGetValueDiff(x, y, out diff))
             {
                 return diff;
             }
 
+            if (settings.ReferenceHandling == ReferenceHandling.References)
+            {
+                return ReferenceEquals(x, y)
+                           ? null
+                           : new ValueDiff(x, y);
+            }
+
+            EqualBy.Verify.CanEqualByFieldValues(x, y, settings);
             var diffs = SubDiffs(x, y, settings, referencePairs);
             return diffs == null
                        ? null

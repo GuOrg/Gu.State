@@ -151,8 +151,8 @@ namespace Gu.State.Tests.DiffTests
             var exception = Assert.Throws<NotSupportedException>(() => this.DiffMethod(x, y, ReferenceHandling.Structural));
             Assert.AreEqual(expected, exception.Message);
 
-            Assert.AreEqual(true, this.DiffMethod(x, y, ReferenceHandling.StructuralWithReferenceLoops));
-            Assert.AreEqual(false, this.DiffMethod(x, y, ReferenceHandling.References));
+            Assert.IsNull(this.DiffMethod(x, y, ReferenceHandling.StructuralWithReferenceLoops));
+            Assert.IsNotNull(this.DiffMethod(x, y, ReferenceHandling.References));
         }
     }
 }

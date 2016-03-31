@@ -1,7 +1,6 @@
 ﻿namespace Gu.State
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Reflection;
 
@@ -65,7 +64,7 @@
             ReferencePairCollection referencePairs)
         {
             referencePairs?.Add(x, y);
-            List<Diff> diffs = Enumerable.Diffs(x, y, settings, referencePairs, ItemPropertiesDiff);
+            var diffs = Enumerable.Diffs(x, y, settings, referencePairs, ItemPropertiesDiff);
 
             var propertyInfos = x.GetType().GetProperties(settings.BindingFlags);
             foreach (var propertyInfo in propertyInfos)
@@ -105,14 +104,20 @@
             PropertiesSettings settings,
             ReferencePairCollection referencePairs)
         {
-            EqualBy.Verify.CanEqualByPropertyValues(x, y, settings);
-
             ValueDiff diff;
             if (TryGetValueDiff(x, y, out diff))
             {
                 return diff;
             }
 
+            if (settings.ReferenceHandling == ReferenceHandling.References)
+            {
+                return ReferenceEquals(x, y)
+                           ? null
+                           : new ValueDiff(x, y);
+            }
+
+            EqualBy.Verify.CanEqualByPropertyValues(x, y, settings);
             var diffs = SubDiffs(x, y, settings, referencePairs);
             return diffs == null
                        ? null

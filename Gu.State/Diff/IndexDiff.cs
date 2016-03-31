@@ -1,5 +1,6 @@
 namespace Gu.State
 {
+    using System;
     using System.CodeDom.Compiler;
     using System.IO;
 
@@ -13,6 +14,7 @@ namespace Gu.State
         }
 
         public IndexDiff(object index, ValueDiff valueDiff)
+            :base(valueDiff.Diffs)
         {
             this.Index = index;
             this.valueDiff = valueDiff;
