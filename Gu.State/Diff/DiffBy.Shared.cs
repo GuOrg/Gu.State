@@ -1,9 +1,5 @@
 ﻿namespace Gu.State
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-
     public static partial class DiffBy
     {
         private static bool TryGetValueDiff(object x, object y, out ValueDiff diff)

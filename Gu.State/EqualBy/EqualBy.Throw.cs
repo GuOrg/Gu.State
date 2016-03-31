@@ -31,21 +31,21 @@
             IMemberSettings settings)
         {
             var structuralWithReferenceLoops = $"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.StructuralWithReferenceLoops)} same as Structural but handles reference loops.";
-            var referecnes = $"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.References)} means that reference equality is used.";
+            var references = $"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.References)} means that reference equality is used.";
             if (settings.ReferenceHandling == ReferenceHandling.Throw)
             {
                 if (errors.AllErrors.OfType<RequiresReferenceHandling>().Any())
                 {
                     return errorBuilder.AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Structural)} means that a deep equals is performed.")
                                        .AppendLine(structuralWithReferenceLoops)
-                                       .AppendLine(referecnes);
+                                       .AppendLine(references);
                 }
             }
 
             if (errors.AllErrors.OfType<ReferenceLoop>().Any())
             {
                 return errorBuilder.AppendLine(structuralWithReferenceLoops)
-                                   .AppendLine(referecnes);
+                                   .AppendLine(references);
             }
 
             return errorBuilder;

@@ -44,6 +44,7 @@
     <Compile Include="Diff\DiffBy.FieldValues.cs" />
     <Compile Include="Diff\DiffBy.PropertyValues.cs" />
     <Compile Include="Diff\DiffBy.Shared.cs" />
+    <Compile Include="Diff\DiffBy.Verify.cs" />
     <Compile Include="Diff\FieldDiff.cs" />
     <Compile Include="Diff\IndexDiff.cs" />
     <Compile Include="Diff\MemberDiff.cs" />

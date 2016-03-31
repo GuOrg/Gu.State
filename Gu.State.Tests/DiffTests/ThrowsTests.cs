@@ -13,9 +13,9 @@ namespace Gu.State.Tests.DiffTests
         [Test]
         public void ComplexValueThrowsWithoutReferenceHandling()
         {
-            var expected = this is DiffTests.FieldValues.Throws
+            var expected = this is FieldValues.Throws
                                ? "EqualBy.FieldValues(x, y) failed.\r\n" +
-                                 "The field WithComplexProperty.<ComplexType>k__BackingField of type ComplexType is not supported.\r\n" +
+                                 "The field WithComplexProperty.complexType of type ComplexType is not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
                                  "* Implement IEquatable<WithComplexProperty> for WithComplexProperty or use a type that does.\r\n" +
                                  "* Implement IEquatable<ComplexType> for ComplexType or use a type that does.\r\n" +
@@ -24,7 +24,7 @@ namespace Gu.State.Tests.DiffTests
                                  "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but handles reference loops.\r\n" +
                                  "  - ReferenceHandling.References means that reference equality is used.\r\n" +
                                  "  - Exclude a combination of the following:\r\n" +
-                                 "    - The field WithComplexProperty.<ComplexType>k__BackingField.\r\n" +
+                                 "    - The field WithComplexProperty.complexType.\r\n" +
                                  "    - The type ComplexType.\r\n"
 
                                : "EqualBy.PropertyValues(x, y) failed.\r\n" +
