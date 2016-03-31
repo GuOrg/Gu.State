@@ -93,7 +93,7 @@
     <Compile Include="Settings\SettingsTypes.cs" />
     <Compile Include="CopyTests\ClassesTests.cs" />
     <Compile Include="CopyTests\CopyTypes.cs" />
-    <Compile Include="Settings\CopyFieldsSettingsTests.cs" />
+    <Compile Include="Settings\FieldsSettingsTests.cs" />
     <Compile Include="CopyTests\FieldValues\Collections.cs" />
     <Compile Include="CopyTests\FieldValues\Throws.cs" />
     <Compile Include="CopyTests\FieldValues\Verify.cs" />
