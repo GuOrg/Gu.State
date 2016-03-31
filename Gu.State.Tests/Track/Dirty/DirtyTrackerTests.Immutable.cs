@@ -22,38 +22,38 @@
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(false, tracker.IsDirty);
-                    CollectionAssert.IsEmpty(tracker.Diff);
+                    Assert.AreEqual(null, tracker.Diff);
                     CollectionAssert.IsEmpty(changes);
 
                     x.Name = "newName1";
                     Assert.AreEqual(true, tracker.IsDirty);
                     expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
-                    CollectionAssert.AreEqual(new[] { typeof(WithImmutableProperty).GetProperty(nameof(x.Name)) }, tracker.Diff);
+                    Assert.AreEqual("new[] { typeof(WithImmutableProperty).GetProperty(nameof(x.Name)) }", tracker.Diff.ToString("", " "));
 
                     y.Name = "newName1";
                     Assert.AreEqual(false, tracker.IsDirty);
                     expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
-                    CollectionAssert.IsEmpty(tracker.Diff);
+                    Assert.AreEqual(null, tracker.Diff);
 
                     x.ImmutableValue = new WithGetReadOnlyPropertySealed<int>(1);
                     Assert.AreEqual(true, tracker.IsDirty);
                     expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
-                    CollectionAssert.AreEqual(new[] { typeof(WithImmutableProperty).GetProperty(nameof(x.ImmutableValue)) }, tracker.Diff);
+                    CollectionAssert.AreEqual(new[] { typeof(WithImmutableProperty).GetProperty(nameof(x.ImmutableValue)) }, tracker.Diff.ToString("", " "));
 
                     y.ImmutableValue = new WithGetReadOnlyPropertySealed<int>(1);
                     Assert.AreEqual(false, tracker.IsDirty);
                     expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
-                    CollectionAssert.IsEmpty(tracker.Diff);
+                    Assert.AreEqual(null, tracker.Diff);
 
                     x.ImmutableValue = new WithGetReadOnlyPropertySealed<int>(2);
                     Assert.AreEqual(true, tracker.IsDirty);
                     expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
-                    CollectionAssert.AreEqual(new[] { typeof(WithImmutableProperty).GetProperty(nameof(x.ImmutableValue)) }, tracker.Diff);
+                    CollectionAssert.AreEqual(new[] { typeof(WithImmutableProperty).GetProperty(nameof(x.ImmutableValue)) }, tracker.Diff.ToString("", " "));
                 }
             }
         }

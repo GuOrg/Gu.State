@@ -1,6 +1,7 @@
 ﻿namespace Gu.State
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.ComponentModel;
@@ -28,33 +29,24 @@
             this.xNode.Tracker.PropertyChange += this.OnTrackedPropertyChange;
             this.yNode.Tracker.PropertyChange += this.OnTrackedPropertyChange;
             this.diff = DiffBy.PropertyValues(x, y, settings);
-            switch (settings.ReferenceHandling)
+            foreach (var property in x.GetType().GetProperties(settings.BindingFlags))
             {
-                case ReferenceHandling.Throw:
-                case ReferenceHandling.References:
-                    break;
-                case ReferenceHandling.Structural:
-                case ReferenceHandling.StructuralWithReferenceLoops:
-                    foreach (var property in x.GetType().GetProperties(settings.BindingFlags))
-                    {
-                        this.UpdatePropertyNode(property);
-                    }
+                this.UpdatePropertyNode(property);
+            }
 
-                    throw new NotImplementedException("message");
+            if (IsNotifyingCollection(x) && IsNotifyingCollection(y))
+            {
+                throw new NotImplementedException("message");
 
-                    //this.xNode.Tracker.Add += this.OnTrackedAdd;
-                    //this.xNode.Tracker.Remove += this.OnTrackedRemove;
-                    //this.xNode.Tracker.Move += this.OnTrackedMove;
-                    //this.xNode.Tracker.Reset += this.OnTrackedReset;
+                //this.xNode.Tracker.Add += this.OnTrackedAdd;
+                //this.xNode.Tracker.Remove += this.OnTrackedRemove;
+                //this.xNode.Tracker.Move += this.OnTrackedMove;
+                //this.xNode.Tracker.Reset += this.OnTrackedReset;
 
-                    //this.yNode.Tracker.Add += this.OnTrackedAdd;
-                    //this.yNode.Tracker.Remove += this.OnTrackedRemove;
-                    //this.yNode.Tracker.Move += this.OnTrackedMove;
-                    //this.yNode.Tracker.Reset += this.OnTrackedReset;
-
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                //this.yNode.Tracker.Add += this.OnTrackedAdd;
+                //this.yNode.Tracker.Remove += this.OnTrackedRemove;
+                //this.yNode.Tracker.Move += this.OnTrackedMove;
+                //this.yNode.Tracker.Reset += this.OnTrackedReset;
             }
         }
 
@@ -129,6 +121,11 @@
             Debug.Assert(y != null, "Cannot track null");
             Debug.Assert(y is INotifyPropertyChanged || y is INotifyCollectionChanged, "Must notify");
             return settings.DirtyNodes.GetOrAdd(owner, new ReferencePair(x, y), () => new DirtyTrackerNode(x, y, settings));
+        }
+
+        private static bool IsNotifyingCollection(object o)
+        {
+            return o is INotifyCollectionChanged && o is IList;
         }
 
         private void OnTrackedPropertyChange(object sender, PropertyChangeEventArgs e)

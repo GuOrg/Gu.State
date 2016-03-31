@@ -2,7 +2,6 @@ namespace Gu.State.Tests
 {
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Linq;
 
     using NUnit.Framework;
 
@@ -11,55 +10,57 @@ namespace Gu.State.Tests
         public class Simple
         {
             [Test]
+            public void CreateAndDispose()
+            {
+                Assert.Fail("Verify it stops tracking on dispose");
+                Assert.Fail("Check memory leaks");
+            }
+
+            [Test]
             public void TracksX()
             {
-                var source = new DirtyTrackerTypes.SimpleDirtyTrackClass { Value = 1, Excluded = 2 };
-                var target = new DirtyTrackerTypes.SimpleDirtyTrackClass { Value = 3, Excluded = 4 };
-                var tracker = Track.IsDirty(source, target);
+                var x = new DirtyTrackerTypes.SimpleDirtyTrackClass { Value = 1, Excluded = 2 };
+                var y = new DirtyTrackerTypes.SimpleDirtyTrackClass { Value = 3, Excluded = 4 };
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
-                tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
-                using (tracker)
+
+                using (var tracker = Track.IsDirty(x, y))
                 {
+                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual(2, tracker.Diff.Count());
+                    Assert.AreEqual("2", tracker.Diff.ToString("", " "));
                     CollectionAssert.IsEmpty(changes);
 
-                    source.Value = 5;
+                    x.Value = 5;
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual(2, tracker.Diff.Count());
+                    Assert.AreEqual(2, tracker.Diff.ToString("", " "));
                     CollectionAssert.IsEmpty(changes);
 
-                    source.Value = 3;
+                    x.Value = 3;
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual(1, tracker.Diff.Count());
+                    Assert.AreEqual(1, tracker.Diff.ToString("", " "));
                     expectedChanges.Add(nameof(DirtyTracker<INotifyPropertyChanged>.Diff));
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
-                    source.Excluded = 4;
+                    x.Excluded = 4;
                     Assert.AreEqual(false, tracker.IsDirty);
-                    Assert.AreEqual(0, tracker.Diff.Count());
+                    Assert.AreEqual(null, tracker.Diff);
                     expectedChanges.Add(nameof(DirtyTracker<INotifyPropertyChanged>.IsDirty));
                     expectedChanges.Add(nameof(DirtyTracker<INotifyPropertyChanged>.Diff));
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
-                    source.OnPropertyChanged(nameof(DirtyTrackerTypes.SimpleDirtyTrackClass.Excluded));
+                    x.OnPropertyChanged(nameof(DirtyTrackerTypes.SimpleDirtyTrackClass.Excluded));
                     Assert.AreEqual(false, tracker.IsDirty);
-                    Assert.AreEqual(0, tracker.Diff.Count());
+                    Assert.AreEqual(0, tracker.Diff.ToString("", " "));
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
-                    source.Excluded = 3;
+                    x.Excluded = 3;
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual(1, tracker.Diff.Count());
+                    Assert.AreEqual(1, tracker.Diff.ToString("", " "));
                     expectedChanges.Add(nameof(DirtyTracker<INotifyPropertyChanged>.IsDirty));
                     expectedChanges.Add(nameof(DirtyTracker<INotifyPropertyChanged>.Diff));
                     CollectionAssert.AreEqual(expectedChanges, changes);
                 }
-
-                source.Value = 4;
-                Assert.AreEqual(true, tracker.IsDirty);
-                Assert.AreEqual(1, tracker.Diff.Count());
-                CollectionAssert.AreEqual(expectedChanges, changes);
             }
 
             [Test]
@@ -74,35 +75,35 @@ namespace Gu.State.Tests
                 using (tracker)
                 {
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual(2, tracker.Diff.Count());
+                    Assert.AreEqual(2, tracker.Diff.ToString("", " "));
                     CollectionAssert.IsEmpty(changes);
 
                     target.Value = 5;
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual(2, tracker.Diff.Count());
+                    Assert.AreEqual(2, tracker.Diff.ToString("", " "));
                     CollectionAssert.IsEmpty(changes);
 
                     target.Value = 1;
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual(1, tracker.Diff.Count());
+                    Assert.AreEqual(1, tracker.Diff.ToString("", " "));
                     expectedChanges.Add(nameof(DirtyTracker<INotifyPropertyChanged>.Diff));
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
                     target.Excluded = 2;
                     Assert.AreEqual(false, tracker.IsDirty);
-                    Assert.AreEqual(0, tracker.Diff.Count());
+                    Assert.AreEqual(0, tracker.Diff.ToString("", " "));
                     expectedChanges.Add(nameof(DirtyTracker<INotifyPropertyChanged>.IsDirty));
                     expectedChanges.Add(nameof(DirtyTracker<INotifyPropertyChanged>.Diff));
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
                     target.OnPropertyChanged(nameof(DirtyTrackerTypes.SimpleDirtyTrackClass.Excluded));
                     Assert.AreEqual(false, tracker.IsDirty);
-                    Assert.AreEqual(0, tracker.Diff.Count());
+                    Assert.AreEqual(0, tracker.Diff.ToString("", " "));
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
                     target.Excluded = 3;
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual(1, tracker.Diff.Count());
+                    Assert.AreEqual(1, tracker.Diff.ToString("", " "));
                     expectedChanges.Add(nameof(DirtyTracker<INotifyPropertyChanged>.IsDirty));
                     expectedChanges.Add(nameof(DirtyTracker<INotifyPropertyChanged>.Diff));
                     CollectionAssert.AreEqual(expectedChanges, changes);
@@ -110,7 +111,7 @@ namespace Gu.State.Tests
 
                 target.Value = 4;
                 Assert.AreEqual(true, tracker.IsDirty);
-                Assert.AreEqual(1, tracker.Diff.Count());
+                Assert.AreEqual(1, tracker.Diff.ToString("", " "));
                 CollectionAssert.AreEqual(expectedChanges, changes);
             }
         }

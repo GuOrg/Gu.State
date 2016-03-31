@@ -21,54 +21,54 @@
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(false, tracker.IsDirty);
-                    CollectionAssert.IsEmpty(tracker.Diff);
+                    Assert.AreEqual(null, tracker.Diff);
                     CollectionAssert.IsEmpty(changes);
 
                     x.Name = "newName1";
                     Assert.AreEqual(true, tracker.IsDirty);
                     expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
-                    CollectionAssert.AreEqual(new[] { typeof(WithComplexProperty).GetProperty(nameof(x.Name)) }, tracker.Diff);
+                    CollectionAssert.AreEqual("new[] { typeof(WithComplexProperty).GetProperty(nameof(x.Name)) }", tracker.Diff.ToString("", ""));
 
                     y.Name = "newName1";
                     Assert.AreEqual(false, tracker.IsDirty);
                     expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
-                    CollectionAssert.IsEmpty(tracker.Diff);
+                    Assert.AreEqual(null, tracker.Diff);
 
                     x.ComplexType = new ComplexType("a", 1);
                     Assert.AreEqual(true, tracker.IsDirty);
                     expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
-                    CollectionAssert.AreEqual(new[] { typeof(WithComplexProperty).GetProperty(nameof(x.ComplexType)) }, tracker.Diff);
+                    CollectionAssert.AreEqual("new[] { typeof(WithComplexProperty).GetProperty(nameof(x.ComplexType)) }", tracker.Diff.ToString("", ""));
 
                     y.ComplexType = new ComplexType("a", 1);
                     Assert.AreEqual(false, tracker.IsDirty);
                     expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
-                    CollectionAssert.IsEmpty(tracker.Diff);
+                    Assert.AreEqual(null, tracker.Diff);
 
                     x.ComplexType.Name = "newName2";
                     Assert.AreEqual(true, tracker.IsDirty);
                     expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
-                    CollectionAssert.AreEqual(new[] { typeof(WithComplexProperty).GetProperty(nameof(x.ComplexType)) }, tracker.Diff);
+                    CollectionAssert.AreEqual(new[] { typeof(WithComplexProperty).GetProperty(nameof(x.ComplexType)) }, tracker.Diff.ToString("", " "));
 
                     x.ComplexType.Value++;
                     Assert.AreEqual(true, tracker.IsDirty);
                     CollectionAssert.AreEqual(expectedChanges, changes);
-                    CollectionAssert.AreEqual(new[] { typeof(WithComplexProperty).GetProperty(nameof(x.ComplexType)) }, tracker.Diff);
+                    CollectionAssert.AreEqual(new[] { typeof(WithComplexProperty).GetProperty(nameof(x.ComplexType)) }, tracker.Diff.ToString("", " "));
 
                     y.ComplexType.Name = "newName2";
                     Assert.AreEqual(true, tracker.IsDirty);
                     CollectionAssert.AreEqual(expectedChanges, changes);
-                    CollectionAssert.AreEqual(new[] { typeof(WithComplexProperty).GetProperty(nameof(x.ComplexType)) }, tracker.Diff);
+                    CollectionAssert.AreEqual(new[] { typeof(WithComplexProperty).GetProperty(nameof(x.ComplexType)) }, tracker.Diff.ToString("", " "));
 
                     y.ComplexType.Value++;
                     Assert.AreEqual(false, tracker.IsDirty);
                     expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
-                    CollectionAssert.IsEmpty(tracker.Diff);
+                    Assert.AreEqual(null, tracker.Diff);
                 }
             }
         }
