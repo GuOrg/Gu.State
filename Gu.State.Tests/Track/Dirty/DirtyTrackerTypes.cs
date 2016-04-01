@@ -136,7 +136,11 @@
                 get { return this.value1; }
                 set
                 {
-                    if (value == this.value1) return;
+                    if (value == this.value1)
+                    {
+                        return;
+                    }
+
                     this.value1 = value;
                     this.OnPropertyChanged();
                 }
@@ -147,7 +151,11 @@
                 get { return this.value2; }
                 set
                 {
-                    if (value == this.value2) return;
+                    if (value == this.value2)
+                    {
+                        return;
+                    }
+
                     this.value2 = value;
                     this.OnPropertyChanged();
                 }

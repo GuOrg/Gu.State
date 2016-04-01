@@ -17,7 +17,9 @@
             {
                 var diffs = source.Diffs.Except<Diff, PropertyDiff>(x => x.PropertyInfo == propertyInfo)
                                 .ToArray();
-                return new ValueDiff(source.X, source.Y, diffs);
+                return diffs.Any()
+                           ? new ValueDiff(source.X, source.Y, diffs)
+                           : null;
             }
 
             return source;
@@ -34,8 +36,10 @@
                     .Any(x => (int)x.Index == index))
             {
                 var diffs = source.Diffs.Except<Diff, IndexDiff>(x => (int)x.Index == index)
-                                .ToArray();
-                return new ValueDiff(source.X, source.Y, diffs);
+                                  .ToArray();
+                return diffs.Any()
+                           ? new ValueDiff(source.X, source.Y, diffs)
+                           : null;
             }
 
             return source;

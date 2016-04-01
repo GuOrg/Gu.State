@@ -22,7 +22,7 @@ namespace Gu.State
         public static DirtyTracker<T> IsDirty<T>(
             T x,
             T y,
-            ReferenceHandling referenceHandling = ReferenceHandling.Throw,
+            ReferenceHandling referenceHandling = ReferenceHandling.StructuralWithReferenceLoops,
             BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
             where T : class, INotifyPropertyChanged
         {
