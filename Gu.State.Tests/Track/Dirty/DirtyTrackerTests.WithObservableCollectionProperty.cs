@@ -30,26 +30,26 @@
 
                     x.Complexes.Add(new ComplexType("a", 1));
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual(new[] { ComplexesProperty }, tracker.Diff.ToString("", " "));
-                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
+                    Assert.AreEqual("WithObservableCollectionProperties Complexes [0] x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: null", tracker.Diff.ToString("", " "));
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
                     y.Complexes.Add(new ComplexType("a", 1));
                     Assert.AreEqual(false, tracker.IsDirty);
                     Assert.AreEqual(null, tracker.Diff);
-                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
                     x.Complexes[0].Value++;
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("new[] { ComplexesProperty }", tracker.Diff.ToString("", " "));
-                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
+                    Assert.AreEqual("WithObservableCollectionProperties Complexes [0] Value x: 2 y: 1", tracker.Diff.ToString("", " "));
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
                     y.Complexes[0].Value++;
                     Assert.AreEqual(false, tracker.IsDirty);
                     Assert.AreEqual(null, tracker.Diff);
-                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
                 }
             }
@@ -70,24 +70,26 @@
 
                     x.Complexes.Add(new ComplexType("a", 1));
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual(new[] { ComplexesProperty }, tracker.Diff.ToString("", " "));
-                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
+                    Assert.AreEqual("WithObservableCollectionProperties Complexes [0] x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: null", tracker.Diff.ToString("", " "));
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
                     y.Complexes.Add(new ComplexType("b", 2));
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual(new[] { ComplexesProperty }, tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("WithObservableCollectionProperties Complexes [0] Name x: a y: b Value x: 1 y: 2", tracker.Diff.ToString("", " "));
+                    expectedChanges.Add("Diff");
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
                     x.Complexes[0].Name = "b";
                     Assert.AreEqual(true, tracker.IsDirty);
-                    CollectionAssert.AreEqual(new[] { ComplexesProperty }, tracker.Diff.ToString("", " "));
+                    CollectionAssert.AreEqual("WithObservableCollectionProperties Complexes [0] Value x: 1 y: 2", tracker.Diff.ToString("", " "));
+                    expectedChanges.Add("Diff");
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
                     y.Complexes[0].Value = 1;
                     Assert.AreEqual(false, tracker.IsDirty);
                     Assert.AreEqual(null, tracker.Diff);
-                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
                 }
             }
@@ -109,7 +111,7 @@
                     x.Complexes.RemoveAt(1);
                     Assert.AreEqual(false, tracker.IsDirty);
                     Assert.AreEqual(null, tracker.Diff);
-                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
+                    expectedChanges.AddRange(new[] {  "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
                 }
             }
@@ -151,13 +153,13 @@
                     x.Complexes.Clear();
                     Assert.AreEqual(true, tracker.IsDirty);
                     CollectionAssert.AreEqual(new[] { ComplexesProperty }, tracker.Diff.ToString("", " "));
-                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
+                    expectedChanges.AddRange(new[] {  "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
                     y.Complexes.Clear();
                     Assert.AreEqual(false, tracker.IsDirty);
                     Assert.AreEqual(null, tracker.Diff);
-                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
+                    expectedChanges.AddRange(new[] {  "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
                 }
             }
@@ -184,7 +186,7 @@
                     y.Complexes.Clear();
                     Assert.AreEqual(false, tracker.IsDirty);
                     Assert.AreEqual(null, tracker.Diff);
-                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
+                    expectedChanges.AddRange(new[] {  "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
                 }
             }
@@ -206,13 +208,13 @@
                     x.Complexes.Move(0, 1);
                     Assert.AreEqual(true, tracker.IsDirty);
                     CollectionAssert.AreEqual(new[] { ComplexesProperty }, tracker.Diff.ToString("", " "));
-                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
+                    expectedChanges.AddRange(new[] {  "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
                     x.Complexes.Move(0, 1);
                     Assert.AreEqual(false, tracker.IsDirty);
                     Assert.AreEqual(null, tracker.Diff);
-                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
+                    expectedChanges.AddRange(new[] {  "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
                 }
             }
@@ -234,13 +236,13 @@
                     x.Complexes.Move(0, 1);
                     Assert.AreEqual(true, tracker.IsDirty);
                     CollectionAssert.AreEqual(new[] { ComplexesProperty }, tracker.Diff.ToString("", " "));
-                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
+                    expectedChanges.AddRange(new[] {  "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
                     y.Complexes.Move(0, 1);
                     Assert.AreEqual(false, tracker.IsDirty);
                     Assert.AreEqual(null, tracker.Diff);
-                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
+                    expectedChanges.AddRange(new[] {  "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
                 }
             }
@@ -262,13 +264,13 @@
                     x.Complexes[0] = new ComplexType("c", 3);
                     Assert.AreEqual(true, tracker.IsDirty);
                     CollectionAssert.AreEqual(new[] { ComplexesProperty }, tracker.Diff.ToString("", " "));
-                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
+                    expectedChanges.AddRange(new[] {  "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
                     y.Complexes[0] = new ComplexType("c", 3);
                     Assert.AreEqual(false, tracker.IsDirty);
                     Assert.AreEqual(null, tracker.Diff);
-                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
+                    expectedChanges.AddRange(new[] {  "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
                 }
             }
@@ -290,25 +292,25 @@
                     x.Complexes.Add(new ComplexType("a", 1));
                     Assert.AreEqual(true, tracker.IsDirty);
                     CollectionAssert.AreEqual(new[] { ComplexesProperty }, tracker.Diff.ToString("", " "));
-                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
+                    expectedChanges.AddRange(new[] {  "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
                     y.Complexes.Add(new ComplexType("a", 1));
                     Assert.AreEqual(false, tracker.IsDirty);
                     Assert.AreEqual(null, tracker.Diff);
-                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
+                    expectedChanges.AddRange(new[] {  "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
                     x.Complexes[0].Value++;
                     Assert.AreEqual(true, tracker.IsDirty);
                     CollectionAssert.AreEqual(new[] { ComplexesProperty }, tracker.Diff.ToString("", " "));
-                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
+                    expectedChanges.AddRange(new[] {  "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
                     y.Complexes[0].Value++;
                     Assert.AreEqual(false, tracker.IsDirty);
                     Assert.AreEqual(null, tracker.Diff);
-                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
+                    expectedChanges.AddRange(new[] {  "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
                     var complexType = y.Complexes[0];

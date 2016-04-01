@@ -159,7 +159,7 @@
         {
             var list = (IList)this.node.Tracker.Source;
             var value = list[index];
-            if (value != null)
+            if (value != null && !this.Settings.IsImmutable(value.GetType()))
             {
                 var child = this.CreateChild(value);
                 this.children.SetValue(index, child);

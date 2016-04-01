@@ -14,6 +14,6 @@
         {
         }
 
-        public PropertyInfo PropertyInfo => base.MemberyInfo;
+        public PropertyInfo PropertyInfo => this.MemberyInfo;
     }
 }

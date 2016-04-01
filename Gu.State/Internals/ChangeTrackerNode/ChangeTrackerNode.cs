@@ -87,32 +87,26 @@
         private void OnTrackedCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             this.Change?.Invoke(this, EventArgs.Empty);
-            var itemType = sender.GetType().GetItemType();
-            if (this.Settings.IsImmutable(itemType))
-            {
-                return;
-            }
-
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
                     for (var i = 0; i < e.NewItems.Count; i++)
                     {
-                        this.Add?.Invoke(this, new AddEventArgs(e.NewStartingIndex + i, e.NewItems[i]));
+                        this.Add?.Invoke(this, new AddEventArgs(e.NewStartingIndex + i));
                     }
 
                     break;
                 case NotifyCollectionChangedAction.Remove:
                     for (var i = 0; i < e.OldItems.Count; i++)
                     {
-                        this.Remove?.Invoke(this, new RemoveEventArgs(e.OldStartingIndex + i, e.OldItems[i]));
+                        this.Remove?.Invoke(this, new RemoveEventArgs(e.OldStartingIndex + i));
                     }
 
                     break;
                 case NotifyCollectionChangedAction.Replace:
                     for (int i = 0; i < e.NewItems.Count; i++)
                     {
-                        this.Replace?.Invoke(this, new ReplaceEventArgs(e.NewStartingIndex + 1, e.OldItems[i], e.NewItems[i]));
+                        this.Replace?.Invoke(this, new ReplaceEventArgs(e.NewStartingIndex + i));
                     }
 
                     break;

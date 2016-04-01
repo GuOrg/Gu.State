@@ -36,6 +36,8 @@
 
             if (IsNotifyingCollection(x) && IsNotifyingCollection(y))
             {
+                this.OnTrackedReset(x, new ResetEventArgs(null, null));
+
                 this.xNode.Tracker.Add += this.OnTrackedAdd;
                 this.xNode.Tracker.Remove += this.OnTrackedRemove;
                 this.xNode.Tracker.Replace += this.OnTrackedReplace;
@@ -130,6 +132,31 @@
             return o is INotifyCollectionChanged && o is IList;
         }
 
+        private static bool IsTrackablePair(object x, object y, PropertiesSettings settings)
+        {
+            if (IsNullOrMissing(x) || IsNullOrMissing(y))
+            {
+                return false;
+            }
+
+            return !settings.IsImmutable(x.GetType()) && !settings.IsImmutable(y.GetType());
+        }
+
+        private static bool IsNullOrMissing(object x)
+        {
+            return x == null || x == PaddedPairs.MissingItem;
+        }
+
+        private static object GetValue(IList source, int index)
+        {
+            if (source == null || index >= source.Count)
+            {
+                return PaddedPairs.MissingItem;
+            }
+
+            return source[index];
+        }
+
         private void OnTrackedPropertyChange(object sender, PropertyChangeEventArgs e)
         {
             this.UpdatePropertyNode(e.PropertyInfo);
@@ -168,27 +195,83 @@
 
         private void OnTrackedAdd(object sender, AddEventArgs e)
         {
-            throw new NotImplementedException();
+            this.UpdateIndexNode(e.Index);
         }
 
         private void OnTrackedRemove(object sender, RemoveEventArgs e)
         {
-            throw new NotImplementedException();
+            this.children.Remove(e.Index);
+            var xValue = GetValue((IList)this.xNode.Tracker.Source, e.Index);
+            var yValue = GetValue((IList)this.yNode.Tracker.Source, e.Index);
+            var indexValueDiff = this.CreateIndexValueDiff(xValue, yValue);
+
+            lock (this.gate)
+            {
+                this.Diff = indexValueDiff == null
+                                ? this.diff.Without(e.Index)
+                                : this.diff.With(this.xNode.Tracker.Source, this.yNode.Tracker.Source, e.Index, indexValueDiff);
+            }
         }
 
         private void OnTrackedReplace(object sender, ReplaceEventArgs e)
         {
-            throw new NotImplementedException();
+            this.UpdateIndexNode(e.Index);
         }
 
         private void OnTrackedMove(object sender, MoveEventArgs e)
         {
-            throw new NotImplementedException();
+            this.OnTrackedReplace(sender, new ReplaceEventArgs(e.FromIndex));
+            this.OnTrackedReplace(sender, new ReplaceEventArgs(e.ToIndex));
         }
 
         private void OnTrackedReset(object sender, ResetEventArgs e)
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < Math.Max(((IList)this.xNode.Tracker.Source).Count, ((IList)this.yNode.Tracker.Source).Count); i++)
+            {
+                this.UpdateIndexNode(i);
+            }
+        }
+
+        private void UpdateIndexNode(int index)
+        {
+            var xValue = GetValue((IList)this.xNode.Tracker.Source, index);
+            var yValue = GetValue((IList)this.yNode.Tracker.Source, index);
+
+            if (IsTrackablePair(xValue, yValue, this.Settings) &&
+               (this.Settings.ReferenceHandling == ReferenceHandling.Structural || this.Settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops))
+            {
+                var refCounted = this.CreateChild(xValue, yValue, index);
+                this.children.SetValue(index, refCounted);
+            }
+            else
+            {
+                this.children.SetValue(index, null);
+            }
+
+            var indexValueDiff = this.CreateIndexValueDiff(xValue, yValue);
+
+            lock (this.gate)
+            {
+                this.Diff = indexValueDiff == null
+                                ? this.diff.Without(index)
+                                : this.diff.With(this.xNode.Tracker.Source, this.yNode.Tracker.Source, index, indexValueDiff);
+            }
+        }
+
+        private ValueDiff CreateIndexValueDiff(object xValue, object yValue)
+        {
+            if ((xValue == PaddedPairs.MissingItem && yValue == PaddedPairs.MissingItem) ||
+                (xValue == null && yValue == null))
+            {
+                return null;
+            }
+
+            if (IsNullOrMissing(xValue) || IsNullOrMissing(yValue))
+            {
+                return new ValueDiff(xValue, yValue);
+            }
+
+            return DiffBy.PropertyValues(xValue, yValue, this.Settings);
         }
 
         private IDisposable CreateChild(object xValue, object yValue, object key)
