@@ -117,7 +117,10 @@
 
         private void OnTrackedRemove(object sender, RemoveEventArgs e)
         {
-            this.children.Remove(e.Index);
+            if (!this.Settings.IsImmutable(this.node.Tracker.Source.GetType().GetItemType()))
+            {
+                this.children.Remove(e.Index);
+            }
         }
 
         private void OnTrackedReplace(object sender, ReplaceEventArgs e)
@@ -127,7 +130,10 @@
 
         private void OnTrackedMove(object sender, MoveEventArgs e)
         {
-            this.children.Move(e.FromIndex, e.ToIndex);
+            if (!this.Settings.IsImmutable(this.node.Tracker.Source.GetType().GetItemType()))
+            {
+                this.children.Move(e.FromIndex, e.ToIndex);
+            }
         }
 
         private void OnTrackedReset(object sender, ResetEventArgs e)
