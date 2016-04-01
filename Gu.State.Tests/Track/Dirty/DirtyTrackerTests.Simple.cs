@@ -34,10 +34,11 @@ namespace Gu.State.Tests
                 CollectionAssert.AreEqual(expectedChanges, changes);
 
 #if (!DEBUG) // debug build keeps instances alive longer for nicer debugging experience
-                var wrx = new WeakReference(x);
-                var wry = new WeakReference(y);
+                var wrx = new System.WeakReference(x);
+                var wry = new System.WeakReference(y);
                 x = null;
                 y = null;
+                System.GC.Collect();
                 Assert.AreEqual(false, wrx.IsAlive);
                 Assert.AreEqual(false, wry.IsAlive);
 #endif
