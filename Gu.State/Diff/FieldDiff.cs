@@ -14,6 +14,6 @@ namespace Gu.State
         {
         }
 
-        public FieldInfo FieldInfo => base.MemberyInfo;
+        public FieldInfo FieldInfo => this.MemberyInfo;
     }
 }

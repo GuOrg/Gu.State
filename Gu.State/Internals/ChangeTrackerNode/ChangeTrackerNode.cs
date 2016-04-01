@@ -43,6 +43,8 @@
 
         public event EventHandler<RemoveEventArgs> Remove;
 
+        public event EventHandler<ReplaceEventArgs> Replace;
+
         public event EventHandler<MoveEventArgs> Move;
 
         public event EventHandler<EventArgs> Change;
@@ -84,39 +86,39 @@
 
         private void OnTrackedCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            this.OnChange();
-            var itemType = sender.GetType().GetItemType();
-            if (this.Settings.IsImmutable(itemType))
-            {
-                return;
-            }
-
+            this.Change?.Invoke(this, EventArgs.Empty);
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
                     for (var i = 0; i < e.NewItems.Count; i++)
                     {
-                        this.OnAdd(new AddEventArgs(e.NewStartingIndex + i, e.NewItems[i]));
+                        this.Add?.Invoke(this, new AddEventArgs(e.NewStartingIndex + i));
                     }
 
                     break;
                 case NotifyCollectionChangedAction.Remove:
                     for (var i = 0; i < e.OldItems.Count; i++)
                     {
-                        this.OnRemove(new RemoveEventArgs(e.OldStartingIndex + i, e.OldItems[i]));
+                        this.Remove?.Invoke(this, new RemoveEventArgs(e.OldStartingIndex + i));
                     }
 
                     break;
                 case NotifyCollectionChangedAction.Replace:
-                    this.OnAdd(new AddEventArgs(e.NewStartingIndex, e.NewItems[0]));
-                    this.OnRemove(new RemoveEventArgs(e.OldStartingIndex, e.OldItems[0]));
+                    for (int i = 0; i < e.NewItems.Count; i++)
+                    {
+                        this.Replace?.Invoke(this, new ReplaceEventArgs(e.NewStartingIndex + i));
+                    }
+
                     break;
                 case NotifyCollectionChangedAction.Move:
-                    this.OnMove(new MoveEventArgs(e.OldStartingIndex, e.NewStartingIndex));
+                    {
+                        this.Move?.Invoke(this, new MoveEventArgs(e.OldStartingIndex, e.NewStartingIndex));
+                    }
+
                     break;
                 case NotifyCollectionChangedAction.Reset:
                     {
-                        this.OnReset(new ResetEventArgs(e.OldItems, e.NewItems));
+                        this.Reset?.Invoke(this, new ResetEventArgs(e.OldItems, e.NewItems));
                         break;
                     }
 
@@ -129,7 +131,7 @@
         {
             if (string.IsNullOrEmpty(e.PropertyName))
             {
-                this.OnChange();
+                this.Change?.Invoke(this, EventArgs.Empty);
                 this.OnResetProperties();
                 return;
             }
@@ -141,8 +143,8 @@
                 return;
             }
 
-            this.OnChange();
-            this.OnPropertyChange(new PropertyChangeEventArgs(propertyInfo));
+            this.Change?.Invoke(this, EventArgs.Empty);
+            this.PropertyChange?.Invoke(this, new PropertyChangeEventArgs(propertyInfo));
         }
 
         private void OnResetProperties()
@@ -152,40 +154,9 @@
             {
                 foreach (var propertyInfo in this.TrackProperties)
                 {
-                    var trackEventArgs = new PropertyChangeEventArgs(propertyInfo);
-                    handler.Invoke(this, trackEventArgs);
+                    handler.Invoke(this, new PropertyChangeEventArgs(propertyInfo));
                 }
             }
-        }
-
-        private void OnChange()
-        {
-            this.Change?.Invoke(this, EventArgs.Empty);
-        }
-
-        private void OnPropertyChange(PropertyChangeEventArgs e)
-        {
-            this.PropertyChange?.Invoke(this, e);
-        }
-
-        private void OnReset(ResetEventArgs e)
-        {
-            this.Reset?.Invoke(this, e);
-        }
-
-        private void OnAdd(AddEventArgs e)
-        {
-            this.Add?.Invoke(this, e);
-        }
-
-        private void OnRemove(RemoveEventArgs e)
-        {
-            this.Remove?.Invoke(this, e);
-        }
-
-        private void OnMove(MoveEventArgs e)
-        {
-            this.Move?.Invoke(this, e);
         }
     }
 }

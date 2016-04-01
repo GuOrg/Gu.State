@@ -39,10 +39,12 @@ namespace Gu.State.Tests.DiffTests
                                  "  - Exclude a combination of the following:\r\n" +
                                  "    - The property WithComplexProperty.ComplexType.\r\n" +
                                  "    - The type ComplexType.\r\n";
-            var exception = Assert.Throws<NotSupportedException>(() => this.DiffMethod<WithComplexProperty>(null, null));
+            var x = new WithComplexProperty();
+            var y = new WithComplexProperty();
+            var exception = Assert.Throws<NotSupportedException>(() => this.DiffMethod<WithComplexProperty>(x, y));
             Assert.AreEqual(expected, exception.Message);
 
-            Assert.DoesNotThrow(() => this.DiffMethod<ComplexType>(null, null));
+            Assert.DoesNotThrow(() => this.DiffMethod<ComplexType>(new ComplexType(), new ComplexType()));
         }
 
         [Test]
