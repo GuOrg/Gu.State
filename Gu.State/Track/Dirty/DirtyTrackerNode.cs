@@ -36,17 +36,17 @@
 
             if (IsNotifyingCollection(x) && IsNotifyingCollection(y))
             {
-                throw new NotImplementedException("message");
+                this.xNode.Tracker.Add += this.OnTrackedAdd;
+                this.xNode.Tracker.Remove += this.OnTrackedRemove;
+                this.xNode.Tracker.Replace += this.OnTrackedReplace;
+                this.xNode.Tracker.Move += this.OnTrackedMove;
+                this.xNode.Tracker.Reset += this.OnTrackedReset;
 
-                //this.xNode.Tracker.Add += this.OnTrackedAdd;
-                //this.xNode.Tracker.Remove += this.OnTrackedRemove;
-                //this.xNode.Tracker.Move += this.OnTrackedMove;
-                //this.xNode.Tracker.Reset += this.OnTrackedReset;
-
-                //this.yNode.Tracker.Add += this.OnTrackedAdd;
-                //this.yNode.Tracker.Remove += this.OnTrackedRemove;
-                //this.yNode.Tracker.Move += this.OnTrackedMove;
-                //this.yNode.Tracker.Reset += this.OnTrackedReset;
+                this.yNode.Tracker.Add += this.OnTrackedAdd;
+                this.yNode.Tracker.Remove += this.OnTrackedRemove;
+                this.yNode.Tracker.Replace += this.OnTrackedReplace;
+                this.yNode.Tracker.Move += this.OnTrackedMove;
+                this.yNode.Tracker.Reset += this.OnTrackedReset;
             }
         }
 
@@ -99,17 +99,19 @@
         {
             this.xNode.RemoveOwner(this);
             this.xNode.Tracker.PropertyChange -= this.OnTrackedPropertyChange;
-            //this.xNode.Tracker.Add -= this.OnTrackedAdd;
-            //this.xNode.Tracker.Remove -= this.OnTrackedRemove;
-            //this.xNode.Tracker.Move -= this.OnTrackedMove;
-            //this.xNode.Tracker.Reset -= this.OnTrackedReset;
+            this.xNode.Tracker.Add -= this.OnTrackedAdd;
+            this.xNode.Tracker.Remove -= this.OnTrackedRemove;
+            this.xNode.Tracker.Remove -= this.OnTrackedRemove;
+            this.xNode.Tracker.Move -= this.OnTrackedMove;
+            this.xNode.Tracker.Reset -= this.OnTrackedReset;
 
             this.yNode.RemoveOwner(this);
             this.yNode.Tracker.PropertyChange -= this.OnTrackedPropertyChange;
-            //this.yNode.Tracker.Add -= this.OnTrackedAdd;
-            //this.yNode.Tracker.Remove -= this.OnTrackedRemove;
-            //this.yNode.Tracker.Move -= this.OnTrackedMove;
-            //this.yNode.Tracker.Reset -= this.OnTrackedReset;
+            this.yNode.Tracker.Add -= this.OnTrackedAdd;
+            this.yNode.Tracker.Remove -= this.OnTrackedRemove;
+            this.yNode.Tracker.Remove -= this.OnTrackedRemove;
+            this.yNode.Tracker.Move -= this.OnTrackedMove;
+            this.yNode.Tracker.Reset -= this.OnTrackedReset;
 
             this.children.Dispose();
         }
@@ -146,9 +148,7 @@
             if (this.TrackProperties.Contains(propertyInfo) &&
                (this.Settings.ReferenceHandling == ReferenceHandling.Structural || this.Settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops))
             {
-                var refCounted = xValue == null || yValue == null
-                                     ? null
-                                     : this.CreateChild(xValue, yValue, propertyInfo);
+                var refCounted = this.CreateChild(xValue, yValue, propertyInfo);
                 this.children.SetValue(propertyInfo, refCounted);
             }
 
@@ -166,10 +166,38 @@
             }
         }
 
+        private void OnTrackedAdd(object sender, AddEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void OnTrackedRemove(object sender, RemoveEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void OnTrackedReplace(object sender, ReplaceEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void OnTrackedMove(object sender, MoveEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void OnTrackedReset(object sender, ResetEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
         private IDisposable CreateChild(object xValue, object yValue, object key)
         {
-            Debug.Assert(xValue != null, "xValue != null");
-            Debug.Assert(yValue != null, "yValue != null");
+            if (xValue == null || yValue == null)
+            {
+                return null;
+            }
+
             var childNode = GetOrCreate(this, xValue, yValue, this.Settings);
             EventHandler<DirtyTrackerNode> trackerOnBubbleChange = (sender, args) => this.OnBubbleChange(sender, args, key);
             childNode.Tracker.BubbleChange += trackerOnBubbleChange;

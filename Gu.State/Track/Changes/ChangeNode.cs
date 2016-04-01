@@ -29,6 +29,7 @@
                     this.node.Tracker.PropertyChange += this.OnTrackedPropertyChange;
                     this.node.Tracker.Add += this.OnTrackedAdd;
                     this.node.Tracker.Remove += this.OnTrackedRemove;
+                    this.node.Tracker.Replace += this.OnTrackedReplace;
                     this.node.Tracker.Move += this.OnTrackedMove;
                     this.node.Tracker.Reset += this.OnTrackedReset;
                     foreach (var property in this.TrackProperties)
@@ -70,6 +71,7 @@
             this.node.Tracker.PropertyChange -= this.OnTrackedPropertyChange;
             this.node.Tracker.Add -= this.OnTrackedAdd;
             this.node.Tracker.Remove -= this.OnTrackedRemove;
+            this.node.Tracker.Replace -= this.OnTrackedReplace;
             this.node.Tracker.Move -= this.OnTrackedMove;
             this.node.Tracker.Reset -= this.OnTrackedReset;
             this.children.Dispose();
@@ -116,6 +118,11 @@
         private void OnTrackedRemove(object sender, RemoveEventArgs e)
         {
             this.children.Remove(e.Index);
+        }
+
+        private void OnTrackedReplace(object sender, ReplaceEventArgs e)
+        {
+            this.UpdateIndexNode(e.Index);
         }
 
         private void OnTrackedMove(object sender, MoveEventArgs e)

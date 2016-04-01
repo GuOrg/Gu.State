@@ -116,7 +116,7 @@
             {
                 var changes = new List<object>();
                 var root = new Level();
-                using (var tracker = Track.Changes(root))
+                using (var tracker = Track.Changes(root, ReferenceHandling.StructuralWithReferenceLoops))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
@@ -138,7 +138,7 @@
             {
                 var changes = new List<object>();
                 var level = new Level { Next = new Level() };
-                using (var tracker = Track.Changes(level))
+                using (var tracker = Track.Changes(level, ReferenceHandling.StructuralWithReferenceLoops))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);

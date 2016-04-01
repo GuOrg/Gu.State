@@ -2,8 +2,6 @@ namespace Gu.State.Tests
 {
     using System.Collections.Generic;
 
-    using Gu.State.Tests.EqualByTests;
-
     using NUnit.Framework;
 
     using static ChangeTrackerTypes;
@@ -17,7 +15,7 @@ namespace Gu.State.Tests
             {
                 var changes = new List<object>();
                 var parent = new Parent();
-                using (var tracker = Track.Changes(parent))
+                using (var tracker = Track.Changes(parent, ReferenceHandling.StructuralWithReferenceLoops))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
