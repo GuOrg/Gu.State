@@ -12,17 +12,17 @@ namespace Gu.State
         /// <typeparam name="T">The type os <paramref name="source"/> and <paramref name="target"/></typeparam>
         /// <param name="source">The instance to copy property values from</param>
         /// <param name="target">The instance to copy property values to</param>
-        /// <param name="bindingFlags">The binding flags to use when getting properties</param>
         /// <param name="referenceHandling">
         /// If Structural is used property values for sub properties are copied for the entire graph.
         /// Activator.CreateInstance is used to new up references so a default constructor is required, can be private
         /// </param>
+        /// <param name="bindingFlags">The binding flags to use when getting properties</param>
         /// <returns>A disposable that when disposed stops synchronizing</returns>
         public static IDisposable PropertyValues<T>(
             T source,
             T target,
-            BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags,
-            ReferenceHandling referenceHandling = ReferenceHandling.Throw)
+            ReferenceHandling referenceHandling = ReferenceHandling.Throw,
+            BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
             where T : class, INotifyPropertyChanged
         {
             var settings = PropertiesSettings.GetOrCreate(bindingFlags, referenceHandling);
