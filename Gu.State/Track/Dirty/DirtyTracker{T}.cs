@@ -1,28 +1,17 @@
 ﻿namespace Gu.State
 {
     using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Collections.Specialized;
     using System.ComponentModel;
     using System.Diagnostics;
-    using System.Linq;
-    using System.Reflection;
-    using System.Runtime.CompilerServices;
-
-    using JetBrains.Annotations;
 
     /// <summary>
     /// Tracks if there is a difference between the properties of x and y
     /// </summary>
     [DebuggerDisplay("DirtyTracker<{typeof(T).Name}> IsDirty: {IsDirty}")]
-    public partial class DirtyTracker<T> : INotifyPropertyChanged, IDirtyTracker
+    public sealed class DirtyTracker<T> : DirtyTracker, INotifyPropertyChanged, IDisposable
         where T : class, INotifyPropertyChanged
     {
-        private readonly HashSet<PropertyInfo> diff = new HashSet<PropertyInfo>();
-        private readonly PropertiesDirtyTracker propertyTracker;
-        private readonly ItemsDirtyTracker itemTrackers;
-
+        private readonly IRefCounted<DirtyTrackerNode> refCountedNode;
         private bool disposed;
 
         public DirtyTracker(T x, T y, PropertiesSettings settings)
@@ -33,17 +22,15 @@
             Ensure.SameType(x, y);
             Track.VerifyCanTrackIsDirty<T>(settings);
             this.Settings = settings;
-            this.propertyTracker = PropertiesDirtyTracker.Create(x, y, this);
-            this.itemTrackers = ItemsDirtyTracker.Create(x, y, this);
+            this.refCountedNode = DirtyTrackerNode.GetOrCreate(this, x, y, settings);
+            this.refCountedNode.Tracker.PropertyChanged += this.OnNodeChanged;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public bool IsDirty => this.diff.Count != 0;
+        public override bool IsDirty => this.refCountedNode.Tracker.IsDirty;
 
-        PropertyInfo IDirtyTrackerNode.PropertyInfo => null;
-
-        public IEnumerable<PropertyInfo> Diff => this.diff;
+        public override ValueDiff Diff => this.refCountedNode.Tracker.Diff;
 
         public PropertiesSettings Settings { get; }
 
@@ -54,63 +41,21 @@
                 return;
             }
 
-            GC.SuppressFinalize(this);
             this.disposed = true;
-            this.Dispose(true);
+            this.refCountedNode.RemoveOwner(this);
+            this.refCountedNode.Tracker.PropertyChanged -= this.OnNodeChanged;
         }
 
-        void IDirtyTracker.Update(IDirtyTrackerNode child)
+        private void OnNodeChanged(object sender, PropertyChangedEventArgs e)
         {
-            var before = this.diff.Count;
-            if (child.IsDirty)
+            if (e.PropertyName == nameof(DirtyTrackerNode.Diff))
             {
-                this.diff.Add(child.PropertyInfo);
+                this.PropertyChanged?.Invoke(this, DiffPropertyChangedEventArgs);
             }
-            else
+            else if (e.PropertyName == nameof(DirtyTrackerNode.IsDirty))
             {
-                var itemDirtyTracker = child as ItemDirtyTracker;
-                if (itemDirtyTracker != null)
-                {
-                    if (!this.itemTrackers.IsDirty)
-                    {
-                        this.diff.Remove(child.PropertyInfo);
-                    }
-                }
-                else
-                {
-                    this.diff.Remove(child.PropertyInfo);
-                }
+                this.PropertyChanged?.Invoke(this, IsDirtyPropertyChangedEventArgs);
             }
-
-            this.NotifyChanges(before);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                this.propertyTracker?.Dispose();
-                this.itemTrackers?.Dispose();
-            }
-        }
-
-        protected void NotifyChanges(int diffsBefore)
-        {
-            if (this.diff.Count != diffsBefore)
-            {
-                if ((diffsBefore == 0 && this.diff.Count > 0) || (diffsBefore > 0 && this.diff.Count == 0))
-                {
-                    this.OnPropertyChanged(nameof(this.IsDirty));
-                }
-
-                this.OnPropertyChanged(nameof(this.Diff));
-            }
-        }
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

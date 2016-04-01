@@ -7,3 +7,6 @@ licenseUrl http://opensource.org/licenses/MIT
 excludeddependencies
   JetBrains.Annotations
   StyleCop.Analyzers
+  Microsoft.ApiDesignGuidelines.Analyzers
+  Microsoft.CodeAnalysis.Analyzers
+  Desktop.Analyzers

@@ -5,7 +5,7 @@ namespace Gu.State
     using System.Diagnostics;
     using System.Linq;
 
-    [DebuggerDisplay("{GetType().Name} Type: {Type.Name}")]
+    [DebuggerDisplay("{GetType().Name} Type: {Type?.Name}")]
     internal sealed class TypeErrors : Error, IWithErrors
     {
         private static readonly Error[] EmptyErrors = new Error[0];

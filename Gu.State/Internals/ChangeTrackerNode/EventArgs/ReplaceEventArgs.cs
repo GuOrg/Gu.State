@@ -1,10 +1,10 @@
 namespace Gu.State
 {
-    internal struct RemoveEventArgs
+    internal struct ReplaceEventArgs
     {
         internal readonly int Index;
 
-        public RemoveEventArgs(int index)
+        public ReplaceEventArgs(int index)
         {
             this.Index = index;
         }

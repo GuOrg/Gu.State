@@ -27,13 +27,7 @@
                 var x = new WithComplexProperty();
                 var y = new WithComplexProperty();
 
-                var exception = Assert.Throws<NotSupportedException>(() => Track.IsDirty(x, y));
-                Assert.AreEqual(expected, exception.Message);
-
-                exception = Assert.Throws<NotSupportedException>(() => Track.IsDirty(x, y, referenceHandling: ReferenceHandling.Throw));
-                Assert.AreEqual(expected, exception.Message);
-
-                exception = Assert.Throws<NotSupportedException>(() => Track.VerifyCanTrackIsDirty<WithComplexProperty>());
+                var exception = Assert.Throws<NotSupportedException>(() => Track.IsDirty(x, y, ReferenceHandling.Throw));
                 Assert.AreEqual(expected, exception.Message);
 
                 exception = Assert.Throws<NotSupportedException>(() => Track.VerifyCanTrackIsDirty<WithComplexProperty>(referenceHandling: ReferenceHandling.Throw));

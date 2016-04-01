@@ -4,3 +4,6 @@ nuget JetBrains.Annotations
 nuget Moq
 nuget NUnit 2.6.4
 nuget StyleCop.Analyzers
+#nuget Desktop.Analyzers
+#nuget Microsoft.ApiDesignGuidelines.Analyzers
+#nuget Microsoft.CodeAnalysis.Analyzers

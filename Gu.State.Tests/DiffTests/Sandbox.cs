@@ -2,7 +2,6 @@
 {
     using System;
     using System.Linq;
-    using System.Text;
 
     using NUnit.Framework;
 
@@ -16,7 +15,7 @@
             var settings = PropertiesSettings.GetOrCreate();
             var x = new WithSimpleProperties(1, 2, "a", StringSplitOptions.RemoveEmptyEntries);
             var y = new WithSimpleProperties(1, 2, "b", StringSplitOptions.RemoveEmptyEntries);
-            var result = (ValueDiff)DiffBy.PropertyValues(x, y, settings);
+            var result = DiffBy.PropertyValues(x, y, settings);
             Assert.AreEqual(result.X, x);
             Assert.AreEqual(result.Y, y);
             var propertyDiff = (PropertyDiff)result.Diffs.Single();

@@ -29,6 +29,7 @@
                     this.node.Tracker.PropertyChange += this.OnTrackedPropertyChange;
                     this.node.Tracker.Add += this.OnTrackedAdd;
                     this.node.Tracker.Remove += this.OnTrackedRemove;
+                    this.node.Tracker.Replace += this.OnTrackedReplace;
                     this.node.Tracker.Move += this.OnTrackedMove;
                     this.node.Tracker.Reset += this.OnTrackedReset;
                     foreach (var property in this.TrackProperties)
@@ -55,9 +56,9 @@
             }
         }
 
-        public event EventHandler<ChangeNode> ChildChanged;
-
         public event EventHandler Changed;
+
+        public event EventHandler<ChangeNode> BubbleChange;
 
         private IReadOnlyCollection<PropertyInfo> TrackProperties => this.node.Tracker.TrackProperties;
 
@@ -70,6 +71,7 @@
             this.node.Tracker.PropertyChange -= this.OnTrackedPropertyChange;
             this.node.Tracker.Add -= this.OnTrackedAdd;
             this.node.Tracker.Remove -= this.OnTrackedRemove;
+            this.node.Tracker.Replace -= this.OnTrackedReplace;
             this.node.Tracker.Move -= this.OnTrackedMove;
             this.node.Tracker.Reset -= this.OnTrackedReset;
             this.children.Dispose();
@@ -85,10 +87,10 @@
         private void OnTrackerChange(object sender, EventArgs e)
         {
             this.Changed?.Invoke(this, EventArgs.Empty);
-            this.ChildChanged?.Invoke(this, this);
+            this.BubbleChange?.Invoke(this, this);
         }
 
-        private void OnChildChange(object sender, ChangeNode originalSource)
+        private void OnBubbleChange(object sender, ChangeNode originalSource)
         {
             if (ReferenceEquals(this, originalSource))
             {
@@ -96,7 +98,7 @@
             }
 
             this.Changed?.Invoke(this, EventArgs.Empty);
-            this.ChildChanged?.Invoke(this, originalSource);
+            this.BubbleChange?.Invoke(this, originalSource);
         }
 
         private void OnTrackedPropertyChange(object sender, PropertyChangeEventArgs e)
@@ -115,12 +117,23 @@
 
         private void OnTrackedRemove(object sender, RemoveEventArgs e)
         {
-            this.children.Remove(e.Index);
+            if (!this.Settings.IsImmutable(this.node.Tracker.Source.GetType().GetItemType()))
+            {
+                this.children.Remove(e.Index);
+            }
+        }
+
+        private void OnTrackedReplace(object sender, ReplaceEventArgs e)
+        {
+            this.UpdateIndexNode(e.Index);
         }
 
         private void OnTrackedMove(object sender, MoveEventArgs e)
         {
-            this.children.Move(e.FromIndex, e.ToIndex);
+            if (!this.Settings.IsImmutable(this.node.Tracker.Source.GetType().GetItemType()))
+            {
+                this.children.Move(e.FromIndex, e.ToIndex);
+            }
         }
 
         private void OnTrackedReset(object sender, ResetEventArgs e)
@@ -152,7 +165,7 @@
         {
             var list = (IList)this.node.Tracker.Source;
             var value = list[index];
-            if (value != null)
+            if (value != null && !this.Settings.IsImmutable(value.GetType()))
             {
                 var child = this.CreateChild(value);
                 this.children.SetValue(index, child);
@@ -166,11 +179,11 @@
         private IDisposable CreateChild(object child)
         {
             var childNode = GetOrCreate(this, child, this.node.Tracker.Settings);
-            childNode.Tracker.ChildChanged += this.OnChildChange;
+            childNode.Tracker.BubbleChange += this.OnBubbleChange;
             var disposable = new Disposer(() =>
                 {
                     childNode.RemoveOwner(this);
-                    childNode.Tracker.ChildChanged -= this.OnChildChange;
+                    childNode.Tracker.BubbleChange -= this.OnBubbleChange;
                 });
             return disposable;
         }
