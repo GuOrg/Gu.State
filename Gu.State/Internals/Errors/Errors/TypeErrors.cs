@@ -32,9 +32,9 @@ namespace Gu.State
             this.AllErrors = MergedErrors.MergeAll(this, errors);
         }
 
-        internal Type Type { get; }
-
         public IReadOnlyCollection<Error> Errors { get; }
+
+        internal Type Type { get; }
 
         internal IReadOnlyCollection<Error> AllErrors { get; }
     }

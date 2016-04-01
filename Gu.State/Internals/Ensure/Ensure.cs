@@ -3,7 +3,7 @@
     using System;
     using System.Diagnostics;
 
-    public static partial class Ensure
+    internal static partial class Ensure
     {
         internal static void NotSame<T>(T x, T y, string xParameterName, string yParametername)
         {

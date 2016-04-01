@@ -127,6 +127,7 @@ namespace Gu.State
             return FieldValueEquals(x, y, null, settings, referencePairs);
         }
 
+        // ReSharper disable once UnusedParameter.Local
         private static bool FieldValueEquals(object x, object y, FieldInfo fieldInfo, FieldsSettings settings, ReferencePairCollection referencePairs)
         {
             if (ReferenceEquals(x, y))

@@ -7,6 +7,11 @@
     /// <summary>
     /// Tracks if there is a difference between the properties of x and y
     /// </summary>
+    /// <typeparam name="T">
+    /// The type to synchronize must implement <see cref="INotifyPropertyChanged"/>
+    /// Collection must implement <see cref="System.Collections.Specialized.INotifyCollectionChanged"/>
+    /// All types in the graph muct be either notifying or immutable.
+    /// </typeparam> 
     [DebuggerDisplay("DirtyTracker<{typeof(T).Name}> IsDirty: {IsDirty}")]
     public sealed class DirtyTracker<T> : DirtyTracker, INotifyPropertyChanged, IDisposable
         where T : class, INotifyPropertyChanged

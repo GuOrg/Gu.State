@@ -43,7 +43,7 @@
 
             public object Target { get; }
 
-            public bool Equals { get; }
+            public new bool Equals { get; }
 
             public override string ToString()
             {
