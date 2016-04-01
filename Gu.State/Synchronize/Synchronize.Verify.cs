@@ -12,14 +12,14 @@
         /// Use this to fail fast or in unit tests.
         /// </summary>
         /// <typeparam name="T">The type to verify that synchronization is possible for</typeparam>
-        /// <param name="bindingFlags">The binding flags to use when getting properties</param>
         /// <param name="referenceHandling">
         /// If Structural is used property values for sub properties are copied for the entire graph.
         /// Activator.CreateInstance is sued to new up references so a default constructor is required, can be private
         /// </param>
+        /// <param name="bindingFlags">The binding flags to use when getting properties</param>
         public static void VerifyCanSynchronize<T>(
-            BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags,
-            ReferenceHandling referenceHandling = ReferenceHandling.Throw)
+            ReferenceHandling referenceHandling = ReferenceHandling.Throw,
+            BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
         {
             var settings = PropertiesSettings.GetOrCreate(bindingFlags, referenceHandling);
             VerifyCanSynchronize<T>(settings);
