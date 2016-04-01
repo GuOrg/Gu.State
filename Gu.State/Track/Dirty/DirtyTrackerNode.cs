@@ -21,6 +21,7 @@
         private readonly object gate = new object();
         private ValueDiff diff;
         private bool isBubbling;
+        private bool isBatchUpdating;
 
         private DirtyTrackerNode(object x, object y, PropertiesSettings settings)
         {
@@ -78,16 +79,9 @@
 
                     var before = this.diff;
                     this.diff = value;
-                    this.OnPropertyChanged(DiffPropertyChangedEventArgs);
-                    this.Changed?.Invoke(this, EventArgs.Empty);
-                    if (!this.isBubbling)
+                    if (!this.isBatchUpdating)
                     {
-                        this.BubbleChange?.Invoke(this, this);
-                    }
-
-                    if (value == null || before == null)
-                    {
-                        this.OnPropertyChanged(IsDirtyPropertyChangedEventArgs);
+                        this.NotifyChanges(this.diff, before);
                     }
                 }
             }
@@ -220,15 +214,37 @@
 
         private void OnTrackedMove(object sender, MoveEventArgs e)
         {
-            this.OnTrackedReplace(sender, new ReplaceEventArgs(e.FromIndex));
-            this.OnTrackedReplace(sender, new ReplaceEventArgs(e.ToIndex));
+            var before = this.diff;
+            this.isBatchUpdating = true;
+            try
+            {
+                this.OnTrackedReplace(sender, new ReplaceEventArgs(e.FromIndex));
+                this.OnTrackedReplace(sender, new ReplaceEventArgs(e.ToIndex));
+            }
+            finally
+            {
+                this.isBatchUpdating = false;
+                this.NotifyChanges(before, this.diff);
+            }
         }
 
         private void OnTrackedReset(object sender, ResetEventArgs e)
         {
-            for (int i = 0; i < Math.Max(((IList)this.xNode.Tracker.Source).Count, ((IList)this.yNode.Tracker.Source).Count); i++)
+            var before = this.diff;
+            this.isBatchUpdating = true;
+            try
             {
-                this.UpdateIndexNode(i);
+                var maxDiffIndex = this.diff?.Diffs.OfType<IndexDiff>().Max(x => (int)x.Index) + 1 ?? 0;
+                var max = Math.Max(maxDiffIndex, Math.Max(((IList)this.xNode.Tracker.Source).Count, ((IList)this.yNode.Tracker.Source).Count));
+                for (int i = 0; i < max; i++)
+                {
+                    this.UpdateIndexNode(i);
+                }
+            }
+            finally
+            {
+                this.isBatchUpdating = false;
+                this.NotifyChanges(before, this.diff);
             }
         }
 
@@ -337,10 +353,19 @@
             this.BubbleChange?.Invoke(this, originalSource);
         }
 
-        [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged(PropertyChangedEventArgs e)
+        private void NotifyChanges(ValueDiff value, ValueDiff before)
         {
-            this.PropertyChanged?.Invoke(this, e);
+            this.PropertyChanged?.Invoke(this, DiffPropertyChangedEventArgs);
+            this.Changed?.Invoke(this, EventArgs.Empty);
+            if (!this.isBubbling)
+            {
+                this.BubbleChange?.Invoke(this, this);
+            }
+
+            if (value == null || before == null)
+            {
+                this.PropertyChanged?.Invoke(this, IsDirtyPropertyChangedEventArgs);
+            }
         }
     }
 }

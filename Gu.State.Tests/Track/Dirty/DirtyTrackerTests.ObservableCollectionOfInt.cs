@@ -155,7 +155,7 @@
                     Assert.AreEqual(true, tracker.IsDirty);
                     Assert.AreEqual("ObservableCollection<int> [0] x: missing item y: 3 [1] x: missing item y: 4 [2] x: missing item y: 5", tracker.Diff.ToString("", " "));
                     expectedChanges.AddRange(new[] { "Diff" });
-                    CollectionAssert.IsEmpty(changes);
+                    CollectionAssert.AreEqual(expectedChanges, changes);
 
                     y.Clear();
                     Assert.AreEqual(false, tracker.IsDirty);
