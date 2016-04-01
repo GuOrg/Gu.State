@@ -25,7 +25,7 @@
         /// </param>
         public static void VerifyCanTrackIsDirty<T>(
             BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags,
-            ReferenceHandling referenceHandling = ReferenceHandling.Throw)
+            ReferenceHandling referenceHandling = ReferenceHandling.Structural)
             where T : class, INotifyPropertyChanged
         {
             var settings = PropertiesSettings.GetOrCreate(bindingFlags, referenceHandling);
@@ -74,7 +74,7 @@
         /// </param>
         public static void VerifyCanTrackChanges<T>(
             BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags,
-            ReferenceHandling referenceHandling = ReferenceHandling.Throw)
+            ReferenceHandling referenceHandling = ReferenceHandling.Structural)
         {
             var settings = PropertiesSettings.GetOrCreate(bindingFlags, referenceHandling);
             VerifyCanTrackChanges<T>(settings);

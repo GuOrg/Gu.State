@@ -8,6 +8,9 @@ namespace Gu.State
         /// <summary>
         /// Creates a tracker that detects and notifies about differences for any property or subproperty of <paramref name="x"/> compared to <paramref name="y"/>
         /// </summary>
+        /// <typeparam name="T">
+        /// The type of <paramref name="x"/> and <paramref name="y"/>
+        /// </typeparam>
         /// <param name="x">The first item to track changes for and compare to <paramref name="y"/>.</param>
         /// <param name="y">The othe item to track changes for and compare to <paramref name="x"/>.</param>
         /// <param name="referenceHandling">
@@ -18,11 +21,11 @@ namespace Gu.State
         /// <param name="bindingFlags">
         /// The <see cref="BindingFlags"/> to use when getting properties to track
         /// </param>
-        /// <returns>An <see cref="IChangeTracker"/> that signals on differences between in <paramref name="x"/> and <paramref name="y"/></returns>
+        /// <returns>An <see cref="DirtyTracker{T}"/> that signals on differences between in <paramref name="x"/> and <paramref name="y"/></returns>
         public static DirtyTracker<T> IsDirty<T>(
             T x,
             T y,
-            ReferenceHandling referenceHandling = ReferenceHandling.StructuralWithReferenceLoops,
+            ReferenceHandling referenceHandling = ReferenceHandling.Structural,
             BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
             where T : class, INotifyPropertyChanged
         {
@@ -30,6 +33,18 @@ namespace Gu.State
             return new DirtyTracker<T>(x, y, settings);
         }
 
+        /// <summary>
+        /// Creates a tracker that detects and notifies about differences for any property or subproperty of <paramref name="x"/> compared to <paramref name="y"/>
+        /// </summary>
+        /// <typeparam name="T">
+        /// The type of <paramref name="x"/> and <paramref name="y"/>
+        /// </typeparam>
+        /// <param name="x">The first item to track changes for and compare to <paramref name="y"/>.</param>
+        /// <param name="y">The othe item to track changes for and compare to <paramref name="x"/>.</param>
+        /// <param name="settings">
+        /// An instance of <see cref="PropertiesSettings"/> configuring how tracking will be performed
+        /// </param>
+        /// <returns>An <see cref="DirtyTracker{T}"/> that signals on differences between in <paramref name="x"/> and <paramref name="y"/></returns>
         public static DirtyTracker<T> IsDirty<T>(T x, T y, PropertiesSettings settings)
             where T : class, INotifyPropertyChanged
         {
@@ -45,11 +60,17 @@ namespace Gu.State
         /// - References tracks only one level.
         /// - Throw throws and exception if there are nested trackable types
         /// </param>
+        /// <param name="bindingFlags">
+        /// The <see cref="BindingFlags"/> to use when getting properties to track
+        /// </param>
         /// <returns>An <see cref="IChangeTracker"/> that signals on changes in <paramref name="root"/></returns>
-        public static IChangeTracker Changes(INotifyPropertyChanged root, ReferenceHandling referenceHandling = ReferenceHandling.StructuralWithReferenceLoops)
+        public static IChangeTracker Changes(
+            INotifyPropertyChanged root,
+            ReferenceHandling referenceHandling = ReferenceHandling.Structural,
+            BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
         {
             Ensure.NotNull(root, nameof(root));
-            var settings = PropertiesSettings.GetOrCreate(referenceHandling: referenceHandling);
+            var settings = PropertiesSettings.GetOrCreate(referenceHandling: referenceHandling, bindingFlags: bindingFlags);
             return Changes(root, settings);
         }
 
