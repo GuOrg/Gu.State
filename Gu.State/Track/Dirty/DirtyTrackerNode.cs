@@ -146,11 +146,17 @@
             if (this.TrackProperties.Contains(propertyInfo) &&
                (this.Settings.ReferenceHandling == ReferenceHandling.Structural || this.Settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops))
             {
-                var refCounted = this.CreateChild(xValue, yValue, propertyInfo);
+                var refCounted = xValue == null || yValue == null
+                                     ? null
+                                     : this.CreateChild(xValue, yValue, propertyInfo);
                 this.children.SetValue(propertyInfo, refCounted);
             }
 
-            var propertyValueDiff = DiffBy.PropertyValues(xValue, yValue, this.Settings);
+            var propertyValueDiff = xValue != null && yValue != null
+                                        ? DiffBy.PropertyValues(xValue, yValue, this.Settings)
+                                        : xValue != null || yValue != null
+                                              ? new ValueDiff(xValue, yValue)
+                                              : null;
 
             lock (this.gate)
             {
@@ -162,6 +168,8 @@
 
         private IDisposable CreateChild(object xValue, object yValue, object key)
         {
+            Debug.Assert(xValue != null, "xValue != null");
+            Debug.Assert(yValue != null, "yValue != null");
             var childNode = GetOrCreate(this, xValue, yValue, this.Settings);
             EventHandler<DirtyTrackerNode> trackerOnBubbleChange = (sender, args) => this.OnBubbleChange(sender, args, key);
             childNode.Tracker.BubbleChange += trackerOnBubbleChange;

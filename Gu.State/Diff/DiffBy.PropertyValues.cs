@@ -41,9 +41,8 @@
         public static ValueDiff PropertyValues<T>(T x, T y, PropertiesSettings settings)
         {
             Ensure.NotNull(x, nameof(x));
-            Ensure.NotNull(y, nameof(y));   
+            Ensure.NotNull(y, nameof(y));
             Ensure.NotNull(settings, nameof(settings));
-            EqualBy.Verify.CanEqualByPropertyValues(x, y, settings, typeof(DiffBy).Name, nameof(PropertyValues));
 
             ValueDiff diff;
             if (TryGetValueDiff(x, y, settings, out diff))
@@ -51,6 +50,7 @@
                 return diff;
             }
 
+            EqualBy.Verify.CanEqualByPropertyValues(x, y, settings, typeof(DiffBy).Name, nameof(PropertyValues));
             var pairs = settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops
                             ? new ReferencePairCollection()
                             : null;

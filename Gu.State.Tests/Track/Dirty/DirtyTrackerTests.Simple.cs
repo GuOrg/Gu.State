@@ -26,8 +26,7 @@ namespace Gu.State.Tests
                     x.Value1++;
                     Assert.AreEqual(true, tracker.IsDirty);
                     Assert.AreEqual("SimpleDirtyTrackClass Value1 x: 2 y: 1", tracker.Diff.ToString("", " "));
-                    expectedChanges.Add(nameof(DirtyTracker.Diff));
-                    expectedChanges.Add(nameof(DirtyTracker.IsDirty));
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
                 }
 
@@ -62,20 +61,19 @@ namespace Gu.State.Tests
                     x.Value1 = 5;
                     Assert.AreEqual(true, tracker.IsDirty);
                     Assert.AreEqual("SimpleDirtyTrackClass Value2 x: 2 y: 4 Value1 x: 5 y: 3", tracker.Diff.ToString("", " "));
-                    expectedChanges.Add(nameof(DirtyTracker.Diff));
+                    expectedChanges.Add("Diff");
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
                     x.Value1 = 3;
                     Assert.AreEqual(true, tracker.IsDirty);
                     Assert.AreEqual("SimpleDirtyTrackClass Value2 x: 2 y: 4", tracker.Diff.ToString("", " "));
-                    expectedChanges.Add(nameof(DirtyTracker.Diff));
+                    expectedChanges.Add("Diff");
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
                     x.Value2 = 4;
                     Assert.AreEqual(false, tracker.IsDirty);
                     Assert.AreEqual(null, tracker.Diff);
-                    expectedChanges.Add(nameof(DirtyTracker.Diff));
-                    expectedChanges.Add(nameof(DirtyTracker.IsDirty));
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
                     x.OnPropertyChanged(nameof(SimpleDirtyTrackClass.Value2));
@@ -86,8 +84,7 @@ namespace Gu.State.Tests
                     x.Value2 = 3;
                     Assert.AreEqual(true, tracker.IsDirty);
                     Assert.AreEqual("SimpleDirtyTrackClass Value2 x: 3 y: 4", tracker.Diff.ToString("", " "));
-                    expectedChanges.Add(nameof(DirtyTracker.Diff));
-                    expectedChanges.Add(nameof(DirtyTracker.IsDirty));
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
                 }
             }
@@ -109,20 +106,19 @@ namespace Gu.State.Tests
                     y.Value1 = 5;
                     Assert.AreEqual(true, tracker.IsDirty);
                     Assert.AreEqual("SimpleDirtyTrackClass Value2 x: 2 y: 4 Value1 x: 1 y: 5", tracker.Diff.ToString("", " "));
-                    expectedChanges.Add(nameof(DirtyTracker.Diff));
+                    expectedChanges.Add("Diff");
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
                     y.Value1 = 1;
                     Assert.AreEqual(true, tracker.IsDirty);
                     Assert.AreEqual("SimpleDirtyTrackClass Value2 x: 2 y: 4", tracker.Diff.ToString("", " "));
-                    expectedChanges.Add(nameof(DirtyTracker.Diff));
+                    expectedChanges.Add("Diff");
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
                     y.Value2 = 2;
                     Assert.AreEqual(false, tracker.IsDirty);
                     Assert.AreEqual(null, tracker.Diff?.ToString("", " "));
-                    expectedChanges.Add(nameof(DirtyTracker.Diff));
-                    expectedChanges.Add(nameof(DirtyTracker.IsDirty));
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
                     y.OnPropertyChanged(nameof(SimpleDirtyTrackClass.Value2));
@@ -133,8 +129,7 @@ namespace Gu.State.Tests
                     y.Value2 = 3;
                     Assert.AreEqual(true, tracker.IsDirty);
                     Assert.AreEqual("SimpleDirtyTrackClass Value2 x: 2 y: 3", tracker.Diff.ToString("", " "));
-                    expectedChanges.Add(nameof(DirtyTracker.Diff));
-                    expectedChanges.Add(nameof(DirtyTracker.IsDirty));
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
                 }
             }

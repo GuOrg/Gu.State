@@ -10,14 +10,15 @@
     {
         public class Complex
         {
-            [Test]
-            public void WithComplexPropertyTracks()
+            [TestCase(ReferenceHandling.Structural)]
+            [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
+            public void WithComplexPropertyTracks(ReferenceHandling referenceHandling)
             {
                 var x = new WithComplexProperty();
                 var y = new WithComplexProperty();
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
-                using (var tracker = Track.IsDirty(x, y, referenceHandling: ReferenceHandling.Structural))
+                using (var tracker = Track.IsDirty(x, y, referenceHandling))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(false, tracker.IsDirty);
@@ -26,47 +27,49 @@
 
                     x.Name = "newName1";
                     Assert.AreEqual(true, tracker.IsDirty);
-                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
-                    CollectionAssert.AreEqual("new[] { typeof(WithComplexProperty).GetProperty(nameof(x.Name)) }", tracker.Diff.ToString("", ""));
+                    Assert.AreEqual("WithComplexProperty Name x: newName1 y: null", tracker.Diff.ToString("", " "));
 
                     y.Name = "newName1";
                     Assert.AreEqual(false, tracker.IsDirty);
-                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
                     Assert.AreEqual(null, tracker.Diff);
 
                     x.ComplexType = new ComplexType("a", 1);
                     Assert.AreEqual(true, tracker.IsDirty);
-                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
-                    CollectionAssert.AreEqual("new[] { typeof(WithComplexProperty).GetProperty(nameof(x.ComplexType)) }", tracker.Diff.ToString("", ""));
+                    Assert.AreEqual("WithComplexProperty ComplexType x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: null", tracker.Diff.ToString("", " "));
 
                     y.ComplexType = new ComplexType("a", 1);
                     Assert.AreEqual(false, tracker.IsDirty);
-                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
                     Assert.AreEqual(null, tracker.Diff);
 
                     x.ComplexType.Name = "newName2";
                     Assert.AreEqual(true, tracker.IsDirty);
-                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
-                    CollectionAssert.AreEqual(new[] { typeof(WithComplexProperty).GetProperty(nameof(x.ComplexType)) }, tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("WithComplexProperty ComplexType Name x: newName2 y: a", tracker.Diff.ToString("", " "));
 
                     x.ComplexType.Value++;
                     Assert.AreEqual(true, tracker.IsDirty);
+                    expectedChanges.Add( "Diff");
                     CollectionAssert.AreEqual(expectedChanges, changes);
-                    CollectionAssert.AreEqual(new[] { typeof(WithComplexProperty).GetProperty(nameof(x.ComplexType)) }, tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("WithComplexProperty ComplexType Name x: newName2 y: a Value x: 2 y: 1", tracker.Diff.ToString("", " "));
 
                     y.ComplexType.Name = "newName2";
                     Assert.AreEqual(true, tracker.IsDirty);
+                    expectedChanges.Add("Diff");
                     CollectionAssert.AreEqual(expectedChanges, changes);
-                    CollectionAssert.AreEqual(new[] { typeof(WithComplexProperty).GetProperty(nameof(x.ComplexType)) }, tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("WithComplexProperty ComplexType Value x: 2 y: 1", tracker.Diff.ToString("", " "));
 
                     y.ComplexType.Value++;
                     Assert.AreEqual(false, tracker.IsDirty);
-                    expectedChanges.AddRange(new[] { "IsDirty", "Diff" });
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
                     Assert.AreEqual(null, tracker.Diff);
                 }
