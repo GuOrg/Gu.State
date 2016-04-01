@@ -116,6 +116,7 @@
             return PropertyValueEquals(x, y, null, settings, referencePairs);
         }
 
+        // ReSharper disable once UnusedParameter.Local
         private static bool PropertyValueEquals(
             object x,
             object y,

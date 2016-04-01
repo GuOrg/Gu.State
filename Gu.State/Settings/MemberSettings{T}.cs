@@ -34,15 +34,15 @@
 
         public ReferenceHandling ReferenceHandling { get; }
 
-        public bool IsEquatable(Type type) => IsEquatableCore(type);
-
-        public bool IsImmutable(Type type) => IsImmutableCore(type);
-
         internal ConcurrentDictionary<Type, TypeErrors> EqualByErrors { get; } = new ConcurrentDictionary<Type, TypeErrors>();
 
         internal ConcurrentDictionary<Type, TypeErrors> CopyErrors { get; } = new ConcurrentDictionary<Type, TypeErrors>();
 
         protected ConcurrentDictionary<T, bool> IgnoredMembers => this.ignoredMembers;
+
+        public bool IsEquatable(Type type) => IsEquatableCore(type);
+
+        public bool IsImmutable(Type type) => IsImmutableCore(type);
 
         public bool IsIgnoringDeclaringType(Type declaringType)
         {

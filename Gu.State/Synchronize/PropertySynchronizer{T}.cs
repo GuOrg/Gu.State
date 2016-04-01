@@ -5,6 +5,11 @@ namespace Gu.State
     /// <summary>
     /// This class tracks property changes in source and keeps target in sync
     /// </summary>
+    /// <typeparam name="T">
+    /// The type to synchronize must implement <see cref="INotifyPropertyChanged"/>
+    /// Collection must implement <see cref="System.Collections.Specialized.INotifyCollectionChanged"/>
+    /// All types in the graph muct be either notifying or immutable.
+    /// </typeparam>
     internal sealed partial class PropertySynchronizer<T> : IPropertySynchronizer
         where T : class, INotifyPropertyChanged
     {
@@ -14,7 +19,6 @@ namespace Gu.State
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertySynchronizer{T}"/> class.
         /// </summary>
-        /// <typeparam name="T">The type to get ignore properties for settings for</typeparam>
         /// <param name="source">The instance to copy property values from</param>
         /// <param name="target">The instance to copy property values to</param>
         /// <param name="settings">Contains configuration for how synchronization will be performed</param>

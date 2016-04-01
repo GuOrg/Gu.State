@@ -4,7 +4,7 @@
     using System.Diagnostics;
     using System.Text.RegularExpressions;
 
-    public static partial class Ensure
+    internal static partial class Ensure
     {
         // ReSharper disable once UnusedParameter.Global
         internal static void NotNullOrEmpty(string value, string parameterName)
@@ -17,7 +17,7 @@
         }
 
         // ReSharper disable once UnusedParameter.Global
-        public static void IsMatch(string text, string pattern, string parameterName)
+        internal static void IsMatch(string text, string pattern, string parameterName)
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), $"{nameof(parameterName)} cannot be null");
             if (!Regex.IsMatch(text, pattern))

@@ -3,7 +3,7 @@
     using System;
     using System.Diagnostics;
 
-    public static partial class Ensure
+    internal static partial class Ensure
     {
         internal static void SameType(object x, object y, string xName = null, string yName = null)
         {

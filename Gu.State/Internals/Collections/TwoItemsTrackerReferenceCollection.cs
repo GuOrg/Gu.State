@@ -71,9 +71,8 @@
             internal readonly object Item1;
             internal readonly object Item2;
             internal readonly T Tracker;
-            private readonly TwoItemsTrackerReferenceCollection<T> parent;
-
             internal int RefCount;
+            private readonly TwoItemsTrackerReferenceCollection<T> parent;
 
             public TrackerReference(object item1, object item2, T tracker, TwoItemsTrackerReferenceCollection<T> parent)
             {
