@@ -3,11 +3,15 @@ Library for managing state.
 
 ## Table of Contents
 - [1. EqualBy](#1-equalby)
-- [1.1. FieldValues](#11-fieldValues)
-- [1.2. PropertyValues](#12-propertyValues)
+- [1.1. FieldValues](#11-fieldvalues)
+- [1.1. VerifyCanEqualByFieldValues](#12-verifycanequalbyfieldvalues)
+- [1.3. PropertyValues](#12-propertyvalues)
 - [2. Copy](#2-copy)
-- [2.1. FieldValues](#21-fieldValues)
-- [2.2. PropertyValues](#22-propertyValues)
+- [2.1. FieldValues](#21-fieldvalues)
+- [2.2. PropertyValues](#22-propertyvalues)
+- [3. DiffBy](#3-diffby)
+- [3.1. FieldValues](#31-fieldvalues)
+- [3.2. PropertyValues](#32-propertyvalues)
 
 ## 1. EqualBy
 Compares two instances.
@@ -17,21 +21,37 @@ Compares two instances.
 - Handles enumerables.
 
 ### 1.1. FieldValues
+Compares x and y by field values.
 ```
 EqualBy.FieldValues(x, y);
 EqualBy.FieldValues(x, y, ReferenceHandling.Structural); 
 EqualBy.FieldValues(x, y, ReferenceHandling.StructuralWithReferenceLoops); 
 EqualBy.FieldValues(x, y, ReferenceHandling.References);
+EqualBy.FieldValues(x, y, settings);
 ```
 
 - Ignores event fields
 
-### 1.2. PropertyValues
+### 1.2. VerifyCanEqualByFieldValues
+
+Asserts that instances of type &lt;T&gt; can be compared using the `EqualBy.FieldValues` method.
+This can be useful in unit tests.
+Throws an exception with a message describing the problem(s) found and suggestions for fixes.
+```
+EqualBy.VerifyCanEqualByFieldValues<T>();
+EqualBy.VerifyCanEqualByFieldValues<T>(ReferenceHandling.Structural); 
+EqualBy.VerifyCanEqualByFieldValues<T>(ReferenceHandling.StructuralWithReferenceLoops); 
+EqualBy.VerifyCanEqualByFieldValues<T>(ReferenceHandling.References);
+EqualBy.VerifyCanEqualByFieldValues<T>(settings);
+```
+
+### 1.3. PropertyValues
 ```
 EqualBy.PropertyValues(x, y);
 EqualBy.PropertyValues(x, y, ReferenceHandling.Structural); 
 EqualBy.PropertyValues(x, y, ReferenceHandling.StructuralWithReferenceLoops); 
 EqualBy.PropertyValues(x, y, ReferenceHandling.References);
+EqualBy.PropertyValues(x, y, settings);
 ```
 
 ## 2. Copy
@@ -54,21 +74,14 @@ Copy.PropertyValues(source, target, ReferenceHandling.Structural);
 Copy.PropertyValues(source, target, ReferenceHandling.StructuralWithReferenceLoops); 
 Copy.PropertyValues(source, target, ReferenceHandling.References);
 ```
-##### FieldsSettings.
-For more finegrained control there is an overload accepting a `FieldsSettings`
 
-
-##### PropertiesSettings.
-For more finegrained control there is an overload accepting a `PropertiesSettings`
-
-
-## DiffBy
+## 3. DiffBy
 Compares two instances and returns a tree with the diff or null is they are equal.
 Types implementing `IEquatable` are compared using `object.Equals(x, y)`
 - Indexers are only supported for framework collection types.
 - Handles enumerables.
 
-#### FieldValues
+### 3.1. FieldValues
 ```
 DiffBy.FieldValues(x, y);
 DiffBy.FieldValues(x, y, ReferenceHandling.Structural); 
@@ -77,7 +90,7 @@ DiffBy.FieldValues(x, y, ReferenceHandling.References);
 ```
 - Ignores event fields
 
-#### PropertyValues
+### 3.2. PropertyValues
 ```
 DiffBy.PropertyValues(x, y);
 DiffBy.PropertyValues(x, y, ReferenceHandling.Structural); 
@@ -85,14 +98,14 @@ DiffBy.PropertyValues(x, y, ReferenceHandling.StructuralWithReferenceLoops);
 DiffBy.PropertyValues(x, y, ReferenceHandling.References);
 ```
 
-## Track
+## 4. Track
 Tracks changes in a graph.
 For subproperties the following must hold:
 - Collections must implement INotifyCollectionChanged
 - Types that are not collections and not immutable must implement INotifyPropertyChanged.
 - Indexers are only supported for framework collection types.
 
-##### Changes.
+### 4.1. Changes.
 
 ```
 using (var tracker = Track.Changes(foo))
@@ -104,7 +117,7 @@ using (var tracker = Track.Changes(foo))
 // no longer tracking after disposing.
 ```
 
-##### IsDirty.
+### 4.2. IsDirty.
 
 ```
 using (var tracker = Track.IsDirty(x, y))
@@ -116,7 +129,7 @@ using (var tracker = Track.IsDirty(x, y))
 // no longer tracking after disposing.
 ```
 
-##### Verify.
+### Verify.
 ```
 Track.VerifyCanTrackIsDirty<T>(ReferenceHandling.Structural);
 Track.VerifyCanTrackChanges<T>(ReferenceHandling.Structural);
@@ -146,3 +159,10 @@ using (Synchronize.CreatePropertySynchronizer(source, target, referenceHandling:
     ...
 }
 ```
+
+## FieldsSettings.
+For more finegrained control there is an overload accepting a `FieldsSettings`
+
+
+## PropertiesSettings.
+For more finegrained control there is an overload accepting a `PropertiesSettings`
