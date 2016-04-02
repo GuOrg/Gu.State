@@ -310,11 +310,6 @@
 
         private void OnBubbleChange(object sender, DirtyTrackerNode originalSource, object key)
         {
-            if (ReferenceEquals(this, originalSource))
-            {
-                return;
-            }
-
             var node = (DirtyTrackerNode)sender;
             var propertyInfo = key as PropertyInfo;
             if (propertyInfo != null)
@@ -350,11 +345,19 @@
                 }
             }
 
-            this.BubbleChange?.Invoke(this, originalSource);
+            if (!ReferenceEquals(this, originalSource))
+            {
+                this.BubbleChange?.Invoke(this, originalSource);
+            }
         }
 
         private void NotifyChanges(ValueDiff value, ValueDiff before)
         {
+            if (Equals(before, value))
+            {
+                return;
+            }
+
             this.PropertyChanged?.Invoke(this, DiffPropertyChangedEventArgs);
             this.Changed?.Invoke(this, EventArgs.Empty);
             if (!this.isBubbling)
