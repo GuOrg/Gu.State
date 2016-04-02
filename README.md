@@ -4,8 +4,9 @@ Library for managing state.
 ## Table of Contents
 - [1. EqualBy](#1-equalby)
 - [1.1. FieldValues](#11-fieldvalues)
-- [1.1. VerifyCanEqualByFieldValues](#12-verifycanequalbyfieldvalues)
-- [1.3. PropertyValues](#12-propertyvalues)
+- [1.2. VerifyCanEqualByFieldValues](#12-verifycanequalbyfieldvalues)
+- [1.3. PropertyValues](#13-propertyvalues)
+- [1.4. VerifyCanEqualByPropertyValues](#14-verifycanequalbypropertyvalues)
 - [2. Copy](#2-copy)
 - [2.1. FieldValues](#21-fieldvalues)
 - [2.2. PropertyValues](#22-propertyvalues)
@@ -34,7 +35,7 @@ EqualBy.FieldValues(x, y, settings);
 
 ### 1.2. VerifyCanEqualByFieldValues
 
-Asserts that instances of type &lt;T&gt; can be compared using the `EqualBy.FieldValues` method.
+Asserts that instances of type `<T>` can be compared using the `EqualBy.FieldValues` method.
 This can be useful in unit tests.
 Throws an exception with a message describing the problem(s) found and suggestions for fixes.
 ```
@@ -54,6 +55,19 @@ EqualBy.PropertyValues(x, y, ReferenceHandling.References);
 EqualBy.PropertyValues(x, y, settings);
 ```
 
+### 1.4. VerifyCanEqualByPropertyValues
+
+Asserts that instances of type `<T>` can be compared using the `EqualBy.PropertyValues` method.
+This can be useful in unit tests.
+Throws an exception with a message describing the problem(s) found and suggestions for fixes.
+```
+EqualBy.VerifyCanEqualByPropertyValues<T>();
+EqualBy.VerifyCanEqualByPropertyValues<T>(ReferenceHandling.Structural); 
+EqualBy.VerifyCanEqualByPropertyValues<T>(ReferenceHandling.StructuralWithReferenceLoops); 
+EqualBy.VerifyCanEqualByPropertyValues<T>(ReferenceHandling.References);
+EqualBy.VerifyCanEqualByPropertyValues<T>(settings);
+```
+
 ## 2. Copy
 Copies values from source to target.
 Immutable types are copied by value/reference.
@@ -67,6 +81,7 @@ Copy.FieldValues(source, target, ReferenceHandling.Structural);
 Copy.FieldValues(source, target, ReferenceHandling.StructuralWithReferenceLoops); 
 Copy.FieldValues(source, target, ReferenceHandling.References);
 ```
+
 ### 2.2. PropertyValues
 ```
 Copy.PropertyValues(source, target);
