@@ -2,12 +2,12 @@
 Library for managing state.
 
 ## Table of Contents
-- [1. EqualBy](#1-EqualBy)
-- [1.1. FieldValues](#11-FieldValues)
-- [1.2. PropertyValues](#12-PropertyValues)
-- [2. Copy](#1-Copy)
-- [2.1. FieldValues](#21-FieldValues)
-- [2.2. PropertyValues](#22-PropertyValues)
+- [1. EqualBy](#1-equalby)
+- [1.1. FieldValues](#11-fieldValues)
+- [1.2. PropertyValues](#12-propertyValues)
+- [2. Copy](#1-copy)
+- [2.1. FieldValues](#21-fieldValues)
+- [2.2. PropertyValues](#22-propertyValues)
 
 ## 1. EqualBy
 Compares two instances.
