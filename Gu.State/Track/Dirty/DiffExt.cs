@@ -3,7 +3,7 @@
     using System.Linq;
     using System.Reflection;
 
-    internal static class ValueDiffExt
+    internal static class DiffExt
     {
         internal static ValueDiff Without(this ValueDiff source, PropertyInfo propertyInfo)
         {
