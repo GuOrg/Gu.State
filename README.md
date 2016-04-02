@@ -5,14 +5,15 @@ Library for managing state.
 - [1. EqualBy](#1-equalby)
 - [1.1. FieldValues](#11-fieldValues)
 - [1.2. PropertyValues](#12-propertyValues)
-- [2. Copy](#1-copy)
+- [2. Copy](#2-copy)
 - [2.1. FieldValues](#21-fieldValues)
 - [2.2. PropertyValues](#22-propertyValues)
 
 ## 1. EqualBy
 Compares two instances.
-Types implementing `IEquatable` are compared using `object.Equals(x, y)`
-- Indexers are only supported for framework collection types.
+
+- Types implementing `IEquatable` are compared using `object.Equals(x, y)`
+- Indexers are only supported for framework collection types like `List<T>`.
 - Handles enumerables.
 
 ### 1.1. FieldValues
