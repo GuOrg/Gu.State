@@ -118,7 +118,7 @@
     <Compile Include="Track\Dirty\DirtyTrackerNode.cs" />
     <Compile Include="Internals\ChangeTrackerNode\ChangeTrackerNode.cs" />
     <Compile Include="Track\Track.Verify.cs" />
-    <Compile Include="EqualBy\EqualBy.Collection.cs" />
+    <Compile Include="EqualBy\EqualBy.Enumerable.cs" />
     <Compile Include="EqualBy\EqualBy.Throw.cs" />
     <Compile Include="Contracts\IIgnoringProperties.cs" />
     <Compile Include="Internals\Errors\Throw.cs" />
