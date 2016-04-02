@@ -1,51 +1,61 @@
 # Gu.State
 Library for managing state.
 
-## Copy
-Copies values from source to target.
-Immutable types are copied by value/reference.
-- Indexers are only supported for framework collection types.
-- Collections must implement `IList` or `IDictionary`
+## Table of Contents
+- [1. EqualBy](#1-EqualBy)
+- [1.1. FieldValues](#11-FieldValues)
+- [1.2. PropertyValues](#12-PropertyValues)
+- [2. Copy](#1-Copy)
+- [2.1. FieldValues](#21-FieldValues)
+- [2.2. PropertyValues](#22-PropertyValues)
 
-#### FieldValues
-```
-Copy.FieldValues(source, target);
-Copy.FieldValues(source, target, ReferenceHandling.Structural); 
-Copy.FieldValues(source, target, ReferenceHandling.StructuralWithReferenceLoops); 
-Copy.FieldValues(source, target, ReferenceHandling.References);
-```
-#### PropertyValues
-```
-Copy.PropertyValues(source, target);
-Copy.PropertyValues(source, target, ReferenceHandling.Structural); 
-Copy.PropertyValues(source, target, ReferenceHandling.StructuralWithReferenceLoops); 
-Copy.PropertyValues(source, target, ReferenceHandling.References);
-```
-##### PropertiesSettings.
-For more finegrained control there is an overload accepting a `PropertiesSettings`
-
-## EqualBy
+## 1. EqualBy
 Compares two instances.
 Types implementing `IEquatable` are compared using `object.Equals(x, y)`
 - Indexers are only supported for framework collection types.
 - Handles enumerables.
 
-#### FieldValues
+### 1.1. FieldValues
 ```
 EqualBy.FieldValues(x, y);
 EqualBy.FieldValues(x, y, ReferenceHandling.Structural); 
 EqualBy.FieldValues(x, y, ReferenceHandling.StructuralWithReferenceLoops); 
 EqualBy.FieldValues(x, y, ReferenceHandling.References);
 ```
+
 - Ignores event fields
 
-#### PropertyValues
+### 1.2. PropertyValues
 ```
 EqualBy.PropertyValues(x, y);
 EqualBy.PropertyValues(x, y, ReferenceHandling.Structural); 
 EqualBy.PropertyValues(x, y, ReferenceHandling.StructuralWithReferenceLoops); 
 EqualBy.PropertyValues(x, y, ReferenceHandling.References);
 ```
+
+## 2. Copy
+Copies values from source to target.
+Immutable types are copied by value/reference.
+- Indexers are only supported for framework collection types.
+- Collections must implement `IList` or `IDictionary`
+
+### 2.1. FieldValues
+```
+Copy.FieldValues(source, target);
+Copy.FieldValues(source, target, ReferenceHandling.Structural); 
+Copy.FieldValues(source, target, ReferenceHandling.StructuralWithReferenceLoops); 
+Copy.FieldValues(source, target, ReferenceHandling.References);
+```
+### 2.2. PropertyValues
+```
+Copy.PropertyValues(source, target);
+Copy.PropertyValues(source, target, ReferenceHandling.Structural); 
+Copy.PropertyValues(source, target, ReferenceHandling.StructuralWithReferenceLoops); 
+Copy.PropertyValues(source, target, ReferenceHandling.References);
+```
+##### FieldsSettings.
+For more finegrained control there is an overload accepting a `FieldsSettings`
+
 
 ##### PropertiesSettings.
 For more finegrained control there is an overload accepting a `PropertiesSettings`
