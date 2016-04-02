@@ -24,28 +24,29 @@
                 }
 
                 Debug.Assert(settings.ReferenceHandling != ReferenceHandling.Throw, "Should not get here");
-                var xl = x as IList;
-                var yl = y as IList;
-                if (xl != null && yl != null)
+
+                IList xl;
+                IList yl;
+                if (Try.CastAs(x, y, out xl, out yl))
                 {
                     return Diffs(xl, yl, settings, referencePairs, itemDiff);
                 }
 
-                if (xl != null || yl != null)
-                {
-                    throw Throw.ShouldNeverGetHereException("should be checked for same type before");
-                }
-
-                var xd = x as IDictionary;
-                var yd = y as IDictionary;
-                if (xd != null && yd != null)
+                IDictionary xd;
+                IDictionary yd;
+                if (Try.CastAs(x, y, out xd, out yd))
                 {
                     return Diffs(xd, yd, settings, referencePairs, itemDiff);
                 }
 
-                if (xd != null || yd != null)
+                if (Is.Sets(x, y))
                 {
-                    throw Throw.ShouldNeverGetHereException("should be checked for same type before");
+                    return Diffs(
+                        Set.ElementsOrderedByHashCode((IEnumerable)x),
+                        Set.ElementsOrderedByHashCode((IEnumerable)y),
+                        settings,
+                        referencePairs,
+                        itemDiff);
                 }
 
                 return Diffs((IEnumerable)x, (IEnumerable)y, settings, referencePairs, itemDiff);
@@ -70,6 +71,11 @@
                 Func<object, object, TSettings, ReferencePairCollection, ValueDiff> itemDiff)
                 where TSettings : IMemberSettings
             {
+                if (x == null || y == null)
+                {
+                    throw Throw.ShouldNeverGetHereException("should be checked for same type before");
+                }
+
                 List<Diff> diffs = null;
                 foreach (var key in x.Keys.OfType<object>().Concat(y.Keys.OfType<object>()).Distinct())
                 {
@@ -120,6 +126,11 @@
                 Func<object, object, TSettings, ReferencePairCollection, ValueDiff> itemDiff)
                 where TSettings : IMemberSettings
             {
+                if (x == null || y == null)
+                {
+                    throw Throw.ShouldNeverGetHereException("should be checked for same type before");
+                }
+
                 var i = -1;
                 List<Diff> diffs = null;
                 foreach (var pair in new PaddedPairs(x, y))

@@ -21,26 +21,26 @@
 
             IList xl;
             IList yl;
-            if (Collection.TryCastAs(x, y, out xl, out yl))
+            if (Try.CastAs(x, y, out xl, out yl))
             {
                 return Collection.Equals(xl, yl, compareItem, settings, referencePairs);
             }
 
             IDictionary xd;
             IDictionary yd;
-            if (Collection.TryCastAs(x, y, out xd, out yd))
+            if (Try.CastAs(x, y, out xd, out yd))
             {
                 return Collection.Equals(xd, yd, compareItem, settings, referencePairs);
             }
 
-            if (Collection.IsSets(x, y))
+            if (Is.Sets(x, y))
             {
                 return Collection.SetEquals(x, y, compareItem, settings, referencePairs);
             }
 
             IEnumerable xe;
             IEnumerable ye;
-            if (Collection.TryCastAs(x, y, out xe, out ye))
+            if (Try.CastAs(x, y, out xe, out ye))
             {
                 return Collection.Equals(xe, ye, compareItem, settings, referencePairs);
             }
@@ -52,30 +52,6 @@
 
         private static class Collection
         {
-            internal static bool IsSets(object x, object y)
-            {
-                if (x?.GetType().Implements(typeof(ISet<>)) != true || y?.GetType().Implements(typeof(ISet<>)) != true)
-                {
-                    return false;
-                }
-
-                return x.GetType().GetItemType() == y.GetType().GetItemType();
-            }
-
-            internal static bool TryCastAs<T>(object x, object y, out T xResult, out T yResult)
-            {
-                if (x is T && y is T)
-                {
-                    xResult = (T)x;
-                    yResult = (T)y;
-                    return true;
-                }
-
-                xResult = default(T);
-                yResult = default(T);
-                return false;
-            }
-
             internal static bool Equals<TSetting>(
                 IList x,
                 IList y,
@@ -177,9 +153,12 @@
                     return false;
                 }
 
-                var xe = ((IEnumerable)x).Cast<object>().OrderBy(i => i.GetHashCode());
-                var ye = ((IEnumerable)y).Cast<object>().OrderBy(i => i.GetHashCode());
-                return Equals(xe, ye, compareItem, settings, referencePairs);
+                return Equals(
+                    Set.ElementsOrderedByHashCode((IEnumerable)x),
+                    Set.ElementsOrderedByHashCode((IEnumerable)y),
+                    compareItem,
+                    settings,
+                    referencePairs);
             }
 
             internal static bool Equals<TSetting>(

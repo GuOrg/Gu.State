@@ -95,6 +95,8 @@
             private string name;
             private int value;
 
+            public static readonly IEqualityComparer<ComplexType> NameComparer = new nameComparer();
+
             public ComplexType()
             {
             }
@@ -115,6 +117,36 @@
             {
                 get { return this.value; }
                 set { this.value = value; }
+            }
+
+            private sealed class nameComparer : IEqualityComparer<ComplexType>
+            {
+                public bool Equals(ComplexType x, ComplexType y)
+                {
+                    if (ReferenceEquals(x, y))
+                    {
+                        return true;
+                    }
+                    if (ReferenceEquals(x, null))
+                    {
+                        return false;
+                    }
+                    if (ReferenceEquals(y, null))
+                    {
+                        return false;
+                    }
+                    if (x.GetType() != y.GetType())
+                    {
+                        return false;
+                    }
+
+                    return string.Equals(x.Name, y.Name);
+                }
+
+                public int GetHashCode(ComplexType obj)
+                {
+                    return obj?.Name.GetHashCode() ?? 0;
+                }
             }
         }
 
