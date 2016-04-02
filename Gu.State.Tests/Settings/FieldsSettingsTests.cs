@@ -40,6 +40,7 @@
         [TestCase(typeof(Collection<int>))]
         [TestCase(typeof(ObservableCollection<int>))]
         [TestCase(typeof(Dictionary<int, int>))]
+        [TestCase(typeof(HashSet<int>))]
         public void IgnoresCollectionFields(Type type)
         {
             var settings = FieldsSettings.GetOrCreate();

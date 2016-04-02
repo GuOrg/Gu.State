@@ -122,7 +122,8 @@
         [TestCase(typeof(Collection<int>))]
         [TestCase(typeof(ObservableCollection<int>))]
         [TestCase(typeof(Dictionary<int, int>))]
-        public void IgnoresCollectionFields(Type type)
+        [TestCase(typeof(HashSet<int>))]
+        public void IgnoresCollectionProperties(Type type)
         {
             var settings = PropertiesSettings.GetOrCreate();
             var propertyInfos = type.GetProperties(Constants.DefaultFieldBindingFlags);
