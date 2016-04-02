@@ -50,7 +50,7 @@
     <Compile Include="DiffBy\Diffs\MemberDiff.cs" />
     <Compile Include="DiffBy\Diffs\PropertyDiff.cs" />
     <Compile Include="DiffBy\Diffs\ValueDiff.cs" />
-    <Compile Include="DiffBy\Diffs\ValueDiffExt.cs" />
+    <Compile Include="Track\Dirty\DiffExt.cs" />
     <Compile Include="Internals\ChangeTrackerNode\EventArgs\ReplaceEventArgs.cs" />
     <Compile Include="Internals\Collections\DisposingMap{TKey, TValue}.cs" />
     <Compile Include="Internals\Collections\ImmutableList{T}.cs" />
