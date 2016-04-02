@@ -377,6 +377,7 @@
                     {
                         return;
                     }
+
                     this.parent = value;
                     this.OnPropertyChanged();
                 }

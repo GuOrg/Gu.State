@@ -36,16 +36,20 @@ namespace Gu.State.Tests
                     Assert.AreEqual("Parent Name x: Poppa y: null Child x: Gu.State.Tests.ChangeTrackerTypes+Child y: null", tracker.Diff.ToString("", " "));
 
                     x.Child.Parent = x;
-                    expectedChanges.Add("Diff");
                     CollectionAssert.AreEqual(expectedChanges, changes);
                     Assert.AreEqual("Parent Name x: Poppa y: null Child x: Gu.State.Tests.ChangeTrackerTypes+Child y: null", tracker.Diff.ToString("", " "));
 
                     y.Child = new Child("Child");
                     expectedChanges.Add("Diff");
                     CollectionAssert.AreEqual(expectedChanges, changes);
-                    Assert.AreEqual("Parent Name x: Poppa y: null", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("Parent Name x: Poppa y: null Child Parent x: Gu.State.Tests.ChangeTrackerTypes+Parent y: null", tracker.Diff.ToString("", " "));
 
                     y.Child.Parent = y;
+                    expectedChanges.Add("Diff");
+                    CollectionAssert.AreEqual(expectedChanges, changes);
+                    Assert.AreEqual("Parent Name x: Poppa y: null Child Parent Name x: Poppa y: null", tracker.Diff.ToString("", " "));
+
+                    y.Name = x.Name;
                     expectedChanges.Add("Diff", "IsDirty");
                     CollectionAssert.AreEqual(expectedChanges, changes);
                     Assert.AreEqual(null, tracker.Diff);
