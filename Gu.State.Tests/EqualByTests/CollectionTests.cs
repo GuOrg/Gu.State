@@ -5,7 +5,11 @@
     using System.Collections.ObjectModel;
     using System.Linq;
 
+    using Gu.State.Tests.CopyTests;
+
     using NUnit.Framework;
+
+    using static EqualByTypes;
 
     public abstract class CollectionTests
     {
@@ -19,7 +23,7 @@
         {
             var x = xs.Split(',').Select(int.Parse).ToArray();
             var y = ys.Split(',').Select(int.Parse).ToArray();
-            Assert.AreEqual(expected,this.EqualByMethod(x, y, referenceHandling: ReferenceHandling.Structural));
+            Assert.AreEqual(expected, this.EqualByMethod(x, y, referenceHandling: ReferenceHandling.Structural));
         }
 
         [Test]
@@ -37,7 +41,7 @@
         [Test]
         public void ListOfIntsEmptyToEmpty()
         {
-            var x = new List<int> ();
+            var x = new List<int>();
             var y = new List<int>();
             var result = this.EqualByMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
@@ -61,8 +65,8 @@
         [Test]
         public void ListOfWithSimples()
         {
-            var x = new List<EqualByTypes.WithSimpleProperties> { new EqualByTypes.WithSimpleProperties(1, 2, "a", StringSplitOptions.RemoveEmptyEntries) };
-            var y = new List<EqualByTypes.WithSimpleProperties> { new EqualByTypes.WithSimpleProperties(1, 2, "a", StringSplitOptions.RemoveEmptyEntries) };
+            var x = new List<WithSimpleProperties> { new WithSimpleProperties(1, 2, "a", StringSplitOptions.RemoveEmptyEntries) };
+            var y = new List<WithSimpleProperties> { new WithSimpleProperties(1, 2, "a", StringSplitOptions.RemoveEmptyEntries) };
             var result = this.EqualByMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
 
@@ -73,8 +77,8 @@
         [Test]
         public void ListOfComplex()
         {
-            var x = new List<EqualByTypes.ComplexType> { new EqualByTypes.ComplexType("b", 2), new EqualByTypes.ComplexType("c", 3) };
-            var y = new List<EqualByTypes.ComplexType> { new EqualByTypes.ComplexType("b", 2), new EqualByTypes.ComplexType("c", 3) };
+            var x = new List<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) };
+            var y = new List<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) };
             var result = this.EqualByMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
 
@@ -88,8 +92,8 @@
         [Test]
         public void ListOfComplexSameItems()
         {
-            var x = new List<EqualByTypes.ComplexType> { new EqualByTypes.ComplexType("b", 2), new EqualByTypes.ComplexType("c", 3) };
-            var y = new List<EqualByTypes.ComplexType>(x);
+            var x = new List<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) };
+            var y = new List<ComplexType>(x);
             var result = this.EqualByMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
 
@@ -127,8 +131,8 @@
         [Test]
         public void ObservableCollectionOfComplexType()
         {
-            var x = new ObservableCollection<EqualByTypes.ComplexType> { new EqualByTypes.ComplexType("b", 2), new EqualByTypes.ComplexType("c", 3) };
-            var y = new ObservableCollection<EqualByTypes.ComplexType> { new EqualByTypes.ComplexType("b", 2), new EqualByTypes.ComplexType("c", 3) };
+            var x = new ObservableCollection<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) };
+            var y = new ObservableCollection<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) };
             var result = this.EqualByMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
 
@@ -152,17 +156,17 @@
         [TestCase(ReferenceHandling.References)]
         public void ArrayOfImmutable()
         {
-            var source = new[] { new EqualByTypes.Immutable(1), new EqualByTypes.Immutable(2), new EqualByTypes.Immutable(3) };
-            var target = new[] { new EqualByTypes.Immutable(4), new EqualByTypes.Immutable(5), new EqualByTypes.Immutable(6) };
+            var source = new[] { new Immutable(1), new Immutable(2), new Immutable(3) };
+            var target = new[] { new Immutable(4), new Immutable(5), new Immutable(6) };
             this.EqualByMethod(source, target, ReferenceHandling.Structural);
-            var expected = new[] { new EqualByTypes.Immutable(1), new EqualByTypes.Immutable(2), new EqualByTypes.Immutable(3) };
+            var expected = new[] { new Immutable(1), new Immutable(2), new Immutable(3) };
             CollectionAssert.AreEqual(expected, source);
             CollectionAssert.AreEqual(expected, target);
         }
 
-        [TestCase(1,"one", true)]
-        [TestCase(2,"one", false)]
-        [TestCase(1,"two", false)]
+        [TestCase(1, "one", true)]
+        [TestCase(2, "one", false)]
+        [TestCase(1, "two", false)]
         public void DictionaryToSameLength(int key, string value, bool expected)
         {
             var x = new Dictionary<int, string> { { key, value } };
@@ -235,6 +239,33 @@
         {
             var x = new HashSet<int> { 1, 2, 3, 4 };
             var y = new HashSet<int> { 1, 2, 3 };
+            var result = this.EqualByMethod(x, y, referenceHandling);
+            Assert.AreEqual(false, result);
+
+            result = this.EqualByMethod(y, x, referenceHandling);
+            Assert.AreEqual(false, result);
+        }
+
+        [TestCase(ReferenceHandling.Structural)]
+        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
+        public void HashSetOfComplexWhenEqual(ReferenceHandling referenceHandling)
+        {
+            var x = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 1) };
+            var y = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 1) };
+            var result = this.EqualByMethod(x, y, referenceHandling);
+            Assert.AreEqual(true, result);
+
+            result = this.EqualByMethod(y, x, referenceHandling);
+            Assert.AreEqual(true, result);
+        }
+
+        [TestCase(ReferenceHandling.Structural)]
+        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
+        [TestCase(ReferenceHandling.References)]
+        public void HashSetOfComplexWhenNotEqual(ReferenceHandling referenceHandling)
+        {
+            var x = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 1) };
+            var y = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 2) };
             var result = this.EqualByMethod(x, y, referenceHandling);
             Assert.AreEqual(false, result);
 

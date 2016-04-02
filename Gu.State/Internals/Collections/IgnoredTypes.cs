@@ -14,7 +14,8 @@
                                                                                   typeof(Array),
                                                                                   typeof(Dictionary<,>),
                                                                                   typeof(ObservableCollection<>),
-                                                                                  typeof(Collection<>)
+                                                                                  typeof(Collection<>),
+                                                                                  typeof(HashSet<>)
                                                                               };
 
         private static readonly IgnoredTypes Default = new IgnoredTypes(null);
