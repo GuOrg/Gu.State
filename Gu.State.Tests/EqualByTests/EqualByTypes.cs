@@ -154,7 +154,7 @@
                 }
             }
 
-            private sealed class nameComparer : IEqualityComparer<ComplexType>, IComparer<ComplexType>, IComparer
+            private sealed class nameComparer : IEqualityComparer<ComplexType>
             {
                 public bool Equals(ComplexType x, ComplexType y)
                 {
@@ -181,18 +181,6 @@
                 public int GetHashCode(ComplexType obj)
                 {
                     return obj?.Name.GetHashCode() ?? 0;
-                }
-
-                public int Compare(ComplexType x, ComplexType y)
-                {
-                    return this.Equals(x, y)
-                               ? 0
-                               : -1;
-                }
-
-                int IComparer.Compare(object x, object y)
-                {
-                    return this.Compare((ComplexType)x, (ComplexType)y);
                 }
             }
         }
