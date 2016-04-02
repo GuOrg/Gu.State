@@ -186,22 +186,60 @@
             Assert.AreEqual(false, result);
         }
 
-        [Test]
-        public void DictionaryToLonger()
+        [TestCase(ReferenceHandling.Structural)]
+        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
+        [TestCase(ReferenceHandling.References)]
+        public void DictionaryToLonger(ReferenceHandling referenceHandling)
         {
             var x = new Dictionary<int, string> { { 1, "one" } };
             var y = new Dictionary<int, string> { { 1, "one" }, { 2, "two" } };
-            var result = this.EqualByMethod(x, y, ReferenceHandling.Structural);
+            var result = this.EqualByMethod(x, y, referenceHandling);
             Assert.AreEqual(false, result);
 
-            result = this.EqualByMethod(y, x, ReferenceHandling.Structural);
+            result = this.EqualByMethod(y, x, referenceHandling);
             Assert.AreEqual(false, result);
         }
 
-        [Test]
-        public void HashSetOfInts()
+        [TestCase(ReferenceHandling.Structural)]
+        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
+        [TestCase(ReferenceHandling.References)]
+        public void HashSetOfIntsWhenEqual(ReferenceHandling referenceHandling)
         {
-            Assert.Inconclusive("Reminder");
+            var x = new HashSet<int> { 1, 2, 3 };
+            var y = new HashSet<int> { 2, 3, 1 };
+            var result = this.EqualByMethod(x, y, referenceHandling);
+            Assert.AreEqual(true, result);
+
+            result = this.EqualByMethod(y, x, referenceHandling);
+            Assert.AreEqual(true, result);
+        }
+
+        [TestCase(ReferenceHandling.Structural)]
+        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
+        [TestCase(ReferenceHandling.References)]
+        public void HashSetOfIntsWhenNotEqual(ReferenceHandling referenceHandling)
+        {
+            var x = new HashSet<int> { 1, 2, 3 };
+            var y = new HashSet<int> { 1, 2, 4 };
+            var result = this.EqualByMethod(x, y, referenceHandling);
+            Assert.AreEqual(false, result);
+
+            result = this.EqualByMethod(y, x, referenceHandling);
+            Assert.AreEqual(false, result);
+        }
+
+        [TestCase(ReferenceHandling.Structural)]
+        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
+        [TestCase(ReferenceHandling.References)]
+        public void HashSetOfIntsWhenLonger(ReferenceHandling referenceHandling)
+        {
+            var x = new HashSet<int> { 1, 2, 3, 4 };
+            var y = new HashSet<int> { 1, 2, 3 };
+            var result = this.EqualByMethod(x, y, referenceHandling);
+            Assert.AreEqual(false, result);
+
+            result = this.EqualByMethod(y, x, referenceHandling);
+            Assert.AreEqual(false, result);
         }
 
         [TestCase("1, 2, 3", "1, 2, 3", true)]
