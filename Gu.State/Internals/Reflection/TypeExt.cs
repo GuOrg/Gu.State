@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
 
     internal static partial class TypeExt
@@ -47,7 +48,47 @@
 
         /// <summary>
         /// To check if type implements IEquatable{string}
-        /// Call like this type.Implements(typeof(IEquatable{}, typeof(string))
+        /// Call like this type.Implements(typeof(IEquatable&lt;&gt;)
+        /// </summary>
+        internal static bool Implements(this Type type, Type @interface)
+        {
+            Debug.Assert(@interface.IsInterface, "genericInterface must be an interface type");
+            var interfaces = type.GetInterfaces();
+            if (interfaces.Contains(@interface))
+            {
+                return true;
+            }
+
+            if (!@interface.IsGenericTypeDefinition)
+            {
+                return false;
+            }
+
+            foreach (var i in interfaces)
+            {
+                if (!i.IsGenericType)
+                {
+                    continue;
+                }
+
+                var typeDefinition = i.GetGenericTypeDefinition();
+                if (typeDefinition == @interface)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        internal static bool IsOpenGenericType(this Type type)
+        {
+            return type.IsGenericTypeDefinition;
+        }
+
+        /// <summary>
+        /// To check if type implements IEquatable{string}
+        /// Call like this type.Implements(typeof(IEquatable&lt;&gt;, typeof(string))
         /// </summary>
         internal static bool Implements(this Type type, Type genericInterface, Type genericArgument)
         {

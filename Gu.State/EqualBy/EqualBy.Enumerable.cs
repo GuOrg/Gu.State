@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections;
+    using System.Collections.Generic;
     using System.Diagnostics;
 
     public static partial class EqualBy
@@ -16,40 +17,27 @@
         {
             Debug.Assert(settings.ReferenceHandling != ReferenceHandling.Throw, "Should not get here");
 
-            var xl = x as IList;
-            var yl = y as IList;
-            if (xl != null && yl != null)
+            IList xl;
+            IList yl;
+            if (Collection.TryCastAs(x, y, out xl, out yl))
             {
                 return Collection.Equals(xl, yl, compareItem, settings, referencePairs);
             }
 
-            if (xl != null || yl != null)
-            {
-                return false;
-            }
-
-            var xd = x as IDictionary;
-            var yd = y as IDictionary;
-            if (xd != null && yd != null)
+            IDictionary xd;
+            IDictionary yd;
+            if (Collection.TryCastAs(x, y, out xd, out yd))
             {
                 return Collection.Equals(xd, yd, compareItem, settings, referencePairs);
             }
 
-            if (xd != null || yd != null)
-            {
-                return false;
-            }
+            throw new NotImplementedException("Handle sets");
 
-            var xe = x as IEnumerable;
-            var ye = y as IEnumerable;
-            if (xe != null && ye != null)
+            IEnumerable xe;
+            IEnumerable ye;
+            if (Collection.TryCastAs(x, y, out xe, out ye))
             {
                 return Collection.Equals(xe, ye, compareItem, settings, referencePairs);
-            }
-
-            if (xe != null || ye != null)
-            {
-                return false;
             }
 
             var message = "There is a bug in the library as it:\r\n" +
@@ -59,6 +47,20 @@
 
         private static class Collection
         {
+            internal static bool TryCastAs<T>(object x, object y, out T xResult, out T yResult)
+            {
+                if (x is T && y is T)
+                {
+                    xResult = (T)x;
+                    yResult = (T)y;
+                    return true;
+                }
+
+                xResult = default(T);
+                yResult = default(T);
+                return false;
+            }
+
             internal static bool Equals<TSetting>(
                 IList x,
                 IList y,
@@ -66,6 +68,16 @@
                 TSetting settings,
                 ReferencePairCollection referencePairs)
             {
+                if (x == null && y == null)
+                {
+                    return true;
+                }
+
+                if (x == null || y == null)
+                {
+                    return false;
+                }
+
                 if (x.Count != y.Count)
                 {
                     return false;
@@ -96,6 +108,16 @@
                 TSetting settings,
                 ReferencePairCollection referencePairs)
             {
+                if (x == null && y == null)
+                {
+                    return true;
+                }
+
+                if (x == null || y == null)
+                {
+                    return false;
+                }
+
                 if (x.Count != y.Count)
                 {
                     return false;
@@ -131,6 +153,16 @@
                 TSetting settings,
                 ReferencePairCollection referencePairs)
             {
+                if (x == null && y == null)
+                {
+                    return true;
+                }
+
+                if (x == null || y == null)
+                {
+                    return false;
+                }
+
                 foreach (var pair in new PaddedPairs(x, y))
                 {
                     if (referencePairs?.Contains(pair.X, pair.Y) == true)

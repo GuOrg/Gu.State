@@ -75,6 +75,7 @@
     <Compile Include="Internals\Errors\ErrorTypes.cs" />
     <Compile Include="Internals\MemberPath\MemberPathTests.cs" />
     <Compile Include="Internals\MemberPath\MemberPathTypes.cs" />
+    <Compile Include="Internals\Refelection\TypeExtTests.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTests.Ignores.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTests.ReferenceLoops.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTests.WithObservableCollectionProperty.cs" />
@@ -119,7 +120,7 @@
     <Compile Include="EqualByTests\ThrowsTests.cs" />
     <Compile Include="EqualByTests\FieldValues\Throws.cs" />
     <Compile Include="Internals\IgnoredTypesTests.cs" />
-    <Compile Include="Internals\TypeExtTypes.cs" />
+    <Compile Include="Internals\Refelection\TypeExtTypes.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerTests.Immutable.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerTests.WithObservableCollectionProperty.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerTests.ObservableCollectionOfComplexType.cs" />
