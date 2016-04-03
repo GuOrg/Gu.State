@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections;
+    using System.Collections.Generic;
     using System.Reflection;
 
     /// <summary>
@@ -43,7 +44,9 @@
 
         private static bool IsCopyableCollectionType(Type type)
         {
-            return typeof(IList).IsAssignableFrom(type) || typeof(IDictionary).IsAssignableFrom(type);
+            return typeof(IList).IsAssignableFrom(type) ||
+                   typeof(IDictionary).IsAssignableFrom(type) ||
+                   type.Implements(typeof(ISet<>));
         }
     }
 }

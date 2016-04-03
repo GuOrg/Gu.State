@@ -164,12 +164,13 @@
         [TestCase(ReferenceHandling.References)]
         public void HashSetOfIntsWhenEqual(ReferenceHandling referenceHandling)
         {
+            var expected = new[] { 1, 2, 3 };
             var source = new HashSet<int> { 1, 2, 3 };
+            CollectionAssert.AreEqual(expected, source);
             var target = new HashSet<int> { 2, 3, 1 };
             this.CopyMethod(source, target, referenceHandling);
-            var expected = new[] { new KeyValuePair<int, string>(1, "one") };
             CollectionAssert.AreEqual(expected, source);
-            CollectionAssert.AreEqual(expected, target);
+            CollectionAssert.AreEquivalent(expected, target);
         }
 
         [TestCase(ReferenceHandling.Structural)]
@@ -217,7 +218,7 @@
             var source = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 1) };
             var target = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 2) };
             this.CopyMethod(source, target, referenceHandling);
-            var expected = new[] { new KeyValuePair<int, string>(1, "one") };
+            var expected = new[] { new ComplexType("a", 1) };
             CollectionAssert.AreEqual(expected, source, ComplexType.Comparer);
             CollectionAssert.AreEqual(expected, target, ComplexType.Comparer);
         }
@@ -225,12 +226,13 @@
         [Test]
         public void HashSetOfComplexWhenNotEqualReferences()
         {
-            var source = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 1) };
+            var sv = new ComplexType("a", 1);
+            var source = new HashSet<ComplexType>(ComplexType.NameComparer) { sv };
             var target = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 2) };
             this.CopyMethod(source, target, ReferenceHandling.References);
-            var expected = new[] { new KeyValuePair<int, string>(1, "one") };
-            CollectionAssert.AreEqual(expected, source, ComplexType.Comparer);
-            CollectionAssert.AreEqual(expected, target, ComplexType.Comparer);
+            var expected = new[] { sv };
+            CollectionAssert.AreEqual(expected, source);
+            CollectionAssert.AreEqual(expected, target);
         }
     }
 }
