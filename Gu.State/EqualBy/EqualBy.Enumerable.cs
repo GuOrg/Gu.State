@@ -4,7 +4,6 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Linq;
     using System.Reflection;
 
     public static partial class EqualBy
@@ -145,20 +144,19 @@
                 ReferencePairCollection referencePairs)
                 where TSetting : IMemberSettings
             {
-                var setEqualsMethod = x.GetType().GetMethod("SetEquals", BindingFlags.Public | BindingFlags.Instance);
-                Debug.Assert(setEqualsMethod != null, "setEqualsMethod == null");
-                var setEquals = (bool)setEqualsMethod.Invoke(x, new[] { y });
-                if (!setEquals)
+                if (!Set.Equals(x, y))
                 {
                     return false;
                 }
 
-                return Equals(
-                    Set.ElementsOrderedByHashCode((IEnumerable)x),
-                    Set.ElementsOrderedByHashCode((IEnumerable)y),
-                    compareItem,
-                    settings,
-                    referencePairs);
+                IEnumerable<object> xe;
+                IEnumerable<object> ye;
+                if (Set.TryOrderByHashCode(x, out xe) && Set.TryOrderByHashCode(y, out ye))
+                {
+                    return Equals(xe, ye, compareItem, settings, referencePairs);
+                }
+
+                throw new NotImplementedException("message");
             }
 
             internal static bool Equals<TSetting>(
