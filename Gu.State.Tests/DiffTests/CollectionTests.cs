@@ -306,6 +306,37 @@
             Assert.AreEqual("HashSet<ComplexType> [0] x: Gu.State.Tests.DiffTests.DiffTypes+ComplexType y: Gu.State.Tests.DiffTests.DiffTypes+ComplexType", result.ToString("", " "));
         }
 
+        [TestCase(ReferenceHandling.Structural)]
+        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
+        [TestCase(ReferenceHandling.References)]
+        public void HashSetOfWithCollisionsWhenEqual(ReferenceHandling referenceHandling)
+        {
+            var e1 = new HashCollisionType();
+            var e2 = new HashCollisionType();
+            var x = new HashSet<HashCollisionType> { e1, e2 };
+            var y = new HashSet<HashCollisionType> { e2, e1 };
+            var result = this.DiffMethod(x, y, referenceHandling);
+            Assert.AreEqual(null, result);
+
+            result = this.DiffMethod(y, x, referenceHandling);
+            Assert.AreEqual(null, result);
+        }
+
+        [TestCase(ReferenceHandling.Structural)]
+        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
+        [TestCase(ReferenceHandling.References)]
+        public void HashSetOfWithCollisionsWhenNotEqual(ReferenceHandling referenceHandling)
+        {
+            var e1 = new HashCollisionType();
+            var x = new HashSet<HashCollisionType> { e1, new HashCollisionType() };
+            var y = new HashSet<HashCollisionType> { e1, new HashCollisionType() };
+            var result = this.DiffMethod(x, y, referenceHandling);
+            Assert.AreEqual("", result.ToString("", " "));
+
+            result = this.DiffMethod(y, x, referenceHandling);
+            Assert.AreEqual("", result.ToString("", " "));
+        }
+
         [TestCase("1, 2, 3", "1, 2, 3", null)]
         [TestCase("1, 2, 3", "1, 2", "WhereSelectArrayIterator<string, int> [2] x: 3 y: missing item")]
         [TestCase("1, 2", "1, 2, 3", "WhereSelectArrayIterator<string, int> [2] x: missing item y: 3")]

@@ -74,5 +74,18 @@
                                                 .MakeGenericMethod(itemType);
             return emptyMethod;
         }
+
+        public static IEnumerable<PaddedPairs.Pair<object>> Pairs(object source, object target)
+        {
+            var se = ElementsOrderedByHashCode((IEnumerable)source);
+            var te = ElementsOrderedByHashCode((IEnumerable)target);
+            var targetEnumerator = te.GetEnumerator();
+            foreach (var o in se)
+            {
+                
+            }
+            throw new NotImplementedException("message");
+            
+        }
     }
 }

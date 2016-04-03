@@ -485,5 +485,15 @@
 
             public Parent Parent { get; set; }
         }
+
+        public class HashCollisionType
+        {
+            public int HashValue { get; set; } = 0;
+
+            public override int GetHashCode()
+            {
+                return this.HashValue;
+            }
+        }
     }
 }

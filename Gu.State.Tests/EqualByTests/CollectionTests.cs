@@ -273,6 +273,37 @@
             Assert.AreEqual(false, result);
         }
 
+        [TestCase(ReferenceHandling.Structural)]
+        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
+        [TestCase(ReferenceHandling.References)]
+        public void HashSetOfWithCollisionsWhenEqual(ReferenceHandling referenceHandling)
+        {
+            var e1 = new HashCollisionType();
+            var e2 = new HashCollisionType();
+            var x = new HashSet<HashCollisionType> { e1, e2 };
+            var y = new HashSet<HashCollisionType> { e2, e1 };
+            var result = this.EqualByMethod(x, y, referenceHandling);
+            Assert.AreEqual(true, result);
+
+            result = this.EqualByMethod(y, x, referenceHandling);
+            Assert.AreEqual(true, result);
+        }
+
+        [TestCase(ReferenceHandling.Structural)]
+        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
+        [TestCase(ReferenceHandling.References)]
+        public void HashSetOfWithCollisionsWhenNotEqual(ReferenceHandling referenceHandling)
+        {
+            var e1 = new HashCollisionType();
+            var x = new HashSet<HashCollisionType> { e1, new HashCollisionType() };
+            var y = new HashSet<HashCollisionType> { e1, new HashCollisionType() };
+            var result = this.EqualByMethod(x, y, referenceHandling);
+            Assert.AreEqual(false, result);
+
+            result = this.EqualByMethod(y, x, referenceHandling);
+            Assert.AreEqual(false, result);
+        }
+
         [TestCase("1, 2, 3", "1, 2, 3", true)]
         [TestCase("1, 2, 3", "1, 2", false)]
         [TestCase("1, 2", "1, 2, 3", false)]

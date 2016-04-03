@@ -174,6 +174,7 @@
                 if (settings.ReferenceHandling == ReferenceHandling.References ||
                     settings.IsImmutable(source.GetType().GetItemType()))
                 {
+                    // keeping it simple here for now
                     Set.Clear(target);
                     Set.UnionWith(target, source);
                     return;
@@ -188,49 +189,23 @@
                     case ReferenceHandling.Structural:
                     case ReferenceHandling.StructuralWithReferenceLoops:
                         Set.IntersectWith(target, source);
-                        throw new NotImplementedException("message");
+                        var pairs = Set.Pairs(source, target);
+                        foreach (var pair in pairs)
+                        {
+                            var sv = pair.X;
+                            var tv = pair.Y == PaddedPairs.MissingItem
+                                         ? CreateInstance(sv, null, settings)
+                                         : pair.Y;
+
+                            syncItem(sv, tv, settings, referencePairs);
+
+                            Set.Add(target, tv);
+                        }
+
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-
-                //foreach (var sv in ((IEnumerable)source).Cast<object>())
-                //{
-                //    if (sv == null)
-                //    {
-                //        Set.Add(target, null);
-                //        continue;
-                //    }
-
-                //    var tv = targetDict.Contains(key)
-                //                 ? targetDict[key]
-                //                 : null;
-                //    switch (settings.ReferenceHandling)
-                //    {
-                //        case ReferenceHandling.References:
-                //            if (ReferenceEquals(sv, tv))
-                //            {
-                //                continue;
-                //            }
-
-                //            targetDict[key] = sv;
-                //            continue;
-                //        case ReferenceHandling.Structural:
-                //        case ReferenceHandling.StructuralWithReferenceLoops:
-                //            if (tv == null)
-                //            {
-                //                tv = CreateInstance(sv, null, settings);
-                //                targetDict[key] = tv;
-                //            }
-
-                //            syncItem(sv, tv, settings, referencePairs);
-                //            continue;
-                //        case ReferenceHandling.Throw:
-                //            throw State.Throw.ShouldNeverGetHereException();
-                //        default:
-                //            throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);
-                //    }
-                //}
             }
 
             private static void SetListItem(IList targetList, int index, object item)
