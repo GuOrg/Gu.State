@@ -183,6 +183,24 @@
             Assert.AreEqual(expected, actual);
         }
 
+        [Test]
+        public void DictionaryWithCollisionsWhenEqual()
+        {
+            var k1 = new HashCollisionType();
+            var k2 = new HashCollisionType();
+            var x = new Dictionary<HashCollisionType, string> { { k1, "1" }, { k2, "2" } };
+            var y = new Dictionary<HashCollisionType, string> { { k1, "1" }, { k2, "2" } };
+            Assert.AreEqual(2, x.Count);
+            var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
+            var actual = result?.ToString("", " ");
+            Assert.AreEqual(null, actual);
+
+            y = new Dictionary<HashCollisionType, string> { { k2, "2" }, { k1, "1" } };
+            result = this.DiffMethod(x, y, ReferenceHandling.Structural);
+            actual = result?.ToString("", " ");
+            Assert.AreEqual(null, actual);
+        }
+
         [TestCase(1, "one", null)]
         [TestCase(2, "one", "Dictionary<int, ComplexType> [2] x: Gu.State.Tests.DiffTests.DiffTypes+ComplexType y: missing item [1] x: missing item y: Gu.State.Tests.DiffTests.DiffTypes+ComplexType")]
         [TestCase(1, "two", "Dictionary<int, ComplexType> [1] <member> x: two y: one")]

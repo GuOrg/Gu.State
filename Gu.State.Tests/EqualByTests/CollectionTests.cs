@@ -204,6 +204,22 @@
             Assert.AreEqual(false, result);
         }
 
+        [Test]
+        public void DictionaryWithCollisionsWhenEqual()
+        {
+            var k1 = new HashCollisionType();
+            var k2 = new HashCollisionType();
+            var x = new Dictionary<HashCollisionType, string> { { k1, "1" }, { k2, "2" } };
+            var y = new Dictionary<HashCollisionType, string> { { k1, "1" }, { k2, "2" } };
+            Assert.AreEqual(2, x.Count);
+            var result = this.EqualByMethod(x, y, ReferenceHandling.Structural);
+            Assert.AreEqual(true, result);
+
+            y = new Dictionary<HashCollisionType, string> { { k2, "2" }, { k1, "1" } };
+            result = this.EqualByMethod(x, y, ReferenceHandling.Structural);
+            Assert.AreEqual(true, result);
+        }
+
         [TestCase(ReferenceHandling.Structural)]
         [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
