@@ -46,22 +46,31 @@
     </When>
   </Choose>
   <ItemGroup>
+    <Compile Include="CopyTests\DictionaryTests.cs" />
+    <Compile Include="CopyTests\FieldValues\Dictionary.cs" />
     <Compile Include="CopyTests\FieldValues\ReferenceLoops.cs" />
+    <Compile Include="CopyTests\FieldValues\Sets.cs" />
+    <Compile Include="CopyTests\PropertyValues\Dictionary.cs" />
     <Compile Include="CopyTests\PropertyValues\ReferenceLoops.cs" />
+    <Compile Include="CopyTests\PropertyValues\Sets.cs" />
     <Compile Include="CopyTests\ReferenceLoops.cs" />
+    <Compile Include="CopyTests\SetTests.cs" />
     <Compile Include="DiffTests\ClassesTests.cs" />
     <Compile Include="DiffTests\CollectionTests.cs" />
     <Compile Include="DiffTests\DiffToStringTests.cs" />
     <Compile Include="DiffTests\DiffTypes.cs" />
     <Compile Include="DiffTests\FieldValues\Classes.cs" />
     <Compile Include="DiffTests\FieldValues\Collections.cs" />
+    <Compile Include="DiffTests\FieldValues\Set.cs" />
     <Compile Include="DiffTests\FieldValues\Throws.cs" />
     <Compile Include="DiffTests\FieldValues\Verify.cs" />
     <Compile Include="DiffTests\PropertyValues\Classes.cs" />
     <Compile Include="DiffTests\PropertyValues\Collections.cs" />
+    <Compile Include="DiffTests\PropertyValues\Set.cs" />
     <Compile Include="DiffTests\PropertyValues\Throws.cs" />
     <Compile Include="DiffTests\PropertyValues\Verify.cs" />
     <Compile Include="DiffTests\Sandbox.cs" />
+    <Compile Include="DiffTests\SetTests.cs" />
     <Compile Include="DiffTests\ThrowsTests.cs" />
     <Compile Include="DiffTests\VerifyTests.cs" />
     <Compile Include="EqualByTests\DictionaryTests.cs" />

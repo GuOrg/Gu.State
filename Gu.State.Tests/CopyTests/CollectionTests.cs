@@ -49,7 +49,14 @@
         [Test]
         public void ListOfWithSimplesToEmpty()
         {
-            var source = new List<WithSimpleProperties> { new WithSimpleProperties(1, 2, "a", StringSplitOptions.RemoveEmptyEntries) };
+            var source = new List<WithSimpleProperties>
+                             {
+                                 new WithSimpleProperties(
+                                     1,
+                                     2,
+                                     "a",
+                                     StringSplitOptions.RemoveEmptyEntries)
+                             };
             var target = new List<WithSimpleProperties>();
             this.CopyMethod(source, target, ReferenceHandling.Structural);
             var expected = new[] { new WithSimpleProperties(1, 2, "a", StringSplitOptions.RemoveEmptyEntries) };
@@ -122,115 +129,6 @@
             var target = new[] { new Immutable(4), new Immutable(5), new Immutable(6) };
             this.CopyMethod(source, target, ReferenceHandling.Structural);
             var expected = new[] { new Immutable(1), new Immutable(2), new Immutable(3) };
-            CollectionAssert.AreEqual(expected, source);
-            CollectionAssert.AreEqual(expected, target);
-        }
-
-        [Test]
-        public void DictionaryToSameLength()
-        {
-            var source = new Dictionary<int, string> { { 1, "one" } };
-            var target = new Dictionary<int, string> { { 1, "ett" } };
-            this.CopyMethod(source, target, ReferenceHandling.Structural);
-            var expected = new[] { new KeyValuePair<int, string>(1, "one"), };
-            CollectionAssert.AreEqual(expected, source);
-            CollectionAssert.AreEqual(expected, target);
-        }
-
-        [Test]
-        public void DictionaryToEmpty()
-        {
-            var source = new Dictionary<int, string> { { 1, "one" } };
-            var target = new Dictionary<int, string>();
-            this.CopyMethod(source, target, ReferenceHandling.Structural);
-            var expected = new[] { new KeyValuePair<int, string>(1, "one"), };
-            CollectionAssert.AreEqual(expected, source);
-            CollectionAssert.AreEqual(expected, target);
-        }
-
-        [Test]
-        public void DictionaryToLonger()
-        {
-            var source = new Dictionary<int, string> { { 1, "one" } };
-            var target = new Dictionary<int, string> { { 1, "one" }, { 2, "two" } };
-            this.CopyMethod(source, target, ReferenceHandling.Structural);
-            var expected = new[] { new KeyValuePair<int, string>(1, "one") };
-            CollectionAssert.AreEqual(expected, source);
-            CollectionAssert.AreEqual(expected, target);
-        }
-
-        [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
-        [TestCase(ReferenceHandling.References)]
-        public void HashSetOfIntsWhenEqual(ReferenceHandling referenceHandling)
-        {
-            var expected = new[] { 1, 2, 3 };
-            var source = new HashSet<int> { 1, 2, 3 };
-            CollectionAssert.AreEqual(expected, source);
-            var target = new HashSet<int> { 2, 3, 1 };
-            this.CopyMethod(source, target, referenceHandling);
-            CollectionAssert.AreEqual(expected, source);
-            CollectionAssert.AreEquivalent(expected, target);
-        }
-
-        [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
-        [TestCase(ReferenceHandling.References)]
-        public void HashSetOfIntsWhenNotEqual(ReferenceHandling referenceHandling)
-        {
-            var source = new HashSet<int> { 1, 2, 3 };
-            var target = new HashSet<int> { 1, 2, 4 };
-            this.CopyMethod(source, target, referenceHandling);
-            var expected = new[] { 1, 2, 3 };
-            CollectionAssert.AreEqual(expected, source);
-            CollectionAssert.AreEqual(expected, target);
-        }
-
-        [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
-        [TestCase(ReferenceHandling.References)]
-        public void HashSetOfIntsWhenLonger(ReferenceHandling referenceHandling)
-        {
-            var source = new HashSet<int> { 1, 2, 3, 4 };
-            var target = new HashSet<int> { 1, 2, 3 };
-            this.CopyMethod(source, target, referenceHandling);
-            var expected = new[] { 1, 2, 3, 4 };
-            CollectionAssert.AreEqual(expected, source);
-            CollectionAssert.AreEqual(expected, target);
-        }
-
-        [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
-        public void HashSetOfComplexWhenEqual(ReferenceHandling referenceHandling)
-        {
-            var source = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 1) };
-            var target = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 1) };
-            this.CopyMethod(source, target, referenceHandling);
-            var expected = new[] { new ComplexType("a", 1) };
-            CollectionAssert.AreEqual(expected, source, ComplexType.Comparer);
-            CollectionAssert.AreEqual(expected, target, ComplexType.Comparer);
-        }
-
-        [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
-        public void HashSetOfComplexWhenNotEqual(ReferenceHandling referenceHandling)
-        {
-            var source = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 1) };
-            var target = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 2) };
-            this.CopyMethod(source, target, referenceHandling);
-            var expected = new[] { new ComplexType("a", 1) };
-            CollectionAssert.AreEqual(expected, source, ComplexType.Comparer);
-            CollectionAssert.AreEqual(expected, target, ComplexType.Comparer);
-        }
-
-        [Test]
-        public void HashSetOfComplexWhenNotEqualReferences()
-        {
-            var sv = new ComplexType("a", 1);
-            var source = new HashSet<ComplexType>(ComplexType.NameComparer) { sv };
-            var target = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 2) };
-            this.CopyMethod(source, target, ReferenceHandling.References);
-            var expected = new[] { sv };
             CollectionAssert.AreEqual(expected, source);
             CollectionAssert.AreEqual(expected, target);
         }

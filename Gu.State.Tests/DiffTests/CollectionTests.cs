@@ -11,8 +11,7 @@
 
     public abstract class CollectionTests
     {
-        public abstract Diff DiffMethod<T>(T source, T target, ReferenceHandling referenceHandling)
-            where T : class;
+        public abstract Diff DiffMethod<T>(T source, T target, ReferenceHandling referenceHandling) where T : class;
 
         [TestCase("1, 2, 3", "1, 2, 3", null)]
         [TestCase("1, 2, 3", "1, 2", "int[] [2] x: 3 y: missing item")]
@@ -20,8 +19,12 @@
         [TestCase("5, 2, 3", "1, 2, 3", "int[] [0] x: 5 y: 1")]
         public void ArrayOfIntsStructural(string xs, string ys, string expected)
         {
-            var x = xs.Split(',').Select(int.Parse).ToArray();
-            var y = ys.Split(',').Select(int.Parse).ToArray();
+            var x = xs.Split(',')
+                      .Select(int.Parse)
+                      .ToArray();
+            var y = ys.Split(',')
+                      .Select(int.Parse)
+                      .ToArray();
             var result = this.DiffMethod(x, y, referenceHandling: ReferenceHandling.Structural);
             Assert.AreEqual(expected, result?.ToString("", " "));
         }
@@ -69,8 +72,22 @@
         [Test]
         public void ListOfWithSimples()
         {
-            var x = new List<WithSimpleProperties> { new WithSimpleProperties(1, 2, "a", StringSplitOptions.RemoveEmptyEntries) };
-            var y = new List<WithSimpleProperties> { new WithSimpleProperties(1, 2, "a", StringSplitOptions.RemoveEmptyEntries) };
+            var x = new List<WithSimpleProperties>
+                        {
+                            new WithSimpleProperties(
+                                1,
+                                2,
+                                "a",
+                                StringSplitOptions.RemoveEmptyEntries)
+                        };
+            var y = new List<WithSimpleProperties>
+                        {
+                            new WithSimpleProperties(
+                                1,
+                                2,
+                                "a",
+                                StringSplitOptions.RemoveEmptyEntries)
+                        };
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(null, result);
 
@@ -87,7 +104,8 @@
             Assert.AreEqual(null, result);
 
             result = this.DiffMethod(x, y, ReferenceHandling.References);
-            var expected = "List<ComplexType> [0] x: Gu.State.Tests.DiffTests.DiffTypes+ComplexType y: Gu.State.Tests.DiffTests.DiffTypes+ComplexType [1] x: Gu.State.Tests.DiffTests.DiffTypes+ComplexType y: Gu.State.Tests.DiffTests.DiffTypes+ComplexType";
+            var expected =
+                "List<ComplexType> [0] x: Gu.State.Tests.DiffTests.DiffTypes+ComplexType y: Gu.State.Tests.DiffTests.DiffTypes+ComplexType [1] x: Gu.State.Tests.DiffTests.DiffTypes+ComplexType y: Gu.State.Tests.DiffTests.DiffTypes+ComplexType";
             Assert.AreEqual(expected, result?.ToString("", " "));
 
             result = this.DiffMethod(y, x, ReferenceHandling.Structural);
@@ -115,11 +133,13 @@
             var x = new ObservableCollection<int> { 1, 2, 3 };
             var y = new ObservableCollection<int>();
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            var expected = "ObservableCollection<int> [0] x: 1 y: missing item [1] x: 2 y: missing item [2] x: 3 y: missing item";
+            var expected =
+                "ObservableCollection<int> [0] x: 1 y: missing item [1] x: 2 y: missing item [2] x: 3 y: missing item";
             Assert.AreEqual(expected, result?.ToString("", " "));
 
             result = this.DiffMethod(y, x, ReferenceHandling.Structural);
-            expected = "ObservableCollection<int> [0] x: missing item y: 1 [1] x: missing item y: 2 [2] x: missing item y: 3";
+            expected =
+                "ObservableCollection<int> [0] x: missing item y: 1 [1] x: missing item y: 2 [2] x: missing item y: 3";
             Assert.AreEqual(expected, result?.ToString("", " "));
         }
 
@@ -202,11 +222,17 @@
         }
 
         [TestCase(1, "one", null)]
-        [TestCase(2, "one", "Dictionary<int, ComplexType> [2] x: Gu.State.Tests.DiffTests.DiffTypes+ComplexType y: missing item [1] x: missing item y: Gu.State.Tests.DiffTests.DiffTypes+ComplexType")]
+        [TestCase(2, "one",
+            "Dictionary<int, ComplexType> [2] x: Gu.State.Tests.DiffTests.DiffTypes+ComplexType y: missing item [1] x: missing item y: Gu.State.Tests.DiffTests.DiffTypes+ComplexType"
+            )]
         [TestCase(1, "two", "Dictionary<int, ComplexType> [1] <member> x: two y: one")]
         public void DictionaryIntComplex(int key, string value, string expected)
         {
-            expected = expected?.Replace("<member>", this is FieldValues.Collections ? "name" : "Name");
+            expected = expected?.Replace(
+                "<member>",
+                this is FieldValues.Collections
+                    ? "name"
+                    : "Name");
             var x = new Dictionary<int, ComplexType> { { key, new ComplexType(value, 1) } };
             var y = new Dictionary<int, ComplexType> { { 1, new ComplexType("one", 1) } };
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
@@ -244,116 +270,6 @@
             Assert.AreEqual(expected, actual);
         }
 
-        [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
-        [TestCase(ReferenceHandling.References)]
-        public void HashSetOfIntsWhenEqual(ReferenceHandling referenceHandling)
-        {
-            var x = new HashSet<int> { 1, 2, 3 };
-            var y = new HashSet<int> { 2, 3, 1 };
-            var result = this.DiffMethod(x, y, referenceHandling);
-            Assert.AreEqual(null, result);
-
-            result = this.DiffMethod(y, x, referenceHandling);
-            Assert.AreEqual(null, result);
-        }
-
-        [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
-        [TestCase(ReferenceHandling.References)]
-        public void HashSetOfIntsWhenNotEqual(ReferenceHandling referenceHandling)
-        {
-            var x = new HashSet<int> { 1, 2, 3 };
-            var y = new HashSet<int> { 1, 2, 4 };
-            var result = this.DiffMethod(x, y, referenceHandling);
-            Assert.AreEqual("HashSet<int> [2] x: 3 y: 4", result.ToString("", " "));
-
-            result = this.DiffMethod(y, x, referenceHandling);
-            Assert.AreEqual("HashSet<int> [2] x: 4 y: 3", result.ToString("", " "));
-        }
-
-        [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
-        [TestCase(ReferenceHandling.References)]
-        public void HashSetOfIntsWhenLonger(ReferenceHandling referenceHandling)
-        {
-            var x = new HashSet<int> { 1, 2, 3, 4 };
-            var y = new HashSet<int> { 1, 2, 3 };
-            var result = this.DiffMethod(x, y, referenceHandling);
-            Assert.AreEqual("HashSet<int> [3] x: 4 y: missing item", result.ToString("", " "));
-
-            result = this.DiffMethod(y, x, referenceHandling);
-            Assert.AreEqual("HashSet<int> [3] x: missing item y: 4", result.ToString("", " "));
-        }
-
-        [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
-        public void HashSetOfComplexWhenEqual(ReferenceHandling referenceHandling)
-        {
-            var x = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 1) };
-            var y = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 1) };
-            var result = this.DiffMethod(x, y, referenceHandling);
-            Assert.AreEqual(null, result);
-
-            result = this.DiffMethod(y, x, referenceHandling);
-            Assert.AreEqual(null, result);
-        }
-
-        [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
-        public void HashSetOfComplexWhenNotEqual(ReferenceHandling referenceHandling)
-        {
-            var x = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 1) };
-            var y = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 2) };
-            var result = this.DiffMethod(x, y, referenceHandling);
-            StringAssert.AreEqualIgnoringCase("HashSet<ComplexType> [0] Value x: 1 y: 2", result.ToString("", " "));
-
-            result = this.DiffMethod(y, x, referenceHandling);
-            StringAssert.AreEqualIgnoringCase("HashSet<ComplexType> [0] Value x: 2 y: 1", result.ToString("", " "));
-        }
-
-        [Test]
-        public void HashSetOfComplexWhenNotEqualReferences()
-        {
-            var x = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 1) };
-            var y = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 2) };
-            var result = this.DiffMethod(x, y, ReferenceHandling.References);
-            Assert.AreEqual("HashSet<ComplexType> [0] x: Gu.State.Tests.DiffTests.DiffTypes+ComplexType y: Gu.State.Tests.DiffTests.DiffTypes+ComplexType", result.ToString("", " "));
-
-            result = this.DiffMethod(y, x, ReferenceHandling.References);
-            Assert.AreEqual("HashSet<ComplexType> [0] x: Gu.State.Tests.DiffTests.DiffTypes+ComplexType y: Gu.State.Tests.DiffTests.DiffTypes+ComplexType", result.ToString("", " "));
-        }
-
-        [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
-        [TestCase(ReferenceHandling.References)]
-        public void HashSetOfWithCollisionsWhenEqual(ReferenceHandling referenceHandling)
-        {
-            var e1 = new HashCollisionType();
-            var e2 = new HashCollisionType();
-            var x = new HashSet<HashCollisionType> { e1, e2 };
-            var y = new HashSet<HashCollisionType> { e2, e1 };
-            var result = this.DiffMethod(x, y, referenceHandling);
-            Assert.AreEqual(null, result);
-
-            result = this.DiffMethod(y, x, referenceHandling);
-            Assert.AreEqual(null, result);
-        }
-
-        [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
-        [TestCase(ReferenceHandling.References)]
-        public void HashSetOfWithCollisionsWhenNotEqual(ReferenceHandling referenceHandling)
-        {
-            var e1 = new HashCollisionType();
-            var x = new HashSet<HashCollisionType> { e1, new HashCollisionType() };
-            var y = new HashSet<HashCollisionType> { e1, new HashCollisionType() };
-            var result = this.DiffMethod(x, y, referenceHandling);
-            Assert.AreEqual("", result.ToString("", " "));
-
-            result = this.DiffMethod(y, x, referenceHandling);
-            Assert.AreEqual("", result.ToString("", " "));
-        }
 
         [TestCase("1, 2, 3", "1, 2, 3", null)]
         [TestCase("1, 2, 3", "1, 2", "WhereSelectArrayIterator<string, int> [2] x: 3 y: missing item")]
