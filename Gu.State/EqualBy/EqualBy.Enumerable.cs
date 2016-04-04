@@ -151,14 +151,35 @@
 
                 var xe = Set.ItemsOrderByHashCode(x);
                 var ye = Set.ItemsOrderByHashCode(y);
-                if (xe.HasCollision || ye.HasCollision)
+                if (xe.HasCollision || ye.HasCollision || !xe.HashesEquals(ye))
                 {
-                    throw new NotImplementedException("message");
+                    for (int xi = xe.Count - 1; xi >= 0; xi--)
+                    {
+                        var xItem = xe[xi];
+                        bool found = false;
+                        var indices = ye.MatchingHashIndices(xItem);
+                        for (int yi = indices.First; yi <= indices.Last; yi++)
+                        {
+                            var yItem = ye[yi];
+                            if (compareItem(xItem, yItem, settings, referencePairs))
+                            {
+                                found = true;
+                                xe.RemoveAt(xi);
+                                ye.RemoveAt(yi);
+                                break;
+                            }
+                        }
+
+                        if (!found)
+                        {
+                            return false;
+                        }
+                    }
+
+                    return xe.Count == 0 && ye.Count == 0;
                 }
-                else
-                {
-                    return Equals(xe, ye, compareItem, settings, referencePairs);
-                }
+
+                return Equals(xe, ye, compareItem, settings, referencePairs);
             }
 
             internal static bool Equals<TSetting>(

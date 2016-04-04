@@ -43,7 +43,7 @@
                 {
                     var xe = Set.ItemsOrderByHashCode(x);
                     var ye = Set.ItemsOrderByHashCode(y);
-                    if (xe.HasCollision || ye.HasCollision)
+                    if (xe.HasCollision || ye.HasCollision || !xe.HashesEquals(ye))
                     {
                         throw new NotImplementedException("message");
                     }

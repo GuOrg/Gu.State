@@ -3,7 +3,6 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
 
     internal static partial class Set
@@ -11,6 +10,12 @@
         internal interface ISortedByHashCode : IReadOnlyList<object>
         {
             bool HasCollision { get; }
+
+            bool HashesEquals(ISortedByHashCode other);
+
+            Indices MatchingHashIndices(object xi);
+
+            void RemoveAt(int index);
         }
 
         internal class SortedByHashCode<T> : ISortedByHashCode
@@ -46,6 +51,63 @@
                                                               .Cast<object>()
                                                               .GetEnumerator();
 
+            public bool HashesEquals(ISortedByHashCode other)
+            {
+                var sortedByHashCode = other as SortedByHashCode<T>;
+                if (sortedByHashCode == null)
+                {
+                    throw Gu.State.Throw.ShouldNeverGetHereException("Must be the same type here");
+                }
+
+                if (this.sortedItems.Count != sortedByHashCode.Count)
+                {
+                    return false;
+                }
+
+                for (int i = 0; i < this.sortedItems.Count; i++)
+                {
+                    if (this.sortedItems[i].HashCode != sortedByHashCode.sortedItems[i].HashCode)
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+
+            public Indices MatchingHashIndices(object xi)
+            {
+                if (this.comparer == null)
+                {
+                    return new Indices(0, this.sortedItems.Count - 1);
+                }
+
+                var hashCode = this.comparer.GetHashCode((T)xi);
+                var index = this.sortedItems.BinarySearch(new Hashed<T>(hashCode, (T)xi));
+                if (index < 0)
+                {
+                    return new Indices(0, 0);
+                }
+
+                while (index > 0 && this.sortedItems[index - 1].HashCode == hashCode)
+                {
+                    index--;
+                }
+
+                var start = index;
+                while (index < this.sortedItems.Count - 1 && this.sortedItems[index + 1].HashCode == hashCode)
+                {
+                    index++;
+                }
+
+                return new Indices(start, index);
+            }
+
+            public void RemoveAt(int index)
+            {
+                this.sortedItems.RemoveAt(index);
+            }
+
             IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
 
             private void Add(Hashed<T> item)
@@ -58,7 +120,6 @@
                 }
                 else
                 {
-                    Debug.WriteLine($"index: {index} ~index:{~index}");
                     this.sortedItems.Insert(~index, item);
                 }
             }
@@ -78,6 +139,18 @@
             public int CompareTo(Hashed<T> other)
             {
                 return this.HashCode.CompareTo(other.HashCode);
+            }
+        }
+
+        internal struct Indices
+        {
+            internal readonly int First;
+            internal readonly int Last;
+
+            public Indices(int first, int last)
+            {
+                this.First = first;
+                this.Last = last;
             }
         }
     }
