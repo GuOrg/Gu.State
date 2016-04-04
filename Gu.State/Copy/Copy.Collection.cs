@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections;
+    using System.Diagnostics;
     using System.Linq;
 
     public static partial class Copy
@@ -192,13 +193,13 @@
                         var pairs = Set.Pairs(source, target);
                         foreach (var pair in pairs)
                         {
+                            Debug.Assert(pair.X != PaddedPairs.MissingItem, "pair.X != PaddedPairs.MissingItem");
                             var sv = pair.X;
                             var tv = pair.Y == PaddedPairs.MissingItem
                                          ? CreateInstance(sv, null, settings)
                                          : pair.Y;
 
                             syncItem(sv, tv, settings, referencePairs);
-
                             Set.Add(target, tv);
                         }
 

@@ -56,6 +56,29 @@
             IntersectWith(source, empty);
         }
 
+        internal static IEnumerable<PaddedPairs.Pair<object>> Pairs(object source, object target)
+        {
+            var se = ItemsOrderByHashCode(source);
+            var te = ItemsOrderByHashCode(target);
+            foreach (var sv in se)
+            {
+                var indices = te.MatchingHashIndices(sv);
+                if (indices.IsNone)
+                {
+                    yield return new PaddedPairs.Pair<object>(sv, PaddedPairs.MissingItem);
+                    continue;
+                }
+
+                yield return new PaddedPairs.Pair<object>(sv, te[indices.First]);
+                te.RemoveAt(indices.First);
+            }
+
+            foreach (var tv in te)
+            {
+                yield return new PaddedPairs.Pair<object>(PaddedPairs.MissingItem, tv);
+            }
+        }
+
         private static ConstructorInfo GetSortedCtor(Type type)
         {
             var itemType = type.GetItemType();
@@ -96,21 +119,6 @@
                                                 .MakeGenericMethod(itemType);
             Debug.Assert(methodInfo != null, "methodInfo == null");
             return methodInfo;
-        }
-
-        public static IEnumerable<PaddedPairs.Pair<object>> Pairs(object source, object target)
-        {
-            throw new NotImplementedException("message");
-
-            //var se = ElementsOrderedByHashCode((IEnumerable)source);
-            //var te = ElementsOrderedByHashCode((IEnumerable)target);
-            //var targetEnumerator = te.GetEnumerator();
-            //foreach (var o in se)
-            //{
-
-            //}
-            //throw new NotImplementedException("message");
-
         }
     }
 }
