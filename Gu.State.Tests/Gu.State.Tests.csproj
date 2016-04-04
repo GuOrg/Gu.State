@@ -46,24 +46,42 @@
     </When>
   </Choose>
   <ItemGroup>
+    <Compile Include="CopyTests\DictionaryTests.cs" />
+    <Compile Include="CopyTests\FieldValues\Dictionary.cs" />
     <Compile Include="CopyTests\FieldValues\ReferenceLoops.cs" />
+    <Compile Include="CopyTests\FieldValues\Sets.cs" />
+    <Compile Include="CopyTests\PropertyValues\Dictionary.cs" />
     <Compile Include="CopyTests\PropertyValues\ReferenceLoops.cs" />
+    <Compile Include="CopyTests\PropertyValues\Sets.cs" />
     <Compile Include="CopyTests\ReferenceLoops.cs" />
+    <Compile Include="CopyTests\SetTests.cs" />
     <Compile Include="DiffTests\ClassesTests.cs" />
     <Compile Include="DiffTests\CollectionTests.cs" />
     <Compile Include="DiffTests\DiffToStringTests.cs" />
     <Compile Include="DiffTests\DiffTypes.cs" />
     <Compile Include="DiffTests\FieldValues\Classes.cs" />
     <Compile Include="DiffTests\FieldValues\Collections.cs" />
+    <Compile Include="DiffTests\FieldValues\Set.cs" />
     <Compile Include="DiffTests\FieldValues\Throws.cs" />
     <Compile Include="DiffTests\FieldValues\Verify.cs" />
     <Compile Include="DiffTests\PropertyValues\Classes.cs" />
     <Compile Include="DiffTests\PropertyValues\Collections.cs" />
+    <Compile Include="DiffTests\PropertyValues\Set.cs" />
     <Compile Include="DiffTests\PropertyValues\Throws.cs" />
     <Compile Include="DiffTests\PropertyValues\Verify.cs" />
     <Compile Include="DiffTests\Sandbox.cs" />
+    <Compile Include="DiffTests\SetTests.cs" />
     <Compile Include="DiffTests\ThrowsTests.cs" />
     <Compile Include="DiffTests\VerifyTests.cs" />
+    <Compile Include="EqualByTests\DictionaryTests.cs" />
+    <Compile Include="EqualByTests\EnumerableTests.cs" />
+    <Compile Include="EqualByTests\FieldValues\Dictionary.cs" />
+    <Compile Include="EqualByTests\FieldValues\Enumerable.cs" />
+    <Compile Include="EqualByTests\FieldValues\Sets.cs" />
+    <Compile Include="EqualByTests\PropertyValues\Dictionary.cs" />
+    <Compile Include="EqualByTests\PropertyValues\Enumerable.cs" />
+    <Compile Include="EqualByTests\PropertyValues\Sets.cs" />
+    <Compile Include="EqualByTests\SetTests.cs" />
     <Compile Include="Internals\Collections\DisposingListTests.cs" />
     <Compile Include="Internals\Collections\DisposingMapTests.cs" />
     <Compile Include="Internals\Collections\RefCountCollectionTests.cs" />
@@ -76,6 +94,7 @@
     <Compile Include="Internals\MemberPath\MemberPathTests.cs" />
     <Compile Include="Internals\MemberPath\MemberPathTypes.cs" />
     <Compile Include="Internals\Refelection\TypeExtTests.cs" />
+    <Compile Include="Internals\SetTests.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTests.Ignores.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTests.ReferenceLoops.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTests.WithObservableCollectionProperty.cs" />

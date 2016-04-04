@@ -46,6 +46,11 @@
             return false;
         }
 
+        internal static bool Implements<T>(this Type type)
+        {
+            return type.Implements(typeof(T));
+        }
+
         /// <summary>
         /// To check if type implements IEquatable{string}
         /// Call like this type.Implements(typeof(IEquatable&lt;&gt;)

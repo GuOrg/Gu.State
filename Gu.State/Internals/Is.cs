@@ -1,5 +1,6 @@
 ﻿namespace Gu.State
 {
+    using System.Collections;
     using System.Collections.Generic;
 
     internal static class Is
@@ -12,6 +13,11 @@
             }
 
             return x.GetType().GetItemType() == y.GetType().GetItemType();
+        }
+
+        public static bool Enumerable(object source, object target)
+        {
+            return source is IEnumerable && target is IEnumerable;
         }
     }
 }

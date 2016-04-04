@@ -52,6 +52,7 @@
     <Compile Include="DiffBy\Diffs\ValueDiff.cs" />
     <Compile Include="Internals\Is.cs" />
     <Compile Include="Internals\Set.cs" />
+    <Compile Include="Internals\Set.Sorted.cs" />
     <Compile Include="Internals\Try.cs" />
     <Compile Include="Track\Dirty\DiffExt.cs" />
     <Compile Include="Internals\ChangeTrackerNode\EventArgs\ReplaceEventArgs.cs" />

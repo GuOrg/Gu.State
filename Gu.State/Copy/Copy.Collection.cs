@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections;
+    using System.Diagnostics;
     using System.Linq;
 
     public static partial class Copy
@@ -9,9 +10,19 @@
         private static void CopyCollectionItems<T>(object source, object target, Action<object, object, T, ReferencePairCollection> syncItem, T settings, ReferencePairCollection referencePairs)
              where T : class, IMemberSettings
         {
-            var sl = source as IList;
-            var tl = target as IList;
-            if (sl != null && tl != null)
+            if (!Is.Enumerable(source, target))
+            {
+                return;
+            }
+
+            if (settings.ReferenceHandling == ReferenceHandling.Throw)
+            {
+                throw Gu.State.Throw.ShouldNeverGetHereException("Should have been checked for throw before copy");
+            }
+
+            IList sl;
+            IList tl;
+            if (Try.CastAs(source, target, out sl, out tl))
             {
                 if ((sl.IsFixedSize || tl.IsFixedSize) &&
                     sl.Count != tl.Count)
@@ -19,13 +30,13 @@
                     Throw.CannotCopyFixesSizeCollections(sl, tl, settings);
                 }
 
-                Collection.CopyListItems(sl, tl, syncItem, settings, referencePairs);
+                Collection.CopyItems(sl, tl, syncItem, settings, referencePairs);
                 return;
             }
 
-            var sd = source as IDictionary;
-            var td = target as IDictionary;
-            if (sd != null && td != null)
+            IDictionary sd;
+            IDictionary td;
+            if (Try.CastAs(source, target, out sd, out td))
             {
                 if ((sd.IsFixedSize || td.IsFixedSize) &&
                     sd.Count != td.Count)
@@ -33,7 +44,13 @@
                     Throw.CannotCopyFixesSizeCollections(sd, td, settings);
                 }
 
-                Collection.CopyDictionaryItems(sd, td, syncItem, settings, referencePairs);
+                Collection.CopyItems(sd, td, syncItem, settings, referencePairs);
+                return;
+            }
+
+            if (Is.Sets(source, target))
+            {
+                Collection.CopySetItems(source, target, syncItem, settings, referencePairs);
                 return;
             }
 
@@ -45,7 +62,7 @@
 
         private static class Collection
         {
-            internal static void CopyListItems<T>(IList sourceList, IList targetList, Action<object, object, T, ReferencePairCollection> syncItem, T settings, ReferencePairCollection referencePairs)
+            internal static void CopyItems<T>(IList sourceList, IList targetList, Action<object, object, T, ReferencePairCollection> syncItem, T settings, ReferencePairCollection referencePairs)
                 where T : class, IMemberSettings
             {
                 for (int i = 0; i < sourceList.Count; i++)
@@ -97,7 +114,7 @@
                 }
             }
 
-            internal static void CopyDictionaryItems<T>(IDictionary sourceDict, IDictionary targetDict, Action<object, object, T, ReferencePairCollection> syncItem, T settings, ReferencePairCollection referencePairs)
+            internal static void CopyItems<T>(IDictionary sourceDict, IDictionary targetDict, Action<object, object, T, ReferencePairCollection> syncItem, T settings, ReferencePairCollection referencePairs)
                 where T : class, IMemberSettings
             {
                 foreach (var key in sourceDict.Keys)
@@ -149,6 +166,46 @@
                 foreach (var key in toRemove)
                 {
                     targetDict.Remove(key);
+                }
+            }
+
+            internal static void CopySetItems<T>(object source, object target, Action<object, object, T, ReferencePairCollection> syncItem, T settings, ReferencePairCollection referencePairs)
+                where T : class, IMemberSettings
+            {
+                if (settings.ReferenceHandling == ReferenceHandling.References ||
+                    settings.IsImmutable(source.GetType().GetItemType()))
+                {
+                    // keeping it simple here for now
+                    Set.Clear(target);
+                    Set.UnionWith(target, source);
+                    return;
+                }
+
+                switch (settings.ReferenceHandling)
+                {
+                    case ReferenceHandling.Throw:
+                        throw Gu.State.Throw.ShouldNeverGetHereException("Should have been checked for throw before copy");
+                    case ReferenceHandling.References:
+                        throw Gu.State.Throw.ShouldNeverGetHereException("Handled above");
+                    case ReferenceHandling.Structural:
+                    case ReferenceHandling.StructuralWithReferenceLoops:
+                        Set.IntersectWith(target, source);
+                        var pairs = Set.Pairs(source, target);
+                        foreach (var pair in pairs)
+                        {
+                            Debug.Assert(pair.X != PaddedPairs.MissingItem, "pair.X != PaddedPairs.MissingItem");
+                            var sv = pair.X;
+                            var tv = pair.Y == PaddedPairs.MissingItem
+                                         ? CreateInstance(sv, null, settings)
+                                         : pair.Y;
+
+                            syncItem(sv, tv, settings, referencePairs);
+                            Set.Add(target, tv);
+                        }
+
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
 
