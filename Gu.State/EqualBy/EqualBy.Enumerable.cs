@@ -4,7 +4,6 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Linq;
     using System.Reflection;
 
     public static partial class EqualBy
@@ -145,20 +144,42 @@
                 ReferencePairCollection referencePairs)
                 where TSetting : IMemberSettings
             {
-                var setEqualsMethod = x.GetType().GetMethod("SetEquals", BindingFlags.Public | BindingFlags.Instance);
-                Debug.Assert(setEqualsMethod != null, "setEqualsMethod == null");
-                var setEquals = (bool)setEqualsMethod.Invoke(x, new[] { y });
-                if (!setEquals)
+                if (!Set.Equals(x, y))
                 {
                     return false;
                 }
 
-                return Equals(
-                    Set.ElementsOrderedByHashCode((IEnumerable)x),
-                    Set.ElementsOrderedByHashCode((IEnumerable)y),
-                    compareItem,
-                    settings,
-                    referencePairs);
+                var xe = Set.ItemsOrderByHashCode(x);
+                var ye = Set.ItemsOrderByHashCode(y);
+                for (int xi = xe.Count - 1; xi >= 0; xi--)
+                {
+                    var xItem = xe[xi];
+                    bool found = false;
+                    var indices = ye.MatchingHashIndices(xItem);
+                    if (indices.IsNone)
+                    {
+                        return false;
+                    }
+
+                    for (int yi = indices.First; yi <= indices.Last; yi++)
+                    {
+                        var yItem = ye[yi];
+                        if (compareItem(xItem, yItem, settings, referencePairs))
+                        {
+                            found = true;
+                            xe.RemoveAt(xi);
+                            ye.RemoveAt(yi);
+                            break;
+                        }
+                    }
+
+                    if (!found)
+                    {
+                        return false;
+                    }
+                }
+
+                return xe.Count == 0 && ye.Count == 0;
             }
 
             internal static bool Equals<TSetting>(
