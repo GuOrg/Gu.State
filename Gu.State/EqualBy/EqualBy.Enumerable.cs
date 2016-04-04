@@ -151,35 +151,35 @@
 
                 var xe = Set.ItemsOrderByHashCode(x);
                 var ye = Set.ItemsOrderByHashCode(y);
-                if (xe.HasCollision || ye.HasCollision || !xe.HashesEquals(ye))
+                for (int xi = xe.Count - 1; xi >= 0; xi--)
                 {
-                    for (int xi = xe.Count - 1; xi >= 0; xi--)
+                    var xItem = xe[xi];
+                    bool found = false;
+                    var indices = ye.MatchingHashIndices(xItem);
+                    if (indices.IsNone)
                     {
-                        var xItem = xe[xi];
-                        bool found = false;
-                        var indices = ye.MatchingHashIndices(xItem);
-                        for (int yi = indices.First; yi <= indices.Last; yi++)
-                        {
-                            var yItem = ye[yi];
-                            if (compareItem(xItem, yItem, settings, referencePairs))
-                            {
-                                found = true;
-                                xe.RemoveAt(xi);
-                                ye.RemoveAt(yi);
-                                break;
-                            }
-                        }
+                        return false;
+                    }
 
-                        if (!found)
+                    for (int yi = indices.First; yi <= indices.Last; yi++)
+                    {
+                        var yItem = ye[yi];
+                        if (compareItem(xItem, yItem, settings, referencePairs))
                         {
-                            return false;
+                            found = true;
+                            xe.RemoveAt(xi);
+                            ye.RemoveAt(yi);
+                            break;
                         }
                     }
 
-                    return xe.Count == 0 && ye.Count == 0;
+                    if (!found)
+                    {
+                        return false;
+                    }
                 }
 
-                return Equals(xe, ye, compareItem, settings, referencePairs);
+                return xe.Count == 0 && ye.Count == 0;
             }
 
             internal static bool Equals<TSetting>(

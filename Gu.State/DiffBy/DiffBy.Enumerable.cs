@@ -43,14 +43,7 @@
                 {
                     var xe = Set.ItemsOrderByHashCode(x);
                     var ye = Set.ItemsOrderByHashCode(y);
-                    if (xe.HasCollision || ye.HasCollision || !xe.HashesEquals(ye))
-                    {
-                        throw new NotImplementedException("message");
-                    }
-                    else
-                    {
-                        return Diffs(xe, ye, settings, referencePairs, itemDiff);
-                    }
+                    return Diffs(xe, ye, settings, referencePairs, itemDiff);
                 }
 
                 return Diffs((IEnumerable)x, (IEnumerable)y, settings, referencePairs, itemDiff);
@@ -117,6 +110,71 @@
 
                         diffs.Add(diff);
                     }
+                }
+
+                return diffs;
+            }
+
+            private static List<Diff> Diffs<TSettings>(
+                Set.ISortedByHashCode xSorted,
+                Set.ISortedByHashCode ySorted,
+                TSettings settings,
+                ReferencePairCollection referencePairs,
+                Func<object, object, TSettings, ReferencePairCollection, ValueDiff> itemDiff)
+                 where TSettings : IMemberSettings
+            {
+                List<Diff> diffs = null;
+                for (int xi = xSorted.Count - 1; xi >= 0; xi--)
+                {
+                    var xItem = xSorted[xi];
+                    bool found = false;
+                    var indices = ySorted.MatchingHashIndices(xItem);
+                    if (indices.IsNone)
+                    {
+                        if (diffs == null)
+                        {
+                            diffs = new List<Diff>();
+                        }
+
+                        diffs.Add(new IndexDiff(xItem, new ValueDiff(xItem, PaddedPairs.MissingItem)));
+                        continue;
+                    }
+
+                    ValueDiff valueDiff = null;
+                    for (int yi = indices.First; yi <= indices.Last; yi++)
+                    {
+                        var yItem = ySorted[yi];
+                        valueDiff = itemDiff(xItem, yItem, settings, referencePairs);
+                        if (valueDiff == null)
+                        {
+                            found = true;
+                            xSorted.RemoveAt(xi);
+                            ySorted.RemoveAt(yi);
+                            break;
+                        }
+                    }
+
+                    if (!found)
+                    {
+                        if (diffs == null)
+                        {
+                            diffs = new List<Diff>();
+                        }
+
+                        diffs.Add(new IndexDiff(xItem, valueDiff));
+                        xSorted.RemoveAt(xi);
+                        ySorted.RemoveAt(indices.Last);
+                    }
+                }
+
+                foreach (var yItem in ySorted)
+                {
+                    if (diffs == null)
+                    {
+                        diffs = new List<Diff>();
+                    }
+
+                    diffs.Add(new IndexDiff(yItem, new ValueDiff(PaddedPairs.MissingItem, yItem)));
                 }
 
                 return diffs;

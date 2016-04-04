@@ -488,7 +488,15 @@
 
         public class HashCollisionType
         {
+            private int value;
+
             public int HashValue { get; set; } = 0;
+
+            public int Value
+            {
+                get { return this.value; }
+                set { this.value = value; }
+            }
 
             public override int GetHashCode()
             {

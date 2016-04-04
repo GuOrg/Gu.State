@@ -3,6 +3,7 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
 
     internal static partial class Set
@@ -86,7 +87,7 @@
                 var index = this.sortedItems.BinarySearch(new Hashed<T>(hashCode, (T)xi));
                 if (index < 0)
                 {
-                    return new Indices(0, 0);
+                    return Indices.None;
                 }
 
                 while (index > 0 && this.sortedItems[index - 1].HashCode == hashCode)
@@ -125,7 +126,15 @@
             }
         }
 
-        internal struct Hashed<T> : IComparable<Hashed<T>>
+        public interface IHashed
+        {
+            int HashCode { get; }
+
+            object Value { get; }
+        }
+
+        [DebuggerDisplay("HashCode: {HashCode} Value: {Value}")]
+        internal struct Hashed<T> : IHashed, IComparable<Hashed<T>>
         {
             internal readonly int HashCode;
             internal readonly T Value;
@@ -135,6 +144,10 @@
                 this.HashCode = hashCode;
                 this.Value = value;
             }
+
+            int IHashed.HashCode => this.HashCode;
+
+            object IHashed.Value => this.Value;
 
             public int CompareTo(Hashed<T> other)
             {
@@ -147,11 +160,15 @@
             internal readonly int First;
             internal readonly int Last;
 
+            public static readonly Indices None = new Indices(int.MinValue, int.MinValue);
+
             public Indices(int first, int last)
             {
                 this.First = first;
                 this.Last = last;
             }
+
+            internal bool IsNone => this.First == int.MinValue;
         }
     }
 }
