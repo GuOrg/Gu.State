@@ -41,12 +41,16 @@
 
                 if (Is.Sets(x, y))
                 {
-                    return Diffs(
-                        Set.ElementsOrderedByHashCode((IEnumerable)x),
-                        Set.ElementsOrderedByHashCode((IEnumerable)y),
-                        settings,
-                        referencePairs,
-                        itemDiff);
+                    var xe = Set.ItemsOrderByHashCode(x);
+                    var ye = Set.ItemsOrderByHashCode(y);
+                    if (xe.HasCollision || ye.HasCollision)
+                    {
+                        throw new NotImplementedException("message");
+                    }
+                    else
+                    {
+                        return Diffs(xe, ye, settings, referencePairs, itemDiff);
+                    }
                 }
 
                 return Diffs((IEnumerable)x, (IEnumerable)y, settings, referencePairs, itemDiff);

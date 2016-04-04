@@ -149,14 +149,16 @@
                     return false;
                 }
 
-                IEnumerable<object> xe;
-                IEnumerable<object> ye;
-                if (Set.TryOrderByHashCode(x, out xe) && Set.TryOrderByHashCode(y, out ye))
+                var xe = Set.ItemsOrderByHashCode(x);
+                var ye = Set.ItemsOrderByHashCode(y);
+                if (xe.HasCollision || ye.HasCollision)
+                {
+                    throw new NotImplementedException("message");
+                }
+                else
                 {
                     return Equals(xe, ye, compareItem, settings, referencePairs);
                 }
-
-                throw new NotImplementedException("message");
             }
 
             internal static bool Equals<TSetting>(

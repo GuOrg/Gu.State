@@ -8,12 +8,13 @@
     using System.Linq;
     using System.Reflection;
 
-    internal static class Set
+    internal static partial class Set
     {
-        private static ConcurrentDictionary<Type, MethodInfo> EmptyMethods = new ConcurrentDictionary<Type, MethodInfo>();
-        private static ConcurrentDictionary<Type, MethodInfo> SetEqualsMethods = new ConcurrentDictionary<Type, MethodInfo>();
-        private static ConcurrentDictionary<Type, MethodInfo> UnionWithMethods = new ConcurrentDictionary<Type, MethodInfo>();
-        private static ConcurrentDictionary<Type, MethodInfo> IntersectWithMethods = new ConcurrentDictionary<Type, MethodInfo>();
+        private static readonly ConcurrentDictionary<Type, MethodInfo> EmptyMethods = new ConcurrentDictionary<Type, MethodInfo>();
+        private static readonly ConcurrentDictionary<Type, MethodInfo> SetEqualsMethods = new ConcurrentDictionary<Type, MethodInfo>();
+        private static readonly ConcurrentDictionary<Type, MethodInfo> UnionWithMethods = new ConcurrentDictionary<Type, MethodInfo>();
+        private static readonly ConcurrentDictionary<Type, MethodInfo> IntersectWithMethods = new ConcurrentDictionary<Type, MethodInfo>();
+        private static readonly ConcurrentDictionary<Type, ConstructorInfo> SortedCtors = new ConcurrentDictionary<Type, ConstructorInfo>();
 
         internal static bool Add(object set, object value)
         {
@@ -21,26 +22,13 @@
             return (bool)addMethod.Invoke(set, new[] { value });
         }
 
-        internal static bool TryOrderByHashCode(object set, out IEnumerable<object> ordered)
+        internal static ISortedByHashCode ItemsOrderByHashCode(object set)
         {
-            var comparer = set.GetType()
-                              .GetProperty("Comparer", Constants.DefaultPropertyBindingFlags)
-                              ?.GetValue(set);
-
-            if (comparer == null)
-            {
-                ordered = ((IEnumerable)set).Cast<object>()
-                                            .OrderBy(i => i.GetHashCode());
-            }
-            else
-            {
-                var getHashcodeMethod = comparer.GetType()
-                                                .GetMethod(nameof(GetHashCode), new[] { set.GetType().GetItemType() });
-                ordered = ((IEnumerable)set).Cast<object>()
-                                            .OrderBy(i => (int)getHashcodeMethod.Invoke(comparer, new[] { i }));
-            }
-
-            return !collision;
+            var setType = set.GetType();
+            var comparer = setType.GetProperty("Comparer", Constants.DefaultPropertyBindingFlags)
+                                 ?.GetValue(set);
+            var ctor = SortedCtors.GetOrAdd(setType, GetSortedCtor);
+            return (ISortedByHashCode)ctor.Invoke(new[] { set, comparer });
         }
 
         internal new static bool Equals(object first, object other)
@@ -66,6 +54,16 @@
             var methodInfo = EmptyMethods.GetOrAdd(source.GetType(), GetEmptyMethod);
             var empty = methodInfo.Invoke(null, null);
             IntersectWith(source, empty);
+        }
+
+        private static ConstructorInfo GetSortedCtor(Type type)
+        {
+            var itemType = type.GetItemType();
+            var types = new[] { typeof(IEnumerable<>).MakeGenericType(itemType), typeof(IEqualityComparer<>).MakeGenericType(itemType) };
+            var constructorInfo = typeof(SortedByHashCode<>).MakeGenericType(itemType)
+                                                            .GetConstructor(types);
+            Debug.Assert(constructorInfo != null, "constructorInfo == null");
+            return constructorInfo;
         }
 
         private static MethodInfo GetSetEqualsMethod(Type type)
@@ -102,14 +100,16 @@
 
         public static IEnumerable<PaddedPairs.Pair<object>> Pairs(object source, object target)
         {
-            var se = ElementsOrderedByHashCode((IEnumerable)source);
-            var te = ElementsOrderedByHashCode((IEnumerable)target);
-            var targetEnumerator = te.GetEnumerator();
-            foreach (var o in se)
-            {
-
-            }
             throw new NotImplementedException("message");
+
+            //var se = ElementsOrderedByHashCode((IEnumerable)source);
+            //var te = ElementsOrderedByHashCode((IEnumerable)target);
+            //var targetEnumerator = te.GetEnumerator();
+            //foreach (var o in se)
+            //{
+
+            //}
+            //throw new NotImplementedException("message");
 
         }
     }

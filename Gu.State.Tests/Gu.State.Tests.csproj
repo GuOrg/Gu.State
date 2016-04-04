@@ -94,6 +94,7 @@
     <Compile Include="Internals\MemberPath\MemberPathTests.cs" />
     <Compile Include="Internals\MemberPath\MemberPathTypes.cs" />
     <Compile Include="Internals\Refelection\TypeExtTests.cs" />
+    <Compile Include="Internals\SetTests.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTests.Ignores.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTests.ReferenceLoops.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTests.WithObservableCollectionProperty.cs" />
