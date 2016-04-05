@@ -15,6 +15,17 @@
 
         internal static Type GetItemType(this Type type)
         {
+            if (type.HasElementType)
+            {
+                return type.GetElementType();
+            }
+
+            if (type.Name == "IEnumerable`1")
+            {
+                return type.GetGenericArguments()
+                           .Single();
+            }
+
             var enumerable = type.GetIEnumerableOfT();
             if (enumerable == null)
             {
@@ -29,8 +40,8 @@
         private static Type GetIEnumerableOfT(this Type type)
         {
             var enumerable = type.GetInterfaces()
-                                 .Where(i => i.IsGenericType)
-                                 .SingleOrDefault(i => i.GetGenericTypeDefinition() == typeof(IEnumerable<>));
+                                    .Where(i => i.IsGenericType)
+                                    .SingleOrDefault(i => i.GetGenericTypeDefinition() == typeof(IEnumerable<>));
             return enumerable;
         }
 
