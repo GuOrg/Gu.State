@@ -50,6 +50,9 @@
     <Compile Include="DiffBy\Diffs\MemberDiff.cs" />
     <Compile Include="DiffBy\Diffs\PropertyDiff.cs" />
     <Compile Include="DiffBy\Diffs\ValueDiff.cs" />
+    <Compile Include="EqualBy\Comparers\EqualByComparer.cs" />
+    <Compile Include="EqualBy\Comparers\ListEqualByComparer.cs" />
+    <Compile Include="EqualBy\Comparers\ListEqualByComparer{T}.cs" />
     <Compile Include="Internals\Is.cs" />
     <Compile Include="Internals\Set.cs" />
     <Compile Include="Internals\Set.Sorted.cs" />

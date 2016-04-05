@@ -41,5 +41,15 @@
             var actual = type.Implements(interfaceType, parameterType);
             Assert.AreEqual(expected, actual);
         }
+
+        [TestCase(typeof(IEnumerable<int>), typeof(int))]
+        [TestCase(typeof(List<int>), typeof(int))]
+        [TestCase(typeof(int[]), typeof(int))]
+        [TestCase(typeof(int[,]), typeof(int))]
+        public void GetItemType(Type enumerableType, Type expected)
+        {
+            var itemType = enumerableType.GetItemType();
+            Assert.AreEqual(expected, itemType);
+        }
     }
 }

@@ -1,12 +1,10 @@
 ﻿namespace Gu.State
 {
-    using System.Collections.Generic;
-
-    internal class ReferencePairCollection
+    public class ReferencePairCollection
     {
         private readonly ConcurrentSet<ReferencePair> pairs = new ConcurrentSet<ReferencePair>();
 
-        internal void Add(object x, object y)
+        public void Add(object x, object y)
         {
             if (x == null || y == null)
             {

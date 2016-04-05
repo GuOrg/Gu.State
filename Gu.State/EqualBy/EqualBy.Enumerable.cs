@@ -16,11 +16,10 @@
         {
             Debug.Assert(settings.ReferenceHandling != ReferenceHandling.Throw, "Should not get here");
 
-            IList xl;
-            IList yl;
-            if (Try.CastAs(x, y, out xl, out yl))
+            EqualByComparer comparer;
+            if (ListEqualByComparer.TryGetOrCreate(x, y, out comparer))
             {
-                return Collection.Equals(xl, yl, compareItem, settings, referencePairs);
+                return comparer.Equals(x, y, compareItem, settings, referencePairs);
             }
 
             IDictionary xd;
@@ -49,46 +48,6 @@
 
         private static class Collection
         {
-            internal static bool Equals<TSetting>(
-                IList x,
-                IList y,
-                Func<object, object, TSetting, ReferencePairCollection, bool> compareItem,
-                TSetting settings,
-                ReferencePairCollection referencePairs)
-            {
-                if (x == null && y == null)
-                {
-                    return true;
-                }
-
-                if (x == null || y == null)
-                {
-                    return false;
-                }
-
-                if (x.Count != y.Count)
-                {
-                    return false;
-                }
-
-                for (int i = 0; i < x.Count; i++)
-                {
-                    var xv = x[i];
-                    var yv = y[i];
-                    if (referencePairs?.Contains(xv, yv) == true)
-                    {
-                        continue;
-                    }
-
-                    if (!compareItem(xv, yv, settings, referencePairs))
-                    {
-                        return false;
-                    }
-                }
-
-                return true;
-            }
-
             internal static bool Equals<TSetting>(
                 IDictionary x,
                 IDictionary y,
