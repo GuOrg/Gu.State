@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Security.Cryptography.X509Certificates;
 
     public class ListEqualByComparer<T> : EqualByComparer
     {
@@ -31,8 +32,16 @@
                 return false;
             }
 
-            return settings.IsEquatable(x.GetType().GetItemType())
-                       ? this.Equals(xl, yl, EqualityComparer<T>.Default)
+            var isEquatable = settings.IsEquatable(x.GetType().GetItemType());
+            if (settings.ReferenceHandling == ReferenceHandling.References)
+            {
+                return isEquatable
+                           ? this.ItemsEquals(xl, yl, EqualityComparer<T>.Default.Equals)
+                           : this.ItemsEquals(xl, yl, (xi, yi) => ReferenceEquals(xi, yi));
+            }
+
+            return isEquatable
+                       ? this.ItemsEquals(xl, yl, EqualityComparer<T>.Default.Equals)
                        : this.Equals(xl, yl, compareItem, settings, referencePairs);
         }
 
@@ -61,11 +70,11 @@
             return true;
         }
 
-        private bool Equals(IList<T> x, IList<T> y, EqualityComparer<T> comparer)
+        private bool ItemsEquals(IList<T> x, IList<T> y, Func<T, T, bool> compare)
         {
             for (int i = 0; i < x.Count; i++)
             {
-                if (!comparer.Equals(x[i], y[i]))
+                if (!compare(x[i], y[i]))
                 {
                     return false;
                 }

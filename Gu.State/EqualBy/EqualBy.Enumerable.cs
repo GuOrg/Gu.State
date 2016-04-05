@@ -22,6 +22,11 @@
                 return comparer.Equals(x, y, compareItem, settings, referencePairs);
             }
 
+            if (x is Array && y is Array)
+            {
+                return ArrayEqualByComparer.Default.Equals(x, y, compareItem, settings, referencePairs);
+            }
+
             IDictionary xd;
             IDictionary yd;
             if (Try.CastAs(x, y, out xd, out yd))

@@ -9,7 +9,8 @@
             object y,
             Func<object, object, TSetting, ReferencePairCollection, bool> compareItem,
             TSetting settings,
-            ReferencePairCollection referencePairs) where TSetting : class, IMemberSettings;
+            ReferencePairCollection referencePairs)
+            where TSetting : class, IMemberSettings;
 
         protected static bool TryGetEitherNullEquals(object x, object y, out bool result)
         {

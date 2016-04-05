@@ -35,25 +35,27 @@ namespace Gu.State.Tests.EqualByTests
             Assert.AreEqual(true, result);
         }
 
-        [Test]
-        public void JaggedArray2DOfInts()
+        [TestCase(5, true)]
+        [TestCase(10, false)]
+        public void JaggedArray2DOfInts(int value, bool expected)
         {
-            Assert.Fail();
-            //var x = new int[2][3];
-            //var y = new[] { 1, 2, 3 };
-            //var result = this.EqualByMethod(x, y, ReferenceHandling.Structural);
-            //Assert.AreEqual(true, result);
+            var x = new[] { new[] { 1, 2, 3 }, new[] { 4, 5} };
+            var y = new[] { new[] { 1, 2, 3 }, new[] { 4, value } };
+            var result = this.EqualByMethod(x, y, ReferenceHandling.Structural);
+            Assert.AreEqual(expected, result);
 
-            //result = this.EqualByMethod(y, x, ReferenceHandling.Structural);
-            //Assert.AreEqual(true, result);
+            result = this.EqualByMethod(y, x, ReferenceHandling.Structural);
+            Assert.AreEqual(expected, result);
         }
 
-        [TestCase(3, true)]
-        [TestCase(10, false)]
-        public void Array2DOfInts(int yValue, bool expected)
+        [TestCase(0, 0, 1, true)]
+        [TestCase(0, 0, 10, false)]
+        [TestCase(2, 1, 10, false)]
+        public void Array2DOfInts(int i1, int i2, int yValue, bool expected)
         {
             var x = new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } };
-            var y = new[,] { { 1, 2 }, { yValue, 4 }, { 5, 6 } };
+            var y = new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } };
+            y[i1, i2] = yValue;
             var result = this.EqualByMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(expected, result);
 
