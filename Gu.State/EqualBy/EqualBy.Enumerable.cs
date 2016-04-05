@@ -22,6 +22,11 @@
                 return comparer.Equals(x, y, compareItem, settings, referencePairs);
             }
 
+            if (SetEqualByComparer.TryGetOrCreate(x, y, out comparer))
+            {
+                return comparer.Equals(x, y, compareItem, settings, referencePairs);
+            }
+
             if (x is Array && y is Array)
             {
                 return ArrayEqualByComparer.Default.Equals(x, y, compareItem, settings, referencePairs);
@@ -32,11 +37,6 @@
             if (Try.CastAs(x, y, out xd, out yd))
             {
                 return Collection.Equals(xd, yd, compareItem, settings, referencePairs);
-            }
-
-            if (Is.Sets(x, y))
-            {
-                return Collection.SetEquals(x, y, compareItem, settings, referencePairs);
             }
 
             IEnumerable xe;
@@ -96,52 +96,6 @@
                 }
 
                 return true;
-            }
-
-            internal static bool SetEquals<TSetting>(
-                object x,
-                object y,
-                Func<object, object, TSetting, ReferencePairCollection, bool> compareItem,
-                TSetting settings,
-                ReferencePairCollection referencePairs)
-                where TSetting : IMemberSettings
-            {
-                if (!Set.Equals(x, y))
-                {
-                    return false;
-                }
-
-                var xe = Set.ItemsOrderByHashCode(x);
-                var ye = Set.ItemsOrderByHashCode(y);
-                for (int xi = xe.Count - 1; xi >= 0; xi--)
-                {
-                    var xItem = xe[xi];
-                    bool found = false;
-                    var indices = ye.MatchingHashIndices(xItem);
-                    if (indices.IsNone)
-                    {
-                        return false;
-                    }
-
-                    for (int yi = indices.First; yi <= indices.Last; yi++)
-                    {
-                        var yItem = ye[yi];
-                        if (compareItem(xItem, yItem, settings, referencePairs))
-                        {
-                            found = true;
-                            xe.RemoveAt(xi);
-                            ye.RemoveAt(yi);
-                            break;
-                        }
-                    }
-
-                    if (!found)
-                    {
-                        return false;
-                    }
-                }
-
-                return xe.Count == 0 && ye.Count == 0;
             }
 
             internal static bool Equals<TSetting>(
