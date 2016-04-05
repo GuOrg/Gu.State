@@ -507,6 +507,8 @@
         {
             public int HashValue { get; set; } = 0;
 
+            public int Value { get; set; }
+
             public override int GetHashCode()
             {
                 return this.HashValue;

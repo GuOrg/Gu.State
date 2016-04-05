@@ -104,8 +104,8 @@
         public void HashSetOfWithCollisionsWhenNotEqual(ReferenceHandling referenceHandling)
         {
             var e1 = new HashCollisionType();
-            var x = new HashSet<HashCollisionType> { e1, new HashCollisionType() };
-            var y = new HashSet<HashCollisionType> { e1, new HashCollisionType() };
+            var x = new HashSet<HashCollisionType> { e1, new HashCollisionType { Value = 1 } };
+            var y = new HashSet<HashCollisionType> { e1, new HashCollisionType { Value = 2 } };
             var result = this.EqualByMethod(x, y, referenceHandling);
             Assert.AreEqual(false, result);
 
