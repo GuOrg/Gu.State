@@ -73,11 +73,14 @@
     <Compile Include="DiffTests\SetTests.cs" />
     <Compile Include="DiffTests\ThrowsTests.cs" />
     <Compile Include="DiffTests\VerifyTests.cs" />
+    <Compile Include="EqualByTests\ArrayTests.cs" />
     <Compile Include="EqualByTests\DictionaryTests.cs" />
     <Compile Include="EqualByTests\EnumerableTests.cs" />
+    <Compile Include="EqualByTests\FieldValues\Array.cs" />
     <Compile Include="EqualByTests\FieldValues\Dictionary.cs" />
     <Compile Include="EqualByTests\FieldValues\Enumerable.cs" />
     <Compile Include="EqualByTests\FieldValues\Sets.cs" />
+    <Compile Include="EqualByTests\PropertyValues\Array.cs" />
     <Compile Include="EqualByTests\PropertyValues\Dictionary.cs" />
     <Compile Include="EqualByTests\PropertyValues\Enumerable.cs" />
     <Compile Include="EqualByTests\PropertyValues\Sets.cs" />
