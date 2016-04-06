@@ -22,7 +22,12 @@ namespace Gu.State
             return false;
         }
 
-        public override bool Equals<TSetting>(object x, object y, Func<object, object, TSetting, ReferencePairCollection, bool> compareItem, TSetting settings, ReferencePairCollection referencePairs)
+        public override bool Equals<TSetting>(
+            object x,
+            object y,
+            Func<object, object, TSetting, ReferencePairCollection, bool> compareItem,
+            TSetting settings,
+            ReferencePairCollection referencePairs)
         {
             bool result;
             if (TryGetEitherNullEquals(x, y, out result))

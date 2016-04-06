@@ -53,6 +53,8 @@
     <Compile Include="EqualBy\Comparers\ArrayEqualByComparer.cs" />
     <Compile Include="EqualBy\Comparers\DictionaryEqualByComparer.cs" />
     <Compile Include="EqualBy\Comparers\DictionaryEqualByComparer{TKey,TValue}.cs" />
+    <Compile Include="EqualBy\Comparers\EnumerableEqualByComparer.cs" />
+    <Compile Include="EqualBy\Comparers\EnumerableEqualByComparer{T}.cs" />
     <Compile Include="EqualBy\Comparers\EqualByComparer.cs" />
     <Compile Include="EqualBy\Comparers\ListEqualByComparer.cs" />
     <Compile Include="EqualBy\Comparers\ListEqualByComparer{T}.cs" />

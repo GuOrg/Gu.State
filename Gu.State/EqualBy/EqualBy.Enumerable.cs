@@ -20,23 +20,10 @@
             if (ListEqualByComparer.TryGetOrCreate(x, y, out comparer) ||
                 SetEqualByComparer.TryGetOrCreate(x, y, out comparer) ||
                 ArrayEqualByComparer.TryGetOrCreate(x, y, out comparer) ||
-                DictionaryEqualByComparer.TryGetOrCreate(x, y, out comparer))
+                DictionaryEqualByComparer.TryGetOrCreate(x, y, out comparer) ||
+                EnumerableEqualByComparer.TryGetOrCreate(x, y, out comparer))
             {
                 return comparer.Equals(x, y, compareItem, settings, referencePairs);
-            }
-
-            IDictionary xd;
-            IDictionary yd;
-            if (Try.CastAs(x, y, out xd, out yd))
-            {
-                return Collection.Equals(xd, yd, compareItem, settings, referencePairs);
-            }
-
-            IEnumerable xe;
-            IEnumerable ye;
-            if (Try.CastAs(x, y, out xe, out ye))
-            {
-                return Collection.Equals(xe, ye, compareItem, settings, referencePairs);
             }
 
             var message = "There is a bug in the library as it:\r\n" +
