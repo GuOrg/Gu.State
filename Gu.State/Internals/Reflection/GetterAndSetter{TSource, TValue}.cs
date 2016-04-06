@@ -11,8 +11,8 @@
 
         public GetterAndSetter(PropertyInfo propertyInfo)
         {
-            this.setter = (Action<TSource, TValue>)Delegate.CreateDelegate(typeof(Action<TSource, TValue>), propertyInfo.SetMethod);
-            this.getter = (Func<TSource, TValue>)Delegate.CreateDelegate(typeof(Func<TSource, TValue>), propertyInfo.GetMethod);
+            this.setter = (Action<TSource, TValue>)propertyInfo.SetMethod.CreateDelegate(typeof(Action<TSource, TValue>));
+            this.getter = (Func<TSource, TValue>)propertyInfo.GetMethod.CreateDelegate(typeof(Func<TSource, TValue>));
         }
 
         public GetterAndSetter(FieldInfo fieldInfo)
@@ -46,23 +46,23 @@
         {
             var methodName = $"{field.ReflectedType.FullName}.set_{field.Name}";
             var setterMethod = new DynamicMethod(methodName, null, new[] { typeof(TSource), typeof(TValue) }, true);
-            var gen = setterMethod.GetILGenerator();
-            gen.Emit(OpCodes.Ldarg_0);
-            gen.Emit(OpCodes.Ldarg_1);
-            gen.Emit(OpCodes.Stfld, field);
-            gen.Emit(OpCodes.Ret);
+            var ilGenerator = setterMethod.GetILGenerator();
+            ilGenerator.Emit(OpCodes.Ldarg_0);
+            ilGenerator.Emit(OpCodes.Ldarg_1);
+            ilGenerator.Emit(OpCodes.Stfld, field);
+            ilGenerator.Emit(OpCodes.Ret);
             return (Action<TSource, TValue>)setterMethod.CreateDelegate(typeof(Action<TSource, TValue>));
         }
 
         // http://stackoverflow.com/a/16222886/1069200
         private static Func<TSource, TValue> CreateGetterDelegate(FieldInfo field)
         {
-            string methodName = $"{field.ReflectedType.FullName}.get_{field.Name}";
-            DynamicMethod setterMethod = new DynamicMethod(methodName, typeof(TValue), new[] { typeof(TSource) }, true);
-            ILGenerator gen = setterMethod.GetILGenerator();
-            gen.Emit(OpCodes.Ldarg_0);
-            gen.Emit(OpCodes.Ldfld, field);
-            gen.Emit(OpCodes.Ret);
+            var methodName = $"{field.ReflectedType.FullName}.get_{field.Name}";
+            var setterMethod = new DynamicMethod(methodName, typeof(TValue), new[] { typeof(TSource) }, true);
+            var ilGenerator = setterMethod.GetILGenerator();
+            ilGenerator.Emit(OpCodes.Ldarg_0);
+            ilGenerator.Emit(OpCodes.Ldfld, field);
+            ilGenerator.Emit(OpCodes.Ret);
             return (Func<TSource, TValue>)setterMethod.CreateDelegate(typeof(Func<TSource, TValue>));
         }
     }

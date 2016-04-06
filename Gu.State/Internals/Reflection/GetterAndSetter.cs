@@ -2,7 +2,7 @@
 {
     using System.Reflection;
 
-    internal static class GetterAndSetter
+    internal class GetterAndSetter
     {
         internal static IGetterAndSetter Create(PropertyInfo propertyInfo)
         {
