@@ -61,6 +61,9 @@
     <Compile Include="EqualBy\Comparers\SetEqualByComparer.cs" />
     <Compile Include="EqualBy\Comparers\SetEqualByComparer{T}.cs" />
     <Compile Include="Internals\Is.cs" />
+    <Compile Include="Internals\Reflection\IGetterAndSetter.cs" />
+    <Compile Include="Internals\Reflection\GetterAndSetter.cs" />
+    <Compile Include="Internals\Reflection\GetterAndSetter{TSource, TValue}.cs" />
     <Compile Include="Internals\Set.cs" />
     <Compile Include="Internals\Set.Sorted.cs" />
     <Compile Include="Internals\Try.cs" />
