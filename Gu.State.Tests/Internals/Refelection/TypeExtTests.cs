@@ -26,6 +26,7 @@
         [TestCase(typeof(HashSet<int>), typeof(IList), false)]
         [TestCase(typeof(HashSet<int>), typeof(ISet<int>), true)]
         [TestCase(typeof(HashSet<int>), typeof(ISet<string>), false)]
+        [TestCase(typeof(Dictionary<int, int>), typeof(IDictionary<,>), true)]
         public void Implements(Type type, Type interfaceType, bool expected)
         {
             var actual = type.Implements(interfaceType);
