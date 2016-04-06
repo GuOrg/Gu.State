@@ -74,6 +74,7 @@
     <Compile Include="DiffTests\ThrowsTests.cs" />
     <Compile Include="DiffTests\VerifyTests.cs" />
     <Compile Include="EqualByTests\ArrayTests.cs" />
+    <Compile Include="EqualByTests\Comparers\DictionaryEqualByComparerTests.cs" />
     <Compile Include="EqualByTests\DictionaryTests.cs" />
     <Compile Include="EqualByTests\EnumerableTests.cs" />
     <Compile Include="EqualByTests\FieldValues\Array.cs" />

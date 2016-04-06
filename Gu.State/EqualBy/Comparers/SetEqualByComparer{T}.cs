@@ -103,18 +103,5 @@
                 public int GetHashCode(T obj) => this.HashCode?.Invoke(obj) ?? obj.GetHashCode();
             }
         }
-
-        private class ReferenceComparer : IEqualityComparer<T>
-        {
-            public static readonly ReferenceComparer Default = new ReferenceComparer();
-
-            private ReferenceComparer()
-            {
-            }
-
-            public bool Equals(T x, T y) => ReferenceEquals(x, y);
-
-            public int GetHashCode(T obj) => obj?.GetHashCode() ?? 0;
-        }
     }
 }

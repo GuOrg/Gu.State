@@ -35,16 +35,16 @@
             if (settings.ReferenceHandling == ReferenceHandling.References)
             {
                 return isEquatable
-                           ? this.ItemsEquals(xl, yl, EqualityComparer<T>.Default.Equals)
-                           : this.ItemsEquals(xl, yl, (xi, yi) => ReferenceEquals(xi, yi));
+                           ? ItemsEquals(xl, yl, EqualityComparer<T>.Default.Equals)
+                           : ItemsEquals(xl, yl, (xi, yi) => ReferenceEquals(xi, yi));
             }
 
             return isEquatable
-                       ? this.ItemsEquals(xl, yl, EqualityComparer<T>.Default.Equals)
-                       : this.Equals(xl, yl, compareItem, settings, referencePairs);
+                       ? ItemsEquals(xl, yl, EqualityComparer<T>.Default.Equals)
+                       : Equals(xl, yl, compareItem, settings, referencePairs);
         }
 
-        private bool Equals<TSetting>(
+        private static bool Equals<TSetting>(
             IList<T> x,
             IList<T> y,
             Func<object, object, TSetting, ReferencePairCollection, bool> compareItem,
@@ -69,7 +69,7 @@
             return true;
         }
 
-        private bool ItemsEquals(IList<T> x, IList<T> y, Func<T, T, bool> compare)
+        private static bool ItemsEquals(IList<T> x, IList<T> y, Func<T, T, bool> compare)
         {
             for (int i = 0; i < x.Count; i++)
             {

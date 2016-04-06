@@ -10,6 +10,18 @@ namespace Gu.State
         {
         }
 
+        public static bool TryGetOrCreate(object x, object y, out EqualByComparer comparer)
+        {
+            if (x is Array && y is Array)
+            {
+                comparer = Default;
+                return true;
+            }
+
+            comparer = null;
+            return false;
+        }
+
         public override bool Equals<TSetting>(object x, object y, Func<object, object, TSetting, ReferencePairCollection, bool> compareItem, TSetting settings, ReferencePairCollection referencePairs)
         {
             bool result;
@@ -37,16 +49,16 @@ namespace Gu.State
             if (settings.ReferenceHandling == ReferenceHandling.References)
             {
                 return isEquatable
-                           ? this.ItemsEquals(xl, yl, object.Equals)
-                           : this.ItemsEquals(xl, yl, ReferenceEquals);
+                           ? ItemsEquals(xl, yl, object.Equals)
+                           : ItemsEquals(xl, yl, ReferenceEquals);
             }
 
             return isEquatable
-                       ? this.ItemsEquals(xl, yl, object.Equals)
-                       : this.ItemsEquals(xl, yl, (xi, yi) => compareItem(xi, yi, settings, referencePairs));
+                       ? ItemsEquals(xl, yl, object.Equals)
+                       : ItemsEquals(xl, yl, (xi, yi) => compareItem(xi, yi, settings, referencePairs));
         }
 
-        private bool ItemsEquals(Array x, Array y, Func<object, object, bool> compare)
+        private static bool ItemsEquals(Array x, Array y, Func<object, object, bool> compare)
         {
             var xe = x.GetEnumerator();
             var ye = y.GetEnumerator();
