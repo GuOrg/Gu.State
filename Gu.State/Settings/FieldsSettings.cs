@@ -68,5 +68,10 @@
 
             return this.IgnoredMembers.ContainsKey(fieldInfo);
         }
+
+        internal override IGetterAndSetter GetOrCreateGetterAndSetter(FieldInfo propertyInfo)
+        {
+            return GetterAndSetter.GetOrCreate(propertyInfo);
+        }
     }
 }
