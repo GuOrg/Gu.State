@@ -82,6 +82,7 @@
     <Compile Include="EqualByTests\FieldValues\Dictionary.cs" />
     <Compile Include="EqualByTests\FieldValues\Enumerable.cs" />
     <Compile Include="EqualByTests\FieldValues\Sets.cs" />
+    <Compile Include="EqualByTests\Perf\ProfilePerf.cs" />
     <Compile Include="EqualByTests\PropertyValues\Array.cs" />
     <Compile Include="EqualByTests\PropertyValues\Dictionary.cs" />
     <Compile Include="EqualByTests\PropertyValues\Enumerable.cs" />
