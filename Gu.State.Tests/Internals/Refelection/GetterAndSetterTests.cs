@@ -32,6 +32,17 @@
         }
 
         [Test]
+        public void CtorFieldInfo()
+        {
+            var fieldInfo = typeof(ComplexType).GetField(nameof(ComplexType.value));
+            var getterAndSetter = new GetterAndSetter<ComplexType, int>(fieldInfo);
+            var complexType = new ComplexType();
+            getterAndSetter.SetValue(complexType, 1);
+            Assert.AreEqual(1, complexType.Value);
+            Assert.AreEqual(1, getterAndSetter.GetValue(complexType));
+        }
+
+        [Test]
         public void SetUsingExpressionSandbox()
         {
             var fieldInfo = typeof(ComplexType).GetField(nameof(ComplexType.value));
