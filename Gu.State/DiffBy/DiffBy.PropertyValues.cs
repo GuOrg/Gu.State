@@ -51,10 +51,14 @@
             }
 
             EqualBy.Verify.CanEqualByPropertyValues(x, y, settings, typeof(DiffBy).Name, nameof(PropertyValues));
-            var pairs = settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops
-                            ? new ReferencePairCollection()
-                            : null;
-            var diffs = SubDiffs(x, y, settings, pairs);
+            IReadOnlyCollection<Diff> diffs;
+            using (var pairs = settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops
+                                   ? ReferencePairCollection.Create()
+                                   : null)
+            {
+                diffs = SubDiffs(x, y, settings, pairs);
+            }
+
             return diffs == null
                        ? null
                        : new ValueDiff(x, y, diffs);

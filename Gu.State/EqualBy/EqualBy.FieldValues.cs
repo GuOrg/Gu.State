@@ -65,10 +65,12 @@ namespace Gu.State
                 return Equals(x, y);
             }
 
-            var pairs = settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops
-                            ? new ReferencePairCollection()
-                            : null;
-            return FieldsValuesEquals(x, y, settings, pairs);
+            using (var pairs = settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops
+                                   ? ReferencePairCollection.Create()
+                                   : null)
+            {
+                return FieldsValuesEquals(x, y, settings, pairs);
+            }
         }
 
         private static bool FieldsValuesEquals(object x, object y, FieldsSettings settings, ReferencePairCollection referencePairs)
