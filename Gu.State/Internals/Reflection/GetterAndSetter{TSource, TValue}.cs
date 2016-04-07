@@ -1,6 +1,7 @@
 ﻿namespace Gu.State
 {
     using System;
+    using System.Collections.Generic;
     using System.Reflection;
     using System.Reflection.Emit;
 
@@ -11,9 +12,19 @@
 
         public GetterAndSetter(PropertyInfo propertyInfo)
         {
-            this.Setter = (Action<TSource, TValue>)propertyInfo.SetMethod.CreateDelegate(typeof(Action<TSource, TValue>));
-            this.Getter = (Func<TSource, TValue>)propertyInfo.GetMethod.CreateDelegate(typeof(Func<TSource, TValue>));
+            this.Setter = propertyInfo.CanWrite
+                              ? (Action<TSource, TValue>)
+                                propertyInfo.SetMethod.CreateDelegate(typeof(Action<TSource, TValue>))
+                              : null;
+            this.Getter = propertyInfo.CanRead
+                              ? (Func<TSource, TValue>)
+                                propertyInfo.GetMethod.CreateDelegate(typeof(Func<TSource, TValue>))
+                              : null;
         }
+
+        public Type SourceType => typeof(TSource);
+
+        public Type ValueType => typeof(TValue);
 
         public GetterAndSetter(FieldInfo fieldInfo)
         {
@@ -34,6 +45,14 @@
         public object GetValue(object source)
         {
             return this.GetValue((TSource)source);
+        }
+
+        public bool ValueEquals(object x, object y)
+        {
+            var xv = this.GetValue((TSource)x);
+            var yv = this.GetValue((TSource)y);
+            var comparer = EqualityComparer<TValue>.Default;
+            return comparer.Equals(xv, yv);
         }
 
         public TValue GetValue(TSource source)

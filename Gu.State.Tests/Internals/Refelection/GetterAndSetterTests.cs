@@ -13,7 +13,7 @@
         public void CreateFromPropertyInfo()
         {
             var propertyInfo = typeof(ComplexType).GetProperty(nameof(ComplexType.Value));
-            var getterAndSetter = (GetterAndSetter<ComplexType, int>)GetterAndSetter.Create(propertyInfo);
+            var getterAndSetter = (GetterAndSetter<ComplexType, int>)GetterAndSetter.GetOrCreate(propertyInfo);
             var complexType = new ComplexType();
             getterAndSetter.SetValue(complexType, 1);
             Assert.AreEqual(1, complexType.Value);
@@ -24,7 +24,7 @@
         public void CreateFromFieldInfo()
         {
             var fieldInfo = typeof(ComplexType).GetField(nameof(ComplexType.value));
-            var getterAndSetter = (GetterAndSetter<ComplexType, int>)GetterAndSetter.Create(fieldInfo);
+            var getterAndSetter = (GetterAndSetter<ComplexType, int>)GetterAndSetter.GetOrCreate(fieldInfo);
             var complexType = new ComplexType();
             getterAndSetter.SetValue(complexType, 1);
             Assert.AreEqual(1, complexType.Value);

@@ -40,6 +40,8 @@
 
         protected ConcurrentDictionary<T, bool> IgnoredMembers => this.ignoredMembers;
 
+        internal abstract IGetterAndSetter GetOrCreateGetterAndSetter(T propertyInfo);
+
         public bool IsEquatable(Type type) => IsEquatableCore(type);
 
         public bool IsImmutable(Type type) => IsImmutableCore(type);

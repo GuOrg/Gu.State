@@ -76,6 +76,11 @@
             return null;
         }
 
+        internal override IGetterAndSetter GetOrCreateGetterAndSetter(PropertyInfo propertyInfo)
+        {
+            return GetterAndSetter.GetOrCreate(propertyInfo);
+        }
+
         private bool GetIsIgnoring(PropertyInfo propertyInfo)
         {
             foreach (var kvp in this.IgnoredMembers)

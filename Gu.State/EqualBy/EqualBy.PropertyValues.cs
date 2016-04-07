@@ -91,9 +91,20 @@
                     continue;
                 }
 
-                var xv = propertyInfo.GetValue(x);
-                var yv = propertyInfo.GetValue(y);
-                if (referencePairs?.Contains(xv, yv) == true)
+                var getterAndSetter = settings.GetOrCreateGetterAndSetter(propertyInfo);
+                if (settings.IsEquatable(getterAndSetter.ValueType))
+                {
+                    if (!getterAndSetter.ValueEquals(x, y))
+                    {
+                        return false;
+                    }
+
+                    continue;
+                }
+
+                var xv = getterAndSetter.GetValue(x);
+                var yv = getterAndSetter.GetValue(y);
+                if (propertyInfo.PropertyType.IsClass && referencePairs?.Contains(xv, yv) == true)
                 {
                     continue;
                 }
