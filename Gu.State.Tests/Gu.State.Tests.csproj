@@ -98,6 +98,7 @@
     <Compile Include="Internals\Errors\ErrorTypes.cs" />
     <Compile Include="Internals\MemberPath\MemberPathTests.cs" />
     <Compile Include="Internals\MemberPath\MemberPathTypes.cs" />
+    <Compile Include="Internals\Refelection\EmitSandbox\Sandbox.cs" />
     <Compile Include="Internals\Refelection\GetterAndSetterTests.cs" />
     <Compile Include="Internals\Refelection\TypeExtTests.cs" />
     <Compile Include="Internals\SetTests.cs" />
@@ -267,5 +268,5 @@
       <Paket>True</Paket>
     </Reference>
   </ItemGroup>
-  <ItemGroup />
+  <Import Project="..\.paket\paket.targets" />
 </Project>
