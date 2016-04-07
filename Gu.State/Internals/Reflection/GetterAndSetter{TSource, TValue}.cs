@@ -1,7 +1,6 @@
 ﻿namespace Gu.State
 {
     using System;
-    using System.Collections.Generic;
     using System.Reflection;
     using System.Reflection.Emit;
 
@@ -51,8 +50,7 @@
         {
             var xv = this.GetValue((TSource)x);
             var yv = this.GetValue((TSource)y);
-            var comparer = EqualityComparer<TValue>.Default;
-            return comparer.Equals(xv, yv);
+            return Equals(xv, yv);
         }
 
         public TValue GetValue(TSource source)

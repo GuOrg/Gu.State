@@ -5,6 +5,8 @@
 
     using NUnit.Framework;
 
+    using static EqualByTypes;
+
     public abstract class ClassesTests
     {
         public abstract bool EqualMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excludedMembers = null, Type excludedType = null) where T : class;
@@ -21,8 +23,8 @@
         [TestCase("b", "c", false)]
         public void WithSimpleHappyPath(string xn, string yn, bool expected)
         {
-            var x = new EqualByTypes.WithSimpleProperties(1, 2, xn, StringSplitOptions.RemoveEmptyEntries);
-            var y = new EqualByTypes.WithSimpleProperties(1, 2, yn, StringSplitOptions.RemoveEmptyEntries);
+            var x = new WithSimpleProperties(1, 2, xn, StringSplitOptions.RemoveEmptyEntries);
+            var y = new WithSimpleProperties(1, 2, yn, StringSplitOptions.RemoveEmptyEntries);
             var result = this.EqualMethod(x, y);
             Assert.AreEqual(expected, result);
 
@@ -40,14 +42,14 @@
         [TestCase("b", "c", false)]
         public void WithComplexStructural(string xn, string yn, bool expected)
         {
-            var x = new EqualByTypes.WithComplexProperty("a", 1)
+            var x = new WithComplexProperty("a", 1)
             {
-                ComplexType = new EqualByTypes.ComplexType { Name = xn, Value = 2 }
+                ComplexType = new ComplexType { Name = xn, Value = 2 }
             };
 
-            var y = new EqualByTypes.WithComplexProperty("a", 1)
+            var y = new WithComplexProperty("a", 1)
             {
-                ComplexType = new EqualByTypes.ComplexType { Name = yn, Value = 2 }
+                ComplexType = new ComplexType { Name = yn, Value = 2 }
             };
             var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(expected, result);
@@ -56,8 +58,8 @@
         [Test]
         public void WithComplexStructuralWhenNull()
         {
-            var x = new EqualByTypes.WithComplexProperty { Name = "a", Value = 1 };
-            var y = new EqualByTypes.WithComplexProperty { Name = "a", Value = 1 };
+            var x = new WithComplexProperty { Name = "a", Value = 1 };
+            var y = new WithComplexProperty { Name = "a", Value = 1 };
             this.EqualMethod(x, y, ReferenceHandling.Structural);
             var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
@@ -69,8 +71,8 @@
         [Test]
         public void WithComplexStructuralWhenXIsNull()
         {
-            var x = new EqualByTypes.WithComplexProperty { Name = "a", Value = 1, ComplexType = new EqualByTypes.ComplexType("b", 1) };
-            var y = new EqualByTypes.WithComplexProperty { Name = "a", Value = 1 };
+            var x = new WithComplexProperty { Name = "a", Value = 1, ComplexType = new ComplexType("b", 1) };
+            var y = new WithComplexProperty { Name = "a", Value = 1 };
             this.EqualMethod(x, y, ReferenceHandling.Structural);
             var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(false, result);
@@ -82,8 +84,8 @@
         [Test]
         public void WithComplexStructuralWhenYIsNull()
         {
-            var x = new EqualByTypes.WithComplexProperty { Name = "a", Value = 1 };
-            var y = new EqualByTypes.WithComplexProperty { Name = "a", Value = 1, ComplexType = new EqualByTypes.ComplexType("b", 1) };
+            var x = new WithComplexProperty { Name = "a", Value = 1 };
+            var y = new WithComplexProperty { Name = "a", Value = 1, ComplexType = new ComplexType("b", 1) };
             this.EqualMethod(x, y, ReferenceHandling.Structural);
             var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(false, result);
@@ -95,13 +97,13 @@
         [Test]
         public void WithComplexReferenceWhenSame()
         {
-            var x = new EqualByTypes.WithComplexProperty
+            var x = new WithComplexProperty
             {
                 Name = "a",
                 Value = 1,
-                ComplexType = new EqualByTypes.ComplexType { Name = "b", Value = 2 }
+                ComplexType = new ComplexType { Name = "b", Value = 2 }
             };
-            var y = new EqualByTypes.WithComplexProperty
+            var y = new WithComplexProperty
             {
                 Name = "a",
                 Value = 1,
@@ -117,17 +119,17 @@
         [Test]
         public void WithComplexReferenceWhenNotSame()
         {
-            var x = new EqualByTypes.WithComplexProperty
+            var x = new WithComplexProperty
             {
                 Name = "a",
                 Value = 1,
-                ComplexType = new EqualByTypes.ComplexType { Name = "b", Value = 2 }
+                ComplexType = new ComplexType { Name = "b", Value = 2 }
             };
-            var y = new EqualByTypes.WithComplexProperty
+            var y = new WithComplexProperty
             {
                 Name = "a",
                 Value = 1,
-                ComplexType = new EqualByTypes.ComplexType { Name = "b", Value = 2 }
+                ComplexType = new ComplexType { Name = "b", Value = 2 }
             };
             var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
@@ -143,8 +145,8 @@
         [TestCase(1, 1, ReferenceHandling.References, true)]
         public void WithReadonlyIntHappyPath(int xv, int yv, ReferenceHandling? referenceHandling, bool expected)
         {
-            var x = new EqualByTypes.WithReadonlyProperty<int>(xv);
-            var y = new EqualByTypes.WithReadonlyProperty<int>(yv);
+            var x = new WithReadonlyProperty<int>(xv);
+            var y = new WithReadonlyProperty<int>(yv);
             if (referenceHandling == null)
             {
                 var result = this.EqualMethod(x, y);
@@ -161,8 +163,8 @@
         [TestCase("a", "b", false)]
         public void WithReadonlyComplex(string xv, string yv, bool expected)
         {
-            var x = new EqualByTypes.WithReadonlyProperty<EqualByTypes.ComplexType>(new EqualByTypes.ComplexType(xv, 1));
-            var y = new EqualByTypes.WithReadonlyProperty<EqualByTypes.ComplexType>(new EqualByTypes.ComplexType(yv, 1));
+            var x = new WithReadonlyProperty<ComplexType>(new ComplexType(xv, 1));
+            var y = new WithReadonlyProperty<ComplexType>(new ComplexType(yv, 1));
             var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(expected, result);
         }
@@ -170,8 +172,8 @@
         [Test]
         public void WithListOfIntsToEmpty()
         {
-            var x = new EqualByTypes.WithListProperty<int> { Items = { 1, 2, 3 } };
-            var y = new EqualByTypes.WithListProperty<int>();
+            var x = new WithListProperty<int> { Items = { 1, 2, 3 } };
+            var y = new WithListProperty<int>();
             var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(false, result);
         }
@@ -179,8 +181,8 @@
         [Test]
         public void WithListOfIntsNullToNull()
         {
-            var x = new EqualByTypes.WithListProperty<int> { Items = null };
-            var y = new EqualByTypes.WithListProperty<int> { Items = null };
+            var x = new WithListProperty<int> { Items = null };
+            var y = new WithListProperty<int> { Items = null };
             var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
 
@@ -191,8 +193,8 @@
         [Test]
         public void WithListOfIntsEmptyToEmpty()
         {
-            var x = new EqualByTypes.WithListProperty<int> { Items = new List<int>() };
-            var y = new EqualByTypes.WithListProperty<int> { Items = new List<int>() };
+            var x = new WithListProperty<int> { Items = new List<int>() };
+            var y = new WithListProperty<int> { Items = new List<int>() };
             var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
 
@@ -203,8 +205,8 @@
         [Test]
         public void WithListOfIntsToNull()
         {
-            var x = new EqualByTypes.WithListProperty<int> { Items = { 1, 2, 3 } };
-            var y = new EqualByTypes.WithListProperty<int> { Items = null };
+            var x = new WithListProperty<int> { Items = { 1, 2, 3 } };
+            var y = new WithListProperty<int> { Items = null };
             var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(false, result);
         }
@@ -213,8 +215,8 @@
         [TestCase(ReferenceHandling.References)]
         public void WithArrayWhenTargetArrayIsNull(ReferenceHandling referenceHandling)
         {
-            var x = new EqualByTypes.WithArrayProperty("a", 1, new[] { 1, 2 });
-            var y = new EqualByTypes.WithArrayProperty("a", 1, null);
+            var x = new WithArrayProperty("a", 1, new[] { 1, 2 });
+            var y = new WithArrayProperty("a", 1, null);
 
             var result = this.EqualMethod(x, y, referenceHandling);
             Assert.AreEqual(false, result);
@@ -223,8 +225,8 @@
         [Test]
         public void WithListOfIntsPropertyToLonger()
         {
-            var x = new EqualByTypes.WithListProperty<int> { Items = { 1, 2, 3 } };
-            var y = new EqualByTypes.WithListProperty<int> { Items = { 1, 2, 3, 4 } };
+            var x = new WithListProperty<int> { Items = { 1, 2, 3 } };
+            var y = new WithListProperty<int> { Items = { 1, 2, 3, 4 } };
             var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(false, result);
         }
@@ -232,8 +234,8 @@
         [Test]
         public void WithListOfComplexPropertyToEmptyStructural()
         {
-            var x = new EqualByTypes.WithListProperty<EqualByTypes.ComplexType> { Items = { new EqualByTypes.ComplexType("a", 1) } };
-            var y = new EqualByTypes.WithListProperty<EqualByTypes.ComplexType> { Items = { new EqualByTypes.ComplexType("a", 1) } };
+            var x = new WithListProperty<ComplexType> { Items = { new ComplexType("a", 1) } };
+            var y = new WithListProperty<ComplexType> { Items = { new ComplexType("a", 1) } };
             var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
         }
@@ -241,8 +243,8 @@
         [Test]
         public void WithListOfComplexPropertyToLonger()
         {
-            var source = new EqualByTypes.WithListProperty<EqualByTypes.ComplexType> { Items = { new EqualByTypes.ComplexType("a", 1) } };
-            var target = new EqualByTypes.WithListProperty<EqualByTypes.ComplexType> { Items = { new EqualByTypes.ComplexType("a", 1), new EqualByTypes.ComplexType("a", 1) } };
+            var source = new WithListProperty<ComplexType> { Items = { new ComplexType("a", 1) } };
+            var target = new WithListProperty<ComplexType> { Items = { new ComplexType("a", 1), new ComplexType("a", 1) } };
             var result = this.EqualMethod(source, target, ReferenceHandling.Structural);
             Assert.AreEqual(false, result);
         }
@@ -254,11 +256,11 @@
         [TestCase(1, 1, ReferenceHandling.References, true)]
         public void IgnoresMember(int xv, int yv, ReferenceHandling? referenceHandling, bool expected)
         {
-            var x = new EqualByTypes.WithSimpleProperties(xv, null, "3", StringSplitOptions.RemoveEmptyEntries);
-            var y = new EqualByTypes.WithSimpleProperties(yv, 2, "3", StringSplitOptions.RemoveEmptyEntries);
+            var x = new WithSimpleProperties(xv, null, "3", StringSplitOptions.RemoveEmptyEntries);
+            var y = new WithSimpleProperties(yv, 2, "3", StringSplitOptions.RemoveEmptyEntries);
             var excluded = this.GetType() == typeof(FieldValues.Classes)
                         ? "nullableIntValue"
-                        : nameof(EqualByTypes.WithSimpleProperties.NullableIntValue);
+                        : nameof(WithSimpleProperties.NullableIntValue);
             if (referenceHandling == null)
             {
                 var result = this.EqualMethod(x, y, excludedMembers: excluded);
@@ -275,9 +277,9 @@
         [TestCase("b", false)]
         public void IgnoresType(string xv, bool expected)
         {
-            var x = new EqualByTypes.WithComplexProperty(xv, 1, new EqualByTypes.ComplexType("b", 2));
-            var y = new EqualByTypes.WithComplexProperty("a", 1, new EqualByTypes.ComplexType("c", 2));
-            var result = this.EqualMethod(x, y, referenceHandling: ReferenceHandling.Structural, excludedType: typeof(EqualByTypes.ComplexType));
+            var x = new WithComplexProperty(xv, 1, new ComplexType("b", 2));
+            var y = new WithComplexProperty("a", 1, new ComplexType("c", 2));
+            var result = this.EqualMethod(x, y, referenceHandling: ReferenceHandling.Structural, excludedType: typeof(ComplexType));
             Assert.AreEqual(expected, result);
         }
 
@@ -286,8 +288,8 @@
         [TestCase("p", "", false)]
         public void ParentChild(string p, string c, bool expected)
         {
-            var x = new EqualByTypes.Parent("p", new EqualByTypes.Child("c"));
-            var y = new EqualByTypes.Parent(p, new EqualByTypes.Child(c));
+            var x = new Parent("p", new Child("c"));
+            var y = new Parent(p, new Child(c));
             var result = this.EqualMethod(x, y, ReferenceHandling.StructuralWithReferenceLoops);
             Assert.AreEqual(expected, result);
 
@@ -298,8 +300,8 @@
         [Test]
         public void ParentChildWhenTargetChildIsNull()
         {
-            var x = new EqualByTypes.Parent("p", new EqualByTypes.Child("c"));
-            var y = new EqualByTypes.Parent("p", null);
+            var x = new Parent("p", new Child("c"));
+            var y = new Parent("p", null);
             var result = this.EqualMethod(x, y, ReferenceHandling.StructuralWithReferenceLoops);
             Assert.AreEqual(false, result);
 
@@ -313,8 +315,8 @@
         [Test]
         public void ParentChildWhenSourceChildIsNull()
         {
-            var x = new EqualByTypes.Parent("p", null);
-            var y = new EqualByTypes.Parent("p", new EqualByTypes.Child("c"));
+            var x = new Parent("p", null);
+            var y = new Parent("p", new Child("c"));
             var result = this.EqualMethod(x, y, ReferenceHandling.StructuralWithReferenceLoops);
             Assert.AreEqual(false, result);
 
