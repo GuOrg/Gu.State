@@ -3,7 +3,6 @@ namespace Gu.State
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Linq;
 
     [DebuggerDisplay("{GetType().Name} Type: {Type?.Name}")]
     internal sealed class TypeErrors : Error, IWithErrors
@@ -25,17 +24,17 @@ namespace Gu.State
         {
         }
 
-        internal TypeErrors(Type type, IReadOnlyCollection<Error> errors)
+        internal TypeErrors(Type type, IReadOnlyList<Error> errors)
         {
             this.Type = type;
             this.Errors = errors;
             this.AllErrors = MergedErrors.MergeAll(this, errors);
         }
 
-        public IReadOnlyCollection<Error> Errors { get; }
+        public IReadOnlyList<Error> Errors { get; }
 
         internal Type Type { get; }
 
-        internal IReadOnlyCollection<Error> AllErrors { get; }
+        internal IReadOnlyList<Error> AllErrors { get; }
     }
 }

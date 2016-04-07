@@ -72,7 +72,7 @@ namespace Gu.State
                 else if (requiresReferenceHandling(type))
                 {
                     typeErrors = typeErrors.CreateIfNull(type)
-                                           .Add(RequiresReferenceHandling.Other);
+                                           .Add(RequiresReferenceHandling.ComplexType);
                 }
             }
 

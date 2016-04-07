@@ -4,6 +4,6 @@ namespace Gu.State
 
     internal interface IWithErrors
     {
-        IReadOnlyCollection<Error> Errors { get; }
+        IReadOnlyList<Error> Errors { get; }
     }
 }

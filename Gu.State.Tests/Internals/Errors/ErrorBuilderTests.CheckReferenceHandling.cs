@@ -54,7 +54,7 @@
                 var errors = ErrorBuilder.Start()
                                          .CheckReferenceHandling(type, settings, _ => true)
                                          .Finnish();
-                var expected = new[] { RequiresReferenceHandling.Other };
+                var expected = new[] { RequiresReferenceHandling.ComplexType };
                 CollectionAssert.AreEqual(expected, errors.Errors);
             }
         }

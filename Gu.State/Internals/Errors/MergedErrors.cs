@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    internal class MergedErrors : IReadOnlyCollection<Error>
+    internal class MergedErrors : IReadOnlyList<Error>
     {
         private readonly List<Error> errors;
 
@@ -23,6 +23,8 @@
         }
 
         public int Count => this.errors.Count;
+
+        public Error this[int index] => this.errors[index];
 
         public IEnumerator<Error> GetEnumerator() => this.errors.GetEnumerator();
 
@@ -87,7 +89,7 @@
             return true;
         }
 
-        public static IReadOnlyCollection<Error> MergeAll(TypeErrors typeErrors, IReadOnlyCollection<Error> errors)
+        public static IReadOnlyList<Error> MergeAll(TypeErrors typeErrors, IReadOnlyCollection<Error> errors)
         {
             var allErrors = new List<Error> { typeErrors };
             Add(errors, allErrors);
