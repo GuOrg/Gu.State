@@ -1,10 +1,35 @@
 ﻿namespace Gu.State
 {
-    public class ReferencePairCollection
+    using System;
+    using System.Collections.Concurrent;
+
+    public sealed class ReferencePairCollection : IDisposable
     {
+        private static readonly ConcurrentQueue<ReferencePairCollection> Cache = new ConcurrentQueue<ReferencePairCollection>();
         private readonly ConcurrentSet<ReferencePair> pairs = new ConcurrentSet<ReferencePair>();
 
-        public void Add(object x, object y)
+        private ReferencePairCollection()
+        {
+        }
+
+        public void Dispose()
+        {
+            this.pairs.Clear();
+            Cache.Enqueue(this);
+        }
+
+        internal static ReferencePairCollection Create()
+        {
+            ReferencePairCollection collection;
+            if (Cache.TryDequeue(out collection))
+            {
+                return collection;
+            }
+
+            return new ReferencePairCollection();
+        }
+
+        internal void Add(object x, object y)
         {
             if (x == null || y == null)
             {
