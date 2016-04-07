@@ -27,6 +27,6 @@ namespace Gu.State
 
         public MemberInfo Member => this.Path.LastMember;
 
-        public IReadOnlyCollection<Error> Errors { get; }
+        public IReadOnlyList<Error> Errors { get; }
     }
 }

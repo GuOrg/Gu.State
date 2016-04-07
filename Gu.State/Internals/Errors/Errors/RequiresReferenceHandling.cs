@@ -4,11 +4,10 @@ namespace Gu.State
 
     internal sealed class RequiresReferenceHandling : Error, IFixWithImmutable
     {
-        private readonly string type;
-
         public static readonly RequiresReferenceHandling Enumerable = new RequiresReferenceHandling(typeof(IEnumerable).Name);
+        public static readonly RequiresReferenceHandling ComplexType = new RequiresReferenceHandling("ComplexType");
 
-        public static readonly RequiresReferenceHandling Other = new RequiresReferenceHandling("Other");
+        private readonly string type;
 
         private RequiresReferenceHandling(string type)
         {
@@ -17,32 +16,22 @@ namespace Gu.State
 
         public static bool operator ==(RequiresReferenceHandling left, RequiresReferenceHandling right)
         {
-            return Equals(left, right);
+            return ReferenceEquals(left, right);
         }
 
         public static bool operator !=(RequiresReferenceHandling left, RequiresReferenceHandling right)
         {
-            return !Equals(left, right);
+            return !ReferenceEquals(left, right);
         }
 
         private bool Equals(RequiresReferenceHandling other)
         {
-            return string.Equals(this.type, other.type);
+            return ReferenceEquals(this, other);
         }
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            return obj is RequiresReferenceHandling && this.Equals((RequiresReferenceHandling)obj);
+            return ReferenceEquals(this, obj);
         }
 
         public override int GetHashCode()

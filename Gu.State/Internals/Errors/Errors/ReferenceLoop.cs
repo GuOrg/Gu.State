@@ -30,7 +30,7 @@ namespace Gu.State
 
         public MemberPath Path { get; }
 
-        public IReadOnlyCollection<Error> Errors { get; }
+        public IReadOnlyList<Error> Errors { get; }
 
         public StringBuilder AppendNotSupported(StringBuilder errorBuilder)
         {

@@ -13,7 +13,7 @@
             }
 
             if (source.Diffs.OfType<PropertyDiff>()
-                    .Any(x => x.PropertyInfo == propertyInfo))
+                            .Any(x => x.PropertyInfo == propertyInfo))
             {
                 var diffs = source.Diffs.Except<Diff, PropertyDiff>(x => x.PropertyInfo == propertyInfo)
                                 .ToArray();
