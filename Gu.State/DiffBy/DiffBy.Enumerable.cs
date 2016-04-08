@@ -10,7 +10,7 @@
     {
         private static class Enumerable
         {
-            internal static List<Diff> Diffs<TSettings>(
+            internal static List<SubDiff> Diffs<TSettings>(
                 object x,
                 object y,
                 TSettings settings,
@@ -49,7 +49,7 @@
                 return Diffs((IEnumerable)x, (IEnumerable)y, settings, referencePairs, itemDiff);
             }
 
-            private static List<Diff> Diffs<TSettings>(
+            private static List<SubDiff> Diffs<TSettings>(
                 IList x,
                 IList y,
                 TSettings settings,
@@ -60,7 +60,7 @@
                 return Diffs((IEnumerable)x, (IEnumerable)y, settings, referencePairs, itemDiff);
             }
 
-            private static List<Diff> Diffs<TSettings>(
+            private static List<SubDiff> Diffs<TSettings>(
                 IDictionary x,
                 IDictionary y,
                 TSettings settings,
@@ -73,7 +73,7 @@
                     throw Throw.ShouldNeverGetHereException("should be checked for same type before");
                 }
 
-                List<Diff> diffs = null;
+                List<SubDiff> diffs = null;
                 foreach (var key in x.Keys.OfType<object>().Concat(y.Keys.OfType<object>()).Distinct())
                 {
                     IndexDiff diff = null;
@@ -105,7 +105,7 @@
                     {
                         if (diffs == null)
                         {
-                            diffs = new List<Diff>();
+                            diffs = new List<SubDiff>();
                         }
 
                         diffs.Add(diff);
@@ -115,7 +115,7 @@
                 return diffs;
             }
 
-            private static List<Diff> Diffs<TSettings>(
+            private static List<SubDiff> Diffs<TSettings>(
                 Set.ISortedByHashCode xSorted,
                 Set.ISortedByHashCode ySorted,
                 TSettings settings,
@@ -123,7 +123,7 @@
                 Func<object, object, TSettings, ReferencePairCollection, ValueDiff> itemDiff)
                  where TSettings : IMemberSettings
             {
-                List<Diff> diffs = null;
+                List<SubDiff> diffs = null;
                 for (int xi = xSorted.Count - 1; xi >= 0; xi--)
                 {
                     var xItem = xSorted[xi];
@@ -133,7 +133,7 @@
                     {
                         if (diffs == null)
                         {
-                            diffs = new List<Diff>();
+                            diffs = new List<SubDiff>();
                         }
 
                         diffs.Add(new IndexDiff(xItem, new ValueDiff(xItem, PaddedPairs.MissingItem)));
@@ -158,7 +158,7 @@
                     {
                         if (diffs == null)
                         {
-                            diffs = new List<Diff>();
+                            diffs = new List<SubDiff>();
                         }
 
                         diffs.Add(new IndexDiff(xItem, valueDiff));
@@ -171,7 +171,7 @@
                 {
                     if (diffs == null)
                     {
-                        diffs = new List<Diff>();
+                        diffs = new List<SubDiff>();
                     }
 
                     diffs.Add(new IndexDiff(yItem, new ValueDiff(PaddedPairs.MissingItem, yItem)));
@@ -180,7 +180,7 @@
                 return diffs;
             }
 
-            private static List<Diff> Diffs<TSettings>(
+            private static List<SubDiff> Diffs<TSettings>(
                 IEnumerable x,
                 IEnumerable y,
                 TSettings settings,
@@ -194,7 +194,7 @@
                 }
 
                 var i = -1;
-                List<Diff> diffs = null;
+                List<SubDiff> diffs = null;
                 foreach (var pair in new PaddedPairs(x, y))
                 {
                     i++;
@@ -208,7 +208,7 @@
                     {
                         if (diffs == null)
                         {
-                            diffs = new List<Diff>();
+                            diffs = new List<SubDiff>();
                         }
 
                         diffs.Add(new IndexDiff(i, diff));

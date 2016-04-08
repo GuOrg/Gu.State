@@ -4,11 +4,9 @@ namespace Gu.State
     using System.IO;
     using System.Reflection;
 
-    public abstract class MemberDiff<T> : Diff
+    public abstract class MemberDiff<T> : SubDiff
         where T : MemberInfo
     {
-
-        private readonly ValueDiff valueDiff;
 
         public MemberDiff(T memberInfo, object xValue, object yValue)
             : this(memberInfo, new ValueDiff(xValue, yValue))
@@ -16,21 +14,16 @@ namespace Gu.State
         }
 
         public MemberDiff(T memberInfo, ValueDiff diff)
-            : base(diff.Diffs)
+            : base(diff)
         {
             this.MemberyInfo = memberInfo;
-            this.valueDiff = diff;
         }
 
         protected T MemberyInfo { get; }
 
-        public object X => this.valueDiff.X;
-
-        public object Y => this.valueDiff.Y;
-
         public override string ToString()
         {
-            return $"{this.MemberyInfo.Name} {this.valueDiff} diffs: {this.Diffs.Count}";
+            return $"{this.MemberyInfo.Name} {this.ValueDiff} diffs: {this.Diffs.Count}";
         }
 
         public override string ToString(string tabString, string newLine)

@@ -61,7 +61,7 @@ namespace Gu.State.Tests
 
                     x.Value1 = 5;
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("SimpleDirtyTrackClass Value2 x: 2 y: 4 Value1 x: 5 y: 3", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("SimpleDirtyTrackClass Value1 x: 5 y: 3 Value2 x: 2 y: 4", tracker.Diff.ToString("", " "));
                     expectedChanges.Add("Diff");
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
@@ -106,7 +106,7 @@ namespace Gu.State.Tests
 
                     y.Value1 = 5;
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("SimpleDirtyTrackClass Value2 x: 2 y: 4 Value1 x: 1 y: 5", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("SimpleDirtyTrackClass Value1 x: 1 y: 5 Value2 x: 2 y: 4", tracker.Diff.ToString("", " "));
                     expectedChanges.Add("Diff");
                     CollectionAssert.AreEqual(expectedChanges, changes);
 

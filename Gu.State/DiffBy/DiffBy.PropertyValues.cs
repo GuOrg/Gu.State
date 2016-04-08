@@ -51,20 +51,18 @@
             }
 
             EqualBy.Verify.CanEqualByPropertyValues(x, y, settings, typeof(DiffBy).Name, nameof(PropertyValues));
-            IReadOnlyCollection<Diff> diffs;
             using (var pairs = settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops
                                    ? ReferencePairCollection.Create()
                                    : null)
             {
-                diffs = SubDiffs(x, y, settings, pairs);
+               var diffs = SubDiffs(x, y, settings, pairs);
+                return diffs == null
+                           ? null
+                           : new ValueDiff(x, y, diffs);
             }
-
-            return diffs == null
-                       ? null
-                       : new ValueDiff(x, y, diffs);
         }
 
-        private static IReadOnlyCollection<Diff> SubDiffs<T>(
+        private static IReadOnlyList<SubDiff> SubDiffs<T>(
             T x,
             T y,
             PropertiesSettings settings,
@@ -96,7 +94,7 @@
 
                 if (diffs == null)
                 {
-                    diffs = new List<Diff>();
+                    diffs = new List<SubDiff>();
                 }
 
                 diffs.Add(propDiff);
@@ -131,7 +129,7 @@
                        : new ValueDiff(x, y, diffs);
         }
 
-        private static Diff PropertyValueDiff(
+        private static SubDiff PropertyValueDiff(
             object xValue,
             object yValue,
             PropertyInfo propertyInfo,

@@ -47,7 +47,7 @@
                 return diff;
             }
 
-            IReadOnlyCollection<Diff> diffs;
+            IReadOnlyList<SubDiff> diffs;
             using (var pairs = settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops
                                    ? ReferencePairCollection.Create()
                                    : null)
@@ -60,7 +60,7 @@
                        : new ValueDiff(x, y, diffs);
         }
 
-        private static IReadOnlyCollection<Diff> SubDiffs<T>(
+        private static IReadOnlyList<SubDiff> SubDiffs<T>(
             T x,
             T y,
             FieldsSettings settings,
@@ -84,18 +84,18 @@
                     continue;
                 }
 
-                var propDiff = FieldValueDiff(xv, yv, fieldInfo, settings, referencePairs);
-                if (propDiff == null)
+                var fieldValueDiff = FieldValueDiff(xv, yv, fieldInfo, settings, referencePairs);
+                if (fieldValueDiff == null)
                 {
                     continue;
                 }
 
                 if (diffs == null)
                 {
-                    diffs = new List<Diff>();
+                    diffs = new List<SubDiff>();
                 }
 
-                diffs.Add(propDiff);
+                diffs.Add(fieldValueDiff);
             }
 
             return diffs;
@@ -127,7 +127,7 @@
                        : new ValueDiff(x, y, diffs);
         }
 
-        private static Diff FieldValueDiff(
+        private static SubDiff FieldValueDiff(
             object xValue,
             object yValue,
             FieldInfo fieldInfo,

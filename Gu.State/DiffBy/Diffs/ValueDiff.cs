@@ -12,7 +12,7 @@
             this.Y = yValue;
         }
 
-        public ValueDiff(object xValue, object yValue, IReadOnlyCollection<Diff> diffs)
+        public ValueDiff(object xValue, object yValue, IReadOnlyList<SubDiff> diffs)
             : base(diffs)
         {
             this.X = xValue;
