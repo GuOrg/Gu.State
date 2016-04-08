@@ -49,6 +49,7 @@
     <Compile Include="DiffBy\Diffs\IndexDiff.cs" />
     <Compile Include="DiffBy\Diffs\MemberDiff.cs" />
     <Compile Include="DiffBy\Diffs\PropertyDiff.cs" />
+    <Compile Include="DiffBy\Diffs\SubDiff.cs" />
     <Compile Include="DiffBy\Diffs\ValueDiff.cs" />
     <Compile Include="EqualBy\Comparers\ArrayEqualByComparer.cs" />
     <Compile Include="EqualBy\Comparers\DictionaryEqualByComparer.cs" />

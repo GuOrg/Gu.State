@@ -5,14 +5,14 @@
 
     public abstract class Diff
     {
-        private static readonly IReadOnlyCollection<Diff> Empty = new Diff[0];
+        private static readonly IReadOnlyList<SubDiff> Empty = new SubDiff[0];
 
-        internal Diff(IReadOnlyCollection<Diff> diffs = null)
+        internal Diff(IReadOnlyList<SubDiff> diffs = null)
         {
             this.Diffs = diffs ?? Empty;
         }
 
-        public IReadOnlyCollection<Diff> Diffs { get; }
+        public IReadOnlyList<SubDiff> Diffs { get; }
 
         public abstract string ToString(string tabString, string newLine);
 

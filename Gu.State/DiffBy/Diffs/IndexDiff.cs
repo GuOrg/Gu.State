@@ -3,31 +3,24 @@ namespace Gu.State
     using System.CodeDom.Compiler;
     using System.IO;
 
-    public class IndexDiff : Diff
+    public class IndexDiff : SubDiff
     {
-        private readonly ValueDiff valueDiff;
-
         public IndexDiff(object index, object xValue, object yValue)
             : this(index, new ValueDiff(xValue, yValue))
         {
         }
 
         public IndexDiff(object index, ValueDiff valueDiff)
-            :base(valueDiff.Diffs)
+             : base(valueDiff)
         {
             this.Index = index;
-            this.valueDiff = valueDiff;
         }
 
         public object Index { get; }
 
-        public object X => this.valueDiff.X;
-
-        public object Y => this.valueDiff.Y;
-
         public override string ToString()
         {
-            return $"[{this.Index}] {this.valueDiff} diffs: {this.Diffs.Count}";
+            return $"[{this.Index}] {this.ValueDiff} diffs: {this.Diffs.Count}";
         }
 
         public override string ToString(string tabString, string newLine)

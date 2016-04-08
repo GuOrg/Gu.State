@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     internal static class EnumerableExt
     {
@@ -22,30 +23,15 @@
             }
         }
 
-        internal static IEnumerable<TSource> Except<TSource, TValue>(this IEnumerable<TSource> source, Func<TValue, bool> filter)
-            where TValue : class, TSource
-        {
-            foreach (var item in source)
-            {
-                var value = item as TValue;
-                if (value != null && filter(value))
-                {
-                    continue;
-                }
-
-                yield return item;
-            }
-        }
-
         internal static IEnumerable<TSource> Append<TSource>(this IEnumerable<TSource> source, TSource element)
         {
-            Ensure.NotNull(source, nameof(source));
+            Debug.Assert(source != null, "source == null");
             return AppendIterator(source, element);
         }
 
         internal static IEnumerable<TSource> Prepend<TSource>(this IEnumerable<TSource> source, TSource element)
         {
-            Ensure.NotNull(source, nameof(source));
+            Debug.Assert(source != null, "source == null");
             return PrependIterator(source, element);
         }
 

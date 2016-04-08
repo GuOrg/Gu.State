@@ -1,6 +1,7 @@
 ﻿namespace Gu.State
 {
-    using System.Linq;
+    using System;
+    using System.Collections.Generic;
     using System.Reflection;
 
     internal static class DiffExt
@@ -12,17 +13,10 @@
                 return null;
             }
 
-            if (source.Diffs.OfType<PropertyDiff>()
-                            .Any(x => x.PropertyInfo == propertyInfo))
-            {
-                var diffs = source.Diffs.Except<Diff, PropertyDiff>(x => x.PropertyInfo == propertyInfo)
-                                .ToArray();
-                return diffs.Any()
-                           ? new ValueDiff(source.X, source.Y, diffs)
-                           : null;
-            }
-
-            return source;
+            var diffs = RemoveDiff(source, diff => IsPropertyMatch(diff, propertyInfo));
+            return diffs.Count == 0
+                       ? null
+                       : new ValueDiff(source.X, source.Y, diffs);
         }
 
         internal static ValueDiff Without(this ValueDiff source, int index)
@@ -32,49 +26,96 @@
                 return null;
             }
 
-            if (source.Diffs.OfType<IndexDiff>()
-                    .Any(x => (int)x.Index == index))
-            {
-                var diffs = source.Diffs.Except<Diff, IndexDiff>(x => (int)x.Index == index)
-                                  .ToArray();
-                return diffs.Any()
-                           ? new ValueDiff(source.X, source.Y, diffs)
-                           : null;
-            }
-
-            return source;
+            var diffs = RemoveDiff(source, diff => IsIndexMatch(diff, index));
+            return diffs.Count == 0
+                       ? null
+                       : new ValueDiff(source.X, source.Y, diffs);
         }
 
         internal static ValueDiff With(this ValueDiff source, object x, object y, PropertyInfo propertyInfo, ValueDiff propertyValueDiff)
         {
-            var propertyDiff = new PropertyDiff(propertyInfo, propertyValueDiff);
-
             if (source == null)
             {
-                return new ValueDiff(x, y, new Diff[] { propertyDiff });
+                var propertyDiff = new PropertyDiff(propertyInfo, propertyValueDiff);
+                return new ValueDiff(x, y, new[] { propertyDiff });
             }
 
-            var diffs = source.Diffs.Except<Diff, PropertyDiff>(d => d.PropertyInfo == propertyInfo)
-                              .Append(propertyDiff)
-                              .ToArray();
-
-            return new ValueDiff(source.X, source.Y, diffs);
+            var diffs = source.Diffs.ReplaceOdAdd(diff => IsPropertyMatch(diff, propertyInfo), new PropertyDiff(propertyInfo, propertyValueDiff));
+            return new ValueDiff(x, y, diffs);
         }
 
         internal static ValueDiff With(this ValueDiff source, object x, object y, int index, ValueDiff indexValueDiff)
         {
-            var propertyDiff = new IndexDiff(index, indexValueDiff);
-
             if (source == null)
             {
-                return new ValueDiff(x, y, new Diff[] { propertyDiff });
+                var indexDiff = new IndexDiff(index, indexValueDiff);
+                return new ValueDiff(x, y, new[] { indexDiff });
             }
 
-            var diffs = source.Diffs.Except<Diff, IndexDiff>(d => (int)d.Index == index)
-                              .Append(propertyDiff)
-                              .ToArray();
+            var diffs = source.Diffs.ReplaceOdAdd(diff => IsIndexMatch(diff, index), new IndexDiff(index, indexValueDiff));
+            return new ValueDiff(x, y, diffs);
+        }
 
-            return new ValueDiff(source.X, source.Y, diffs);
+        private static bool IsIndexMatch(Diff diff, int index)
+        {
+            var indexDiff = diff as IndexDiff;
+            if (indexDiff == null)
+            {
+                return false;
+            }
+
+            return (int)indexDiff.Index == index;
+        }
+
+        private static bool IsPropertyMatch(Diff diff, PropertyInfo propertyInfo)
+        {
+            var propertyDiff = diff as PropertyDiff;
+            if (propertyDiff == null)
+            {
+                return false;
+            }
+
+            return propertyDiff.PropertyInfo == propertyInfo;
+        }
+
+        private static IReadOnlyList<SubDiff> ReplaceOdAdd(this IReadOnlyList<SubDiff> source, Func<SubDiff, bool> isMatch, SubDiff newDiff)
+        {
+            var result = new List<SubDiff>(source.Count);
+            bool replaced = false;
+            foreach (var item in source)
+            {
+                if (isMatch(item))
+                {
+                    replaced = true;
+                    result.Add(newDiff);
+                    continue;
+                }
+
+                result.Add(item);
+            }
+
+            if (!replaced)
+            {
+                result.Add(newDiff);
+            }
+
+            return result;
+        }
+
+        private static IReadOnlyList<SubDiff> RemoveDiff(this ValueDiff source, Func<SubDiff, bool> isMatch)
+        {
+            var result = new List<SubDiff>(source.Diffs.Count);
+            foreach (var item in source.Diffs)
+            {
+                if (isMatch(item))
+                {
+                    continue;
+                }
+
+                result.Add(item);
+            }
+
+            return result;
         }
     }
 }
