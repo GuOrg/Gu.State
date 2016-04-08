@@ -170,6 +170,9 @@
         public class With<T> : INotifyPropertyChanged
         {
             private T value;
+
+            private string name;
+
             public event PropertyChangedEventHandler PropertyChanged;
 
             public T Value
@@ -179,6 +182,23 @@
                 {
                     if (Equals(value, this.value)) return;
                     this.value = value;
+                    this.OnPropertyChanged();
+                }
+            }
+
+            public string Name
+            {
+                get
+                {
+                    return this.name;
+                }
+                set
+                {
+                    if (value == this.name)
+                    {
+                        return;
+                    }
+                    this.name = value;
                     this.OnPropertyChanged();
                 }
             }

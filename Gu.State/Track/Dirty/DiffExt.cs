@@ -130,42 +130,58 @@
                 result.Add(subDiff);
             }
 
-            if (result.Count == 1 && match != null)
+            return RemoveRecursiveMatches(result, match, isMatch);
+        }
+
+        private static IReadOnlyList<SubDiff> RemoveRecursiveMatches(List<SubDiff> diffs, SubDiff removed, Func<SubDiff, bool> isMatch)
+        {
+            if (removed == null || diffs.Count != 1)
             {
-                var diffs = SingleItemDiffs(result[0]);
-                if (diffs != null)
+                return diffs;
+            }
+
+            using (var disposer = Diff.BorrowReferenceList())
+            {
+                var singles = SingleItemDiffs(diffs[0], disposer.Value);
+                if (singles != null)
                 {
-                    var node = diffs[diffs.Count - 1].Diffs[0];
-                    if (isMatch(node) && Equals(match.X, node.X) && Equals(match.Y, node.Y))
+                    var node = singles[singles.Count - 1];
+                    if (isMatch(node) && Equals(removed.X, node.X) && Equals(removed.Y, node.Y))
                     {
-                        result.Clear();
+                        diffs.Clear();
                     }
                 }
             }
 
-            return result;
+            return diffs;
         }
 
-        private static IReadOnlyList<SubDiff> SingleItemDiffs(SubDiff diff, List<SubDiff> diffs = null)
+        private static List<SubDiff> SingleItemDiffs(SubDiff diff, List<SubDiff> diffs)
         {
+            if (diffs == null)
+            {
+                return null;
+            }
+
+            if (diff.Diffs.Count == 0)
+            {
+                diffs.Add(diff);
+                return diffs;
+            }
+
             if (diff.Diffs.Count != 1)
             {
                 return null;
             }
 
-            if (diffs == null)
-            {
-                diffs = new List<SubDiff>();
-            }
-
             if (diffs.Contains(diff))
             {
-                return null;
+                diffs.Add(diff.Diffs[0]);
+                return diffs;
             }
 
             diffs.Add(diff);
-            SingleItemDiffs(diff.Diffs[0], diffs);
-
+            diffs = SingleItemDiffs(diff.Diffs[0], diffs);
             return diffs;
         }
     }

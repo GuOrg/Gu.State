@@ -1,6 +1,7 @@
 namespace Gu.State
 {
     using System.CodeDom.Compiler;
+    using System.Collections.Generic;
     using System.IO;
 
     public class IndexDiff : SubDiff
@@ -33,13 +34,25 @@ namespace Gu.State
             using (var writer = new IndentedTextWriter(new StringWriter(), tabString) { NewLine = newLine })
             {
                 writer.WriteLine(this.Index);
-                this.WriteDiffs(writer);
+                using (var disposer = BorrowReferenceList())
+                {
+                    this.WriteDiffs(writer, disposer.Value);
+                }
+
                 return writer.InnerWriter.ToString();
             }
         }
 
-        internal override IndentedTextWriter WriteDiffs(IndentedTextWriter writer)
+        internal override IndentedTextWriter WriteDiffs(IndentedTextWriter writer, List<SubDiff> written)
         {
+            if (written.Contains(this))
+            {
+                writer.Write("...");
+                return writer;
+            }
+
+            written.Add(this);
+
             if (this.Diffs.Count == 0)
             {
                 writer.Write($"[{this.Index}] x: {this.X ?? "null"} y: {this.Y ?? "null"}");
@@ -51,7 +64,7 @@ namespace Gu.State
             foreach (var diff in this.Diffs)
             {
                 writer.WriteLine();
-                diff.WriteDiffs(writer);
+                diff.WriteDiffs(writer, written);
             }
 
             writer.Indent--;
