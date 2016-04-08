@@ -38,18 +38,22 @@
             using (var writer = new IndentedTextWriter(new StringWriter(), tabString) { NewLine = newLine })
             {
                 writer.Write(this.X.GetType().PrettyName());
-                this.WriteDiffs(writer);
+                using (var disposer = BorrowReferenceList())
+                {
+                    this.WriteDiffs(writer, disposer.Value);
+                }
+
                 return writer.InnerWriter.ToString();
             }
         }
 
-        internal override IndentedTextWriter WriteDiffs(IndentedTextWriter writer)
+        internal override IndentedTextWriter WriteDiffs(IndentedTextWriter writer, List<SubDiff> written)
         {
             writer.Indent++;
             foreach (var diff in this.Diffs)
             {
                 writer.WriteLine();
-                diff.WriteDiffs(writer);
+                diff.WriteDiffs(writer, written);
             }
 
             writer.Indent--;
