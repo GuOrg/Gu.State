@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Reflection;
 
     internal static class DiffExt
@@ -32,7 +33,12 @@
                        : new ValueDiff(source.X, source.Y, diffs);
         }
 
-        internal static ValueDiff With(this ValueDiff source, object x, object y, PropertyInfo propertyInfo, ValueDiff propertyValueDiff)
+        internal static ValueDiff With(
+            this ValueDiff source,
+            object x,
+            object y,
+            PropertyInfo propertyInfo,
+            ValueDiff propertyValueDiff)
         {
             if (source == null)
             {
@@ -40,7 +46,9 @@
                 return new ValueDiff(x, y, new[] { propertyDiff });
             }
 
-            var diffs = source.Diffs.ReplaceOdAdd(diff => IsPropertyMatch(diff, propertyInfo), new PropertyDiff(propertyInfo, propertyValueDiff));
+            var diffs = source.Diffs.ReplaceOdAdd(
+                diff => IsPropertyMatch(diff, propertyInfo),
+                new PropertyDiff(propertyInfo, propertyValueDiff));
             return new ValueDiff(x, y, diffs);
         }
 
@@ -52,7 +60,9 @@
                 return new ValueDiff(x, y, new[] { indexDiff });
             }
 
-            var diffs = source.Diffs.ReplaceOdAdd(diff => IsIndexMatch(diff, index), new IndexDiff(index, indexValueDiff));
+            var diffs = source.Diffs.ReplaceOdAdd(
+                diff => IsIndexMatch(diff, index),
+                new IndexDiff(index, indexValueDiff));
             return new ValueDiff(x, y, diffs);
         }
 
@@ -78,7 +88,10 @@
             return propertyDiff.PropertyInfo == propertyInfo;
         }
 
-        private static IReadOnlyList<SubDiff> ReplaceOdAdd(this IReadOnlyList<SubDiff> source, Func<SubDiff, bool> isMatch, SubDiff newDiff)
+        private static IReadOnlyList<SubDiff> ReplaceOdAdd(
+            this IReadOnlyList<SubDiff> source,
+            Func<SubDiff, bool> isMatch,
+            SubDiff newDiff)
         {
             var result = new List<SubDiff>(source.Count);
             bool replaced = false;
@@ -105,17 +118,55 @@
         private static IReadOnlyList<SubDiff> RemoveDiff(this ValueDiff source, Func<SubDiff, bool> isMatch)
         {
             var result = new List<SubDiff>(source.Diffs.Count);
-            foreach (var item in source.Diffs)
+            SubDiff match = null;
+            foreach (var subDiff in source.Diffs)
             {
-                if (isMatch(item))
+                if (isMatch(subDiff))
                 {
+                    match = subDiff;
                     continue;
                 }
 
-                result.Add(item);
+                result.Add(subDiff);
+            }
+
+            if (result.Count == 1 && match != null)
+            {
+                var diffs = SingleItemDiffs(result[0]);
+                if (diffs != null)
+                {
+                    var node = diffs[diffs.Count - 1].Diffs[0];
+                    if (isMatch(node) && Equals(match.X, node.X) && Equals(match.Y, node.Y))
+                    {
+                        result.Clear();
+                    }
+                }
             }
 
             return result;
+        }
+
+        private static IReadOnlyList<SubDiff> SingleItemDiffs(SubDiff diff, List<SubDiff> diffs = null)
+        {
+            if (diff.Diffs.Count != 1)
+            {
+                return null;
+            }
+
+            if (diffs == null)
+            {
+                diffs = new List<SubDiff>();
+            }
+
+            if (diffs.Contains(diff))
+            {
+                return null;
+            }
+
+            diffs.Add(diff);
+            SingleItemDiffs(diff.Diffs[0], diffs);
+
+            return diffs;
         }
     }
 }
