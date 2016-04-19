@@ -18,7 +18,7 @@ namespace Gu.State
         /// <param name="referenceHandling">
         /// If Structural is used a deep equals is performed.
         /// Default value is Throw
-        /// </param>/// 
+        /// </param>
         /// <param name="bindingFlags">The binding flags to use when getting fields</param>
         /// <returns>True if <paramref name="x"/> and <paramref name="y"/> are equal</returns>
         public static bool FieldValues<T>(

@@ -66,6 +66,11 @@
         /// To check if type implements IEquatable{string}
         /// Call like this type.Implements(typeof(IEquatable&lt;&gt;)
         /// </summary>
+        /// <param name="type">The type</param>
+        /// <param name="interface">
+        /// The interface type, can be an open interface IEnumerable{}
+        /// </param>
+        /// <returns>True if <paramref name="type"/> implements <paramref name="interface"/></returns>
         internal static bool Implements(this Type type, Type @interface)
         {
             Debug.Assert(@interface.IsInterface, "genericInterface must be an interface type");
@@ -103,9 +108,13 @@
         }
 
         /// <summary>
-        /// To check if type implements IEquatable{string}
-        /// Call like this type.Implements(typeof(IEquatable&lt;&gt;, typeof(string))
+        /// To check if type implements <paramref name="genericInterface"/>lt;<paramref name="genericArgument"/>&gt;
+        /// Call like this type.Implements(typeof(IEquatable&lt;&gt;), typeof(string))
         /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="genericInterface">Example typeof(IEquatable&lt;&gt;)</param>
+        /// <param name="genericArgument">Example typeof(string)</param>
+        /// <returns>True is <paramref name="type"/> implements <paramref name="genericInterface"/>lt;<paramref name="genericArgument"/>&gt;</returns>
         internal static bool Implements(this Type type, Type genericInterface, Type genericArgument)
         {
             if (type.IsInterface &&

@@ -53,6 +53,30 @@
             }
         }
 
+        internal static void PropertyValue(object source, object target, PropertyInfo propertyInfo)
+        {
+            if (propertyInfo == null)
+            {
+                return;
+            }
+
+            var sourceValue = propertyInfo.GetValue(source);
+            if (propertyInfo.CanWrite)
+            {
+                propertyInfo.SetValue(target, sourceValue);
+            }
+            else
+            {
+                var targetValue = propertyInfo.GetValue(target);
+                if (!Equals(sourceValue, targetValue))
+                {
+                    var message = "There is a bug in the library as it:\r\n"
+                                  + $"Tried to copy the value of the readonly property {source.GetType().PrettyName()}{propertyInfo.Name}.";
+                    throw new InvalidOperationException(message);
+                }
+            }
+        }
+
         private static void CopyPropertiesValues<T>(T source, T target, PropertiesSettings settings, ReferencePairCollection referencePairs)
             where T : class
         {
@@ -191,30 +215,6 @@
                 if (!EqualBy.PropertyValues(sv, tv, settings))
                 {
                     Throw.ReadonlyMemberDiffers(new SourceAndTargetValue(source, sv, target, tv), propertyInfo, settings);
-                }
-            }
-        }
-
-        internal static void PropertyValue(object source, object target, PropertyInfo propertyInfo)
-        {
-            if (propertyInfo == null)
-            {
-                return;
-            }
-
-            var sourceValue = propertyInfo.GetValue(source);
-            if (propertyInfo.CanWrite)
-            {
-                propertyInfo.SetValue(target, sourceValue);
-            }
-            else
-            {
-                var targetValue = propertyInfo.GetValue(target);
-                if (!Equals(sourceValue, targetValue))
-                {
-                    var message = "There is a bug in the library as it:\r\n"
-                                  + $"Tried to copy the value of the readonly property {source.GetType().PrettyName()}{propertyInfo.Name}.";
-                    throw new InvalidOperationException(message);
                 }
             }
         }

@@ -2,6 +2,7 @@ namespace Gu.State
 {
     using System;
 
+    /// <inheritdoc />
     public class ArrayEqualByComparer : EqualByComparer
     {
         public static readonly ArrayEqualByComparer Default = new ArrayEqualByComparer();
@@ -22,6 +23,7 @@ namespace Gu.State
             return false;
         }
 
+        /// <inheritdoc />
         public override bool Equals<TSetting>(
             object x,
             object y,

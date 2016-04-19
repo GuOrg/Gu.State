@@ -22,7 +22,7 @@
             if (errors.AllErrors.OfType<UnsupportedIndexer>().Any())
             {
                 errorBuilder.AppendLine("Indexers are not supported.");
-                foreach (var indexer in errors.AllErrors.OfType<UnsupportedIndexer>().Select(x=>x.Indexer).Distinct())
+                foreach (var indexer in errors.AllErrors.OfType<UnsupportedIndexer>().Select(x => x.Indexer).Distinct())
                 {
                     errorBuilder.AppendNotSupportedMember(indexer);
                 }

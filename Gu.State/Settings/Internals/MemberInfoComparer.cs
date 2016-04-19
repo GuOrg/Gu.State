@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Reflection;
 
+    /// <inheritdoc />
     internal class MemberInfoComparer<T> : IEqualityComparer<T>
         where T : MemberInfo
     {
@@ -12,16 +13,16 @@
         {
         }
 
+        /// <inheritdoc />
         public bool Equals(T x, T y)
         {
             return x.Name == y.Name && x.DeclaringType == y.DeclaringType;
         }
 
-        /// <summary>
-        /// http://stackoverflow.com/a/263416/1069200
-        /// </summary>
+        /// <inheritdoc />
         public int GetHashCode(T obj)
         {
+            // http://stackoverflow.com/a/263416/1069200 
             unchecked
             {
                 int hash = (int)2166136261;

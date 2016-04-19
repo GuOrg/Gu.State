@@ -4,6 +4,9 @@
     using System.Reflection;
     using System.Reflection.Emit;
 
+    /// <summary>Creates delegates for getting and setting the member.</summary>
+    /// <typeparam name="TSource">The source type.</typeparam>
+    /// <typeparam name="TValue">The value type.</typeparam>
     internal class GetterAndSetter<TSource, TValue> : IGetterAndSetter
     {
         public readonly Action<TSource, TValue> Setter;
@@ -12,24 +15,22 @@
         public GetterAndSetter(PropertyInfo propertyInfo)
         {
             this.Setter = propertyInfo.CanWrite
-                              ? (Action<TSource, TValue>)
-                                propertyInfo.SetMethod.CreateDelegate(typeof(Action<TSource, TValue>))
+                              ? (Action<TSource, TValue>)propertyInfo.SetMethod.CreateDelegate(typeof(Action<TSource, TValue>))
                               : null;
             this.Getter = propertyInfo.CanRead
-                              ? (Func<TSource, TValue>)
-                                propertyInfo.GetMethod.CreateDelegate(typeof(Func<TSource, TValue>))
+                              ? (Func<TSource, TValue>)propertyInfo.GetMethod.CreateDelegate(typeof(Func<TSource, TValue>))
                               : null;
         }
-
-        public Type SourceType => typeof(TSource);
-
-        public Type ValueType => typeof(TValue);
 
         public GetterAndSetter(FieldInfo fieldInfo)
         {
             this.Setter = CreateSetterDelegate(fieldInfo);
             this.Getter = CreateGetterDelegate(fieldInfo);
         }
+
+        public Type SourceType => typeof(TSource);
+
+        public Type ValueType => typeof(TValue);
 
         public void SetValue(object source, object value)
         {

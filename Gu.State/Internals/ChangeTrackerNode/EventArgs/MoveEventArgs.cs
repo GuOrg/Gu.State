@@ -2,7 +2,6 @@
 {
     internal struct MoveEventArgs
     {
-
         internal readonly int FromIndex;
 
         internal readonly int ToIndex;
