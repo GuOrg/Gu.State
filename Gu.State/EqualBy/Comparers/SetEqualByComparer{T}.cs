@@ -4,8 +4,10 @@
     using System.Collections.Concurrent;
     using System.Collections.Generic;
 
+    /// <inheritdoc />
     public class SetEqualByComparer<T> : EqualByComparer
     {
+        /// <summary>The default instance.</summary>
         public static readonly SetEqualByComparer<T> Default = new SetEqualByComparer<T>();
         private readonly SetPool pool = new SetPool();
 
@@ -13,6 +15,7 @@
         {
         }
 
+        /// <inheritdoc />
         public override bool Equals<TSetting>(
             object x,
             object y,

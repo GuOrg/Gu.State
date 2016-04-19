@@ -37,15 +37,7 @@
                              .Single();
         }
 
-        private static Type GetIEnumerableOfT(this Type type)
-        {
-            var enumerable = type.GetInterfaces()
-                                    .Where(i => i.IsGenericType)
-                                    .SingleOrDefault(i => i.GetGenericTypeDefinition() == typeof(IEnumerable<>));
-            return enumerable;
-        }
-
-        public static bool IsNullable(this Type type)
+        internal static bool IsNullable(this Type type)
         {
             if (type.IsGenericType && !type.IsGenericTypeDefinition)
             {
@@ -144,6 +136,14 @@
 
             var genericArguments = type.GetGenericArguments();
             return genericArguments.Length == 1 && genericArguments[0] == genericArgument;
+        }
+
+        private static Type GetIEnumerableOfT(this Type type)
+        {
+            var enumerable = type.GetInterfaces()
+                                 .Where(i => i.IsGenericType)
+                                 .SingleOrDefault(i => i.GetGenericTypeDefinition() == typeof(IEnumerable<>));
+            return enumerable;
         }
     }
 }

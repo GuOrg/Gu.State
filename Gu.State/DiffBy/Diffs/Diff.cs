@@ -4,6 +4,7 @@
     using System.Collections.Concurrent;
     using System.Collections.Generic;
 
+    /// <summary>A node in a diff tree.</summary>
     public abstract class Diff
     {
         private static readonly IReadOnlyList<SubDiff> Empty = new SubDiff[0];
@@ -13,6 +14,7 @@
             this.Diffs = diffs ?? Empty;
         }
 
+        /// <summary>Gets the diffs for properties and indexes.</summary>
         public IReadOnlyList<SubDiff> Diffs { get; }
 
         /// <summary>

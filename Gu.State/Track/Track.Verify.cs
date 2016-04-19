@@ -2,10 +2,10 @@
 {
     using System;
     using System.ComponentModel;
-    using System.Linq;
     using System.Reflection;
     using System.Text;
 
+    /// <summary>Provides methods for tracking stuff.</summary>
     public static partial class Track
     {
         /// <summary>

@@ -5,20 +5,30 @@ namespace Gu.State
     using System.IO;
     using System.Reflection;
 
+    /// <summary>A diff for a member.</summary>
+    /// <typeparam name="T">The member.</typeparam>
     public abstract class MemberDiff<T> : SubDiff
         where T : MemberInfo
     {
+        /// <summary> Initializes a new instance of the <see cref="MemberDiff{T}"/> class.</summary>
+        /// <param name="memberInfo">The member.</param>
+        /// <param name="xValue">The x value of the <paramref name="memberInfo"/></param>
+        /// <param name="yValue">The y value of the <paramref name="memberInfo"/></param>
         protected MemberDiff(T memberInfo, object xValue, object yValue)
             : this(memberInfo, new ValueDiff(xValue, yValue))
         {
         }
 
+        /// <summary> Initializes a new instance of the <see cref="MemberDiff{T}"/> class.</summary>
+        /// <param name="memberInfo">The member.</param>
+        /// <param name="diff">The <see cref="ValueDiff"/> for the <paramref name="memberInfo"/></param>
         protected MemberDiff(T memberInfo, ValueDiff diff)
             : base(diff)
         {
             this.MemberyInfo = memberInfo;
         }
 
+        /// <summary>Gets the member.</summary>
         protected T MemberyInfo { get; }
 
         /// <inheritdoc />

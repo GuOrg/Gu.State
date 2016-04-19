@@ -40,13 +40,22 @@
         /// <returns>Diff.Empty if <paramref name="x"/> and <paramref name="y"/> are equal</returns>
         public static Diff FieldValues<T>(T x, T y, FieldsSettings settings)
         {
+            Ensure.NotNull(x, nameof(x));
+            Ensure.NotNull(y, nameof(y));
+            Ensure.NotNull(settings, nameof(settings));
             EqualBy.Verify.CanEqualByFieldValues(x, y, settings, typeof(DiffBy).Name, nameof(FieldValues));
+            return FieldValuesCore(x, y, settings) ?? new EmptyDiff(x, y);
+        }
+
+        private static Diff FieldValuesCore<T>(T x, T y, FieldsSettings settings)
+        {
             ValueDiff diff;
             if (TryGetValueDiff(x, y, settings, out diff))
             {
                 return diff;
             }
 
+            EqualBy.Verify.CanEqualByFieldValues(x, y, settings, typeof(DiffBy).Name, nameof(FieldValues));
             IReadOnlyList<SubDiff> diffs;
             using (var pairs = settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops
                                    ? ReferencePairCollection.Create()

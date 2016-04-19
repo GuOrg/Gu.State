@@ -11,7 +11,7 @@
     /// The type to synchronize must implement <see cref="INotifyPropertyChanged"/>
     /// Collection must implement <see cref="System.Collections.Specialized.INotifyCollectionChanged"/>
     /// All types in the graph muct be either notifying or immutable.
-    /// </typeparam> 
+    /// </typeparam>
     [DebuggerDisplay("DirtyTracker<{typeof(T).Name}> IsDirty: {IsDirty}")]
     public sealed class DirtyTracker<T> : DirtyTracker, INotifyPropertyChanged, IDisposable
         where T : class, INotifyPropertyChanged
