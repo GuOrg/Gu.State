@@ -8,13 +8,12 @@ namespace Gu.State
     public abstract class MemberDiff<T> : SubDiff
         where T : MemberInfo
     {
-
-        public MemberDiff(T memberInfo, object xValue, object yValue)
+        protected MemberDiff(T memberInfo, object xValue, object yValue)
             : this(memberInfo, new ValueDiff(xValue, yValue))
         {
         }
 
-        public MemberDiff(T memberInfo, ValueDiff diff)
+        protected MemberDiff(T memberInfo, ValueDiff diff)
             : base(diff)
         {
             this.MemberyInfo = memberInfo;
@@ -22,11 +21,13 @@ namespace Gu.State
 
         protected T MemberyInfo { get; }
 
+        /// <inheritdoc />
         public override string ToString()
         {
             return $"{this.MemberyInfo.Name} {this.ValueDiff} diffs: {this.Diffs.Count}";
         }
 
+        /// <inheritdoc />
         public override string ToString(string tabString, string newLine)
         {
             if (this.Diffs.Count == 0)

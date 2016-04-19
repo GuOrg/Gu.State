@@ -111,14 +111,14 @@
         internal MemberPath WithProperty(PropertyInfo propertyInfo)
         {
             Debug.Assert(propertyInfo != null, nameof(propertyInfo));
-            //Debug.Assert(this.LastNodeType.GetProperties().Contains(propertyInfo) != false, "Must contain property");
+            ////Debug.Assert(this.LastNodeType.GetProperties().Contains(propertyInfo) != false, "Must contain property");
             return new MemberPath(this.Root, this.Path.Append(new PropertyItem(propertyInfo)));
         }
 
         internal MemberPath WithField(FieldInfo fieldInfo)
         {
             Debug.Assert(fieldInfo != null, nameof(fieldInfo));
-            //Debug.Assert(this.LastNodeType.GetFields().Contains(fieldInfo) != false, "Must contain property");
+            ////Debug.Assert(this.LastNodeType.GetFields().Contains(fieldInfo) != false, "Must contain property");
             return new MemberPath(this.Root, this.Path.Append(new FieldItem(fieldInfo)));
         }
 
@@ -127,7 +127,7 @@
             return new MemberPath(this.Root, this.Path.Append(new IndexItem(index)));
         }
 
-        public bool HasLoop()
+        internal bool HasLoop()
         {
             var lastOrDefault = this.Path.OfType<IMemberItem>()
                                     .LastOrDefault();

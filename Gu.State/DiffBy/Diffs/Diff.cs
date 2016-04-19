@@ -15,14 +15,20 @@
 
         public IReadOnlyList<SubDiff> Diffs { get; }
 
+        /// <summary>
+        /// Creates a report for all diffs
+        /// </summary>
+        /// <param name="tabString">The string to use for indentation.</param>
+        /// <param name="newLine">The newline ex: <see cref="System.Environment.NewLine"/></param>
+        /// <returns>A report with all diffs.</returns>
         public abstract string ToString(string tabString, string newLine);
-
-        internal abstract IndentedTextWriter WriteDiffs(IndentedTextWriter writer, List<SubDiff> written);
 
         internal static Disposer<List<SubDiff>> BorrowReferenceList()
         {
             return ReferenceListPool.Borrow();
         }
+
+        internal abstract IndentedTextWriter WriteDiffs(IndentedTextWriter writer, List<SubDiff> written);
 
         private static class ReferenceListPool
         {

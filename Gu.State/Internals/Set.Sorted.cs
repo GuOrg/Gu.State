@@ -157,10 +157,10 @@
 
         internal struct Indices
         {
+            public static readonly Indices None = new Indices(int.MinValue, int.MinValue);
+
             internal readonly int First;
             internal readonly int Last;
-
-            public static readonly Indices None = new Indices(int.MinValue, int.MinValue);
 
             public Indices(int first, int last)
             {

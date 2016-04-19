@@ -1,6 +1,6 @@
 ﻿namespace Gu.State
 {
-    interface IRefCounted<TValue>
+    internal interface IRefCounted<out TValue>
         where TValue : IRefCountable
     {
         TValue Tracker { get; }

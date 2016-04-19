@@ -24,11 +24,6 @@ namespace Gu.State
             return !ReferenceEquals(left, right);
         }
 
-        private bool Equals(RequiresReferenceHandling other)
-        {
-            return ReferenceEquals(this, other);
-        }
-
         public override bool Equals(object obj)
         {
             return ReferenceEquals(this, obj);
@@ -37,6 +32,11 @@ namespace Gu.State
         public override int GetHashCode()
         {
             return this.type.GetHashCode();
+        }
+
+        private bool Equals(RequiresReferenceHandling other)
+        {
+            return ReferenceEquals(this, other);
         }
     }
 }

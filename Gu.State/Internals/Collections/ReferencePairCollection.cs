@@ -12,6 +12,7 @@
         {
         }
 
+        /// <inheritdoc />
         public void Dispose()
         {
             this.pairs.Clear();

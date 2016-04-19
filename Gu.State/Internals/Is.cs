@@ -15,7 +15,7 @@
             return x.GetType().GetItemType() == y.GetType().GetItemType();
         }
 
-        public static bool Enumerable(object source, object target)
+        internal static bool Enumerable(object source, object target)
         {
             return source is IEnumerable && target is IEnumerable;
         }
