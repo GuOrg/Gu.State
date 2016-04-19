@@ -17,10 +17,10 @@ namespace Gu.State.Tests.DiffTests
             var x = new HashSet<int> { 1, 2, 3 };
             var y = new HashSet<int> { 2, 3, 1 };
             var result = this.DiffMethod(x, y, referenceHandling);
-            Assert.AreEqual(null, result);
+            Assert.AreEqual("Empty", result.ToString());
 
             result = this.DiffMethod(y, x, referenceHandling);
-            Assert.AreEqual(null, result);
+            Assert.AreEqual("Empty", result.ToString());
         }
 
         [TestCase(ReferenceHandling.Structural)]
@@ -58,10 +58,10 @@ namespace Gu.State.Tests.DiffTests
             var x = new HashSet<DiffTypes.ComplexType>(DiffTypes.ComplexType.NameComparer) { new DiffTypes.ComplexType("a", 1) };
             var y = new HashSet<DiffTypes.ComplexType>(DiffTypes.ComplexType.NameComparer) { new DiffTypes.ComplexType("a", 1) };
             var result = this.DiffMethod(x, y, referenceHandling);
-            Assert.AreEqual(null, result);
+            Assert.AreEqual("Empty", result.ToString());
 
             result = this.DiffMethod(y, x, referenceHandling);
-            Assert.AreEqual(null, result);
+            Assert.AreEqual("Empty", result.ToString());
         }
 
         [TestCase(ReferenceHandling.Structural)]
@@ -99,10 +99,10 @@ namespace Gu.State.Tests.DiffTests
             var x = new HashSet<DiffTypes.HashCollisionType> { e1, e2 };
             var y = new HashSet<DiffTypes.HashCollisionType> { e2, e1 };
             var result = this.DiffMethod(x, y, referenceHandling);
-            Assert.AreEqual(null, result);
+            Assert.AreEqual("Empty", result.ToString());
 
             result = this.DiffMethod(y, x, referenceHandling);
-            Assert.AreEqual(null, result);
+            Assert.AreEqual("Empty", result.ToString());
         }
 
         [TestCase(ReferenceHandling.Structural)]

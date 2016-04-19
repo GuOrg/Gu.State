@@ -4,26 +4,37 @@ namespace Gu.State
     using System.Collections.Generic;
     using System.IO;
 
+    /// <summary>A diff for an item in a collection.</summary>
     public class IndexDiff : SubDiff
     {
+        /// <summary> Initializes a new instance of the <see cref="IndexDiff"/> class.</summary>
+        /// <param name="index">The index or key.</param>
+        /// <param name="xValue">The x value of the <paramref name="index"/></param>
+        /// <param name="yValue">The y value of the <paramref name="index"/></param>
         public IndexDiff(object index, object xValue, object yValue)
             : this(index, new ValueDiff(xValue, yValue))
         {
         }
 
+        /// <summary> Initializes a new instance of the <see cref="IndexDiff"/> class.</summary>
+        /// <param name="index">The property.</param>
+        /// <param name="valueDiff">The <see cref="ValueDiff"/> for the <paramref name="index"/></param>
         public IndexDiff(object index, ValueDiff valueDiff)
              : base(valueDiff)
         {
             this.Index = index;
         }
 
+        /// <summary>Gets the index or key.</summary>
         public object Index { get; }
 
+        /// <inheritdoc />
         public override string ToString()
         {
             return $"[{this.Index}] {this.ValueDiff} diffs: {this.Diffs.Count}";
         }
 
+        /// <inheritdoc />
         public override string ToString(string tabString, string newLine)
         {
             if (this.Diffs.Count == 0)

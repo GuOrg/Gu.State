@@ -9,6 +9,34 @@ namespace Gu.State.Tests
         public class ReferenceLoops
         {
             [Test]
+            public void ParentChildCreateWhenDirtyLoop()
+            {
+                Assert.Fail();
+                var changes = new List<string>();
+                var expectedChanges = new List<string>();
+                var x = new Parent { Name = "p1", Child = new Child("c") };
+                x.Child.Parent = x;
+                var y = new Parent { Name = "p2", Child = new Child("c") };
+                y.Child.Parent = y;
+                using (var tracker = Track.IsDirty(x, y, ReferenceHandling.StructuralWithReferenceLoops))
+                {
+                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+
+                    Assert.AreEqual(true, tracker.IsDirty);
+                    CollectionAssert.IsEmpty(changes);
+                    var expected = "Parent Name x: p1 y: p2 Child Parent ...";
+                    var actual = tracker.Diff.ToString("", " ");
+                    Assert.AreEqual(expected, actual);
+
+                    x.Name = y.Name;
+                    y.Name = x.Name;
+                    expectedChanges.Add("Diff", "IsDirty");
+                    CollectionAssert.AreEqual(expectedChanges, changes);
+                    Assert.AreEqual(false, tracker.IsDirty);
+                }
+            }
+
+            [Test]
             public void ParentChildRenameParentLast()
             {
                 var changes = new List<string>();
@@ -139,24 +167,31 @@ namespace Gu.State.Tests
                     actual = tracker.Diff.ToString("", " ");
                     Assert.AreEqual(expected, actual);
 
-                    //x.Child.Parent = x;
-                    //CollectionAssert.AreEqual(expectedChanges, changes);
-                    //Assert.AreEqual("Parent Name x: Poppa y: null Child x: Gu.State.Tests.ChangeTrackerTypes+Child y: null", tracker.Diff.ToString("", " "));
+                    x.Value.Child.Parent = x.Value;
+                    expectedChanges.Add("Diff");
+                    CollectionAssert.AreEqual(expectedChanges, changes);
+                    expected = "With<Parent> Name x: Root y: null Value Name x: Poppa1 y: Poppa2 Child Parent ...";
+                    actual = tracker.Diff.ToString("", " ");
+                    Assert.AreEqual(expected, actual);
 
-                    //y.Child = new Child("Child");
-                    //expectedChanges.Add("Diff");
-                    //CollectionAssert.AreEqual(expectedChanges, changes);
-                    //Assert.AreEqual("Parent Name x: Poppa y: null Child Parent x: Gu.State.Tests.ChangeTrackerTypes+Parent y: null", tracker.Diff.ToString("", " "));
+                    y.Value.Child = new Child("Child");
+                    expectedChanges.Add("Diff");
+                    CollectionAssert.AreEqual(expectedChanges, changes);
+                    expected = "With<Parent> Name x: Root y: null Value Name x: Poppa1 y: Poppa2 Child Parent ...";
+                    actual = tracker.Diff.ToString("", " ");
+                    Assert.AreEqual(expected, actual);
 
-                    //y.Child.Parent = y;
-                    //expectedChanges.Add("Diff");
-                    //CollectionAssert.AreEqual(expectedChanges, changes);
-                    //Assert.AreEqual("Parent Name x: Poppa y: null Child Parent Name x: Poppa y: null", tracker.Diff.ToString("", " "));
+                    y.Value.Child.Parent = y.Value;
+                    expectedChanges.Add("Diff");
+                    CollectionAssert.AreEqual(expectedChanges, changes);
+                    expected = "With<Parent> Name x: Root y: null Value Name x: Poppa1 y: Poppa2 Child Parent ...";
+                    actual = tracker.Diff.ToString("", " ");
+                    Assert.AreEqual(expected, actual);
 
-                    //y.Name = x.Name;
-                    //expectedChanges.Add("Diff", "IsDirty");
-                    //CollectionAssert.AreEqual(expectedChanges, changes);
-                    //Assert.AreEqual(null, tracker.Diff);
+                    y.Name = x.Name;
+                    expectedChanges.Add("Diff", "IsDirty");
+                    CollectionAssert.AreEqual(expectedChanges, changes);
+                    Assert.AreEqual(null, tracker.Diff);
                 }
             }
 
@@ -185,7 +220,7 @@ namespace Gu.State.Tests
                     x.Child = new Child("ChildX");
                     expectedChanges.Add("Diff");
                     CollectionAssert.AreEqual(expectedChanges, changes);
-                    expected = "Parent Name x: Poppa y: null ChildX x: Gu.State.Tests.ChangeTrackerTypes+Child y: null";
+                    expected = "Parent Name x: Poppa y: null Child x: Gu.State.Tests.ChangeTrackerTypes+Child y: null";
                     actual = tracker.Diff.ToString("", " ");
                     Assert.AreEqual(expected, actual);
 
@@ -205,14 +240,14 @@ namespace Gu.State.Tests
                     y.Child.Parent = y;
                     expectedChanges.Add("Diff");
                     CollectionAssert.AreEqual(expectedChanges, changes);
-                    expected = "Parent Name x: Poppa y: null Child Name x: ChildX y: ChildY Parent Name x: Poppa y: null Child Name x: Child y: ";
+                    expected = "Parent Name x: Poppa y: null Child Name x: ChildX y: ChildY Parent ...";
                     actual = tracker.Diff.ToString("", " ");
                     Assert.AreEqual(expected, actual);
 
                     y.Name = x.Name;
                     expectedChanges.Add("Diff");
                     CollectionAssert.AreEqual(expectedChanges, changes);
-                    expected = "Parent Name x: Poppa y: null Child Parent Name x: Poppa y: null";
+                    expected = "Parent Child Name x: ChildX y: ChildY Parent ...";
                     actual = tracker.Diff.ToString("", " ");
                     Assert.AreEqual(expected, actual);
 

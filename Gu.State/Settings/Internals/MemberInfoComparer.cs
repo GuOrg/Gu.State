@@ -22,7 +22,7 @@
         /// <inheritdoc />
         public int GetHashCode(T obj)
         {
-            // http://stackoverflow.com/a/263416/1069200 
+            // http://stackoverflow.com/a/263416/1069200
             unchecked
             {
                 int hash = (int)2166136261;

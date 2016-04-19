@@ -13,7 +13,7 @@
     {
         public abstract Diff DiffMethod<T>(T source, T target, ReferenceHandling referenceHandling) where T : class;
 
-        [TestCase("1, 2, 3", "1, 2, 3", null)]
+        [TestCase("1, 2, 3", "1, 2, 3", "Empty")]
         [TestCase("1, 2, 3", "1, 2", "int[] [2] x: 3 y: missing item")]
         [TestCase("1, 2", "1, 2, 3", "int[] [2] x: missing item y: 3")]
         [TestCase("5, 2, 3", "1, 2, 3", "int[] [0] x: 5 y: 1")]
@@ -26,7 +26,7 @@
                       .Select(int.Parse)
                       .ToArray();
             var result = this.DiffMethod(x, y, referenceHandling: ReferenceHandling.Structural);
-            Assert.AreEqual(expected, result?.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString("", " "));
         }
 
         [Test]
@@ -36,11 +36,11 @@
             var y = new List<int>();
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
             var expected = "List<int> [0] x: 1 y: missing item [1] x: 2 y: missing item [2] x: 3 y: missing item";
-            Assert.AreEqual(expected, result?.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString("", " "));
 
             result = this.DiffMethod(y, x, ReferenceHandling.Structural);
             expected = "List<int> [0] x: missing item y: 1 [1] x: missing item y: 2 [2] x: missing item y: 3";
-            Assert.AreEqual(expected, result?.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString("", " "));
         }
 
         [Test]
@@ -49,10 +49,10 @@
             var x = new List<int>();
             var y = new List<int>();
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(null, result);
+            Assert.AreEqual("Empty", result.ToString());
 
             result = this.DiffMethod(y, x, ReferenceHandling.Structural);
-            Assert.AreEqual(null, result);
+            Assert.AreEqual("Empty", result.ToString());
         }
 
         [Test]
@@ -89,10 +89,10 @@
                                 StringSplitOptions.RemoveEmptyEntries)
                         };
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(null, result);
+            Assert.AreEqual("Empty", result.ToString());
 
             result = this.DiffMethod(y, x, ReferenceHandling.Structural);
-            Assert.AreEqual(null, result);
+            Assert.AreEqual("Empty", result.ToString());
         }
 
         [Test]
@@ -101,7 +101,7 @@
             var x = new List<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) };
             var y = new List<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) };
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(null, result);
+            Assert.AreEqual("Empty", result.ToString());
 
             result = this.DiffMethod(x, y, ReferenceHandling.References);
             var expected =
@@ -109,7 +109,7 @@
             Assert.AreEqual(expected, result?.ToString("", " "));
 
             result = this.DiffMethod(y, x, ReferenceHandling.Structural);
-            Assert.AreEqual(null, result);
+            Assert.AreEqual("Empty", result.ToString());
         }
 
         [Test]
@@ -118,13 +118,13 @@
             var x = new List<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) };
             var y = new List<ComplexType>(x);
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(null, result);
+            Assert.AreEqual("Empty", result.ToString());
 
             result = this.DiffMethod(x, y, ReferenceHandling.References);
-            Assert.AreEqual(null, result);
+            Assert.AreEqual("Empty", result.ToString());
 
             result = this.DiffMethod(y, x, ReferenceHandling.Structural);
-            Assert.AreEqual(null, result);
+            Assert.AreEqual("Empty", result.ToString());
         }
 
         [Test]
@@ -163,10 +163,10 @@
             var x = new ObservableCollection<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) };
             var y = new ObservableCollection<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) };
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(null, result);
+            Assert.AreEqual("Empty", result.ToString());
 
             result = this.DiffMethod(y, x, ReferenceHandling.Structural);
-            Assert.AreEqual(null, result);
+            Assert.AreEqual("Empty", result.ToString());
         }
 
         [Test]
@@ -175,10 +175,10 @@
             var x = new[] { 1, 2, 3 };
             var y = new[] { 1, 2, 3 };
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(null, result);
+            Assert.AreEqual("Empty", result.ToString());
 
             result = this.DiffMethod(y, x, ReferenceHandling.Structural);
-            Assert.AreEqual(null, result);
+            Assert.AreEqual("Empty", result.ToString());
         }
 
         [TestCase(ReferenceHandling.Structural)]
@@ -188,10 +188,10 @@
             var source = new[] { new Immutable(1), new Immutable(2), new Immutable(3) };
             var target = new[] { new Immutable(1), new Immutable(2), new Immutable(3) };
             var diff = this.DiffMethod(source, target, referenceHandling);
-            Assert.IsNull(diff);
+            Assert.AreEqual("Empty", diff.ToString());
         }
 
-        [TestCase(1, "one", null)]
+        [TestCase(1, "one", "Empty")]
         [TestCase(2, "one", "Dictionary<int, string> [2] x: one y: missing item [1] x: missing item y: one")]
         [TestCase(1, "two", "Dictionary<int, string> [1] x: two y: one")]
         public void DictionaryToSameLength(int key, string value, string expected)
@@ -199,7 +199,7 @@
             var x = new Dictionary<int, string> { { key, value } };
             var y = new Dictionary<int, string> { { 1, "one" } };
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            var actual = result?.ToString("", " ");
+            var actual = result.ToString("", " ");
             Assert.AreEqual(expected, actual);
         }
 
@@ -212,19 +212,17 @@
             var y = new Dictionary<HashCollisionType, string> { { k1, "1" }, { k2, "2" } };
             Assert.AreEqual(2, x.Count);
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            var actual = result?.ToString("", " ");
-            Assert.AreEqual(null, actual);
+            var actual = result.ToString("", " ");
+            Assert.AreEqual("Empty", actual);
 
             y = new Dictionary<HashCollisionType, string> { { k2, "2" }, { k1, "1" } };
             result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            actual = result?.ToString("", " ");
-            Assert.AreEqual(null, actual);
+            actual = result.ToString("", " ");
+            Assert.AreEqual("Empty", actual);
         }
 
-        [TestCase(1, "one", null)]
-        [TestCase(2, "one",
-            "Dictionary<int, ComplexType> [2] x: Gu.State.Tests.DiffTests.DiffTypes+ComplexType y: missing item [1] x: missing item y: Gu.State.Tests.DiffTests.DiffTypes+ComplexType"
-            )]
+        [TestCase(1, "one", "Empty")]
+        [TestCase(2, "one", "Dictionary<int, ComplexType> [2] x: Gu.State.Tests.DiffTests.DiffTypes+ComplexType y: missing item [1] x: missing item y: Gu.State.Tests.DiffTests.DiffTypes+ComplexType")]
         [TestCase(1, "two", "Dictionary<int, ComplexType> [1] <member> x: two y: one")]
         public void DictionaryIntComplex(int key, string value, string expected)
         {
@@ -236,7 +234,7 @@
             var x = new Dictionary<int, ComplexType> { { key, new ComplexType(value, 1) } };
             var y = new Dictionary<int, ComplexType> { { 1, new ComplexType("one", 1) } };
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            var actual = result?.ToString("", " ");
+            var actual = result.ToString("", " ");
             Assert.AreEqual(expected, actual);
         }
 
@@ -271,7 +269,7 @@
         }
 
 
-        [TestCase("1, 2, 3", "1, 2, 3", null)]
+        [TestCase("1, 2, 3", "1, 2, 3", "Empty")]
         [TestCase("1, 2, 3", "1, 2", "WhereSelectArrayIterator<string, int> [2] x: 3 y: missing item")]
         [TestCase("1, 2", "1, 2, 3", "WhereSelectArrayIterator<string, int> [2] x: missing item y: 3")]
         [TestCase("5, 2, 3", "1, 2, 3", "WhereSelectArrayIterator<string, int> [0] x: 5 y: 1")]
@@ -280,13 +278,13 @@
             var x = xs.Split(',').Select(int.Parse);
             var y = ys.Split(',').Select(int.Parse);
             var diff = this.DiffMethod(x, y, referenceHandling: ReferenceHandling.Structural);
-            var actual = diff?.ToString("", " ");
+            var actual = diff.ToString("", " ");
             Assert.AreEqual(expected, actual);
         }
 
-        [TestCase(0, 0, 0, 0, null)]
-        [TestCase(0, 1, 0, 1, null)]
-        [TestCase(1, 1, 1, 1, null)]
+        [TestCase(0, 0, 0, 0, "Empty")]
+        [TestCase(0, 1, 0, 1, "Empty")]
+        [TestCase(1, 1, 1, 1, "Empty")]
         [TestCase(0, 2, 0, 1, "<RepeatIterator>d__112<int> [1] x: 0 y: missing item")]
         [TestCase(0, 1, 0, 2, "<RepeatIterator>d__112<int> [1] x: missing item y: 0")]
         [TestCase(1, 1, 0, 1, "<RepeatIterator>d__112<int> [0] x: 1 y: 0")]
@@ -296,7 +294,7 @@
             var x = Enumerable.Repeat(startX, countX);
             var y = Enumerable.Repeat(startY, countY);
             var diff = this.DiffMethod(x, y, referenceHandling: ReferenceHandling.Structural);
-            Assert.AreEqual(expected, diff?.ToString("", " "));
+            Assert.AreEqual(expected, diff.ToString("", " "));
         }
 
         [Test]
@@ -305,20 +303,20 @@
             var x = new object[] { 1, null }.Select(z => z);
             var y = new object[] { 1, null }.Select(z => z);
             var diff = this.DiffMethod(x, y, referenceHandling: ReferenceHandling.Structural);
-            Assert.AreEqual(null, diff);
+            Assert.AreEqual("Empty", diff.ToString());
 
             x = new object[] { 1 }.Select(z => z);
             y = new object[] { 1, null }.Select(z => z);
             diff = this.DiffMethod(x, y, referenceHandling: ReferenceHandling.Structural);
             var expected = "WhereSelectArrayIterator<Object, Object> [1] x: missing item y: null";
-            var actual = diff?.ToString("", " ");
+            var actual = diff.ToString("", " ");
             Assert.AreEqual(expected, actual);
 
             x = new object[] { 1, null }.Select(z => z);
             y = new object[] { 1 }.Select(z => z);
             diff = this.DiffMethod(x, y, referenceHandling: ReferenceHandling.Structural);
             expected = "WhereSelectArrayIterator<Object, Object> [1] x: null y: missing item";
-            actual = diff?.ToString("", " ");
+            actual = diff.ToString("", " ");
             Assert.AreEqual(expected, actual);
         }
     }

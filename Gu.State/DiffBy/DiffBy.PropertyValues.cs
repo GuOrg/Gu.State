@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Reflection;
 
     public static partial class DiffBy
@@ -43,6 +44,16 @@
             Ensure.NotNull(x, nameof(x));
             Ensure.NotNull(y, nameof(y));
             Ensure.NotNull(settings, nameof(settings));
+            EqualBy.Verify.CanEqualByPropertyValues(x, y, settings, typeof(DiffBy).Name, nameof(PropertyValues));
+
+            return PropertyValuesCore(x, y, settings) ?? new EmptyDiff(x, y);
+        }
+
+        internal static ValueDiff PropertyValuesCore<T>(T x, T y, PropertiesSettings settings)
+        {
+            Debug.Assert(x != null, "x == null");
+            Debug.Assert(y != null, "y == null");
+            Debug.Assert(settings != null, "settings == null");
 
             ValueDiff diff;
             if (TryGetValueDiff(x, y, settings, out diff))
@@ -55,7 +66,7 @@
                                    ? ReferencePairCollection.Create()
                                    : null)
             {
-               var diffs = SubDiffs(x, y, settings, pairs);
+                var diffs = SubDiffs(x, y, settings, pairs);
                 return diffs == null
                            ? null
                            : new ValueDiff(x, y, diffs);

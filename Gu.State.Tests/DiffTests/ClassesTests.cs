@@ -16,7 +16,7 @@
             string excludedMembers = null,
             Type excludedType = null) where T : class;
 
-        [TestCase("b", "b", null)]
+        [TestCase("b", "b", "Empty")]
         [TestCase("b", "c", "WithSimpleProperties <member> x: b y: c")]
         public void WithSimpleHappyPath(string xn, string yn, string expected)
         {
@@ -28,41 +28,36 @@
             var x = new WithSimpleProperties(1, 2, xn, StringSplitOptions.RemoveEmptyEntries);
             var y = new WithSimpleProperties(1, 2, yn, StringSplitOptions.RemoveEmptyEntries);
             var result = this.DiffMethod(x, y);
-            Assert.AreEqual(expected, result?.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString("", " "));
 
             result = this.DiffMethod(x, y, ReferenceHandling.Throw);
-            Assert.AreEqual(expected, result?.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString("", " "));
 
             result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(expected, result?.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString("", " "));
 
             result = this.DiffMethod(x, y, ReferenceHandling.References);
-            Assert.AreEqual(expected, result?.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString("", " "));
         }
 
-        [TestCase("b", "b", null)]
+        [TestCase("b", "b", "Empty")]
         [TestCase("b", "c", "WithComplexProperty <member1> <member2> x: b y: c")]
         public void WithComplexStructural(string xn, string yn, string expected)
         {
-            expected = expected?.Replace(
-                "<member1>",
-                this is FieldValues.Classes
-                    ? "complexType"
-                    : "ComplexType")
-                                .Replace(
-                                    "<member2>",
-                                    this is FieldValues.Classes
-                                        ? "name"
-                                        : "Name");
+            expected = this is FieldValues.Classes
+                           ? expected.Replace("<member1>", "complexType")
+                                     .Replace("<member2>", "name")
+                           : expected.Replace("<member1>", "ComplexType")
+                                     .Replace("<member2>", "Name");
             var x = new WithComplexProperty("a", 1) { ComplexType = new ComplexType { Name = xn, Value = 2 } };
 
             var y = new WithComplexProperty("a", 1) { ComplexType = new ComplexType { Name = yn, Value = 2 } };
 
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(expected, result?.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString("", " "));
 
             result = this.DiffMethod(x, y, ReferenceHandling.StructuralWithReferenceLoops);
-            Assert.AreEqual(expected, result?.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString("", " "));
         }
 
         [Test]
@@ -72,10 +67,10 @@
             var y = new WithComplexProperty { Name = "a", Value = 1 };
             this.DiffMethod(x, y, ReferenceHandling.Structural);
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(null, result);
+            Assert.AreEqual("Empty", result.ToString());
 
             result = this.DiffMethod(x, y, ReferenceHandling.References);
-            Assert.AreEqual(null, result);
+            Assert.AreEqual("Empty", result.ToString());
         }
 
         [Test]
@@ -123,14 +118,12 @@
                         };
             var y = new WithComplexProperty { Name = "a", Value = 1, ComplexType = x.ComplexType };
             var result = this.DiffMethod(x, y, referenceHandling);
-            Assert.AreEqual(null, result);
+            Assert.AreEqual("Empty", result.ToString());
         }
 
-        [TestCase(ReferenceHandling.Structural, null)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops, null)]
-        [TestCase(ReferenceHandling.References,
-            "WithComplexProperty <member> x: Gu.State.Tests.DiffTests.DiffTypes+ComplexType y: Gu.State.Tests.DiffTests.DiffTypes+ComplexType"
-            )]
+        [TestCase(ReferenceHandling.Structural, "Empty")]
+        [TestCase(ReferenceHandling.StructuralWithReferenceLoops, "Empty")]
+        [TestCase(ReferenceHandling.References, "WithComplexProperty <member> x: Gu.State.Tests.DiffTests.DiffTypes+ComplexType y: Gu.State.Tests.DiffTests.DiffTypes+ComplexType")]
         public void WithComplexReferenceWhenNotSame(ReferenceHandling referenceHandling, string expected)
         {
             expected = expected?.Replace(
@@ -151,14 +144,14 @@
                             ComplexType = new ComplexType { Name = "b", Value = 2 }
                         };
             var result = this.DiffMethod(x, y, referenceHandling);
-            Assert.AreEqual(expected, result?.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString("", " "));
         }
 
-        [TestCase(1, 1, null, null)]
+        [TestCase(1, 1, null, "Empty")]
         [TestCase(1, 2, null, "WithReadonlyProperty<int> <member> x: 1 y: 2")]
-        [TestCase(1, 1, ReferenceHandling.Throw, null)]
-        [TestCase(1, 1, ReferenceHandling.Structural, null)]
-        [TestCase(1, 1, ReferenceHandling.References, null)]
+        [TestCase(1, 1, ReferenceHandling.Throw, "Empty")]
+        [TestCase(1, 1, ReferenceHandling.Structural, "Empty")]
+        [TestCase(1, 1, ReferenceHandling.References, "Empty")]
         public void WithReadonlyIntHappyPath(int xv, int yv, ReferenceHandling? referenceHandling, string expected)
         {
             expected = expected?.Replace(
@@ -176,11 +169,11 @@
             else
             {
                 var result = this.DiffMethod(x, y, referenceHandling.Value);
-                Assert.AreEqual(expected, result?.ToString("", " "));
+                Assert.AreEqual(expected, result.ToString("", " "));
             }
         }
 
-        [TestCase("a", "a", null)]
+        [TestCase("a", "a", "Empty")]
         [TestCase("a", "b", "WithReadonlyProperty<ComplexType> <member1> <member2> x: a y: b")]
         public void WithReadonlyComplex(string xv, string yv, string expected)
         {
@@ -197,7 +190,7 @@
             var x = new WithReadonlyProperty<ComplexType>(new ComplexType(xv, 1));
             var y = new WithReadonlyProperty<ComplexType>(new ComplexType(yv, 1));
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(expected, result?.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString("", " "));
         }
 
         [Test]
@@ -219,7 +212,7 @@
             var x = new WithListProperty<int> { Items = null };
             var y = new WithListProperty<int> { Items = null };
             var result = this.DiffMethod(x, y, referenceHandling);
-            Assert.AreEqual(null, result);
+            Assert.AreEqual("Empty", result.ToString());
         }
 
         [Test]
@@ -228,7 +221,7 @@
             var x = new WithListProperty<int> { Items = new List<int>() };
             var y = new WithListProperty<int> { Items = new List<int>() };
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(null, result);
+            Assert.AreEqual("Empty", result.ToString());
 
             result = this.DiffMethod(x, y, ReferenceHandling.References);
             var expected = this is FieldValues.Classes
@@ -281,7 +274,7 @@
             var x = new WithListProperty<ComplexType> { Items = { new ComplexType("a", 1) } };
             var y = new WithListProperty<ComplexType> { Items = { new ComplexType("a", 1) } };
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(null, result);
+            Assert.AreEqual("Empty", result.ToString());
         }
 
         [Test]
@@ -303,11 +296,11 @@
             Assert.AreEqual(expected, result.ToString("", " "));
         }
 
-        [TestCase(1, 1, null, null)]
+        [TestCase(1, 1, null, "Empty")]
         [TestCase(1, 2, null, "WithSimpleProperties <member> x: 1 y: 2")]
-        [TestCase(1, 1, ReferenceHandling.Throw, null)]
-        [TestCase(1, 1, ReferenceHandling.Structural, null)]
-        [TestCase(1, 1, ReferenceHandling.References, null)]
+        [TestCase(1, 1, ReferenceHandling.Throw, "Empty")]
+        [TestCase(1, 1, ReferenceHandling.Structural, "Empty")]
+        [TestCase(1, 1, ReferenceHandling.References, "Empty")]
         public void IgnoresMember(int xv, int yv, ReferenceHandling? referenceHandling, string expected)
         {
             expected = expected?.Replace(
@@ -323,16 +316,16 @@
             if (referenceHandling == null)
             {
                 var result = this.DiffMethod(x, y, excludedMembers: excluded);
-                Assert.AreEqual(expected, result?.ToString("", " "));
+                Assert.AreEqual(expected, result.ToString("", " "));
             }
             else
             {
                 var result = this.DiffMethod(x, y, referenceHandling.Value, excluded);
-                Assert.AreEqual(expected, result?.ToString("", " "));
+                Assert.AreEqual(expected, result.ToString("", " "));
             }
         }
 
-        [TestCase("a", null)]
+        [TestCase("a", "Empty")]
         [TestCase("b", "WithComplexProperty <member> x: b y: a")]
         public void IgnoresType(string xv, string expected)
         {
@@ -348,8 +341,7 @@
                 y,
                 referenceHandling: ReferenceHandling.Structural,
                 excludedType: typeof(ComplexType));
-            Assert.AreEqual(expected, result?.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString("", " "));
         }
-
     }
 }

@@ -30,8 +30,10 @@
             this.ignoredTypes = IgnoredTypes.Create(ignoredTypes);
         }
 
+        /// <inheritdoc />
         public BindingFlags BindingFlags { get; }
 
+        /// <inheritdoc />
         public ReferenceHandling ReferenceHandling { get; }
 
         internal ConcurrentDictionary<Type, TypeErrors> EqualByErrors { get; } = new ConcurrentDictionary<Type, TypeErrors>();
@@ -40,8 +42,10 @@
 
         protected ConcurrentDictionary<T, bool> IgnoredMembers => this.ignoredMembers;
 
+        /// <inheritdoc />
         public bool IsEquatable(Type type) => IsEquatableCore(type);
 
+        /// <inheritdoc />
         public bool IsImmutable(Type type) => IsImmutableCore(type);
 
         public bool IsIgnoringDeclaringType(Type declaringType)
