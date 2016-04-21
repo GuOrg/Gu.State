@@ -1,6 +1,7 @@
 namespace Gu.State.Tests.DiffTests
 {
     using System;
+    using System.Linq;
 
     using NUnit.Framework;
 
@@ -16,13 +17,18 @@ namespace Gu.State.Tests.DiffTests
             var x = new Parent("p1", new Child("c"));
             Assert.AreSame(x, x.Child.Parent);
             Assert.AreSame(x.Child, x.Child.Parent.Child);
+
             var y = new Parent("p2", new Child("c"));
+            Assert.AreSame(y, y.Child.Parent);
+            Assert.AreSame(y.Child, y.Child.Parent.Child);
+
             var expected = this is FieldValues.ReferenceLoops
                                ? "Parent <Name>k__BackingField x: p1 y: p2 <Child>k__BackingField <Parent>k__BackingField ..."
                                : "Parent Name x: p1 y: p2 Child Parent ...";
             var result = this.DiffMethod(x, y, ReferenceHandling.StructuralWithReferenceLoops);
             var actual = result.ToString("", " ");
             Assert.AreEqual(expected, actual);
+            Assert.AreSame(result, result.Diffs.Single(d => d.X == x.Child).Diffs.Last(d => d.X == x));
         }
 
         [TestCase("p", "c", "Empty")]
