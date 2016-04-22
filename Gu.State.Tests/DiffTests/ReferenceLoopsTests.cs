@@ -12,6 +12,25 @@ namespace Gu.State.Tests.DiffTests
         public abstract Diff DiffMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excludedMembers = null, Type excludedType = null) where T : class;
 
         [Test]
+        public void ParentChildCreateWhenParentDirtyLoopDelete()
+        {
+            var x = new Parent("p1", new Child("c"));
+            Assert.AreSame(x, x.Child.Parent);
+            Assert.AreSame(x.Child, x.Child.Parent.Child);
+
+            var y = new Parent("p2", new Child("c"));
+            Assert.AreSame(y, y.Child.Parent);
+            Assert.AreSame(y.Child, y.Child.Parent.Child);
+
+            var expected = "Parent Name x: p1 y: p2 Child Parent ...";
+            var result = DiffBy.PropertyValues(x, y, ReferenceHandling.StructuralWithReferenceLoops);
+            var actual = result.ToString("", " ");
+            Assert.AreEqual(expected, actual);
+            Assert.AreSame(result, result.Diffs.Single(d => d.X == x.Child).Diffs.Last(d => d.X == x));
+            Assert.Fail("Delete");
+        }
+
+        [Test]
         public void ParentChildCreateWhenParentDirtyLoop()
         {
             var x = new Parent("p1", new Child("c"));
