@@ -41,7 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DiffBy\DiffBuilder\DiffBuilderRoot.cs" />
-    <Compile Include="DiffBy\DiffBuilder\SubBuilder.cs" />
+    <Compile Include="DiffBy\DiffBuilder\SubDiffBuilder.cs" />
     <Compile Include="DiffBy\Diffs\Diff.cs" />
     <Compile Include="DiffBy\DiffBy.Enumerable.cs" />
     <Compile Include="DiffBy\DiffBy.FieldValues.cs" />

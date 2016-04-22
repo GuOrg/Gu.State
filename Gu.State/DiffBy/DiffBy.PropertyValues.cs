@@ -64,11 +64,9 @@
                 }
 
                 EqualBy.Verify.CanEqualByPropertyValues(x, y, settings, typeof(DiffBy).Name, nameof(PropertyValues));
-                var builder = new DiffBuilderRoot(settings.ReferenceHandling);
+                var builder = new DiffBuilderRoot(x, y, settings.ReferenceHandling);
                 AddSubDiffs(x, y, settings, builder);
-                return builder.IsEmpty
-                           ? null
-                           : new ValueDiff(x, y, builder.Diffs.ToArray());
+                return builder.CreateValueDiff();
             }
 
             private static void AddSubDiffs<T>(
@@ -156,18 +154,13 @@
                     case ReferenceHandling.Structural:
                     case ReferenceHandling.StructuralWithReferenceLoops:
                         EqualBy.Verify.CanEqualByPropertyValues(xValue, yValue, settings, typeof(DiffBy).Name, nameof(PropertyValues));
-                        SubBuilder subBuilder;
-                        if (builder.TryAdd(xValue, yValue, out subBuilder))
+                        DiffBuilder subDiffBuilder;
+                        if (builder.TryAdd(xValue, yValue, out subDiffBuilder))
                         {
-                            AddSubDiffs(xValue, yValue, settings, subBuilder);
+                            AddSubDiffs(xValue, yValue, settings, subDiffBuilder);
                         }
 
-                        builder.Add(
-                            () => subBuilder.IsEmpty
-                                      ? null
-                                      : new PropertyDiff(
-                                            propertyInfo,
-                                            new ValueDiff(xValue, yValue, subBuilder.Diffs.ToArray())));
+                        builder.Add(subDiffBuilder.CreatePropertyDiff(propertyInfo));
                         return;
                     case ReferenceHandling.Throw:
                         throw Throw.ShouldNeverGetHereException();

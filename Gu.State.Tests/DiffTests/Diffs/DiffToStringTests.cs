@@ -1,5 +1,7 @@
 ﻿namespace Gu.State.Tests.DiffTests
 {
+    using System.Collections.Generic;
+
     using NUnit.Framework;
 
     using static DiffTypes;
@@ -15,14 +17,18 @@
         }
 
         [Test]
-        public void WithPropertyDiff()
+        public void Loop()
         {
-            Assert.Inconclusive();
-            var propertyDiff = new PropertyDiff(typeof(WithSimpleProperties).GetProperty(nameof(WithSimpleProperties.StringValue)), "a", "b");
-            var diff = new ValueDiff("a", "b", new[] { propertyDiff });
-            var expected = "WithSimpleProperties\r\n" +
-                           "  StringValue x: a y: b";
-            Assert.AreEqual(expected, diff.ToString());
+            //var p1 = new Parent("p1", new Child("c"));
+            //var p2 = new Parent("p2", new Child("c"));
+            //var nameDiff = new PropertyDiff(typeof(Parent).GetProperty(nameof(Parent.Name)), "p1", "p2");
+            //var parentPropertyDiff = new PropertyDiff(typeof(Child).GetProperty(nameof(Child.Parent)), p1, p2);
+            //var childPropertyDiff = new PropertyDiff(typeof(Parent).GetProperty(nameof(Parent.Child)), p1.Child, p2.Child);
+            //var childDiffs = new List<SubDiff>();
+            //var childValueDiff = new ValueDiff(p1.Child, p2.Child, childDiffs);
+            //var parentValueDiff = new ValueDiff(p1, p2, new List<SubDiff> { nameDiff, parentPropertyDiff });
+            //var expected = "WithSimpleProperties";
+            //Assert.AreEqual(expected, parentValueDiff.ToString("", " "));
         }
     }
 }
