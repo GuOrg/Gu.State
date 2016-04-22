@@ -93,6 +93,7 @@
     <Compile Include="Internals\Collections\DisposingListTests.cs" />
     <Compile Include="Internals\Collections\DisposingMapTests.cs" />
     <Compile Include="Internals\Collections\RefCountCollectionTests.cs" />
+    <Compile Include="Internals\Collections\ReferenceSetPoolTests.cs" />
     <Compile Include="Internals\Errors\ErrorBuilderTests.WithReferenceLoop.cs" />
     <Compile Include="Internals\Errors\ErrorBuilderTests.CheckReferenceHandling.cs" />
     <Compile Include="Internals\Errors\ErrorBuilderTests.CheckNotifies.cs" />

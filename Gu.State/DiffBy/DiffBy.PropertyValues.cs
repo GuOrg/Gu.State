@@ -160,7 +160,7 @@
                             AddSubDiffs(xValue, yValue, settings, subDiffBuilder);
                         }
 
-                        builder.Add(subDiffBuilder.CreatePropertyDiff(propertyInfo));
+                        builder.AddLazy(() => subDiffBuilder.CreatePropertyDiff(propertyInfo));
                         return;
                     case ReferenceHandling.Throw:
                         throw Throw.ShouldNeverGetHereException();
