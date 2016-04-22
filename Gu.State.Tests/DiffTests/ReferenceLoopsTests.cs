@@ -58,7 +58,13 @@ namespace Gu.State.Tests.DiffTests
             expected = expected?.Replace("<member1>", this is FieldValues.ReferenceLoops ? "<Child>k__BackingField" : "Child")
                                 .Replace("<member2>", this is FieldValues.ReferenceLoops ? "<Name>k__BackingField" : "Name");
             var x = new Parent("p", new Child("c"));
+            Assert.AreSame(x, x.Child.Parent);
+            Assert.AreSame(x.Child, x.Child.Parent.Child);
+
             var y = new Parent(p, new Child(c));
+            Assert.AreSame(y, y.Child.Parent);
+            Assert.AreSame(y.Child, y.Child.Parent.Child);
+
             var result = this.DiffMethod(x, y, ReferenceHandling.StructuralWithReferenceLoops);
             Assert.AreEqual(expected, result.ToString("", " "));
 

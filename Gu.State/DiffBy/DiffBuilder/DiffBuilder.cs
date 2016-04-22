@@ -10,7 +10,7 @@
     {
         private readonly Dictionary<ReferencePair, DiffBuilder> builderCache = new Dictionary<ReferencePair, DiffBuilder>();
         private readonly List<SubDiff> diffs = new List<SubDiff>();
-        private readonly List<Func<SubDiff>> builders = new List<Func<SubDiff>>();
+        private readonly List<Factory> builders = new List<Factory>();
         private readonly Lazy<ValueDiff> valueDiff;
         private readonly object x;
         private readonly object y;
@@ -24,7 +24,7 @@
             this.builderCache.Add(new ReferencePair(x, y), this);
         }
 
-        internal bool IsEmpty => this.diffs?.Any() != true && this.builders?.Any() == true;
+        internal bool IsEmpty => this.diffs.Any() || this.builders.Any(b => b.CanCreate);
 
         internal IEnumerable<SubDiff> Diffs => this.diffs.Concat(this.BuildDiffs());
 
@@ -41,9 +41,9 @@
             this.diffs.Add(subDiff);
         }
 
-        internal void AddLazy(Func<SubDiff> builder)
+        internal void AddLazy(PropertyInfo property, DiffBuilder builder)
         {
-            this.builders.Add(builder);
+            this.builders.Add(new PropertyFactory(property, builder));
         }
 
         public ValueDiff CreateValueDiff()
@@ -53,20 +53,40 @@
                        : this.valueDiff.Value;
         }
 
-        internal SubDiff CreatePropertyDiff(PropertyInfo propertyInfo)
-        {
-            if (this.IsEmpty)
-            {
-                return null;
-            }
-
-            return new PropertyDiff(propertyInfo, this.valueDiff.Value);
-        }
-
         private IEnumerable<SubDiff> BuildDiffs()
         {
-            return this.builders.Where(b => b != null)
-                       .Select(b => b());
+            return this.builders.Where(b => b.CanCreate)
+                       .Select(b => b.Create());
+        }
+
+        private abstract class Factory
+        {
+            protected readonly DiffBuilder Builder;
+
+            protected Factory(DiffBuilder builder)
+            {
+                this.Builder = builder;
+            }
+
+            public bool CanCreate => !this.Builder.IsEmpty;
+
+            internal abstract SubDiff Create();
+        }
+
+        private class PropertyFactory : Factory
+        {
+            private readonly PropertyInfo propertyInfo;
+
+            public PropertyFactory(PropertyInfo propertyInfo, DiffBuilder builder)
+                : base(builder)
+            {
+                this.propertyInfo = propertyInfo;
+            }
+
+            internal override SubDiff Create()
+            {
+                return new PropertyDiff(this.propertyInfo, this.Builder.valueDiff.Value);
+            }
         }
     }
 }
