@@ -75,7 +75,7 @@
                 PropertiesSettings settings,
                 DiffBuilder builder)
             {
-                //var diffs = Enumerable.Diffs(x, y, settings, builder, ItemPropertiesDiff);
+                Enumerable.AddItemDiffs(x, y, settings, builder, ItemPropertiesDiff);
                 var propertyInfos = x.GetType().GetProperties(settings.BindingFlags);
                 foreach (var propertyInfo in propertyInfos)
                 {
@@ -101,28 +101,43 @@
                 }
             }
 
-            //private static void ItemPropertiesDiff(
-            //    object x,
-            //    object y,
-            //    PropertiesSettings settings,
-            //    DiffBuilder referencePairs)
-            //{
-            //    ValueDiff diff;
-            //    if (TryGetValueDiff(x, y, settings, out diff))
-            //    {
-            //        return diff;
-            //    }
+            private static void ItemPropertiesDiff(
+                object xItem,
+                object yItem,
+                object index,
+                PropertiesSettings settings,
+                DiffBuilder collectionBuilder)
+            {
+                ValueDiff diff;
+                if (TryGetValueDiff(xItem, yItem, settings, out diff))
+                {
+                    if (diff != null)
+                    {
+                        collectionBuilder.Add(new IndexDiff(index, diff));
+                    }
 
-            //    if (settings.ReferenceHandling == ReferenceHandling.References)
-            //    {
-            //        return ReferenceEquals(x, y)
-            //                   ? null
-            //                   : new ValueDiff(x, y);
-            //    }
+                    return;
+                }
 
-            //    EqualBy.Verify.CanEqualByPropertyValues(x, y, settings, typeof(DiffBy).Name, nameof(PropertyValues));
-            //    AddSubDiffs(x, y, settings, referencePairs);
-            //}
+                if (settings.ReferenceHandling == ReferenceHandling.References)
+                {
+                    if (!ReferenceEquals(xItem, yItem))
+                    {
+                        collectionBuilder.Add(new IndexDiff(index, diff));
+                    }
+
+                    return;
+                }
+
+                EqualBy.Verify.CanEqualByPropertyValues(xItem, yItem, settings, typeof(DiffBy).Name, nameof(PropertyValues));
+                DiffBuilder subDiffBuilder;
+                if (collectionBuilder.TryAdd(xItem, yItem, out subDiffBuilder))
+                {
+                    AddSubDiffs(xItem, yItem, settings, subDiffBuilder);
+                }
+
+                collectionBuilder.AddLazy(index, subDiffBuilder);
+            }
 
             private static void PropertyValueDiff(
                 object xValue,

@@ -24,7 +24,7 @@
             this.builderCache.Add(new ReferencePair(x, y), this);
         }
 
-        internal bool IsEmpty => this.diffs.Any() || this.builders.Any(b => b.CanCreate);
+        internal bool IsEmpty => !(this.diffs.Any() || this.builders.Any(b => b.CanCreate));
 
         internal IEnumerable<SubDiff> Diffs => this.diffs.Concat(this.BuildDiffs());
 
@@ -44,6 +44,11 @@
         internal void AddLazy(PropertyInfo property, DiffBuilder builder)
         {
             this.builders.Add(new PropertyFactory(property, builder));
+        }
+
+        public void AddLazy(object index, DiffBuilder builder)
+        {
+            this.builders.Add(new IndexFactory(index, builder));
         }
 
         public ValueDiff CreateValueDiff()
@@ -86,6 +91,22 @@
             internal override SubDiff Create()
             {
                 return new PropertyDiff(this.propertyInfo, this.Builder.valueDiff.Value);
+            }
+        }
+
+        private class IndexFactory : Factory
+        {
+            private readonly object index;
+
+            public IndexFactory(object index, DiffBuilder builder)
+                : base(builder)
+            {
+                this.index = index;
+            }
+
+            internal override SubDiff Create()
+            {
+                return new IndexDiff(this.index, this.Builder.valueDiff.Value);
             }
         }
     }

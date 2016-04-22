@@ -10,17 +10,17 @@
     {
         private static class Enumerable
         {
-            internal static List<SubDiff> Diffs<TSettings>(
+            internal static void AddItemDiffs<TSettings>(
                 object x,
                 object y,
                 TSettings settings,
-                ReferencePairCollection referencePairs,
-                Func<object, object, TSettings, ReferencePairCollection, ValueDiff> itemDiff)
+                DiffBuilder collectionBuilder,
+                Action<object, object, object, TSettings, DiffBuilder> itemDiff)
                 where TSettings : IMemberSettings
             {
                 if (!(x is IEnumerable) || !(y is IEnumerable))
                 {
-                    return null;
+                    return;
                 }
 
                 Debug.Assert(settings.ReferenceHandling != ReferenceHandling.Throw, "Should not get here");
@@ -29,43 +29,51 @@
                 IList yl;
                 if (Try.CastAs(x, y, out xl, out yl))
                 {
-                    return Diffs(xl, yl, settings, referencePairs, itemDiff);
+                    Diffs(xl, yl, settings, collectionBuilder, itemDiff);
+                    return;
                 }
 
                 IDictionary xd;
                 IDictionary yd;
                 if (Try.CastAs(x, y, out xd, out yd))
                 {
-                    return Diffs(xd, yd, settings, referencePairs, itemDiff);
+                    Diffs(xd, yd, settings, collectionBuilder, itemDiff);
+                    return;
                 }
 
                 if (Is.Sets(x, y))
                 {
                     var xe = Set.ItemsOrderByHashCode(x);
                     var ye = Set.ItemsOrderByHashCode(y);
-                    return Diffs(xe, ye, settings, referencePairs, itemDiff);
+                    Diffs(xe, ye, settings, collectionBuilder, itemDiff);
+                    return;
                 }
 
-                return Diffs((IEnumerable)x, (IEnumerable)y, settings, referencePairs, itemDiff);
+                Diffs((IEnumerable)x, (IEnumerable)y, settings, collectionBuilder, itemDiff);
             }
 
-            private static List<SubDiff> Diffs<TSettings>(
+            private static void Diffs<TSettings>(
                 IList x,
                 IList y,
                 TSettings settings,
-                ReferencePairCollection referencePairs,
-                Func<object, object, TSettings, ReferencePairCollection, ValueDiff> itemDiff)
+                DiffBuilder collectionBuilder,
+                Action<object, object, object, TSettings, DiffBuilder> itemDiff)
                 where TSettings : IMemberSettings
             {
-                return Diffs((IEnumerable)x, (IEnumerable)y, settings, referencePairs, itemDiff);
+                for (int i = 0; i < Math.Max(x.Count, y.Count); i++)
+                {
+                    var xv = x.ElementAtOrMissing(i);
+                    var yv = y.ElementAtOrMissing(i);
+                    itemDiff(xv, yv, i, settings, collectionBuilder);
+                }
             }
 
-            private static List<SubDiff> Diffs<TSettings>(
+            private static void Diffs<TSettings>(
                 IDictionary x,
                 IDictionary y,
                 TSettings settings,
-                ReferencePairCollection referencePairs,
-                Func<object, object, TSettings, ReferencePairCollection, ValueDiff> itemDiff)
+                DiffBuilder collectionBuilder,
+                Action<object, object, object, TSettings, DiffBuilder> itemDiff)
                 where TSettings : IMemberSettings
             {
                 if (x == null || y == null)
@@ -73,119 +81,86 @@
                     throw Throw.ShouldNeverGetHereException("should be checked for same type before");
                 }
 
-                List<SubDiff> diffs = null;
                 foreach (var key in x.Keys.OfType<object>().Concat(y.Keys.OfType<object>()).Distinct())
                 {
-                    IndexDiff diff = null;
-                    if (!x.Contains(key))
-                    {
-                        diff = new IndexDiff(key, PaddedPairs.MissingItem, y[key]);
-                    }
-                    else if (!y.Contains(key))
-                    {
-                        diff = new IndexDiff(key, x[key], PaddedPairs.MissingItem);
-                    }
-                    else
-                    {
-                        var xv = x[key];
-                        var yv = y[key];
-                        if (referencePairs?.Contains(xv, yv) == true)
-                        {
-                            continue;
-                        }
-
-                        var id = itemDiff(xv, yv, settings, referencePairs);
-                        if (id != null)
-                        {
-                            diff = new IndexDiff(key, id);
-                        }
-                    }
-
-                    if (diff != null)
-                    {
-                        if (diffs == null)
-                        {
-                            diffs = new List<SubDiff>();
-                        }
-
-                        diffs.Add(diff);
-                    }
+                    var xv = x.ElementAtOrMissing(key);
+                    var yv = y.ElementAtOrMissing(key);
+                    itemDiff(xv, yv, key, settings, collectionBuilder);
                 }
-
-                return diffs;
             }
 
-            private static List<SubDiff> Diffs<TSettings>(
+            private static void Diffs<TSettings>(
                 Set.ISortedByHashCode xSorted,
                 Set.ISortedByHashCode ySorted,
                 TSettings settings,
-                ReferencePairCollection referencePairs,
-                Func<object, object, TSettings, ReferencePairCollection, ValueDiff> itemDiff)
+                DiffBuilder collectionBuilder,
+                Action<object, object, object, TSettings, DiffBuilder> itemDiff)
                  where TSettings : IMemberSettings
             {
-                List<SubDiff> diffs = null;
-                for (int xi = xSorted.Count - 1; xi >= 0; xi--)
-                {
-                    var xItem = xSorted[xi];
-                    bool found = false;
-                    var indices = ySorted.MatchingHashIndices(xItem);
-                    if (indices.IsNone)
-                    {
-                        if (diffs == null)
-                        {
-                            diffs = new List<SubDiff>();
-                        }
+                throw new NotImplementedException("message");
 
-                        diffs.Add(new IndexDiff(xItem, new ValueDiff(xItem, PaddedPairs.MissingItem)));
-                        continue;
-                    }
+                //for (int xi = xSorted.Count - 1; xi >= 0; xi--)
+                //{
+                //    var xItem = xSorted[xi];
+                //    bool found = false;
+                //    var indices = ySorted.MatchingHashIndices(xItem);
+                //    if (indices.IsNone)
+                //    {
+                //        if (diffs == null)
+                //        {
+                //            diffs = new List<SubDiff>();
+                //        }
 
-                    ValueDiff valueDiff = null;
-                    for (int yi = indices.First; yi <= indices.Last; yi++)
-                    {
-                        var yItem = ySorted[yi];
-                        valueDiff = itemDiff(xItem, yItem, settings, referencePairs);
-                        if (valueDiff == null)
-                        {
-                            found = true;
-                            xSorted.RemoveAt(xi);
-                            ySorted.RemoveAt(yi);
-                            break;
-                        }
-                    }
+                //        diffs.Add(new IndexDiff(xItem, new ValueDiff(xItem, PaddedPairs.MissingItem)));
+                //        continue;
+                //    }
 
-                    if (!found)
-                    {
-                        if (diffs == null)
-                        {
-                            diffs = new List<SubDiff>();
-                        }
+                //    ValueDiff valueDiff = null;
+                //    for (int yi = indices.First; yi <= indices.Last; yi++)
+                //    {
+                //        var yItem = ySorted[yi];
+                //        valueDiff = itemDiff(xItem, yItem, settings, referencePairs);
+                //        if (valueDiff == null)
+                //        {
+                //            found = true;
+                //            xSorted.RemoveAt(xi);
+                //            ySorted.RemoveAt(yi);
+                //            break;
+                //        }
+                //    }
 
-                        diffs.Add(new IndexDiff(xItem, valueDiff));
-                        xSorted.RemoveAt(xi);
-                        ySorted.RemoveAt(indices.Last);
-                    }
-                }
+                //    if (!found)
+                //    {
+                //        if (diffs == null)
+                //        {
+                //            diffs = new List<SubDiff>();
+                //        }
 
-                foreach (var yItem in ySorted)
-                {
-                    if (diffs == null)
-                    {
-                        diffs = new List<SubDiff>();
-                    }
+                //        diffs.Add(new IndexDiff(xItem, valueDiff));
+                //        xSorted.RemoveAt(xi);
+                //        ySorted.RemoveAt(indices.Last);
+                //    }
+                //}
 
-                    diffs.Add(new IndexDiff(yItem, new ValueDiff(PaddedPairs.MissingItem, yItem)));
-                }
+                //foreach (var yItem in ySorted)
+                //{
+                //    if (diffs == null)
+                //    {
+                //        diffs = new List<SubDiff>();
+                //    }
 
-                return diffs;
+                //    diffs.Add(new IndexDiff(yItem, new ValueDiff(PaddedPairs.MissingItem, yItem)));
+                //}
+
+                //return diffs;
             }
 
-            private static List<SubDiff> Diffs<TSettings>(
+            private static void Diffs<TSettings>(
                 IEnumerable x,
                 IEnumerable y,
                 TSettings settings,
-                ReferencePairCollection referencePairs,
-                Func<object, object, TSettings, ReferencePairCollection, ValueDiff> itemDiff)
+                DiffBuilder collectionBuilder,
+                Action<object, object, object, TSettings, DiffBuilder> itemDiff)
                 where TSettings : IMemberSettings
             {
                 if (x == null || y == null)
@@ -194,28 +169,11 @@
                 }
 
                 var i = -1;
-                List<SubDiff> diffs = null;
                 foreach (var pair in new PaddedPairs(x, y))
                 {
                     i++;
-                    if (referencePairs?.Contains(pair.X, pair.Y) == true)
-                    {
-                        continue;
-                    }
-
-                    var diff = itemDiff(pair.X, pair.Y, settings, referencePairs);
-                    if (diff != null)
-                    {
-                        if (diffs == null)
-                        {
-                            diffs = new List<SubDiff>();
-                        }
-
-                        diffs.Add(new IndexDiff(i, diff));
-                    }
+                    itemDiff(pair.X, pair.Y, i, settings, collectionBuilder);
                 }
-
-                return diffs;
             }
         }
     }

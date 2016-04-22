@@ -1,11 +1,52 @@
 ﻿namespace Gu.State
 {
-    using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
 
     internal static class EnumerableExt
     {
+        internal static object ElementAtOrMissing(this IList list, int index)
+        {
+            if (index < list.Count)
+            {
+                return list[index];
+            }
+
+            return PaddedPairs.MissingItem;
+        }
+
+        internal static object ElementAtOrMissing<T>(this IList<T> list, int index)
+        {
+            if (index < list.Count)
+            {
+                return list[index];
+            }
+
+            return PaddedPairs.MissingItem;
+        }
+
+        internal static object ElementAtOrMissing(this IDictionary dictionary, object key)
+        {
+            if (dictionary.Contains(key))
+            {
+                return dictionary[key];
+            }
+
+            return PaddedPairs.MissingItem;
+        }
+
+        internal static object ElementAtOrMissing<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key)
+        {
+            TValue value;
+            if (dictionary.TryGetValue(key, out value))
+            {
+                return value;
+            }
+
+            return PaddedPairs.MissingItem;
+        }
+
         // http://stackoverflow.com/a/969118/1069200
         internal static IEnumerable<T> SkipLast<T>(this IEnumerable<T> source)
         {

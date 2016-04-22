@@ -75,39 +75,41 @@
             FieldsSettings settings,
             ReferencePairCollection referencePairs)
         {
+            throw new NotImplementedException("message");
+            
             referencePairs?.Add(x, y);
-            var diffs = Enumerable.Diffs(x, y, settings, referencePairs, ItemFieldsDiff);
+            //var diffs = Enumerable.AddItemDiffs(x, y, settings, referencePairs, ItemFieldsDiff);
 
-            var fieldInfos = x.GetType().GetFields(settings.BindingFlags);
-            foreach (var fieldInfo in fieldInfos)
-            {
-                if (settings.IsIgnoringField(fieldInfo))
-                {
-                    continue;
-                }
+            //var fieldInfos = x.GetType().GetFields(settings.BindingFlags);
+            //foreach (var fieldInfo in fieldInfos)
+            //{
+            //    if (settings.IsIgnoringField(fieldInfo))
+            //    {
+            //        continue;
+            //    }
 
-                var xv = fieldInfo.GetValue(x);
-                var yv = fieldInfo.GetValue(y);
-                if (referencePairs?.Contains(xv, yv) == true)
-                {
-                    continue;
-                }
+            //    var xv = fieldInfo.GetValue(x);
+            //    var yv = fieldInfo.GetValue(y);
+            //    if (referencePairs?.Contains(xv, yv) == true)
+            //    {
+            //        continue;
+            //    }
 
-                var fieldValueDiff = FieldValueDiff(xv, yv, fieldInfo, settings, referencePairs);
-                if (fieldValueDiff == null)
-                {
-                    continue;
-                }
+            //    var fieldValueDiff = FieldValueDiff(xv, yv, fieldInfo, settings, referencePairs);
+            //    if (fieldValueDiff == null)
+            //    {
+            //        continue;
+            //    }
 
-                if (diffs == null)
-                {
-                    diffs = new List<SubDiff>();
-                }
+            //    if (diffs == null)
+            //    {
+            //        diffs = new List<SubDiff>();
+            //    }
 
-                diffs.Add(fieldValueDiff);
-            }
+            //    diffs.Add(fieldValueDiff);
+            //}
 
-            return diffs;
+            //return diffs;
         }
 
         private static ValueDiff ItemFieldsDiff(
