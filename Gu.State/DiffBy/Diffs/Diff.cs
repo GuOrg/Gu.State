@@ -1,7 +1,6 @@
 ﻿namespace Gu.State
 {
     using System.CodeDom.Compiler;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
 
     /// <summary>A node in a diff tree.</summary>
@@ -25,33 +24,11 @@
         /// <returns>A report with all diffs.</returns>
         public abstract string ToString(string tabString, string newLine);
 
-        internal static Disposer<List<SubDiff>> BorrowReferenceList()
+        internal static Disposer<HashSet<SubDiff>> BorrowReferenceList()
         {
-            return ReferenceListPool.Borrow();
+            return ReferenceSetPool<SubDiff>.Borrow();
         }
 
-        internal abstract IndentedTextWriter WriteDiffs(IndentedTextWriter writer, List<SubDiff> written);
-
-        private static class ReferenceListPool
-        {
-            private static readonly ConcurrentQueue<List<SubDiff>> Pool = new ConcurrentQueue<List<SubDiff>>();
-
-            internal static Disposer<List<SubDiff>> Borrow()
-            {
-                List<SubDiff> list;
-                if (Pool.TryDequeue(out list))
-                {
-                    return new Disposer<List<SubDiff>>(list, Return);
-                }
-
-                return new Disposer<List<SubDiff>>(new List<SubDiff>(), Return);
-            }
-
-            private static void Return(List<SubDiff> list)
-            {
-                list.Clear();
-                Pool.Enqueue(list);
-            }
-        }
+        internal abstract IndentedTextWriter WriteDiffs(IndentedTextWriter writer, HashSet<SubDiff> written);
     }
 }

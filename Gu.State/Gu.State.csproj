@@ -53,6 +53,8 @@
     <Compile Include="DiffBy\Diffs\IndexDiff.cs" />
     <Compile Include="DiffBy\Diffs\MemberDiff.cs" />
     <Compile Include="DiffBy\Diffs\PropertyDiff.cs" />
+    <Compile Include="Internals\Collections\ReferenceComparer{T}.cs" />
+    <Compile Include="Internals\Collections\ReferenceSetPool.cs" />
     <Compile Include="DiffBy\Diffs\SubDiff.cs" />
     <Compile Include="DiffBy\Diffs\EmptyDiff.cs" />
     <Compile Include="DiffBy\Diffs\ValueDiff.cs" />

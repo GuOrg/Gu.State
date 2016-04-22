@@ -33,7 +33,6 @@ namespace Gu.State
 
             subBuilder = new SubBuilder(this);
             this.AddSubBuilderToCache(x, y, subBuilder);
-            this.Add(subBuilder);
             return true;
         }
     }

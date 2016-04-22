@@ -54,15 +54,13 @@ namespace Gu.State
             }
         }
 
-        internal override IndentedTextWriter WriteDiffs(IndentedTextWriter writer, List<SubDiff> written)
+        internal override IndentedTextWriter WriteDiffs(IndentedTextWriter writer, HashSet<SubDiff> written)
         {
-            if (written.Contains(this))
+            if (!written.Add(this))
             {
                 writer.Write("...");
                 return writer;
             }
-
-            written.Add(this);
 
             if (this.Diffs.Count == 0)
             {

@@ -11,7 +11,7 @@
 
         internal bool IsEmpty => this.Diffs == null || !this.Diffs.Any();
 
-        internal IEnumerable<SubDiff> Diffs => this.diffs.Concat(this.builders.Select(b => b()).Where(x => x != null));
+        internal IEnumerable<SubDiff> Diffs => this.diffs.Concat(this.BuildDiffs());
 
         internal abstract bool TryAdd(object x, object y, out SubBuilder subBuilder);
 
@@ -23,6 +23,13 @@
         internal void Add(Func<SubDiff> builder)
         {
             this.builders.Add(builder);
+        }
+
+        private IEnumerable<SubDiff> BuildDiffs()
+        {
+            return this.builders
+                       .Select(b => b())
+                       .Where(x => x != null);
         }
     }
 }

@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Linq;
     using System.Reflection;
 
     public static partial class DiffBy
@@ -67,7 +68,7 @@
                 AddSubDiffs(x, y, settings, builder);
                 return builder.IsEmpty
                            ? null
-                           : new ValueDiff(x, y, builder.Diffs);
+                           : new ValueDiff(x, y, builder.Diffs.ToArray());
             }
 
             private static void AddSubDiffs<T>(
@@ -76,12 +77,6 @@
                 PropertiesSettings settings,
                 DiffBuilder builder)
             {
-                SubBuilder subBuilder;
-                if (!builder.TryAdd(x, y, out subBuilder))
-                {
-                    return;
-                }
-
                 //var diffs = Enumerable.Diffs(x, y, settings, builder, ItemPropertiesDiff);
                 var propertyInfos = x.GetType().GetProperties(settings.BindingFlags);
                 foreach (var propertyInfo in propertyInfos)
@@ -96,7 +91,7 @@
                     {
                         if (!getterAndSetter.ValueEquals(x, y))
                         {
-                            subBuilder.Add(new PropertyDiff(propertyInfo, getterAndSetter.GetValue(x), getterAndSetter.GetValue(y)));
+                            builder.Add(new PropertyDiff(propertyInfo, getterAndSetter.GetValue(x), getterAndSetter.GetValue(y)));
                         }
 
                         continue;
@@ -141,23 +136,39 @@
                 ValueDiff diff;
                 if (TryGetValueDiff(xValue, yValue, settings, out diff))
                 {
-                    return diff == null
-                               ? null
-                               : new PropertyDiff(propertyInfo, diff);
+                    if (diff != null)
+                    {
+                        builder.Add(new PropertyDiff(propertyInfo, diff));
+                    }
+
+                    return;
                 }
 
                 switch (settings.ReferenceHandling)
                 {
                     case ReferenceHandling.References:
-                        return ReferenceEquals(xValue, yValue) ? null : new PropertyDiff(propertyInfo, xValue, yValue);
+                        if (!ReferenceEquals(xValue, yValue))
+                        {
+                            builder.Add(new PropertyDiff(propertyInfo, new ValueDiff(xValue, yValue)));
+                        }
+
+                        return;
                     case ReferenceHandling.Structural:
                     case ReferenceHandling.StructuralWithReferenceLoops:
                         EqualBy.Verify.CanEqualByPropertyValues(xValue, yValue, settings, typeof(DiffBy).Name, nameof(PropertyValues));
-                        var subBuilder = AddSubDiffs(xValue, yValue, settings, builder);
-                        return subBuilder.IsEmpty
-                                   ? null
-                                   : new PropertyDiff(propertyInfo, new ValueDiff(xValue, yValue, subBuilder.Diffs));
+                        SubBuilder subBuilder;
+                        if (builder.TryAdd(xValue, yValue, out subBuilder))
+                        {
+                            AddSubDiffs(xValue, yValue, settings, subBuilder);
+                        }
 
+                        builder.Add(
+                            () => subBuilder.IsEmpty
+                                      ? null
+                                      : new PropertyDiff(
+                                            propertyInfo,
+                                            new ValueDiff(xValue, yValue, subBuilder.Diffs.ToArray())));
+                        return;
                     case ReferenceHandling.Throw:
                         throw Throw.ShouldNeverGetHereException();
                     default:

@@ -59,7 +59,7 @@
             }
         }
 
-        internal override IndentedTextWriter WriteDiffs(IndentedTextWriter writer, List<SubDiff> written)
+        internal override IndentedTextWriter WriteDiffs(IndentedTextWriter writer, HashSet<SubDiff> written)
         {
             writer.Indent++;
             foreach (var diff in this.Diffs)

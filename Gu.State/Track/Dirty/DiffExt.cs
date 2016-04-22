@@ -142,21 +142,22 @@
 
             using (var disposer = Diff.BorrowReferenceList())
             {
-                var singles = SingleItemDiffs(diffs[0], disposer.Value);
-                if (singles != null)
-                {
-                    var node = singles[singles.Count - 1];
-                    if (isMatch(node) && Equals(removed.X, node.X) && Equals(removed.Y, node.Y))
-                    {
-                        diffs.Clear();
-                    }
-                }
+                throw new NotImplementedException("message");
+                //var singles = SingleItemDiffs(diffs[0], disposer.Value);
+                //if (singles != null)
+                //{
+                //    var node = singles[singles.Count - 1];
+                //    if (isMatch(node) && Equals(removed.X, node.X) && Equals(removed.Y, node.Y))
+                //    {
+                //        diffs.Clear();
+                //    }
+                //}
             }
 
             return diffs;
         }
 
-        private static List<SubDiff> SingleItemDiffs(SubDiff diff, List<SubDiff> diffs)
+        private static HashSet<SubDiff> SingleItemDiffs(SubDiff diff, HashSet<SubDiff> diffs)
         {
             if (diffs == null)
             {

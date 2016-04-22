@@ -13,13 +13,11 @@ namespace Gu.State
         {
             if (this.root.TryGetSubBuilder(x, y, out subBuilder))
             {
-                this.Add(subBuilder);
                 return false;
             }
 
             subBuilder = new SubBuilder(this.root);
             this.root.AddSubBuilderToCache(x, y, subBuilder);
-            this.Add(subBuilder);
             return true;
         }
     }
