@@ -1,6 +1,7 @@
 ﻿namespace Gu.State
 {
     using System;
+    using System.CodeDom.Compiler;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
@@ -8,29 +9,30 @@
 
     internal abstract class DiffBuilder
     {
-        private readonly Dictionary<ReferencePair, DiffBuilder> builderCache = new Dictionary<ReferencePair, DiffBuilder>();
+        private readonly Dictionary<ReferencePair, DiffBuilder> builderCache;
         private readonly List<SubDiff> diffs = new List<SubDiff>();
-        private readonly List<Factory> builders = new List<Factory>();
-        private readonly Lazy<ValueDiff> valueDiff;
-        private readonly object x;
-        private readonly object y;
+        private readonly ValueDiff valueDiff;
 
-        protected DiffBuilder(object x, object y)
+        protected DiffBuilder(object x, object y, DiffBuilderRoot root)
+            : this(x, y, root.builderCache)
         {
-            this.x = x;
-            this.y = y;
-            this.valueDiff = new Lazy<ValueDiff>(() => new ValueDiff(this.x, this.y, this.Diffs.ToArray()));
+        }
+
+        protected DiffBuilder(object x, object y, Dictionary<ReferencePair, DiffBuilder> builderCache)
+        {
+            this.builderCache = builderCache;
             Debug.Assert(!this.builderCache.ContainsKey(new ReferencePair(x, y)), "Builder added twice");
+            this.valueDiff = new ValueDiff(x, y, this.diffs);
             this.builderCache.Add(new ReferencePair(x, y), this);
         }
 
-        internal bool IsEmpty => !(this.diffs.Any() || this.builders.Any(b => b.CanCreate));
+        internal event EventHandler Empty;
 
-        internal IEnumerable<SubDiff> Diffs => this.diffs.Concat(this.BuildDiffs());
+        private bool IsEmpty => this.diffs.Count == 0;
 
         internal abstract bool TryAdd(object x, object y, out DiffBuilder subDiffBuilder);
 
-        internal bool TryGetSubBuilder(object x, object y, out DiffBuilder diffBuilder)
+        internal bool TryGetBuilder(object x, object y, out DiffBuilder diffBuilder)
         {
             var pair = new ReferencePair(x, y);
             return this.builderCache.TryGetValue(pair, out diffBuilder);
@@ -43,70 +45,43 @@
 
         internal void AddLazy(PropertyInfo property, DiffBuilder builder)
         {
-            this.builders.Add(new PropertyFactory(property, builder));
+            this.diffs.Add(new PropertyDiff(property, builder.valueDiff));
         }
 
         public void AddLazy(object index, DiffBuilder builder)
         {
-            this.builders.Add(new IndexFactory(index, builder));
+            this.diffs.Add(new IndexDiff(index, builder.valueDiff));
         }
 
         public ValueDiff CreateValueDiff()
         {
-            return this.IsEmpty
-                       ? null
-                       : this.valueDiff.Value;
+            this.PurgeEmptyBuilders();
+            return this.IsEmpty ? null : this.valueDiff;
         }
 
-        private IEnumerable<SubDiff> BuildDiffs()
+        protected void OnSubBuilderEmpty(object sender, EventArgs e)
         {
-            return this.builders.Where(b => b.CanCreate)
-                       .Select(b => b.Create());
-        }
-
-        private abstract class Factory
-        {
-            protected readonly DiffBuilder Builder;
-
-            protected Factory(DiffBuilder builder)
+            var builder = (DiffBuilder)sender;
+            if (this.IsEmpty)
             {
-                this.Builder = builder;
+                return;
             }
 
-            public bool CanCreate => !this.Builder.IsEmpty;
-
-            internal abstract SubDiff Create();
-        }
-
-        private class PropertyFactory : Factory
-        {
-            private readonly PropertyInfo propertyInfo;
-
-            public PropertyFactory(PropertyInfo propertyInfo, DiffBuilder builder)
-                : base(builder)
+            this.diffs.RemoveAll(x => x.ValueDiff == builder.valueDiff);
+            if (this.IsEmpty)
             {
-                this.propertyInfo = propertyInfo;
-            }
-
-            internal override SubDiff Create()
-            {
-                return new PropertyDiff(this.propertyInfo, this.Builder.valueDiff.Value);
+                this.Empty?.Invoke(this, EventArgs.Empty);
             }
         }
 
-        private class IndexFactory : Factory
+        private void PurgeEmptyBuilders()
         {
-            private readonly object index;
-
-            public IndexFactory(object index, DiffBuilder builder)
-                : base(builder)
+            foreach (var builder in this.builderCache.Values)
             {
-                this.index = index;
-            }
-
-            internal override SubDiff Create()
-            {
-                return new IndexDiff(this.index, this.Builder.valueDiff.Value);
+                if (builder.IsEmpty)
+                {
+                    builder.Empty?.Invoke(builder, EventArgs.Empty);
+                }
             }
         }
     }

@@ -1,9 +1,7 @@
 ﻿namespace Gu.State
 {
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Linq;
     using System.Reflection;
 
     public static partial class DiffBy
@@ -123,7 +121,7 @@
                 {
                     if (!ReferenceEquals(xItem, yItem))
                     {
-                        collectionBuilder.Add(new IndexDiff(index, diff));
+                        collectionBuilder.Add(new IndexDiff(index, new ValueDiff(xItem, yItem)));
                     }
 
                     return;

@@ -115,7 +115,7 @@ namespace Gu.State.Tests.DiffTests
         [Test]
         public void DetectsReferenceLoop()
         {
-            var expected = this is DiffTests.FieldValues.Throws
+            var expected = this is FieldValues.Throws
                    ? "DiffBy.FieldValues(x, y) failed.\r\n" +
                      "The field Parent.<Child>k__BackingField of type Child is in a reference loop.\r\n" +
                      "  - The loop is Parent.<Child>k__BackingField.<Parent>k__BackingField.<Child>k__BackingField...\r\n" +
@@ -154,7 +154,7 @@ namespace Gu.State.Tests.DiffTests
             Assert.AreEqual(expected, exception.Message);
 
             Assert.AreEqual("Empty", this.DiffMethod(x, y, ReferenceHandling.StructuralWithReferenceLoops).ToString());
-            Assert.IsNotNull(this.DiffMethod(x, y, ReferenceHandling.References));
+            Assert.AreEqual("Parent Child x: Child y: Child", this.DiffMethod(x, y, ReferenceHandling.References).ToString("", " "));
         }
     }
 }
