@@ -154,7 +154,7 @@ namespace Gu.State.Tests.DiffTests
             Assert.AreEqual(expected, exception.Message);
 
             Assert.AreEqual("Empty", this.DiffMethod(x, y, ReferenceHandling.StructuralWithReferenceLoops).ToString());
-            Assert.AreEqual("Parent Child x: Child y: Child", this.DiffMethod(x, y, ReferenceHandling.References).ToString("", " "));
+            Assert.AreEqual("Parent Child x: Gu.State.Tests.DiffTests.DiffTypes+Child y: Gu.State.Tests.DiffTests.DiffTypes+Child", this.DiffMethod(x, y, ReferenceHandling.References).ToString("", " "));
         }
     }
 }

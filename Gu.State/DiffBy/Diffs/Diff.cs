@@ -1,7 +1,9 @@
 ﻿namespace Gu.State
 {
     using System.CodeDom.Compiler;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.Runtime.CompilerServices;
 
     /// <summary>A node in a diff tree.</summary>
     public abstract class Diff
@@ -12,6 +14,8 @@
         {
             this.Diffs = diffs ?? Empty;
         }
+
+        public abstract bool IsEmpty { get; }
 
         /// <summary>Gets the diffs for properties and indexes.</summary>
         public IReadOnlyList<SubDiff> Diffs { get; }
@@ -24,11 +28,33 @@
         /// <returns>A report with all diffs.</returns>
         public abstract string ToString(string tabString, string newLine);
 
-        internal static Disposer<HashSet<ValueDiff>> BorrowReferenceList()
+        internal static Disposer<HashSet<ValueDiff>> BorrowValueDiffReferenceSet()
         {
-            return ReferenceSetPool<ValueDiff>.Borrow();
+            return ValueDiffSetPool.Borrow();
         }
 
         internal abstract IndentedTextWriter WriteDiffs(IndentedTextWriter writer, HashSet<ValueDiff> written);
+
+        private static class ValueDiffSetPool
+        {
+            private static readonly ConcurrentQueue<HashSet<ValueDiff>> Pool = new ConcurrentQueue<HashSet<ValueDiff>>();
+
+            internal static Disposer<HashSet<ValueDiff>> Borrow()
+            {
+                HashSet<ValueDiff> set;
+                if (Pool.TryDequeue(out set))
+                {
+                    return new Disposer<HashSet<ValueDiff>>(set, Return);
+                }
+
+                return new Disposer<HashSet<ValueDiff>>(new HashSet<ValueDiff>(), Return);
+            }
+
+            private static void Return(HashSet<ValueDiff> set)
+            {
+                set.Clear();
+                Pool.Enqueue(set);
+            }
+        }
     }
 }

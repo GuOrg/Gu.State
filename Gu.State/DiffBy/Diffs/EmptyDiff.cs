@@ -14,6 +14,8 @@
         {
         }
 
+        public override bool IsEmpty => true;
+
         /// <inheritdoc />
         public override string ToString()
         {

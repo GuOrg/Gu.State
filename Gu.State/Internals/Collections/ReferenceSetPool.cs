@@ -13,10 +13,12 @@
             HashSet<T> set;
             if (Pool.TryDequeue(out set))
             {
-                return new Disposer<HashSet<T>>(set, Return);
+                return Disposer.Create(set, Return);
             }
-
-            return new Disposer<HashSet<T>>(new HashSet<T>(ReferenceComparer<T>.Default), Return);
+            else
+            {
+                return Disposer.Create(new HashSet<T>(ReferenceComparer<T>.Default), Return);
+            }
         }
 
         private static void Return(HashSet<T> set)

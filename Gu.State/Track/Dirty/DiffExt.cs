@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Reflection;
 
     internal static class DiffExt
@@ -94,7 +93,7 @@
             SubDiff newDiff)
         {
             var result = new List<SubDiff>(source.Count);
-            bool replaced = false;
+            var replaced = false;
             foreach (var item in source)
             {
                 if (isMatch(item))
@@ -140,7 +139,7 @@
                 return diffs;
             }
 
-            using (var disposer = Diff.BorrowReferenceList())
+            using (var disposer = Diff.BorrowValueDiffReferenceSet())
             {
                 throw new NotImplementedException("message");
                 //var singles = SingleItemDiffs(diffs[0], disposer.Value);

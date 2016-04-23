@@ -45,7 +45,7 @@ namespace Gu.State
             using (var writer = new IndentedTextWriter(new StringWriter(), tabString) { NewLine = newLine })
             {
                 writer.WriteLine(this.Index);
-                using (var disposer = BorrowReferenceList())
+                using (var disposer = BorrowValueDiffReferenceSet())
                 {
                     this.WriteDiffs(writer, disposer.Value);
                 }

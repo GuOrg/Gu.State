@@ -28,7 +28,7 @@
 
         internal event EventHandler Empty;
 
-        private bool IsEmpty => this.diffs.Count == 0;
+        private bool IsEmpty => this.diffs.All(d => d.IsEmpty);
 
         internal abstract bool TryAdd(object x, object y, out DiffBuilder subDiffBuilder);
 
