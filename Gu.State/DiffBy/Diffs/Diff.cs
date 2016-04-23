@@ -24,11 +24,11 @@
         /// <returns>A report with all diffs.</returns>
         public abstract string ToString(string tabString, string newLine);
 
-        internal static Disposer<HashSet<SubDiff>> BorrowReferenceList()
+        internal static Disposer<HashSet<ValueDiff>> BorrowReferenceList()
         {
-            return ReferenceSetPool<SubDiff>.Borrow();
+            return ReferenceSetPool<ValueDiff>.Borrow();
         }
 
-        internal abstract IndentedTextWriter WriteDiffs(IndentedTextWriter writer, HashSet<SubDiff> written);
+        internal abstract IndentedTextWriter WriteDiffs(IndentedTextWriter writer, HashSet<ValueDiff> written);
     }
 }

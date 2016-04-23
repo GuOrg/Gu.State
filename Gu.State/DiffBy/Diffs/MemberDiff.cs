@@ -57,11 +57,11 @@ namespace Gu.State
             }
         }
 
-        internal override IndentedTextWriter WriteDiffs(IndentedTextWriter writer, HashSet<SubDiff> written)
+        internal override IndentedTextWriter WriteDiffs(IndentedTextWriter writer, HashSet<ValueDiff> written)
         {
-            if (!written.Add(this))
+            if (!written.Add(this.ValueDiff))
             {
-                writer.Write("...");
+                writer.Write($"{this.MemberyInfo.Name} ...");
                 return writer;
             }
 

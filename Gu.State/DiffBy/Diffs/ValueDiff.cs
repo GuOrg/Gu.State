@@ -52,6 +52,7 @@
                 writer.Write(this.X.GetType().PrettyName());
                 using (var disposer = BorrowReferenceList())
                 {
+                    disposer.Value.Add(this);
                     this.WriteDiffs(writer, disposer.Value);
                 }
 
@@ -59,7 +60,7 @@
             }
         }
 
-        internal override IndentedTextWriter WriteDiffs(IndentedTextWriter writer, HashSet<SubDiff> written)
+        internal override IndentedTextWriter WriteDiffs(IndentedTextWriter writer, HashSet<ValueDiff> written)
         {
             writer.Indent++;
             foreach (var diff in this.Diffs)

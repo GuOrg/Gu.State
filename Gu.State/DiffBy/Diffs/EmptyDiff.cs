@@ -26,7 +26,7 @@
             return this.ToString();
         }
 
-        internal override IndentedTextWriter WriteDiffs(IndentedTextWriter writer, HashSet<SubDiff> written)
+        internal override IndentedTextWriter WriteDiffs(IndentedTextWriter writer, HashSet<ValueDiff> written)
         {
             return writer;
         }
