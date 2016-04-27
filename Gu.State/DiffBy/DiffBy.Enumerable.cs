@@ -24,11 +24,11 @@
 
                 Debug.Assert(settings.ReferenceHandling != ReferenceHandling.Throw, "Should not get here");
 
-                IList xl;
-                IList yl;
-                if (Try.CastAs(x, y, out xl, out yl))
+                IDiffBy comparer;
+                if (ListDiffBy.TryGetOrCreate(x, y, out comparer) ||
+                    ReadonlyListDiffBy.TryGetOrCreate(x, y, out comparer))
                 {
-                    Diffs(xl, yl, settings, collectionBuilder, itemDiff);
+                    comparer.AddDiffs(x, y, settings, collectionBuilder, itemDiff);
                     return;
                 }
 
@@ -49,22 +49,6 @@
                 }
 
                 Diffs((IEnumerable)x, (IEnumerable)y, settings, collectionBuilder, itemDiff);
-            }
-
-            private static void Diffs<TSettings>(
-                IList x,
-                IList y,
-                TSettings settings,
-                DiffBuilder collectionBuilder,
-                Action<object, object, object, TSettings, DiffBuilder> itemDiff)
-                where TSettings : IMemberSettings
-            {
-                for (int i = 0; i < Math.Max(x.Count, y.Count); i++)
-                {
-                    var xv = x.ElementAtOrMissing(i);
-                    var yv = y.ElementAtOrMissing(i);
-                    itemDiff(xv, yv, i, settings, collectionBuilder);
-                }
             }
 
             private static void Diffs<TSettings>(

@@ -9,7 +9,7 @@
     {
         private static readonly ConcurrentDictionary<Type, IDiffBy> Cache = new ConcurrentDictionary<Type, IDiffBy>();
 
-        internal static bool TryGet(object x, object y, out IDiffBy result)
+        internal static bool TryGetOrCreate(object x, object y, out IDiffBy result)
         {
             if (x.GetType().Implements(typeof(IList<>)) && y.GetType().Implements(typeof(IList<>)))
             {
