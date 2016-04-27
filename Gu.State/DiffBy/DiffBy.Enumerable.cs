@@ -1,9 +1,7 @@
 ﻿namespace Gu.State
 {
     using System;
-    using System.Collections;
     using System.Diagnostics;
-    using System.Linq;
 
     public static partial class DiffBy
     {
@@ -26,50 +24,17 @@
 
                 IDiffBy comparer;
                 if (ListDiffBy.TryGetOrCreate(x, y, out comparer) ||
-                    ReadonlyListDiffBy.TryGetOrCreate(x, y, out comparer))
+                    ReadonlyListDiffBy.TryGetOrCreate(x, y, out comparer) ||
+                    DictionaryDiffBy.TryGetOrCreate(x, y, out comparer) ||
+                    ReadOnlyDictionaryDiffBy.TryGetOrCreate(x, y, out comparer) ||
+                    SetDiffBy.TryGetOrCreate(x, y, out comparer) ||
+                    EnumerableDiffBy.TryGetOrCreate(x, y, out comparer))
                 {
                     comparer.AddDiffs(x, y, settings, collectionBuilder, itemDiff);
                     return;
                 }
 
-                IDictionary xd;
-                IDictionary yd;
-                if (Try.CastAs(x, y, out xd, out yd))
-                {
-                    Diffs(xd, yd, settings, collectionBuilder, itemDiff);
-                    return;
-                }
-
-                if (Is.Sets(x, y))
-                {
-                    var xe = Set.ItemsOrderByHashCode(x);
-                    var ye = Set.ItemsOrderByHashCode(y);
-                    Diffs(xe, ye, settings, collectionBuilder, itemDiff);
-                    return;
-                }
-
-                Diffs((IEnumerable)x, (IEnumerable)y, settings, collectionBuilder, itemDiff);
-            }
-
-            private static void Diffs<TSettings>(
-                IDictionary x,
-                IDictionary y,
-                TSettings settings,
-                DiffBuilder collectionBuilder,
-                Action<object, object, object, TSettings, DiffBuilder> itemDiff)
-                where TSettings : IMemberSettings
-            {
-                if (x == null || y == null)
-                {
-                    throw Throw.ShouldNeverGetHereException("should be checked for same type before");
-                }
-
-                foreach (var key in x.Keys.OfType<object>().Concat(y.Keys.OfType<object>()).Distinct())
-                {
-                    var xv = x.ElementAtOrMissing(key);
-                    var yv = y.ElementAtOrMissing(key);
-                    itemDiff(xv, yv, key, settings, collectionBuilder);
-                }
+                throw Throw.ShouldNeverGetHereException("All enumarebles must be checked here");
             }
 
             private static void Diffs<TSettings>(
@@ -136,27 +101,6 @@
                 //}
 
                 //return diffs;
-            }
-
-            private static void Diffs<TSettings>(
-                IEnumerable x,
-                IEnumerable y,
-                TSettings settings,
-                DiffBuilder collectionBuilder,
-                Action<object, object, object, TSettings, DiffBuilder> itemDiff)
-                where TSettings : IMemberSettings
-            {
-                if (x == null || y == null)
-                {
-                    throw Throw.ShouldNeverGetHereException("should be checked for same type before");
-                }
-
-                var i = -1;
-                foreach (var pair in new PaddedPairs(x, y))
-                {
-                    i++;
-                    itemDiff(pair.X, pair.Y, i, settings, collectionBuilder);
-                }
             }
         }
     }

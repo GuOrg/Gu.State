@@ -1,9 +1,7 @@
 ﻿namespace Gu.State
 {
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
-    using System.Reflection;
 
     /// <inheritdoc />
     public class ReadOnlyDictionaryEqualByComparer<TKey, TValue> : EqualByComparer

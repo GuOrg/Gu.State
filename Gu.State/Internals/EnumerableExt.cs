@@ -57,6 +57,17 @@
             return PaddedPairs.MissingItem;
         }
 
+        internal static object ElementAtOrMissing<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> dictionary, TKey key)
+        {
+            TValue value;
+            if (dictionary.TryGetValue(key, out value))
+            {
+                return value;
+            }
+
+            return PaddedPairs.MissingItem;
+        }
+
         // http://stackoverflow.com/a/969118/1069200
         internal static IEnumerable<T> SkipLast<T>(this IEnumerable<T> source)
         {

@@ -1,15 +1,14 @@
 ﻿namespace Gu.State
 {
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.Runtime.CompilerServices;
 
     /// <inheritdoc />
     public class SetEqualByComparer<T> : EqualByComparer
     {
         /// <summary>The default instance.</summary>
         public static readonly SetEqualByComparer<T> Default = new SetEqualByComparer<T>();
-        private readonly SetPool pool = new SetPool();
 
         private SetEqualByComparer()
         {
@@ -40,17 +39,17 @@
             var xHashSet = xs as HashSet<T>;
             if (isEquatable)
             {
-                if (xHashSet?.Comparer == EqualityComparer<T>.Default)
+                if (Equals(xHashSet?.Comparer, EqualityComparer<T>.Default))
                 {
                     return xs.SetEquals(ys);
                 }
 
-                return this.ItemsEquals(xs, ys, EqualityComparer<T>.Default.Equals);
+                return this.ItemsEquals(xs, ys, EqualityComparer<T>.Default.Equals, EqualityComparer<T>.Default.GetHashCode);
             }
 
             if (settings.ReferenceHandling == ReferenceHandling.References)
             {
-                return this.ItemsEquals(xs, ys, (xi, yi) => ReferenceEquals(xi, yi));
+                return this.ItemsEquals(xs, ys, (xi, yi) => ReferenceEquals(xi, yi), xi => RuntimeHelpers.GetHashCode(xi));
             }
 
             var hashCodeMethod = typeof(T).GetMethod(nameof(this.GetHashCode), new Type[0]);
@@ -59,51 +58,16 @@
                 return this.ItemsEquals(xs, ys, (xi, yi) => compareItem(xi, yi, settings, referencePairs), _ => 0);
             }
 
-            return this.ItemsEquals(xs, ys, (xi, yi) => compareItem(xi, yi, settings, referencePairs));
+            return this.ItemsEquals(xs, ys, (xi, yi) => compareItem(xi, yi, settings, referencePairs), xi => xi.GetHashCode());
         }
 
-        private bool ItemsEquals(ISet<T> x, ISet<T> y, Func<T, T, bool> compare, Func<T, int> getHashCode = null)
+        private bool ItemsEquals(ISet<T> x, ISet<T> y, Func<T, T, bool> compare, Func<T, int> getHashCode)
         {
-            var set = this.pool.Borrow(compare, getHashCode);
-            set.UnionWith(x);
-            var result = set.SetEquals(y);
-            this.pool.Return(set);
-            return result;
-        }
-
-        private class SetPool
-        {
-            private readonly ConcurrentQueue<HashSet<T>> cache = new ConcurrentQueue<HashSet<T>>();
-
-            internal HashSet<T> Borrow(Func<T, T, bool> compare, Func<T, int> getHashCode = null)
+            using (var borrow = SetPool<T>.Borrow(compare, getHashCode))
             {
-                HashSet<T> set;
-                if (this.cache.TryDequeue(out set))
-                {
-                    ((WrappingComparer)set.Comparer).Compare = compare;
-                    ((WrappingComparer)set.Comparer).HashCode = getHashCode;
-                    return set;
-                }
-
-                return new HashSet<T>(new WrappingComparer { Compare = compare, HashCode = getHashCode });
-            }
-
-            internal void Return(HashSet<T> set)
-            {
-                set.Clear();
-                ((WrappingComparer)set.Comparer).Compare = null;
-                this.cache.Enqueue(set);
-            }
-
-            private class WrappingComparer : IEqualityComparer<T>
-            {
-                public Func<T, int> HashCode { private get; set; }
-
-                public Func<T, T, bool> Compare { private get; set; }
-
-                public bool Equals(T x, T y) => this.Compare(x, y);
-
-                public int GetHashCode(T obj) => this.HashCode?.Invoke(obj) ?? obj.GetHashCode();
+                borrow.Value.UnionWith(x);
+                var result = borrow.Value.SetEquals(y);
+                return result;
             }
         }
     }
