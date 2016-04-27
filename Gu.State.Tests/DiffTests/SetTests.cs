@@ -72,10 +72,13 @@ namespace Gu.State.Tests.DiffTests
             var x = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 1) };
             var y = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 2) };
             var result = this.DiffMethod(x, y, referenceHandling);
-            StringAssert.AreEqualIgnoringCase("HashSet<ComplexType> [Gu.State.Tests.DiffTests.DiffTypes+ComplexType] Value x: 1 y: 2", result.ToString("", " "));
+            var expected = "HashSet<ComplexType> [Gu.State.Tests.DiffTests.DiffTypes+ComplexType] x: Gu.State.Tests.DiffTests.DiffTypes+ComplexType y: missing item [Gu.State.Tests.DiffTests.DiffTypes+ComplexType] x: missing item y: Gu.State.Tests.DiffTests.DiffTypes+ComplexType";
+            var actual = result.ToString("", " ");
+            StringAssert.AreEqualIgnoringCase(expected, actual);
 
             result = this.DiffMethod(y, x, referenceHandling);
-            StringAssert.AreEqualIgnoringCase("HashSet<ComplexType> [Gu.State.Tests.DiffTests.DiffTypes+ComplexType] Value x: 2 y: 1", result.ToString("", " "));
+            actual = result.ToString("", " ");
+            StringAssert.AreEqualIgnoringCase(expected, actual);
         }
 
         [Test]
@@ -84,10 +87,13 @@ namespace Gu.State.Tests.DiffTests
             var x = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 1) };
             var y = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 2) };
             var result = this.DiffMethod(x, y, ReferenceHandling.References);
-            Assert.AreEqual("HashSet<ComplexType> [Gu.State.Tests.DiffTests.DiffTypes+ComplexType] x: Gu.State.Tests.DiffTests.DiffTypes+ComplexType y: Gu.State.Tests.DiffTests.DiffTypes+ComplexType", result.ToString("", " "));
+            var expected = "HashSet<ComplexType> [Gu.State.Tests.DiffTests.DiffTypes+ComplexType] x: Gu.State.Tests.DiffTests.DiffTypes+ComplexType y: missing item [Gu.State.Tests.DiffTests.DiffTypes+ComplexType] x: missing item y: Gu.State.Tests.DiffTests.DiffTypes+ComplexType";
+            var actual = result.ToString("", " ");
+            Assert.AreEqual(expected, actual);
 
             result = this.DiffMethod(y, x, ReferenceHandling.References);
-            Assert.AreEqual("HashSet<ComplexType> [Gu.State.Tests.DiffTests.DiffTypes+ComplexType] x: Gu.State.Tests.DiffTests.DiffTypes+ComplexType y: Gu.State.Tests.DiffTests.DiffTypes+ComplexType", result.ToString("", " "));
+            actual = result.ToString("", " ");
+            Assert.AreEqual(expected, actual);
         }
 
         [TestCase(ReferenceHandling.Structural)]
@@ -114,11 +120,10 @@ namespace Gu.State.Tests.DiffTests
             var x = new HashSet<HashCollisionType> { e1, new HashCollisionType { Value = 1 } };
             var y = new HashSet<HashCollisionType> { e1, new HashCollisionType { Value = 2 } };
             var result = this.DiffMethod(x, y, referenceHandling);
-            var expected = "HashSet<HashCollisionType> [Gu.State.Tests.DiffTests.DiffTypes+HashCollisionType] Value x: 1 y: 2";
+            var expected = "HashSet<HashCollisionType> [Gu.State.Tests.DiffTests.DiffTypes+HashCollisionType] x: Gu.State.Tests.DiffTests.DiffTypes+HashCollisionType y: missing item [Gu.State.Tests.DiffTests.DiffTypes+HashCollisionType] x: missing item y: Gu.State.Tests.DiffTests.DiffTypes+HashCollisionType";
             var actual = result.ToString("", " ");
             StringAssert.AreEqualIgnoringCase(expected, actual);
 
-            expected = "HashSet<HashCollisionType> [Gu.State.Tests.DiffTests.DiffTypes+HashCollisionType] Value x: 2 y: 1";
             result = this.DiffMethod(y, x, referenceHandling);
             actual = result.ToString("", " ");
             StringAssert.AreEqualIgnoringCase(expected, actual);
@@ -131,7 +136,8 @@ namespace Gu.State.Tests.DiffTests
             var x = new HashSet<HashCollisionType> { e1, new HashCollisionType() };
             var y = new HashSet<HashCollisionType> { e1, new HashCollisionType() };
             var result = this.DiffMethod(x, y, ReferenceHandling.References);
-            var expected = "HashSet<HashCollisionType> [Gu.State.Tests.DiffTests.DiffTypes+HashCollisionType] x: Gu.State.Tests.DiffTests.DiffTypes+HashCollisionType y: Gu.State.Tests.DiffTests.DiffTypes+HashCollisionType";
+            var expected = "HashSet<HashCollisionType> [Gu.State.Tests.DiffTests.DiffTypes+HashCollisionType] x: Gu.State.Tests.DiffTests.DiffTypes+HashCollisionType y: missing item [Gu.State.Tests.DiffTests.DiffTypes+HashCollisionType] x: missing item y: Gu.State.Tests.DiffTests.DiffTypes+HashCollisionType";
+
             var actual = result.ToString("", " ");
             Assert.AreEqual(expected, actual);
 
