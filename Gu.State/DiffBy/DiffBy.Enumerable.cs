@@ -18,7 +18,7 @@
                 Action<object, object, object, TSettings, DiffBuilder> itemDiff)
                 where TSettings : IMemberSettings
             {
-                if (!(x is IEnumerable) || !(y is IEnumerable))
+                if (!Is.Enumerable(x, y))
                 {
                     return;
                 }
