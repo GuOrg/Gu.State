@@ -3,7 +3,6 @@
     using System.CodeDom.Compiler;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
-    using System.Runtime.CompilerServices;
 
     /// <summary>A node in a diff tree.</summary>
     public abstract class Diff

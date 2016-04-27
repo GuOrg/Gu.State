@@ -1,7 +1,5 @@
 ﻿namespace Gu.State.Tests.DiffTests
 {
-    using System.Collections.Generic;
-
     using NUnit.Framework;
 
     using static DiffTypes;

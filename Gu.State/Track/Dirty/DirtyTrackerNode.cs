@@ -9,8 +9,6 @@
     using System.Linq;
     using System.Reflection;
 
-    using JetBrains.Annotations;
-
     internal sealed class DirtyTrackerNode : IRefCountable, INotifyPropertyChanged
     {
         private static readonly PropertyChangedEventArgs DiffPropertyChangedEventArgs = new PropertyChangedEventArgs(nameof(Diff));

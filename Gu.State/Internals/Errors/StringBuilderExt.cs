@@ -1,6 +1,5 @@
 ﻿namespace Gu.State
 {
-    using System;
     using System.Reflection;
     using System.Text;
 
