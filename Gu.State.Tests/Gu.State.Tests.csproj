@@ -55,12 +55,14 @@
     <Compile Include="CopyTests\PropertyValues\Sets.cs" />
     <Compile Include="CopyTests\ReferenceLoops.cs" />
     <Compile Include="CopyTests\SetTests.cs" />
+    <Compile Include="DiffTests\ArrayTests.cs" />
     <Compile Include="DiffTests\ClassesTests.cs" />
     <Compile Include="DiffTests\CollectionTests.cs" />
     <Compile Include="DiffTests\DictionaryTests.cs" />
     <Compile Include="DiffTests\Diffs\DiffToStringTests.cs" />
     <Compile Include="DiffTests\DiffTypes.cs" />
     <Compile Include="DiffTests\EnumerableTests.cs" />
+    <Compile Include="DiffTests\FieldValues\Array.cs" />
     <Compile Include="DiffTests\FieldValues\Classes.cs" />
     <Compile Include="DiffTests\FieldValues\Collections.cs" />
     <Compile Include="DiffTests\FieldValues\Dictionary.cs" />
@@ -69,6 +71,7 @@
     <Compile Include="DiffTests\FieldValues\Set.cs" />
     <Compile Include="DiffTests\FieldValues\Throws.cs" />
     <Compile Include="DiffTests\FieldValues\Verify.cs" />
+    <Compile Include="DiffTests\PropertyValues\Array.cs" />
     <Compile Include="DiffTests\PropertyValues\Classes.cs" />
     <Compile Include="DiffTests\PropertyValues\Collections.cs" />
     <Compile Include="DiffTests\PropertyValues\Dictionary.cs" />

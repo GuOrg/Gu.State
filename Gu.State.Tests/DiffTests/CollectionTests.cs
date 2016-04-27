@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Linq;
 
     using NUnit.Framework;
 
@@ -12,22 +11,6 @@
     public abstract class CollectionTests
     {
         public abstract Diff DiffMethod<T>(T source, T target, ReferenceHandling referenceHandling) where T : class;
-
-        [TestCase("1, 2, 3", "1, 2, 3", "Empty")]
-        [TestCase("1, 2, 3", "1, 2", "int[] [2] x: 3 y: missing item")]
-        [TestCase("1, 2", "1, 2, 3", "int[] [2] x: missing item y: 3")]
-        [TestCase("5, 2, 3", "1, 2, 3", "int[] [0] x: 5 y: 1")]
-        public void ArrayOfIntsStructural(string xs, string ys, string expected)
-        {
-            var x = xs.Split(',')
-                      .Select(int.Parse)
-                      .ToArray();
-            var y = ys.Split(',')
-                      .Select(int.Parse)
-                      .ToArray();
-            var result = this.DiffMethod(x, y, referenceHandling: ReferenceHandling.Structural);
-            Assert.AreEqual(expected, result.ToString("", " "));
-        }
 
         [Test]
         public void ListOfIntsToEmpty()
@@ -166,28 +149,6 @@
 
             result = this.DiffMethod(y, x, ReferenceHandling.Structural);
             Assert.AreEqual("Empty", result.ToString());
-        }
-
-        [Test]
-        public void ArrayOfInts()
-        {
-            var x = new[] { 1, 2, 3 };
-            var y = new[] { 1, 2, 3 };
-            var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual("Empty", result.ToString());
-
-            result = this.DiffMethod(y, x, ReferenceHandling.Structural);
-            Assert.AreEqual("Empty", result.ToString());
-        }
-
-        [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.References)]
-        public void ArrayOfEqualImmutable(ReferenceHandling referenceHandling)
-        {
-            var source = new[] { new Immutable(1), new Immutable(2), new Immutable(3) };
-            var target = new[] { new Immutable(1), new Immutable(2), new Immutable(3) };
-            var diff = this.DiffMethod(source, target, referenceHandling);
-            Assert.AreEqual("Empty", diff.ToString());
         }
     }
 }
