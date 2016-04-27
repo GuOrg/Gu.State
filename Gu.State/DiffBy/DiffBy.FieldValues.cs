@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Reflection;
 
     public static partial class DiffBy
@@ -44,134 +45,145 @@
             Ensure.NotNull(y, nameof(y));
             Ensure.NotNull(settings, nameof(settings));
             EqualBy.Verify.CanEqualByFieldValues(x, y, settings, typeof(DiffBy).Name, nameof(FieldValues));
-            return FieldValuesCore(x, y, settings) ?? new EmptyDiff(x, y);
+            return FieldsValuesDiffs.Get(x, y, settings) ?? new EmptyDiff(x, y);
         }
 
-        private static Diff FieldValuesCore<T>(T x, T y, FieldsSettings settings)
+        private static class FieldsValuesDiffs
         {
-            ValueDiff diff;
-            if (TryGetValueDiff(x, y, settings, out diff))
+            internal static ValueDiff Get<T>(T x, T y, FieldsSettings settings)
             {
-                return diff;
+                Debug.Assert(x != null, "x == null");
+                Debug.Assert(y != null, "y == null");
+                Debug.Assert(settings != null, "settings == null");
+
+                ValueDiff diff;
+                if (TryGetValueDiff(x, y, settings, out diff))
+                {
+                    return diff;
+                }
+
+                EqualBy.Verify.CanEqualByFieldValues(x, y, settings, typeof(DiffBy).Name, nameof(FieldValues));
+                var builder = new DiffBuilderRoot(x, y, settings.ReferenceHandling);
+                AddSubDiffs(x, y, settings, builder);
+                return builder.CreateValueDiff();
             }
 
-            EqualBy.Verify.CanEqualByFieldValues(x, y, settings, typeof(DiffBy).Name, nameof(FieldValues));
-            IReadOnlyList<SubDiff> diffs;
-            using (var pairs = settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops
-                                   ? ReferencePairCollection.Create()
-                                   : null)
+            private static void AddSubDiffs<T>(
+                T x,
+                T y,
+                FieldsSettings settings,
+                DiffBuilder builder)
             {
-                diffs = SubDiffs(x, y, settings, pairs);
+                Enumerable.AddItemDiffs(x, y, settings, builder, ItemFieldsDiff);
+                var fieldInfos = x.GetType().GetFields(settings.BindingFlags);
+                foreach (var fieldInfo in fieldInfos)
+                {
+                    if (settings.IsIgnoringField(fieldInfo))
+                    {
+                        continue;
+                    }
+
+                    var getterAndSetter = settings.GetOrCreateGetterAndSetter(fieldInfo);
+                    if (settings.IsEquatable(getterAndSetter.ValueType))
+                    {
+                        if (!getterAndSetter.ValueEquals(x, y))
+                        {
+                            builder.Add(new FieldDiff(fieldInfo, getterAndSetter.GetValue(x), getterAndSetter.GetValue(y)));
+                        }
+
+                        continue;
+                    }
+
+                    var xv = getterAndSetter.GetValue(x);
+                    var yv = getterAndSetter.GetValue(y);
+                    FieldValueDiff(xv, yv, fieldInfo, settings, builder);
+                }
             }
 
-            return diffs == null
-                       ? null
-                       : new ValueDiff(x, y, diffs);
-        }
-
-        private static IReadOnlyList<SubDiff> SubDiffs<T>(
-            T x,
-            T y,
-            FieldsSettings settings,
-            ReferencePairCollection referencePairs)
-        {
-            throw new NotImplementedException("message");
-            
-            referencePairs?.Add(x, y);
-            //var diffs = Enumerable.AddItemDiffs(x, y, settings, referencePairs, ItemFieldsDiff);
-
-            //var fieldInfos = x.GetType().GetFields(settings.BindingFlags);
-            //foreach (var fieldInfo in fieldInfos)
-            //{
-            //    if (settings.IsIgnoringField(fieldInfo))
-            //    {
-            //        continue;
-            //    }
-
-            //    var xv = fieldInfo.GetValue(x);
-            //    var yv = fieldInfo.GetValue(y);
-            //    if (referencePairs?.Contains(xv, yv) == true)
-            //    {
-            //        continue;
-            //    }
-
-            //    var fieldValueDiff = FieldValueDiff(xv, yv, fieldInfo, settings, referencePairs);
-            //    if (fieldValueDiff == null)
-            //    {
-            //        continue;
-            //    }
-
-            //    if (diffs == null)
-            //    {
-            //        diffs = new List<SubDiff>();
-            //    }
-
-            //    diffs.Add(fieldValueDiff);
-            //}
-
-            //return diffs;
-        }
-
-        private static ValueDiff ItemFieldsDiff(
-            object x,
-            object y,
-            FieldsSettings settings,
-            ReferencePairCollection referencePairs)
-        {
-            ValueDiff diff;
-            if (TryGetValueDiff(x, y, settings, out diff))
+            private static void ItemFieldsDiff(
+                object xItem,
+                object yItem,
+                object index,
+                FieldsSettings settings,
+                DiffBuilder collectionBuilder)
             {
-                return diff;
+                ValueDiff diff;
+                if (TryGetValueDiff(xItem, yItem, settings, out diff))
+                {
+                    if (diff != null)
+                    {
+                        collectionBuilder.Add(new IndexDiff(index, diff));
+                    }
+
+                    return;
+                }
+
+                if (settings.ReferenceHandling == ReferenceHandling.References)
+                {
+                    if (!ReferenceEquals(xItem, yItem))
+                    {
+                        collectionBuilder.Add(new IndexDiff(index, new ValueDiff(xItem, yItem)));
+                    }
+
+                    return;
+                }
+
+                EqualBy.Verify.CanEqualByFieldValues(xItem, yItem, settings, typeof(DiffBy).Name, nameof(PropertyValues));
+                DiffBuilder subDiffBuilder;
+                if (collectionBuilder.TryAdd(xItem, yItem, out subDiffBuilder))
+                {
+                    AddSubDiffs(xItem, yItem, settings, subDiffBuilder);
+                }
+
+                collectionBuilder.AddLazy(index, subDiffBuilder);
             }
 
-            if (settings.ReferenceHandling == ReferenceHandling.References)
+            private static void FieldValueDiff(
+                object xValue,
+                object yValue,
+                FieldInfo fieldInfo,
+                FieldsSettings settings,
+                DiffBuilder builder)
             {
-                return ReferenceEquals(x, y)
-                           ? null
-                           : new ValueDiff(x, y);
-            }
+                ValueDiff diff;
+                if (TryGetValueDiff(xValue, yValue, settings, out diff))
+                {
+                    if (diff != null)
+                    {
+                        builder.Add(new FieldDiff(fieldInfo, diff));
+                    }
 
-            EqualBy.Verify.CanEqualByFieldValues(x, y, settings, typeof(DiffBy).Name, nameof(FieldValues));
-            var diffs = SubDiffs(x, y, settings, referencePairs);
-            return diffs == null
-                       ? null
-                       : new ValueDiff(x, y, diffs);
-        }
+                    return;
+                }
 
-        private static SubDiff FieldValueDiff(
-            object xValue,
-            object yValue,
-            FieldInfo fieldInfo,
-            FieldsSettings settings,
-            ReferencePairCollection referencePairs)
-        {
-            ValueDiff diff;
-            if (TryGetValueDiff(xValue, yValue, settings, out diff))
-            {
-                return diff == null
-                           ? null
-                           : new FieldDiff(fieldInfo, diff);
-            }
+                switch (settings.ReferenceHandling)
+                {
+                    case ReferenceHandling.References:
+                        if (!ReferenceEquals(xValue, yValue))
+                        {
+                            builder.Add(new FieldDiff(fieldInfo, new ValueDiff(xValue, yValue)));
+                        }
 
-            switch (settings.ReferenceHandling)
-            {
-                case ReferenceHandling.References:
-                    return ReferenceEquals(xValue, yValue) ? null : new FieldDiff(fieldInfo, xValue, yValue);
-                case ReferenceHandling.Structural:
-                case ReferenceHandling.StructuralWithReferenceLoops:
-                    EqualBy.Verify.CanEqualByFieldValues(xValue, yValue, settings);
-                    var diffs = SubDiffs(xValue, yValue, settings, referencePairs);
-                    return diffs == null
-                               ? null
-                               : new FieldDiff(fieldInfo, new ValueDiff(xValue, yValue, diffs));
+                        return;
+                    case ReferenceHandling.Structural:
+                    case ReferenceHandling.StructuralWithReferenceLoops:
+                        EqualBy.Verify.CanEqualByFieldValues(xValue, yValue, settings, typeof(DiffBy).Name, nameof(PropertyValues));
+                        DiffBuilder subDiffBuilder;
+                        if (builder.TryAdd(xValue, yValue, out subDiffBuilder))
+                        {
+                            AddSubDiffs(xValue, yValue, settings, subDiffBuilder);
+                        }
 
-                case ReferenceHandling.Throw:
-                    throw Throw.ShouldNeverGetHereException();
-                default:
-                    throw new ArgumentOutOfRangeException(
-                        nameof(settings.ReferenceHandling),
-                        settings.ReferenceHandling,
-                        null);
+                        builder.AddLazy(fieldInfo, subDiffBuilder);
+                        return;
+                    case ReferenceHandling.Throw:
+                        throw Throw.ShouldNeverGetHereException();
+                    default:
+                        throw new ArgumentOutOfRangeException(
+                            nameof(settings.ReferenceHandling),
+                            settings.ReferenceHandling,
+                            null);
+                }
             }
         }
     }

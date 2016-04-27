@@ -48,6 +48,11 @@
             this.diffs.Add(new PropertyDiff(property, builder.valueDiff));
         }
 
+        internal void AddLazy(FieldInfo field, DiffBuilder builder)
+        {
+            this.diffs.Add(new FieldDiff(field, builder.valueDiff));
+        }
+
         public void AddLazy(object index, DiffBuilder builder)
         {
             this.diffs.Add(new IndexDiff(index, builder.valueDiff));

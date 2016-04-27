@@ -45,11 +45,9 @@
         [TestCase(1, "two", "Dictionary<int, ComplexType> [1] <member> x: two y: one")]
         public void DictionaryIntComplex(int key, string value, string expected)
         {
-            expected = expected?.Replace(
-                "<member>",
-                this is FieldValues.Collections
-                    ? "name"
-                    : "Name");
+            expected = this is FieldValues.Dictionary
+                           ? expected?.Replace("<member>", "name")
+                           : expected?.Replace("<member>", "Name");
             var x = new Dictionary<int, DiffTypes.ComplexType> { { key, new DiffTypes.ComplexType(value, 1) } };
             var y = new Dictionary<int, DiffTypes.ComplexType> { { 1, new DiffTypes.ComplexType("one", 1) } };
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
