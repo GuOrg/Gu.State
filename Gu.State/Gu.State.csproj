@@ -40,6 +40,11 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DiffBy\Comparers\IDiffBy.cs" />
+    <Compile Include="DiffBy\Comparers\ListDiffBy.cs" />
+    <Compile Include="DiffBy\Comparers\ListDiffBy{T}.cs" />
+    <Compile Include="DiffBy\Comparers\ReadonlyListDiffBy.cs" />
+    <Compile Include="DiffBy\Comparers\ReadOnlyListDiffBy{T}.cs" />
     <Compile Include="DiffBy\DiffBuilder\DiffBuilderRoot.cs" />
     <Compile Include="DiffBy\DiffBuilder\SubDiffBuilder.cs" />
     <Compile Include="DiffBy\Diffs\Diff.cs" />
@@ -53,6 +58,10 @@
     <Compile Include="DiffBy\Diffs\IndexDiff.cs" />
     <Compile Include="DiffBy\Diffs\MemberDiff.cs" />
     <Compile Include="DiffBy\Diffs\PropertyDiff.cs" />
+    <Compile Include="EqualBy\Comparers\ReadOnlyDictionaryEqualByComparer.cs" />
+    <Compile Include="EqualBy\Comparers\ReadOnlyDictionaryEqualByComparer{TKey, TValue}.cs" />
+    <Compile Include="EqualBy\Comparers\ReadOnlyListEqualByComparer.cs" />
+    <Compile Include="EqualBy\Comparers\ReadOnlyListEqualByComparer{T}.cs" />
     <Compile Include="Internals\Collections\ReferenceComparer{T}.cs" />
     <Compile Include="Internals\Collections\ReferenceSetPool.cs" />
     <Compile Include="DiffBy\Diffs\SubDiff.cs" />

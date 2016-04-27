@@ -26,6 +26,16 @@
             return PaddedPairs.MissingItem;
         }
 
+        internal static object ElementAtOrMissing<T>(this IReadOnlyList<T> list, int index)
+        {
+            if (index < list.Count)
+            {
+                return list[index];
+            }
+
+            return PaddedPairs.MissingItem;
+        }
+
         internal static object ElementAtOrMissing(this IDictionary dictionary, object key)
         {
             if (dictionary.Contains(key))
