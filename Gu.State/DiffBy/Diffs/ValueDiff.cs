@@ -38,50 +38,10 @@
         /// <summary>Gets the Y value.</summary>
         public object Y { get; }
 
-        public static bool operator ==(ValueDiff left, ValueDiff right)
-        {
-            return Equals(left, right);
-        }
-
-        public static bool operator !=(ValueDiff left, ValueDiff right)
-        {
-            return !Equals(left, right);
-        }
-
         /// <inheritdoc />
         public override string ToString()
         {
             return $"x: {this.X ?? "null"} y: {this.Y ?? "null"} diffs: {this.Diffs.Count}";
-        }
-
-        /// <inheritdoc />
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-
-            return this.Equals((ValueDiff)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                return ((this.X != null ? RuntimeHelpers.GetHashCode(this.X) : 0) * 397) ^
-                        (this.Y != null ? RuntimeHelpers.GetHashCode(this.Y) : 0);
-            }
         }
 
         /// <inheritdoc />
@@ -118,7 +78,7 @@
             return writer;
         }
 
-        internal bool HasNodeDiff()
+        private bool HasNodeDiff()
         {
             if (this.Diffs.Count == 0)
             {
@@ -129,11 +89,6 @@
             {
                 return this.HasNodeDiff(diffs.Value);
             }
-        }
-
-        protected bool Equals(ValueDiff other)
-        {
-            return ReferenceEquals(this.X, other.X) && ReferenceEquals(this.Y, other.Y);
         }
 
         private bool HasNodeDiff(HashSet<ValueDiff> @checked)

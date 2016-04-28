@@ -47,7 +47,7 @@
             return PropertyValuesDiffs.Get(x, y, settings) ?? new EmptyDiff(x, y);
         }
 
-        private static class PropertyValuesDiffs
+        internal static class PropertyValuesDiffs
         {
             internal static ValueDiff Get<T>(T x, T y, PropertiesSettings settings)
             {

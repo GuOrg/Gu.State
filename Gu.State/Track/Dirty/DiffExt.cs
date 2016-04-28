@@ -68,12 +68,7 @@
         private static bool IsIndexMatch(Diff diff, int index)
         {
             var indexDiff = diff as IndexDiff;
-            if (indexDiff == null)
-            {
-                return false;
-            }
-
-            return (int)indexDiff.Index == index;
+            return (int?)indexDiff?.Index == index;
         }
 
         private static bool IsPropertyMatch(Diff diff, PropertyInfo propertyInfo)
@@ -117,72 +112,20 @@
         private static IReadOnlyList<SubDiff> RemoveDiff(this ValueDiff source, Func<SubDiff, bool> isMatch)
         {
             var result = new List<SubDiff>(source.Diffs.Count);
-            SubDiff match = null;
             foreach (var subDiff in source.Diffs)
             {
                 if (isMatch(subDiff))
                 {
-                    match = subDiff;
                     continue;
                 }
 
-                result.Add(subDiff);
+                if (!subDiff.IsEmpty)
+                {
+                    result.Add(subDiff);
+                }
             }
 
-            return RemoveRecursiveMatches(result, match, isMatch);
-        }
-
-        private static IReadOnlyList<SubDiff> RemoveRecursiveMatches(List<SubDiff> diffs, SubDiff removed, Func<SubDiff, bool> isMatch)
-        {
-            if (removed == null || diffs.Count != 1)
-            {
-                return diffs;
-            }
-
-            using (var disposer = Diff.BorrowValueDiffReferenceSet())
-            {
-                throw new NotImplementedException("message");
-                //var singles = SingleItemDiffs(diffs[0], disposer.Value);
-                //if (singles != null)
-                //{
-                //    var node = singles[singles.Count - 1];
-                //    if (isMatch(node) && Equals(removed.X, node.X) && Equals(removed.Y, node.Y))
-                //    {
-                //        diffs.Clear();
-                //    }
-                //}
-            }
-
-            return diffs;
-        }
-
-        private static HashSet<SubDiff> SingleItemDiffs(SubDiff diff, HashSet<SubDiff> diffs)
-        {
-            if (diffs == null)
-            {
-                return null;
-            }
-
-            if (diff.Diffs.Count == 0)
-            {
-                diffs.Add(diff);
-                return diffs;
-            }
-
-            if (diff.Diffs.Count != 1)
-            {
-                return null;
-            }
-
-            if (diffs.Contains(diff))
-            {
-                diffs.Add(diff.Diffs[0]);
-                return diffs;
-            }
-
-            diffs.Add(diff);
-            diffs = SingleItemDiffs(diff.Diffs[0], diffs);
-            return diffs;
+            return result;
         }
     }
 }

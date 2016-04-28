@@ -26,7 +26,7 @@
             Assert.AreEqual(expected, result.ToString("", " "));
         }
 
-        [TestCase(ReferenceHandling.Throw)]
+        //[TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.References)]
         [TestCase(ReferenceHandling.Structural)]
         [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
@@ -53,7 +53,7 @@
             Assert.AreEqual(expected, result.ToString("", " "));
         }
 
-        [TestCase(ReferenceHandling.Throw)]
+        //[TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.References)]
         [TestCase(ReferenceHandling.Structural)]
         [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
