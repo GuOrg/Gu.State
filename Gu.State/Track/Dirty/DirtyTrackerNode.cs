@@ -234,7 +234,7 @@
             {
                 var maxDiffIndex = this.diff?.Diffs.OfType<IndexDiff>().Max(x => (int)x.Index) + 1 ?? 0;
                 var max = Math.Max(maxDiffIndex, Math.Max(((IList)this.xNode.Tracker.Source).Count, ((IList)this.yNode.Tracker.Source).Count));
-                for (int i = 0; i < max; i++)
+                for (var i = 0; i < max; i++)
                 {
                     this.UpdateIndexNode(i);
                 }

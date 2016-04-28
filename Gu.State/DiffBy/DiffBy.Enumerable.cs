@@ -25,6 +25,7 @@
                 IDiffBy comparer;
                 if (ListDiffBy.TryGetOrCreate(x, y, out comparer) ||
                     ReadonlyListDiffBy.TryGetOrCreate(x, y, out comparer) ||
+                    ArrayDiffBy.TryGetOrCreate(x, y, out comparer) ||
                     DictionaryDiffBy.TryGetOrCreate(x, y, out comparer) ||
                     ReadOnlyDictionaryDiffBy.TryGetOrCreate(x, y, out comparer) ||
                     SetDiffBy.TryGetOrCreate(x, y, out comparer) ||

@@ -71,9 +71,9 @@
         // http://stackoverflow.com/a/969118/1069200
         internal static IEnumerable<T> SkipLast<T>(this IEnumerable<T> source)
         {
-            T previous = default(T);
-            bool first = true;
-            foreach (T element in source)
+            var previous = default(T);
+            var first = true;
+            foreach (var element in source)
             {
                 if (!first)
                 {
@@ -99,7 +99,7 @@
 
         private static IEnumerable<TSource> AppendIterator<TSource>(IEnumerable<TSource> source, TSource element)
         {
-            foreach (TSource e1 in source)
+            foreach (var e1 in source)
             {
                 yield return e1;
             }
@@ -111,7 +111,7 @@
         {
             yield return element;
 
-            foreach (TSource e1 in source)
+            foreach (var e1 in source)
             {
                 yield return e1;
             }

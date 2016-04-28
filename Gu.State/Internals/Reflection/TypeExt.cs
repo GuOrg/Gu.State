@@ -42,7 +42,7 @@
             if (type.IsGenericType && !type.IsGenericTypeDefinition)
             {
                 // instantiated generic type only
-                Type genericType = type.GetGenericTypeDefinition();
+                var genericType = type.GetGenericTypeDefinition();
                 return ReferenceEquals(genericType, typeof(Nullable<>));
             }
 

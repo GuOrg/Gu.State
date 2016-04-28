@@ -50,7 +50,7 @@
             if (type.IsArray)
             {
                 var elementType = type.GetElementType();
-                return elementType.PrettyName() + "[]";
+                return $"{elementType.PrettyName()}[{new string(',', type.GetArrayRank() - 1)}]";
             }
 
             string alias;

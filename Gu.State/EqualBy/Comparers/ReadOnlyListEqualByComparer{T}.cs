@@ -51,7 +51,7 @@ namespace Gu.State
             TSetting settings,
             ReferencePairCollection referencePairs)
         {
-            for (int i = 0; i < x.Count; i++)
+            for (var i = 0; i < x.Count; i++)
             {
                 var xv = x[i];
                 var yv = y[i];
@@ -71,7 +71,7 @@ namespace Gu.State
 
         private static bool ItemsEquals(IReadOnlyList<T> x, IReadOnlyList<T> y, Func<T, T, bool> compare)
         {
-            for (int i = 0; i < x.Count; i++)
+            for (var i = 0; i < x.Count; i++)
             {
                 if (!compare(x[i], y[i]))
                 {

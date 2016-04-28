@@ -10,9 +10,9 @@ namespace Gu.State.Tests.Internals.Collections
         [Test]
         public void BorrowTwiceReturnsDifferent()
         {
-            using (Disposer<HashSet<object>> disposer1 = ReferenceSetPool<object>.Borrow())
+            using (var disposer1 = ReferenceSetPool<object>.Borrow())
             {
-                using (Disposer<HashSet<object>> disposer2 = ReferenceSetPool<object>.Borrow())
+                using (var disposer2 = ReferenceSetPool<object>.Borrow())
                 {
                     Assert.AreNotSame(disposer1.Value, disposer2.Value);
                 }

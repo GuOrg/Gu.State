@@ -72,7 +72,7 @@
         internal void Reset(IReadOnlyList<TValue> newItems)
         {
             this.collectionItems.Value.Clear();
-            for (int i = 0; i < newItems.Count; i++)
+            for (var i = 0; i < newItems.Count; i++)
             {
                 this.collectionItems.Value[i] = newItems[i];
             }

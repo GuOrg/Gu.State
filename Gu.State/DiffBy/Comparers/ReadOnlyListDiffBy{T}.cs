@@ -30,7 +30,7 @@
             Action<object, object, object, TSettings, DiffBuilder> itemDiff)
             where TSettings : IMemberSettings
         {
-            for (int i = 0; i < Math.Max(x.Count, y.Count); i++)
+            for (var i = 0; i < Math.Max(x.Count, y.Count); i++)
             {
                 var xv = x.ElementAtOrMissing(i);
                 var yv = y.ElementAtOrMissing(i);
