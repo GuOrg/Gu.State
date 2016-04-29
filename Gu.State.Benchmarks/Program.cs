@@ -6,7 +6,7 @@
     {
         static void Main()
         {
-            var summary = BenchmarkRunner.Run<EqualByBenchmarks>();
+            BenchmarkRunner.Run<EqualByBenchmarks>();
         }
     }
 }
