@@ -5,6 +5,8 @@
 
     using NUnit.Framework;
 
+    using static CopyTypes;
+
     public abstract class VerifyTests
     {
         public abstract void VerifyMethod<T>() where T : class;
@@ -14,13 +16,13 @@
         [Test]
         public void CanCopyHappyPath()
         {
-            this.VerifyMethod<CopyTypes.WithSimpleProperties>();
+            this.VerifyMethod<WithSimpleProperties>();
         }
 
         [Test]
         public void CanCopyWithCalculatedProperty()
         {
-            this.VerifyMethod<CopyTypes.WithCalculatedProperty>();
+            this.VerifyMethod<WithCalculatedProperty>();
         }
 
         [TestCase(null)]
@@ -66,8 +68,8 @@
                      "    - The property WithComplexProperty.ComplexType.\r\n" +
                      "    - The type ComplexType.\r\n";
             var exception = referenceHandling != null
-                                ? Assert.Throws<NotSupportedException>(() => this.VerifyMethod<CopyTypes.WithComplexProperty>(referenceHandling.Value))
-                                : Assert.Throws<NotSupportedException>(this.VerifyMethod<CopyTypes.WithComplexProperty>);
+                                ? Assert.Throws<NotSupportedException>(() => this.VerifyMethod<WithComplexProperty>(referenceHandling.Value))
+                                : Assert.Throws<NotSupportedException>(this.VerifyMethod<WithComplexProperty>);
 
             Assert.AreEqual(expected, exception.Message);
         }
@@ -76,20 +78,20 @@
         [TestCase(ReferenceHandling.References)]
         public void CanCopyWithComplexDoesNotThrowWithReferenceHandling(ReferenceHandling referenceHandling)
         {
-            this.VerifyMethod<CopyTypes.WithComplexProperty>(referenceHandling);
+            this.VerifyMethod<WithComplexProperty>(referenceHandling);
         }
 
         [TestCase(null)]
         [TestCase(ReferenceHandling.Throw)]
-        public void CanCopyListOfIntsThrows(ReferenceHandling? referenceHandling)
+        public void CanCopyListOfComplexTypeThrows(ReferenceHandling? referenceHandling)
         {
             if (referenceHandling != null)
             {
-                Assert.Throws<NotSupportedException>(() => this.VerifyMethod<List<int>>(referenceHandling.Value));
+                Assert.Throws<NotSupportedException>(() => this.VerifyMethod<List<ComplexType>>(referenceHandling.Value));
             }
             else
             {
-                Assert.Throws<NotSupportedException>(this.VerifyMethod<List<int>>);
+                Assert.Throws<NotSupportedException>(this.VerifyMethod<List<ComplexType>>);
             }
         }
 
@@ -116,8 +118,8 @@
         {
             var expected = "Cannot copy the members of an immutable object";
             var exception = referenceHandling != null
-                ? Assert.Throws<NotSupportedException>(() => this.VerifyMethod<CopyTypes.Immutable>(referenceHandling.Value))
-                : Assert.Throws<NotSupportedException>(this.VerifyMethod<CopyTypes.Immutable>);
+                ? Assert.Throws<NotSupportedException>(() => this.VerifyMethod<Immutable>(referenceHandling.Value))
+                : Assert.Throws<NotSupportedException>(this.VerifyMethod<Immutable>);
 
             Assert.AreEqual(expected, exception.Message);
         }
@@ -157,7 +159,7 @@
                                  "  - Exclude a combination of the following:\r\n" +
                                  "    - The indexer property WithIndexerType.Item.\r\n";
 
-            var exception = Assert.Throws<NotSupportedException>(() => this.VerifyMethod<CopyTypes.WithIndexerType>(ReferenceHandling.Structural));
+            var exception = Assert.Throws<NotSupportedException>(() => this.VerifyMethod<WithIndexerType>(ReferenceHandling.Structural));
             Assert.AreEqual(expected, exception.Message);
         }
 
@@ -210,11 +212,11 @@
                      "    - The property Parent.Child.\r\n" +
                      "    - The property Child.Parent.\r\n" +
                      "    - The type Child.\r\n";
-            var exception = Assert.Throws<NotSupportedException>(() => this.VerifyMethod<CopyTypes.Parent>(ReferenceHandling.Structural));
+            var exception = Assert.Throws<NotSupportedException>(() => this.VerifyMethod<Parent>(ReferenceHandling.Structural));
             Assert.AreEqual(expected, exception.Message);
 
-            Assert.DoesNotThrow(() => this.VerifyMethod<CopyTypes.Parent>(ReferenceHandling.StructuralWithReferenceLoops));
-            Assert.DoesNotThrow(() => this.VerifyMethod<CopyTypes.Parent>(ReferenceHandling.References));
+            Assert.DoesNotThrow(() => this.VerifyMethod<Parent>(ReferenceHandling.StructuralWithReferenceLoops));
+            Assert.DoesNotThrow(() => this.VerifyMethod<Parent>(ReferenceHandling.References));
         }
     }
 }

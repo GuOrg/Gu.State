@@ -15,9 +15,22 @@
                 return;
             }
 
-            if (settings.ReferenceHandling == ReferenceHandling.Throw)
+            if (!settings.IsEquatable(source.GetType().GetItemType()) && settings.ReferenceHandling == ReferenceHandling.Throw)
             {
                 throw Gu.State.Throw.ShouldNeverGetHereException("Should have been checked for throw before copy");
+            }
+
+            Array sa;
+            Array ta;
+            if (Try.CastAs(source, target, out sa, out ta))
+            {
+                if (!Is.SameSize(sa, ta))
+                {
+                    Throw.CannotCopyFixesSizeCollections(sa, ta, settings);
+                }
+
+                Collection.CopyItems(sa, ta, syncItem, settings, referencePairs);
+                return;
             }
 
             IList sl;
@@ -25,7 +38,7 @@
             if (Try.CastAs(source, target, out sl, out tl))
             {
                 if ((sl.IsFixedSize || tl.IsFixedSize) &&
-                    sl.Count != tl.Count)
+                     sl.Count != tl.Count)
                 {
                     Throw.CannotCopyFixesSizeCollections(sl, tl, settings);
                 }
@@ -62,6 +75,59 @@
 
         private static class Collection
         {
+            internal static void CopyItems<T>(Array sourceArray, Array targetArray, Action<object, object, T, ReferencePairCollection> syncItem, T settings, ReferencePairCollection referencePairs)
+                where T : class, IMemberSettings
+            {
+                if (sourceArray.Rank == 1 && targetArray.Rank == 1)
+                {
+                    CopyItems((IList)sourceArray, (IList)targetArray, syncItem,settings, referencePairs);
+                    return;
+                }
+
+                foreach (var index in sourceArray.Indices())
+                {
+                    var sv = sourceArray.GetValue(index);
+                    if (sv == null)
+                    {
+                        targetArray.SetValue(null, index);
+                        continue;
+                    }
+
+                    if (settings.IsImmutable(sv.GetType()))
+                    {
+                        targetArray.SetValue(sv, index);
+                        continue;
+                    }
+
+                    var tv = targetArray.GetValue(index);
+                    switch (settings.ReferenceHandling)
+                    {
+                        case ReferenceHandling.References:
+                            if (ReferenceEquals(sv, tv))
+                            {
+                                continue;
+                            }
+
+                            targetArray.SetValue(sv, index);
+                            continue;
+                        case ReferenceHandling.Structural:
+                        case ReferenceHandling.StructuralWithReferenceLoops:
+                            if (tv == null)
+                            {
+                                tv = CreateInstance(sv, null, settings);
+                                targetArray.SetValue(tv, index);
+                            }
+
+                            syncItem(sv, tv, settings, referencePairs);
+                            continue;
+                        case ReferenceHandling.Throw:
+                            throw State.Throw.ShouldNeverGetHereException();
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);
+                    }
+                }
+            }
+
             internal static void CopyItems<T>(IList sourceList, IList targetList, Action<object, object, T, ReferencePairCollection> syncItem, T settings, ReferencePairCollection referencePairs)
                 where T : class, IMemberSettings
             {

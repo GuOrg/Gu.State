@@ -37,7 +37,7 @@
         public void Ints2D()
         {
             var source = new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } };
-            var target = new int[2, 3];
+            var target = new int[3, 2];
             this.CopyMethod(source, target, ReferenceHandling.Structural);
             var expected = new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } };
             CollectionAssert.AreEqual(expected, source);
