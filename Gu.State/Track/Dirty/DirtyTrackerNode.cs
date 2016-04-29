@@ -9,8 +9,6 @@
     using System.Linq;
     using System.Reflection;
 
-    using JetBrains.Annotations;
-
     internal sealed class DirtyTrackerNode : IRefCountable, INotifyPropertyChanged
     {
         private static readonly PropertyChangedEventArgs DiffPropertyChangedEventArgs = new PropertyChangedEventArgs(nameof(Diff));
@@ -29,7 +27,7 @@
             this.yNode = ChangeTrackerNode.GetOrCreate(this, y, settings);
             this.xNode.Tracker.PropertyChange += this.OnTrackedPropertyChange;
             this.yNode.Tracker.PropertyChange += this.OnTrackedPropertyChange;
-            this.diff = DiffBy.PropertyValuesCore(x, y, settings);
+            this.diff = DiffBy.PropertyValuesDiffs.Get(x, y, settings);
             foreach (var property in x.GetType().GetProperties(settings.BindingFlags))
             {
                 this.UpdatePropertyNode(property);
@@ -163,8 +161,9 @@
                 return;
             }
 
-            var xValue = propertyInfo.GetValue(this.xNode.Tracker.Source);
-            var yValue = propertyInfo.GetValue(this.yNode.Tracker.Source);
+            var getter = this.Settings.GetOrCreateGetterAndSetter(propertyInfo);
+            var xValue = getter.GetValue(this.xNode.Tracker.Source);
+            var yValue = getter.GetValue(this.yNode.Tracker.Source);
 
             if (this.TrackProperties.Contains(propertyInfo) &&
                (this.Settings.ReferenceHandling == ReferenceHandling.Structural || this.Settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops))
@@ -174,7 +173,7 @@
             }
 
             var propertyValueDiff = xValue != null && yValue != null
-                                        ? DiffBy.PropertyValuesCore(xValue, yValue, this.Settings)
+                                        ? DiffBy.PropertyValuesDiffs.Get(xValue, yValue, this.Settings)
                                         : xValue != null || yValue != null
                                               ? new ValueDiff(xValue, yValue)
                                               : null;
@@ -236,7 +235,7 @@
             {
                 var maxDiffIndex = this.diff?.Diffs.OfType<IndexDiff>().Max(x => (int)x.Index) + 1 ?? 0;
                 var max = Math.Max(maxDiffIndex, Math.Max(((IList)this.xNode.Tracker.Source).Count, ((IList)this.yNode.Tracker.Source).Count));
-                for (int i = 0; i < max; i++)
+                for (var i = 0; i < max; i++)
                 {
                     this.UpdateIndexNode(i);
                 }
@@ -287,7 +286,7 @@
                 return new ValueDiff(xValue, yValue);
             }
 
-            return DiffBy.PropertyValuesCore(xValue, yValue, this.Settings);
+            return DiffBy.PropertyValuesDiffs.Get(xValue, yValue, this.Settings);
         }
 
         private IDisposable CreateChild(object xValue, object yValue, object key)

@@ -81,7 +81,7 @@ namespace Gu.State.Tests
                     y.Child.Parent = y;
                     expectedChanges.Add("Diff");
                     CollectionAssert.AreEqual(expectedChanges, changes);
-                    expected = "Parent Name x: Poppa y: null Child Parent Name x: Poppa y: null";
+                    expected = "Parent Name x: Poppa y: null Child Parent Name x: Poppa y: null Child Parent ...";
                     actual = tracker.Diff.ToString("", " ");
                     Assert.AreEqual(expected, actual);
 

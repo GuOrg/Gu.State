@@ -65,7 +65,7 @@
             internal static void CopyItems<T>(IList sourceList, IList targetList, Action<object, object, T, ReferencePairCollection> syncItem, T settings, ReferencePairCollection referencePairs)
                 where T : class, IMemberSettings
             {
-                for (int i = 0; i < sourceList.Count; i++)
+                for (var i = 0; i < sourceList.Count; i++)
                 {
                     var sv = sourceList[i];
                     if (sv == null)

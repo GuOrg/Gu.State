@@ -2,8 +2,6 @@
 {
     using System;
 
-    using NUnit.Framework;
-
     public class Verify : VerifyTests
     {
         public override void VerifyMethod<T>(ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excludedMembers = null, Type excludedType = null)

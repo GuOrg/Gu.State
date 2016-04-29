@@ -65,7 +65,7 @@
                     return false;
                 }
 
-                for (int i = 0; i < this.sortedItems.Count; i++)
+                for (var i = 0; i < this.sortedItems.Count; i++)
                 {
                     if (this.sortedItems[i].HashCode != sortedByHashCode.sortedItems[i].HashCode)
                     {

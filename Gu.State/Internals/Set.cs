@@ -1,7 +1,6 @@
 ﻿namespace Gu.State
 {
     using System;
-    using System.Collections;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -11,7 +10,6 @@
     internal static partial class Set
     {
         private static readonly ConcurrentDictionary<Type, MethodInfo> EmptyMethods = new ConcurrentDictionary<Type, MethodInfo>();
-        private static readonly ConcurrentDictionary<Type, MethodInfo> SetEqualsMethods = new ConcurrentDictionary<Type, MethodInfo>();
         private static readonly ConcurrentDictionary<Type, MethodInfo> UnionWithMethods = new ConcurrentDictionary<Type, MethodInfo>();
         private static readonly ConcurrentDictionary<Type, MethodInfo> IntersectWithMethods = new ConcurrentDictionary<Type, MethodInfo>();
         private static readonly ConcurrentDictionary<Type, ConstructorInfo> SortedCtors = new ConcurrentDictionary<Type, ConstructorInfo>();
@@ -29,12 +27,6 @@
                                  ?.GetValue(set);
             var ctor = SortedCtors.GetOrAdd(setType, GetSortedCtor);
             return (ISortedByHashCode)ctor.Invoke(new[] { set, comparer });
-        }
-
-        internal new static bool Equals(object first, object other)
-        {
-            var methodInfo = SetEqualsMethods.GetOrAdd(first.GetType(), GetSetEqualsMethod);
-            return (bool)methodInfo.Invoke(first, new[] { other });
         }
 
         internal static void UnionWith(object set, object otherSet)
@@ -87,13 +79,6 @@
                                                             .GetConstructor(types);
             Debug.Assert(constructorInfo != null, "constructorInfo == null");
             return constructorInfo;
-        }
-
-        private static MethodInfo GetSetEqualsMethod(Type type)
-        {
-            var methodInfo = type.GetMethod("SetEquals", BindingFlags.Public | BindingFlags.Instance);
-            Debug.Assert(methodInfo != null, "setEqualsMethod == null");
-            return methodInfo;
         }
 
         private static MethodInfo GetUnionWithMethod(Type type)

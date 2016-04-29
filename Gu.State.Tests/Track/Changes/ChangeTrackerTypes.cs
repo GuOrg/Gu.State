@@ -8,8 +8,6 @@
     using System.Linq;
     using System.Runtime.CompilerServices;
 
-    using Gu.State.Tests.EqualByTests;
-
     using JetBrains.Annotations;
 
     public static class ChangeTrackerTypes

@@ -104,7 +104,7 @@
 
                     break;
                 case NotifyCollectionChangedAction.Replace:
-                    for (int i = 0; i < e.NewItems.Count; i++)
+                    for (var i = 0; i < e.NewItems.Count; i++)
                     {
                         this.Replace?.Invoke(this, new ReplaceEventArgs(e.NewStartingIndex + i));
                     }

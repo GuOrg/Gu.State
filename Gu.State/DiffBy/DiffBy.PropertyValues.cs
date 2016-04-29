@@ -1,7 +1,6 @@
 ﻿namespace Gu.State
 {
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Reflection;
 
@@ -45,135 +44,145 @@
             Ensure.NotNull(y, nameof(y));
             Ensure.NotNull(settings, nameof(settings));
             EqualBy.Verify.CanEqualByPropertyValues(x, y, settings, typeof(DiffBy).Name, nameof(PropertyValues));
-
-            return PropertyValuesCore(x, y, settings) ?? new EmptyDiff(x, y);
+            return PropertyValuesDiffs.Get(x, y, settings) ?? new EmptyDiff(x, y);
         }
 
-        internal static ValueDiff PropertyValuesCore<T>(T x, T y, PropertiesSettings settings)
+        internal static class PropertyValuesDiffs
         {
-            Debug.Assert(x != null, "x == null");
-            Debug.Assert(y != null, "y == null");
-            Debug.Assert(settings != null, "settings == null");
-
-            ValueDiff diff;
-            if (TryGetValueDiff(x, y, settings, out diff))
+            internal static ValueDiff Get<T>(T x, T y, PropertiesSettings settings)
             {
-                return diff;
-            }
+                Debug.Assert(x != null, "x == null");
+                Debug.Assert(y != null, "y == null");
+                Debug.Assert(settings != null, "settings == null");
 
-            EqualBy.Verify.CanEqualByPropertyValues(x, y, settings, typeof(DiffBy).Name, nameof(PropertyValues));
-            using (var pairs = settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops
-                                   ? ReferencePairCollection.Create()
-                                   : null)
-            {
-                var diffs = SubDiffs(x, y, settings, pairs);
-                return diffs == null
-                           ? null
-                           : new ValueDiff(x, y, diffs);
-            }
-        }
-
-        private static IReadOnlyList<SubDiff> SubDiffs<T>(
-            T x,
-            T y,
-            PropertiesSettings settings,
-            ReferencePairCollection referencePairs)
-        {
-            referencePairs?.Add(x, y);
-            var diffs = Enumerable.Diffs(x, y, settings, referencePairs, ItemPropertiesDiff);
-
-            var propertyInfos = x.GetType().GetProperties(settings.BindingFlags);
-            foreach (var propertyInfo in propertyInfos)
-            {
-                if (settings.IsIgnoringProperty(propertyInfo))
+                ValueDiff diff;
+                if (TryGetValueDiff(x, y, settings, out diff))
                 {
-                    continue;
+                    return diff;
                 }
 
-                var xv = propertyInfo.GetValue(x);
-                var yv = propertyInfo.GetValue(y);
-                if (referencePairs?.Contains(xv, yv) == true)
+                EqualBy.Verify.CanEqualByPropertyValues(x, y, settings, typeof(DiffBy).Name, nameof(PropertyValues));
+                var builder = new DiffBuilderRoot(x, y, settings.ReferenceHandling);
+                AddSubDiffs(x, y, settings, builder);
+                return builder.CreateValueDiff();
+            }
+
+            private static void AddSubDiffs<T>(
+                T x,
+                T y,
+                PropertiesSettings settings,
+                DiffBuilder builder)
+            {
+                Enumerable.AddItemDiffs(x, y, settings, builder, ItemPropertiesDiff);
+                var propertyInfos = x.GetType().GetProperties(settings.BindingFlags);
+                foreach (var propertyInfo in propertyInfos)
                 {
-                    continue;
+                    if (settings.IsIgnoringProperty(propertyInfo))
+                    {
+                        continue;
+                    }
+
+                    var getterAndSetter = settings.GetOrCreateGetterAndSetter(propertyInfo);
+                    if (settings.IsEquatable(getterAndSetter.ValueType))
+                    {
+                        if (!getterAndSetter.ValueEquals(x, y))
+                        {
+                            builder.Add(new PropertyDiff(propertyInfo, getterAndSetter.GetValue(x), getterAndSetter.GetValue(y)));
+                        }
+
+                        continue;
+                    }
+
+                    var xv = getterAndSetter.GetValue(x);
+                    var yv = getterAndSetter.GetValue(y);
+                    PropertyValueDiff(xv, yv, propertyInfo, settings, builder);
+                }
+            }
+
+            private static void ItemPropertiesDiff(
+                object xItem,
+                object yItem,
+                object index,
+                PropertiesSettings settings,
+                DiffBuilder collectionBuilder)
+            {
+                ValueDiff diff;
+                if (TryGetValueDiff(xItem, yItem, settings, out diff))
+                {
+                    if (diff != null)
+                    {
+                        collectionBuilder.Add(new IndexDiff(index, diff));
+                    }
+
+                    return;
                 }
 
-                var propDiff = PropertyValueDiff(xv, yv, propertyInfo, settings, referencePairs);
-                if (propDiff == null)
+                if (settings.ReferenceHandling == ReferenceHandling.References)
                 {
-                    continue;
+                    if (!ReferenceEquals(xItem, yItem))
+                    {
+                        collectionBuilder.Add(new IndexDiff(index, new ValueDiff(xItem, yItem)));
+                    }
+
+                    return;
                 }
 
-                if (diffs == null)
+                EqualBy.Verify.CanEqualByPropertyValues(xItem, yItem, settings, typeof(DiffBy).Name, nameof(PropertyValues));
+                DiffBuilder subDiffBuilder;
+                if (collectionBuilder.TryAdd(xItem, yItem, out subDiffBuilder))
                 {
-                    diffs = new List<SubDiff>();
+                    AddSubDiffs(xItem, yItem, settings, subDiffBuilder);
                 }
 
-                diffs.Add(propDiff);
+                collectionBuilder.AddLazy(index, subDiffBuilder);
             }
 
-            return diffs;
-        }
-
-        private static ValueDiff ItemPropertiesDiff(
-            object x,
-            object y,
-            PropertiesSettings settings,
-            ReferencePairCollection referencePairs)
-        {
-            ValueDiff diff;
-            if (TryGetValueDiff(x, y, settings, out diff))
+            private static void PropertyValueDiff(
+                object xValue,
+                object yValue,
+                PropertyInfo propertyInfo,
+                PropertiesSettings settings,
+                DiffBuilder builder)
             {
-                return diff;
-            }
+                ValueDiff diff;
+                if (TryGetValueDiff(xValue, yValue, settings, out diff))
+                {
+                    if (diff != null)
+                    {
+                        builder.Add(new PropertyDiff(propertyInfo, diff));
+                    }
 
-            if (settings.ReferenceHandling == ReferenceHandling.References)
-            {
-                return ReferenceEquals(x, y)
-                           ? null
-                           : new ValueDiff(x, y);
-            }
+                    return;
+                }
 
-            EqualBy.Verify.CanEqualByPropertyValues(x, y, settings, typeof(DiffBy).Name, nameof(PropertyValues));
-            var diffs = SubDiffs(x, y, settings, referencePairs);
-            return diffs == null
-                       ? null
-                       : new ValueDiff(x, y, diffs);
-        }
+                switch (settings.ReferenceHandling)
+                {
+                    case ReferenceHandling.References:
+                        if (!ReferenceEquals(xValue, yValue))
+                        {
+                            builder.Add(new PropertyDiff(propertyInfo, new ValueDiff(xValue, yValue)));
+                        }
 
-        private static SubDiff PropertyValueDiff(
-            object xValue,
-            object yValue,
-            PropertyInfo propertyInfo,
-            PropertiesSettings settings,
-            ReferencePairCollection referencePairs)
-        {
-            ValueDiff diff;
-            if (TryGetValueDiff(xValue, yValue, settings, out diff))
-            {
-                return diff == null
-                           ? null
-                           : new PropertyDiff(propertyInfo, diff);
-            }
+                        return;
+                    case ReferenceHandling.Structural:
+                    case ReferenceHandling.StructuralWithReferenceLoops:
+                        EqualBy.Verify.CanEqualByPropertyValues(xValue, yValue, settings, typeof(DiffBy).Name, nameof(PropertyValues));
+                        DiffBuilder subDiffBuilder;
+                        if (builder.TryAdd(xValue, yValue, out subDiffBuilder))
+                        {
+                            AddSubDiffs(xValue, yValue, settings, subDiffBuilder);
+                        }
 
-            switch (settings.ReferenceHandling)
-            {
-                case ReferenceHandling.References:
-                    return ReferenceEquals(xValue, yValue) ? null : new PropertyDiff(propertyInfo, xValue, yValue);
-                case ReferenceHandling.Structural:
-                case ReferenceHandling.StructuralWithReferenceLoops:
-                    EqualBy.Verify.CanEqualByPropertyValues(xValue, yValue, settings, typeof(DiffBy).Name, nameof(PropertyValues));
-                    var diffs = SubDiffs(xValue, yValue, settings, referencePairs);
-                    return diffs == null
-                               ? null
-                               : new PropertyDiff(propertyInfo, new ValueDiff(xValue, yValue, diffs));
-
-                case ReferenceHandling.Throw:
-                    throw Throw.ShouldNeverGetHereException();
-                default:
-                    throw new ArgumentOutOfRangeException(
-                        nameof(settings.ReferenceHandling),
-                        settings.ReferenceHandling,
-                        null);
+                        builder.AddLazy(propertyInfo, subDiffBuilder);
+                        return;
+                    case ReferenceHandling.Throw:
+                        throw Throw.ShouldNeverGetHereException();
+                    default:
+                        throw new ArgumentOutOfRangeException(
+                            nameof(settings.ReferenceHandling),
+                            settings.ReferenceHandling,
+                            null);
+                }
             }
         }
     }

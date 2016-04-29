@@ -11,6 +11,11 @@
             this.action = action;
         }
 
+        public static Disposer<T> Create<T>(T value, Action<T> onDispose)
+        {
+            return new Disposer<T>(value, onDispose);
+        }
+
         public void Dispose()
         {
             this.action();

@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Reflection;
 
     internal static class DiffExt
@@ -69,12 +68,7 @@
         private static bool IsIndexMatch(Diff diff, int index)
         {
             var indexDiff = diff as IndexDiff;
-            if (indexDiff == null)
-            {
-                return false;
-            }
-
-            return (int)indexDiff.Index == index;
+            return (int?)indexDiff?.Index == index;
         }
 
         private static bool IsPropertyMatch(Diff diff, PropertyInfo propertyInfo)
@@ -94,7 +88,7 @@
             SubDiff newDiff)
         {
             var result = new List<SubDiff>(source.Count);
-            bool replaced = false;
+            var replaced = false;
             foreach (var item in source)
             {
                 if (isMatch(item))
@@ -118,71 +112,20 @@
         private static IReadOnlyList<SubDiff> RemoveDiff(this ValueDiff source, Func<SubDiff, bool> isMatch)
         {
             var result = new List<SubDiff>(source.Diffs.Count);
-            SubDiff match = null;
             foreach (var subDiff in source.Diffs)
             {
                 if (isMatch(subDiff))
                 {
-                    match = subDiff;
                     continue;
                 }
 
-                result.Add(subDiff);
-            }
-
-            return RemoveRecursiveMatches(result, match, isMatch);
-        }
-
-        private static IReadOnlyList<SubDiff> RemoveRecursiveMatches(List<SubDiff> diffs, SubDiff removed, Func<SubDiff, bool> isMatch)
-        {
-            if (removed == null || diffs.Count != 1)
-            {
-                return diffs;
-            }
-
-            using (var disposer = Diff.BorrowReferenceList())
-            {
-                var singles = SingleItemDiffs(diffs[0], disposer.Value);
-                if (singles != null)
+                if (!subDiff.IsEmpty)
                 {
-                    var node = singles[singles.Count - 1];
-                    if (isMatch(node) && Equals(removed.X, node.X) && Equals(removed.Y, node.Y))
-                    {
-                        diffs.Clear();
-                    }
+                    result.Add(subDiff);
                 }
             }
 
-            return diffs;
-        }
-
-        private static List<SubDiff> SingleItemDiffs(SubDiff diff, List<SubDiff> diffs)
-        {
-            if (diffs == null)
-            {
-                return null;
-            }
-
-            if (diff.Diffs.Count == 0)
-            {
-                diffs.Add(diff);
-                return diffs;
-            }
-
-            if (diff.Diffs.Count != 1)
-            {
-                return null;
-            }
-
-            if (diffs.Contains(diff))
-            {
-                diffs.Add(diff.Diffs[0]);
-                return diffs;
-            }
-
-            diffs.Add(diff);
-            diffs = SingleItemDiffs(diff.Diffs[0], diffs);
-            return diffs;
+            return result;
         }
     }
 }
