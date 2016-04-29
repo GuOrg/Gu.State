@@ -7,6 +7,11 @@
 
     internal static partial class TypeExt
     {
+        internal static bool IsKeyValuePair(this Type type)
+        {
+            return type.FullName.StartsWith("System.Collections.Generic.KeyValuePair`2");
+        }
+
         internal static bool IsEnumerableOfT(this Type type)
         {
             var iEnumerableOfT = type.GetIEnumerableOfT();

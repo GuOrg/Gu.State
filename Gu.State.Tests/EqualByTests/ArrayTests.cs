@@ -23,15 +23,18 @@ namespace Gu.State.Tests.EqualByTests
             Assert.AreEqual(expected, this.EqualByMethod(x, y, referenceHandling: ReferenceHandling.Structural));
         }
 
-        [Test]
-        public void ArrayOfInts()
+        [TestCase(ReferenceHandling.Throw)]
+        [TestCase(ReferenceHandling.Structural)]
+        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
+        [TestCase(ReferenceHandling.References)]
+        public void IntsWhenEqual(ReferenceHandling referenceHandling)
         {
             var x = new[] { 1, 2, 3 };
             var y = new[] { 1, 2, 3 };
-            var result = this.EqualByMethod(x, y, ReferenceHandling.Structural);
+            var result = this.EqualByMethod(x, y, referenceHandling);
             Assert.AreEqual(true, result);
 
-            result = this.EqualByMethod(y, x, ReferenceHandling.Structural);
+            result = this.EqualByMethod(y, x, referenceHandling);
             Assert.AreEqual(true, result);
         }
 
@@ -39,7 +42,7 @@ namespace Gu.State.Tests.EqualByTests
         [TestCase(10, false)]
         public void JaggedArray2DOfInts(int value, bool expected)
         {
-            var x = new[] { new[] { 1, 2, 3 }, new[] { 4, 5} };
+            var x = new[] { new[] { 1, 2, 3 }, new[] { 4, 5 } };
             var y = new[] { new[] { 1, 2, 3 }, new[] { 4, value } };
             var result = this.EqualByMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(expected, result);
@@ -63,18 +66,31 @@ namespace Gu.State.Tests.EqualByTests
             Assert.AreEqual(expected, result);
         }
 
+        [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.Structural)]
+        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
-        public void ArrayOfImmutable()
+        public void ArrayOfImmutableWhenNotEqual(ReferenceHandling referenceHandling)
         {
-            var source = new[] { new EqualByTypes.Immutable(1), new EqualByTypes.Immutable(2), new EqualByTypes.Immutable(3) };
-            var target = new[] { new EqualByTypes.Immutable(4), new EqualByTypes.Immutable(5), new EqualByTypes.Immutable(6) };
-            this.EqualByMethod(source, target, ReferenceHandling.Structural);
-            var expected = new[] { new EqualByTypes.Immutable(1), new EqualByTypes.Immutable(2), new EqualByTypes.Immutable(3) };
-            CollectionAssert.AreEqual(expected, source);
-            CollectionAssert.AreEqual(expected, target);
+            var x = new[] { new EqualByTypes.Immutable(1), new EqualByTypes.Immutable(2), new EqualByTypes.Immutable(3) };
+            var y = new[] { new EqualByTypes.Immutable(4), new EqualByTypes.Immutable(5), new EqualByTypes.Immutable(6) };
+            Assert.AreEqual(false, this.EqualByMethod(x, y, referenceHandling));
+            Assert.AreEqual(false, this.EqualByMethod(y, x, referenceHandling));
         }
 
+        [TestCase(ReferenceHandling.Throw)]
+        [TestCase(ReferenceHandling.Structural)]
+        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
+        [TestCase(ReferenceHandling.References)]
+        public void ArrayOfImmutableWhenEqual(ReferenceHandling referenceHandling)
+        {
+            var x = new[] { new EqualByTypes.Immutable(1), new EqualByTypes.Immutable(2), new EqualByTypes.Immutable(3) };
+            var y = new[] { new EqualByTypes.Immutable(1), new EqualByTypes.Immutable(2), new EqualByTypes.Immutable(3) };
+            Assert.AreEqual(true, this.EqualByMethod(x, y, referenceHandling));
+            Assert.AreEqual(true, this.EqualByMethod(y, x, referenceHandling));
+        }
+
+        [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.References)]
         [TestCase(ReferenceHandling.Structural)]
         [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]

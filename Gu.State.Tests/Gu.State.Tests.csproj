@@ -46,10 +46,13 @@
     </When>
   </Choose>
   <ItemGroup>
+    <Compile Include="CopyTests\ArrayTests.cs" />
     <Compile Include="CopyTests\DictionaryTests.cs" />
+    <Compile Include="CopyTests\FieldValues\Array.cs" />
     <Compile Include="CopyTests\FieldValues\Dictionary.cs" />
     <Compile Include="CopyTests\FieldValues\ReferenceLoops.cs" />
     <Compile Include="CopyTests\FieldValues\Sets.cs" />
+    <Compile Include="CopyTests\PropertyValues\Array.cs" />
     <Compile Include="CopyTests\PropertyValues\Dictionary.cs" />
     <Compile Include="CopyTests\PropertyValues\ReferenceLoops.cs" />
     <Compile Include="CopyTests\PropertyValues\Sets.cs" />

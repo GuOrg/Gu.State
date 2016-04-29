@@ -13,8 +13,6 @@
             ReferencePairCollection referencePairs)
             where TSetting : class, IMemberSettings
         {
-            Debug.Assert(settings.ReferenceHandling != ReferenceHandling.Throw, "Should not get here");
-
             EqualByComparer comparer;
             if (ListEqualByComparer.TryGetOrCreate(x, y, out comparer) ||
                 ReadOnlyListEqualByComparer.TryGetOrCreate(x, y, out comparer) ||

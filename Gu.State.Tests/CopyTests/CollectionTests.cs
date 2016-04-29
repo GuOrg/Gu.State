@@ -109,28 +109,5 @@
             Assert.AreSame(item, target[0]);
             Assert.AreNotSame(source[0], target[0]);
         }
-
-        [Test]
-        public void ArrayOfInts()
-        {
-            var source = new[] { 1, 2, 3 };
-            var target = new[] { 4, 5, 6 };
-            this.CopyMethod(source, target, ReferenceHandling.Structural);
-            var expected = new[] { 1, 2, 3 };
-            CollectionAssert.AreEqual(expected, source);
-            CollectionAssert.AreEqual(expected, target);
-        }
-
-        [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.References)]
-        public void ArrayOfImmutable()
-        {
-            var source = new[] { new Immutable(1), new Immutable(2), new Immutable(3) };
-            var target = new[] { new Immutable(4), new Immutable(5), new Immutable(6) };
-            this.CopyMethod(source, target, ReferenceHandling.Structural);
-            var expected = new[] { new Immutable(1), new Immutable(2), new Immutable(3) };
-            CollectionAssert.AreEqual(expected, source);
-            CollectionAssert.AreEqual(expected, target);
-        }
     }
 }

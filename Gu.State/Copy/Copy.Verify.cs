@@ -180,7 +180,7 @@
             private static ErrorBuilder.TypeErrorsBuilder VerifyCore(IMemberSettings settings, Type type)
             {
                 return ErrorBuilder.Start()
-                                   .CheckReferenceHandling(type, settings, t => !settings.IsImmutable(t))
+                                   .CheckRequiresReferenceHandling(type, settings, t => !settings.IsImmutable(t))
                                    .CheckIsCopyableEnumerable(type, settings)
                                    .CheckIndexers(type, settings);
             }

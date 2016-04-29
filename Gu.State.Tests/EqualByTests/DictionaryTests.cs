@@ -4,6 +4,8 @@ namespace Gu.State.Tests.EqualByTests
 
     using NUnit.Framework;
 
+    using static EqualByTypes;
+
     public abstract class DictionaryTests
     {
         public abstract bool EqualByMethod<T>(T source, T target, ReferenceHandling referenceHandling) where T : class;
@@ -11,7 +13,7 @@ namespace Gu.State.Tests.EqualByTests
         [TestCase(1, "one", true)]
         [TestCase(2, "one", false)]
         [TestCase(1, "two", false)]
-        public void DictionaryToSameLength(int key, string value, bool expected)
+        public void SameLength(int key, string value, bool expected)
         {
             var x = new Dictionary<int, string> { { key, value } };
             var y = new Dictionary<int, string> { { 1, "one" } };
@@ -23,7 +25,7 @@ namespace Gu.State.Tests.EqualByTests
         }
 
         [Test]
-        public void DictionaryToEmpty()
+        public void OneEmpty()
         {
             var x = new Dictionary<int, string> { { 1, "one" } };
             var y = new Dictionary<int, string>();
@@ -37,7 +39,7 @@ namespace Gu.State.Tests.EqualByTests
         [TestCase(ReferenceHandling.Structural)]
         [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
-        public void DictionaryToLonger(ReferenceHandling referenceHandling)
+        public void OneLonger(ReferenceHandling referenceHandling)
         {
             var x = new Dictionary<int, string> { { 1, "one" } };
             var y = new Dictionary<int, string> { { 1, "one" }, { 2, "two" } };
@@ -49,33 +51,72 @@ namespace Gu.State.Tests.EqualByTests
         }
 
         [Test]
-        public void DictionaryWithCollisionsWhenEqual()
+        public void WithCollisionsWhenEqual()
         {
-            var k1 = new EqualByTypes.HashCollisionType();
-            var k2 = new EqualByTypes.HashCollisionType();
-            var x = new Dictionary<EqualByTypes.HashCollisionType, string> { { k1, "1" }, { k2, "2" } };
-            var y = new Dictionary<EqualByTypes.HashCollisionType, string> { { k1, "1" }, { k2, "2" } };
+            var k1 = new HashCollisionType();
+            var k2 = new HashCollisionType();
+            var x = new Dictionary<HashCollisionType, string> { { k1, "1" }, { k2, "2" } };
+            var y = new Dictionary<HashCollisionType, string> { { k1, "1" }, { k2, "2" } };
             Assert.AreEqual(2, x.Count);
             var result = this.EqualByMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
 
-            y = new Dictionary<EqualByTypes.HashCollisionType, string> { { k2, "2" }, { k1, "1" } };
+            y = new Dictionary<HashCollisionType, string> { { k2, "2" }, { k1, "1" } };
             result = this.EqualByMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
         }
 
+        [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.References)]
         [TestCase(ReferenceHandling.Structural)]
         [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
-        public void ImmutableDictionaryOfIntsWhenEqual(ReferenceHandling referenceHandling)
+        public void ImmutableDictionaryOfIntsAndStringsWhenEqual(ReferenceHandling referenceHandling)
         {
             var builder = System.Collections.Immutable.ImmutableDictionary.CreateBuilder<int, string>();
             builder.Add(1, "one");
-            builder.Add(2,"two");
+            builder.Add(2, "two");
             var x = builder.ToImmutable();
             var y = builder.ToImmutable();
             Assert.AreEqual(true, this.EqualByMethod(x, y, referenceHandling));
             Assert.AreEqual(true, this.EqualByMethod(y, x, referenceHandling));
+        }
+
+        [TestCase(ReferenceHandling.Throw)]
+        [TestCase(ReferenceHandling.References)]
+        [TestCase(ReferenceHandling.Structural)]
+        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
+        public void ImmutableDictionaryOfIntsAndStringsWhenNotEqualKeys(ReferenceHandling referenceHandling)
+        {
+            var builder = System.Collections.Immutable.ImmutableDictionary.CreateBuilder<int, string>();
+            builder.Add(1, "one");
+            builder.Add(2, "two");
+            var x = builder.ToImmutable();
+
+            builder = System.Collections.Immutable.ImmutableDictionary.CreateBuilder<int, string>();
+            builder.Add(1, "one");
+            builder.Add(3, "two");
+            var y = builder.ToImmutable();
+            Assert.AreEqual(false, this.EqualByMethod(x, y, referenceHandling));
+            Assert.AreEqual(false, this.EqualByMethod(y, x, referenceHandling));
+        }
+
+        [TestCase(ReferenceHandling.Throw)]
+        [TestCase(ReferenceHandling.References)]
+        [TestCase(ReferenceHandling.Structural)]
+        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
+        public void ImmutableDictionaryOfIntsAndStringsWhenNotEqualValues(ReferenceHandling referenceHandling)
+        {
+            var builder = System.Collections.Immutable.ImmutableDictionary.CreateBuilder<int, string>();
+            builder.Add(1, "one");
+            builder.Add(2, "two");
+            var x = builder.ToImmutable();
+
+            builder = System.Collections.Immutable.ImmutableDictionary.CreateBuilder<int, string>();
+            builder.Add(1, "one");
+            builder.Add(2, "två");
+            var y = builder.ToImmutable();
+            Assert.AreEqual(false, this.EqualByMethod(x, y, referenceHandling));
+            Assert.AreEqual(false, this.EqualByMethod(y, x, referenceHandling));
         }
     }
 }

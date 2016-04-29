@@ -10,10 +10,11 @@
     {
         public abstract bool EqualByMethod<T>(T source, T target, ReferenceHandling referenceHandling) where T : class;
 
+        [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.Structural)]
         [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
-        public void HashSetOfIntsWhenEqual(ReferenceHandling referenceHandling)
+        public void IntsWhenEqual(ReferenceHandling referenceHandling)
         {
             var x = new HashSet<int> { 1, 2, 3 };
             var y = new HashSet<int> { 2, 3, 1 };
@@ -27,7 +28,7 @@
         [TestCase(ReferenceHandling.Structural)]
         [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
-        public void HashSetOfIntsWhenNotEqual(ReferenceHandling referenceHandling)
+        public void IntsWhenNotEqual(ReferenceHandling referenceHandling)
         {
             var x = new HashSet<int> { 1, 2, 3 };
             var y = new HashSet<int> { 1, 2, 4 };
@@ -41,7 +42,7 @@
         [TestCase(ReferenceHandling.Structural)]
         [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
-        public void HashSetOfIntsWhenLonger(ReferenceHandling referenceHandling)
+        public void IntsWhenLonger(ReferenceHandling referenceHandling)
         {
             var x = new HashSet<int> { 1, 2, 3, 4 };
             var y = new HashSet<int> { 1, 2, 3 };
@@ -54,7 +55,7 @@
 
         [TestCase(ReferenceHandling.Structural)]
         [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
-        public void HashSetOfComplexWhenEqual(ReferenceHandling referenceHandling)
+        public void ComplexWhenEqual(ReferenceHandling referenceHandling)
         {
             var x = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 1) };
             var y = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 1) };
@@ -68,7 +69,7 @@
         [TestCase(ReferenceHandling.Structural)]
         [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
-        public void HashSetOfComplexWhenNotEqual(ReferenceHandling referenceHandling)
+        public void ComplexWhenNotEqual(ReferenceHandling referenceHandling)
         {
             var x = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 1) };
             var y = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 2) };
@@ -82,7 +83,7 @@
         [TestCase(ReferenceHandling.Structural)]
         [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
-        public void HashSetOfWithCollisionsWhenEqual(ReferenceHandling referenceHandling)
+        public void WithCollisionsWhenEqual(ReferenceHandling referenceHandling)
         {
             var e1 = new HashCollisionType();
             var e2 = new HashCollisionType();
@@ -98,7 +99,7 @@
         [TestCase(ReferenceHandling.Structural)]
         [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
-        public void HashSetOfWithCollisionsWhenNotEqual(ReferenceHandling referenceHandling)
+        public void WithCollisionsWhenNotEqual(ReferenceHandling referenceHandling)
         {
             var e1 = new HashCollisionType();
             var x = new HashSet<HashCollisionType> { e1, new HashCollisionType { Value = 1 } };
@@ -110,6 +111,7 @@
             Assert.AreEqual(false, result);
         }
 
+        [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.References)]
         [TestCase(ReferenceHandling.Structural)]
         [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
