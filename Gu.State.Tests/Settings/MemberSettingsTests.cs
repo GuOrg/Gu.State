@@ -1,6 +1,8 @@
 ﻿namespace Gu.State.Tests.Settings
 {
     using System;
+    using System.Collections.Generic;
+
     using NUnit.Framework;
 
     using static SettingsTypes;
@@ -21,6 +23,7 @@
         [TestCase(typeof(WithReadonlyFieldSealed<int>), true)]
         [TestCase(typeof(WithReadonlyFieldSealed<int?>), true)]
         [TestCase(typeof(WithSelfFieldSealed), true)]
+        [TestCase(typeof(KeyValuePair<int, string>), true)]
         [TestCase(typeof(System.Collections.Immutable.ImmutableList<int>), true)]
         [TestCase(typeof(System.Collections.Immutable.ImmutableArray<int>), true)]
         [TestCase(typeof(System.Collections.Immutable.ImmutableHashSet<int>), true)]
@@ -37,6 +40,8 @@
         [TestCase(typeof(WithSelfProp), false)]
         [TestCase(typeof(WithImmutableSubclassingMutable), false)]
         [TestCase(typeof(WithImmutableImplementingMutableInterfaceExplicit), false)]
+        [TestCase(typeof(KeyValuePair<int, ComplexType>), false)]
+        [TestCase(typeof(KeyValuePair<ComplexType, string>), false)]
         [TestCase(typeof(System.Collections.Immutable.ImmutableList<ComplexType>), false)]
         [TestCase(typeof(System.Collections.Immutable.ImmutableArray<ComplexType>), false)]
         [TestCase(typeof(System.Collections.Immutable.ImmutableHashSet<ComplexType>), false)]

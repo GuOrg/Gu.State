@@ -125,7 +125,7 @@
             private static ErrorBuilder.TypeErrorsBuilder VerifyCore(IMemberSettings settings, Type type)
             {
                 return ErrorBuilder.Start()
-                                   .CheckReferenceHandling(type, settings, t => !settings.IsEquatable(t))
+                                   .CheckRequiresReferenceHandling(type, settings, t => !settings.IsEquatable(t))
                                    .CheckIndexers(type, settings);
             }
 

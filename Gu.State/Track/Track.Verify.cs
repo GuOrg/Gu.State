@@ -135,7 +135,7 @@
                 return settings.TrackableErrors.GetOrAdd(
                     type,
                     t => ErrorBuilder.Start()
-                                     .CheckReferenceHandling(type, settings, x => !settings.IsImmutable(x))
+                                     .CheckRequiresReferenceHandling(type, settings, x => !settings.IsImmutable(x))
                                      .CheckIndexers(type, settings)
                                      .CheckNotifies(type, settings)
                                      .VerifyRecursive(t, settings, path, GetRecursiveErrors)

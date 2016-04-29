@@ -44,46 +44,51 @@
             if (type.IsNullable())
             {
                 var underlyingType = Nullable.GetUnderlyingType(type);
-                var isImmutable = CheckIfIsImmutable(underlyingType, checkedTypes);
-                ImmutableCheckedTypes.TryAdd(type, isImmutable);
-                return isImmutable;
+                result = CheckIfIsImmutable(underlyingType, checkedTypes);
             }
-
-            if (type.IsEnum)
+            else if (type.IsEnum)
             {
-                ImmutableCheckedTypes.TryAdd(type, true);
-                return true;
+                result = true;
             }
-
-            if (type.IsImmutableList() ||
-                type.IsImmutableArray() ||
-                type.IsImmutableHashSet())
+            else if (type.IsImmutableList() ||
+                     type.IsImmutableArray() ||
+                     type.IsImmutableHashSet())
             {
                 var itemType = type.GetItemType();
-                var isImmutable = CheckIfIsImmutable(itemType, checkedTypes);
-                ImmutableCheckedTypes.TryAdd(type, isImmutable);
-                return isImmutable;
+                result = CheckIfIsImmutable(itemType, checkedTypes);
             }
-
-            if (!CanBeImmutable(type))
+            else if (type.IsKeyValuePair())
             {
-                ImmutableCheckedTypes.TryAdd(type, false);
-                return false;
+                var genericArguments = type.GetGenericArguments();
+                result = CheckIfIsImmutable(genericArguments[0], checkedTypes)
+                         && CheckIfIsImmutable(genericArguments[1], checkedTypes);
+            }
+            else if (CanBeImmutable(type))
+            {
+                result = HasImmutableMembers(type, checkedTypes);
+            }
+            else
+            {
+                result = false;
             }
 
+            ImmutableCheckedTypes.TryAdd(type, result);
+            return result;
+        }
+
+        private static bool HasImmutableMembers(Type type, List<Type> checkedTypes)
+        {
             var propertyInfos = type.GetProperties(Constants.DefaultFieldBindingFlags);
             foreach (var propertyInfo in propertyInfos)
             {
-                if (!propertyInfo.IsGetReadOnly() ||
-                    (propertyInfo.GetIndexParameters().Length > 0 && propertyInfo.SetMethod != null))
+                if (!propertyInfo.IsGetReadOnly() || (propertyInfo.GetIndexParameters()
+                                                                  .Length > 0 && propertyInfo.SetMethod != null))
                 {
-                    ImmutableCheckedTypes.TryAdd(type, false);
                     return false;
                 }
 
                 if (!CanBeImmutable(propertyInfo.PropertyType))
                 {
-                    ImmutableCheckedTypes.TryAdd(type, false);
                     return false;
                 }
 
@@ -94,7 +99,6 @@
 
                 if (!CheckIfIsImmutable(propertyInfo.PropertyType, checkedTypes))
                 {
-                    ImmutableCheckedTypes.TryAdd(type, false);
                     return false;
                 }
             }
@@ -109,13 +113,11 @@
 
                 if (!fieldInfo.IsInitOnly)
                 {
-                    ImmutableCheckedTypes.TryAdd(type, false);
                     return false;
                 }
 
                 if (!CanBeImmutable(fieldInfo.FieldType))
                 {
-                    ImmutableCheckedTypes.TryAdd(type, false);
                     return false;
                 }
 
@@ -126,12 +128,10 @@
 
                 if (!CheckIfIsImmutable(fieldInfo.FieldType, checkedTypes))
                 {
-                    ImmutableCheckedTypes.TryAdd(type, false);
                     return false;
                 }
             }
 
-            ImmutableCheckedTypes.TryAdd(type, true);
             return true;
         }
 

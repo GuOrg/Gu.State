@@ -1,7 +1,11 @@
 namespace Gu.State.Tests.EqualByTests
 {
     using System;
+    using System.Collections.Generic;
+
     using NUnit.Framework;
+
+    using static EqualByTypes;
 
     public abstract class VerifyTests
     {
@@ -36,10 +40,10 @@ namespace Gu.State.Tests.EqualByTests
                                  "  - Exclude a combination of the following:\r\n" +
                                  "    - The property WithProperty<ComplexType>.Value.\r\n" +
                                  "    - The type ComplexType.\r\n";
-            var exception = Assert.Throws<NotSupportedException>(() => this.VerifyMethod<EqualByTypes.WithProperty<EqualByTypes.ComplexType>>());
+            var exception = Assert.Throws<NotSupportedException>(() => this.VerifyMethod<WithProperty<ComplexType>>());
             Assert.AreEqual(expected, exception.Message);
 
-            Assert.DoesNotThrow(() => this.VerifyMethod<EqualByTypes.ComplexType>());
+            Assert.DoesNotThrow(() => this.VerifyMethod<ComplexType>());
         }
 
         [Test]
@@ -64,7 +68,7 @@ namespace Gu.State.Tests.EqualByTests
                                  "  - Exclude a combination of the following:\r\n" +
                                  "    - The indexer property WithIndexerType.Item.\r\n";
 
-            var exception = Assert.Throws<NotSupportedException>(() => this.VerifyMethod<EqualByTypes.WithIndexerType>(ReferenceHandling.Structural));
+            var exception = Assert.Throws<NotSupportedException>(() => this.VerifyMethod<WithIndexerType>(ReferenceHandling.Structural));
             Assert.AreEqual(expected, exception.Message);
         }
 
@@ -102,8 +106,38 @@ namespace Gu.State.Tests.EqualByTests
                                  "    - The type List<WithIndexerType>.\r\n" +
                                  "    - The type WithIndexerType.\r\n";
 
-            var exception = Assert.Throws<NotSupportedException>(() => this.VerifyMethod<EqualByTypes.WithListProperty<EqualByTypes.WithIndexerType>>(ReferenceHandling.Structural));
+            var exception = Assert.Throws<NotSupportedException>(() => this.VerifyMethod<WithListProperty<WithIndexerType>>(ReferenceHandling.Structural));
             Assert.AreEqual(expected, exception.Message);
+        }
+
+        [Test]
+        public void DoesNotThrowForArrayOfint()
+        {
+            Assert.DoesNotThrow(() => this.VerifyMethod<int[]>(referenceHandling: ReferenceHandling.Throw));
+        }
+
+        [Test]
+        public void ThrowsForArrayOfComplex()
+        {
+            Assert.Throws<NotSupportedException>(() => this.VerifyMethod<ComplexType[]>(referenceHandling: ReferenceHandling.Throw));
+            Assert.DoesNotThrow(() => this.VerifyMethod<ComplexType[]>(referenceHandling: ReferenceHandling.References));
+            Assert.DoesNotThrow(() => this.VerifyMethod<ComplexType[]>(referenceHandling: ReferenceHandling.Structural));
+            Assert.DoesNotThrow(() => this.VerifyMethod<ComplexType[]>(referenceHandling: ReferenceHandling.StructuralWithReferenceLoops));
+        }
+
+        [Test]
+        public void DoesNotThrowForDictionaryOfIntAndString()
+        {
+            Assert.DoesNotThrow(() => this.VerifyMethod<Dictionary<int, string>>(referenceHandling: ReferenceHandling.Throw));
+        }
+
+        [Test]
+        public void ThrowsForDictionaryOfIntAndString()
+        {
+            Assert.Throws<NotSupportedException>(() => this.VerifyMethod<Dictionary<int, ComplexType>>(referenceHandling: ReferenceHandling.Throw));
+            Assert.DoesNotThrow(() => this.VerifyMethod<Dictionary<int, ComplexType>>(referenceHandling: ReferenceHandling.References));
+            Assert.DoesNotThrow(() => this.VerifyMethod<Dictionary<int, ComplexType>>(referenceHandling: ReferenceHandling.Structural));
+            Assert.DoesNotThrow(() => this.VerifyMethod<Dictionary<int, ComplexType>>(referenceHandling: ReferenceHandling.StructuralWithReferenceLoops));
         }
 
         [Test]
@@ -141,11 +175,11 @@ namespace Gu.State.Tests.EqualByTests
                      "    - The property Parent.Child.\r\n" +
                      "    - The property Child.Parent.\r\n" +
                      "    - The type Child.\r\n";
-            var exception = Assert.Throws<NotSupportedException>(() => this.VerifyMethod<EqualByTypes.Parent>(ReferenceHandling.Structural));
+            var exception = Assert.Throws<NotSupportedException>(() => this.VerifyMethod<Parent>(ReferenceHandling.Structural));
             Assert.AreEqual(expected, exception.Message);
 
-            Assert.DoesNotThrow(() => this.VerifyMethod<EqualByTypes.Parent>(ReferenceHandling.StructuralWithReferenceLoops));
-            Assert.DoesNotThrow(() => this.VerifyMethod<EqualByTypes.Parent>(ReferenceHandling.References));
+            Assert.DoesNotThrow(() => this.VerifyMethod<Parent>(ReferenceHandling.StructuralWithReferenceLoops));
+            Assert.DoesNotThrow(() => this.VerifyMethod<Parent>(ReferenceHandling.References));
         }
     }
 }

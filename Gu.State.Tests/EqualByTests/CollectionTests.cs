@@ -12,15 +12,18 @@
     {
         public abstract bool EqualByMethod<T>(T source, T target, ReferenceHandling referenceHandling) where T : class;
 
-        [Test]
-        public void ListOfIntsToEmpty()
+        [TestCase(ReferenceHandling.Throw)]
+        [TestCase(ReferenceHandling.References)]
+        [TestCase(ReferenceHandling.Structural)]
+        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
+        public void ListOfIntsToEmpty(ReferenceHandling referenceHandling)
         {
             var x = new List<int> { 1, 2, 3 };
             var y = new List<int>();
-            var result = this.EqualByMethod(x, y, ReferenceHandling.Structural);
+            var result = this.EqualByMethod(x, y, referenceHandling);
             Assert.AreEqual(false, result);
 
-            result = this.EqualByMethod(y, x, ReferenceHandling.Structural);
+            result = this.EqualByMethod(y, x, referenceHandling);
             Assert.AreEqual(false, result);
         }
 
@@ -140,6 +143,7 @@
             Assert.AreEqual(true, result);
         }
 
+        [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.References)]
         [TestCase(ReferenceHandling.Structural)]
         [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]

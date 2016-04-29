@@ -2,6 +2,7 @@ namespace Gu.State
 {
     using System;
     using System.Collections;
+    using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.ComponentModel;
     using System.Reflection;
@@ -59,15 +60,42 @@ namespace Gu.State
             return new TypeErrors(null, new[] { first, other });
         }
 
-        internal static TypeErrorsBuilder CheckReferenceHandling<TSettings>(this TypeErrorsBuilder typeErrors, Type type, TSettings settings, Func<Type, bool> requiresReferenceHandling)
+        internal static TypeErrorsBuilder CheckRequiresReferenceHandling<TSettings>(
+            this TypeErrorsBuilder typeErrors,
+            Type type,
+            TSettings settings,
+            Func<Type, bool> requiresReferenceHandling)
             where TSettings : IMemberSettings
         {
             if (settings.ReferenceHandling == ReferenceHandling.Throw)
             {
                 if (typeof(IEnumerable).IsAssignableFrom(type))
                 {
-                    typeErrors = typeErrors.CreateIfNull(type)
-                                           .Add(RequiresReferenceHandling.Enumerable);
+                    if (type.Implements(typeof(IDictionary<,>)))
+                    {
+                        var arguments = type.GetGenericArguments();
+                        if (arguments.Length != 2 ||
+                            requiresReferenceHandling(arguments[0]) ||
+                            requiresReferenceHandling(arguments[1]))
+                        {
+                            typeErrors = typeErrors.CreateIfNull(type)
+                                                   .Add(RequiresReferenceHandling.Enumerable);
+                        }
+                    }
+                    else if (requiresReferenceHandling(type.GetItemType()))
+                    {
+                        typeErrors = typeErrors.CreateIfNull(type)
+                                               .Add(RequiresReferenceHandling.Enumerable);
+                    }
+                }
+                else if (type.IsKeyValuePair())
+                {
+                    var arguments = type.GetGenericArguments();
+                    if (requiresReferenceHandling(arguments[0]) || requiresReferenceHandling(arguments[1]))
+                    {
+                        typeErrors = typeErrors.CreateIfNull(type)
+                                               .Add(RequiresReferenceHandling.ComplexType);
+                    }
                 }
                 else if (requiresReferenceHandling(type))
                 {
