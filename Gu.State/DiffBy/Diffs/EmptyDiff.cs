@@ -14,6 +14,8 @@
         {
         }
 
+        public override bool IsEmpty => true;
+
         /// <inheritdoc />
         public override string ToString()
         {
@@ -26,7 +28,7 @@
             return this.ToString();
         }
 
-        internal override IndentedTextWriter WriteDiffs(IndentedTextWriter writer, List<SubDiff> written)
+        internal override IndentedTextWriter WriteDiffs(IndentedTextWriter writer, HashSet<ValueDiff> written)
         {
             return writer;
         }

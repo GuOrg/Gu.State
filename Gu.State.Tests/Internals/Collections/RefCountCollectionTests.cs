@@ -29,7 +29,6 @@ namespace Gu.State.Tests.Internals.Collections
         [Test]
         public void Dispose()
         {
-            Assert.Inconclusive();
             var collection = new RefCountCollection<IRefCountable>();
             var trackers = new[] { new Mock<IRefCountable>(), new Mock<IRefCountable>() };
             var s1 = new object();
@@ -43,13 +42,12 @@ namespace Gu.State.Tests.Internals.Collections
         }
 
         [Test]
-        public void DisposeItem()
+        public void RemoveOwner()
         {
-            Assert.Inconclusive();
             var collection = new RefCountCollection<IRefCountable>();
             var s1 = new object();
             var tracker1 = collection.GetOrAdd(this, s1, () => new Mock<IRefCountable>().Object);
-            tracker1.Tracker.Dispose();
+            tracker1.RemoveOwner(this);
             var tracker2 = collection.GetOrAdd(this, s1, () => new Mock<IRefCountable>().Object);
             Assert.AreNotSame(tracker1, tracker2);
         }

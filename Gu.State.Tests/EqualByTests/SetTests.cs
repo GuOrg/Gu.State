@@ -1,9 +1,6 @@
 ﻿namespace Gu.State.Tests.EqualByTests
 {
-    using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Linq;
 
     using NUnit.Framework;
 

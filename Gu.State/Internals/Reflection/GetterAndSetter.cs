@@ -3,9 +3,10 @@
     using System.Collections.Concurrent;
     using System.Reflection;
 
-    internal class GetterAndSetter
+    internal static class GetterAndSetter
     {
         private static readonly ConcurrentDictionary<PropertyInfo, IGetterAndSetter> PropertyCache = new ConcurrentDictionary<PropertyInfo, IGetterAndSetter>();
+        private static readonly ConcurrentDictionary<FieldInfo, IGetterAndSetter> FieldCache = new ConcurrentDictionary<FieldInfo, IGetterAndSetter>();
 
         internal static IGetterAndSetter GetOrCreate(PropertyInfo propertyInfo)
         {
@@ -13,6 +14,11 @@
         }
 
         internal static IGetterAndSetter GetOrCreate(FieldInfo fieldInfo)
+        {
+            return FieldCache.GetOrAdd(fieldInfo, Create);
+        }
+
+        private static IGetterAndSetter Create(FieldInfo fieldInfo)
         {
             var setter = typeof(GetterAndSetter<,>).MakeGenericType(fieldInfo.DeclaringType, fieldInfo.FieldType);
             var constructorInfo = setter.GetConstructor(new[] { typeof(FieldInfo) });

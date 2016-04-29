@@ -14,6 +14,8 @@
             this.Diffs = diffs ?? Empty;
         }
 
+        public abstract bool IsEmpty { get; }
+
         /// <summary>Gets the diffs for properties and indexes.</summary>
         public IReadOnlyList<SubDiff> Diffs { get; }
 
@@ -25,32 +27,32 @@
         /// <returns>A report with all diffs.</returns>
         public abstract string ToString(string tabString, string newLine);
 
-        internal static Disposer<List<SubDiff>> BorrowReferenceList()
+        internal static Disposer<HashSet<ValueDiff>> BorrowValueDiffReferenceSet()
         {
-            return ReferenceListPool.Borrow();
+            return ValueDiffSetPool.Borrow();
         }
 
-        internal abstract IndentedTextWriter WriteDiffs(IndentedTextWriter writer, List<SubDiff> written);
+        internal abstract IndentedTextWriter WriteDiffs(IndentedTextWriter writer, HashSet<ValueDiff> written);
 
-        private static class ReferenceListPool
+        private static class ValueDiffSetPool
         {
-            private static readonly ConcurrentQueue<List<SubDiff>> Pool = new ConcurrentQueue<List<SubDiff>>();
+            private static readonly ConcurrentQueue<HashSet<ValueDiff>> Pool = new ConcurrentQueue<HashSet<ValueDiff>>();
 
-            internal static Disposer<List<SubDiff>> Borrow()
+            internal static Disposer<HashSet<ValueDiff>> Borrow()
             {
-                List<SubDiff> list;
-                if (Pool.TryDequeue(out list))
+                HashSet<ValueDiff> set;
+                if (Pool.TryDequeue(out set))
                 {
-                    return new Disposer<List<SubDiff>>(list, Return);
+                    return new Disposer<HashSet<ValueDiff>>(set, Return);
                 }
 
-                return new Disposer<List<SubDiff>>(new List<SubDiff>(), Return);
+                return new Disposer<HashSet<ValueDiff>>(new HashSet<ValueDiff>(), Return);
             }
 
-            private static void Return(List<SubDiff> list)
+            private static void Return(HashSet<ValueDiff> set)
             {
-                list.Clear();
-                Pool.Enqueue(list);
+                set.Clear();
+                Pool.Enqueue(set);
             }
         }
     }

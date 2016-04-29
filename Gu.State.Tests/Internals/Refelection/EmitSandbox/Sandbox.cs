@@ -1,4 +1,5 @@
-﻿namespace Gu.State.Tests.Internals.Refelection.EmitSandbox
+﻿// ReSharper disable All
+namespace Gu.State.Tests.Internals.Refelection.EmitSandbox
 {
     using System;
     using System.Diagnostics;

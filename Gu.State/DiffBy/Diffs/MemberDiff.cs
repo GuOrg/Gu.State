@@ -47,7 +47,7 @@ namespace Gu.State
 
             using (var writer = new IndentedTextWriter(new StringWriter(), tabString) { NewLine = newLine })
             {
-                using (var disposer = BorrowReferenceList())
+                using (var disposer = BorrowValueDiffReferenceSet())
                 {
                     writer.Write(this.MemberyInfo.Name);
                     this.WriteDiffs(writer, disposer.Value);
@@ -57,15 +57,13 @@ namespace Gu.State
             }
         }
 
-        internal override IndentedTextWriter WriteDiffs(IndentedTextWriter writer, List<SubDiff> written)
+        internal override IndentedTextWriter WriteDiffs(IndentedTextWriter writer, HashSet<ValueDiff> written)
         {
-            if (written.Contains(this))
+            if (!written.Add(this.ValueDiff))
             {
-                writer.Write("...");
+                writer.Write($"{this.MemberyInfo.Name} ...");
                 return writer;
             }
-
-            written.Add(this);
 
             if (this.Diffs.Count == 0)
             {

@@ -28,7 +28,7 @@
         public void PropertyValues()
         {
             var sw = Stopwatch.StartNew();
-            for (int i = 0; i < N; i++)
+            for (var i = 0; i < N; i++)
             {
                 EqualBy.PropertyValues(this.x, this.y);
             }
@@ -40,7 +40,7 @@
         public void FieldValues()
         {
             var sw = Stopwatch.StartNew();
-            for (int i = 0; i < N; i++)
+            for (var i = 0; i < N; i++)
             {
                 EqualBy.FieldValues(this.x, this.y);
             }
@@ -52,7 +52,7 @@
         public void Comparer()
         {
             var sw = Stopwatch.StartNew();
-            for (int i = 0; i < N; i++)
+            for (var i = 0; i < N; i++)
             {
                 ComplexType.Comparer.Equals(this.x, this.y);
             }

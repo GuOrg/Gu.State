@@ -38,16 +38,26 @@ namespace Gu.State
                 return result;
             }
 
-            var xl = (Array)x;
-            var yl = (Array)y;
-            if (xl.Length != yl.Length || xl.Rank != yl.Rank)
+            return Equals((Array)x, (Array)y, compareItem, settings, referencePairs);
+        }
+
+        private static bool Equals<TSetting>(
+            Array x,
+            Array y,
+            Func<object, object, TSetting, ReferencePairCollection, bool> compareItem,
+            TSetting settings,
+            ReferencePairCollection referencePairs)
+            where TSetting : IMemberSettings
+        {
+            if (x.Length != y.Length || x.Rank != y.Rank)
             {
                 return false;
             }
 
-            for (int i = 0; i < xl.Rank; i++)
+            for (var i = 0; i < x.Rank; i++)
             {
-                if (xl.GetLength(i) != yl.GetLength(i))
+                if (x.GetLowerBound(i) != y.GetLowerBound(i) ||
+                    x.GetUpperBound(i) != y.GetUpperBound(i))
                 {
                     return false;
                 }
@@ -57,13 +67,13 @@ namespace Gu.State
             if (settings.ReferenceHandling == ReferenceHandling.References)
             {
                 return isEquatable
-                           ? ItemsEquals(xl, yl, object.Equals)
-                           : ItemsEquals(xl, yl, ReferenceEquals);
+                           ? ItemsEquals(x, y, object.Equals)
+                           : ItemsEquals(x, y, ReferenceEquals);
             }
 
             return isEquatable
-                       ? ItemsEquals(xl, yl, object.Equals)
-                       : ItemsEquals(xl, yl, (xi, yi) => compareItem(xi, yi, settings, referencePairs));
+                       ? ItemsEquals(x, y, object.Equals)
+                       : ItemsEquals(x, y, (xi, yi) => compareItem(xi, yi, settings, referencePairs));
         }
 
         private static bool ItemsEquals(Array x, Array y, Func<object, object, bool> compare)

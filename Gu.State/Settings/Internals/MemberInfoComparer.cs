@@ -25,7 +25,7 @@
             // http://stackoverflow.com/a/263416/1069200
             unchecked
             {
-                int hash = (int)2166136261;
+                var hash = (int)2166136261;
                 hash = hash * 16777619 ^ obj.Name.GetHashCode();
                 hash = hash * 16777619 ^ (obj.DeclaringType?.GetHashCode() ?? 0);
                 return hash;

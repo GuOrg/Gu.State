@@ -11,6 +11,8 @@ namespace Gu.State
             this.ValueDiff = valueDiff;
         }
 
+        public override bool IsEmpty => this.ValueDiff.IsEmpty;
+
         public object X => this.ValueDiff.X;
 
         public object Y => this.ValueDiff.Y;

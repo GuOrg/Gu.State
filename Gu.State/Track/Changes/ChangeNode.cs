@@ -43,7 +43,7 @@
                         var itemType = list.GetType().GetItemType();
                         if (!settings.IsImmutable(itemType) && !this.node.Tracker.Settings.IsIgnoringDeclaringType(itemType))
                         {
-                            for (int i = 0; i < list.Count; i++)
+                            for (var i = 0; i < list.Count; i++)
                             {
                                 this.UpdateIndexNode(i);
                             }

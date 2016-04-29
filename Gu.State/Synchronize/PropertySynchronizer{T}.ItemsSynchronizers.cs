@@ -91,7 +91,7 @@
                 switch (e.Action)
                 {
                     case NotifyCollectionChangedAction.Add:
-                        for (int i = 0; i < e.NewItems.Count; i++)
+                        for (var i = 0; i < e.NewItems.Count; i++)
                         {
                             var sv = e.NewItems[i];
                             object tv = null;
@@ -115,7 +115,7 @@
 
                         break;
                     case NotifyCollectionChangedAction.Remove:
-                        for (int i = 0; i < e.OldItems.Count; i++)
+                        for (var i = 0; i < e.OldItems.Count; i++)
                         {
                             var index = e.OldStartingIndex + i;
                             this.target.RemoveAt(index);
@@ -149,7 +149,7 @@
                     return;
                 }
 
-                for (int i = 0; i < this.source.Count; i++)
+                for (var i = 0; i < this.source.Count; i++)
                 {
                     this.UpdateItemSynchronizer(i, NotifyCollectionChangedAction.Reset);
                 }
