@@ -6,7 +6,7 @@ namespace Gu.State.Tests.EqualByTests
 
     public abstract class ArrayTests
     {
-        public abstract bool EqualByMethod<T>(T source, T target, ReferenceHandling referenceHandling) where T : class;
+        public abstract bool EqualByMethod<T>(T source, T target, ReferenceHandling referenceHandling);
 
         [TestCase("1, 2, 3", "1, 2, 3", true)]
         [TestCase("1, 2, 3", "1, 2", false)]
@@ -73,6 +73,17 @@ namespace Gu.State.Tests.EqualByTests
             var expected = new[] { new EqualByTypes.Immutable(1), new EqualByTypes.Immutable(2), new EqualByTypes.Immutable(3) };
             CollectionAssert.AreEqual(expected, source);
             CollectionAssert.AreEqual(expected, target);
+        }
+
+        [TestCase(ReferenceHandling.References)]
+        [TestCase(ReferenceHandling.Structural)]
+        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
+        public void ImmutableListOfIntsWhenEqual(ReferenceHandling referenceHandling)
+        {
+            var x = System.Collections.Immutable.ImmutableArray.Create(1, 2, 3);
+            var y = System.Collections.Immutable.ImmutableArray.Create(1, 2, 3);
+            Assert.AreEqual(true, this.EqualByMethod(x, y, referenceHandling));
+            Assert.AreEqual(true, this.EqualByMethod(y, x, referenceHandling));
         }
     }
 }

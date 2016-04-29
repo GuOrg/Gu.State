@@ -39,9 +39,7 @@
         }
 
         [TestCase(1, "one", "Empty")]
-        [TestCase(2, "one",
-            "Dictionary<int, ComplexType> [2] x: Gu.State.Tests.DiffTests.DiffTypes+ComplexType y: missing item [1] x: missing item y: Gu.State.Tests.DiffTests.DiffTypes+ComplexType"
-            )]
+        [TestCase(2, "one", "Dictionary<int, ComplexType> [2] x: Gu.State.Tests.DiffTests.DiffTypes+ComplexType y: missing item [1] x: missing item y: Gu.State.Tests.DiffTests.DiffTypes+ComplexType")]
         [TestCase(1, "two", "Dictionary<int, ComplexType> [1] <member> x: two y: one")]
         public void DictionaryIntComplex(int key, string value, string expected)
         {
@@ -83,6 +81,20 @@
             expected = "Dictionary<int, string> [2] x: two y: missing item";
             actual = result?.ToString("", " ");
             Assert.AreEqual(expected, actual);
+        }
+
+        [TestCase(ReferenceHandling.References)]
+        [TestCase(ReferenceHandling.Structural)]
+        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
+        public void ImmutableDictionaryOfIntsWhenEqual(ReferenceHandling referenceHandling)
+        {
+            var builder = System.Collections.Immutable.ImmutableDictionary.CreateBuilder<int, string>();
+            builder.Add(1, "one");
+            builder.Add(2, "two");
+            var x = builder.ToImmutable();
+            var y = builder.ToImmutable();
+            Assert.AreEqual("Empty", this.DiffMethod(x, y, referenceHandling).ToString("", " "));
+            Assert.AreEqual("Empty", this.DiffMethod(y, x, referenceHandling).ToString("", " "));
         }
     }
 }

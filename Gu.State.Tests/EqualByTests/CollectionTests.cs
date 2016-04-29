@@ -140,5 +140,15 @@
             Assert.AreEqual(true, result);
         }
 
+        [TestCase(ReferenceHandling.References)]
+        [TestCase(ReferenceHandling.Structural)]
+        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
+        public void ImmutableListOfIntsWhenEqual(ReferenceHandling referenceHandling)
+        {
+            var x = System.Collections.Immutable.ImmutableList.Create(1, 2, 3);
+            var y = System.Collections.Immutable.ImmutableList.Create(1, 2, 3);
+            Assert.AreEqual(true, this.EqualByMethod(x, y, referenceHandling));
+            Assert.AreEqual(true, this.EqualByMethod(y, x, referenceHandling));
+        }
     }
 }

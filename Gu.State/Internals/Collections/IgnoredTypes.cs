@@ -61,7 +61,11 @@
                 return isIgnoring;
             }
 
-            if (type.IsArray)
+            if (type.IsArray ||
+                type.IsImmutableList() ||
+                type.IsImmutableArray() ||
+                type.IsImmutableHashSet() ||
+                type.IsImmutableDictionary())
             {
                 this.ignoredTypes.TryAdd(type, true);
                 return true;
@@ -73,7 +77,7 @@
                 return false;
             }
 
-           return this.IsIgnoredGeneric(type);
+            return this.IsIgnoredGeneric(type);
         }
 
         private bool IsIgnoredGeneric(Type type)

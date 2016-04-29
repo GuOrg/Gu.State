@@ -145,5 +145,19 @@ namespace Gu.State.Tests.DiffTests
             actual = result.ToString("", " ");
             Assert.AreEqual(expected, actual);
         }
+
+        [TestCase(ReferenceHandling.References)]
+        [TestCase(ReferenceHandling.Structural)]
+        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
+        public void ImmutableHashSetOfIntsWhenEqual(ReferenceHandling referenceHandling)
+        {
+            var x = System.Collections.Immutable.ImmutableHashSet.Create(1, 2, 3);
+            var y = System.Collections.Immutable.ImmutableHashSet.Create(1, 2, 3);
+            var result = this.DiffMethod(x, y, referenceHandling);
+            Assert.AreEqual("Empty", result.ToString());
+
+            result = this.DiffMethod(y, x, referenceHandling);
+            Assert.AreEqual("Empty", result.ToString());
+        }
     }
 }

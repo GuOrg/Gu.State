@@ -50,10 +50,19 @@
 
             if (type.IsEnum)
             {
-                return true;
+                result = true;
+            }
+            else if (type.IsImmutableArray())
+            {
+                // special casing ImmutableArray due to weird equality
+                // Implements IEquatable<ImmutableArray> but Equals does not compare elements.
+                result = false;
+            }
+            else
+            {
+                result = type.Implements(typeof(IEquatable<>), type);
             }
 
-            result = type.Implements(typeof(IEquatable<>), type);
             EquatableCheckedTypes.TryAdd(type, result);
             return result;
         }
