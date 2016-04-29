@@ -83,10 +83,11 @@
             Assert.AreEqual(expected, actual);
         }
 
+        [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.References)]
         [TestCase(ReferenceHandling.Structural)]
         [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
-        public void ImmutableDictionaryOfIntsWhenEqual(ReferenceHandling referenceHandling)
+        public void ImmutableDictionaryOfIntsAndStringsWhenEqual(ReferenceHandling referenceHandling)
         {
             var builder = System.Collections.Immutable.ImmutableDictionary.CreateBuilder<int, string>();
             builder.Add(1, "one");

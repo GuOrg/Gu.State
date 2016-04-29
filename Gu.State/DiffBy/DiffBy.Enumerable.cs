@@ -20,8 +20,6 @@
                     return;
                 }
 
-                Debug.Assert(settings.ReferenceHandling != ReferenceHandling.Throw, "Should not get here");
-
                 IDiffBy comparer;
                 if (ListDiffBy.TryGetOrCreate(x, y, out comparer) ||
                     ReadonlyListDiffBy.TryGetOrCreate(x, y, out comparer) ||
