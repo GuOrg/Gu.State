@@ -6,7 +6,7 @@
 
     internal static class ArrayExt
     {
-        public static IEnumerable<int> Indices(this Array array, int dimension)
+        internal static IEnumerable<int> Indices(this Array array, int dimension)
         {
             for (var i = array.GetLowerBound(dimension); i <= array.GetUpperBound(dimension); i++)
             {
@@ -14,7 +14,7 @@
             }
         }
 
-        public static IEnumerable<int[]> Indices(this Array array)
+        internal static IEnumerable<int[]> Indices(this Array array)
         {
             var indices = new int[array.Rank];
             return GetIndices(indices, array, 0);
