@@ -10,6 +10,7 @@ namespace Gu.State.Tests.DiffTests
         public abstract Diff DiffMethod<T>(T source, T target, ReferenceHandling referenceHandling)
             where T : class;
 
+        [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.Structural)]
         [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
@@ -24,6 +25,7 @@ namespace Gu.State.Tests.DiffTests
             Assert.AreEqual("Empty", result.ToString());
         }
 
+        [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.Structural)]
         [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
@@ -38,6 +40,7 @@ namespace Gu.State.Tests.DiffTests
             Assert.AreEqual("HashSet<int> [40] x: 40 y: missing item [30] x: missing item y: 30", result.ToString("", " "));
         }
 
+        [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.Structural)]
         [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
@@ -146,6 +149,7 @@ namespace Gu.State.Tests.DiffTests
             Assert.AreEqual(expected, actual);
         }
 
+        [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.References)]
         [TestCase(ReferenceHandling.Structural)]
         [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
