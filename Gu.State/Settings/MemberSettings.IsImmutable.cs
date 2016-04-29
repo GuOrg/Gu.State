@@ -43,8 +43,8 @@
 
             if (type.IsNullable())
             {
-                type = Nullable.GetUnderlyingType(type);
-                var isImmutable = CheckIfIsImmutable(type, checkedTypes);
+                var underlyingType = Nullable.GetUnderlyingType(type);
+                var isImmutable = CheckIfIsImmutable(underlyingType, checkedTypes);
                 ImmutableCheckedTypes.TryAdd(type, isImmutable);
                 return isImmutable;
             }
@@ -53,6 +53,16 @@
             {
                 ImmutableCheckedTypes.TryAdd(type, true);
                 return true;
+            }
+
+            if (type.IsImmutableList() ||
+                type.IsImmutableArray() ||
+                type.IsImmutableHashSet())
+            {
+                var itemType = type.GetItemType();
+                var isImmutable = CheckIfIsImmutable(itemType, checkedTypes);
+                ImmutableCheckedTypes.TryAdd(type, isImmutable);
+                return isImmutable;
             }
 
             if (!CanBeImmutable(type))

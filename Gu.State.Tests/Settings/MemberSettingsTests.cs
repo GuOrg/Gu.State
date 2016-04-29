@@ -1,7 +1,6 @@
 ﻿namespace Gu.State.Tests.Settings
 {
     using System;
-
     using NUnit.Framework;
 
     using static SettingsTypes;
@@ -22,6 +21,9 @@
         [TestCase(typeof(WithReadonlyFieldSealed<int>), true)]
         [TestCase(typeof(WithReadonlyFieldSealed<int?>), true)]
         [TestCase(typeof(WithSelfFieldSealed), true)]
+        [TestCase(typeof(System.Collections.Immutable.ImmutableList<int>), true)]
+        [TestCase(typeof(System.Collections.Immutable.ImmutableArray<int>), true)]
+        [TestCase(typeof(System.Collections.Immutable.ImmutableHashSet<int>), true)]
         [TestCase(typeof(WithSelfPropSealed), true)]
         [TestCase(typeof(WithGetReadOnlyPropertySealed<WithReadonlyField<int>>), false)]
         [TestCase(typeof(WithGetReadOnlyPropertySealed<WithGetReadOnlyProperty<int>>), false)]
@@ -35,6 +37,9 @@
         [TestCase(typeof(WithSelfProp), false)]
         [TestCase(typeof(WithImmutableSubclassingMutable), false)]
         [TestCase(typeof(WithImmutableImplementingMutableInterfaceExplicit), false)]
+        [TestCase(typeof(System.Collections.Immutable.ImmutableList<ComplexType>), false)]
+        [TestCase(typeof(System.Collections.Immutable.ImmutableArray<ComplexType>), false)]
+        [TestCase(typeof(System.Collections.Immutable.ImmutableHashSet<ComplexType>), false)]
         public void IsImmutable(Type type, bool expected)
         {
             var settings = PropertiesSettings.GetOrCreate();
@@ -69,6 +74,9 @@
         [TestCase(typeof(WithSelfProp), false)]
         [TestCase(typeof(WithImmutableSubclassingMutable), false)]
         [TestCase(typeof(WithImmutableImplementingMutableInterfaceExplicit), false)]
+        [TestCase(typeof(System.Collections.Immutable.ImmutableList<int>), false)]
+        [TestCase(typeof(System.Collections.Immutable.ImmutableArray<int>), false)]
+        [TestCase(typeof(System.Collections.Immutable.ImmutableHashSet<int>), false)]
         public void IsEquatable(Type type, bool expected)
         {
             var settings = PropertiesSettings.GetOrCreate();

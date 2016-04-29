@@ -109,5 +109,16 @@
             result = this.EqualByMethod(y, x, referenceHandling);
             Assert.AreEqual(false, result);
         }
+
+        [TestCase(ReferenceHandling.References)]
+        [TestCase(ReferenceHandling.Structural)]
+        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
+        public void ImmutableHashSetOfIntsWhenEqual(ReferenceHandling referenceHandling)
+        {
+            var x = System.Collections.Immutable.ImmutableHashSet.Create(1, 2, 3);
+            var y = System.Collections.Immutable.ImmutableHashSet.Create(1, 2, 3);
+            Assert.AreEqual(true, this.EqualByMethod(x, y, referenceHandling));
+            Assert.AreEqual(true, this.EqualByMethod(y, x, referenceHandling));
+        }
     }
 }

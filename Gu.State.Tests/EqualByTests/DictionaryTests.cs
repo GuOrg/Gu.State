@@ -63,5 +63,19 @@ namespace Gu.State.Tests.EqualByTests
             result = this.EqualByMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
         }
+
+        [TestCase(ReferenceHandling.References)]
+        [TestCase(ReferenceHandling.Structural)]
+        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
+        public void ImmutableDictionaryOfIntsWhenEqual(ReferenceHandling referenceHandling)
+        {
+            var builder = System.Collections.Immutable.ImmutableDictionary.CreateBuilder<int, string>();
+            builder.Add(1, "one");
+            builder.Add(2,"two");
+            var x = builder.ToImmutable();
+            var y = builder.ToImmutable();
+            Assert.AreEqual(true, this.EqualByMethod(x, y, referenceHandling));
+            Assert.AreEqual(true, this.EqualByMethod(y, x, referenceHandling));
+        }
     }
 }

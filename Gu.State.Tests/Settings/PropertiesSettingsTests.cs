@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.Immutable;
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.Reflection;
@@ -118,11 +119,15 @@
         }
 
         [TestCase(typeof(List<int>))]
+        [TestCase(typeof(ImmutableList<int>))]
         [TestCase(typeof(int[]))]
+        [TestCase(typeof(ImmutableArray<int>))]
         [TestCase(typeof(Collection<int>))]
         [TestCase(typeof(ObservableCollection<int>))]
         [TestCase(typeof(Dictionary<int, int>))]
+        [TestCase(typeof(ImmutableDictionary<int, int>))]
         [TestCase(typeof(HashSet<int>))]
+        [TestCase(typeof(ImmutableHashSet<int>))]
         public void IgnoresCollectionProperties(Type type)
         {
             var settings = PropertiesSettings.GetOrCreate();

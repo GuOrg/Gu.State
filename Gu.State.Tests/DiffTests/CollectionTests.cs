@@ -150,5 +150,19 @@
             result = this.DiffMethod(y, x, ReferenceHandling.Structural);
             Assert.AreEqual("Empty", result.ToString());
         }
+
+        [TestCase(ReferenceHandling.References)]
+        [TestCase(ReferenceHandling.Structural)]
+        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
+        public void ImmutableListOfIntsWhenEqual(ReferenceHandling referenceHandling)
+        {
+            var x = System.Collections.Immutable.ImmutableList.Create(1, 2, 3);
+            var y = System.Collections.Immutable.ImmutableList.Create(1, 2, 3);
+            var result = this.DiffMethod(x, y, referenceHandling);
+            Assert.AreEqual("Empty", result.ToString());
+
+            result = this.DiffMethod(y, x, referenceHandling);
+            Assert.AreEqual("Empty", result.ToString());
+        }
     }
 }

@@ -96,6 +96,7 @@
     <Compile Include="Internals\Reflection\IGetterAndSetter.cs" />
     <Compile Include="Internals\Reflection\GetterAndSetter.cs" />
     <Compile Include="Internals\Reflection\GetterAndSetter{TSource, TValue}.cs" />
+    <Compile Include="Internals\Reflection\TypeExt.ImmutableCollections.cs" />
     <Compile Include="Internals\Set.cs" />
     <Compile Include="Internals\Set.Sorted.cs" />
     <Compile Include="Internals\Try.cs" />
@@ -230,8 +231,9 @@
   <ItemGroup>
     <Folder Include="Settings\Errors\" />
   </ItemGroup>
+  <Import Project="..\.paket\paket.targets" />
   <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v2.0' Or $(TargetFrameworkVersion) == 'v3.0' Or $(TargetFrameworkVersion) == 'v3.5' Or $(TargetFrameworkVersion) == 'v4.0' Or $(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1')">
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v2.0' Or $(TargetFrameworkVersion) == 'v3.0' Or $(TargetFrameworkVersion) == 'v3.5' Or $(TargetFrameworkVersion) == 'v4.0' Or $(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1' Or $(TargetFrameworkVersion) == 'v4.6.2')">
       <ItemGroup>
         <Reference Include="JetBrains.Annotations">
           <HintPath>..\packages\JetBrains.Annotations\lib\net20\JetBrains.Annotations.dll</HintPath>
@@ -270,5 +272,4 @@
       <Paket>True</Paket>
     </Analyzer>
   </ItemGroup>
-  <Import Project="..\.paket\paket.targets" />
 </Project>

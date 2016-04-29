@@ -6,7 +6,7 @@
 
     using NUnit.Framework;
 
-    public class TypeExtTests
+    public partial class TypeExtTests
     {
         [TestCase(typeof(ISet<>), true)]
         [TestCase(typeof(IEnumerable<>), true)]

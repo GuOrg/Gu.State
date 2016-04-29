@@ -8,7 +8,7 @@
 
     public abstract class ArrayTests
     {
-        public abstract Diff DiffMethod<T>(T source, T target, ReferenceHandling referenceHandling) where T : class;
+        public abstract Diff DiffMethod<T>(T source, T target, ReferenceHandling referenceHandling);
 
         [TestCase("1, 2, 3", "1, 2, 3", "Empty")]
         [TestCase("1, 2, 3", "1, 2", "int[] [2] x: 3 y: missing item")]
@@ -34,6 +34,20 @@
         {
             var x = new[] { 1, 2, 3 };
             var y = new[] { 1, 2, 3 };
+            var result = this.DiffMethod(x, y, referenceHandling);
+            Assert.AreEqual("Empty", result.ToString());
+
+            result = this.DiffMethod(y, x, referenceHandling);
+            Assert.AreEqual("Empty", result.ToString());
+        }
+
+        [TestCase(ReferenceHandling.References)]
+        [TestCase(ReferenceHandling.Structural)]
+        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
+        public void ImmutableArrayOfIntsWhenEqual(ReferenceHandling referenceHandling)
+        {
+            var x = System.Collections.Immutable.ImmutableArray.Create(1, 2, 3);
+            var y = System.Collections.Immutable.ImmutableArray.Create(1, 2, 3);
             var result = this.DiffMethod(x, y, referenceHandling);
             Assert.AreEqual("Empty", result.ToString());
 
