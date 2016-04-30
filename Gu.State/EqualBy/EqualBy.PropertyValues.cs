@@ -1,7 +1,5 @@
 ﻿namespace Gu.State
 {
-    using System;
-    using System.Collections;
     using System.Reflection;
 
     public static partial class EqualBy

@@ -38,8 +38,7 @@
         }
 
         // ReSharper disable once UnusedParameter.Local
-        private static void ThrowIfHasErrors<TSetting>(this TypeErrors errors, TSetting settings, string className, string methodName)
-            where TSetting : class, IMemberSettings
+        private static void ThrowIfHasErrors(this TypeErrors errors, IMemberSettings settings, string className, string methodName)
         {
             if (errors == null)
             {
@@ -56,7 +55,7 @@
                         .AppendNotSupported(errors)
                         .AppendSolveTheProblemBy()
                         .AppendSuggestEquatable(errors)
-                        .AppendLine($"* Use {typeof(TSetting).Name} and specify how comparing is performed:")
+                        .AppendLine($"* Use {settings.GetType().Name} and specify how comparing is performed:")
                         .AppendSuggestReferenceHandling(errors, settings)
                         .AppendSuggestExclude(errors);
 
