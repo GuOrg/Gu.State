@@ -1,20 +1,21 @@
-namespace Gu.State
+﻿namespace Gu.State
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
 
-    public class ListOfTCopyer : ICopyer
+    public class SetOfTCopyer : ICopyer
     {
-        public static readonly ListOfTCopyer Default = new ListOfTCopyer();
+        public static readonly State.SetOfTCopyer Default = new State.SetOfTCopyer();
 
-        private ListOfTCopyer()
+        private SetOfTCopyer()
         {
         }
 
         public static bool TryGetOrCreate(object x, object y, out ICopyer comparer)
         {
-            if (Is.IListsOfT(x, y))
+            if (Is.ISetsOfT(x, y))
             {
                 comparer = Default;
                 return true;
@@ -34,14 +35,14 @@ namespace Gu.State
         {
             var itemType = source.GetType().GetItemType();
             var copyMethod = this.GetType()
-                                        .GetMethod(nameof(Copy), BindingFlags.NonPublic | BindingFlags.Static)
+                                        .GetMethod(nameof(State.Copy), BindingFlags.NonPublic | BindingFlags.Static)
                                         .MakeGenericMethod(itemType, typeof(TSettings));
             copyMethod.Invoke(null, new[] { source, target, syncItem, settings, referencePairs });
         }
 
         private static void Copy<T, TSettings>(
-            IList<T> source,
-            IList<T> target,
+            ISet<T> source,
+            ISet<T> target,
             Action<object, object, TSettings, ReferencePairCollection> syncItem,
             TSettings settings,
             ReferencePairCollection referencePairs)
@@ -52,27 +53,27 @@ namespace Gu.State
                 throw State.Copy.Throw.CannotCopyFixesSizeCollections(source, target, settings);
             }
 
-            var isImmutable = settings.IsImmutable(
-                source.GetType()
-                      .GetItemType());
-            for (var i = 0; i < source.Count; i++)
+            if (settings.IsImmutable(typeof(T)))
             {
-                var sv = source[i];
-                var tv = target.ElementAtOrDefault(i);
-                var copyItem = State.Copy.Item(sv, tv, syncItem, settings, referencePairs, isImmutable);
-                if (i < target.Count)
-                {
-                    target[i] = copyItem;
-                }
-                else
-                {
-                    target.Add(copyItem);
-                }
+                target.IntersectWith(source);
+                target.UnionWith(source);
+                return;
             }
 
-            for (var i = target.Count - 1; i >= source.Count; i--)
+            switch (settings.ReferenceHandling)
             {
-                target.RemoveAt(i);
+                case ReferenceHandling.Throw:
+                    break;
+                case ReferenceHandling.References:
+                        target.IntersectWith(source);
+                        target.UnionWith(source);
+                    break;
+                case ReferenceHandling.Structural:
+                case ReferenceHandling.StructuralWithReferenceLoops:
+                    target.IntersectWith(source);
+                    return;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }

@@ -46,7 +46,7 @@ namespace Gu.State
             return KeysAndValuesEquals(xd, yd, compareItem, settings, referencePairs);
         }
 
-        internal static bool KeysAndValuesEquals<TSetting>(
+        private static bool KeysAndValuesEquals<TSetting>(
             IDictionary<TKey, TValue> x,
             IDictionary<TKey, TValue> y,
             Func<object, object, TSetting, ReferencePairCollection, bool> compareItem,
@@ -77,7 +77,7 @@ namespace Gu.State
             return true;
         }
 
-        internal static bool KeysAndValuesEquals(
+        private static bool KeysAndValuesEquals(
             IDictionary<TKey, TValue> x,
             IDictionary<TKey, TValue> y,
             Func<TValue, TValue, bool> compareItem)

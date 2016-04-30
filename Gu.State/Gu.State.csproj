@@ -41,6 +41,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Copy\Copyers\ArrayCopyer.cs" />
+    <Compile Include="Copy\Copyers\SetOfTCopyer.cs" />
+    <Compile Include="Copy\Copyers\DictionaryTKeyTValueCopyer.cs" />
     <Compile Include="Copy\Copyers\DictionaryCopyer.cs" />
     <Compile Include="Copy\Copyers\ICopyer.cs" />
     <Compile Include="Copy\Copyers\ListCopyer.cs" />
@@ -81,6 +83,7 @@
     <Compile Include="EqualBy\Comparers\ReadOnlyListEqualByComparer{T}.cs" />
     <Compile Include="Internals\ArrayExt.cs" />
     <Compile Include="Internals\EnumerableExt.ElementAt.cs" />
+    <Compile Include="Internals\Pools\ListPool.cs" />
     <Compile Include="Internals\Pools\SetPool.cs" />
     <Compile Include="Internals\Collections\ReferenceComparer{T}.cs" />
     <Compile Include="Internals\Pools\ReferenceSetPool.cs" />
