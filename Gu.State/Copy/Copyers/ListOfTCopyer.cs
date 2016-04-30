@@ -47,7 +47,7 @@ namespace Gu.State
             ReferencePairCollection referencePairs)
             where TSettings : class, IMemberSettings
         {
-            if (Is.FixedSize(source, target) && source.Count != target.Count)
+            if (Is.IsFixedSize(source, target) && source.Count != target.Count)
             {
                 throw State.Copy.Throw.CannotCopyFixesSizeCollections(source, target, settings);
             }

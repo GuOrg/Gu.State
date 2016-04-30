@@ -107,7 +107,6 @@
     <Compile Include="Internals\Reflection\GetterAndSetter{TSource, TValue}.cs" />
     <Compile Include="Internals\Reflection\TypeExt.ImmutableCollections.cs" />
     <Compile Include="Internals\Set.cs" />
-    <Compile Include="Internals\Set.Sorted.cs" />
     <Compile Include="Internals\Try.cs" />
     <Compile Include="Track\Dirty\DiffExt.cs" />
     <Compile Include="Internals\ChangeTrackerNode\EventArgs\ReplaceEventArgs.cs" />

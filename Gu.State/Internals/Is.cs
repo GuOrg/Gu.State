@@ -65,12 +65,12 @@
             return source is IEnumerable && target is IEnumerable;
         }
 
-        internal static bool FixedSize(IEnumerable x, IEnumerable y)
+        internal static bool IsFixedSize(IEnumerable x, IEnumerable y)
         {
-            return FixedSize(x) || FixedSize(y);
+            return IsFixedSize(x) || IsFixedSize(y);
         }
 
-        internal static bool FixedSize(object list)
+        internal static bool IsFixedSize(object list)
         {
             return (list as IList)?.IsReadOnly == true;
         }
@@ -89,6 +89,16 @@
         {
             Debug.Assert(type.IsInterface, "typeof(T).IsInterface add support for baseclasses?");
             return x?.GetType().Implements(type) == true;
+        }
+
+        internal static bool IsEquatable<T>()
+        {
+            return typeof(T).IsEquatable();
+        }
+
+        internal static bool IsEquatable(this Type type)
+        {
+            return type.Implements(typeof(IEquatable<>), type);
         }
     }
 }
