@@ -1,6 +1,7 @@
 ﻿namespace Gu.State
 {
     using System;
+    using System.Collections.Specialized;
     using System.Reflection;
 
     public static partial class EqualBy
@@ -80,6 +81,25 @@
 
         internal static class Verify
         {
+            internal static void CanEqualByMemberValues<T>(T x, T y, IMemberSettings settings)
+            {
+                var propertiesSettings = settings as PropertiesSettings;
+                if (propertiesSettings != null)
+                {
+                    CanEqualByPropertyValues(x, y, propertiesSettings);
+                    return;
+                }
+
+                var fieldsSettings = settings as FieldsSettings;
+                if (fieldsSettings != null)
+                {
+                    CanEqualByFieldValues(x, y, fieldsSettings);
+                    return;
+                }
+
+                throw Throw.ExpectedParameterOfTypes<PropertiesSettings, FieldsSettings>("CanEqualByMemberValues failed.");
+            }
+
             internal static void CanEqualByPropertyValues<T>(T x, T y, PropertiesSettings settings)
             {
                 CanEqualByPropertyValues(x, y, settings, typeof(EqualBy).Name, nameof(EqualBy.PropertyValues));

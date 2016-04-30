@@ -1,6 +1,8 @@
 ﻿namespace Gu.State
 {
     using System;
+    using System.Collections.Generic;
+    using System.Reflection;
 
     /// <summary>Setting specifying how members are handled.</summary>
     public interface IMemberSettings : IIgnoringDeclaredType, IBindingFlags, IReferenceHandling
@@ -27,5 +29,11 @@
         /// <param name="type">The type.</param>
         /// <returns>True if <paramref name="type"/> is equatable</returns>
         bool IsImmutable(Type type);
+
+        IEnumerable<MemberInfo> GetMembers(Type type);
+
+        bool IsIgnoringMember(MemberInfo member);
+
+        IGetterAndSetter GetOrCreateGetterAndSetter(MemberInfo member);
     }
 }

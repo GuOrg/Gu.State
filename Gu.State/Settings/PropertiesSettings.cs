@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Reflection;
 
     public class PropertiesSettings : MemberSettings<PropertyInfo>, IIgnoringProperties
@@ -74,6 +75,23 @@
         public SpecialCopyProperty GetSpecialCopyProperty(PropertyInfo propertyInfo)
         {
             return null;
+        }
+
+        public override IEnumerable<MemberInfo> GetMembers(Type type)
+        {
+            return type.GetProperties(this.BindingFlags);
+        }
+
+        public override bool IsIgnoringMember(MemberInfo member)
+        {
+            Debug.Assert(member is PropertyInfo, "member is PropertyInfo");
+            return this.IsIgnoringProperty(member as PropertyInfo);
+        }
+
+        public override IGetterAndSetter GetOrCreateGetterAndSetter(MemberInfo member)
+        {
+            Debug.Assert(member is PropertyInfo, "member is PropertyInfo");
+            return this.GetOrCreateGetterAndSetter(member as PropertyInfo);
         }
 
         internal override IGetterAndSetter GetOrCreateGetterAndSetter(PropertyInfo propertyInfo)

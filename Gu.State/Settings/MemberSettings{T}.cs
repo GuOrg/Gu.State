@@ -48,6 +48,12 @@
         /// <inheritdoc />
         public bool IsImmutable(Type type) => IsImmutableCore(type);
 
+        public abstract IEnumerable<MemberInfo> GetMembers(Type type);
+
+        public abstract bool IsIgnoringMember(MemberInfo member);
+
+        public abstract IGetterAndSetter GetOrCreateGetterAndSetter(MemberInfo member);
+
         public bool IsIgnoringDeclaringType(Type declaringType)
         {
             return this.ignoredTypes.IsIgnoringType(declaringType);
