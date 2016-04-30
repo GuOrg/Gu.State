@@ -4,10 +4,13 @@ namespace Gu.State.Tests.CopyTests
 
     using NUnit.Framework;
 
+    using static CopyTypes;
+
     public abstract class SetTests
     {
         public abstract void CopyMethod<T>(T source, T target, ReferenceHandling referenceHandling) where T : class;
 
+        [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.Structural)]
         [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
@@ -22,6 +25,7 @@ namespace Gu.State.Tests.CopyTests
             CollectionAssert.AreEquivalent(expected, target);
         }
 
+        [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.Structural)]
         [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
@@ -52,32 +56,44 @@ namespace Gu.State.Tests.CopyTests
         [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         public void HashSetOfComplexWhenEqual(ReferenceHandling referenceHandling)
         {
-            var source = new HashSet<CopyTypes.ComplexType>(CopyTypes.ComplexType.NameComparer) { new CopyTypes.ComplexType("a", 1) };
-            var target = new HashSet<CopyTypes.ComplexType>(CopyTypes.ComplexType.NameComparer) { new CopyTypes.ComplexType("a", 1) };
+            var source = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 1) };
+            var target = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 1) };
             this.CopyMethod(source, target, referenceHandling);
-            var expected = new[] { new CopyTypes.ComplexType("a", 1) };
-            CollectionAssert.AreEqual(expected, source, CopyTypes.ComplexType.Comparer);
-            CollectionAssert.AreEqual(expected, target, CopyTypes.ComplexType.Comparer);
+            var expected = new[] { new ComplexType("a", 1) };
+            CollectionAssert.AreEqual(expected, source, ComplexType.Comparer);
+            CollectionAssert.AreEqual(expected, target, ComplexType.Comparer);
         }
 
         [TestCase(ReferenceHandling.Structural)]
         [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         public void HashSetOfComplexWhenNotEqual(ReferenceHandling referenceHandling)
         {
-            var source = new HashSet<CopyTypes.ComplexType>(CopyTypes.ComplexType.NameComparer) { new CopyTypes.ComplexType("a", 1) };
-            var target = new HashSet<CopyTypes.ComplexType>(CopyTypes.ComplexType.NameComparer) { new CopyTypes.ComplexType("a", 2) };
+            var source = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 1) };
+            var target = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 2) };
             this.CopyMethod(source, target, referenceHandling);
-            var expected = new[] { new CopyTypes.ComplexType("a", 1) };
-            CollectionAssert.AreEqual(expected, source, CopyTypes.ComplexType.Comparer);
-            CollectionAssert.AreEqual(expected, target, CopyTypes.ComplexType.Comparer);
+            var expected = new[] { new ComplexType("a", 1) };
+            CollectionAssert.AreEqual(expected, source, ComplexType.Comparer);
+            CollectionAssert.AreEqual(expected, target, ComplexType.Comparer);
         }
 
         [Test]
         public void HashSetOfComplexWhenNotEqualReferences()
         {
-            var sv = new CopyTypes.ComplexType("a", 1);
-            var source = new HashSet<CopyTypes.ComplexType>(CopyTypes.ComplexType.NameComparer) { sv };
-            var target = new HashSet<CopyTypes.ComplexType>(CopyTypes.ComplexType.NameComparer) { new CopyTypes.ComplexType("a", 2) };
+            var sv = new ComplexType("a", 1);
+            var source = new HashSet<ComplexType>(ComplexType.NameComparer) { sv };
+            var target = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 2) };
+            this.CopyMethod(source, target, ReferenceHandling.References);
+            var expected = new[] { sv };
+            CollectionAssert.AreEqual(expected, source);
+            CollectionAssert.AreEqual(expected, target);
+        }
+
+        [Test]
+        public void HashSetOfComplexWhenEqualReferences()
+        {
+            var sv = new ComplexType("a", 1);
+            var source = new HashSet<ComplexType>(ComplexType.NameComparer) { sv };
+            var target = new HashSet<ComplexType>(ComplexType.NameComparer) { sv };
             this.CopyMethod(source, target, ReferenceHandling.References);
             var expected = new[] { sv };
             CollectionAssert.AreEqual(expected, source);

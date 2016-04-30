@@ -1,7 +1,6 @@
 namespace Gu.State
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Reflection;
 
@@ -15,7 +14,7 @@ namespace Gu.State
 
         public static bool TryGetOrCreate(object x, object y, out ICopyer comparer)
         {
-            if (Is.ListsOfT(x, y))
+            if (Is.IListsOfT(x, y))
             {
                 comparer = Default;
                 return true;
@@ -48,7 +47,7 @@ namespace Gu.State
             ReferencePairCollection referencePairs)
             where TSettings : class, IMemberSettings
         {
-            if (Is.FixedSize(source, target) && source.Count != target.Count)
+            if (Is.IsFixedSize(source, target) && source.Count != target.Count)
             {
                 throw State.Copy.Throw.CannotCopyFixesSizeCollections(source, target, settings);
             }

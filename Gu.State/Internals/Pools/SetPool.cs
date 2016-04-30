@@ -9,6 +9,11 @@
     {
         private static readonly ConcurrentQueue<HashSet<T>> Cache = new ConcurrentQueue<HashSet<T>>();
 
+        internal static Disposer<HashSet<T>> Borrow(IEqualityComparer<T> comparer)
+        {
+            return Borrow(comparer.Equals, comparer.GetHashCode);
+        }
+
         internal static Disposer<HashSet<T>> Borrow(Func<T, T, bool> compare, Func<T, int> getHashCode)
         {
             Debug.Assert(compare != null, "compare == null");
