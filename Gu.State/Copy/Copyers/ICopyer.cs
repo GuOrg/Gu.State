@@ -4,7 +4,7 @@
 
     public interface ICopyer
     {
-        void CopyItems<TSettings>(
+        void Copy<TSettings>(
             object source,
             object target,
             Action<object, object, TSettings, ReferencePairCollection> syncItem,

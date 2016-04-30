@@ -3,6 +3,7 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.IO.IsolatedStorage;
 
     internal static class Is
     {
@@ -25,9 +26,19 @@
             return true;
         }
 
-        internal static bool Sets(object x, object y)
+        internal static bool SetsOfT(object x, object y)
         {
             if (x?.GetType().Implements(typeof(ISet<>)) != true || y?.GetType().Implements(typeof(ISet<>)) != true)
+            {
+                return false;
+            }
+
+            return x.GetType().GetItemType() == y.GetType().GetItemType();
+        }
+
+        internal static bool ListsOfT(object x, object y)
+        {
+            if (x?.GetType().Implements(typeof(IList<>)) != true || y?.GetType().Implements(typeof(IList<>)) != true)
             {
                 return false;
             }
@@ -38,6 +49,16 @@
         internal static bool Enumerable(object source, object target)
         {
             return source is IEnumerable && target is IEnumerable;
+        }
+
+        internal static bool FixedSize(IEnumerable x, IEnumerable y)
+        {
+            return FixedSize(x) || FixedSize(y);
+        }
+
+        internal static bool FixedSize(object list)
+        {
+            return (list as IList)?.IsReadOnly == true;
         }
     }
 }

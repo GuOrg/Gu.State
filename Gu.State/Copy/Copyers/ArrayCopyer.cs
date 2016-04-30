@@ -1,7 +1,6 @@
 ﻿namespace Gu.State
 {
     using System;
-    using System.Globalization;
     using System.Reflection;
 
     public class ArrayCopyer : ICopyer
@@ -24,7 +23,7 @@
             return false;
         }
 
-        public void CopyItems<TSettings>(
+        public void Copy<TSettings>(
             object source,
             object target,
             Action<object, object, TSettings, ReferencePairCollection> syncItem,
@@ -93,7 +92,7 @@
             {
                 var sv = sourceArray[i];
                 var tv = targetArray[i];
-                var copyItem = Gu.State.Copy.Item(sv, tv, syncItem, settings, referencePairs, isImmutable);
+                var copyItem = State.Copy.Item(sv, tv, syncItem, settings, referencePairs, isImmutable);
                 targetArray[i] = copyItem;
             }
         }
@@ -115,7 +114,7 @@
                 {
                     var sv = sourceArray[i, j];
                     var tv = targetArray[i, j];
-                    var copyItem = Gu.State.Copy.Item(sv, tv, syncItem, settings, referencePairs, isImmutable);
+                    var copyItem = State.Copy.Item(sv, tv, syncItem, settings, referencePairs, isImmutable);
                     targetArray[i, j] = copyItem;
                 }
             }
@@ -140,7 +139,7 @@
                     {
                         var sv = sourceArray[i, j, k];
                         var tv = targetArray[i, j, k];
-                        var copyItem = Gu.State.Copy.Item(sv, tv, syncItem, settings, referencePairs, isImmutable);
+                        var copyItem = State.Copy.Item(sv, tv, syncItem, settings, referencePairs, isImmutable);
                         targetArray[i, j, k] = copyItem;
                     }
                 }
@@ -162,7 +161,7 @@
             {
                 var sv = sourceArray.GetValue(index);
                 var tv = targetArray.GetValue(index);
-                var copyItem = Gu.State.Copy.Item(sv, tv, syncItem, settings, referencePairs, isImmutable);
+                var copyItem = State.Copy.Item(sv, tv, syncItem, settings, referencePairs, isImmutable);
                 targetArray.SetValue(copyItem, index);
             }
         }
