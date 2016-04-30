@@ -4,6 +4,7 @@
     using System.Collections;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Reflection;
 
     public class FieldsSettings : MemberSettings<FieldInfo>, IIgnoringFields
@@ -67,6 +68,23 @@
             }
 
             return this.IgnoredMembers.ContainsKey(fieldInfo);
+        }
+
+        public override IEnumerable<MemberInfo> GetMembers(Type type)
+        {
+            return type.GetFields(this.BindingFlags);
+        }
+
+        public override bool IsIgnoringMember(MemberInfo member)
+        {
+            Debug.Assert(member is FieldInfo, "member is FieldInfo");
+            return this.IsIgnoringField(member as FieldInfo);
+        }
+
+        public override IGetterAndSetter GetOrCreateGetterAndSetter(MemberInfo member)
+        {
+            Debug.Assert(member is FieldInfo, "member is FieldInfo");
+            return this.GetOrCreateGetterAndSetter(member as FieldInfo);
         }
 
         internal override IGetterAndSetter GetOrCreateGetterAndSetter(FieldInfo propertyInfo)

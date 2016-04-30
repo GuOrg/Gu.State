@@ -2,7 +2,7 @@
 {
     using System;
 
-    internal interface IGetterAndSetter
+    public interface IGetterAndSetter
     {
         Type SourceType { get; }
 

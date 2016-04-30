@@ -4,6 +4,8 @@ namespace Gu.State.Tests.EqualByTests
 
     using NUnit.Framework;
 
+    using static EqualByTypes;
+
     public abstract class ThrowsTests
     {
         public abstract bool EqualByMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excludedMembers = null, Type excludedType = null);
@@ -37,10 +39,10 @@ namespace Gu.State.Tests.EqualByTests
                                  "  - Exclude a combination of the following:\r\n" +
                                  "    - The property WithComplexProperty.ComplexType.\r\n" +
                                  "    - The type ComplexType.\r\n";
-            var exception = Assert.Throws<NotSupportedException>(() => this.EqualByMethod<EqualByTypes.WithComplexProperty>(null, null));
+            var exception = Assert.Throws<NotSupportedException>(() => this.EqualByMethod<WithComplexProperty>(null, null));
             Assert.AreEqual(expected, exception.Message);
 
-            Assert.DoesNotThrow(() => this.EqualByMethod<EqualByTypes.ComplexType>(null, null));
+            Assert.DoesNotThrow(() => this.EqualByMethod<ComplexType>(null, null));
         }
 
         [Test]
@@ -64,8 +66,8 @@ namespace Gu.State.Tests.EqualByTests
                                  "* Use PropertiesSettings and specify how comparing is performed:\r\n" +
                                  "  - Exclude a combination of the following:\r\n" +
                                  "    - The indexer property WithIndexerType.Item.\r\n";
-            var source = new EqualByTypes.WithIndexerType();
-            var target = new EqualByTypes.WithIndexerType();
+            var source = new WithIndexerType();
+            var target = new WithIndexerType();
 
             var exception = Assert.Throws<NotSupportedException>(() => this.EqualByMethod(source, target, ReferenceHandling.Structural));
             Assert.AreEqual(expected, exception.Message);
@@ -101,8 +103,8 @@ namespace Gu.State.Tests.EqualByTests
                                  "    - The indexer property WithIndexerType.Item.\r\n" +
                                  "    - The type WithIndexerType.\r\n";
             ;
-            var source = new EqualByTypes.WithProperty<EqualByTypes.WithIndexerType>();
-            var target = new EqualByTypes.WithProperty<EqualByTypes.WithIndexerType>();
+            var source = new WithProperty<WithIndexerType>();
+            var target = new WithProperty<WithIndexerType>();
 
             var exception = Assert.Throws<NotSupportedException>(() => this.EqualByMethod(source, target, ReferenceHandling.Structural));
             Assert.AreEqual(expected, exception.Message);
@@ -144,8 +146,8 @@ namespace Gu.State.Tests.EqualByTests
                      "    - The property Child.Parent.\r\n" +
                      "    - The type Child.\r\n";
 
-            var x = new EqualByTypes.Parent("p", new EqualByTypes.Child("c"));
-            var y = new EqualByTypes.Parent("p", new EqualByTypes.Child("c"));
+            var x = new Parent("p", new Child("c"));
+            var y = new Parent("p", new Child("c"));
             var exception = Assert.Throws<NotSupportedException>(() => this.EqualByMethod(x, y, ReferenceHandling.Structural));
             Assert.AreEqual(expected, exception.Message);
 
