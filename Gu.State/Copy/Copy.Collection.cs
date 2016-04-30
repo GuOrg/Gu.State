@@ -4,6 +4,7 @@
     using System.Collections;
     using System.Diagnostics;
     using System.Linq;
+    using System.Reflection;
 
     public static partial class Copy
     {
@@ -80,7 +81,18 @@
             {
                 if (sourceArray.Rank == 1 && targetArray.Rank == 1)
                 {
-                    CopyItems((IList)sourceArray, (IList)targetArray, syncItem,settings, referencePairs);
+                    CopyItems((IList)sourceArray, (IList)targetArray, syncItem, settings, referencePairs);
+                    return;
+                }
+
+                var itemType = sourceArray.GetType().GetItemType();
+                if (sourceArray.Rank == 2 &&
+                    targetArray.Rank == 2 &&
+                    (settings.IsImmutable(itemType) || settings.ReferenceHandling == ReferenceHandling.References))
+                {
+                    var copyMethod = typeof(Collection).GetMethod(nameof(CopyImmutable2DItems), BindingFlags.NonPublic | BindingFlags.Static)
+                                                              .MakeGenericMethod(itemType);
+                    copyMethod.Invoke(null, new object[] { sourceArray, targetArray });
                     return;
                 }
 
@@ -124,6 +136,17 @@
                             throw State.Throw.ShouldNeverGetHereException();
                         default:
                             throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);
+                    }
+                }
+            }
+
+            private static void CopyImmutable2DItems<T>(T[,] sourceArray, T[,] targetArray)
+            {
+                for (int i = sourceArray.GetLowerBound(0); i <= sourceArray.GetUpperBound(0); i++)
+                {
+                    for (int j = sourceArray.GetLowerBound(1); j <= sourceArray.GetUpperBound(1); j++)
+                    {
+                        targetArray[i, j] = sourceArray[i, j];
                     }
                 }
             }

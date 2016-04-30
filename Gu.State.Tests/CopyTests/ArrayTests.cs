@@ -33,12 +33,15 @@
             CollectionAssert.AreEqual(expected, target);
         }
 
-        [Test]
-        public void Ints2D()
+        [TestCase(ReferenceHandling.Throw)]
+        [TestCase(ReferenceHandling.Structural)]
+        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
+        [TestCase(ReferenceHandling.References)]
+        public void Ints2D(ReferenceHandling referenceHandling)
         {
             var source = new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } };
             var target = new int[3, 2];
-            this.CopyMethod(source, target, ReferenceHandling.Structural);
+            this.CopyMethod(source, target, referenceHandling);
             var expected = new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } };
             CollectionAssert.AreEqual(expected, source);
             CollectionAssert.AreEqual(expected, target);
