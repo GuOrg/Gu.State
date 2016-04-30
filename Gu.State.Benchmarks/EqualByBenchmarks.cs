@@ -2,12 +2,12 @@
 {
     using BenchmarkDotNet.Attributes;
 
-    public class EqualByBenchmarks
+    public class EqualByComplexTypeBenchmarks
     {
-        private ComplexType x;
-        private ComplexType y;
+        private readonly ComplexType x;
+        private readonly ComplexType y;
 
-        public EqualByBenchmarks()
+        public EqualByComplexTypeBenchmarks()
         {
             this.x = new ComplexType();
             this.y = new ComplexType();

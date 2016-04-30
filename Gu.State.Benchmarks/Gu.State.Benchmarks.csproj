@@ -39,6 +39,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ComplexType.cs" />
+    <Compile Include="CopyArray2DByBenchmarks.cs" />
+    <Compile Include="CopyArray3DBenchmarks.cs" />
+    <Compile Include="CopyListBenchmarks.cs" />
     <Compile Include="EqualByBenchmarks.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

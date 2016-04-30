@@ -33,7 +33,7 @@
     <DocumentationFile>bin\Release\Gu.State.xml</DocumentationFile>
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <CodeAnalysisRuleSet>Gu.State.ruleset</CodeAnalysisRuleSet>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -229,6 +229,7 @@
   </Target>
   -->
   <ItemGroup>
+    <Folder Include="Copy\Copyers\" />
     <Folder Include="Settings\Errors\" />
   </ItemGroup>
   <Import Project="..\.paket\paket.targets" />
