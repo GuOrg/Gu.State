@@ -3,7 +3,6 @@
     using System.CodeDom.Compiler;
     using System.Collections.Generic;
     using System.IO;
-    using System.Runtime.CompilerServices;
 
     /// <summary>A value difference X != Y </summary>
     public class ValueDiff : Diff
