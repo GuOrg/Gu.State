@@ -5,12 +5,12 @@ namespace Gu.State
     using System.Linq;
     using System.Text;
 
-    internal sealed class CannotCopyFixesSizeCollectionsError : Error, INotSupported
+    internal sealed class CannotCopyFixedSizeCollectionsError : Error, INotSupported
     {
         private readonly IEnumerable source;
         private readonly IEnumerable target;
 
-        public CannotCopyFixesSizeCollectionsError(IEnumerable source, IEnumerable target)
+        public CannotCopyFixedSizeCollectionsError(IEnumerable source, IEnumerable target)
         {
             this.source = source;
             this.target = target;

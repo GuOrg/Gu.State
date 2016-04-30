@@ -63,7 +63,7 @@
             return message;
         }
 
-        private static class Throw
+        internal static class Throw
         {
             // ReSharper disable once UnusedParameter.Local
             internal static void ReadonlyMemberDiffers<T>(
@@ -80,13 +80,13 @@
             }
 
             // ReSharper disable once UnusedParameter.Local
-            internal static void CannotCopyFixesSizeCollections<TSettings>(IEnumerable source, IEnumerable target, TSettings settings)
+            internal static Exception CannotCopyFixesSizeCollections<TSettings>(IEnumerable source, IEnumerable target, TSettings settings)
                 where TSettings : class, IMemberSettings
             {
-                var error = new CannotCopyFixesSizeCollectionsError(source, target);
+                var error = new CannotCopyFixedSizeCollectionsError(source, target);
                 var typeErrors = new TypeErrors(target.GetType(), error);
                 var message = typeErrors.GetErrorText(settings);
-                throw new InvalidOperationException(message);
+                return new InvalidOperationException(message);
             }
 
             internal static InvalidOperationException CreateCannotCreateInstanceException<TSettings>(object sourceValue, MemberInfo member, TSettings settings, Exception exception)

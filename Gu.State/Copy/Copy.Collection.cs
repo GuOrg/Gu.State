@@ -21,16 +21,10 @@
                 throw Gu.State.Throw.ShouldNeverGetHereException("Should have been checked for throw before copy");
             }
 
-            Array sa;
-            Array ta;
-            if (Try.CastAs(source, target, out sa, out ta))
+            ICopyer copyer;
+            if (ArrayCopyer.TryGetOrCreate(source, target, out copyer))
             {
-                if (!Is.SameSize(sa, ta))
-                {
-                    Throw.CannotCopyFixesSizeCollections(sa, ta, settings);
-                }
-
-                Collection.CopyItems(sa, ta, syncItem, settings, referencePairs);
+                copyer.CopyItems(source, target, syncItem, settings, referencePairs);
                 return;
             }
 
@@ -41,7 +35,7 @@
                 if ((sl.IsFixedSize || tl.IsFixedSize) &&
                      sl.Count != tl.Count)
                 {
-                    Throw.CannotCopyFixesSizeCollections(sl, tl, settings);
+                    throw Throw.CannotCopyFixesSizeCollections(sl, tl, settings);
                 }
 
                 Collection.CopyItems(sl, tl, syncItem, settings, referencePairs);
@@ -55,7 +49,7 @@
                 if ((sd.IsFixedSize || td.IsFixedSize) &&
                     sd.Count != td.Count)
                 {
-                    Throw.CannotCopyFixesSizeCollections(sd, td, settings);
+                    throw Throw.CannotCopyFixesSizeCollections(sd, td, settings);
                 }
 
                 Collection.CopyItems(sd, td, syncItem, settings, referencePairs);
@@ -76,81 +70,6 @@
 
         private static class Collection
         {
-            internal static void CopyItems<T>(Array sourceArray, Array targetArray, Action<object, object, T, ReferencePairCollection> syncItem, T settings, ReferencePairCollection referencePairs)
-                where T : class, IMemberSettings
-            {
-                if (sourceArray.Rank == 1 && targetArray.Rank == 1)
-                {
-                    CopyItems((IList)sourceArray, (IList)targetArray, syncItem, settings, referencePairs);
-                    return;
-                }
-
-                var itemType = sourceArray.GetType().GetItemType();
-                if (sourceArray.Rank == 2 &&
-                    targetArray.Rank == 2 &&
-                    (settings.IsImmutable(itemType) || settings.ReferenceHandling == ReferenceHandling.References))
-                {
-                    var copyMethod = typeof(Collection).GetMethod(nameof(CopyImmutable2DItems), BindingFlags.NonPublic | BindingFlags.Static)
-                                                              .MakeGenericMethod(itemType);
-                    copyMethod.Invoke(null, new object[] { sourceArray, targetArray });
-                    return;
-                }
-
-                foreach (var index in sourceArray.Indices())
-                {
-                    var sv = sourceArray.GetValue(index);
-                    if (sv == null)
-                    {
-                        targetArray.SetValue(null, index);
-                        continue;
-                    }
-
-                    if (settings.IsImmutable(sv.GetType()))
-                    {
-                        targetArray.SetValue(sv, index);
-                        continue;
-                    }
-
-                    var tv = targetArray.GetValue(index);
-                    switch (settings.ReferenceHandling)
-                    {
-                        case ReferenceHandling.References:
-                            if (ReferenceEquals(sv, tv))
-                            {
-                                continue;
-                            }
-
-                            targetArray.SetValue(sv, index);
-                            continue;
-                        case ReferenceHandling.Structural:
-                        case ReferenceHandling.StructuralWithReferenceLoops:
-                            if (tv == null)
-                            {
-                                tv = CreateInstance(sv, null, settings);
-                                targetArray.SetValue(tv, index);
-                            }
-
-                            syncItem(sv, tv, settings, referencePairs);
-                            continue;
-                        case ReferenceHandling.Throw:
-                            throw State.Throw.ShouldNeverGetHereException();
-                        default:
-                            throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);
-                    }
-                }
-            }
-
-            private static void CopyImmutable2DItems<T>(T[,] sourceArray, T[,] targetArray)
-            {
-                for (int i = sourceArray.GetLowerBound(0); i <= sourceArray.GetUpperBound(0); i++)
-                {
-                    for (int j = sourceArray.GetLowerBound(1); j <= sourceArray.GetUpperBound(1); j++)
-                    {
-                        targetArray[i, j] = sourceArray[i, j];
-                    }
-                }
-            }
-
             internal static void CopyItems<T>(IList sourceList, IList targetList, Action<object, object, T, ReferencePairCollection> syncItem, T settings, ReferencePairCollection referencePairs)
                 where T : class, IMemberSettings
             {

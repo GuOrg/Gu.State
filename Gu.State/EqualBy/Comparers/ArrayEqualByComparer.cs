@@ -49,18 +49,9 @@ namespace Gu.State
             ReferencePairCollection referencePairs)
             where TSetting : IMemberSettings
         {
-            if (x.Length != y.Length || x.Rank != y.Rank)
+            if (!Is.SameSize(x, y))
             {
                 return false;
-            }
-
-            for (var i = 0; i < x.Rank; i++)
-            {
-                if (x.GetLowerBound(i) != y.GetLowerBound(i) ||
-                    x.GetUpperBound(i) != y.GetUpperBound(i))
-                {
-                    return false;
-                }
             }
 
             var isEquatable = settings.IsEquatable(x.GetType().GetItemType());

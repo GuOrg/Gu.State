@@ -118,7 +118,7 @@
 
         internal static StringBuilder AppendSuggestResizableCollection(this StringBuilder errorBuilder, TypeErrors errors)
         {
-            foreach (var type in errors.AllErrors.OfType<CannotCopyFixesSizeCollectionsError>().Select(x => x.Type).Distinct())
+            foreach (var type in errors.AllErrors.OfType<CannotCopyFixedSizeCollectionsError>().Select(x => x.Type).Distinct())
             {
                 errorBuilder.AppendLine($"* Use a resizable collection like List<{type.GetItemType().PrettyName()}> instead of {type.PrettyName()}.")
                             .AppendLine("* Check that the collections are the same size before calling.");
