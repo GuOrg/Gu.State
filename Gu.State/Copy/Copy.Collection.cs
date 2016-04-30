@@ -68,6 +68,43 @@
             }
         }
 
+        internal static T Item<T, TSettings>(
+            T sourceItem,
+            T targetItem,
+            Action<object, object, TSettings, ReferencePairCollection> syncItem,
+            TSettings settings,
+            ReferencePairCollection referencePairs,
+            bool isImmutable)
+            where TSettings : class, IMemberSettings
+        {
+            if (sourceItem == null || settings.ReferenceHandling == ReferenceHandling.References || isImmutable)
+            {
+                return sourceItem;
+            }
+
+            switch (settings.ReferenceHandling)
+            {
+                case ReferenceHandling.References:
+                    return sourceItem;
+                case ReferenceHandling.Structural:
+                case ReferenceHandling.StructuralWithReferenceLoops:
+                    if (targetItem == null)
+                    {
+                        targetItem = (T)State.Copy.CreateInstance(sourceItem, null, settings);
+                    }
+
+                    syncItem(sourceItem, targetItem, settings, referencePairs);
+                    return targetItem;
+                case ReferenceHandling.Throw:
+                    throw State.Throw.ShouldNeverGetHereException();
+                default:
+                    throw new ArgumentOutOfRangeException(
+                        nameof(settings.ReferenceHandling),
+                        settings.ReferenceHandling,
+                        null);
+            }
+        }
+
         private static class Collection
         {
             internal static void CopyItems<T>(IList sourceList, IList targetList, Action<object, object, T, ReferencePairCollection> syncItem, T settings, ReferencePairCollection referencePairs)

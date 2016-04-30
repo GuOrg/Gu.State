@@ -93,7 +93,7 @@
             {
                 var sv = sourceArray[i];
                 var tv = targetArray[i];
-                var copyItem = CopyItem(sv, tv, syncItem, settings, referencePairs, isImmutable);
+                var copyItem = Gu.State.Copy.Item(sv, tv, syncItem, settings, referencePairs, isImmutable);
                 targetArray[i] = copyItem;
             }
         }
@@ -115,7 +115,7 @@
                 {
                     var sv = sourceArray[i, j];
                     var tv = targetArray[i, j];
-                    var copyItem = CopyItem(sv, tv, syncItem, settings, referencePairs, isImmutable);
+                    var copyItem = Gu.State.Copy.Item(sv, tv, syncItem, settings, referencePairs, isImmutable);
                     targetArray[i, j] = copyItem;
                 }
             }
@@ -140,7 +140,7 @@
                     {
                         var sv = sourceArray[i, j, k];
                         var tv = targetArray[i, j, k];
-                        var copyItem = CopyItem(sv, tv, syncItem, settings, referencePairs, isImmutable);
+                        var copyItem = Gu.State.Copy.Item(sv, tv, syncItem, settings, referencePairs, isImmutable);
                         targetArray[i, j, k] = copyItem;
                     }
                 }
@@ -162,45 +162,8 @@
             {
                 var sv = sourceArray.GetValue(index);
                 var tv = targetArray.GetValue(index);
-                var copyItem = CopyItem(sv, tv, syncItem, settings, referencePairs, isImmutable);
+                var copyItem = Gu.State.Copy.Item(sv, tv, syncItem, settings, referencePairs, isImmutable);
                 targetArray.SetValue(copyItem, index);
-            }
-        }
-
-        private static T CopyItem<T, TSettings>(
-            T sourceItem,
-            T targetItem,
-            Action<object, object, TSettings, ReferencePairCollection> syncItem,
-            TSettings settings,
-            ReferencePairCollection referencePairs,
-            bool isImmutable)
-            where TSettings : class, IMemberSettings
-        {
-            if (sourceItem == null || settings.ReferenceHandling == ReferenceHandling.References || isImmutable)
-            {
-                return sourceItem;
-            }
-
-            switch (settings.ReferenceHandling)
-            {
-                case ReferenceHandling.References:
-                    return sourceItem;
-                case ReferenceHandling.Structural:
-                case ReferenceHandling.StructuralWithReferenceLoops:
-                    if (targetItem == null)
-                    {
-                        targetItem = (T)State.Copy.CreateInstance(sourceItem, null, settings);
-                    }
-
-                    syncItem(sourceItem, targetItem, settings, referencePairs);
-                    return targetItem;
-                case ReferenceHandling.Throw:
-                    throw State.Throw.ShouldNeverGetHereException();
-                default:
-                    throw new ArgumentOutOfRangeException(
-                        nameof(settings.ReferenceHandling),
-                        settings.ReferenceHandling,
-                        null);
             }
         }
     }
