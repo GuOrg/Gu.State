@@ -1,7 +1,6 @@
 ﻿namespace Gu.State
 {
     using System;
-    using System.Diagnostics;
 
     public static partial class EqualBy
     {
