@@ -14,6 +14,12 @@
         }
 
         [Benchmark(Baseline = true)]
+        public bool this_x_Equals_this_y()
+        {
+            return this.x.Equals(this.y);
+        }
+
+        [Benchmark]
         public bool ObjectEquals()
         {
             return Equals(this.x, this.y);

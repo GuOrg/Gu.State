@@ -7,11 +7,6 @@ namespace Gu.State.Benchmarks
 
         public int Value { get; set; }
 
-        protected bool Equals(ComplexType other)
-        {
-            return string.Equals(this.Name, other.Name) && this.Value == other.Value;
-        }
-
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -45,6 +40,11 @@ namespace Gu.State.Benchmarks
         public static bool operator !=(ComplexType left, ComplexType right)
         {
             return !Equals(left, right);
+        }
+
+        protected bool Equals(ComplexType other)
+        {
+            return string.Equals(this.Name, other.Name) && this.Value == other.Value;
         }
     }
 }

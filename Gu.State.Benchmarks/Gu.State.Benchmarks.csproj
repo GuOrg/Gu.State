@@ -43,6 +43,7 @@
     <Compile Include="CopyArray3DBenchmarks.cs" />
     <Compile Include="CopyListBenchmarks.cs" />
     <Compile Include="EqualByBenchmarks.cs" />
+    <Compile Include="EqualByDynamicComplexTypeBenchmarks.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
