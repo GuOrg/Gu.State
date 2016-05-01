@@ -82,17 +82,22 @@
         {
             internal static void CanEqualByMemberValues<T>(T x, T y, IMemberSettings settings)
             {
+                CanEqualByMemberValues(x, y, settings, typeof(EqualBy).Name, settings is PropertiesSettings ? nameof(EqualBy.PropertyValues) : nameof(EqualBy.FieldValues));
+            }
+
+            internal static void CanEqualByMemberValues<T>(T x, T y, IMemberSettings settings, string className, string methodName)
+            {
                 var propertiesSettings = settings as PropertiesSettings;
                 if (propertiesSettings != null)
                 {
-                    CanEqualByPropertyValues(x, y, propertiesSettings);
+                    CanEqualByPropertyValues(x, y, propertiesSettings, className, methodName);
                     return;
                 }
 
                 var fieldsSettings = settings as FieldsSettings;
                 if (fieldsSettings != null)
                 {
-                    CanEqualByFieldValues(x, y, fieldsSettings);
+                    CanEqualByFieldValues(x, y, fieldsSettings, className, methodName);
                     return;
                 }
 

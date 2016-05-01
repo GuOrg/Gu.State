@@ -27,7 +27,7 @@
             this.yNode = ChangeTrackerNode.GetOrCreate(this, y, settings);
             this.xNode.Tracker.PropertyChange += this.OnTrackedPropertyChange;
             this.yNode.Tracker.PropertyChange += this.OnTrackedPropertyChange;
-            this.diff = DiffBy.PropertyValuesDiffs.Get(x, y, settings);
+            this.diff = DiffBy.PropertyValuesOrNull(x, y, settings);
             foreach (var property in x.GetType().GetProperties(settings.BindingFlags))
             {
                 this.UpdatePropertyNode(property);
@@ -173,7 +173,7 @@
             }
 
             var propertyValueDiff = xValue != null && yValue != null
-                                        ? DiffBy.PropertyValuesDiffs.Get(xValue, yValue, this.Settings)
+                                        ? DiffBy.PropertyValuesOrNull(xValue, yValue, this.Settings)
                                         : xValue != null || yValue != null
                                               ? new ValueDiff(xValue, yValue)
                                               : null;
@@ -286,7 +286,7 @@
                 return new ValueDiff(xValue, yValue);
             }
 
-            return DiffBy.PropertyValuesDiffs.Get(xValue, yValue, this.Settings);
+            return DiffBy.PropertyValuesOrNull(xValue, yValue, this.Settings);
         }
 
         private IDisposable CreateChild(object xValue, object yValue, object key)

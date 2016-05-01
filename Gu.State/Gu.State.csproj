@@ -54,6 +54,7 @@
     <Compile Include="DiffBy\Comparers\EnumerableDiffBy.cs" />
     <Compile Include="DiffBy\Comparers\EnumerableDiffBy{T}.cs" />
     <Compile Include="DiffBy\Comparers\IDiffBy.cs" />
+    <Compile Include="DiffBy\DiffBy.MemberValues.cs" />
     <Compile Include="DiffBy\Diffs\Index.cs" />
     <Compile Include="DiffBy\Comparers\ListDiffBy.cs" />
     <Compile Include="DiffBy\Comparers\ListDiffBy{T}.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="DiffBy\Comparers\ReadOnlyListDiffBy{T}.cs" />
     <Compile Include="DiffBy\Comparers\SetDiffBy.cs" />
     <Compile Include="DiffBy\Comparers\SetDiffBy{T}.cs" />
+    <Compile Include="DiffBy\Diffs\MemberDiff.cs" />
     <Compile Include="DiffBy\Diffs\RankDiff.cs" />
     <Compile Include="DiffBy\Diffs\Skip.cs" />
     <Compile Include="DiffBy\DiffBuilder\DiffBuilderRoot.cs" />
@@ -76,7 +78,7 @@
     <Compile Include="DiffBy\DiffBuilder\DiffBuilder.cs" />
     <Compile Include="DiffBy\Diffs\FieldDiff.cs" />
     <Compile Include="DiffBy\Diffs\IndexDiff.cs" />
-    <Compile Include="DiffBy\Diffs\MemberDiff.cs" />
+    <Compile Include="DiffBy\Diffs\MemberDiff{TMember}.cs" />
     <Compile Include="DiffBy\Diffs\PropertyDiff.cs" />
     <Compile Include="EqualBy\Comparers\ReadOnlyDictionaryEqualByComparer.cs" />
     <Compile Include="EqualBy\Comparers\ReadOnlyDictionaryEqualByComparer{TKey, TValue}.cs" />
