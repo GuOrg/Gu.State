@@ -343,7 +343,7 @@
 
         public class WithSimpleProperties : INotifyPropertyChanged
         {
-            internal static readonly TestComparer Comparer = new TestComparer();
+            internal static readonly AllMembersComparerImpl AllMembersComparer = new AllMembersComparerImpl();
 
             private int intValue;
             private int? nullableIntValue;
@@ -419,7 +419,7 @@
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
 
-            internal sealed class TestComparer : IEqualityComparer<WithSimpleProperties>, IComparer
+            internal sealed class AllMembersComparerImpl : IEqualityComparer<WithSimpleProperties>, IComparer
             {
                 public bool Equals(WithSimpleProperties x, WithSimpleProperties y)
                 {

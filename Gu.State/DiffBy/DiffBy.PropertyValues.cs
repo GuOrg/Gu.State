@@ -1,5 +1,6 @@
 ﻿namespace Gu.State
 {
+    using System.Diagnostics;
     using System.Reflection;
 
     public static partial class DiffBy
@@ -47,15 +48,13 @@
 
         internal static ValueDiff PropertyValuesOrNull<T>(T x, T y, PropertiesSettings settings)
         {
+            Debug.Assert(settings != null, "settings == null");
             ValueDiff diff;
             if (TryGetValueDiff(x, y, settings, out diff))
             {
                 return diff;
             }
 
-            Ensure.NotNull(x, nameof(x));
-            Ensure.NotNull(y, nameof(y));
-            Ensure.NotNull(settings, nameof(settings));
             EqualBy.Verify.CanEqualByPropertyValues(x, y, settings, typeof(DiffBy).Name, nameof(PropertyValues));
             return MemberValues.Diffs(x, y, settings);
         }
