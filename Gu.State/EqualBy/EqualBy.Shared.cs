@@ -16,11 +16,11 @@
                                    ? ReferencePairCollection.Create()
                                    : null)
             {
-                return MemberValuesEquals(x, y, settings, pairs);
+                return MemberValues(x, y, settings, pairs);
             }
         }
 
-        private static bool MemberValuesEquals<T>(
+        private static bool MemberValues<T>(
             T x,
             T y,
             IMemberSettings settings,
@@ -49,7 +49,7 @@
 
             if (x is IEnumerable)
             {
-                if (!EnumerableEquals(x, y, MemberValuesEquals, settings, referencePairs))
+                if (!EnumerableEquals(x, y, MemberValues, settings, referencePairs))
                 {
                     return false;
                 }
@@ -119,7 +119,7 @@
                 case ReferenceHandling.Structural:
                 case ReferenceHandling.StructuralWithReferenceLoops:
                     Verify.CanEqualByMemberValues(x, y, settings);
-                    return MemberValuesEquals(x, y, settings, referencePairs);
+                    return MemberValues(x, y, settings, referencePairs);
                 case ReferenceHandling.Throw:
                     throw Throw.ShouldNeverGetHereException();
                 default:
