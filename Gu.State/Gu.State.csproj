@@ -40,6 +40,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Copy\Copy.MemberValues.cs" />
     <Compile Include="Copy\Copyers\ArrayCopyer.cs" />
     <Compile Include="Copy\Copyers\SetOfTCopyer.cs" />
     <Compile Include="Copy\Copyers\DictionaryTKeyTValueCopyer.cs" />

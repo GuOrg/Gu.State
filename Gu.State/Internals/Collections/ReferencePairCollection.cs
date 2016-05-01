@@ -19,7 +19,7 @@
             Cache.Enqueue(this);
         }
 
-        internal static ReferencePairCollection Create()
+        internal static ReferencePairCollection Borrow()
         {
             ReferencePairCollection collection;
             if (Cache.TryDequeue(out collection))

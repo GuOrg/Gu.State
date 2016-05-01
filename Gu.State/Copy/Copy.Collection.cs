@@ -42,7 +42,12 @@
             }
         }
 
-        private static void CopyCollectionItems<T>(object source, object target, Action<object, object, T, ReferencePairCollection> syncItem, T settings, ReferencePairCollection referencePairs)
+        private static void CopyCollectionItems<T>(
+            object source,
+            object target, 
+            Action<object, object, T, ReferencePairCollection> syncItem,
+            T settings, 
+            ReferencePairCollection referencePairs)
              where T : class, IMemberSettings
         {
             if (!Is.Enumerable(source, target))
