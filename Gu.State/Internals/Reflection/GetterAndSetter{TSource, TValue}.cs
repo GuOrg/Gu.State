@@ -14,6 +14,8 @@
 
         public GetterAndSetter(PropertyInfo propertyInfo)
         {
+            this.Member = propertyInfo;
+            this.IsInitOnly = !propertyInfo.CanWrite;
             this.Setter = propertyInfo.CanWrite
                               ? (Action<TSource, TValue>)propertyInfo.SetMethod.CreateDelegate(typeof(Action<TSource, TValue>))
                               : null;
@@ -24,6 +26,8 @@
 
         public GetterAndSetter(FieldInfo fieldInfo)
         {
+            this.Member = fieldInfo;
+            this.IsInitOnly = fieldInfo.IsInitOnly;
             this.Setter = CreateSetterDelegate(fieldInfo);
             this.Getter = CreateGetterDelegate(fieldInfo);
         }
@@ -31,6 +35,10 @@
         public Type SourceType => typeof(TSource);
 
         public Type ValueType => typeof(TValue);
+
+        public bool IsInitOnly { get; }
+
+        public MemberInfo Member { get; }
 
         public void SetValue(object source, object value)
         {
@@ -49,9 +57,19 @@
 
         public bool ValueEquals(object x, object y)
         {
-            var xv = this.GetValue((TSource)x);
-            var yv = this.GetValue((TSource)y);
+            return this.ValueEquals((TSource)x, (TSource)y);
+        }
+
+        public bool ValueEquals(TSource x, TSource y)
+        {
+            var xv = this.GetValue(x);
+            var yv = this.GetValue(y);
             return Equals(xv, yv);
+        }
+
+        public void CopyValue(object source, object target)
+        {
+            this.SetValue((TSource)target, this.GetValue((TSource)source));
         }
 
         public TValue GetValue(TSource source)

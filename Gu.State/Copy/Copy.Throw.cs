@@ -7,15 +7,14 @@
 
     public static partial class Copy
     {
-        private static StringBuilder AppendCopyFailed<T>(this StringBuilder errorBuilder)
-            where T : IMemberSettings
+        private static StringBuilder AppendCopyFailed(this StringBuilder errorBuilder, IMemberSettings settings)
         {
-            if (typeof(FieldsSettings).IsAssignableFrom(typeof(T)))
+            if (settings is FieldsSettings)
             {
                 return errorBuilder.AppendLine($"Copy.{nameof(Copy.FieldValues)}(x, y) failed.");
             }
 
-            if (typeof(PropertiesSettings).IsAssignableFrom(typeof(T)))
+            if (settings is PropertiesSettings)
             {
                 return errorBuilder.AppendLine($"Copy.{nameof(Copy.PropertyValues)}(x, y) failed.");
             }
@@ -46,13 +45,13 @@
             where TSettings : class, IMemberSettings
         {
             var errorBuilder = new StringBuilder();
-            errorBuilder.AppendCopyFailed<TSettings>()
+            errorBuilder.AppendCopyFailed(settings)
                         .AppendNotSupported(errors)
                         .AppendSolveTheProblemBy()
                         .AppendSuggestImmutable(errors)
                         .AppendSuggestResizableCollection(errors)
                         .AppendSuggestDefaultCtor(errors)
-                        .AppendLine($"* Use {typeof(TSettings).Name} and specify how copying is performed:")
+                        .AppendLine($"* Use {settings.GetType().Name} and specify how copying is performed:")
                         .AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Structural)} means that a the entire graph is traversed and immutable property values are copied.")
                         .AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.StructuralWithReferenceLoops)} same as Structural but tracks reference loops.")
                         .AppendLine($"    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.")

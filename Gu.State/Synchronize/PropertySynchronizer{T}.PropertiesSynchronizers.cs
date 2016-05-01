@@ -121,27 +121,10 @@
                     return;
                 }
 
-                if (this.settings.IsIgnoringProperty(propertyInfo) ||
-                    (this.source is INotifyCollectionChanged && e.PropertyName == "Count"))
-                {
-                    return;
-                }
-
-                var specialCopyProperty = this.settings.GetSpecialCopyProperty(propertyInfo);
-                if (specialCopyProperty != null)
-                {
-                    specialCopyProperty.CopyValue(this.source, this.target);
-                    return;
-                }
-
+                Copy.Member(this.source, this.target, this.settings, propertyInfo);
                 if (!this.settings.IsImmutable(propertyInfo.PropertyType))
                 {
-                    Copy.PropertyValues(this.source, this.target, this.settings);
                     this.UpdateSubPropertySynchronizer(propertyInfo);
-                }
-                else
-                {
-                    Copy.PropertyValue(this.source, this.target, propertyInfo);
                 }
             }
 

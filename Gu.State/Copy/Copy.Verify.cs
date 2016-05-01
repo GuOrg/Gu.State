@@ -135,6 +135,29 @@
 
         internal static class Verify
         {
+            internal static void CanCopyMemberValues<T>(T x, T y, IMemberSettings settings)
+            {
+                var type = x?.GetType() ?? y?.GetType() ?? typeof(T);
+                var propertiesSettings = settings as PropertiesSettings;
+                if (propertiesSettings != null)
+                {
+                    GetPropertiesErrors(type, propertiesSettings)
+                        .ThrowIfHasErrors(propertiesSettings);
+                    return;
+                }
+
+                var fieldsSettings = settings as FieldsSettings;
+                if (fieldsSettings != null)
+                {
+                    GetFieldsErrors(type, fieldsSettings)
+                        .ThrowIfHasErrors(settings);
+                    return;
+                }
+
+                throw State.Throw.ExpectedParameterOfTypes<PropertiesSettings, FieldsSettings>(
+                    "CanCopyMemberValues failed");
+            }
+
             internal static void CanCopyRoot<TSettings>(Type type, TSettings settings)
                 where TSettings : IMemberSettings
             {

@@ -13,7 +13,7 @@
         {
             Verify.CanEqualByMemberValues(x, y, settings);
             using (var pairs = settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops
-                                   ? ReferencePairCollection.Create()
+                                   ? ReferencePairCollection.Borrow()
                                    : null)
             {
                 return MemberValues(x, y, settings, pairs);
