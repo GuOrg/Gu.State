@@ -30,6 +30,11 @@
         /// <returns>True if <paramref name="type"/> is equatable</returns>
         bool IsImmutable(Type type);
 
+        /// <summary>
+        /// Gets all instance members that matches <see cref="BindingFlags"/>
+        /// </summary>
+        /// <param name="type">The type to get members for.</param>
+        /// <returns>The members.</returns>
         IEnumerable<MemberInfo> GetMembers(Type type);
 
         bool IsIgnoringMember(MemberInfo member);

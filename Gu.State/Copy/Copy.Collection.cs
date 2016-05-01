@@ -44,9 +44,9 @@
 
         private static void CopyCollectionItems<T>(
             object source,
-            object target, 
+            object target,
             Action<object, object, T, ReferencePairCollection> syncItem,
-            T settings, 
+            T settings,
             ReferencePairCollection referencePairs)
              where T : class, IMemberSettings
         {
