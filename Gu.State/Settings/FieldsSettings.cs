@@ -16,6 +16,7 @@
         /// </summary>
         /// <param name="ignoredFields">The fields provided here will be ignored when the intsance of <see cref="FieldsSettings"/> is used</param>
         /// <param name="ignoredTypes">The types to ignore</param>
+        /// <param name="comparers">Custom comparers. Use this to get better performance or for custom equality for types.</param>
         /// <param name="bindingFlags">The binding flags to use when getting properties</param>
         /// <param name="referenceHandling">
         /// If Structural is used property values for sub properties are copied for the entire graph.
@@ -24,9 +25,10 @@
         public FieldsSettings(
             IEnumerable<FieldInfo> ignoredFields,
             IEnumerable<Type> ignoredTypes,
+                        IReadOnlyDictionary<Type, CastingComparer> comparers,
             BindingFlags bindingFlags,
             ReferenceHandling referenceHandling)
-            : base(ignoredFields, ignoredTypes, bindingFlags, referenceHandling)
+            : base(ignoredFields, ignoredTypes, comparers, bindingFlags, referenceHandling)
         {
         }
 
@@ -52,7 +54,7 @@
         public static FieldsSettings GetOrCreate(BindingFlags bindingFlags = Constants.DefaultFieldBindingFlags, ReferenceHandling referenceHandling = ReferenceHandling.Throw)
         {
             var key = new BindingFlagsAndReferenceHandling(bindingFlags, referenceHandling);
-            return Cache.GetOrAdd(key, x => new FieldsSettings(null, null, bindingFlags, referenceHandling));
+            return Cache.GetOrAdd(key, x => new FieldsSettings(null, null, null, bindingFlags, referenceHandling));
         }
 
         public bool IsIgnoringField(FieldInfo fieldInfo)

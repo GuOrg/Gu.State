@@ -94,10 +94,12 @@
     <Compile Include="EqualByTests\DictionaryTests.cs" />
     <Compile Include="EqualByTests\EnumerableTests.cs" />
     <Compile Include="EqualByTests\FieldValues\Array.cs" />
+    <Compile Include="EqualByTests\FieldValues\CustomComparer.cs" />
     <Compile Include="EqualByTests\FieldValues\Dictionary.cs" />
     <Compile Include="EqualByTests\FieldValues\Enumerable.cs" />
     <Compile Include="EqualByTests\FieldValues\Sets.cs" />
     <Compile Include="EqualByTests\PropertyValues\Array.cs" />
+    <Compile Include="EqualByTests\PropertyValues\CustomComparer.cs" />
     <Compile Include="EqualByTests\PropertyValues\Dictionary.cs" />
     <Compile Include="EqualByTests\PropertyValues\Enumerable.cs" />
     <Compile Include="EqualByTests\PropertyValues\Sets.cs" />

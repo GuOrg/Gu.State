@@ -10,6 +10,16 @@
 
     public static class EqualByTypes
     {
+        public class With<T>
+        {
+            public With(T value)
+            {
+                this.Value = value;
+            }
+
+            public T Value { get;  }
+        }
+
         public class WithComplexValue
         {
             private string name;

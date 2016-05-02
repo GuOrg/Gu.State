@@ -12,6 +12,7 @@
     {
         private readonly HashSet<Type> ignoredTypes = new HashSet<Type>();
         private readonly HashSet<PropertyInfo> ignoredProperties = new HashSet<PropertyInfo>(MemberInfoComparer<PropertyInfo>.Default);
+        private readonly Dictionary<Type, CastingComparer> comparers = new Dictionary<Type, CastingComparer>();
 
         public PropertiesSettings CreateSettings(ReferenceHandling referenceHandling = ReferenceHandling.Throw, BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
         {
@@ -20,7 +21,7 @@
                 return PropertiesSettings.GetOrCreate(bindingFlags, referenceHandling);
             }
 
-            return new PropertiesSettings(this.ignoredProperties, this.ignoredTypes, bindingFlags, referenceHandling);
+            return new PropertiesSettings(this.ignoredProperties, this.ignoredTypes, this.comparers, bindingFlags, referenceHandling);
         }
 
         public PropertiesSettingsBuilder IgnoreType<T>()
@@ -113,6 +114,12 @@
                 this.IgnoreProperty(indexer);
             }
 
+            return this;
+        }
+
+        public PropertiesSettingsBuilder AddComparer<T>(IEqualityComparer<T> comparer)
+        {
+            this.comparers[typeof(T)] = CastingComparer.Create(comparer);
             return this;
         }
     }
