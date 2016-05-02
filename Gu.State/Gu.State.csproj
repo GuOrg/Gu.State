@@ -40,6 +40,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Internals\CastingComparer.cs" />
+    <Compile Include="Internals\CastingComparer{T}.cs" />
     <Compile Include="Copy\Copy.MemberValues.cs" />
     <Compile Include="Copy\Copyers\ArrayCopyer.cs" />
     <Compile Include="Copy\Copyers\SetOfTCopyer.cs" />
@@ -209,7 +211,7 @@
     <Compile Include="Copy\Copy.PropertyValues.cs" />
     <Compile Include="EqualBy\EqualBy.FieldValues.cs" />
     <Compile Include="EqualBy\EqualBy.PropertyValues.cs" />
-    <Compile Include="EqualBy\EqualBy.Shared.cs" />
+    <Compile Include="EqualBy\EqualBy.MemberValues.cs" />
     <Compile Include="Internals\Reflection\FieldInfoExt.cs" />
     <Compile Include="Internals\Constants.cs" />
     <Compile Include="Track\Track.cs" />

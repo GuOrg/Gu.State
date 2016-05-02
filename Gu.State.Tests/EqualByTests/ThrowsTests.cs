@@ -39,10 +39,12 @@ namespace Gu.State.Tests.EqualByTests
                                  "  - Exclude a combination of the following:\r\n" +
                                  "    - The property WithComplexProperty.ComplexType.\r\n" +
                                  "    - The type ComplexType.\r\n";
-            var exception = Assert.Throws<NotSupportedException>(() => this.EqualByMethod<WithComplexProperty>(null, null));
+            var x = new WithComplexProperty();
+            var y = new WithComplexProperty();
+            var exception = Assert.Throws<NotSupportedException>(() => this.EqualByMethod(x, y));
             Assert.AreEqual(expected, exception.Message);
 
-            Assert.DoesNotThrow(() => this.EqualByMethod<ComplexType>(null, null));
+            Assert.DoesNotThrow(() => this.EqualByMethod(new ComplexType(), new ComplexType()));
         }
 
         [Test]

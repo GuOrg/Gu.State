@@ -11,6 +11,12 @@
     {
         internal static bool MemberValues<T>(T x, T y, IMemberSettings settings)
         {
+            bool result;
+            if (TryGetValueEquals(x, y, settings, out result))
+            {
+                return result;
+            }
+
             Verify.CanEqualByMemberValues(x, y, settings);
             using (var pairs = settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops
                                    ? ReferencePairCollection.Borrow()
@@ -26,26 +32,13 @@
             IMemberSettings settings,
             ReferencePairCollection referencePairs)
         {
+            bool result;
+            if (TryGetValueEquals(x, y, settings, out result))
+            {
+                return result;
+            }
+
             referencePairs?.Add(x, y);
-            if (ReferenceEquals(x, y))
-            {
-                return true;
-            }
-
-            if (x == null || y == null)
-            {
-                return false;
-            }
-
-            if (x.GetType() != y.GetType())
-            {
-                return false;
-            }
-
-            if (settings.IsEquatable(x.GetType()))
-            {
-                return Equals(x, y);
-            }
 
             if (x is IEnumerable)
             {
@@ -97,19 +90,10 @@
             IMemberSettings settings,
             ReferencePairCollection referencePairs)
         {
-            if (ReferenceEquals(x, y))
+            bool result;
+            if (TryGetValueEquals(x, y, settings, out result))
             {
-                return true;
-            }
-
-            if (x == null || y == null)
-            {
-                return false;
-            }
-
-            if (settings.IsEquatable(x.GetType()))
-            {
-                return Equals(x, y);
+                return result;
             }
 
             switch (settings.ReferenceHandling)
@@ -128,6 +112,43 @@
                         settings.ReferenceHandling,
                         null);
             }
+        }
+
+        private static bool TryGetValueEquals<T>(T x, T y, IMemberSettings settings, out bool result)
+        {
+            if (ReferenceEquals(x, y))
+            {
+                result = true;
+                return true;
+            }
+
+            if (x == null || y == null)
+            {
+                result = false;
+                return true;
+            }
+
+            if (x.GetType() != y.GetType())
+            {
+                result = false;
+                return true;
+            }
+
+            CastingComparer comparer;
+            if (settings.TryGetComparer(x.GetType(), out comparer))
+            {
+                result = comparer.Equals(x, y);
+                return true;
+            }
+
+            if (settings.IsEquatable(x.GetType()))
+            {
+                result = Equals(x, y);
+                return true;
+            }
+
+            result = false;
+            return false;
         }
     }
 }
