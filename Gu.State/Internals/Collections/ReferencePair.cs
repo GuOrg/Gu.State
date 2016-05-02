@@ -1,6 +1,7 @@
 namespace Gu.State
 {
     using System;
+    using System.Runtime.CompilerServices;
 
     internal struct ReferencePair : IEquatable<ReferencePair>
     {
@@ -47,7 +48,7 @@ namespace Gu.State
         {
             unchecked
             {
-                return ((this.X?.GetHashCode() ?? 0) * 397) ^ (this.Y?.GetHashCode() ?? 0);
+                return (RuntimeHelpers.GetHashCode(this.X) * 397) ^ RuntimeHelpers.GetHashCode(this.Y);
             }
         }
     }
