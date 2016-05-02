@@ -13,6 +13,7 @@
         private readonly HashSet<Type> ignoredTypes = new HashSet<Type>();
         private readonly HashSet<PropertyInfo> ignoredProperties = new HashSet<PropertyInfo>(MemberInfoComparer<PropertyInfo>.Default);
         private readonly Dictionary<Type, CastingComparer> comparers = new Dictionary<Type, CastingComparer>();
+        private readonly Dictionary<Type, CustomCopy> copyers = new Dictionary<Type, CustomCopy>();
 
         public PropertiesSettings CreateSettings(ReferenceHandling referenceHandling = ReferenceHandling.Throw, BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
         {
@@ -21,7 +22,7 @@
                 return PropertiesSettings.GetOrCreate(bindingFlags, referenceHandling);
             }
 
-            return new PropertiesSettings(this.ignoredProperties, this.ignoredTypes, this.comparers, bindingFlags, referenceHandling);
+            return new PropertiesSettings(this.ignoredProperties, this.ignoredTypes, this.comparers, this.copyers, bindingFlags, referenceHandling);
         }
 
         public PropertiesSettingsBuilder IgnoreType<T>()
@@ -120,6 +121,20 @@
         public PropertiesSettingsBuilder AddComparer<T>(IEqualityComparer<T> comparer)
         {
             this.comparers[typeof(T)] = CastingComparer.Create(comparer);
+            return this;
+        }
+
+        /// <summary>
+        /// Custom copy implementation.
+        /// </summary>
+        /// <typeparam name="T">The type to copy.</typeparam>
+        /// <param name="copyMethod">
+        /// This method gets passed the source value, target value and returns the updated target value or a new target value.
+        /// </param>
+        /// <returns>Self.</returns>
+        public PropertiesSettingsBuilder AddCustomCopy<T>(Func<T, T, T> copyMethod)
+        {
+            this.copyers[typeof(T)] = CustomCopy.Create(copyMethod);
             return this;
         }
     }

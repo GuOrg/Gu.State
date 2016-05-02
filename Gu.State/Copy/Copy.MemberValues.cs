@@ -28,21 +28,36 @@
 
         private static class MemberValues
         {
-            internal static void Copy<T>(
+            internal static T Copy<T>(
                 T source,
                 T target,
                 IMemberSettings settings)
                 where T : class
             {
+                //T copy;
+                //if (TryCustomCopy(source, target, settings, out copy))
+                //{
+                //    if (copy != null && !ReferenceEquals(target, copy))
+                //    {
+                //        var message = $"The type {source.GetType()} has custom copy specified. For the root object the copy must be a side effect.\r\n" +
+                //                      $"This means that the custom copy must return null or the target instance.\r\n" +
+                //                      $"Also it makes little sense using this method with custom copy for the root type.";
+                //        throw new InvalidOperationException(message);
+                //    }
+
+                //    return copy;
+                //}
+
                 using (var pairs = settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops
                                        ? ReferencePairCollection.Borrow()
                                        : null)
                 {
                     Copy(source, target, settings, pairs);
+                    return target;
                 }
             }
 
-            internal static void Copy<T>(
+            internal static T Copy<T>(
               T source,
               T target,
               IMemberSettings settings,
@@ -55,13 +70,14 @@
                 Verify.CanCopyMemberValues(source, target, settings);
                 if (referencePairs?.Contains(source, target) == true)
                 {
-                    return;
+                    return target;
                 }
 
                 referencePairs?.Add(source, target);
                 CopyCollectionItems(source, target, Copy, settings, referencePairs);
                 MutableMembers(source, target, settings, referencePairs);
                 InitiOnlyMembers(source, target, settings, referencePairs);
+                return target;
             }
 
             internal static void Copy<T>(
@@ -83,14 +99,25 @@
                 }
             }
 
+            internal static bool TryCustomCopy<T>(T source, T target, IMemberSettings settings, out T copy)
+            {
+                CustomCopy copyer;
+                if (settings.TryGetCopyer(source.GetType(), out copyer))
+                {
+                    copy = ((CustomCopy<T>)copyer).Copy(source, target);
+                    return true;
+                }
+
+                copy = default(T);
+                return false;
+            }
+
             private static void MutableMembers<T>(T source, T target, IMemberSettings settings, ReferencePairCollection referencePairs)
                 where T : class
             {
                 Debug.Assert(source != null, nameof(source));
                 Debug.Assert(target != null, nameof(target));
                 Debug.Assert(source.GetType() == target.GetType(), "Must be same type");
-
-                CopyCollectionItems(source, target, MutableMembers, settings, referencePairs);
 
                 foreach (var memberInfo in settings.GetMembers(source.GetType()))
                 {
@@ -122,6 +149,12 @@
                 {
                     getterAndSetter.CopyValue(source, target);
                     return;
+                }
+
+                object copy;
+                if (MemberValues.TryCustomCopy(sv, getterAndSetter.GetValue(target), settings, out copy))
+                {
+                    getterAndSetter.SetValue(target, copy);
                 }
 
                 switch (settings.ReferenceHandling)
@@ -187,7 +220,12 @@
                     return;
                 }
 
-                if (!settings.IsImmutable(getterAndSetter.ValueType))
+                object copy;
+                if (MemberValues.TryCustomCopy(sv, tv, settings, out copy))
+                {
+                    // nop called for side effect. Checked for equality below.
+                }
+                else if (!settings.IsImmutable(getterAndSetter.ValueType))
                 {
                     Copy(sv, tv, settings, referencePairs);
                 }

@@ -42,5 +42,7 @@
         IGetterAndSetter GetOrCreateGetterAndSetter(MemberInfo member);
 
         bool TryGetComparer(Type type, out CastingComparer comparer);
+
+        bool TryGetCopyer(Type type, out CustomCopy copyer);
     }
 }

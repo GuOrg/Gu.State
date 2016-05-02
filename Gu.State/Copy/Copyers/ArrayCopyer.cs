@@ -26,18 +26,18 @@
         public void Copy<TSettings>(
             object source,
             object target,
-            Action<object, object, TSettings, ReferencePairCollection> syncItem,
+            Func<object, object, TSettings, ReferencePairCollection, object> copyItem,
             TSettings settings,
             ReferencePairCollection referencePairs)
             where TSettings : class, IMemberSettings
         {
-            Copy((Array)source, (Array)target, syncItem, settings, referencePairs);
+            Copy((Array)source, (Array)target, copyItem, settings, referencePairs);
         }
 
         private static void Copy<TSettings>(
             Array sourceArray,
             Array targetArray,
-            Action<object, object, TSettings, ReferencePairCollection> syncItem,
+            Func<object, object, TSettings, ReferencePairCollection, object> copyItem,
             TSettings settings,
             ReferencePairCollection referencePairs)
             where TSettings : class, IMemberSettings
@@ -69,18 +69,18 @@
 
                 var copyMethod = typeof(ArrayCopyer).GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Static)
                                                     .MakeGenericMethod(itemType, typeof(TSettings));
-                copyMethod.Invoke(null, new object[] { sourceArray, targetArray, syncItem, settings, referencePairs });
+                copyMethod.Invoke(null, new object[] { sourceArray, targetArray, copyItem, settings, referencePairs });
             }
             else
             {
-                CopyAnyDimension(sourceArray, targetArray, syncItem, settings, referencePairs);
+                CopyAnyDimension(sourceArray, targetArray, copyItem, settings, referencePairs);
             }
         }
 
         private static void Copy1DItems<T, TSettings>(
             T[] sourceArray,
             T[] targetArray,
-            Action<object, object, TSettings, ReferencePairCollection> syncItem,
+            Func<object, object, TSettings, ReferencePairCollection, object> copyItem,
             TSettings settings,
             ReferencePairCollection referencePairs)
             where TSettings : class, IMemberSettings
@@ -92,15 +92,15 @@
             {
                 var sv = sourceArray[i];
                 var tv = targetArray[i];
-                var copyItem = State.Copy.Item(sv, tv, syncItem, settings, referencePairs, isImmutable);
-                targetArray[i] = copyItem;
+                var copy = State.Copy.Item(sv, tv, copyItem, settings, referencePairs, isImmutable);
+                targetArray[i] = copy;
             }
         }
 
         private static void Copy2DItems<T, TSettings>(
             T[,] sourceArray,
             T[,] targetArray,
-            Action<object, object, TSettings, ReferencePairCollection> syncItem,
+            Func<object, object, TSettings, ReferencePairCollection, object> copyItem,
             TSettings settings,
             ReferencePairCollection referencePairs)
             where TSettings : class, IMemberSettings
@@ -114,8 +114,8 @@
                 {
                     var sv = sourceArray[i, j];
                     var tv = targetArray[i, j];
-                    var copyItem = State.Copy.Item(sv, tv, syncItem, settings, referencePairs, isImmutable);
-                    targetArray[i, j] = copyItem;
+                    var copy = State.Copy.Item(sv, tv, copyItem, settings, referencePairs, isImmutable);
+                    targetArray[i, j] = copy;
                 }
             }
         }
@@ -123,7 +123,7 @@
         private static void Copy3DItems<T, TSettings>(
             T[,,] sourceArray,
             T[,,] targetArray,
-            Action<object, object, TSettings, ReferencePairCollection> syncItem,
+            Func<object, object, TSettings, ReferencePairCollection, object> copyItem,
             TSettings settings,
             ReferencePairCollection referencePairs)
             where TSettings : class, IMemberSettings
@@ -139,8 +139,8 @@
                     {
                         var sv = sourceArray[i, j, k];
                         var tv = targetArray[i, j, k];
-                        var copyItem = State.Copy.Item(sv, tv, syncItem, settings, referencePairs, isImmutable);
-                        targetArray[i, j, k] = copyItem;
+                        var copy = State.Copy.Item(sv, tv, copyItem, settings, referencePairs, isImmutable);
+                        targetArray[i, j, k] = copy;
                     }
                 }
             }
@@ -149,7 +149,7 @@
         private static void CopyAnyDimension<TSettings>(
             Array sourceArray,
             Array targetArray,
-            Action<object, object, TSettings, ReferencePairCollection> syncItem,
+            Func<object, object, TSettings, ReferencePairCollection, object> copyItem,
             TSettings settings,
             ReferencePairCollection referencePairs)
             where TSettings : class, IMemberSettings
@@ -161,8 +161,8 @@
             {
                 var sv = sourceArray.GetValue(index);
                 var tv = targetArray.GetValue(index);
-                var copyItem = State.Copy.Item(sv, tv, syncItem, settings, referencePairs, isImmutable);
-                targetArray.SetValue(copyItem, index);
+                var copy= State.Copy.Item(sv, tv, copyItem, settings, referencePairs, isImmutable);
+                targetArray.SetValue(copy, index);
             }
         }
     }

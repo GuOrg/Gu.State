@@ -7,7 +7,7 @@
         void Copy<TSettings>(
             object source,
             object target,
-            Action<object, object, TSettings, ReferencePairCollection> syncItem,
+            Func<object, object, TSettings, ReferencePairCollection, object> copyItem,
             TSettings settings,
             ReferencePairCollection referencePairs)
             where TSettings : class, IMemberSettings;

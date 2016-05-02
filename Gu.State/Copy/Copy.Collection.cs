@@ -8,7 +8,7 @@
         internal static T Item<T, TSettings>(
             T sourceItem,
             T targetItem,
-            Action<object, object, TSettings, ReferencePairCollection> syncItem,
+            Func<object, object, TSettings, ReferencePairCollection, object> copyItem,
             TSettings settings,
             ReferencePairCollection referencePairs,
             bool isImmutable)
@@ -17,6 +17,12 @@
             if (sourceItem == null || settings.ReferenceHandling == ReferenceHandling.References || isImmutable)
             {
                 return sourceItem;
+            }
+
+            T copy;
+            if (MemberValues.TryCustomCopy(sourceItem, targetItem, settings, out copy))
+            {
+                return copy;
             }
 
             switch (settings.ReferenceHandling)
@@ -30,7 +36,7 @@
                         targetItem = (T)State.Copy.CreateInstance(sourceItem, null, settings);
                     }
 
-                    syncItem(sourceItem, targetItem, settings, referencePairs);
+                    copyItem(sourceItem, targetItem, settings, referencePairs);
                     return targetItem;
                 case ReferenceHandling.Throw:
                     throw State.Throw.ShouldNeverGetHereException();
@@ -42,13 +48,13 @@
             }
         }
 
-        private static void CopyCollectionItems<T>(
+        private static void CopyCollectionItems<TSettings>(
             object source,
             object target,
-            Action<object, object, T, ReferencePairCollection> syncItem,
-            T settings,
+            Func<object, object, TSettings, ReferencePairCollection, object> copyItem,
+            TSettings settings,
             ReferencePairCollection referencePairs)
-             where T : class, IMemberSettings
+             where TSettings : class, IMemberSettings
         {
             if (!Is.Enumerable(source, target))
             {
@@ -68,7 +74,7 @@
                 DictionaryCopyer.TryGetOrCreate(source, target, out copyer) ||
                 SetOfTCopyer.TryGetOrCreate(source, target, out copyer))
             {
-                copyer.Copy(source, target, syncItem, settings, referencePairs);
+                copyer.Copy(source, target, copyItem, settings, referencePairs);
                 return;
             }
 

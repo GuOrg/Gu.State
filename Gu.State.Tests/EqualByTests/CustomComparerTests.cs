@@ -1,7 +1,6 @@
 namespace Gu.State.Tests.EqualByTests
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
 
     using Moq;
