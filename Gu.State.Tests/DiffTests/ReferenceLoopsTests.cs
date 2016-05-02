@@ -1,6 +1,7 @@
 namespace Gu.State.Tests.DiffTests
 {
     using System;
+    using System.Linq;
 
     using NUnit.Framework;
 
@@ -27,7 +28,7 @@ namespace Gu.State.Tests.DiffTests
             var result = this.DiffMethod(x, y, ReferenceHandling.StructuralWithReferenceLoops);
             var actual = result.ToString("", " ");
             Assert.AreEqual(expected, actual);
-            //Assert.AreSame(result, result.Diffs.Single(d => d.X == x.Child).Diffs.Last(d => d.X == x));
+            Assert.AreSame(result, result.Diffs.Single(d => d.X == x.Child).Diffs.Last(d => d.X == x));
         }
 
         [TestCase("p", "c", "Empty")]
