@@ -1,35 +1,48 @@
 ﻿namespace Gu.State
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
 
-    internal abstract class DiffBuilder
+    internal sealed class DiffBuilder
     {
-        private readonly Dictionary<ReferencePair, DiffBuilder> builderCache;
+        private readonly ConcurrentDictionary<ReferencePair, DiffBuilder> builderCache;
         private readonly List<SubDiff> diffs = new List<SubDiff>();
         private readonly ValueDiff valueDiff;
 
-        protected DiffBuilder(object x, object y, DiffBuilderRoot root)
-            : this(x, y, root.builderCache)
-        {
-        }
-
-        protected DiffBuilder(object x, object y, Dictionary<ReferencePair, DiffBuilder> builderCache)
+        private DiffBuilder(object x, object y, ConcurrentDictionary<ReferencePair, DiffBuilder> builderCache)
         {
             this.builderCache = builderCache;
             Debug.Assert(!this.builderCache.ContainsKey(new ReferencePair(x, y)), "Builder added twice");
             this.valueDiff = new ValueDiff(x, y, this.diffs);
-            this.builderCache.Add(new ReferencePair(x, y), this);
         }
 
         internal event EventHandler Empty;
 
         private bool IsEmpty => this.diffs.All(d => d.IsEmpty);
 
-        internal abstract bool TryAdd(object x, object y, out DiffBuilder subDiffBuilder);
+        internal static Disposer<DiffBuilder> Borrow(object x, object y)
+        {
+            return new Disposer<DiffBuilder>(new DiffBuilder(x, y, new ConcurrentDictionary<ReferencePair, DiffBuilder>()), _ => { });
+            //return DiffBuilderPool.Borrow(() => new DiffBuilder(x, y, new Dictionary<ReferencePair, DiffBuilder>()));
+        }
+
+        internal bool TryAdd(object x, object y, out DiffBuilder subDiffBuilder)
+        {
+            bool added = false;
+            subDiffBuilder = this.builderCache.GetOrAdd(
+                new ReferencePair(x, y),
+                pair =>
+                    {
+                        added = true;
+                        return new DiffBuilder(pair.X, pair.Y, this.builderCache);
+                    });
+            subDiffBuilder.Empty += this.OnSubBuilderEmpty;
+            return added;
+        }
 
         internal bool TryGetBuilder(object x, object y, out DiffBuilder diffBuilder)
         {
@@ -40,11 +53,6 @@
         internal void Add(SubDiff subDiff)
         {
             this.diffs.Add(subDiff);
-        }
-
-        internal void AddLazy(PropertyInfo property, DiffBuilder builder)
-        {
-            this.diffs.Add(new PropertyDiff(property, builder.valueDiff));
         }
 
         internal void AddLazy(MemberInfo member, DiffBuilder builder)
@@ -63,7 +71,7 @@
             return this.IsEmpty ? null : this.valueDiff;
         }
 
-        protected void OnSubBuilderEmpty(object sender, EventArgs e)
+        private void OnSubBuilderEmpty(object sender, EventArgs e)
         {
             var builder = (DiffBuilder)sender;
             if (this.IsEmpty)
@@ -86,6 +94,33 @@
                 {
                     builder.Empty?.Invoke(builder, EventArgs.Empty);
                 }
+            }
+        }
+
+        private void Clear()
+        {
+            this.builderCache.Clear();
+        }
+
+        internal static class DiffBuilderPool
+        {
+            private static readonly ConcurrentQueue<DiffBuilder> Cache = new ConcurrentQueue<DiffBuilder>();
+
+            internal static Disposer<DiffBuilder> Borrow(Func<DiffBuilder> createNew)
+            {
+                DiffBuilder builder;
+                if (Cache.TryDequeue(out builder))
+                {
+                    return Disposer.Create(builder, Return);
+                }
+
+                return Disposer.Create(createNew(), Return);
+            }
+
+            private static void Return(DiffBuilder builder)
+            {
+                builder.Clear();
+                Cache.Enqueue(builder);
             }
         }
     }
