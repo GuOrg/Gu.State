@@ -113,6 +113,7 @@
     <Compile Include="Internals\Reflection\TypeExt.ImmutableCollections.cs" />
     <Compile Include="Internals\Set.cs" />
     <Compile Include="Internals\Try.cs" />
+    <Compile Include="Settings\CustomCopy.cs" />
     <Compile Include="Track\Dirty\DiffExt.cs" />
     <Compile Include="Internals\ChangeTrackerNode\EventArgs\ReplaceEventArgs.cs" />
     <Compile Include="Internals\Collections\DisposingMap{TKey, TValue}.cs" />
@@ -132,7 +133,6 @@
     <Compile Include="Internals\Errors\WithErrorsExt.cs" />
     <Compile Include="Track\Changes\ChangeNode.cs" />
     <Compile Include="Track\Changes\ChangeTracker.cs" />
-    <Compile Include="Contracts\ISpecialCopyProperty.cs" />
     <Compile Include="EqualBy\EqualBy.Verify.cs" />
     <Compile Include="Internals\Errors\Errors\CannotCopyFixedSizeCollectionsError.cs" />
     <Compile Include="Internals\Errors\Errors\CannotCreateInstanceError.cs" />
@@ -207,7 +207,7 @@
     <Compile Include="Synchronize\IPropertySynchronizer.cs" />
     <Compile Include="Synchronize\Synchronize.Verify.cs" />
     <Compile Include="ReferenceHandling.cs" />
-    <Compile Include="Settings\SpecialCopyProperty.cs" />
+    <Compile Include="Settings\CustomCopy{T}.cs" />
     <Compile Include="Copy\Copy.PropertyValues.cs" />
     <Compile Include="EqualBy\EqualBy.FieldValues.cs" />
     <Compile Include="EqualBy\EqualBy.PropertyValues.cs" />

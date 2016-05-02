@@ -9,6 +9,7 @@
         where T : MemberInfo
     {
         private readonly IReadOnlyDictionary<Type, CastingComparer> comparers;
+        private readonly IReadOnlyDictionary<Type, CustomCopy> copyers;
         private readonly IgnoredTypes ignoredTypes;
         private readonly ConcurrentDictionary<T, bool> ignoredMembers = new ConcurrentDictionary<T, bool>();
 
@@ -16,10 +17,12 @@
             IEnumerable<T> ignoredMembers,
             IEnumerable<Type> ignoredTypes,
             IReadOnlyDictionary<Type, CastingComparer> comparers,
+            IReadOnlyDictionary<Type, CustomCopy> copyers,
             BindingFlags bindingFlags,
             ReferenceHandling referenceHandling)
         {
             this.comparers = comparers;
+            this.copyers = copyers;
             this.BindingFlags = bindingFlags;
             this.ReferenceHandling = referenceHandling;
             if (ignoredMembers != null)
@@ -66,6 +69,12 @@
         {
             comparer = null;
             return this.comparers?.TryGetValue(type, out comparer) == true;
+        }
+
+        public bool TryGetCopyer(Type type, out CustomCopy copyer)
+        {
+            copyer = null;
+            return this.copyers?.TryGetValue(type, out copyer) == true;
         }
 
         internal abstract IGetterAndSetter GetOrCreateGetterAndSetter(T propertyInfo);

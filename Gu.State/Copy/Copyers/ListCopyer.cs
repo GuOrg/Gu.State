@@ -26,18 +26,18 @@ namespace Gu.State
         public void Copy<TSettings>(
             object source,
             object target,
-            Action<object, object, TSettings, ReferencePairCollection> syncItem,
+            Func<object, object, TSettings, ReferencePairCollection, object> copyItem,
             TSettings settings,
             ReferencePairCollection referencePairs)
             where TSettings : class, IMemberSettings
         {
-            Copy((IList)source, (IList)target, syncItem, settings, referencePairs);
+            Copy((IList)source, (IList)target, copyItem, settings, referencePairs);
         }
 
         private static void Copy<TSettings>(
             IList source,
             IList target,
-            Action<object, object, TSettings, ReferencePairCollection> syncItem,
+            Func<object, object, TSettings, ReferencePairCollection, object> copyItem,
             TSettings settings,
             ReferencePairCollection referencePairs)
             where TSettings : class, IMemberSettings
@@ -52,14 +52,14 @@ namespace Gu.State
             {
                 var sv = source[i];
                 var tv = target.ElementAtOrDefault(i);
-                var copyItem = State.Copy.Item(sv, tv, syncItem, settings, referencePairs, isImmutable);
+                var copy = State.Copy.Item(sv, tv, copyItem, settings, referencePairs, isImmutable);
                 if (i < target.Count)
                 {
-                    target[i] = copyItem;
+                    target[i] = copy;
                 }
                 else
                 {
-                    target.Add(copyItem);
+                    target.Add(copy);
                 }
             }
 

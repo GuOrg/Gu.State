@@ -28,7 +28,7 @@
         public void Copy<TSettings>(
             object source,
             object target,
-            Action<object, object, TSettings, ReferencePairCollection> syncItem,
+            Func<object, object, TSettings, ReferencePairCollection, object> copyItem,
             TSettings settings,
             ReferencePairCollection referencePairs)
             where TSettings : class, IMemberSettings
@@ -37,13 +37,13 @@
             var copyMethod = this.GetType()
                                         .GetMethod(nameof(State.Copy), BindingFlags.NonPublic | BindingFlags.Static)
                                         .MakeGenericMethod(itemType, typeof(TSettings));
-            copyMethod.Invoke(null, new[] { source, target, syncItem, settings, referencePairs });
+            copyMethod.Invoke(null, new[] { source, target, copyItem, settings, referencePairs });
         }
 
         private static void Copy<T, TSettings>(
             ISet<T> source,
             ISet<T> target,
-            Action<object, object, TSettings, ReferencePairCollection> syncItem,
+            Func<object, object, TSettings, ReferencePairCollection, object> copyItem,
             TSettings settings,
             ReferencePairCollection referencePairs)
             where TSettings : class, IMemberSettings
@@ -85,7 +85,7 @@
                         comparer = EqualityComparer<T>.Default;
                     }
 
-                    var copyIngComparer = new CopyIngComparer<T, TSettings>(comparer, syncItem, settings, referencePairs);
+                    var copyIngComparer = new CopyIngComparer<T, TSettings>(comparer, copyItem, settings, referencePairs);
                     using (var borrow = SetPool<T>.Borrow(copyIngComparer))
                     {
                         borrow.Value.UnionWith(source);
@@ -104,7 +104,7 @@
              where TSettings : class, IMemberSettings
         {
             private readonly IEqualityComparer<T> inner;
-            private readonly Action<object, object, TSettings, ReferencePairCollection> syncItem;
+            private readonly Func<object, object, TSettings, ReferencePairCollection, object> copyItem;
             private readonly TSettings settings;
             private readonly ReferencePairCollection referencePairs;
 
@@ -112,12 +112,12 @@
 
             public CopyIngComparer(
                 IEqualityComparer<T> inner,
-                Action<object, object, TSettings, ReferencePairCollection> syncItem,
+                Func<object, object, TSettings, ReferencePairCollection, object> copyItem,
                 TSettings settings,
                 ReferencePairCollection referencePairs)
             {
                 this.inner = inner;
-                this.syncItem = syncItem;
+                this.copyItem = copyItem;
                 this.settings = settings;
                 this.referencePairs = referencePairs;
             }
@@ -127,7 +127,7 @@
                 var result = this.inner.Equals(x, y);
                 if (result && this.isCopying)
                 {
-                    State.Copy.Item(x, y, this.syncItem, this.settings, this.referencePairs, false);
+                    State.Copy.Item(x, y, this.copyItem, this.settings, this.referencePairs, false);
                 }
 
                 return result;

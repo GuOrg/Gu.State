@@ -50,8 +50,7 @@
                 foreach (var propertyInfo in source.GetType()
                                                    .GetProperties(settings.BindingFlags))
                 {
-                    if (settings.IsIgnoringProperty(propertyInfo) ||
-                        settings.GetSpecialCopyProperty(propertyInfo) != null)
+                    if (settings.IsIgnoringProperty(propertyInfo))
                     {
                         continue;
                     }

@@ -18,6 +18,7 @@
         /// The types to ignore
         /// </param>
         /// <param name="comparers">Custom comparers. Use this to get better performance or for custom equality for types.</param>
+        /// <param name="copyers">Custom copyers.</param>
         /// <param name="bindingFlags">The binding flags to use when getting properties</param>
         /// <param name="referenceHandling">
         /// If Structural is used property values for sub properties are copied for the entire graph.
@@ -27,9 +28,10 @@
             IEnumerable<PropertyInfo> ignoredProperties,
             IEnumerable<Type> ignoredTypes,
             IReadOnlyDictionary<Type, CastingComparer> comparers,
+            IReadOnlyDictionary<Type, CustomCopy> copyers,
             BindingFlags bindingFlags,
             ReferenceHandling referenceHandling)
-            : base(ignoredProperties, ignoredTypes, comparers, bindingFlags, referenceHandling)
+            : base(ignoredProperties, ignoredTypes, comparers, copyers, bindingFlags, referenceHandling)
         {
         }
 
@@ -60,7 +62,7 @@
         public static PropertiesSettings GetOrCreate(BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags, ReferenceHandling referenceHandling = ReferenceHandling.Throw)
         {
             var key = new BindingFlagsAndReferenceHandling(bindingFlags, referenceHandling);
-            return Cache.GetOrAdd(key, x => new PropertiesSettings(null, null, null, bindingFlags, referenceHandling));
+            return Cache.GetOrAdd(key, x => new PropertiesSettings(null, null, null, null, bindingFlags, referenceHandling));
         }
 
         public bool IsIgnoringProperty(PropertyInfo propertyInfo)
@@ -76,11 +78,6 @@
             }
 
             return this.IgnoredMembers.GetOrAdd(propertyInfo, this.GetIsIgnoring);
-        }
-
-        public SpecialCopyProperty GetSpecialCopyProperty(PropertyInfo propertyInfo)
-        {
-            return null;
         }
 
         public override IEnumerable<MemberInfo> GetMembers(Type type)

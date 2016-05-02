@@ -17,7 +17,7 @@
             var type = typeof(SettingsTypes.ComplexType);
             var nameProperty = type.GetProperty(nameof(SettingsTypes.ComplexType.Name));
             var valueProperty = type.GetProperty(nameof(SettingsTypes.ComplexType.Value));
-            var settings = new PropertiesSettings(new[] { nameProperty }, null, null, Constants.DefaultPropertyBindingFlags, ReferenceHandling.Throw);
+            var settings = new PropertiesSettings(new[] { nameProperty }, null, null, null, Constants.DefaultPropertyBindingFlags, ReferenceHandling.Throw);
             Assert.AreEqual(true, settings.IsIgnoringProperty(nameProperty));
             Assert.AreEqual(false, settings.IsIgnoringProperty(valueProperty));
         }
@@ -78,7 +78,7 @@
             var type = typeof(SettingsTypes.ComplexType);
             var nameProperty = type.GetProperty(nameof(SettingsTypes.ComplexType.Name));
             var valueProperty = type.GetProperty(nameof(SettingsTypes.ComplexType.Value));
-            var settings = new PropertiesSettings(null, new[] { type }, null, Constants.DefaultPropertyBindingFlags, ReferenceHandling.Throw);
+            var settings = new PropertiesSettings(null, new[] { type }, null, null, Constants.DefaultPropertyBindingFlags, ReferenceHandling.Throw);
             Assert.AreEqual(true, settings.IsIgnoringProperty(nameProperty));
             Assert.AreEqual(true, settings.IsIgnoringProperty(valueProperty));
             Assert.AreEqual(false, settings.IsIgnoringProperty(typeof(SettingsTypes.Immutable).GetProperty(nameof(SettingsTypes.Immutable.Value))));
