@@ -26,9 +26,9 @@ namespace Gu.State.Tests.DiffTests
                                ? "Parent <Name>k__BackingField x: p1 y: p2 <Child>k__BackingField <Parent>k__BackingField ..."
                                : "Parent Name x: p1 y: p2 Child Parent ...";
             var result = this.DiffMethod(x, y, ReferenceHandling.StructuralWithReferenceLoops);
+            Assert.AreSame(result, result.Diffs.Single(d => d.X == x.Child).Diffs.Single().ValueDiff);
             var actual = result.ToString("", " ");
             Assert.AreEqual(expected, actual);
-            Assert.AreSame(result, result.Diffs.Single(d => d.X == x.Child).Diffs.Last(d => d.X == x));
         }
 
         [TestCase("p", "c", "Empty")]

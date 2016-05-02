@@ -26,8 +26,10 @@
 
         internal static Disposer<DiffBuilder> Borrow(object x, object y)
         {
-            return new Disposer<DiffBuilder>(new DiffBuilder(x, y, new ConcurrentDictionary<ReferencePair, DiffBuilder>()), _ => { });
-            //return DiffBuilderPool.Borrow(() => new DiffBuilder(x, y, new Dictionary<ReferencePair, DiffBuilder>()));
+            var builder = new DiffBuilder(x, y, new ConcurrentDictionary<ReferencePair, DiffBuilder>());
+            builder.builderCache.TryAdd(new ReferencePair(x, y), builder);
+            return new Disposer<DiffBuilder>(builder, _ => { });
+            //// return DiffBuilderPool.Borrow(() => new DiffBuilder(x, y, new Dictionary<ReferencePair, DiffBuilder>()));
         }
 
         internal bool TryAdd(object x, object y, out DiffBuilder subDiffBuilder)
@@ -42,12 +44,6 @@
                     });
             subDiffBuilder.Empty += this.OnSubBuilderEmpty;
             return added;
-        }
-
-        internal bool TryGetBuilder(object x, object y, out DiffBuilder diffBuilder)
-        {
-            var pair = new ReferencePair(x, y);
-            return this.builderCache.TryGetValue(pair, out diffBuilder);
         }
 
         internal void Add(SubDiff subDiff)
