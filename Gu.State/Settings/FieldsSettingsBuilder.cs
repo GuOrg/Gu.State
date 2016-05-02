@@ -10,6 +10,7 @@
     {
         private readonly HashSet<Type> ignoredTypes = new HashSet<Type>();
         private readonly HashSet<FieldInfo> ignoredFields = new HashSet<FieldInfo>(MemberInfoComparer<FieldInfo>.Default);
+        private readonly Dictionary<Type, CastingComparer> comparers = new Dictionary<Type, CastingComparer>();
 
         public FieldsSettings CreateSettings(ReferenceHandling referenceHandling = ReferenceHandling.Throw, BindingFlags bindingFlags = Constants.DefaultFieldBindingFlags)
         {
@@ -18,7 +19,7 @@
                 return FieldsSettings.GetOrCreate(bindingFlags, referenceHandling);
             }
 
-            return new FieldsSettings(this.ignoredFields, this.ignoredTypes, bindingFlags, referenceHandling);
+            return new FieldsSettings(this.ignoredFields, this.ignoredTypes, this.comparers, bindingFlags, referenceHandling);
         }
 
         public FieldsSettingsBuilder AddImmutableType<T>()
@@ -61,6 +62,12 @@
             }
 
             return this.AddIgnoredField(fieldInfo);
+        }
+
+        public FieldsSettingsBuilder AddComparer<T>(IEqualityComparer<T> comparer)
+        {
+            this.comparers[typeof(T)] = CastingComparer.Create(comparer);
+            return this;
         }
     }
 }

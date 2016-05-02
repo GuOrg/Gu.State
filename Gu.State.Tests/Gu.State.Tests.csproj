@@ -90,13 +90,16 @@
     <Compile Include="EqualByTests\ArrayTests.cs" />
     <Compile Include="EqualByTests\Comparers\DictionaryEqualByComparerTests.cs" />
     <Compile Include="EqualByTests\Comparers\EnumerableEqualByComparerTests.cs" />
+    <Compile Include="EqualByTests\CustomComparerTests.cs" />
     <Compile Include="EqualByTests\DictionaryTests.cs" />
     <Compile Include="EqualByTests\EnumerableTests.cs" />
     <Compile Include="EqualByTests\FieldValues\Array.cs" />
+    <Compile Include="EqualByTests\FieldValues\CustomComparer.cs" />
     <Compile Include="EqualByTests\FieldValues\Dictionary.cs" />
     <Compile Include="EqualByTests\FieldValues\Enumerable.cs" />
     <Compile Include="EqualByTests\FieldValues\Sets.cs" />
     <Compile Include="EqualByTests\PropertyValues\Array.cs" />
+    <Compile Include="EqualByTests\PropertyValues\CustomComparer.cs" />
     <Compile Include="EqualByTests\PropertyValues\Dictionary.cs" />
     <Compile Include="EqualByTests\PropertyValues\Enumerable.cs" />
     <Compile Include="EqualByTests\PropertyValues\Sets.cs" />
@@ -114,6 +117,7 @@
     <Compile Include="Internals\Errors\ErrorTypes.cs" />
     <Compile Include="Internals\MemberPath\MemberPathTests.cs" />
     <Compile Include="Internals\MemberPath\MemberPathTypes.cs" />
+    <Compile Include="Internals\Refelection\EmitSandbox\EqualiyComparerSandbox.cs" />
     <Compile Include="Internals\Refelection\EmitSandbox\Sandbox.cs" />
     <Compile Include="Internals\Refelection\GetterAndSetterTests.cs" />
     <Compile Include="Internals\Refelection\TypeExtTests.cs" />

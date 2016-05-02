@@ -17,7 +17,7 @@
             var type = typeof(ComplexType);
             var nameField = type.GetField(nameof(ComplexType.Name));
             var valueField = type.GetField(nameof(ComplexType.Value));
-            var settings = new FieldsSettings(new[] { nameField }, null, Constants.DefaultFieldBindingFlags, ReferenceHandling.Throw);
+            var settings = new FieldsSettings(new[] { nameField }, null, null, Constants.DefaultFieldBindingFlags, ReferenceHandling.Throw);
             Assert.AreEqual(true, settings.IsIgnoringField(nameField));
             Assert.AreEqual(false, settings.IsIgnoringField(valueField));
         }

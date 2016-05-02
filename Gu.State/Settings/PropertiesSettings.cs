@@ -17,13 +17,19 @@
         /// <param name="ignoredTypes">
         /// The types to ignore
         /// </param>
+        /// <param name="comparers">Custom comparers. Use this to get better performance or for custom equality for types.</param>
         /// <param name="bindingFlags">The binding flags to use when getting properties</param>
         /// <param name="referenceHandling">
         /// If Structural is used property values for sub properties are copied for the entire graph.
         /// Activator.CreateInstance is sued to new up references so a default constructor is required, can be private
         /// </param>
-        public PropertiesSettings(IEnumerable<PropertyInfo> ignoredProperties, IEnumerable<Type> ignoredTypes, BindingFlags bindingFlags, ReferenceHandling referenceHandling)
-            : base(ignoredProperties, ignoredTypes, bindingFlags, referenceHandling)
+        public PropertiesSettings(
+            IEnumerable<PropertyInfo> ignoredProperties,
+            IEnumerable<Type> ignoredTypes,
+            IReadOnlyDictionary<Type, CastingComparer> comparers,
+            BindingFlags bindingFlags,
+            ReferenceHandling referenceHandling)
+            : base(ignoredProperties, ignoredTypes, comparers, bindingFlags, referenceHandling)
         {
         }
 
@@ -54,7 +60,7 @@
         public static PropertiesSettings GetOrCreate(BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags, ReferenceHandling referenceHandling = ReferenceHandling.Throw)
         {
             var key = new BindingFlagsAndReferenceHandling(bindingFlags, referenceHandling);
-            return Cache.GetOrAdd(key, x => new PropertiesSettings(null, null, bindingFlags, referenceHandling));
+            return Cache.GetOrAdd(key, x => new PropertiesSettings(null, null, null, bindingFlags, referenceHandling));
         }
 
         public bool IsIgnoringProperty(PropertyInfo propertyInfo)

@@ -40,5 +40,7 @@
         bool IsIgnoringMember(MemberInfo member);
 
         IGetterAndSetter GetOrCreateGetterAndSetter(MemberInfo member);
+
+        bool TryGetComparer(Type type, out CastingComparer comparer);
     }
 }
