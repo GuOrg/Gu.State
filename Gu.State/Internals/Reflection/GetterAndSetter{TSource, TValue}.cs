@@ -55,16 +55,21 @@
             return this.GetValue((TSource)source);
         }
 
-        public bool ValueEquals(object x, object y)
+        public bool TryGetValueEquals(object x, object y, IMemberSettings settings, out bool equal, out object xv, out object yv)
         {
-            return this.ValueEquals((TSource)x, (TSource)y);
+            TValue xValue;
+            TValue yValue;
+            var result = this.TryGetValueEquals((TSource)x, (TSource)y, settings, out equal, out xValue, out yValue);
+            xv = xValue;
+            yv = yValue;
+            return result;
         }
 
-        public bool ValueEquals(TSource x, TSource y)
+        public bool TryGetValueEquals(TSource x, TSource y, IMemberSettings settings, out bool equal, out TValue xv, out TValue yv)
         {
-            var xv = this.GetValue(x);
-            var yv = this.GetValue(y);
-            return Equals(xv, yv);
+            xv = this.GetValue(x);
+            yv = this.GetValue(y);
+            return EqualBy.TryGetValueEquals(xv, yv, settings, out equal);
         }
 
         public void CopyValue(object source, object target)

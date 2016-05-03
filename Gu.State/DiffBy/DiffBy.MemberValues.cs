@@ -3,6 +3,7 @@
     using System;
     using System.Diagnostics;
     using System.Reflection;
+    using System.Security.Cryptography.X509Certificates;
 
     public static partial class DiffBy
     {
@@ -43,9 +44,12 @@
                     }
 
                     var getterAndSetter = settings.GetOrCreateGetterAndSetter(member);
-                    if (settings.IsEquatable(getterAndSetter.ValueType))
+                    bool equal;
+                    object xv;
+                    object yv;
+                    if (getterAndSetter.TryGetValueEquals(x, y, settings, out equal, out xv, out yv))
                     {
-                        if (!getterAndSetter.ValueEquals(x, y))
+                        if (!equal)
                         {
                             builder.Add(MemberDiff.Create(member, getterAndSetter.GetValue(x), getterAndSetter.GetValue(y)));
                         }
@@ -53,8 +57,6 @@
                         continue;
                     }
 
-                    var xv = getterAndSetter.GetValue(x);
-                    var yv = getterAndSetter.GetValue(y);
                     MemberValueDiff(xv, yv, member, settings, builder);
                 }
             }

@@ -26,6 +26,43 @@
             }
         }
 
+        internal static bool TryGetValueEquals<T>(T x, T y, IMemberSettings settings, out bool result)
+        {
+            if (ReferenceEquals(x, y))
+            {
+                result = true;
+                return true;
+            }
+
+            if (x == null || y == null)
+            {
+                result = false;
+                return true;
+            }
+
+            if (x.GetType() != y.GetType())
+            {
+                result = false;
+                return true;
+            }
+
+            CastingComparer comparer;
+            if (settings.TryGetComparer(x.GetType(), out comparer))
+            {
+                result = comparer.Equals(x, y);
+                return true;
+            }
+
+            if (settings.IsEquatable(x.GetType()))
+            {
+                result = Equals(x, y);
+                return true;
+            }
+
+            result = false;
+            return false;
+        }
+
         private static bool MemberValues<T>(
             T x,
             T y,
@@ -56,9 +93,12 @@
                 }
 
                 var getterAndSetter = settings.GetOrCreateGetterAndSetter(member);
-                if (settings.IsEquatable(getterAndSetter.ValueType))
+                bool equal;
+                object yv;
+                object xv;
+                if (getterAndSetter.TryGetValueEquals(x, y, settings, out equal, out xv, out yv))
                 {
-                    if (!getterAndSetter.ValueEquals(x, y))
+                    if (!equal)
                     {
                         return false;
                     }
@@ -66,8 +106,6 @@
                     continue;
                 }
 
-                var xv = getterAndSetter.GetValue(x);
-                var yv = getterAndSetter.GetValue(y);
                 if (member.MemberType().IsClass && referencePairs?.Contains(xv, yv) == true)
                 {
                     continue;
@@ -112,43 +150,6 @@
                         settings.ReferenceHandling,
                         null);
             }
-        }
-
-        internal static bool TryGetValueEquals<T>(T x, T y, IMemberSettings settings, out bool result)
-        {
-            if (ReferenceEquals(x, y))
-            {
-                result = true;
-                return true;
-            }
-
-            if (x == null || y == null)
-            {
-                result = false;
-                return true;
-            }
-
-            if (x.GetType() != y.GetType())
-            {
-                result = false;
-                return true;
-            }
-
-            CastingComparer comparer;
-            if (settings.TryGetComparer(x.GetType(), out comparer))
-            {
-                result = comparer.Equals(x, y);
-                return true;
-            }
-
-            if (settings.IsEquatable(x.GetType()))
-            {
-                result = Equals(x, y);
-                return true;
-            }
-
-            result = false;
-            return false;
         }
     }
 }
