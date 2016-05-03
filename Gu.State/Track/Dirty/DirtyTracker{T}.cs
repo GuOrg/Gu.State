@@ -33,11 +33,11 @@
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public PropertiesSettings Settings { get; }
+
         public override bool IsDirty => this.refCountedNode.Tracker.IsDirty;
 
         internal override ValueDiff Diff => this.refCountedNode.Tracker.Diff;
-
-        public PropertiesSettings Settings { get; }
 
         public void Dispose()
         {

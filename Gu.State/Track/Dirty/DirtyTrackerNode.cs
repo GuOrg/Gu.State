@@ -16,10 +16,7 @@
         private readonly IRefCounted<ChangeTrackerNode> xNode;
         private readonly IRefCounted<ChangeTrackerNode> yNode;
         private readonly DisposingMap<IDisposable> children = new DisposingMap<IDisposable>();
-        private readonly object gate = new object();
-        private ValueDiff diff;
-        private bool isBubbling;
-        private bool isBatchUpdating;
+        private readonly UpdatingDiffBuilder diffBuilder;
 
         private DirtyTrackerNode(object x, object y, PropertiesSettings settings)
         {
@@ -27,14 +24,14 @@
             this.yNode = ChangeTrackerNode.GetOrCreate(this, y, settings);
             this.xNode.Tracker.PropertyChange += this.OnTrackedPropertyChange;
             this.yNode.Tracker.PropertyChange += this.OnTrackedPropertyChange;
+            this.diffBuilder = new UpdatingDiffBuilder(x, y);
 
-            this.diff = DiffBy.PropertyValuesOrNull(x, y, settings);
             foreach (var property in x.GetType().GetProperties(settings.BindingFlags))
             {
                 this.UpdatePropertyNode(property);
             }
 
-            if (IsNotifyingCollection(x) && IsNotifyingCollection(y))
+            if (Is.NotifyCollections(x, y))
             {
                 this.OnTrackedReset(x, new ResetEventArgs(null, null));
 
@@ -56,35 +53,17 @@
 
         public event EventHandler Changed;
 
-        public event EventHandler<DirtyTrackerNode> BubbleChange;
+        public bool IsDirty => !this.Diff.IsEmpty;
 
-        public bool IsDirty => this.Diff != null;
+        public ValueDiff Diff => this.diffBuilder.ValueDiff;
 
-        public ValueDiff Diff
-        {
-            get
-            {
-                return this.diff;
-            }
+        private object X => this.xNode.Tracker.Source;
 
-            private set
-            {
-                lock (this.gate)
-                {
-                    if (Equals(value, this.diff))
-                    {
-                        return;
-                    }
+        private IList XList => (IList)this.xNode.Tracker.Source;
 
-                    var before = this.diff;
-                    this.diff = value;
-                    if (!this.isBatchUpdating)
-                    {
-                        this.NotifyChanges(this.diff, before);
-                    }
-                }
-            }
-        }
+        private object Y => this.yNode.Tracker.Source;
+
+        private IList YList => (IList)this.yNode.Tracker.Source;
 
         private IReadOnlyCollection<PropertyInfo> TrackProperties => this.xNode.Tracker.TrackProperties;
 
@@ -109,6 +88,7 @@
             this.yNode.Tracker.Reset -= this.OnTrackedReset;
 
             this.children.Dispose();
+            this.diffBuilder.Dispose();
         }
 
         internal static IRefCounted<DirtyTrackerNode> GetOrCreate(object owner, object x, object y, PropertiesSettings settings)
@@ -118,11 +98,6 @@
             Debug.Assert(y != null, "Cannot track null");
             Debug.Assert(y is INotifyPropertyChanged || y is INotifyCollectionChanged, "Must notify");
             return settings.DirtyNodes.GetOrAdd(owner, new ReferencePair(x, y), () => new DirtyTrackerNode(x, y, settings));
-        }
-
-        private static bool IsNotifyingCollection(object o)
-        {
-            return o is INotifyCollectionChanged && o is IList;
         }
 
         private static bool IsTrackablePair(object x, object y, PropertiesSettings settings)
@@ -140,16 +115,6 @@
             return x == null || x == PaddedPairs.MissingItem;
         }
 
-        private static object GetValue(IList source, int index)
-        {
-            if (source == null || index >= source.Count)
-            {
-                return PaddedPairs.MissingItem;
-            }
-
-            return source[index];
-        }
-
         private void OnTrackedPropertyChange(object sender, PropertyChangeEventArgs e)
         {
             this.UpdatePropertyNode(e.PropertyInfo);
@@ -162,29 +127,19 @@
                 return;
             }
 
-            var getter = this.Settings.GetOrCreateGetterAndSetter(propertyInfo);
-            var xValue = getter.GetValue(this.xNode.Tracker.Source);
-            var yValue = getter.GetValue(this.yNode.Tracker.Source);
+            var before = this.IsDirty;
+            this.diffBuilder.Update(propertyInfo);
 
-            if (this.TrackProperties.Contains(propertyInfo) &&
-               (this.Settings.ReferenceHandling == ReferenceHandling.Structural || this.Settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops))
+            if (this.TrackProperties.Contains(propertyInfo))
             {
-                var refCounted = this.CreateChild(xValue, yValue, propertyInfo);
+                var getterAndSetter = this.Settings.GetOrCreateGetterAndSetter(propertyInfo);
+                var xv = getterAndSetter.GetValue(this.X);
+                var yv = getterAndSetter.GetValue(this.Y);
+                var refCounted = this.CreateChild(xv, yv, propertyInfo);
                 this.children.SetValue(propertyInfo, refCounted);
             }
 
-            var propertyValueDiff = xValue != null && yValue != null
-                                        ? DiffBy.PropertyValuesOrNull(xValue, yValue, this.Settings)
-                                        : xValue != null || yValue != null
-                                              ? new ValueDiff(xValue, yValue)
-                                              : null;
-
-            lock (this.gate)
-            {
-                this.Diff = propertyValueDiff == null
-                                ? this.diff.Without(propertyInfo)
-                                : this.diff.With(this.xNode.Tracker.Source, this.yNode.Tracker.Source, propertyInfo, propertyValueDiff);
-            }
+            this.NotifyChanges(before);
         }
 
         private void OnTrackedAdd(object sender, AddEventArgs e)
@@ -194,17 +149,10 @@
 
         private void OnTrackedRemove(object sender, RemoveEventArgs e)
         {
+            var before = this.IsDirty;
             this.children.Remove(e.Index);
-            var xValue = GetValue((IList)this.xNode.Tracker.Source, e.Index);
-            var yValue = GetValue((IList)this.yNode.Tracker.Source, e.Index);
-            var indexValueDiff = this.CreateIndexValueDiff(xValue, yValue);
-
-            lock (this.gate)
-            {
-                this.Diff = indexValueDiff == null
-                                ? this.diff.Without(e.Index)
-                                : this.diff.With(this.xNode.Tracker.Source, this.yNode.Tracker.Source, e.Index, indexValueDiff);
-            }
+            this.diffBuilder.Update(e);
+            this.NotifyChanges(before);
         }
 
         private void OnTrackedReplace(object sender, ReplaceEventArgs e)
@@ -214,28 +162,17 @@
 
         private void OnTrackedMove(object sender, MoveEventArgs e)
         {
-            var before = this.diff;
-            this.isBatchUpdating = true;
-            try
-            {
-                this.OnTrackedReplace(sender, new ReplaceEventArgs(e.FromIndex));
-                this.OnTrackedReplace(sender, new ReplaceEventArgs(e.ToIndex));
-            }
-            finally
-            {
-                this.isBatchUpdating = false;
-                this.NotifyChanges(before, this.diff);
-            }
+            this.children.Move(e.FromIndex, e.ToIndex);
+            this.NotifyChanges(this.IsDirty);
         }
 
         private void OnTrackedReset(object sender, ResetEventArgs e)
         {
-            var before = this.diff;
-            this.isBatchUpdating = true;
+            var before = this.IsDirty;
             try
             {
-                var maxDiffIndex = this.diff?.Diffs.OfType<IndexDiff>().Max(x => (int)x.Index) + 1 ?? 0;
-                var max = Math.Max(maxDiffIndex, Math.Max(((IList)this.xNode.Tracker.Source).Count, ((IList)this.yNode.Tracker.Source).Count));
+                var maxDiffIndex = this.Diff.Diffs.OfType<IndexDiff>().Max(x => (int)x.Index);
+                var max = Math.Max(maxDiffIndex, Math.Max(((IList)this.X).Count, ((IList)this.Y).Count));
                 for (var i = 0; i < max; i++)
                 {
                     this.UpdateIndexNode(i);
@@ -243,16 +180,17 @@
             }
             finally
             {
-                this.isBatchUpdating = false;
-                this.NotifyChanges(before, this.diff);
+                this.NotifyChanges(before);
             }
         }
 
         private void UpdateIndexNode(int index)
         {
-            var xValue = GetValue((IList)this.xNode.Tracker.Source, index);
-            var yValue = GetValue((IList)this.yNode.Tracker.Source, index);
+            var before = this.IsDirty;
 
+            var xValue = this.XList.ElementAtOrMissing(index);
+            var yValue = this.YList.ElementAtOrMissing(index);
+            this.diffBuilder.Update(index);
             if (IsTrackablePair(xValue, yValue, this.Settings) &&
                (this.Settings.ReferenceHandling == ReferenceHandling.Structural || this.Settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops))
             {
@@ -264,30 +202,7 @@
                 this.children.SetValue(index, null);
             }
 
-            var indexValueDiff = this.CreateIndexValueDiff(xValue, yValue);
-
-            lock (this.gate)
-            {
-                this.Diff = indexValueDiff == null
-                                ? this.diff.Without(index)
-                                : this.diff.With(this.xNode.Tracker.Source, this.yNode.Tracker.Source, index, indexValueDiff);
-            }
-        }
-
-        private ValueDiff CreateIndexValueDiff(object xValue, object yValue)
-        {
-            if ((xValue == PaddedPairs.MissingItem && yValue == PaddedPairs.MissingItem) ||
-                (xValue == null && yValue == null))
-            {
-                return null;
-            }
-
-            if (IsNullOrMissing(xValue) || IsNullOrMissing(yValue))
-            {
-                return new ValueDiff(xValue, yValue);
-            }
-
-            return DiffBy.PropertyValuesOrNull(xValue, yValue, this.Settings);
+            this.NotifyChanges(before);
         }
 
         private IDisposable CreateChild(object xValue, object yValue, object key)
@@ -298,74 +213,27 @@
             }
 
             var childNode = GetOrCreate(this, xValue, yValue, this.Settings);
-            EventHandler<DirtyTrackerNode> trackerOnBubbleChange = (sender, args) => this.OnBubbleChange(sender, args, key);
-            childNode.Tracker.BubbleChange += trackerOnBubbleChange;
+            childNode.Tracker.Changed += this.OnChildChanged;
             var disposable = new Disposer(() =>
             {
                 childNode.RemoveOwner(this);
-                childNode.Tracker.BubbleChange -= trackerOnBubbleChange;
+                childNode.Tracker.Changed -= this.OnChildChanged;
             });
+
             return disposable;
         }
 
-        private void OnBubbleChange(object sender, DirtyTrackerNode originalSource, object key)
+        private void OnChildChanged(object sender, EventArgs e)
         {
-            var node = (DirtyTrackerNode)sender;
-            var propertyInfo = key as PropertyInfo;
-            if (propertyInfo != null)
-            {
-                lock (this.gate)
-                {
-                    this.isBubbling = true;
-                    try
-                    {
-                        this.Diff = node.diff == null
-                            ? this.diff.Without(propertyInfo)
-                            : this.diff.With(this.xNode.Tracker.Source, this.yNode.Tracker.Source, propertyInfo, node.diff);
-                    }
-                    finally
-                    {
-                        this.isBubbling = false;
-                    }
-                }
-            }
-            else
-            {
-                var index = (int)key;
-                this.isBubbling = true;
-                try
-                {
-                    this.Diff = node.diff == null
-                        ? this.diff.Without(index)
-                        : this.diff.With(this.xNode.Tracker.Source, this.yNode.Tracker.Source, index, node.diff);
-                }
-                finally
-                {
-                    this.isBubbling = false;
-                }
-            }
-
-            if (!ReferenceEquals(this, originalSource))
-            {
-                this.BubbleChange?.Invoke(this, originalSource);
-            }
+            throw new NotImplementedException();
         }
 
-        private void NotifyChanges(ValueDiff value, ValueDiff before)
+        private void NotifyChanges(bool dirtyBefore)
         {
-            if (Equals(before, value))
-            {
-                return;
-            }
-
             this.PropertyChanged?.Invoke(this, DiffPropertyChangedEventArgs);
             this.Changed?.Invoke(this, EventArgs.Empty);
-            if (!this.isBubbling)
-            {
-                this.BubbleChange?.Invoke(this, this);
-            }
 
-            if (value == null || before == null)
+            if (this.IsDirty != dirtyBefore)
             {
                 this.PropertyChanged?.Invoke(this, IsDirtyPropertyChangedEventArgs);
             }

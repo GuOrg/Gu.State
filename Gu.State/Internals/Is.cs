@@ -3,6 +3,7 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Collections.Specialized;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
@@ -99,6 +100,16 @@
         internal static bool IsEquatable(this Type type)
         {
             return type.Implements(typeof(IEquatable<>), type);
+        }
+
+        internal static bool NotifyCollections(object x, object y)
+        {
+            return NotifyCollection(x) && NotifyCollection(y);
+        }
+
+        internal static bool NotifyCollection(object collection)
+        {
+            return collection is INotifyCollectionChanged && collection is IList;
         }
     }
 }

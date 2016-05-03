@@ -113,7 +113,6 @@
     <Compile Include="Internals\Set.cs" />
     <Compile Include="Internals\Try.cs" />
     <Compile Include="Settings\CustomCopy.cs" />
-    <Compile Include="Track\Dirty\DiffExt.cs" />
     <Compile Include="Internals\ChangeTrackerNode\EventArgs\ReplaceEventArgs.cs" />
     <Compile Include="Internals\Collections\DisposingMap{TKey, TValue}.cs" />
     <Compile Include="Internals\Collections\ImmutableList{T}.cs" />
@@ -179,6 +178,7 @@
     <Compile Include="Track\Dirty\DirtyTracker.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerNode.cs" />
     <Compile Include="Internals\ChangeTrackerNode\ChangeTrackerNode.cs" />
+    <Compile Include="Track\Dirty\UpdatingDiffBuilder.cs" />
     <Compile Include="Track\Track.Verify.cs" />
     <Compile Include="EqualBy\EqualBy.Enumerable.cs" />
     <Compile Include="EqualBy\EqualBy.Throw.cs" />
