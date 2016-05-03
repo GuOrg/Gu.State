@@ -53,7 +53,7 @@
 
         public event EventHandler Changed;
 
-        public bool IsDirty => !this.Diff.IsEmpty;
+        public bool IsDirty => this.Diff?.IsEmpty == false;
 
         public ValueDiff Diff => this.diffBuilder.ValueDiff;
 
