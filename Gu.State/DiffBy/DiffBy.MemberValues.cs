@@ -21,7 +21,7 @@
                 }
 
                 EqualBy.Verify.CanEqualByMemberValues(x, y, settings, typeof(DiffBy).Name, settings.DiffMethodName());
-                using (var borrow = DiffBuilder.Borrow(x, y))
+                using (var borrow = DiffBuilder.Create(x, y))
                 {
                     AddSubDiffs(x, y, settings, borrow.Value);
                     return borrow.Value.CreateValueDiff();

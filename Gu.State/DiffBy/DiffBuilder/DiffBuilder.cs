@@ -7,34 +7,60 @@
     using System.Linq;
     using System.Reflection;
 
-    internal sealed class DiffBuilder
+    internal sealed class DiffBuilder : IDisposable
     {
         private readonly ConcurrentDictionary<ReferencePair, DiffBuilder> builderCache;
         private readonly List<SubDiff> diffs = new List<SubDiff>();
+        private readonly List<Disposer<DiffBuilder>> disposers = new List<Disposer<DiffBuilder>>();
         private readonly ValueDiff valueDiff;
+        private bool disposed;
 
         private DiffBuilder(object x, object y, ConcurrentDictionary<ReferencePair, DiffBuilder> builderCache)
         {
             this.builderCache = builderCache;
-            Debug.Assert(!this.builderCache.ContainsKey(new ReferencePair(x, y)), "Builder added twice");
             this.valueDiff = new ValueDiff(x, y, this.diffs);
+            Debug.Assert(!this.builderCache.ContainsKey(new ReferencePair(x, y)), "Builder added twice");
+            this.builderCache.TryAdd(new ReferencePair(x, y), this);
         }
 
         internal event EventHandler Empty;
 
         private bool IsEmpty => this.diffs.All(d => d.IsEmpty);
 
-        internal static Disposer<DiffBuilder> Borrow(object x, object y)
+        public void Dispose()
         {
-            var builder = new DiffBuilder(x, y, new ConcurrentDictionary<ReferencePair, DiffBuilder>());
-            builder.builderCache.TryAdd(new ReferencePair(x, y), builder);
-            return new Disposer<DiffBuilder>(builder, _ => { });
-            //// return DiffBuilderPool.Borrow(() => new DiffBuilder(x, y, new Dictionary<ReferencePair, DiffBuilder>()));
+            if (this.disposed)
+            {
+                return;
+            }
+
+            this.disposed = true;
+            foreach (var disposer in this.disposers)
+            {
+                disposer.Dispose();
+            }
+
+            this.disposers.Clear();
+        }
+
+        internal static Disposer<DiffBuilder> Create(object x, object y)
+        {
+            var borrow = ConcurrentDictionaryPool<ReferencePair, DiffBuilder>.Borrow();
+            return Disposer.Create(
+                new DiffBuilder(x, y, borrow.Value),
+                builder =>
+                    {
+                        foreach (var kvp in builder.builderCache)
+                        {
+                            kvp.Value.Dispose();
+                        }
+                        borrow.Dispose();
+                    });
         }
 
         internal bool TryAdd(object x, object y, out DiffBuilder subDiffBuilder)
         {
-            bool added = false;
+            var added = false;
             subDiffBuilder = this.builderCache.GetOrAdd(
                 new ReferencePair(x, y),
                 pair =>
@@ -42,27 +68,33 @@
                         added = true;
                         return new DiffBuilder(pair.X, pair.Y, this.builderCache);
                     });
+
             subDiffBuilder.Empty += this.OnSubBuilderEmpty;
+            this.disposers.Add(Disposer.Create(subDiffBuilder, sdb => sdb.Empty -= this.OnSubBuilderEmpty));
             return added;
         }
 
         internal void Add(SubDiff subDiff)
         {
+            Debug.Assert(!this.disposed, "this.disposed");
             this.diffs.Add(subDiff);
         }
 
         internal void AddLazy(MemberInfo member, DiffBuilder builder)
         {
+            Debug.Assert(!this.disposed, "this.disposed");
             this.diffs.Add(MemberDiff.Create(member, builder.valueDiff));
         }
 
-        public void AddLazy(object index, DiffBuilder builder)
+        internal void AddLazy(object index, DiffBuilder builder)
         {
+            Debug.Assert(!this.disposed, "this.disposed");
             this.diffs.Add(new IndexDiff(index, builder.valueDiff));
         }
 
-        public ValueDiff CreateValueDiff()
+        internal ValueDiff CreateValueDiff()
         {
+            Debug.Assert(!this.disposed, "this.disposed");
             this.PurgeEmptyBuilders();
             return this.IsEmpty ? null : this.valueDiff;
         }
@@ -90,33 +122,6 @@
                 {
                     builder.Empty?.Invoke(builder, EventArgs.Empty);
                 }
-            }
-        }
-
-        private void Clear()
-        {
-            this.builderCache.Clear();
-        }
-
-        internal static class DiffBuilderPool
-        {
-            private static readonly ConcurrentQueue<DiffBuilder> Cache = new ConcurrentQueue<DiffBuilder>();
-
-            internal static Disposer<DiffBuilder> Borrow(Func<DiffBuilder> createNew)
-            {
-                DiffBuilder builder;
-                if (Cache.TryDequeue(out builder))
-                {
-                    return Disposer.Create(builder, Return);
-                }
-
-                return Disposer.Create(createNew(), Return);
-            }
-
-            private static void Return(DiffBuilder builder)
-            {
-                builder.Clear();
-                Cache.Enqueue(builder);
             }
         }
     }

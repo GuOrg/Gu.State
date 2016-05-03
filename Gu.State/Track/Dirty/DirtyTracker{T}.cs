@@ -35,7 +35,7 @@
 
         public override bool IsDirty => this.refCountedNode.Tracker.IsDirty;
 
-        public override ValueDiff Diff => this.refCountedNode.Tracker.Diff;
+        internal override ValueDiff Diff => this.refCountedNode.Tracker.Diff;
 
         public PropertiesSettings Settings { get; }
 
