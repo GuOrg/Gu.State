@@ -114,7 +114,7 @@
             }
         }
 
-        private static bool TryGetValueEquals<T>(T x, T y, IMemberSettings settings, out bool result)
+        internal static bool TryGetValueEquals<T>(T x, T y, IMemberSettings settings, out bool result)
         {
             if (ReferenceEquals(x, y))
             {
