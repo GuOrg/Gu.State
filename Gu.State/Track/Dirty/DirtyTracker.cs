@@ -13,6 +13,7 @@
 
         public abstract bool IsDirty { get; }
 
-        public abstract ValueDiff Diff { get; }
+        // This is mutable for now
+        internal abstract ValueDiff Diff { get; }
     }
 }

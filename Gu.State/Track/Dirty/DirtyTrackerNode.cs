@@ -27,6 +27,7 @@
             this.yNode = ChangeTrackerNode.GetOrCreate(this, y, settings);
             this.xNode.Tracker.PropertyChange += this.OnTrackedPropertyChange;
             this.yNode.Tracker.PropertyChange += this.OnTrackedPropertyChange;
+
             this.diff = DiffBy.PropertyValuesOrNull(x, y, settings);
             foreach (var property in x.GetType().GetProperties(settings.BindingFlags))
             {
