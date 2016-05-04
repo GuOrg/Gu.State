@@ -25,30 +25,7 @@
             }
         }
 
-        private static void TryAddDiffs<T>(
-            T x,
-            T y,
-            IMemberSettings settings,
-            DiffBuilder builder)
-        {
-            EqualBy.Verify.CanEqualByMemberValues(x, y, settings, typeof(DiffBy).Name, settings.DiffMethodName());
-            TryAddItemDiffs(x, y, settings, builder, TryAddItemDiff);
-            TryAddMemberDiffs(x, y, settings, builder);
-        }
-
-        private static void TryAddMemberDiffs(
-            object x,
-            object y,
-            IMemberSettings settings,
-            DiffBuilder builder)
-        {
-            foreach (var member in settings.GetMembers(x.GetType()))
-            {
-                TryAddMemberDiff(x, y, member, settings, builder);
-            }
-        }
-
-        private static void TryAddMemberDiff(
+        internal static void UpdateMemberDiff(
             object xSource,
             object ySource,
             MemberInfo member,
@@ -66,9 +43,13 @@
             object yValue;
             if (getterAndSetter.TryGetValueEquals(xSource, ySource, settings, out equal, out xValue, out yValue))
             {
-                if (!equal)
+                if (equal)
                 {
-                    builder.Add(State.MemberDiff.Create(member, xValue, yValue));
+                    builder.TryRemove(member);
+                }
+                else
+                {
+                    builder.AddOrUpdate(State.MemberDiff.Create(member, xValue, yValue));
                 }
 
                 return;
@@ -77,9 +58,13 @@
             switch (settings.ReferenceHandling)
             {
                 case ReferenceHandling.References:
-                    if (!ReferenceEquals(xValue, yValue))
+                    if (ReferenceEquals(xValue, yValue))
                     {
-                        builder.Add(State.MemberDiff.Create(member, new ValueDiff(xValue, yValue)));
+                        builder.TryRemove(member);
+                    }
+                    else
+                    {
+                        builder.AddOrUpdate(State.MemberDiff.Create(member, new ValueDiff(xValue, yValue)));
                     }
 
                     return;
@@ -101,6 +86,29 @@
                         nameof(settings.ReferenceHandling),
                         settings.ReferenceHandling,
                         null);
+            }
+        }
+
+        private static void TryAddDiffs<T>(
+            T x,
+            T y,
+            IMemberSettings settings,
+            DiffBuilder builder)
+        {
+            EqualBy.Verify.CanEqualByMemberValues(x, y, settings, typeof(DiffBy).Name, settings.DiffMethodName());
+            TryAddItemDiffs(x, y, settings, builder, TryAddItemDiff);
+            TryAddMemberDiffs(x, y, settings, builder);
+        }
+
+        private static void TryAddMemberDiffs(
+            object x,
+            object y,
+            IMemberSettings settings,
+            DiffBuilder builder)
+        {
+            foreach (var member in settings.GetMembers(x.GetType()))
+            {
+                UpdateMemberDiff(x, y, member, settings, builder);
             }
         }
 

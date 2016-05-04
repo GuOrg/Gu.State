@@ -16,10 +16,9 @@
             this.y = y;
             this.settings = settings;
             this.diffBuilderDisposer = DiffBuilder.Create(x, y);
-            this.ValueDiff = this.diffBuilderDisposer.Value.CreateValueDiff();
         }
 
-        public ValueDiff ValueDiff { get; }
+        public ValueDiff ValueDiff => this.Builder.CreateValueDiff();
 
         private DiffBuilder Builder => this.diffBuilderDisposer.Value;
 
@@ -30,9 +29,7 @@
 
         public void Update(PropertyInfo propertyInfo)
         {
-            throw new NotImplementedException();
-
-            this.Builder.PurgeEmptyBuilders();
+            DiffBy.UpdateMemberDiff(this.x, this.y, propertyInfo, this.settings, this.Builder);
         }
 
         public void Update(RemoveEventArgs e)

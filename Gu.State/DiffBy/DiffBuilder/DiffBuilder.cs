@@ -9,9 +9,9 @@
 
     internal sealed class DiffBuilder : IDisposable
     {
+        private readonly ValueDiff valueDiff;
         private readonly ConcurrentDictionary<ReferencePair, DiffBuilder> builderCache;
         private readonly List<SubDiff> diffs = new List<SubDiff>();
-        private readonly ValueDiff valueDiff;
         private bool disposed;
         private Disposer<ConcurrentDictionary<DiffBuilder, Disposer<HashSet<object>>>> borrowedDictionary;
 
@@ -84,6 +84,36 @@
             this.diffs.Add(subDiff);
         }
 
+        internal void AddOrUpdate(MemberDiff memberDiff)
+        {
+            Debug.Assert(!this.disposed, "this.disposed");
+            lock (this.diffs)
+            {
+                var index = this.IndexOf(memberDiff.Member);
+                if (index < 0)
+                {
+                    this.diffs.Add(memberDiff);
+                }
+                else
+                {
+                    this.diffs[index] = memberDiff;
+                }
+            }
+        }
+
+        internal void TryRemove(MemberInfo member)
+        {
+            Debug.Assert(!this.disposed, "this.disposed");
+            lock (this.diffs)
+            {
+                var index = this.IndexOf(member);
+                if (index >= 0)
+                {
+                    this.diffs.RemoveAt(index);
+                }
+            }
+        }
+
         internal void Add(MemberInfo member, DiffBuilder builder)
         {
             Debug.Assert(!this.disposed, "this.disposed");
@@ -147,6 +177,20 @@
                     s.Value.Add(index);
                     return s;
                 });
+        }
+
+        private int IndexOf(MemberInfo member)
+        {
+            for (int i = 0; i < this.diffs.Count; i++)
+            {
+                var memberDiff = this.diffs[i] as MemberDiff;
+                if (memberDiff != null && memberDiff.Member == member)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
         }
     }
 }

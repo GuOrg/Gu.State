@@ -7,7 +7,7 @@ namespace Gu.State
 
     /// <summary>A diff for a member.</summary>
     /// <typeparam name="TMember">The member.</typeparam>
-    public abstract class MemberDiff<TMember> : SubDiff
+    public abstract class MemberDiff<TMember> : MemberDiff
         where TMember : MemberInfo
     {
         /// <summary> Initializes a new instance of the <see cref="MemberDiff{T}"/> class.</summary>
@@ -25,16 +25,18 @@ namespace Gu.State
         protected MemberDiff(TMember memberInfo, ValueDiff diff)
             : base(diff)
         {
-            this.MemberyInfo = memberInfo;
+            this.MemberInfo = memberInfo;
         }
 
+        internal override MemberInfo Member => this.MemberInfo;
+
         /// <summary>Gets the member.</summary>
-        protected TMember MemberyInfo { get; }
+        protected TMember MemberInfo { get; }
 
         /// <inheritdoc />
         public override string ToString()
         {
-            return $"{this.MemberyInfo.Name} {this.ValueDiff} diffs: {this.Diffs.Count}";
+            return $"{this.MemberInfo.Name} {this.ValueDiff} diffs: {this.Diffs.Count}";
         }
 
         /// <inheritdoc />
@@ -42,14 +44,14 @@ namespace Gu.State
         {
             if (this.Diffs.Count == 0)
             {
-                return $"{this.MemberyInfo.Name} x: {this.X ?? "null"} y: {this.Y ?? "null"}";
+                return $"{this.MemberInfo.Name} x: {this.X ?? "null"} y: {this.Y ?? "null"}";
             }
 
             using (var writer = new IndentedTextWriter(new StringWriter(), tabString) { NewLine = newLine })
             {
                 using (var disposer = BorrowValueDiffReferenceSet())
                 {
-                    writer.Write(this.MemberyInfo.Name);
+                    writer.Write(this.MemberInfo.Name);
                     this.WriteDiffs(writer, disposer.Value);
                 }
 
@@ -61,17 +63,17 @@ namespace Gu.State
         {
             if (!written.Add(this.ValueDiff))
             {
-                writer.Write($"{this.MemberyInfo.Name} ...");
+                writer.Write($"{this.MemberInfo.Name} ...");
                 return writer;
             }
 
             if (this.Diffs.Count == 0)
             {
-                writer.Write($"{this.MemberyInfo.Name} x: {this.X ?? "null"} y: {this.Y ?? "null"}");
+                writer.Write($"{this.MemberInfo.Name} x: {this.X ?? "null"} y: {this.Y ?? "null"}");
                 return writer;
             }
 
-            writer.Write(this.MemberyInfo.Name);
+            writer.Write(this.MemberInfo.Name);
             writer.Indent++;
             foreach (var diff in this.Diffs)
             {
