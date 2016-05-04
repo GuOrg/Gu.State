@@ -105,6 +105,17 @@
             return this.IsEmpty ? null : this.valueDiff;
         }
 
+        internal void PurgeEmptyBuilders()
+        {
+            foreach (var builder in this.builderCache.Values)
+            {
+                if (builder.IsEmpty)
+                {
+                    builder.Empty?.Invoke(builder, EventArgs.Empty);
+                }
+            }
+        }
+
         private void OnSubBuilderEmpty(object sender, EventArgs e)
         {
             var builder = (DiffBuilder)sender;
@@ -117,17 +128,6 @@
             if (this.IsEmpty)
             {
                 this.Empty?.Invoke(this, EventArgs.Empty);
-            }
-        }
-
-        private void PurgeEmptyBuilders()
-        {
-            foreach (var builder in this.builderCache.Values)
-            {
-                if (builder.IsEmpty)
-                {
-                    builder.Empty?.Invoke(builder, EventArgs.Empty);
-                }
             }
         }
 

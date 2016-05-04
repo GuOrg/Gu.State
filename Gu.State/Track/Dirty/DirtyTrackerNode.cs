@@ -19,13 +19,20 @@
         private readonly UpdatingDiffBuilder diffBuilder;
 
         private DirtyTrackerNode(object x, object y, PropertiesSettings settings)
+            : this(x, y, settings, new UpdatingDiffBuilder(x, y, settings))
+        {
+        }
+
+        private DirtyTrackerNode(object x, object y, PropertiesSettings settings, UpdatingDiffBuilder builder)
         {
             this.xNode = ChangeTrackerNode.GetOrCreate(this, x, settings);
             this.yNode = ChangeTrackerNode.GetOrCreate(this, y, settings);
             this.xNode.Tracker.PropertyChange += this.OnTrackedPropertyChange;
             this.yNode.Tracker.PropertyChange += this.OnTrackedPropertyChange;
-            this.diffBuilder = new UpdatingDiffBuilder(x, y);
+            this.diffBuilder = builder;
 
+            // resetting here in case another thread updated x or y before we subscribed
+            // this is perhaps slightly wasteful
             foreach (var property in settings.GetProperties(x.GetType()))
             {
                 this.UpdatePropertyNode(property);
@@ -33,8 +40,6 @@
 
             if (Is.NotifyCollections(x, y))
             {
-                this.OnTrackedReset(x, new ResetEventArgs(null, null));
-
                 this.xNode.Tracker.Add += this.OnTrackedAdd;
                 this.xNode.Tracker.Remove += this.OnTrackedRemove;
                 this.xNode.Tracker.Replace += this.OnTrackedReplace;
@@ -46,6 +51,10 @@
                 this.yNode.Tracker.Replace += this.OnTrackedReplace;
                 this.yNode.Tracker.Move += this.OnTrackedMove;
                 this.yNode.Tracker.Reset += this.OnTrackedReset;
+
+                // resetting here in case another thread updated x or y before we subscribed
+                // this is perhaps slightly wasteful
+                this.OnTrackedReset(x, new ResetEventArgs(null, null));
             }
         }
 
@@ -135,7 +144,7 @@
                 var getterAndSetter = this.Settings.GetOrCreateGetterAndSetter(propertyInfo);
                 var xv = getterAndSetter.GetValue(this.X);
                 var yv = getterAndSetter.GetValue(this.Y);
-                var refCounted = this.CreateChild(xv, yv, propertyInfo);
+                var refCounted = this.CreateChildTracker(xv, yv);
                 this.children.SetValue(propertyInfo, refCounted);
             }
 
@@ -194,7 +203,7 @@
             if (IsTrackablePair(xValue, yValue, this.Settings) &&
                (this.Settings.ReferenceHandling == ReferenceHandling.Structural || this.Settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops))
             {
-                var refCounted = this.CreateChild(xValue, yValue, index);
+                var refCounted = this.CreateChildTracker(xValue, yValue);
                 this.children.SetValue(index, refCounted);
             }
             else
@@ -205,7 +214,7 @@
             this.NotifyChanges(before);
         }
 
-        private IDisposable CreateChild(object xValue, object yValue, object key)
+        private IDisposable CreateChildTracker(object xValue, object yValue)
         {
             if (xValue == null || yValue == null)
             {
