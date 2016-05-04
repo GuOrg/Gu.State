@@ -13,7 +13,7 @@
         private readonly ConcurrentDictionary<ReferencePair, DiffBuilder> builderCache;
         private readonly List<SubDiff> diffs = new List<SubDiff>();
         private bool disposed;
-        private Disposer<ConcurrentDictionary<DiffBuilder, Disposer<HashSet<object>>>> borrowedDictionary;
+        private Disposer<ConcurrentDictionary<DiffBuilder, Disposer<HashSet<object>>>> subBilderMemberOrItemMap;
 
         private DiffBuilder(object x, object y, ConcurrentDictionary<ReferencePair, DiffBuilder> builderCache)
         {
@@ -24,14 +24,14 @@
                 throw Throw.ShouldNeverGetHereException("Duplicate builder for reference pair");
             }
 
-            this.borrowedDictionary = ConcurrentDictionaryPool<DiffBuilder, Disposer<HashSet<object>>>.Borrow();
+            this.subBilderMemberOrItemMap = ConcurrentDictionaryPool<DiffBuilder, Disposer<HashSet<object>>>.Borrow();
         }
 
         internal event EventHandler Empty;
 
         private bool IsEmpty => this.diffs.All(d => d.IsEmpty);
 
-        private ConcurrentDictionary<DiffBuilder, Disposer<HashSet<object>>> SubBuilders => this.borrowedDictionary.Value;
+        private ConcurrentDictionary<DiffBuilder, Disposer<HashSet<object>>> SubBuilders => this.subBilderMemberOrItemMap.Value;
 
         public void Dispose()
         {
@@ -47,7 +47,7 @@
                 builder.Value.Dispose();
             }
 
-            this.borrowedDictionary.Dispose();
+            this.subBilderMemberOrItemMap.Dispose();
         }
 
         internal static Disposer<DiffBuilder> Create(object x, object y)
@@ -84,7 +84,7 @@
             this.diffs.Add(subDiff);
         }
 
-        internal void AddOrUpdate(MemberDiff memberDiff)
+        internal bool TryAddOrUpdate(MemberDiff memberDiff)
         {
             Debug.Assert(!this.disposed, "this.disposed");
             lock (this.diffs)
@@ -93,31 +93,38 @@
                 if (index < 0)
                 {
                     this.diffs.Add(memberDiff);
+                    return true;
                 }
                 else
                 {
+                    var old = this.diffs[index];
                     this.diffs[index] = memberDiff;
+                    return !Equals(old.X, memberDiff.X) || !Equals(old.Y, memberDiff.Y);
                 }
             }
         }
 
-        internal void TryRemove(MemberInfo member)
+        internal bool TryRemove(MemberInfo member)
         {
             Debug.Assert(!this.disposed, "this.disposed");
             lock (this.diffs)
             {
+                throw new NotImplementedException("Must remove and dispose builder here if needed");
                 var index = this.IndexOf(member);
                 if (index >= 0)
                 {
                     this.diffs.RemoveAt(index);
+                    return true;
                 }
+
+                return false;
             }
         }
 
         internal void Add(MemberInfo member, DiffBuilder builder)
         {
             Debug.Assert(!this.disposed, "this.disposed");
-            this.diffs.Add(MemberDiff.Create(member, builder.valueDiff));
+            this.diffs.Add(MemberDiff.Create(member, builder));
             this.AddSubBuilder(member, builder);
         }
 
@@ -161,7 +168,7 @@
             }
         }
 
-        private void AddSubBuilder(object index, DiffBuilder builder)
+        private void AddSubBuilder(object key, DiffBuilder builder)
         {
             this.SubBuilders.AddOrUpdate(
                 builder,
@@ -169,12 +176,12 @@
                 {
                     b.Empty += this.OnSubBuilderEmpty;
                     var borrowedSet = SetPool<object>.Borrow(EqualityComparer<object>.Default);
-                    borrowedSet.Value.Add(index);
+                    borrowedSet.Value.Add(key);
                     return borrowedSet;
                 },
                 (b, s) =>
                 {
-                    s.Value.Add(index);
+                    s.Value.Add(key);
                     return s;
                 });
         }

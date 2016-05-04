@@ -50,7 +50,6 @@ namespace Gu.State.Tests
                 var x = new SimpleDirtyTrackClass { Value1 = 1, Value2 = 2 };
                 var y = new SimpleDirtyTrackClass { Value1 = 1, Value2 = 2 };
                 var changes = new List<string>();
-                var expectedChanges = new List<string>();
 
                 using (var tracker = Track.IsDirty(x, y))
                 {
@@ -62,7 +61,7 @@ namespace Gu.State.Tests
                     x.OnPropertyChanged(nameof(SimpleDirtyTrackClass.Value2));
                     Assert.AreEqual(false, tracker.IsDirty);
                     Assert.AreEqual(null, tracker.Diff?.ToString("", " "));
-                    CollectionAssert.AreEqual(expectedChanges, changes);
+                    CollectionAssert.IsEmpty(changes);
                 }
             }
 
@@ -72,7 +71,6 @@ namespace Gu.State.Tests
                 var x = new SimpleDirtyTrackClass { Value1 = 1, Value2 = 2 };
                 var y = new SimpleDirtyTrackClass { Value1 = 1, Value2 = 3 };
                 var changes = new List<string>();
-                var expectedChanges = new List<string>();
 
                 using (var tracker = Track.IsDirty(x, y))
                 {
@@ -84,7 +82,7 @@ namespace Gu.State.Tests
                     x.OnPropertyChanged(nameof(SimpleDirtyTrackClass.Value2));
                     Assert.AreEqual(true, tracker.IsDirty);
                     Assert.AreEqual("SimpleDirtyTrackClass Value1 x: 1 y: 3 Value2 x: 2 y: 4", tracker.Diff.ToString("", " "));
-                    CollectionAssert.AreEqual(expectedChanges, changes);
+                    CollectionAssert.IsEmpty(changes);
                 }
             }
 

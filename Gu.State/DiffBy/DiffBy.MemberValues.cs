@@ -25,7 +25,7 @@
             }
         }
 
-        internal static void UpdateMemberDiff(
+        internal static bool TryUpdateMemberDiff(
             object xSource,
             object ySource,
             MemberInfo member,
@@ -34,7 +34,7 @@
         {
             if (settings.IsIgnoringMember(member))
             {
-                return;
+                return false;
             }
 
             var getterAndSetter = settings.GetOrCreateGetterAndSetter(member);
@@ -43,31 +43,17 @@
             object yValue;
             if (getterAndSetter.TryGetValueEquals(xSource, ySource, settings, out equal, out xValue, out yValue))
             {
-                if (equal)
-                {
-                    builder.TryRemove(member);
-                }
-                else
-                {
-                    builder.AddOrUpdate(State.MemberDiff.Create(member, xValue, yValue));
-                }
-
-                return;
+                return equal
+                           ? builder.TryRemove(member)
+                           : builder.TryAddOrUpdate(State.MemberDiff.Create(member, xValue, yValue));
             }
 
             switch (settings.ReferenceHandling)
             {
                 case ReferenceHandling.References:
-                    if (ReferenceEquals(xValue, yValue))
-                    {
-                        builder.TryRemove(member);
-                    }
-                    else
-                    {
-                        builder.AddOrUpdate(State.MemberDiff.Create(member, new ValueDiff(xValue, yValue)));
-                    }
-
-                    return;
+                    return ReferenceEquals(xValue, yValue)
+                               ? builder.TryRemove(member)
+                               : builder.TryAddOrUpdate(State.MemberDiff.Create(member, new ValueDiff(xValue, yValue)));
                 case ReferenceHandling.Structural:
                 case ReferenceHandling.StructuralWithReferenceLoops:
                     EqualBy.Verify.CanEqualByMemberValues(xValue, yValue, settings, typeof(DiffBy).Name, settings.DiffMethodName());
@@ -108,7 +94,7 @@
         {
             foreach (var member in settings.GetMembers(x.GetType()))
             {
-                UpdateMemberDiff(x, y, member, settings, builder);
+                TryUpdateMemberDiff(x, y, member, settings, builder);
             }
         }
 

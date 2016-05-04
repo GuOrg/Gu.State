@@ -27,17 +27,17 @@
             this.diffBuilderDisposer.Dispose();
         }
 
-        public void Update(PropertyInfo propertyInfo)
+        public bool TryUpdate(PropertyInfo propertyInfo)
         {
-            DiffBy.UpdateMemberDiff(this.x, this.y, propertyInfo, this.settings, this.Builder);
+            return DiffBy.TryUpdateMemberDiff(this.x, this.y, propertyInfo, this.settings, this.Builder);
         }
 
-        public void Update(RemoveEventArgs e)
+        public void TryUpdate(RemoveEventArgs e)
         {
             throw new NotImplementedException();
         }
 
-        public void Update(int index)
+        public void TryUpdate(int index)
         {
             throw new NotImplementedException();
         }

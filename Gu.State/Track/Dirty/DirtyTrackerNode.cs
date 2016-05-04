@@ -137,7 +137,7 @@
             }
 
             var before = this.IsDirty;
-            this.diffBuilder.Update(propertyInfo);
+            this.diffBuilder.TryUpdate(propertyInfo);
 
             if (this.TrackProperties.Contains(propertyInfo))
             {
@@ -160,7 +160,7 @@
         {
             var before = this.IsDirty;
             this.children.Remove(e.Index);
-            this.diffBuilder.Update(e);
+            this.diffBuilder.TryUpdate(e);
             this.NotifyChanges(before);
         }
 
@@ -199,7 +199,7 @@
 
             var xValue = this.XList.ElementAtOrMissing(index);
             var yValue = this.YList.ElementAtOrMissing(index);
-            this.diffBuilder.Update(index);
+            this.diffBuilder.TryUpdate(index);
             if (IsTrackablePair(xValue, yValue, this.Settings) &&
                (this.Settings.ReferenceHandling == ReferenceHandling.Structural || this.Settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops))
             {
