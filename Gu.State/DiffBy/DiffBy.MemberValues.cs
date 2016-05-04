@@ -87,12 +87,12 @@
                 case ReferenceHandling.StructuralWithReferenceLoops:
                     EqualBy.Verify.CanEqualByMemberValues(xValue, yValue, settings, typeof(DiffBy).Name, settings.DiffMethodName());
                     DiffBuilder subDiffBuilder;
-                    if (builder.TryAdd(xValue, yValue, out subDiffBuilder))
+                    if (builder.TryCreate(xValue, yValue, out subDiffBuilder))
                     {
                         TryAddDiffs(xValue, yValue, settings, subDiffBuilder);
                     }
 
-                    builder.AddLazy(member, subDiffBuilder);
+                    builder.Add(member, subDiffBuilder);
                     return;
                 case ReferenceHandling.Throw:
                     throw Throw.ShouldNeverGetHereException();
@@ -162,12 +162,12 @@
             }
 
             DiffBuilder subDiffBuilder;
-            if (collectionBuilder.TryAdd(xItem, yItem, out subDiffBuilder))
+            if (collectionBuilder.TryCreate(xItem, yItem, out subDiffBuilder))
             {
                 TryAddDiffs(xItem, yItem, settings, subDiffBuilder);
             }
 
-            collectionBuilder.AddLazy(index, subDiffBuilder);
+            collectionBuilder.Add(index, subDiffBuilder);
         }
     }
 }

@@ -11,21 +11,27 @@
     {
         private readonly ConcurrentDictionary<ReferencePair, DiffBuilder> builderCache;
         private readonly List<SubDiff> diffs = new List<SubDiff>();
-        private readonly List<Disposer<DiffBuilder>> disposers = new List<Disposer<DiffBuilder>>();
         private readonly ValueDiff valueDiff;
         private bool disposed;
+        private Disposer<ConcurrentDictionary<DiffBuilder, Disposer<HashSet<object>>>> borrowedDictionary;
 
         private DiffBuilder(object x, object y, ConcurrentDictionary<ReferencePair, DiffBuilder> builderCache)
         {
             this.builderCache = builderCache;
             this.valueDiff = new ValueDiff(x, y, this.diffs);
-            Debug.Assert(!this.builderCache.ContainsKey(new ReferencePair(x, y)), "Builder added twice");
-            this.builderCache.TryAdd(new ReferencePair(x, y), this);
+            if (!this.builderCache.TryAdd(new ReferencePair(x, y), this))
+            {
+                throw Throw.ShouldNeverGetHereException("Duplicate builder for reference pair");
+            }
+
+            this.borrowedDictionary = ConcurrentDictionaryPool<DiffBuilder, Disposer<HashSet<object>>>.Borrow();
         }
 
         internal event EventHandler Empty;
 
         private bool IsEmpty => this.diffs.All(d => d.IsEmpty);
+
+        private ConcurrentDictionary<DiffBuilder, Disposer<HashSet<object>>> SubBuilders => this.borrowedDictionary.Value;
 
         public void Dispose()
         {
@@ -35,12 +41,13 @@
             }
 
             this.disposed = true;
-            foreach (var disposer in this.disposers)
+            foreach (var builder in this.SubBuilders)
             {
-                disposer.Dispose();
+                builder.Key.Empty -= this.OnSubBuilderEmpty;
+                builder.Value.Dispose();
             }
 
-            this.disposers.Clear();
+            this.borrowedDictionary.Dispose();
         }
 
         internal static Disposer<DiffBuilder> Create(object x, object y)
@@ -58,7 +65,7 @@
                     });
         }
 
-        internal bool TryAdd(object x, object y, out DiffBuilder subDiffBuilder)
+        internal bool TryCreate(object x, object y, out DiffBuilder subDiffBuilder)
         {
             var added = false;
             subDiffBuilder = this.builderCache.GetOrAdd(
@@ -68,9 +75,6 @@
                         added = true;
                         return new DiffBuilder(pair.X, pair.Y, this.builderCache);
                     });
-
-            subDiffBuilder.Empty += this.OnSubBuilderEmpty;
-            this.disposers.Add(Disposer.Create(subDiffBuilder, sdb => sdb.Empty -= this.OnSubBuilderEmpty));
             return added;
         }
 
@@ -80,16 +84,18 @@
             this.diffs.Add(subDiff);
         }
 
-        internal void AddLazy(MemberInfo member, DiffBuilder builder)
+        internal void Add(MemberInfo member, DiffBuilder builder)
         {
             Debug.Assert(!this.disposed, "this.disposed");
             this.diffs.Add(MemberDiff.Create(member, builder.valueDiff));
+            this.AddSubBuilder(member, builder);
         }
 
-        internal void AddLazy(object index, DiffBuilder builder)
+        internal void Add(object index, DiffBuilder builder)
         {
             Debug.Assert(!this.disposed, "this.disposed");
             this.diffs.Add(new IndexDiff(index, builder.valueDiff));
+            this.AddSubBuilder(index, builder);
         }
 
         internal ValueDiff CreateValueDiff()
@@ -123,6 +129,24 @@
                     builder.Empty?.Invoke(builder, EventArgs.Empty);
                 }
             }
+        }
+
+        private void AddSubBuilder(object index, DiffBuilder builder)
+        {
+            this.SubBuilders.AddOrUpdate(
+                builder,
+                b =>
+                {
+                    b.Empty += this.OnSubBuilderEmpty;
+                    var borrowedSet = SetPool<object>.Borrow(EqualityComparer<object>.Default);
+                    borrowedSet.Value.Add(index);
+                    return borrowedSet;
+                },
+                (b, s) =>
+                {
+                    s.Value.Add(index);
+                    return s;
+                });
         }
     }
 }
