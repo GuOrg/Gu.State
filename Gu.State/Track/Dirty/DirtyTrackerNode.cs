@@ -26,7 +26,7 @@
             this.yNode.Tracker.PropertyChange += this.OnTrackedPropertyChange;
             this.diffBuilder = new UpdatingDiffBuilder(x, y);
 
-            foreach (var property in x.GetType().GetProperties(settings.BindingFlags))
+            foreach (var property in settings.GetProperties(x.GetType()))
             {
                 this.UpdatePropertyNode(property);
             }

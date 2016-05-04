@@ -23,44 +23,25 @@
                 EqualBy.Verify.CanEqualByMemberValues(x, y, settings, typeof(DiffBy).Name, settings.DiffMethodName());
                 using (var borrow = DiffBuilder.Create(x, y))
                 {
-                    AddSubDiffs(x, y, settings, borrow.Value);
+                    TryAddDiffs(x, y, settings, borrow.Value);
                     return borrow.Value.CreateValueDiff();
                 }
             }
 
-            private static void AddSubDiffs<T>(
+            private static void TryAddDiffs<T>(
                 T x,
                 T y,
                 IMemberSettings settings,
                 DiffBuilder builder)
             {
-                Enumerable.AddItemDiffs(x, y, settings, builder, ItemMembersDiff);
+                Enumerable.AddItemDiffs(x, y, settings, builder, TryAddItemDiff);
                 foreach (var member in settings.GetMembers(x.GetType()))
                 {
-                    if (settings.IsIgnoringMember(member))
-                    {
-                        continue;
-                    }
-
-                    var getterAndSetter = settings.GetOrCreateGetterAndSetter(member);
-                    bool equal;
-                    object xv;
-                    object yv;
-                    if (getterAndSetter.TryGetValueEquals(x, y, settings, out equal, out xv, out yv))
-                    {
-                        if (!equal)
-                        {
-                            builder.Add(MemberDiff.Create(member, getterAndSetter.GetValue(x), getterAndSetter.GetValue(y)));
-                        }
-
-                        continue;
-                    }
-
-                    MemberValueDiff(xv, yv, member, settings, builder);
+                    TryAddMemberDiff(x, y, member, settings, builder);
                 }
             }
 
-            private static void ItemMembersDiff(
+            private static void TryAddItemDiff(
                 object xItem,
                 object yItem,
                 object index,
@@ -92,25 +73,33 @@
                 DiffBuilder subDiffBuilder;
                 if (collectionBuilder.TryAdd(xItem, yItem, out subDiffBuilder))
                 {
-                    AddSubDiffs(xItem, yItem, settings, subDiffBuilder);
+                    TryAddDiffs(xItem, yItem, settings, subDiffBuilder);
                 }
 
                 collectionBuilder.AddLazy(index, subDiffBuilder);
             }
 
-            private static void MemberValueDiff(
-                object xValue,
-                object yValue,
+            private static void TryAddMemberDiff(
+                object xSource,
+                object ySource,
                 MemberInfo member,
                 IMemberSettings settings,
                 DiffBuilder builder)
             {
-                ValueDiff diff;
-                if (TryGetValueDiff(xValue, yValue, settings, out diff))
+                if (settings.IsIgnoringMember(member))
                 {
-                    if (diff != null)
+                    return;
+                }
+
+                var getterAndSetter = settings.GetOrCreateGetterAndSetter(member);
+                bool equal;
+                object xValue;
+                object yValue;
+                if (getterAndSetter.TryGetValueEquals(xSource, ySource, settings, out equal, out xValue, out yValue))
+                {
+                    if (!equal)
                     {
-                        builder.Add(MemberDiff.Create(member, diff));
+                        builder.Add(State.MemberDiff.Create(member, xValue, yValue));
                     }
 
                     return;
@@ -121,7 +110,7 @@
                     case ReferenceHandling.References:
                         if (!ReferenceEquals(xValue, yValue))
                         {
-                            builder.Add(MemberDiff.Create(member, new ValueDiff(xValue, yValue)));
+                            builder.Add(State.MemberDiff.Create(member, new ValueDiff(xValue, yValue)));
                         }
 
                         return;
@@ -131,7 +120,7 @@
                         DiffBuilder subDiffBuilder;
                         if (builder.TryAdd(xValue, yValue, out subDiffBuilder))
                         {
-                            AddSubDiffs(xValue, yValue, settings, subDiffBuilder);
+                            TryAddDiffs(xValue, yValue, settings, subDiffBuilder);
                         }
 
                         builder.AddLazy(member, subDiffBuilder);

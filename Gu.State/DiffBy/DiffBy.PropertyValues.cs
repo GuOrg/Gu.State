@@ -45,18 +45,5 @@
             EqualBy.Verify.CanEqualByPropertyValues(x, y, settings, typeof(DiffBy).Name, nameof(PropertyValues));
             return MemberValues.Diffs(x, y, settings) ?? new EmptyDiff(x, y);
         }
-
-        internal static ValueDiff PropertyValuesOrNull<T>(T x, T y, PropertiesSettings settings)
-        {
-            Debug.Assert(settings != null, "settings == null");
-            ValueDiff diff;
-            if (TryGetValueDiff(x, y, settings, out diff))
-            {
-                return diff;
-            }
-
-            EqualBy.Verify.CanEqualByPropertyValues(x, y, settings, typeof(DiffBy).Name, nameof(PropertyValues));
-            return MemberValues.Diffs(x, y, settings);
-        }
     }
 }
