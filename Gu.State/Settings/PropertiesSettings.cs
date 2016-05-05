@@ -80,10 +80,12 @@
             return this.IgnoredMembers.GetOrAdd(propertyInfo, this.GetIsIgnoring);
         }
 
-        public override IEnumerable<MemberInfo> GetMembers(Type type)
+        public IEnumerable<PropertyInfo> GetProperties(Type type)
         {
             return type.GetProperties(this.BindingFlags);
         }
+
+        public override IEnumerable<MemberInfo> GetMembers(Type type) => this.GetProperties(type);
 
         public override bool IsIgnoringMember(MemberInfo member)
         {

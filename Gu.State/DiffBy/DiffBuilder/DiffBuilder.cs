@@ -19,8 +19,10 @@
         {
             this.builderCache = builderCache;
             this.valueDiff = new ValueDiff(x, y, this.diffs);
-            Debug.Assert(!this.builderCache.ContainsKey(new ReferencePair(x, y)), "Builder added twice");
-            this.builderCache.TryAdd(new ReferencePair(x, y), this);
+            if (!this.builderCache.TryAdd(new ReferencePair(x, y), this))
+            {
+                throw Throw.ShouldNeverGetHereException("Builder added twice");
+            }
         }
 
         internal event EventHandler Empty;
