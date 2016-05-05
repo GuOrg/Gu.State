@@ -61,6 +61,7 @@
                         {
                             kvp.Value.Dispose();
                         }
+
                         borrow.Dispose();
                     });
         }
@@ -124,7 +125,7 @@
         internal void Add(MemberInfo member, DiffBuilder builder)
         {
             Debug.Assert(!this.disposed, "this.disposed");
-            this.diffs.Add(MemberDiff.Create(member, builder));
+            this.diffs.Add(MemberDiff.Create(member, builder.valueDiff));
             this.AddSubBuilder(member, builder);
         }
 

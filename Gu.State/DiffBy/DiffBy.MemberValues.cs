@@ -6,25 +6,6 @@
 
     public static partial class DiffBy
     {
-        internal static ValueDiff TryCreateValueDiff<T>(T x, T y, IMemberSettings settings)
-        {
-            Debug.Assert(x != null, "x == null");
-            Debug.Assert(y != null, "y == null");
-            Debug.Assert(settings != null, "settings == null");
-
-            ValueDiff diff;
-            if (TryGetValueDiff(x, y, settings, out diff))
-            {
-                return diff;
-            }
-
-            using (var borrow = DiffBuilder.Create(x, y))
-            {
-                TryAddDiffs(x, y, settings, borrow.Value);
-                return borrow.Value.CreateValueDiff();
-            }
-        }
-
         internal static bool TryUpdateMemberDiff(
             object xSource,
             object ySource,
@@ -45,7 +26,7 @@
             {
                 return equal
                            ? builder.TryRemove(member)
-                           : builder.TryAddOrUpdate(State.MemberDiff.Create(member, xValue, yValue));
+                           : builder.TryAddOrUpdate(MemberDiff.Create(member, xValue, yValue));
             }
 
             switch (settings.ReferenceHandling)
@@ -53,10 +34,9 @@
                 case ReferenceHandling.References:
                     return ReferenceEquals(xValue, yValue)
                                ? builder.TryRemove(member)
-                               : builder.TryAddOrUpdate(State.MemberDiff.Create(member, new ValueDiff(xValue, yValue)));
+                               : builder.TryAddOrUpdate(MemberDiff.Create(member, new ValueDiff(xValue, yValue)));
                 case ReferenceHandling.Structural:
                 case ReferenceHandling.StructuralWithReferenceLoops:
-                    EqualBy.Verify.CanEqualByMemberValues(xValue, yValue, settings, typeof(DiffBy).Name, settings.DiffMethodName());
                     DiffBuilder subDiffBuilder;
                     if (builder.TryCreate(xValue, yValue, out subDiffBuilder))
                     {
@@ -64,7 +44,7 @@
                     }
 
                     builder.Add(member, subDiffBuilder);
-                    return;
+                    return true;
                 case ReferenceHandling.Throw:
                     throw Throw.ShouldNeverGetHereException();
                 default:
@@ -72,6 +52,25 @@
                         nameof(settings.ReferenceHandling),
                         settings.ReferenceHandling,
                         null);
+            }
+        }
+
+        private static ValueDiff TryCreateValueDiff<T>(T x, T y, IMemberSettings settings)
+        {
+            Debug.Assert(x != null, "x == null");
+            Debug.Assert(y != null, "y == null");
+            Debug.Assert(settings != null, "settings == null");
+
+            ValueDiff diff;
+            if (TryGetValueDiff(x, y, settings, out diff))
+            {
+                return diff;
+            }
+
+            using (var borrow = DiffBuilder.Create(x, y))
+            {
+                TryAddDiffs(x, y, settings, borrow.Value);
+                return borrow.Value.CreateValueDiff();
             }
         }
 
