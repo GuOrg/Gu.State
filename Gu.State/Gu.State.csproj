@@ -160,7 +160,6 @@
     <Compile Include="Settings\FieldsSettings.cs" />
     <Compile Include="Contracts\IBindingFlags.cs" />
     <Compile Include="Contracts\IIgnoringDeclaredType.cs" />
-    <Compile Include="Contracts\IIgnoringFields.cs" />
     <Compile Include="Contracts\IMemberSettings.cs" />
     <Compile Include="Contracts\IReferenceHandling.cs" />
     <Compile Include="Settings\MemberSettings{T}.cs" />
@@ -181,7 +180,6 @@
     <Compile Include="Track\Track.Verify.cs" />
     <Compile Include="EqualBy\EqualBy.Enumerable.cs" />
     <Compile Include="EqualBy\EqualBy.Throw.cs" />
-    <Compile Include="Contracts\IIgnoringProperties.cs" />
     <Compile Include="Internals\Errors\Throw.cs" />
     <Compile Include="Internals\BindingFlagsAndReferenceHandling.cs" />
     <Compile Include="Internals\Collections\ConcurrentSet.cs" />
