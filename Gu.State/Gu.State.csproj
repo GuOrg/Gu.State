@@ -70,7 +70,6 @@
     <Compile Include="DiffBy\Diffs\RankDiff.cs" />
     <Compile Include="DiffBy\Diffs\Skip.cs" />
     <Compile Include="DiffBy\Diffs\Diff.cs" />
-    <Compile Include="DiffBy\DiffBy.Enumerable.cs" />
     <Compile Include="DiffBy\DiffBy.FieldValues.cs" />
     <Compile Include="DiffBy\DiffBy.PropertyValues.cs" />
     <Compile Include="DiffBy\DiffBy.Shared.cs" />

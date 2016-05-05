@@ -42,7 +42,7 @@
             Ensure.NotNull(y, nameof(y));
             Ensure.NotNull(settings, nameof(settings));
             EqualBy.Verify.CanEqualByFieldValues(x, y, settings, typeof(DiffBy).Name, nameof(FieldValues));
-            return MemberValues.Diffs(x, y, settings) ?? new EmptyDiff(x, y);
+            return TryCreateValueDiff(x, y, settings) ?? new EmptyDiff(x, y);
         }
     }
 }
