@@ -45,6 +45,47 @@ namespace Gu.State.Tests
             }
 
             [Test]
+            public void DoesNotNotifyWhenNoChangeWhenNotDirty()
+            {
+                var x = new SimpleDirtyTrackClass { Value1 = 1, Value2 = 2 };
+                var y = new SimpleDirtyTrackClass { Value1 = 1, Value2 = 2 };
+                var changes = new List<string>();
+
+                using (var tracker = Track.IsDirty(x, y))
+                {
+                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    Assert.AreEqual(null, tracker.Diff);
+                    CollectionAssert.IsEmpty(changes);
+
+                    x.OnPropertyChanged(nameof(SimpleDirtyTrackClass.Value2));
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    Assert.AreEqual(null, tracker.Diff?.ToString("", " "));
+                    CollectionAssert.IsEmpty(changes);
+                }
+            }
+
+            [Test]
+            public void DoesNotNotifyWhenNoChangeWhenDirty()
+            {
+                var x = new SimpleDirtyTrackClass { Value1 = 1, Value2 = 2 };
+                var y = new SimpleDirtyTrackClass { Value1 = 1, Value2 = 3 };
+                var changes = new List<string>();
+                using (var tracker = Track.IsDirty(x, y))
+                {
+                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    Assert.AreEqual(true, tracker.IsDirty);
+                    Assert.AreEqual("SimpleDirtyTrackClass Value2 x: 2 y: 3", tracker.Diff.ToString("", " "));
+                    CollectionAssert.IsEmpty(changes);
+
+                    x.OnPropertyChanged(nameof(SimpleDirtyTrackClass.Value2));
+                    Assert.AreEqual(true, tracker.IsDirty);
+                    Assert.AreEqual("SimpleDirtyTrackClass Value2 x: 2 y: 3", tracker.Diff.ToString("", " "));
+                    CollectionAssert.IsEmpty(changes);
+                }
+            }
+
+            [Test]
             public void TracksX()
             {
                 var x = new SimpleDirtyTrackClass { Value1 = 1, Value2 = 2 };

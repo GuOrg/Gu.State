@@ -11,8 +11,6 @@
         private readonly ConcurrentDictionary<object, RefCounted> items = new ConcurrentDictionary<object, RefCounted>(ReferenceComparer.Default);
         private bool disposed;
 
-        internal int Count => this.items.Count;
-
         public void Dispose()
         {
             if (this.disposed)

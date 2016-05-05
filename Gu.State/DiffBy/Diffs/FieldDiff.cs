@@ -23,6 +23,6 @@ namespace Gu.State
         }
 
         /// <summary>Gets the field</summary>
-        public FieldInfo FieldInfo => this.MemberyInfo;
+        public FieldInfo FieldInfo => this.MemberInfo;
     }
 }
