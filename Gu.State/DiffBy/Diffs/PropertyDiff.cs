@@ -23,6 +23,6 @@
         }
 
         /// <summary>Gets the property.</summary>
-        public PropertyInfo PropertyInfo => this.MemberyInfo;
+        public PropertyInfo PropertyInfo => this.MemberInfo;
     }
 }

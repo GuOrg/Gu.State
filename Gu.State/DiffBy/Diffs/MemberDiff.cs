@@ -2,8 +2,16 @@ namespace Gu.State
 {
     using System.Reflection;
 
-    public static class MemberDiff
+    public abstract class MemberDiff : SubDiff
     {
+        protected MemberDiff(MemberInfo memberInfo, ValueDiff diff)
+            : base(diff)
+        {
+            this.MemberInfo = memberInfo;
+        }
+
+        protected MemberInfo MemberInfo { get; }
+
         public static SubDiff Create(MemberInfo member, object xValue, object yValue)
         {
             return Create(member, new ValueDiff(xValue, yValue));
