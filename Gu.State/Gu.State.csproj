@@ -85,12 +85,14 @@
     <Compile Include="EqualBy\Comparers\ReadOnlyListEqualByComparer{T}.cs" />
     <Compile Include="Internals\ArrayExt.cs" />
     <Compile Include="Internals\Collections\DoubleMap.cs" />
+    <Compile Include="Internals\Collections\RefCounter.cs" />
     <Compile Include="Internals\EnumerableExt.ElementAt.cs" />
     <Compile Include="Internals\Pools\ConcurrentDictionaryPool.cs" />
     <Compile Include="Internals\Pools\ListPool.cs" />
+    <Compile Include="Internals\Pools\ReferenceSetPool.cs" />
     <Compile Include="Internals\Pools\SetPool.cs" />
     <Compile Include="Internals\Collections\ReferenceComparer{T}.cs" />
-    <Compile Include="Internals\Pools\ReferenceSetPool.cs" />
+    <Compile Include="Internals\Pools\ReferenceSetPool{T}.cs" />
     <Compile Include="DiffBy\Diffs\SubDiff.cs" />
     <Compile Include="DiffBy\Diffs\EmptyDiff.cs" />
     <Compile Include="DiffBy\Diffs\ValueDiff.cs" />
