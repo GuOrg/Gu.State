@@ -5,7 +5,7 @@
     using System.Collections.Generic;
     using System.Reflection;
 
-    public abstract class MemberSettings<T> : MemberSettings, IMemberSettings
+    public abstract class MemberSettings<T> : MemberSettings, IBindingFlags, IReferenceHandling
         where T : MemberInfo
     {
         private readonly IReadOnlyDictionary<Type, CastingComparer> comparers;
@@ -54,12 +54,6 @@
         /// <inheritdoc />
         public bool IsImmutable(Type type) => IsImmutableCore(type);
 
-        public abstract IEnumerable<MemberInfo> GetMembers(Type type);
-
-        public abstract bool IsIgnoringMember(MemberInfo member);
-
-        public abstract IGetterAndSetter GetOrCreateGetterAndSetter(MemberInfo member);
-
         public bool IsIgnoringDeclaringType(Type declaringType)
         {
             return this.ignoredTypes.IsIgnoringType(declaringType);
@@ -76,7 +70,5 @@
             copyer = null;
             return this.copyers?.TryGetValue(type, out copyer) == true;
         }
-
-        internal abstract IGetterAndSetter GetOrCreateGetterAndSetter(T propertyInfo);
     }
 }

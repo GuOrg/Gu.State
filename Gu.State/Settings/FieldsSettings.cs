@@ -7,7 +7,7 @@
     using System.Diagnostics;
     using System.Reflection;
 
-    public class FieldsSettings : MemberSettings<FieldInfo>, IIgnoringFields
+    public class FieldsSettings : MemberSettings<FieldInfo>, IMemberSettings
     {
         private static readonly ConcurrentDictionary<BindingFlagsAndReferenceHandling, FieldsSettings> Cache = new ConcurrentDictionary<BindingFlagsAndReferenceHandling, FieldsSettings>();
 
@@ -74,24 +74,24 @@
             return this.IgnoredMembers.ContainsKey(fieldInfo);
         }
 
-        public override IEnumerable<MemberInfo> GetMembers(Type type)
+        IEnumerable<MemberInfo> IMemberSettings.GetMembers(Type type)
         {
             return type.GetFields(this.BindingFlags);
         }
 
-        public override bool IsIgnoringMember(MemberInfo member)
+        bool IMemberSettings.IsIgnoringMember(MemberInfo member)
         {
             Debug.Assert(member is FieldInfo, "member is FieldInfo");
             return this.IsIgnoringField(member as FieldInfo);
         }
 
-        public override IGetterAndSetter GetOrCreateGetterAndSetter(MemberInfo member)
+        IGetterAndSetter IMemberSettings.GetOrCreateGetterAndSetter(MemberInfo member)
         {
             Debug.Assert(member is FieldInfo, "member is FieldInfo");
             return this.GetOrCreateGetterAndSetter(member as FieldInfo);
         }
 
-        internal override IGetterAndSetter GetOrCreateGetterAndSetter(FieldInfo propertyInfo)
+        private IGetterAndSetter GetOrCreateGetterAndSetter(FieldInfo propertyInfo)
         {
             return GetterAndSetter.GetOrCreate(propertyInfo);
         }

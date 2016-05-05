@@ -6,7 +6,7 @@
     using System.Diagnostics;
     using System.Reflection;
 
-    public class PropertiesSettings : MemberSettings<PropertyInfo>, IIgnoringProperties
+    public class PropertiesSettings : MemberSettings<PropertyInfo>, IMemberSettings
     {
         private static readonly ConcurrentDictionary<BindingFlagsAndReferenceHandling, PropertiesSettings> Cache = new ConcurrentDictionary<BindingFlagsAndReferenceHandling, PropertiesSettings>();
 
@@ -85,21 +85,21 @@
             return type.GetProperties(this.BindingFlags);
         }
 
-        public override IEnumerable<MemberInfo> GetMembers(Type type) => this.GetProperties(type);
+        IEnumerable<MemberInfo> IMemberSettings.GetMembers(Type type) => this.GetProperties(type);
 
-        public override bool IsIgnoringMember(MemberInfo member)
+        bool IMemberSettings.IsIgnoringMember(MemberInfo member)
         {
             Debug.Assert(member is PropertyInfo, "member is PropertyInfo");
             return this.IsIgnoringProperty((PropertyInfo)member);
         }
 
-        public override IGetterAndSetter GetOrCreateGetterAndSetter(MemberInfo member)
+        IGetterAndSetter IMemberSettings.GetOrCreateGetterAndSetter(MemberInfo member)
         {
             Debug.Assert(member is PropertyInfo, "member is PropertyInfo");
             return this.GetOrCreateGetterAndSetter((PropertyInfo)member);
         }
 
-        internal override IGetterAndSetter GetOrCreateGetterAndSetter(PropertyInfo propertyInfo)
+        internal IGetterAndSetter GetOrCreateGetterAndSetter(PropertyInfo propertyInfo)
         {
             return GetterAndSetter.GetOrCreate(propertyInfo);
         }
