@@ -3,21 +3,32 @@
     using System;
     using System.Diagnostics;
 
-    internal struct Disposer<T> : IDisposable
+    internal sealed class Disposer<T> : IDisposable
     {
         internal readonly T Value;
-        private readonly Action<T> action;
+        private readonly Action<T> dispose;
+        private readonly object gate = new object();
+        private bool disposed;
 
-        internal Disposer(T value, Action<T> action)
+        internal Disposer(T value, Action<T> dispose)
         {
-            Debug.Assert(action != null, "action == null");
+            Debug.Assert(dispose != null, "dispose == null");
             this.Value = value;
-            this.action = action;
+            this.dispose = dispose;
         }
 
         public void Dispose()
         {
-            this.action(this.Value);
+            lock (this.gate)
+            {
+                if (this.disposed)
+                {
+                    return;
+                }
+
+                this.disposed = true;
+                this.dispose(this.Value);
+            }
         }
     }
 }

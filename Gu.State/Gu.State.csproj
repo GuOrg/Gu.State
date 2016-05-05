@@ -105,6 +105,7 @@
     <Compile Include="EqualBy\Comparers\SetEqualByComparer{T}.cs" />
     <Compile Include="Internals\Disposer{T}.cs" />
     <Compile Include="Internals\Is.cs" />
+    <Compile Include="Internals\RefCounter.cs" />
     <Compile Include="Internals\Reflection\IGetterAndSetter.cs" />
     <Compile Include="Internals\Reflection\GetterAndSetter.cs" />
     <Compile Include="Internals\Reflection\GetterAndSetter{TSource, TValue}.cs" />
