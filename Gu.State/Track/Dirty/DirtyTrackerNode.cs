@@ -34,7 +34,7 @@
                 this.UpdatePropertyNode(property);
             }
 
-            if (IsNotifyingCollection(x) && IsNotifyingCollection(y))
+            if (Is.NotifyCollections(x, y))
             {
                 this.OnTrackedReset(x, new ResetEventArgs(null, null));
 
@@ -118,11 +118,6 @@
             Debug.Assert(y != null, "Cannot track null");
             Debug.Assert(y is INotifyPropertyChanged || y is INotifyCollectionChanged, "Must notify");
             return settings.DirtyNodes.GetOrAdd(owner, new ReferencePair(x, y), () => new DirtyTrackerNode(x, y, settings));
-        }
-
-        private static bool IsNotifyingCollection(object o)
-        {
-            return o is INotifyCollectionChanged && o is IList;
         }
 
         private static bool IsTrackablePair(object x, object y, PropertiesSettings settings)
