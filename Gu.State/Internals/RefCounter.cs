@@ -19,20 +19,8 @@
 
             public static Disposer<TValue> AddOrUpdate(TValue value)
             {
-                Items.AddOrUpdate(value, v => new RefCounted(value), (_, count) => count.Increment());
-                return new Disposer<TValue>(value, RemoveOwner);
-            }
-
-            private static void RemoveOwner(TValue value)
-            {
-                Items.TryUpdate(value, )
-                owners.Value.Remove(owner);
-                if (owners.Value.Count == 0)
-                {
-                    owners.Dispose();
-                    value.Dispose();
-                    Items.Remove(value);
-                }
+                var refCounted = Items.AddOrUpdate(value, v => new RefCounted(value), (_, count) => count.Increment());
+                return new Disposer<TValue>(value, _ => refCounted.Dispose());
             }
 
             private sealed class RefCounted : IDisposable
@@ -67,7 +55,7 @@
                 {
                     lock (this.gate)
                     {
-                        Debug.Assert(this.count > 0, "this.count>0");
+                        Debug.Assert(this.count > 0, "this.count > 0");
                         this.count++;
                         return this;
                     }
