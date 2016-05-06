@@ -77,11 +77,11 @@
             this.children.Dispose();
         }
 
-        internal static IRefCounted<ChangeNode> GetOrCreate(object owner, object source, PropertiesSettings settings)
+        internal static IDisposer<ChangeNode> GetOrCreate(object source, PropertiesSettings settings)
         {
             Debug.Assert(source != null, "Cannot track null");
             Debug.Assert(source is INotifyPropertyChanged || source is INotifyCollectionChanged, "Must notify");
-            return settings.ChangeNodes.GetOrAdd(owner, source, () => new ChangeNode(source, settings));
+            return ReferenceCache.GetOrAdd(source, () => new ChangeNode(source, settings));
         }
 
         private void OnTrackerChange(object sender, EventArgs e)
@@ -178,12 +178,12 @@
 
         private IDisposable CreateChild(object child)
         {
-            var childNode = GetOrCreate(this, child, this.refcountedNode.Value.Settings);
-            childNode.Tracker.BubbleChange += this.OnBubbleChange;
+            var childNode = GetOrCreate(child, this.refcountedNode.Value.Settings);
+            childNode.Value.BubbleChange += this.OnBubbleChange;
             var disposable = new Disposer(() =>
                 {
-                    childNode.RemoveOwner(this);
-                    childNode.Tracker.BubbleChange -= this.OnBubbleChange;
+                    childNode.Value.BubbleChange -= this.OnBubbleChange;
+                    childNode.Dispose();
                 });
             return disposable;
         }
