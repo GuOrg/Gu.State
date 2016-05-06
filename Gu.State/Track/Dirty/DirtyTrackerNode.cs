@@ -13,8 +13,8 @@
     {
         private static readonly PropertyChangedEventArgs DiffPropertyChangedEventArgs = new PropertyChangedEventArgs(nameof(Diff));
         private static readonly PropertyChangedEventArgs IsDirtyPropertyChangedEventArgs = new PropertyChangedEventArgs(nameof(IsDirty));
-        private readonly IRefCounted<ChangeTrackerNode> xNode;
-        private readonly IRefCounted<ChangeTrackerNode> yNode;
+        private readonly IDisposer<ChangeTrackerNode> xNode;
+        private readonly IDisposer<ChangeTrackerNode> yNode;
         private readonly DisposingMap<IDisposable> children = new DisposingMap<IDisposable>();
         private readonly object gate = new object();
         private ValueDiff diff;
@@ -23,10 +23,10 @@
 
         private DirtyTrackerNode(object x, object y, PropertiesSettings settings)
         {
-            this.xNode = ChangeTrackerNode.GetOrCreate(this, x, settings);
-            this.yNode = ChangeTrackerNode.GetOrCreate(this, y, settings);
-            this.xNode.Tracker.PropertyChange += this.OnTrackedPropertyChange;
-            this.yNode.Tracker.PropertyChange += this.OnTrackedPropertyChange;
+            this.xNode = ChangeTrackerNode.GetOrCreate(x, settings);
+            this.yNode = ChangeTrackerNode.GetOrCreate(y, settings);
+            this.xNode.Value.PropertyChange += this.OnTrackedPropertyChange;
+            this.yNode.Value.PropertyChange += this.OnTrackedPropertyChange;
 
             this.diff = DiffBy.PropertyValuesOrNull(x, y, settings);
             foreach (var property in x.GetType().GetProperties(settings.BindingFlags))
@@ -38,17 +38,17 @@
             {
                 this.OnTrackedReset(x, new ResetEventArgs(null, null));
 
-                this.xNode.Tracker.Add += this.OnTrackedAdd;
-                this.xNode.Tracker.Remove += this.OnTrackedRemove;
-                this.xNode.Tracker.Replace += this.OnTrackedReplace;
-                this.xNode.Tracker.Move += this.OnTrackedMove;
-                this.xNode.Tracker.Reset += this.OnTrackedReset;
+                this.xNode.Value.Add += this.OnTrackedAdd;
+                this.xNode.Value.Remove += this.OnTrackedRemove;
+                this.xNode.Value.Replace += this.OnTrackedReplace;
+                this.xNode.Value.Move += this.OnTrackedMove;
+                this.xNode.Value.Reset += this.OnTrackedReset;
 
-                this.yNode.Tracker.Add += this.OnTrackedAdd;
-                this.yNode.Tracker.Remove += this.OnTrackedRemove;
-                this.yNode.Tracker.Replace += this.OnTrackedReplace;
-                this.yNode.Tracker.Move += this.OnTrackedMove;
-                this.yNode.Tracker.Reset += this.OnTrackedReset;
+                this.yNode.Value.Add += this.OnTrackedAdd;
+                this.yNode.Value.Remove += this.OnTrackedRemove;
+                this.yNode.Value.Replace += this.OnTrackedReplace;
+                this.yNode.Value.Move += this.OnTrackedMove;
+                this.yNode.Value.Reset += this.OnTrackedReset;
             }
         }
 
@@ -86,27 +86,27 @@
             }
         }
 
-        private IReadOnlyCollection<PropertyInfo> TrackProperties => this.xNode.Tracker.TrackProperties;
+        private IReadOnlyCollection<PropertyInfo> TrackProperties => this.xNode.Value.TrackProperties;
 
-        private PropertiesSettings Settings => this.xNode.Tracker.Settings;
+        private PropertiesSettings Settings => this.xNode.Value.Settings;
 
         public void Dispose()
         {
-            this.xNode.RemoveOwner(this);
-            this.xNode.Tracker.PropertyChange -= this.OnTrackedPropertyChange;
-            this.xNode.Tracker.Add -= this.OnTrackedAdd;
-            this.xNode.Tracker.Remove -= this.OnTrackedRemove;
-            this.xNode.Tracker.Remove -= this.OnTrackedRemove;
-            this.xNode.Tracker.Move -= this.OnTrackedMove;
-            this.xNode.Tracker.Reset -= this.OnTrackedReset;
+            this.xNode.Value.PropertyChange -= this.OnTrackedPropertyChange;
+            this.xNode.Value.Add -= this.OnTrackedAdd;
+            this.xNode.Value.Remove -= this.OnTrackedRemove;
+            this.xNode.Value.Remove -= this.OnTrackedRemove;
+            this.xNode.Value.Move -= this.OnTrackedMove;
+            this.xNode.Value.Reset -= this.OnTrackedReset;
+            this.xNode.Dispose();
 
-            this.yNode.RemoveOwner(this);
-            this.yNode.Tracker.PropertyChange -= this.OnTrackedPropertyChange;
-            this.yNode.Tracker.Add -= this.OnTrackedAdd;
-            this.yNode.Tracker.Remove -= this.OnTrackedRemove;
-            this.yNode.Tracker.Remove -= this.OnTrackedRemove;
-            this.yNode.Tracker.Move -= this.OnTrackedMove;
-            this.yNode.Tracker.Reset -= this.OnTrackedReset;
+            this.yNode.Value.PropertyChange -= this.OnTrackedPropertyChange;
+            this.yNode.Value.Add -= this.OnTrackedAdd;
+            this.yNode.Value.Remove -= this.OnTrackedRemove;
+            this.yNode.Value.Remove -= this.OnTrackedRemove;
+            this.yNode.Value.Move -= this.OnTrackedMove;
+            this.yNode.Value.Reset -= this.OnTrackedReset;
+            this.yNode.Dispose();
 
             this.children.Dispose();
         }
@@ -158,8 +158,8 @@
             }
 
             var getter = this.Settings.GetOrCreateGetterAndSetter(propertyInfo);
-            var xValue = getter.GetValue(this.xNode.Tracker.Source);
-            var yValue = getter.GetValue(this.yNode.Tracker.Source);
+            var xValue = getter.GetValue(this.xNode.Value.Source);
+            var yValue = getter.GetValue(this.yNode.Value.Source);
 
             if (this.TrackProperties.Contains(propertyInfo) &&
                (this.Settings.ReferenceHandling == ReferenceHandling.Structural || this.Settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops))
@@ -178,7 +178,7 @@
             {
                 this.Diff = propertyValueDiff == null
                                 ? this.diff.Without(propertyInfo)
-                                : this.diff.With(this.xNode.Tracker.Source, this.yNode.Tracker.Source, propertyInfo, propertyValueDiff);
+                                : this.diff.With(this.xNode.Value.Source, this.yNode.Value.Source, propertyInfo, propertyValueDiff);
             }
         }
 
@@ -190,15 +190,15 @@
         private void OnTrackedRemove(object sender, RemoveEventArgs e)
         {
             this.children.Remove(e.Index);
-            var xValue = GetValue((IList)this.xNode.Tracker.Source, e.Index);
-            var yValue = GetValue((IList)this.yNode.Tracker.Source, e.Index);
+            var xValue = GetValue((IList)this.xNode.Value.Source, e.Index);
+            var yValue = GetValue((IList)this.yNode.Value.Source, e.Index);
             var indexValueDiff = this.CreateIndexValueDiff(xValue, yValue);
 
             lock (this.gate)
             {
                 this.Diff = indexValueDiff == null
                                 ? this.diff.Without(e.Index)
-                                : this.diff.With(this.xNode.Tracker.Source, this.yNode.Tracker.Source, e.Index, indexValueDiff);
+                                : this.diff.With(this.xNode.Value.Source, this.yNode.Value.Source, e.Index, indexValueDiff);
             }
         }
 
@@ -230,7 +230,7 @@
             try
             {
                 var maxDiffIndex = this.diff?.Diffs.OfType<IndexDiff>().Max(x => (int)x.Index) + 1 ?? 0;
-                var max = Math.Max(maxDiffIndex, Math.Max(((IList)this.xNode.Tracker.Source).Count, ((IList)this.yNode.Tracker.Source).Count));
+                var max = Math.Max(maxDiffIndex, Math.Max(((IList)this.xNode.Value.Source).Count, ((IList)this.yNode.Value.Source).Count));
                 for (var i = 0; i < max; i++)
                 {
                     this.UpdateIndexNode(i);
@@ -245,8 +245,8 @@
 
         private void UpdateIndexNode(int index)
         {
-            var xValue = GetValue((IList)this.xNode.Tracker.Source, index);
-            var yValue = GetValue((IList)this.yNode.Tracker.Source, index);
+            var xValue = GetValue((IList)this.xNode.Value.Source, index);
+            var yValue = GetValue((IList)this.yNode.Value.Source, index);
 
             if (IsTrackablePair(xValue, yValue, this.Settings) &&
                (this.Settings.ReferenceHandling == ReferenceHandling.Structural || this.Settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops))
@@ -265,7 +265,7 @@
             {
                 this.Diff = indexValueDiff == null
                                 ? this.diff.Without(index)
-                                : this.diff.With(this.xNode.Tracker.Source, this.yNode.Tracker.Source, index, indexValueDiff);
+                                : this.diff.With(this.xNode.Value.Source, this.yNode.Value.Source, index, indexValueDiff);
             }
         }
 
@@ -316,7 +316,7 @@
                     {
                         this.Diff = node.diff == null
                             ? this.diff.Without(propertyInfo)
-                            : this.diff.With(this.xNode.Tracker.Source, this.yNode.Tracker.Source, propertyInfo, node.diff);
+                            : this.diff.With(this.xNode.Value.Source, this.yNode.Value.Source, propertyInfo, node.diff);
                     }
                     finally
                     {
@@ -332,7 +332,7 @@
                 {
                     this.Diff = node.diff == null
                         ? this.diff.Without(index)
-                        : this.diff.With(this.xNode.Tracker.Source, this.yNode.Tracker.Source, index, node.diff);
+                        : this.diff.With(this.xNode.Value.Source, this.yNode.Value.Source, index, node.diff);
                 }
                 finally
                 {

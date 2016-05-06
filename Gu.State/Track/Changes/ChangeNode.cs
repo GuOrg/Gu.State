@@ -11,14 +11,14 @@
 
     internal sealed class ChangeNode : IRefCountable
     {
-        private readonly IRefCounted<ChangeTrackerNode> node;
+        private readonly IDisposer<ChangeTrackerNode> refcountedNode;
         private readonly DisposingMap<IDisposable> children = new DisposingMap<IDisposable>();
 
         private ChangeNode(object source, PropertiesSettings settings)
         {
-            this.node = ChangeTrackerNode.GetOrCreate(this, source, settings);
-            this.node.Tracker.Change += this.OnTrackerChange;
-            switch (this.node.Tracker.Settings.ReferenceHandling)
+            this.refcountedNode = ChangeTrackerNode.GetOrCreate(source, settings);
+            this.refcountedNode.Value.Change += this.OnTrackerChange;
+            switch (this.refcountedNode.Value.Settings.ReferenceHandling)
             {
                 case ReferenceHandling.Throw:
                     break;
@@ -26,22 +26,22 @@
                     break;
                 case ReferenceHandling.Structural:
                 case ReferenceHandling.StructuralWithReferenceLoops:
-                    this.node.Tracker.PropertyChange += this.OnTrackedPropertyChange;
-                    this.node.Tracker.Add += this.OnTrackedAdd;
-                    this.node.Tracker.Remove += this.OnTrackedRemove;
-                    this.node.Tracker.Replace += this.OnTrackedReplace;
-                    this.node.Tracker.Move += this.OnTrackedMove;
-                    this.node.Tracker.Reset += this.OnTrackedReset;
+                    this.refcountedNode.Value.PropertyChange += this.OnTrackedPropertyChange;
+                    this.refcountedNode.Value.Add += this.OnTrackedAdd;
+                    this.refcountedNode.Value.Remove += this.OnTrackedRemove;
+                    this.refcountedNode.Value.Replace += this.OnTrackedReplace;
+                    this.refcountedNode.Value.Move += this.OnTrackedMove;
+                    this.refcountedNode.Value.Reset += this.OnTrackedReset;
                     foreach (var property in this.TrackProperties)
                     {
                         this.UpdatePropertyNode(property);
                     }
 
-                    var list = this.node.Tracker.Source as IList;
+                    var list = this.refcountedNode.Value.Source as IList;
                     if (list != null)
                     {
                         var itemType = list.GetType().GetItemType();
-                        if (!settings.IsImmutable(itemType) && !this.node.Tracker.Settings.IsIgnoringDeclaringType(itemType))
+                        if (!settings.IsImmutable(itemType) && !this.refcountedNode.Value.Settings.IsIgnoringDeclaringType(itemType))
                         {
                             for (var i = 0; i < list.Count; i++)
                             {
@@ -60,20 +60,20 @@
 
         public event EventHandler<ChangeNode> BubbleChange;
 
-        private IReadOnlyCollection<PropertyInfo> TrackProperties => this.node.Tracker.TrackProperties;
+        private IReadOnlyCollection<PropertyInfo> TrackProperties => this.refcountedNode.Value.TrackProperties;
 
-        private PropertiesSettings Settings => this.node.Tracker.Settings;
+        private PropertiesSettings Settings => this.refcountedNode.Value.Settings;
 
         public void Dispose()
         {
-            this.node.RemoveOwner(this);
-            this.node.Tracker.Change -= this.OnTrackerChange;
-            this.node.Tracker.PropertyChange -= this.OnTrackedPropertyChange;
-            this.node.Tracker.Add -= this.OnTrackedAdd;
-            this.node.Tracker.Remove -= this.OnTrackedRemove;
-            this.node.Tracker.Replace -= this.OnTrackedReplace;
-            this.node.Tracker.Move -= this.OnTrackedMove;
-            this.node.Tracker.Reset -= this.OnTrackedReset;
+            this.refcountedNode.Value.Change -= this.OnTrackerChange;
+            this.refcountedNode.Value.PropertyChange -= this.OnTrackedPropertyChange;
+            this.refcountedNode.Value.Add -= this.OnTrackedAdd;
+            this.refcountedNode.Value.Remove -= this.OnTrackedRemove;
+            this.refcountedNode.Value.Replace -= this.OnTrackedReplace;
+            this.refcountedNode.Value.Move -= this.OnTrackedMove;
+            this.refcountedNode.Value.Reset -= this.OnTrackedReset;
+            this.refcountedNode.Dispose();
             this.children.Dispose();
         }
 
@@ -117,7 +117,7 @@
 
         private void OnTrackedRemove(object sender, RemoveEventArgs e)
         {
-            if (!this.Settings.IsImmutable(this.node.Tracker.Source.GetType().GetItemType()))
+            if (!this.Settings.IsImmutable(this.refcountedNode.Value.Source.GetType().GetItemType()))
             {
                 this.children.Remove(e.Index);
             }
@@ -130,7 +130,7 @@
 
         private void OnTrackedMove(object sender, MoveEventArgs e)
         {
-            if (!this.Settings.IsImmutable(this.node.Tracker.Source.GetType().GetItemType()))
+            if (!this.Settings.IsImmutable(this.refcountedNode.Value.Source.GetType().GetItemType()))
             {
                 this.children.Move(e.FromIndex, e.ToIndex);
             }
@@ -149,7 +149,7 @@
 
         private void UpdatePropertyNode(PropertyInfo property)
         {
-            var value = property.GetValue(this.node.Tracker.Source);
+            var value = property.GetValue(this.refcountedNode.Value.Source);
             if (value != null)
             {
                 var child = this.CreateChild(value);
@@ -163,7 +163,7 @@
 
         private void UpdateIndexNode(int index)
         {
-            var list = (IList)this.node.Tracker.Source;
+            var list = (IList)this.refcountedNode.Value.Source;
             var value = list[index];
             if (value != null && !this.Settings.IsImmutable(value.GetType()))
             {
@@ -178,7 +178,7 @@
 
         private IDisposable CreateChild(object child)
         {
-            var childNode = GetOrCreate(this, child, this.node.Tracker.Settings);
+            var childNode = GetOrCreate(this, child, this.refcountedNode.Value.Settings);
             childNode.Tracker.BubbleChange += this.OnBubbleChange;
             var disposable = new Disposer(() =>
                 {
