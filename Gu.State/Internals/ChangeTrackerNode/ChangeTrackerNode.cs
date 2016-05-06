@@ -76,12 +76,12 @@
             }
         }
 
-        internal static IRefCounted<ChangeTrackerNode> GetOrCreate<TOwner>(TOwner owner, object source, PropertiesSettings settings)
+        internal static IDisposer<ChangeTrackerNode> GetOrCreate(object source, PropertiesSettings settings)
         {
             Debug.Assert(source != null, "Cannot track null");
             Debug.Assert(source is INotifyPropertyChanged || source is INotifyCollectionChanged, "Must notify");
             Track.Verify.IsTrackableValue(source, settings);
-            return settings.Trackers.GetOrAdd(owner, source, () => new ChangeTrackerNode(source, settings));
+            return ReferenceCache.GetOrAdd(source, () => new ChangeTrackerNode(source, settings));
         }
 
         private void OnTrackedCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

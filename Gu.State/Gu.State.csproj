@@ -107,6 +107,7 @@
     <Compile Include="Internals\Disposer{T}.cs" />
     <Compile Include="Internals\Is.cs" />
     <Compile Include="Internals\RefCounted.cs" />
+    <Compile Include="Internals\ReferenceCache.cs" />
     <Compile Include="Internals\Reflection\IGetterAndSetter.cs" />
     <Compile Include="Internals\Reflection\GetterAndSetter.cs" />
     <Compile Include="Internals\Reflection\GetterAndSetter{TSource, TValue}.cs" />
