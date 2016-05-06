@@ -81,7 +81,7 @@
         {
             Debug.Assert(source != null, "Cannot track null");
             Debug.Assert(source is INotifyPropertyChanged || source is INotifyCollectionChanged, "Must notify");
-            return ReferenceCache.GetOrAdd(source, () => new ChangeNode(source, settings));
+            return ReferenceCache.GetOrAdd(source, settings, s => new ChangeNode(s, settings));
         }
 
         private void OnTrackerChange(object sender, EventArgs e)
