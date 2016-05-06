@@ -27,13 +27,6 @@
             this.items.Clear();
         }
 
-        internal IRefCounted<TValue> GetOrAdd<TOwner, TKey>(TOwner owner, TKey key, Func<TValue> creator)
-            where TKey : class
-        {
-            this.VerifyDisposed();
-            return this.GetOrAdd(owner, (object)key, creator);
-        }
-
         internal IRefCounted<TValue> GetOrAdd<TOwner>(TOwner owner, ReferencePair key, Func<TValue> creator)
         {
             this.VerifyDisposed();
