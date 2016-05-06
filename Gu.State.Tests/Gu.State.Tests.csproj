@@ -123,6 +123,7 @@
     <Compile Include="Internals\Refelection\TypeExtTests.cs" />
     <Compile Include="Internals\Refelection\TypeExtTests.ImmutableCollections.cs" />
     <Compile Include="Internals\SetTests.cs" />
+    <Compile Include="Internals\RefcounterTests.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTests.Ignores.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTests.ReferenceLoops.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTests.WithObservableCollectionProperty.cs" />

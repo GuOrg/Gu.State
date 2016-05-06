@@ -3,7 +3,7 @@
     using System;
     using System.Runtime.CompilerServices;
 
-    internal static class RefCounter
+    internal static class RefCounted
     {
         internal static bool TryRefCount<TValue>(this TValue value, out IDisposer<TValue> disposer)
             where TValue : class, IDisposable
