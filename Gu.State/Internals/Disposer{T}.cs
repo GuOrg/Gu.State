@@ -3,7 +3,7 @@
     using System;
     using System.Diagnostics;
 
-    internal sealed class Disposer<T> : IDisposable
+    internal sealed class Disposer<T> : IDisposer<T>
     {
         private readonly Action<T> dispose;
         private readonly object gate = new object();
@@ -17,7 +17,7 @@
             this.dispose = dispose;
         }
 
-        internal T Value
+        public T Value
         {
             get
             {

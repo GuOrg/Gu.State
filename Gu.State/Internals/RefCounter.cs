@@ -1,61 +1,104 @@
 ﻿namespace Gu.State
 {
     using System;
-    using System.Collections.Concurrent;
-    using System.Diagnostics;
+    using System.Runtime.CompilerServices;
 
     internal static class RefCounter
     {
-        internal static Disposer<TValue> RefCounted<TValue>(this TValue value)
+        internal static bool TryRefCount<TValue>(this TValue value, out IDisposer<TValue> disposer)
             where TValue : class, IDisposable
         {
-            return RefCount<TValue>.AddOrUpdate(value);
+            int count;
+            disposer = RefCount<TValue>.AddOrUpdate(value, out count);
+            return count > 0;
         }
 
         private static class RefCount<TValue>
             where TValue : class, IDisposable
         {
-            private static readonly ConcurrentDictionary<TValue, RefCounted> Items = new ConcurrentDictionary<TValue, RefCounted>(ReferenceComparer.Default);
+            private static readonly ConditionalWeakTable<TValue, RefCounter> Items = new ConditionalWeakTable<TValue, RefCounter>();
 
-            public static Disposer<TValue> AddOrUpdate(TValue value)
+            internal static IDisposer<TValue> AddOrUpdate(TValue value, out int count)
             {
-                var refCounted = Items.AddOrUpdate(value, v => new RefCounted(value), (_, count) => count.Increment());
-                return new Disposer<TValue>(value, _ => refCounted.Dispose());
+                bool created = false;
+                var refCounter = Items.GetValue(
+                    value,
+                    x =>
+                        {
+                            created = true;
+                            return new RefCounter(x);
+                        });
+                if (!created)
+                {
+                    refCounter.Increment();
+                }
+
+                count = refCounter.Count;
+                return refCounter;
             }
 
-            private sealed class RefCounted : IDisposable
+            private sealed class RefCounter : IDisposer<TValue>
             {
-                private readonly TValue value;
+                private readonly WeakReference<TValue> valueReference;
                 private readonly object gate = new object();
                 private int count;
 
-                public RefCounted(TValue value)
+                public RefCounter(TValue value)
                 {
-                    this.value = value;
+                    this.valueReference = new WeakReference<TValue>(value);
                     this.count = 1;
                 }
+
+                public TValue Value
+                {
+                    get
+                    {
+                        if (this.count == 0)
+                        {
+                            throw new ObjectDisposedException($"Not allowed to get the value of a {this.GetType().PrettyName()} after it is disposed.");
+                        }
+
+                        TValue value;
+                        return this.valueReference.TryGetTarget(out value)
+                                   ? value
+                                   : null;
+                    }
+                }
+
+                internal int Count => this.count;
 
                 public void Dispose()
                 {
                     lock (this.gate)
                     {
+                        if (this.count == 0)
+                        {
+                            return;
+                        }
+
                         this.count--;
                         if (this.count > 0)
                         {
                             return;
                         }
 
-                        RefCounted temp;
-                        Items.TryRemove(this.value, out temp);
-                        this.value.Dispose();
+                        TValue value;
+                        if (this.valueReference.TryGetTarget(out value))
+                        {
+                            value.Dispose();
+                        }
                     }
                 }
 
-                public RefCounted Increment()
+                public RefCounter Increment()
                 {
                     lock (this.gate)
                     {
-                        Debug.Assert(this.count > 0, "this.count > 0");
+                        if (this.count == 0)
+                        {
+                            return this;
+                        }
+
                         this.count++;
                         return this;
                     }
