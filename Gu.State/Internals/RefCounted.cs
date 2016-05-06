@@ -20,7 +20,7 @@
 
             internal static IDisposer<TValue> AddOrUpdate(TValue value, out int count)
             {
-                bool created = false;
+                var created = false;
                 var refCounter = Items.GetValue(
                     value,
                     x =>
