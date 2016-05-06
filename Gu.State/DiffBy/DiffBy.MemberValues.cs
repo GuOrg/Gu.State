@@ -6,7 +6,7 @@
 
     public static partial class DiffBy
     {
-        internal static ValueDiff TryCreateValueDiff<T>(T x, T y, IMemberSettings settings)
+        private static ValueDiff TryCreateValueDiff<T>(T x, T y, IMemberSettings settings)
         {
             Debug.Assert(x != null, "x == null");
             Debug.Assert(y != null, "y == null");

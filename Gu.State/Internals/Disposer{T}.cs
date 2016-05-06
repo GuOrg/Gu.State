@@ -3,21 +3,45 @@
     using System;
     using System.Diagnostics;
 
-    internal struct Disposer<T> : IDisposable
+    internal sealed class Disposer<T> : IDisposer<T>
     {
-        internal readonly T Value;
-        private readonly Action<T> action;
+        private readonly Action<T> dispose;
+        private readonly object gate = new object();
+        private readonly T value;
+        private bool disposed;
 
-        internal Disposer(T value, Action<T> action)
+        internal Disposer(T value, Action<T> dispose)
         {
-            Debug.Assert(action != null, "action == null");
-            this.Value = value;
-            this.action = action;
+            Debug.Assert(dispose != null, "dispose == null");
+            this.value = value;
+            this.dispose = dispose;
+        }
+
+        public T Value
+        {
+            get
+            {
+                if (this.disposed)
+                {
+                    throw new ObjectDisposedException($"Not allowed to get the value of a {this.GetType().PrettyName()} after it is disposed.");
+                }
+
+                return this.value;
+            }
         }
 
         public void Dispose()
         {
-            this.action(this.Value);
+            lock (this.gate)
+            {
+                if (this.disposed)
+                {
+                    return;
+                }
+
+                this.disposed = true;
+                this.dispose(this.value);
+            }
         }
     }
 }
