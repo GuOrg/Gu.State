@@ -39,8 +39,6 @@
 
         internal ConcurrentDictionary<Type, TypeErrors> TrackableErrors { get; } = new ConcurrentDictionary<Type, TypeErrors>();
 
-        internal RefCountCollection<ChangeNode> ChangeNodes { get; } = new RefCountCollection<ChangeNode>();
-
         internal RefCountCollection<DirtyTrackerNode> DirtyNodes { get; } = new RefCountCollection<DirtyTrackerNode>();
 
         public static PropertiesSettingsBuilder Build()

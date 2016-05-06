@@ -10,7 +10,7 @@
     public sealed class ChangeTracker : IChangeTracker
     {
         private static readonly PropertyChangedEventArgs ChangesEventArgs = new PropertyChangedEventArgs(nameof(Changes));
-        private readonly IRefCounted<ChangeNode> node;
+        private readonly IDisposer<ChangeNode> node;
         private bool disposed;
 
         private int changes;
@@ -21,8 +21,8 @@
             Ensure.NotNull(settings, nameof(settings));
             Track.Verify.IsTrackableType(source.GetType(), settings);
             this.Settings = settings;
-            this.node = ChangeNode.GetOrCreate(this, source, settings);
-            this.node.Tracker.Changed += this.OnNodeChange;
+            this.node = ChangeNode.GetOrCreate(source, settings);
+            this.node.Value.Changed += this.OnNodeChange;
         }
 
         /// <inheritdoc/>
@@ -65,8 +65,8 @@
             }
 
             this.disposed = true;
-            this.node.Tracker.Changed -= this.OnNodeChange;
-            this.node.RemoveOwner(this);
+            this.node.Value.Changed -= this.OnNodeChange;
+            this.node.Dispose();
         }
 
         private void OnNodeChange(object sender, EventArgs e)
