@@ -1,4 +1,4 @@
-﻿namespace Gu.State.Internals
+﻿namespace Gu.State.Tests.Internals
 {
     using System;
 
