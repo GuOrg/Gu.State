@@ -3,9 +3,23 @@
     using System;
     using System.Runtime.CompilerServices;
 
-    internal static class ReferenceCache
+    internal static class TrackerCache
     {
-        public static IDisposer<TValue> GetOrAdd<TKey, TValue>(TKey key, PropertiesSettings settings, ConditionalWeakTable<TKey, TValue>.CreateValueCallback creator)
+        internal static IDisposer<TValue> GetOrAdd<TKey, TValue>(
+            TKey x,
+            TKey y,
+            PropertiesSettings settings,
+            Func<TValue> creator)
+            where TKey : class
+            where TValue : class, IDisposable
+        {
+            return GetOrAdd(ReferencePair.GetOrCreate(x, y), settings, _ => creator());
+        }
+
+        public static IDisposer<TValue> GetOrAdd<TKey, TValue>(
+            TKey key,
+            PropertiesSettings settings,
+            ConditionalWeakTable<TKey, TValue>.CreateValueCallback creator)
             where TKey : class
             where TValue : class, IDisposable
         {

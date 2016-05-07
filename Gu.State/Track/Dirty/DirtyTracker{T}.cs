@@ -16,7 +16,7 @@
     public sealed class DirtyTracker<T> : DirtyTracker, INotifyPropertyChanged, IDisposable
         where T : class, INotifyPropertyChanged
     {
-        private readonly IRefCounted<DirtyTrackerNode> refCountedNode;
+        private readonly IDisposer<DirtyTrackerNode> refCountedNode;
         private bool disposed;
 
         public DirtyTracker(T x, T y, PropertiesSettings settings)
@@ -27,15 +27,15 @@
             Ensure.SameType(x, y);
             Track.VerifyCanTrackIsDirty<T>(settings);
             this.Settings = settings;
-            this.refCountedNode = DirtyTrackerNode.GetOrCreate(this, x, y, settings);
-            this.refCountedNode.Tracker.PropertyChanged += this.OnNodeChanged;
+            this.refCountedNode = DirtyTrackerNode.GetOrCreate(x, y, settings);
+            this.refCountedNode.Value.PropertyChanged += this.OnNodeChanged;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public override bool IsDirty => this.refCountedNode.Tracker.IsDirty;
+        public override bool IsDirty => this.refCountedNode.Value.IsDirty;
 
-        internal override ValueDiff Diff => this.refCountedNode.Tracker.Diff;
+        internal override ValueDiff Diff => this.refCountedNode.Value.Diff;
 
         public PropertiesSettings Settings { get; }
 
@@ -47,8 +47,8 @@
             }
 
             this.disposed = true;
-            this.refCountedNode.RemoveOwner(this);
-            this.refCountedNode.Tracker.PropertyChanged -= this.OnNodeChanged;
+            this.refCountedNode.Value.PropertyChanged -= this.OnNodeChanged;
+            this.refCountedNode.Dispose();
         }
 
         private void OnNodeChanged(object sender, PropertyChangedEventArgs e)
