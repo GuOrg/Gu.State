@@ -43,12 +43,12 @@
                 return;
             }
 
-            this.pairs.Add(new ReferencePair(x, y));
+            this.pairs.Add(ReferencePair.GetOrCreate(x, y));
         }
 
         internal bool Contains(object x, object y)
         {
-            return this.pairs.Contains(new ReferencePair(x, y));
+            return this.pairs.Contains(ReferencePair.GetOrCreate(x, y));
         }
     }
 }

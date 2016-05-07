@@ -19,7 +19,7 @@
         {
             this.builderCache = builderCache;
             this.valueDiff = new ValueDiff(x, y, this.diffs);
-            if (!this.builderCache.TryAdd(new ReferencePair(x, y), this))
+            if (!this.builderCache.TryAdd(ReferencePair.GetOrCreate(x, y), this))
             {
                 throw Throw.ShouldNeverGetHereException("Builder added twice");
             }
@@ -64,7 +64,7 @@
         {
             var added = false;
             subDiffBuilder = this.builderCache.GetOrAdd(
-                new ReferencePair(x, y),
+                ReferencePair.GetOrCreate(x, y),
                 pair =>
                     {
                         added = true;

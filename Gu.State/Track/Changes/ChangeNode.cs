@@ -9,7 +9,7 @@
     using System.Linq;
     using System.Reflection;
 
-    internal sealed class ChangeNode : IRefCountable
+    internal sealed class ChangeNode : IDisposable
     {
         private readonly IDisposer<ChangeTrackerNode> refcountedNode;
         private readonly DisposingMap<IDisposable> children = new DisposingMap<IDisposable>();
@@ -81,7 +81,7 @@
         {
             Debug.Assert(source != null, "Cannot track null");
             Debug.Assert(source is INotifyPropertyChanged || source is INotifyCollectionChanged, "Must notify");
-            return ReferenceCache.GetOrAdd(source, settings, s => new ChangeNode(s, settings));
+            return TrackerCache.GetOrAdd(source, settings, s => new ChangeNode(s, settings));
         }
 
         private void OnTrackerChange(object sender, EventArgs e)

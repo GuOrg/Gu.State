@@ -9,7 +9,7 @@
     using System.Linq;
     using System.Reflection;
 
-    internal sealed class DirtyTrackerNode : IRefCountable, INotifyPropertyChanged
+    internal sealed class DirtyTrackerNode : IDisposable, INotifyPropertyChanged
     {
         private static readonly PropertyChangedEventArgs DiffPropertyChangedEventArgs = new PropertyChangedEventArgs(nameof(Diff));
         private static readonly PropertyChangedEventArgs IsDirtyPropertyChangedEventArgs = new PropertyChangedEventArgs(nameof(IsDirty));
@@ -111,13 +111,13 @@
             this.children.Dispose();
         }
 
-        internal static IRefCounted<DirtyTrackerNode> GetOrCreate(object owner, object x, object y, PropertiesSettings settings)
+        internal static IDisposer<DirtyTrackerNode> GetOrCreate(object x, object y, PropertiesSettings settings)
         {
             Debug.Assert(x != null, "Cannot track null");
             Debug.Assert(x is INotifyPropertyChanged || x is INotifyCollectionChanged, "Must notify");
             Debug.Assert(y != null, "Cannot track null");
             Debug.Assert(y is INotifyPropertyChanged || y is INotifyCollectionChanged, "Must notify");
-            return settings.DirtyNodes.GetOrAdd(owner, new ReferencePair(x, y), () => new DirtyTrackerNode(x, y, settings));
+            return TrackerCache.GetOrAdd(x, y, settings, () => new DirtyTrackerNode(x, y, settings));
         }
 
         private static bool IsTrackablePair(object x, object y, PropertiesSettings settings)
@@ -292,13 +292,13 @@
                 return null;
             }
 
-            var childNode = GetOrCreate(this, xValue, yValue, this.Settings);
+            var childNode = GetOrCreate(xValue, yValue, this.Settings);
             EventHandler<DirtyTrackerNode> trackerOnBubbleChange = (sender, args) => this.OnBubbleChange(sender, args, key);
-            childNode.Tracker.BubbleChange += trackerOnBubbleChange;
+            childNode.Value.BubbleChange += trackerOnBubbleChange;
             var disposable = new Disposer(() =>
             {
-                childNode.RemoveOwner(this);
-                childNode.Tracker.BubbleChange -= trackerOnBubbleChange;
+                childNode.Value.BubbleChange -= trackerOnBubbleChange;
+                childNode.Dispose();
             });
             return disposable;
         }

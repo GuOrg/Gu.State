@@ -1,18 +1,35 @@
 namespace Gu.State
 {
     using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Runtime.CompilerServices;
 
-    internal struct ReferencePair : IEquatable<ReferencePair>
+    internal sealed class ReferencePair : IEquatable<ReferencePair>
     {
-        internal readonly object X;
-        internal readonly object Y;
+        private static readonly Dictionary<ReferencePair, ReferencePair> Cache = new Dictionary<ReferencePair, ReferencePair>();
+        private static readonly object Gate = new object();
+        private static readonly ReferencePair Key = new ReferencePair(new object(), new object());
+        private static readonly List<ReferencePair> PurgeList = new List<ReferencePair>();
 
-        public ReferencePair(object x, object y)
+        private readonly WeakReference x;
+        private readonly WeakReference y;
+        private int hashCode;
+
+        private ReferencePair(object x, object y)
         {
-            this.X = x;
-            this.Y = y;
+            Debug.Assert(x != null, "x == null");
+            Debug.Assert(y != null, "y == null");
+            this.x = new WeakReference(x);
+            this.y = new WeakReference(y);
+            this.hashCode = GetHashCode(x, y);
         }
+
+        public object X => this.x.Target;
+
+        public object Y => this.y.Target;
+
+        private bool IsAlive => this.x.IsAlive && this.y.IsAlive;
 
         public static bool operator ==(ReferencePair left, ReferencePair right)
         {
@@ -24,8 +41,40 @@ namespace Gu.State
             return !Equals(left, right);
         }
 
+        public static ReferencePair GetOrCreate<T>(T x, T y)
+            where T : class
+        {
+            lock (Gate)
+            {
+                ReferencePair pair;
+                Key.x.Target = x;
+                Key.y.Target = y;
+                Key.hashCode = GetHashCode(x, y);
+                if (Cache.TryGetValue(Key, out pair))
+                {
+                    Purge();
+                    return pair;
+                }
+
+                pair = new ReferencePair(x, y);
+                Cache[pair] = pair;
+                Purge();
+                return pair;
+            }
+        }
+
         public bool Equals(ReferencePair other)
         {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
             return ReferenceEquals(this.X, other.X) && ReferenceEquals(this.Y, other.Y);
         }
 
@@ -36,7 +85,12 @@ namespace Gu.State
                 return false;
             }
 
-            if (obj.GetType() != this.GetType())
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != typeof(ReferencePair))
             {
                 return false;
             }
@@ -46,9 +100,30 @@ namespace Gu.State
 
         public override int GetHashCode()
         {
+            if (!this.IsAlive)
+            {
+                PurgeList.Add(this);
+            }
+
+            //// ReSharper disable once NonReadonlyMemberInGetHashCode
+            return this.hashCode;
+        }
+
+        private static void Purge()
+        {
+            foreach (var pair in PurgeList)
+            {
+                Cache.Remove(pair);
+            }
+
+            PurgeList.Clear();
+        }
+
+        private static int GetHashCode(object x, object y)
+        {
             unchecked
             {
-                return (RuntimeHelpers.GetHashCode(this.X) * 397) ^ RuntimeHelpers.GetHashCode(this.Y);
+                return (RuntimeHelpers.GetHashCode(x) * 397) ^ RuntimeHelpers.GetHashCode(y);
             }
         }
     }

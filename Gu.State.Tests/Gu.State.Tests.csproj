@@ -107,8 +107,7 @@
     <Compile Include="Internals\ArrayExt.cs" />
     <Compile Include="Internals\Collections\DisposingListTests.cs" />
     <Compile Include="Internals\Collections\DisposingMapTests.cs" />
-    <Compile Include="Internals\Collections\RefCountCollectionTests.cs" />
-    <Compile Include="Internals\Collections\ReferenceSetPoolTests.cs" />
+    <Compile Include="Internals\Pools\ReferenceSetPoolTests.cs" />
     <Compile Include="Internals\Errors\ErrorBuilderTests.WithReferenceLoop.cs" />
     <Compile Include="Internals\Errors\ErrorBuilderTests.CheckReferenceHandling.cs" />
     <Compile Include="Internals\Errors\ErrorBuilderTests.CheckNotifies.cs" />
@@ -117,11 +116,11 @@
     <Compile Include="Internals\Errors\ErrorTypes.cs" />
     <Compile Include="Internals\MemberPath\MemberPathTests.cs" />
     <Compile Include="Internals\MemberPath\MemberPathTypes.cs" />
-    <Compile Include="Internals\Refelection\EmitSandbox\EqualiyComparerSandbox.cs" />
-    <Compile Include="Internals\Refelection\EmitSandbox\Sandbox.cs" />
-    <Compile Include="Internals\Refelection\GetterAndSetterTests.cs" />
-    <Compile Include="Internals\Refelection\TypeExtTests.cs" />
-    <Compile Include="Internals\Refelection\TypeExtTests.ImmutableCollections.cs" />
+    <Compile Include="Internals\Reflection\EmitSandbox\EqualiyComparerSandbox.cs" />
+    <Compile Include="Internals\Reflection\EmitSandbox\Sandbox.cs" />
+    <Compile Include="Internals\Reflection\GetterAndSetterTests.cs" />
+    <Compile Include="Internals\Reflection\TypeExtTests.cs" />
+    <Compile Include="Internals\Reflection\TypeExtTests.ImmutableCollections.cs" />
     <Compile Include="Internals\SetTests.cs" />
     <Compile Include="Internals\RefcounterTests.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTests.Ignores.cs" />
@@ -168,7 +167,7 @@
     <Compile Include="EqualByTests\ThrowsTests.cs" />
     <Compile Include="EqualByTests\FieldValues\Throws.cs" />
     <Compile Include="Internals\IgnoredTypesTests.cs" />
-    <Compile Include="Internals\Refelection\TypeExtTypes.cs" />
+    <Compile Include="Internals\Reflection\TypeExtTypes.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerTests.Immutable.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerTests.WithObservableCollectionProperty.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerTests.ObservableCollectionOfComplexType.cs" />
