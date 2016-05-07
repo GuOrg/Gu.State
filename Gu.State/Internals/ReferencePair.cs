@@ -1,20 +1,15 @@
 namespace Gu.State
 {
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Runtime.CompilerServices;
 
     internal sealed class ReferencePair
     {
-        private static readonly Dictionary<ReferencePair, ReferencePair> Cache = new Dictionary<ReferencePair, ReferencePair>();
-        private static readonly object Gate = new object();
-        private static readonly ReferencePair Key = new ReferencePair(new object(), new object());
-        private static readonly List<ReferencePair> PurgeList = new List<ReferencePair>();
+        private static readonly ConditionalWeakTable<object, ConditionalWeakTable<object, ReferencePair>> Cache = new ConditionalWeakTable<object, ConditionalWeakTable<object, ReferencePair>>();
 
         private readonly WeakReference x;
         private readonly WeakReference y;
-        private int hashCode;
 
         private ReferencePair(object x, object y)
         {
@@ -22,14 +17,11 @@ namespace Gu.State
             Debug.Assert(y != null, "y == null");
             this.x = new WeakReference(x);
             this.y = new WeakReference(y);
-            this.hashCode = GetHashCode(x, y);
         }
 
         public object X => this.x.Target;
 
         public object Y => this.y.Target;
-
-        private bool IsAlive => this.x.IsAlive && this.y.IsAlive;
 
         public static bool operator ==(ReferencePair left, ReferencePair right)
         {
@@ -44,28 +36,13 @@ namespace Gu.State
         public static ReferencePair GetOrCreate<T>(T x, T y)
             where T : class
         {
-            lock (Gate)
-            {
-                ReferencePair pair;
-                Key.x.Target = x;
-                Key.y.Target = y;
-                Key.hashCode = GetHashCode(x, y);
-                if (Cache.TryGetValue(Key, out pair))
-                {
-                    Purge();
-                    return pair;
-                }
-
-                pair = new ReferencePair(x, y);
-                Cache[pair] = pair;
-                Purge();
-                return pair;
-            }
+            var yMap = Cache.GetValue(x, _ => new ConditionalWeakTable<object, ReferencePair>());
+            var pair = yMap.GetValue(y, _ => new ReferencePair(x, y));
+            return pair;
         }
 
         public bool Equals(ReferencePair other)
         {
-            TryAddToPurgeList(this);
             if (ReferenceEquals(null, other))
             {
                 return false;
@@ -76,7 +53,6 @@ namespace Gu.State
                 return true;
             }
 
-            TryAddToPurgeList(other);
             return ReferenceEquals(this.X, other.X) && ReferenceEquals(this.Y, other.Y);
         }
 
@@ -84,13 +60,11 @@ namespace Gu.State
         {
             if (ReferenceEquals(null, obj))
             {
-                TryAddToPurgeList(this);
                 return false;
             }
 
             if (ReferenceEquals(this, obj))
             {
-                TryAddToPurgeList(this);
                 return true;
             }
 
@@ -105,27 +79,7 @@ namespace Gu.State
 
         public override int GetHashCode()
         {
-            TryAddToPurgeList(this);
-            //// ReSharper disable once NonReadonlyMemberInGetHashCode
-            return this.hashCode;
-        }
-
-        private static void TryAddToPurgeList(ReferencePair pair)
-        {
-            if (!pair.IsAlive)
-            {
-                PurgeList.Add(pair);
-            }
-        }
-
-        private static void Purge()
-        {
-            foreach (var pair in PurgeList)
-            {
-                Cache.Remove(pair);
-            }
-
-            PurgeList.Clear();
+            return GetHashCode(this.X, this.Y);
         }
 
         private static int GetHashCode(object x, object y)
