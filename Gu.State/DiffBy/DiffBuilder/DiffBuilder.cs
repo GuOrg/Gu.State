@@ -1,7 +1,6 @@
 ﻿namespace Gu.State
 {
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
@@ -9,23 +8,15 @@
 
     internal sealed class DiffBuilder : IDisposable
     {
-        private readonly ConcurrentDictionary<ReferencePair, DiffBuilder> builderCache;
         private readonly List<SubDiff> diffs = new List<SubDiff>();
         private readonly List<Disposer<DiffBuilder>> disposers = new List<Disposer<DiffBuilder>>();
         private readonly ValueDiff valueDiff;
         private bool disposed;
 
-        private DiffBuilder(object x, object y, ConcurrentDictionary<ReferencePair, DiffBuilder> builderCache)
+        private DiffBuilder(object x, object y)
         {
-            this.builderCache = builderCache;
             this.valueDiff = new ValueDiff(x, y, this.diffs);
-            if (!this.builderCache.TryAdd(ReferencePair.GetOrCreate(x, y), this))
-            {
-                throw Throw.ShouldNeverGetHereException("Builder added twice");
-            }
         }
-
-        internal event EventHandler Empty;
 
         private bool IsEmpty => this.diffs.All(d => d.IsEmpty);
 
@@ -45,35 +36,21 @@
             this.disposers.Clear();
         }
 
-        internal static Disposer<DiffBuilder> Create(object x, object y)
+        internal static IRefCounted<DiffBuilder> Create(object x, object y, IMemberSettings settings)
         {
-            var borrow = ConcurrentDictionaryPool<ReferencePair, DiffBuilder>.Borrow();
-            return Disposer.Create(
-                new DiffBuilder(x, y, borrow.Value),
-                builder =>
-                    {
-                        foreach (var kvp in builder.builderCache)
-                        {
-                            kvp.Value.Dispose();
-                        }
-                        borrow.Dispose();
-                    });
+            return TrackerCache.GetOrAdd(x, y, settings, pair => new DiffBuilder(pair.X, pair.Y));
         }
 
-        internal bool TryAdd(object x, object y, out DiffBuilder subDiffBuilder)
+        internal static bool TryCreate(object x, object y, IMemberSettings settings, out IRefCounted<DiffBuilder> subDiffBuilder)
         {
-            var added = false;
-            subDiffBuilder = this.builderCache.GetOrAdd(
+            bool created;
+            subDiffBuilder = TrackerCache.GetOrAdd(
                 ReferencePair.GetOrCreate(x, y),
-                pair =>
-                    {
-                        added = true;
-                        return new DiffBuilder(pair.X, pair.Y, this.builderCache);
-                    });
+                settings,
+                pair => new DiffBuilder(pair.X, pair.Y),
+                out created);
 
-            subDiffBuilder.Empty += this.OnSubBuilderEmpty;
-            this.disposers.Add(Disposer.Create(subDiffBuilder, sdb => sdb.Empty -= this.OnSubBuilderEmpty));
-            return added;
+            return created;
         }
 
         internal void Add(SubDiff subDiff)
@@ -97,34 +74,21 @@
         internal ValueDiff CreateValueDiff()
         {
             Debug.Assert(!this.disposed, "this.disposed");
-            this.PurgeEmptyBuilders();
+            this.PurgeEmpty();
             return this.IsEmpty ? null : this.valueDiff;
         }
 
-        private void OnSubBuilderEmpty(object sender, EventArgs e)
+        private void PurgeEmpty()
         {
-            var builder = (DiffBuilder)sender;
-            if (this.IsEmpty)
-            {
-                return;
-            }
-
-            this.diffs.RemoveAll(x => x.ValueDiff == builder.valueDiff);
-            if (this.IsEmpty)
-            {
-                this.Empty?.Invoke(this, EventArgs.Empty);
-            }
-        }
-
-        private void PurgeEmptyBuilders()
-        {
-            foreach (var builder in this.builderCache.Values)
-            {
-                if (builder.IsEmpty)
-                {
-                    builder.Empty?.Invoke(builder, EventArgs.Empty);
-                }
-            }
+            throw new NotImplementedException("message");
+            
+            //foreach (var builder in this.builderCache.Values)
+            //{
+            //    if (builder.IsEmpty)
+            //    {
+            //        builder.Empty?.Invoke(builder, EventArgs.Empty);
+            //    }
+            //}
         }
     }
 }

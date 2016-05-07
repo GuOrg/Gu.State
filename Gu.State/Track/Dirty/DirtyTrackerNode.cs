@@ -125,7 +125,7 @@
             Debug.Assert(x is INotifyPropertyChanged || x is INotifyCollectionChanged, "Must notify");
             Debug.Assert(y != null, "Cannot track null");
             Debug.Assert(y is INotifyPropertyChanged || y is INotifyCollectionChanged, "Must notify");
-            return TrackerCache.GetOrAdd(x, y, settings, () => new DirtyTrackerNode(x, y, settings));
+            return TrackerCache.GetOrAdd(x, y, settings, pair => new DirtyTrackerNode(pair.X, pair.Y, settings));
         }
 
         private static bool IsTrackablePair(object x, object y, PropertiesSettings settings)

@@ -8,7 +8,7 @@
     {
         private static readonly ConcurrentQueue<HashSet<T>> Pool = new ConcurrentQueue<HashSet<T>>();
 
-        internal static Disposer<HashSet<T>> Borrow()
+        internal static IBorrowed<HashSet<T>> Borrow()
         {
             HashSet<T> set;
             if (Pool.TryDequeue(out set))

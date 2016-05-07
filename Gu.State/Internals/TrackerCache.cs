@@ -8,18 +8,42 @@
         internal static IRefCounted<TValue> GetOrAdd<TKey, TValue>(
             TKey x,
             TKey y,
-            PropertiesSettings settings,
-            Func<TValue> creator)
+            IMemberSettings settings,
+            ConditionalWeakTable<ReferencePair, TValue>.CreateValueCallback creator)
             where TKey : class
             where TValue : class, IDisposable
         {
-            return GetOrAdd(ReferencePair.GetOrCreate(x, y), settings, _ => creator());
+            return GetOrAdd(ReferencePair.GetOrCreate(x, y), settings, creator);
         }
 
-        public static IRefCounted<TValue> GetOrAdd<TKey, TValue>(
+        internal static IRefCounted<TValue> GetOrAdd<TKey, TValue>(
+            TKey x,
+            TKey y,
+            IMemberSettings settings,
+            ConditionalWeakTable<ReferencePair, TValue>.CreateValueCallback creator,
+            out bool created) 
+            where TKey : class 
+            where TValue : class, IDisposable
+        {
+            return GetOrAdd(ReferencePair.GetOrCreate(x, y), settings, creator, out created);
+        }
+
+        internal static IRefCounted<TValue> GetOrAdd<TKey, TValue>(
             TKey key,
-            PropertiesSettings settings,
+            IMemberSettings settings,
             ConditionalWeakTable<TKey, TValue>.CreateValueCallback creator)
+            where TKey : class
+            where TValue : class, IDisposable
+        {
+            bool temp;
+            return GetOrAdd(key, settings, creator, out temp);
+        }
+
+        internal static IRefCounted<TValue> GetOrAdd<TKey, TValue>(
+            TKey key,
+            IMemberSettings settings,
+            ConditionalWeakTable<TKey, TValue>.CreateValueCallback creator,
+            out bool created)
             where TKey : class
             where TValue : class, IDisposable
         {
@@ -30,6 +54,7 @@
                 IRefCounted<TValue> disposer;
                 if (value.TryRefCount(out disposer))
                 {
+                    created = false;
                     return disposer;
                 }
 
@@ -41,11 +66,12 @@
 
                 cache.Items.Remove(key);
                 cache.Items.Add(key, value);
+                created = true;
                 return disposer;
             }
         }
 
-        private static TypeCache<TKey, TValue> GetOrCreateCache<TKey, TValue>(PropertiesSettings settings)
+        private static TypeCache<TKey, TValue> GetOrCreateCache<TKey, TValue>(IMemberSettings settings)
             where TKey : class
             where TValue : class, IDisposable
         {
@@ -56,7 +82,7 @@
             where TKey : class
             where TValue : class
         {
-            internal static readonly ConditionalWeakTable<PropertiesSettings, TypeCache<TKey, TValue>> SettingsCaches = new ConditionalWeakTable<PropertiesSettings, TypeCache<TKey, TValue>>();
+            internal static readonly ConditionalWeakTable<IMemberSettings, TypeCache<TKey, TValue>> SettingsCaches = new ConditionalWeakTable<IMemberSettings, TypeCache<TKey, TValue>>();
 
             internal readonly ConditionalWeakTable<TKey, TValue> Items = new ConditionalWeakTable<TKey, TValue>();
             internal readonly object Gate = new object();
