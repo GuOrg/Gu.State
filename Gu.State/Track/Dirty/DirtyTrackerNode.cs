@@ -86,6 +86,14 @@
             }
         }
 
+        private object X => this.xNode.Value.Source;
+
+        private IList XList => (IList)this.X;
+
+        private object Y => this.yNode.Value.Source;
+
+        private IList YList => (IList)this.Y;
+
         private IReadOnlyCollection<PropertyInfo> TrackProperties => this.xNode.Value.TrackProperties;
 
         private PropertiesSettings Settings => this.xNode.Value.Settings;
@@ -135,16 +143,6 @@
             return x == null || x == PaddedPairs.MissingItem;
         }
 
-        private static object GetValue(IList source, int index)
-        {
-            if (source == null || index >= source.Count)
-            {
-                return PaddedPairs.MissingItem;
-            }
-
-            return source[index];
-        }
-
         private void OnTrackedPropertyChange(object sender, PropertyChangeEventArgs e)
         {
             this.UpdatePropertyNode(e.PropertyInfo);
@@ -158,8 +156,8 @@
             }
 
             var getter = this.Settings.GetOrCreateGetterAndSetter(propertyInfo);
-            var xValue = getter.GetValue(this.xNode.Value.Source);
-            var yValue = getter.GetValue(this.yNode.Value.Source);
+            var xValue = getter.GetValue(this.X);
+            var yValue = getter.GetValue(this.Y);
 
             if (this.TrackProperties.Contains(propertyInfo) &&
                (this.Settings.ReferenceHandling == ReferenceHandling.Structural || this.Settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops))
@@ -178,7 +176,7 @@
             {
                 this.Diff = propertyValueDiff == null
                                 ? this.diff.Without(propertyInfo)
-                                : this.diff.With(this.xNode.Value.Source, this.yNode.Value.Source, propertyInfo, propertyValueDiff);
+                                : this.diff.With(this.X, this.Y, propertyInfo, propertyValueDiff);
             }
         }
 
@@ -190,15 +188,15 @@
         private void OnTrackedRemove(object sender, RemoveEventArgs e)
         {
             this.children.Remove(e.Index);
-            var xValue = GetValue((IList)this.xNode.Value.Source, e.Index);
-            var yValue = GetValue((IList)this.yNode.Value.Source, e.Index);
+            var xValue = this.XList.ElementAtOrMissing(e.Index);
+            var yValue = this.YList.ElementAtOrMissing(e.Index);
             var indexValueDiff = this.CreateIndexValueDiff(xValue, yValue);
 
             lock (this.gate)
             {
                 this.Diff = indexValueDiff == null
                                 ? this.diff.Without(e.Index)
-                                : this.diff.With(this.xNode.Value.Source, this.yNode.Value.Source, e.Index, indexValueDiff);
+                                : this.diff.With(this.X, this.Y, e.Index, indexValueDiff);
             }
         }
 
@@ -230,7 +228,7 @@
             try
             {
                 var maxDiffIndex = this.diff?.Diffs.OfType<IndexDiff>().Max(x => (int)x.Index) + 1 ?? 0;
-                var max = Math.Max(maxDiffIndex, Math.Max(((IList)this.xNode.Value.Source).Count, ((IList)this.yNode.Value.Source).Count));
+                var max = Math.Max(maxDiffIndex, Math.Max(this.XList.Count, this.YList.Count));
                 for (var i = 0; i < max; i++)
                 {
                     this.UpdateIndexNode(i);
@@ -245,8 +243,8 @@
 
         private void UpdateIndexNode(int index)
         {
-            var xValue = GetValue((IList)this.xNode.Value.Source, index);
-            var yValue = GetValue((IList)this.yNode.Value.Source, index);
+            var xValue = this.XList.ElementAtOrMissing(index);
+            var yValue = this.YList.ElementAtOrMissing(index);
 
             if (IsTrackablePair(xValue, yValue, this.Settings) &&
                (this.Settings.ReferenceHandling == ReferenceHandling.Structural || this.Settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops))
@@ -265,7 +263,7 @@
             {
                 this.Diff = indexValueDiff == null
                                 ? this.diff.Without(index)
-                                : this.diff.With(this.xNode.Value.Source, this.yNode.Value.Source, index, indexValueDiff);
+                                : this.diff.With(this.X, this.Y, index, indexValueDiff);
             }
         }
 
@@ -316,7 +314,7 @@
                     {
                         this.Diff = node.diff == null
                             ? this.diff.Without(propertyInfo)
-                            : this.diff.With(this.xNode.Value.Source, this.yNode.Value.Source, propertyInfo, node.diff);
+                            : this.diff.With(this.X, this.Y, propertyInfo, node.diff);
                     }
                     finally
                     {
@@ -332,7 +330,7 @@
                 {
                     this.Diff = node.diff == null
                         ? this.diff.Without(index)
-                        : this.diff.With(this.xNode.Value.Source, this.yNode.Value.Source, index, node.diff);
+                        : this.diff.With(this.X, this.Y, index, node.diff);
                 }
                 finally
                 {

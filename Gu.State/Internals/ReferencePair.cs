@@ -5,7 +5,7 @@ namespace Gu.State
     using System.Diagnostics;
     using System.Runtime.CompilerServices;
 
-    internal sealed class ReferencePair : IEquatable<ReferencePair>
+    internal sealed class ReferencePair
     {
         private static readonly Dictionary<ReferencePair, ReferencePair> Cache = new Dictionary<ReferencePair, ReferencePair>();
         private static readonly object Gate = new object();

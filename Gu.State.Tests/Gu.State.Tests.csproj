@@ -116,6 +116,7 @@
     <Compile Include="Internals\Errors\ErrorTypes.cs" />
     <Compile Include="Internals\MemberPath\MemberPathTests.cs" />
     <Compile Include="Internals\MemberPath\MemberPathTypes.cs" />
+    <Compile Include="Internals\ReferencePairTests.cs" />
     <Compile Include="Internals\Reflection\EmitSandbox\EqualiyComparerSandbox.cs" />
     <Compile Include="Internals\Reflection\EmitSandbox\Sandbox.cs" />
     <Compile Include="Internals\Reflection\GetterAndSetterTests.cs" />
