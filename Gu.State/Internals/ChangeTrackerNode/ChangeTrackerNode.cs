@@ -76,7 +76,7 @@
             }
         }
 
-        internal static IDisposer<ChangeTrackerNode> GetOrCreate(object source, PropertiesSettings settings)
+        internal static IRefCounted<ChangeTrackerNode> GetOrCreate(object source, PropertiesSettings settings)
         {
             Debug.Assert(source != null, "Cannot track null");
             Debug.Assert(source is INotifyPropertyChanged || source is INotifyCollectionChanged, "Must notify");

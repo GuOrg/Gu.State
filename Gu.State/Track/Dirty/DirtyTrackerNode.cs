@@ -13,8 +13,8 @@
     {
         private static readonly PropertyChangedEventArgs DiffPropertyChangedEventArgs = new PropertyChangedEventArgs(nameof(Diff));
         private static readonly PropertyChangedEventArgs IsDirtyPropertyChangedEventArgs = new PropertyChangedEventArgs(nameof(IsDirty));
-        private readonly IDisposer<ChangeTrackerNode> xNode;
-        private readonly IDisposer<ChangeTrackerNode> yNode;
+        private readonly IRefCounted<ChangeTrackerNode> xNode;
+        private readonly IRefCounted<ChangeTrackerNode> yNode;
         private readonly DisposingMap<IDisposable> children = new DisposingMap<IDisposable>();
         private readonly object gate = new object();
         private ValueDiff diff;
@@ -119,7 +119,7 @@
             this.children.Dispose();
         }
 
-        internal static IDisposer<DirtyTrackerNode> GetOrCreate(object x, object y, PropertiesSettings settings)
+        internal static IRefCounted<DirtyTrackerNode> GetOrCreate(object x, object y, PropertiesSettings settings)
         {
             Debug.Assert(x != null, "Cannot track null");
             Debug.Assert(x is INotifyPropertyChanged || x is INotifyCollectionChanged, "Must notify");

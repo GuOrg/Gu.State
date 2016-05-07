@@ -5,7 +5,7 @@
 
     internal static class TrackerCache
     {
-        internal static IDisposer<TValue> GetOrAdd<TKey, TValue>(
+        internal static IRefCounted<TValue> GetOrAdd<TKey, TValue>(
             TKey x,
             TKey y,
             PropertiesSettings settings,
@@ -16,7 +16,7 @@
             return GetOrAdd(ReferencePair.GetOrCreate(x, y), settings, _ => creator());
         }
 
-        public static IDisposer<TValue> GetOrAdd<TKey, TValue>(
+        public static IRefCounted<TValue> GetOrAdd<TKey, TValue>(
             TKey key,
             PropertiesSettings settings,
             ConditionalWeakTable<TKey, TValue>.CreateValueCallback creator)
@@ -27,7 +27,7 @@
             lock (cache.Gate)
             {
                 var value = cache.GetOrAdd(key, creator);
-                IDisposer<TValue> disposer;
+                IRefCounted<TValue> disposer;
                 if (value.TryRefCount(out disposer))
                 {
                     return disposer;

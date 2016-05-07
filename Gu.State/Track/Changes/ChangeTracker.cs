@@ -10,7 +10,7 @@
     public sealed class ChangeTracker : IChangeTracker
     {
         private static readonly PropertyChangedEventArgs ChangesEventArgs = new PropertyChangedEventArgs(nameof(Changes));
-        private readonly IDisposer<ChangeNode> node;
+        private readonly IRefCounted<ChangeNode> node;
         private bool disposed;
 
         private int changes;
