@@ -65,6 +65,7 @@ namespace Gu.State
 
         public bool Equals(ReferencePair other)
         {
+            TryAddToPurgeList(this);
             if (ReferenceEquals(null, other))
             {
                 return false;
@@ -75,6 +76,7 @@ namespace Gu.State
                 return true;
             }
 
+            TryAddToPurgeList(other);
             return ReferenceEquals(this.X, other.X) && ReferenceEquals(this.Y, other.Y);
         }
 
@@ -82,31 +84,38 @@ namespace Gu.State
         {
             if (ReferenceEquals(null, obj))
             {
+                TryAddToPurgeList(this);
                 return false;
             }
 
             if (ReferenceEquals(this, obj))
             {
+                TryAddToPurgeList(this);
                 return true;
             }
 
-            if (obj.GetType() != typeof(ReferencePair))
+            var other = obj as ReferencePair;
+            if (other == null)
             {
                 return false;
             }
 
-            return this.Equals((ReferencePair)obj);
+            return this.Equals(other);
         }
 
         public override int GetHashCode()
         {
-            if (!this.IsAlive)
-            {
-                PurgeList.Add(this);
-            }
-
+            TryAddToPurgeList(this);
             //// ReSharper disable once NonReadonlyMemberInGetHashCode
             return this.hashCode;
+        }
+
+        private static void TryAddToPurgeList(ReferencePair pair)
+        {
+            if (!pair.IsAlive)
+            {
+                PurgeList.Add(pair);
+            }
         }
 
         private static void Purge()

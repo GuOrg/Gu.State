@@ -83,7 +83,7 @@
         }
 
         private static IReadOnlyList<SubDiff> ReplaceOdAdd(
-            this IReadOnlyList<SubDiff> source,
+            this IReadOnlyCollection<SubDiff> source,
             Func<SubDiff, bool> isMatch,
             SubDiff newDiff)
         {

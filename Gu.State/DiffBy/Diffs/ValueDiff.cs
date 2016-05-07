@@ -22,7 +22,7 @@
         /// <param name="xValue">The x value.</param>
         /// <param name="yValue">The y value.</param>
         /// <param name="diffs">The nested diffs.</param>
-        public ValueDiff(object xValue, object yValue, IReadOnlyList<SubDiff> diffs)
+        public ValueDiff(object xValue, object yValue, IReadOnlyCollection<SubDiff> diffs)
             : base(diffs)
         {
             this.X = xValue;

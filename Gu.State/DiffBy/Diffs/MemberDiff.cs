@@ -10,14 +10,14 @@ namespace Gu.State
             this.MemberInfo = memberInfo;
         }
 
-        protected MemberInfo MemberInfo { get; }
+        internal MemberInfo MemberInfo { get; }
 
-        public static SubDiff Create(MemberInfo member, object xValue, object yValue)
+        public static MemberDiff Create(MemberInfo member, object xValue, object yValue)
         {
             return Create(member, new ValueDiff(xValue, yValue));
         }
 
-        internal static SubDiff Create(MemberInfo member, ValueDiff diff)
+        internal static MemberDiff Create(MemberInfo member, ValueDiff diff)
         {
             var fieldInfo = member as FieldInfo;
             if (fieldInfo != null)

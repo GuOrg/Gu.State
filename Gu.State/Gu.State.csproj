@@ -84,6 +84,7 @@
     <Compile Include="EqualBy\Comparers\ReadOnlyListEqualByComparer.cs" />
     <Compile Include="EqualBy\Comparers\ReadOnlyListEqualByComparer{T}.cs" />
     <Compile Include="Internals\ArrayExt.cs" />
+    <Compile Include="Internals\DictionaryExt.cs" />
     <Compile Include="Internals\EnumerableExt.ElementAt.cs" />
     <Compile Include="Internals\IBorrowed.cs" />
     <Compile Include="Internals\IDisposer{T}.cs" />
