@@ -64,6 +64,14 @@
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=3FDE9E85BB303141BE2830F522302785/Shortcut/@EntryValue">ae</s:String>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=3FDE9E85BB303141BE2830F522302785/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=3FDE9E85BB303141BE2830F522302785/Text/@EntryValue">Assert.AreEqual($END$, );</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4DF67BB77FDDB04DBAFC1713B5D15408/@KeyIndexDefined">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4DF67BB77FDDB04DBAFC1713B5D15408/Applicability/=Live/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4DF67BB77FDDB04DBAFC1713B5D15408/Reformat/@EntryValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4DF67BB77FDDB04DBAFC1713B5D15408/Scope/=139FF4CE89E7094686FDA7BF5FFBBE92/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4DF67BB77FDDB04DBAFC1713B5D15408/Scope/=139FF4CE89E7094686FDA7BF5FFBBE92/Type/@EntryValue">Everywhere</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4DF67BB77FDDB04DBAFC1713B5D15408/Shortcut/@EntryValue">debug_assert_not_disposed</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4DF67BB77FDDB04DBAFC1713B5D15408/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4DF67BB77FDDB04DBAFC1713B5D15408/Text/@EntryValue">Debug.Assert(!this.disposed, "this.disposed");</s:String>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=7420B41584E79F498697AFFDAD6BA074/@KeyIndexDefined">True</s:Boolean>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=7420B41584E79F498697AFFDAD6BA074/Applicability/=Live/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=7420B41584E79F498697AFFDAD6BA074/Reformat/@EntryValue">True</s:Boolean>
