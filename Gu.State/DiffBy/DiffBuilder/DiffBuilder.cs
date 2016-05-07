@@ -8,6 +8,7 @@
 
     internal sealed class DiffBuilder : IDisposable
     {
+        private static readonly object RankDiffKey = new object();
         private readonly IBorrowed<Dictionary<object, SubDiff>> borrowedDiffs;
         private readonly IBorrowed<Dictionary<object, IRefCounted<DiffBuilder>>> borrowedSubBuilders;
         private readonly List<SubDiff> diffs = new List<SubDiff>();
@@ -67,7 +68,7 @@
             Debug.Assert(!this.disposed, "this.disposed");
             lock (this.gate)
             {
-                this.borrowedDiffs.Value.Add(memberDiff.MemberInfo, memberDiff);
+                this.borrowedDiffs.Value[memberDiff.MemberInfo] = memberDiff;
             }
         }
 
@@ -76,7 +77,7 @@
             Debug.Assert(!this.disposed, "this.disposed");
             lock (this.gate)
             {
-                this.borrowedDiffs.Value.Add(indexDiff.Index, indexDiff);
+                this.borrowedDiffs.Value[indexDiff.Index] = indexDiff;
             }
         }
 
@@ -84,7 +85,7 @@
         {
             lock (this.gate)
             {
-                this.borrowedDiffs.Value.Add(rankDiff, rankDiff);
+                this.borrowedDiffs.Value[RankDiffKey] = rankDiff;
             }
         }
 
