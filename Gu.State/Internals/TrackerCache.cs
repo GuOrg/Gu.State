@@ -21,8 +21,8 @@
             TKey y,
             IMemberSettings settings,
             ConditionalWeakTable<ReferencePair, TValue>.CreateValueCallback creator,
-            out bool created) 
-            where TKey : class 
+            out bool created)
+            where TKey : class
             where TValue : class, IDisposable
         {
             return GetOrAdd(ReferencePair.GetOrCreate(x, y), settings, creator, out created);
@@ -52,14 +52,13 @@
             {
                 var value = cache.GetOrAdd(key, creator);
                 IRefCounted<TValue> disposer;
-                if (value.TryRefCount(out disposer))
+                if (value.TryRefCount(out disposer, out created))
                 {
-                    created = false;
                     return disposer;
                 }
 
                 value = creator(key);
-                if (!value.TryRefCount(out disposer))
+                if (!value.TryRefCount(out disposer, out created))
                 {
                     throw Throw.ShouldNeverGetHereException("Refcounting created value failed.");
                 }

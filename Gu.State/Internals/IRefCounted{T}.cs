@@ -1,6 +1,11 @@
 namespace Gu.State
 {
-    internal interface IRefCounted<out T> : IDisposer<T>
+    using System;
+
+    internal interface IRefCounted<out T> : IDisposable
     {
+        T Value { get; }
+
+        int Count { get; }
     }
 }

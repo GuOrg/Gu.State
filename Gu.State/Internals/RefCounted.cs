@@ -5,11 +5,11 @@
 
     internal static class RefCounted
     {
-        internal static bool TryRefCount<TValue>(this TValue value, out IRefCounted<TValue> disposer)
+        internal static bool TryRefCount<TValue>(this TValue value, out IRefCounted<TValue> refCounted, out bool created)
             where TValue : class, IDisposable
         {
             int count;
-            disposer = RefCount<TValue>.AddOrUpdate(value, out count);
+            refCounted = RefCount<TValue>.AddOrUpdate(value, out count, out created);
             return count > 0;
         }
 
@@ -18,22 +18,23 @@
         {
             private static readonly ConditionalWeakTable<TValue, RefCounter> Items = new ConditionalWeakTable<TValue, RefCounter>();
 
-            internal static IRefCounted<TValue> AddOrUpdate(TValue value, out int count)
+            internal static IRefCounted<TValue> AddOrUpdate(TValue value, out int count, out bool created)
             {
-                var created = false;
+                var added = false;
                 var refCounter = Items.GetValue(
                     value,
                     x =>
                         {
-                            created = true;
+                            added = true;
                             return new RefCounter(x);
                         });
-                if (!created)
+                if (!added)
                 {
                     refCounter.Increment();
                 }
 
                 count = refCounter.Count;
+                created = added;
                 return refCounter;
             }
 
@@ -65,7 +66,7 @@
                     }
                 }
 
-                internal int Count => this.count;
+                public int Count => this.count;
 
                 public void Dispose()
                 {

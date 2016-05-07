@@ -140,14 +140,14 @@
 
             this.diffs.Clear();
             this.diffs.AddRange(this.borrowedDiffs.Value.Values);
-
             this.isRefreshing = false;
         }
 
         private void AddSubBuilder(object key, DiffBuilder builder)
         {
             IRefCounted<DiffBuilder> refCounted;
-            if (!builder.TryRefCount(out refCounted))
+            bool created;
+            if (!builder.TryRefCount(out refCounted, out created))
             {
                 throw Throw.ShouldNeverGetHereException("AddLazy failed, try refcount failed");
             }
