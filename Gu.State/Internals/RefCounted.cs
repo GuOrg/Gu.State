@@ -5,7 +5,7 @@
 
     internal static class RefCounted
     {
-        internal static bool TryRefCount<TValue>(this TValue value, out IDisposer<TValue> disposer)
+        internal static bool TryRefCount<TValue>(this TValue value, out IRefCounted<TValue> disposer)
             where TValue : class, IDisposable
         {
             int count;
@@ -18,7 +18,7 @@
         {
             private static readonly ConditionalWeakTable<TValue, RefCounter> Items = new ConditionalWeakTable<TValue, RefCounter>();
 
-            internal static IDisposer<TValue> AddOrUpdate(TValue value, out int count)
+            internal static IRefCounted<TValue> AddOrUpdate(TValue value, out int count)
             {
                 var created = false;
                 var refCounter = Items.GetValue(
@@ -37,7 +37,7 @@
                 return refCounter;
             }
 
-            private sealed class RefCounter : IDisposer<TValue>
+            private sealed class RefCounter : IRefCounted<TValue>
             {
                 private readonly WeakReference<TValue> valueReference;
                 private readonly object gate = new object();

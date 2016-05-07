@@ -11,7 +11,7 @@
 
     internal sealed class ChangeNode : IDisposable
     {
-        private readonly IDisposer<ChangeTrackerNode> refcountedNode;
+        private readonly IRefCounted<ChangeTrackerNode> refcountedNode;
         private readonly DisposingMap<IDisposable> children = new DisposingMap<IDisposable>();
 
         private ChangeNode(object source, PropertiesSettings settings)
@@ -77,7 +77,7 @@
             this.children.Dispose();
         }
 
-        internal static IDisposer<ChangeNode> GetOrCreate(object source, PropertiesSettings settings)
+        internal static IRefCounted<ChangeNode> GetOrCreate(object source, PropertiesSettings settings)
         {
             Debug.Assert(source != null, "Cannot track null");
             Debug.Assert(source is INotifyPropertyChanged || source is INotifyCollectionChanged, "Must notify");
