@@ -35,17 +35,16 @@
             where TKey : class
             where TValue : class, IDisposable
         {
-            return TypeCache<TKey, TValue>.Meh.GetValue(settings, _ => new TypeCache<TKey, TValue>());
+            return TypeCache<TKey, TValue>.SettingsCaches.GetValue(settings, _ => new TypeCache<TKey, TValue>());
         }
 
         private class TypeCache<TKey, TValue>
             where TKey : class
             where TValue : class
         {
-            internal static readonly ConditionalWeakTable<PropertiesSettings, TypeCache<TKey, TValue>> Meh = new ConditionalWeakTable<PropertiesSettings, TypeCache<TKey, TValue>>();
+            internal static readonly ConditionalWeakTable<PropertiesSettings, TypeCache<TKey, TValue>> SettingsCaches = new ConditionalWeakTable<PropertiesSettings, TypeCache<TKey, TValue>>();
 
             internal readonly ConditionalWeakTable<TKey, TValue> Items = new ConditionalWeakTable<TKey, TValue>();
-            //// ReSharper disable once StaticMemberInGenericType Yes we want to lock only for TKey, TValue
             internal readonly object Gate = new object();
 
             internal TValue GetOrAdd(TKey source, ConditionalWeakTable<TKey, TValue>.CreateValueCallback creator)
