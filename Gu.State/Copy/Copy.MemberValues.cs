@@ -18,11 +18,11 @@
                 return;
             }
 
-            using (var pairs = settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops
+            using (var borrowed = settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops
                                    ? ReferencePairCollection.Borrow()
                                    : null)
             {
-                MemberValues.Copy(source, target, settings, member, pairs);
+                MemberValues.Copy(source, target, settings, member, borrowed?.Value);
             }
         }
 
@@ -48,11 +48,11 @@
                 //    return copy;
                 //}
 
-                using (var pairs = settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops
+                using (var borrowed = settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops
                                        ? ReferencePairCollection.Borrow()
                                        : null)
                 {
-                    Copy(source, target, settings, pairs);
+                    Copy(source, target, settings, borrowed?.Value);
                     return target;
                 }
             }
