@@ -274,6 +274,8 @@
             }
             else
             {
+                throw new NotImplementedException("message");
+                
                 //var index = (int)key;
                 //this.isChanging = true;
                 //try
