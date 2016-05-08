@@ -1,7 +1,6 @@
 ﻿namespace Gu.State
 {
     using System;
-    using System.Collections.Concurrent;
     using System.Runtime.CompilerServices;
 
     internal class ConditionalWeakTable2D<TKey, TValue>
@@ -9,6 +8,8 @@
         where TValue : class
     {
         private readonly ConditionalWeakTable<TKey, ConditionalWeakTable<TKey, TValue>> xMap = new ConditionalWeakTable<TKey, ConditionalWeakTable<TKey, TValue>>();
+
+        public delegate TValue CreateValueCallback(ReferencePair key);
 
         public TValue GetValue(TKey xKey, TKey yKey, Func<TValue> createValueCallback)
         {
