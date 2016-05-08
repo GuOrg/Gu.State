@@ -9,7 +9,7 @@ namespace Gu.State.Tests
         public class ReferenceLoops
         {
             [Test]
-            public void ParentChildCreateWhenDirtyLoop()
+            public void ParentChildCreateWhenParentDirtyLoop()
             {
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
