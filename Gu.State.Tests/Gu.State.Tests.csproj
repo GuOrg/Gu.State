@@ -179,7 +179,7 @@
     <Compile Include="Synchronize\PropertySynchronizerTests.WithObservableCollectionProperty.cs" />
     <Compile Include="Synchronize\PropertySynchronizerTests.ObservableCollectionOfComplexTypes.cs" />
     <Compile Include="CopyTests\PropertyValues\Classes.cs" />
-    <Compile Include="Track\Dirty\DirtyTrackerTests.Complex.cs" />
+    <Compile Include="Track\Dirty\DirtyTrackerTests.WithComplex.cs" />
     <Compile Include="EqualByTests\EqualByTestsShared.cs" />
     <Compile Include="CopyTests\FieldValues\Classes.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerTests.Simple.cs" />

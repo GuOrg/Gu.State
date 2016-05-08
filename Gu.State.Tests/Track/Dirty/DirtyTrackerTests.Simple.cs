@@ -58,7 +58,22 @@ namespace Gu.State.Tests
                     Assert.AreEqual(null, tracker.Diff);
                     CollectionAssert.IsEmpty(changes);
 
+                    x.OnPropertyChanged(nameof(SimpleDirtyTrackClass.Value1));
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    Assert.AreEqual(null, tracker.Diff?.ToString("", " "));
+                    CollectionAssert.IsEmpty(changes);
+
                     x.OnPropertyChanged(nameof(SimpleDirtyTrackClass.Value2));
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    Assert.AreEqual(null, tracker.Diff?.ToString("", " "));
+                    CollectionAssert.IsEmpty(changes);
+
+                    y.OnPropertyChanged(nameof(SimpleDirtyTrackClass.Value1));
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    Assert.AreEqual(null, tracker.Diff?.ToString("", " "));
+                    CollectionAssert.IsEmpty(changes);
+
+                    y.OnPropertyChanged(nameof(SimpleDirtyTrackClass.Value2));
                     Assert.AreEqual(false, tracker.IsDirty);
                     Assert.AreEqual(null, tracker.Diff?.ToString("", " "));
                     CollectionAssert.IsEmpty(changes);
@@ -78,7 +93,24 @@ namespace Gu.State.Tests
                     Assert.AreEqual("SimpleDirtyTrackClass Value2 x: 2 y: 3", tracker.Diff.ToString("", " "));
                     CollectionAssert.IsEmpty(changes);
 
+
+                    x.OnPropertyChanged(nameof(SimpleDirtyTrackClass.Value1));
+                    Assert.AreEqual(true, tracker.IsDirty);
+                    Assert.AreEqual("SimpleDirtyTrackClass Value2 x: 2 y: 3", tracker.Diff.ToString("", " "));
+                    CollectionAssert.IsEmpty(changes);
+
                     x.OnPropertyChanged(nameof(SimpleDirtyTrackClass.Value2));
+                    Assert.AreEqual(true, tracker.IsDirty);
+                    Assert.AreEqual("SimpleDirtyTrackClass Value2 x: 2 y: 3", tracker.Diff.ToString("", " "));
+                    CollectionAssert.IsEmpty(changes);
+
+
+                    y.OnPropertyChanged(nameof(SimpleDirtyTrackClass.Value1));
+                    Assert.AreEqual(true, tracker.IsDirty);
+                    Assert.AreEqual("SimpleDirtyTrackClass Value2 x: 2 y: 3", tracker.Diff.ToString("", " "));
+                    CollectionAssert.IsEmpty(changes);
+
+                    y.OnPropertyChanged(nameof(SimpleDirtyTrackClass.Value2));
                     Assert.AreEqual(true, tracker.IsDirty);
                     Assert.AreEqual("SimpleDirtyTrackClass Value2 x: 2 y: 3", tracker.Diff.ToString("", " "));
                     CollectionAssert.IsEmpty(changes);
@@ -116,11 +148,6 @@ namespace Gu.State.Tests
                     Assert.AreEqual(false, tracker.IsDirty);
                     Assert.AreEqual(null, tracker.Diff);
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
-                    CollectionAssert.AreEqual(expectedChanges, changes);
-
-                    x.OnPropertyChanged(nameof(SimpleDirtyTrackClass.Value2));
-                    Assert.AreEqual(false, tracker.IsDirty);
-                    Assert.AreEqual(null, tracker.Diff?.ToString("", " "));
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
                     x.Value2 = 3;
@@ -161,11 +188,6 @@ namespace Gu.State.Tests
                     Assert.AreEqual(false, tracker.IsDirty);
                     Assert.AreEqual(null, tracker.Diff?.ToString("", " "));
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
-                    CollectionAssert.AreEqual(expectedChanges, changes);
-
-                    y.OnPropertyChanged(nameof(SimpleDirtyTrackClass.Value2));
-                    Assert.AreEqual(false, tracker.IsDirty);
-                    Assert.AreEqual(null, tracker.Diff?.ToString("", " "));
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
                     y.Value2 = 3;

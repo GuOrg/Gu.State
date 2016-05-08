@@ -8,7 +8,7 @@
 
     public partial class DirtyTrackerTests
     {
-        public class Complex
+        public class WithComplex
         {
             [Test]
             public void CreateAndDispose()

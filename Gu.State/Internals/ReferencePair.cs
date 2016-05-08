@@ -87,6 +87,7 @@ namespace Gu.State
 
         public bool Equals(ReferencePair other)
         {
+            Debug.Assert(!this.disposed, "this.disposed");
             if (ReferenceEquals(null, other))
             {
                 return false;
@@ -123,6 +124,7 @@ namespace Gu.State
 
         public override int GetHashCode()
         {
+            Debug.Assert(!this.disposed, "this.disposed");
             return this.hashCode;
         }
 
@@ -140,9 +142,9 @@ namespace Gu.State
                     return;
                 }
 
-                this.disposed = true;
                 ReferencePair temp;
                 Cache.TryRemove(this, out temp);
+                this.disposed = true;
             }
         }
 
