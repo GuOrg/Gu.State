@@ -94,7 +94,7 @@
             Debug.Assert(!this.disposed, "this.disposed");
             lock (this.gate)
             {
-                this.borrowedDiffs.Value.Add(member, MemberDiff.Create(member, builder.valueDiff));
+                this.borrowedDiffs.Value[member] = MemberDiff.Create(member, builder.valueDiff);
                 this.AddSubBuilder(member, builder);
             }
         }
@@ -104,7 +104,7 @@
             Debug.Assert(!this.disposed, "this.disposed");
             lock (this.gate)
             {
-                this.borrowedDiffs.Value.Add(index, new IndexDiff(index, builder.valueDiff));
+                this.borrowedDiffs.Value[index] = new IndexDiff(index, builder.valueDiff);
                 this.AddSubBuilder(index, builder);
             }
         }
