@@ -55,9 +55,7 @@
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public event EventHandler Changed;
-
-        public event EventHandler<DirtyTrackerNode> BubbleChange;
+        internal event EventHandler<DirtyTrackerChangedEventArgs> Changed;
 
         public bool IsDirty => this.Diff != null;
 
@@ -181,7 +179,7 @@
 
         private void OnTrackedMove(object sender, MoveEventArgs e)
         {
-            var dirtyBefore = IsDirty;
+            var dirtyBefore = this.IsDirty;
             this.isResetting = true;
             try
             {
@@ -250,79 +248,68 @@
             }
 
             var childNode = GetOrCreate(xValue, yValue, this.Settings);
-            EventHandler<DirtyTrackerNode> trackerOnBubbleChange = (sender, args) => this.OnBubbleChange(sender, args, key);
-            childNode.Value.BubbleChange += trackerOnBubbleChange;
-            var disposable = new Disposer(() =>
-            {
-                childNode.Value.BubbleChange -= trackerOnBubbleChange;
-                childNode.Dispose();
-            });
-            return disposable;
+            EventHandler<DirtyTrackerChangedEventArgs> onChanged = (sender, args) => this.OnChildChanged(sender, args, key);
+            return childNode.AsUnsubscribeOnDispose(x => x.Value.Changed -= onChanged);
         }
 
-        private void OnBubbleChange(object sender, DirtyTrackerNode originalSource, object key)
+        private void OnChildChanged(object _, DirtyTrackerChangedEventArgs e, object key)
         {
-            throw new NotImplementedException("message");
-
-            //var node = (DirtyTrackerNode)sender;
-            //var propertyInfo = key as PropertyInfo;
-            //if (propertyInfo != null)
-            //{
-            //    lock (this.gate)
-            //    {
-            //        this.isChanging = true;
-            //        try
-            //        {
-            //            this.Diff = node.refcountedDiffBuilder == null
-            //                ? this.refcountedDiffBuilder.Without(propertyInfo)
-            //                : this.refcountedDiffBuilder.With(this.X, this.Y, propertyInfo, node.refcountedDiffBuilder);
-            //        }
-            //        finally
-            //        {
-            //            this.isChanging = false;
-            //        }
-            //    }
-            //}
-            //else
-            //{
-            //    var index = (int)key;
-            //    this.isChanging = true;
-            //    try
-            //    {
-            //        this.Diff = node.refcountedDiffBuilder == null
-            //            ? this.refcountedDiffBuilder.Without(index)
-            //            : this.refcountedDiffBuilder.With(this.X, this.Y, index, node.refcountedDiffBuilder);
-            //    }
-            //    finally
-            //    {
-            //        this.isChanging = false;
-            //    }
-            //}
-
-            //if (!ReferenceEquals(this, originalSource))
-            //{
-            //    this.BubbleChange?.Invoke(this, originalSource);
-            //}
-        }
-
-        private void TryNotifyChanges(bool dirtyBefore)
-        {
-            if (!this.refcountedDiffBuilder.Value.TryRefresh(this.Settings))
+            if (e.Contains(this))
             {
                 return;
             }
 
-            this.PropertyChanged?.Invoke(this, DiffPropertyChangedEventArgs);
-            this.Changed?.Invoke(this, EventArgs.Empty);
-            if (!this.isChanging)
+            var propertyInfo = key as PropertyInfo;
+            if (propertyInfo != null)
             {
-                this.BubbleChange?.Invoke(this, this);
+                this.isChanging = true;
+                try
+                {
+                    this.UpdatePropertyNode(propertyInfo);
+                }
+                finally
+                {
+                    this.isChanging = false;
+                }
+            }
+            else
+            {
+                //var index = (int)key;
+                //this.isChanging = true;
+                //try
+                //{
+                //    this.Diff = node.refcountedDiffBuilder == null
+                //        ? this.refcountedDiffBuilder.Without(index)
+                //        : this.refcountedDiffBuilder.With(this.X, this.Y, index, node.refcountedDiffBuilder);
+                //}
+                //finally
+                //{
+                //    this.isChanging = false;
+                //}
             }
 
+            this.Changed?.Invoke(this, e.With(this, key));
+        }
+
+        private bool TryNotifyChanges(bool dirtyBefore)
+        {
+            if (!this.refcountedDiffBuilder.Value.TryRefresh(this.Settings))
+            {
+                return false;
+            }
+
+            this.PropertyChanged?.Invoke(this, DiffPropertyChangedEventArgs);
             if (this.IsDirty != dirtyBefore)
             {
                 this.PropertyChanged?.Invoke(this, IsDirtyPropertyChangedEventArgs);
             }
+
+            if (!this.isChanging)
+            {
+                this.Changed?.Invoke(this, new DirtyTrackerChangedEventArgs(this));
+            }
+
+            return true;
         }
     }
 }

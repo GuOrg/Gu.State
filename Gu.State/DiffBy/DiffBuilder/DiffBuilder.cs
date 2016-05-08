@@ -60,7 +60,6 @@
         {
             bool created;
             subDiffBuilder = TrackerCache.GetOrAdd(x, y, settings, pair => new DiffBuilder(pair), out created);
-
             return created;
         }
 

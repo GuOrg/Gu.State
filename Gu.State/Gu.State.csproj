@@ -89,7 +89,8 @@
     <Compile Include="Internals\IBorrowed.cs" />
     <Compile Include="Internals\IDisposer{T}.cs" />
     <Compile Include="Internals\IRefCounted{T}.cs" />
-    <Compile Include="Internals\ISubscription.cs" />
+    <Compile Include="Internals\IUnsubscriber.cs" />
+    <Compile Include="Internals\IUnsubscriber{T}.cs" />
     <Compile Include="Internals\ListExt.cs" />
     <Compile Include="Internals\Pools\ConcurrentDictionaryPool.cs" />
     <Compile Include="Internals\Pools\DictionaryPool.cs" />
@@ -120,6 +121,7 @@
     <Compile Include="Internals\Reflection\TypeExt.ImmutableCollections.cs" />
     <Compile Include="Internals\Set.cs" />
     <Compile Include="Internals\Try.cs" />
+    <Compile Include="Internals\Unsubscriber.cs" />
     <Compile Include="Settings\CustomCopy.cs" />
     <Compile Include="Internals\ChangeTrackerNode\EventArgs\ReplaceEventArgs.cs" />
     <Compile Include="Internals\Collections\DisposingMap{TKey, TValue}.cs" />
@@ -180,6 +182,7 @@
     <Compile Include="Internals\ChangeTrackerNode\EventArgs\ResetEventArgs.cs" />
     <Compile Include="Internals\ChangeTrackerNode\EventArgs\PropertyChangeEventArgs.cs" />
     <Compile Include="Track\Dirty\DirtyTracker.cs" />
+    <Compile Include="Track\Dirty\DirtyTrackerChangedEventArgs.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerNode.cs" />
     <Compile Include="Internals\ChangeTrackerNode\ChangeTrackerNode.cs" />
     <Compile Include="Track\Track.Verify.cs" />
