@@ -18,7 +18,7 @@
                 return diff;
             }
 
-            using (var borrow = DiffBuilder.Create(x, y))
+            using (var borrow = DiffBuilder.Create(x, y, settings))
             {
                 TryAddDiffs(x, y, settings, borrow.Value);
                 return borrow.Value.CreateValueDiff();
@@ -85,13 +85,13 @@
                     return;
                 case ReferenceHandling.Structural:
                 case ReferenceHandling.StructuralWithReferenceLoops:
-                    DiffBuilder subDiffBuilder;
-                    if (builder.TryAdd(xValue, yValue, out subDiffBuilder))
+                    IRefCounted<DiffBuilder> subDiffBuilder;
+                    if (DiffBuilder.TryCreate(xValue, yValue, settings, out subDiffBuilder))
                     {
-                        TryAddDiffs(xValue, yValue, settings, subDiffBuilder);
+                        TryAddDiffs(xValue, yValue, settings, subDiffBuilder.Value);
                     }
 
-                    builder.AddLazy(member, subDiffBuilder);
+                    builder.AddLazy(member, subDiffBuilder.Value);
                     return;
                 case ReferenceHandling.Throw:
                     throw Throw.ShouldNeverGetHereException();
@@ -160,13 +160,13 @@
                 return;
             }
 
-            DiffBuilder subDiffBuilder;
-            if (collectionBuilder.TryAdd(xItem, yItem, out subDiffBuilder))
+            IRefCounted<DiffBuilder> subDiffBuilder;
+            if (DiffBuilder.TryCreate(xItem, yItem, settings, out subDiffBuilder))
             {
-                TryAddDiffs(xItem, yItem, settings, subDiffBuilder);
+                TryAddDiffs(xItem, yItem, settings, subDiffBuilder.Value);
             }
 
-            collectionBuilder.AddLazy(index, subDiffBuilder);
+            collectionBuilder.AddLazy(index, subDiffBuilder.Value);
         }
     }
 }

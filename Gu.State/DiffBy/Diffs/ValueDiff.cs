@@ -7,8 +7,6 @@
     /// <summary>A value difference X != Y </summary>
     public class ValueDiff : Diff
     {
-        private bool? isEmpty;
-
         /// <summary>Initializes a new instance of the <see cref="ValueDiff"/> class.</summary>
         /// <param name="xValue">The x value.</param>
         /// <param name="yValue">The y value.</param>
@@ -22,14 +20,14 @@
         /// <param name="xValue">The x value.</param>
         /// <param name="yValue">The y value.</param>
         /// <param name="diffs">The nested diffs.</param>
-        public ValueDiff(object xValue, object yValue, IReadOnlyList<SubDiff> diffs)
+        public ValueDiff(object xValue, object yValue, IReadOnlyCollection<SubDiff> diffs)
             : base(diffs)
         {
             this.X = xValue;
             this.Y = yValue;
         }
 
-        public override bool IsEmpty => (bool)(this.isEmpty ?? (this.isEmpty = !this.HasNodeDiff()));
+        public override bool IsEmpty => !this.HasNodeDiff();
 
         /// <summary>Gets the X value.</summary>
         public object X { get; }

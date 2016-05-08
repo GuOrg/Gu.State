@@ -23,24 +23,24 @@
             this.AddDiffs((ISet<T>)x, (ISet<T>)y, settings, collectionBuilder, itemDiff);
         }
 
-        private static void GetItemDiffs(ISet<T> x, ISet<T> y, DiffBuilder collectionBuilder, Disposer<HashSet<T>> borrow)
+        private static void GetItemDiffs(ISet<T> x, ISet<T> y, DiffBuilder collectionBuilder, HashSet<T> borrow)
         {
-            borrow.Value.UnionWith(x);
-            if (borrow.Value.SetEquals(y))
+            borrow.UnionWith(x);
+            if (borrow.SetEquals(y))
             {
                 return;
             }
 
-            borrow.Value.ExceptWith(y);
-            foreach (var xi in borrow.Value)
+            borrow.ExceptWith(y);
+            foreach (var xi in borrow)
             {
                 collectionBuilder.Add(new IndexDiff(xi, new ValueDiff(xi, PaddedPairs.MissingItem)));
             }
 
-            borrow.Value.Clear();
-            borrow.Value.UnionWith(y);
-            borrow.Value.ExceptWith(x);
-            foreach (var yi in borrow.Value)
+            borrow.Clear();
+            borrow.UnionWith(y);
+            borrow.ExceptWith(x);
+            foreach (var yi in borrow)
             {
                 collectionBuilder.Add(new IndexDiff(yi, new ValueDiff(PaddedPairs.MissingItem, yi)));
             }
@@ -58,7 +58,7 @@
             {
                 using (var borrow = SetPool<T>.Borrow(EqualityComparer<T>.Default.Equals, EqualityComparer<T>.Default.GetHashCode))
                 {
-                    GetItemDiffs(x, y, collectionBuilder, borrow);
+                    GetItemDiffs(x, y, collectionBuilder, borrow.Value);
                     return;
                 }
             }
@@ -70,7 +70,7 @@
                 case ReferenceHandling.References:
                     using (var borrow = SetPool<T>.Borrow((xi, yi) => ReferenceEquals(xi, yi), item => RuntimeHelpers.GetHashCode(item)))
                     {
-                        GetItemDiffs(x, y, collectionBuilder, borrow);
+                        GetItemDiffs(x, y, collectionBuilder, borrow.Value);
                         return;
                     }
 
@@ -78,7 +78,7 @@
                 case ReferenceHandling.StructuralWithReferenceLoops:
                     using (var borrow = SetPool<T>.Borrow((xi, yi) => EqualBy.MemberValues(xi, yi, settings), xi => 0))
                     {
-                        GetItemDiffs(x, y, collectionBuilder, borrow);
+                        GetItemDiffs(x, y, collectionBuilder, borrow.Value);
                         return;
                     }
 

@@ -7,7 +7,7 @@ namespace Gu.State
     {
         private static readonly ConcurrentQueue<List<T>> Cache = new ConcurrentQueue<List<T>>();
 
-        internal static Disposer<List<T>> Borrow()
+        internal static IBorrowed<List<T>> Borrow()
         {
             List<T> list;
             if (Cache.TryDequeue(out list))

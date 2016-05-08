@@ -1,20 +1,18 @@
 namespace Gu.State
 {
     using System;
-    using System.Collections.Generic;
+    using System.Collections.Concurrent;
     using System.Diagnostics;
     using System.Runtime.CompilerServices;
 
-    internal sealed class ReferencePair
+    internal sealed class ReferencePair : IDisposable
     {
-        private static readonly Dictionary<ReferencePair, ReferencePair> Cache = new Dictionary<ReferencePair, ReferencePair>();
-        private static readonly object Gate = new object();
-        private static readonly ReferencePair Key = new ReferencePair(new object(), new object());
-        private static readonly List<ReferencePair> PurgeList = new List<ReferencePair>();
-
+        private static readonly ConcurrentDictionary<ReferencePair, ReferencePair> Cache = new ConcurrentDictionary<ReferencePair, ReferencePair>();
         private readonly WeakReference x;
         private readonly WeakReference y;
-        private int hashCode;
+        private readonly int hashCode;
+        private readonly object gate = new object();
+        private bool disposed;
 
         private ReferencePair(object x, object y)
         {
@@ -25,9 +23,34 @@ namespace Gu.State
             this.hashCode = GetHashCode(x, y);
         }
 
-        public object X => this.x.Target;
+        ~ReferencePair()
+        {
+            if (this.disposed || Environment.HasShutdownStarted)
+            {
+                return;
+            }
 
-        public object Y => this.y.Target;
+            ReferencePair temp;
+            Cache.TryRemove(this, out temp);
+        }
+
+        public object X
+        {
+            get
+            {
+                this.VerifyNotDisposed();
+                return this.x.Target;
+            }
+        }
+
+        public object Y
+        {
+            get
+            {
+                this.VerifyNotDisposed();
+                return this.y.Target;
+            }
+        }
 
         private bool IsAlive => this.x.IsAlive && this.y.IsAlive;
 
@@ -41,26 +64,25 @@ namespace Gu.State
             return !Equals(left, right);
         }
 
-        public static ReferencePair GetOrCreate<T>(T x, T y)
+        public static IRefCounted<ReferencePair> GetOrCreate<T>(T x, T y)
             where T : class
         {
-            lock (Gate)
+            var key = new ReferencePair(x, y);
+            IRefCounted<ReferencePair> refcounted;
+            if (!Cache.GetOrAdd(key, p => p).TryRefCount(out refcounted))
             {
-                ReferencePair pair;
-                Key.x.Target = x;
-                Key.y.Target = y;
-                Key.hashCode = GetHashCode(x, y);
-                if (Cache.TryGetValue(Key, out pair))
+                if (!Cache.TryAdd(key, key))
                 {
-                    Purge();
-                    return pair;
+                    throw Throw.ShouldNeverGetHereException("Adding created pair failed");
                 }
 
-                pair = new ReferencePair(x, y);
-                Cache[pair] = pair;
-                Purge();
-                return pair;
+                if (!key.TryRefCount(out refcounted))
+                {
+                    throw Throw.ShouldNeverGetHereException("Refcounting created pair failed");
+                }
             }
+
+            return refcounted;
         }
 
         public bool Equals(ReferencePair other)
@@ -90,33 +112,38 @@ namespace Gu.State
                 return true;
             }
 
-            if (obj.GetType() != typeof(ReferencePair))
+            var other = obj as ReferencePair;
+            if (other == null)
             {
                 return false;
             }
 
-            return this.Equals((ReferencePair)obj);
+            return this.Equals(other);
         }
 
         public override int GetHashCode()
         {
-            if (!this.IsAlive)
-            {
-                PurgeList.Add(this);
-            }
-
-            //// ReSharper disable once NonReadonlyMemberInGetHashCode
             return this.hashCode;
         }
 
-        private static void Purge()
+        public void Dispose()
         {
-            foreach (var pair in PurgeList)
+            if (this.disposed)
             {
-                Cache.Remove(pair);
+                return;
             }
 
-            PurgeList.Clear();
+            lock (this.gate)
+            {
+                if (this.disposed)
+                {
+                    return;
+                }
+
+                this.disposed = true;
+                ReferencePair temp;
+                Cache.TryRemove(this, out temp);
+            }
         }
 
         private static int GetHashCode(object x, object y)
@@ -124,6 +151,16 @@ namespace Gu.State
             unchecked
             {
                 return (RuntimeHelpers.GetHashCode(x) * 397) ^ RuntimeHelpers.GetHashCode(y);
+            }
+        }
+
+        private void VerifyNotDisposed()
+        {
+            if (this.disposed)
+            {
+                throw new ObjectDisposedException(
+                    this.GetType()
+                        .FullName);
             }
         }
     }
