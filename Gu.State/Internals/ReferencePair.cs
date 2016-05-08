@@ -6,7 +6,7 @@ namespace Gu.State
 
     internal sealed class ReferencePair
     {
-        private static readonly ConditionalWeakTable<object, ConditionalWeakTable<object, ReferencePair>> Cache = new ConditionalWeakTable<object, ConditionalWeakTable<object, ReferencePair>>();
+        private static readonly ConditionalWeakTable2D<object, ReferencePair> Cache = new ConditionalWeakTable2D<object, ReferencePair>();
 
         private readonly WeakReference x;
         private readonly WeakReference y;
@@ -36,8 +36,7 @@ namespace Gu.State
         public static ReferencePair GetOrCreate<T>(T x, T y)
             where T : class
         {
-            var yMap = Cache.GetValue(x, _ => new ConditionalWeakTable<object, ReferencePair>());
-            var pair = yMap.GetValue(y, _ => new ReferencePair(x, y));
+            var pair = Cache.GetValue(x, y, () => new ReferencePair(x, y));
             return pair;
         }
 
