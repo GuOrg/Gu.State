@@ -55,7 +55,6 @@
                 return diff;
             }
 
-            EqualBy.Verify.CanEqualByPropertyValues(x, y, settings, typeof(DiffBy).Name, nameof(PropertyValues));
             return TryCreateValueDiff(x, y, settings);
         }
     }
