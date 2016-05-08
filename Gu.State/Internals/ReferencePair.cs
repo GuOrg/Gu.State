@@ -143,7 +143,7 @@ namespace Gu.State
 
                 public bool Equals(ReferencePair x, ReferencePair y)
                 {
-                    if (this.TryPurge(x) || this.TryPurge(y))
+                    if (this.TryAddToPurgeList(x) || this.TryAddToPurgeList(y))
                     {
                         return false;
                     }
@@ -153,11 +153,11 @@ namespace Gu.State
 
                 public int GetHashCode(ReferencePair obj)
                 {
-                    this.TryPurge(obj);
+                    this.TryAddToPurgeList(obj);
                     return obj.GetHashCode();
                 }
 
-                private bool TryPurge(ReferencePair pair)
+                private bool TryAddToPurgeList(ReferencePair pair)
                 {
                     if (this.cache.isPurging || pair.IsAlive)
                     {
