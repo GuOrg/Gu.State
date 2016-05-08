@@ -1,6 +1,7 @@
 ﻿namespace Gu.State
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
@@ -123,34 +124,63 @@
             Debug.Assert(!this.disposed, "this.disposed");
             lock (this.gate)
             {
-                this.Refresh();
+                this.TryRefresh(null);
                 return this.IsEmpty
                            ? null
                            : this.valueDiff;
             }
         }
 
-        internal void Refresh()
+        internal bool TryRefresh(IMemberSettings settings)
         {
-            if (this.isRefreshing)
+            lock (this.gate)
             {
-                return;
-            }
-
-            this.isRefreshing = true;
-            foreach (var keyAndBuilder in this.borrowedSubBuilders.Value)
-            {
-                var builder = keyAndBuilder.Value.Value;
-                builder.Refresh();
-                if (builder.IsEmpty)
+                if (this.isRefreshing)
                 {
-                    this.borrowedDiffs.Value.Remove(keyAndBuilder.Key);
+                    return false;
                 }
-            }
 
-            this.diffs.Clear();
-            this.diffs.AddRange(this.borrowedDiffs.Value.Values);
-            this.isRefreshing = false;
+                var changed = false;
+                this.isRefreshing = true;
+                var keyAndDiffs = this.borrowedDiffs.Value;
+                foreach (var keyAndBuilder in this.borrowedSubBuilders.Value)
+                {
+                    var builder = keyAndBuilder.Value.Value;
+                    changed |= builder.TryRefresh(settings);
+                    if (builder.IsEmpty)
+                    {
+                        keyAndDiffs.Remove(keyAndBuilder.Key);
+                    }
+                }
+
+                var i = 0;
+                changed |= this.diffs.Count != keyAndDiffs.Count;
+                foreach (var keyAndDiff in keyAndDiffs)
+                {
+                    if (!changed && settings != null)
+                    {
+                        var old = this.diffs[i];
+                        bool valueEquals;
+                        if (EqualBy.TryGetValueEquals(old.X, keyAndDiff.Value.X, settings, out valueEquals))
+                        {
+                            changed |= !valueEquals;
+                        }
+
+                        if (!changed &&
+                            EqualBy.TryGetValueEquals(old.Y, keyAndDiff.Value.Y, settings, out valueEquals))
+                        {
+                            changed |= !valueEquals;
+                        }
+                    }
+
+                    this.diffs.SetElementAt(i, keyAndDiff.Value);
+                    i++;
+                }
+
+                changed |= ((IList)this.diffs).TryTrimLengthTo(keyAndDiffs.Count);
+                this.isRefreshing = false;
+                return changed;
+            }
         }
 
         private void AddSubBuilder(object key, DiffBuilder builder)

@@ -90,6 +90,7 @@
     <Compile Include="Internals\IDisposer{T}.cs" />
     <Compile Include="Internals\IRefCounted{T}.cs" />
     <Compile Include="Internals\ISubscription.cs" />
+    <Compile Include="Internals\ListExt.cs" />
     <Compile Include="Internals\Pools\ConcurrentDictionaryPool.cs" />
     <Compile Include="Internals\Pools\DictionaryPool.cs" />
     <Compile Include="Internals\Pools\ListPool.cs" />

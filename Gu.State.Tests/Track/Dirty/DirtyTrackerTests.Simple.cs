@@ -93,7 +93,6 @@ namespace Gu.State.Tests
                     Assert.AreEqual("SimpleDirtyTrackClass Value2 x: 2 y: 3", tracker.Diff.ToString("", " "));
                     CollectionAssert.IsEmpty(changes);
 
-
                     x.OnPropertyChanged(nameof(SimpleDirtyTrackClass.Value1));
                     Assert.AreEqual(true, tracker.IsDirty);
                     Assert.AreEqual("SimpleDirtyTrackClass Value2 x: 2 y: 3", tracker.Diff.ToString("", " "));

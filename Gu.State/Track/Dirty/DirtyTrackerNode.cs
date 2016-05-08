@@ -8,7 +8,6 @@
     using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
-    using System.Runtime.CompilerServices;
 
     internal sealed class DirtyTrackerNode : IDisposable, INotifyPropertyChanged
     {
@@ -135,13 +134,12 @@
                 return;
             }
 
-            var getter = this.Settings.GetOrCreateGetterAndSetter(propertyInfo);
-            var xValue = getter.GetValue(this.X);
-            var yValue = getter.GetValue(this.Y);
-
             if (this.TrackProperties.Contains(propertyInfo) &&
                (this.Settings.ReferenceHandling == ReferenceHandling.Structural || this.Settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops))
             {
+                var getter = this.Settings.GetOrCreateGetterAndSetter(propertyInfo);
+                var xValue = getter.GetValue(this.X);
+                var yValue = getter.GetValue(this.Y);
                 var refCounted = this.CreateChild(xValue, yValue, propertyInfo);
                 this.children.SetValue(propertyInfo, refCounted);
             }
@@ -152,9 +150,10 @@
                 return;
             }
 
-            var before = this.IsDirty;
-            this.refcountedDiffBuilder.Value.UpdateMemberDiff(this.X, this.Y, propertyInfo, this.Settings);
-            this.NotifyChanges(before);
+            var dirtyBefore = this.IsDirty;
+            var builder = this.refcountedDiffBuilder.Value;
+            builder.UpdateMemberDiff(this.X, this.Y, propertyInfo, this.Settings);
+            this.TryNotifyChanges(dirtyBefore);
         }
 
         private void OnTrackedAdd(object sender, AddEventArgs e)
@@ -182,7 +181,7 @@
 
         private void OnTrackedMove(object sender, MoveEventArgs e)
         {
-            var before = this.IsDirty;
+            var dirtyBefore = IsDirty;
             this.isResetting = true;
             try
             {
@@ -192,7 +191,7 @@
             finally
             {
                 this.isResetting = false;
-                this.NotifyChanges(before);
+                this.TryNotifyChanges(dirtyBefore);
             }
         }
 
@@ -214,7 +213,7 @@
             //finally
             //{
             //    this.isResetting = false;
-            //    this.NotifyChanges(before);
+            //    this.TryNotifyChanges(before);
             //}
         }
 
@@ -306,9 +305,13 @@
             //}
         }
 
-        private void NotifyChanges(bool dirtyBefore)
+        private void TryNotifyChanges(bool dirtyBefore)
         {
-            this.refcountedDiffBuilder.Value.Refresh();
+            if (!this.refcountedDiffBuilder.Value.TryRefresh(this.Settings))
+            {
+                return;
+            }
+
             this.PropertyChanged?.Invoke(this, DiffPropertyChangedEventArgs);
             this.Changed?.Invoke(this, EventArgs.Empty);
             if (!this.isChanging)

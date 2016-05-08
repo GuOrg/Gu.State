@@ -1,8 +1,6 @@
 ﻿namespace Gu.State.Tests
 {
     using System;
-    using System.Collections.Generic;
-
     using NUnit.Framework;
 
     using static ChangeTrackerTypes;
