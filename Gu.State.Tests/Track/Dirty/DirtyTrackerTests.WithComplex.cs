@@ -59,6 +59,37 @@
 #endif
             }
 
+            [Test]
+            public void DoesNotLeakNested()
+            {
+                var x = new WithComplexProperty { ComplexType = new ComplexType("a", 1) };
+                var y = new WithComplexProperty { ComplexType = new ComplexType("a", 1) };
+                var changes = new List<string>();
+
+                using (var tracker = Track.IsDirty(x, y))
+                {
+                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    Assert.AreEqual(null, tracker.Diff);
+                    CollectionAssert.IsEmpty(changes);
+
+                    var xc = x.ComplexType;
+                    x.ComplexType = null;
+                    var yc = y.ComplexType;
+                    y.ComplexType = null;
+
+#if (!DEBUG) // debug build keeps instances alive longer for nicer debugging experience
+                    var wrxc = new System.WeakReference(xc);
+                    var wryc = new System.WeakReference(yc);
+                    xc = null;
+                    yc = null;
+                    System.GC.Collect();
+                    Assert.AreEqual(false, wrxc.IsAlive);
+                    Assert.AreEqual(false, wryc.IsAlive);
+#endif
+                }
+            }
+
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
             public void WithComplexPropertyTracks(ReferenceHandling referenceHandling)
