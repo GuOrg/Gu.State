@@ -244,7 +244,7 @@
             }
 
             var dirtyBefore = this.IsDirty;
-            this.Builder.UpdateIndexDiff(this.X, this.Y, index, this.Settings);
+            this.Builder.UpdateIndexDiff(xValue, yValue, index, this.Settings);
             return this.TryNotifyChanges(dirtyBefore, index, true);
         }
 
@@ -304,7 +304,7 @@
         private bool TryNotifyChanges(bool dirtyBefore, object propertyOrIndex, bool needsRefresh)
         {
             if (needsRefresh &&
-                !this.refcountedDiffBuilder.Value.TryRefresh(this.Settings))
+                !this.Builder.TryRefresh(this.Settings))
             {
                 return false;
             }

@@ -73,13 +73,13 @@
             }
         }
 
-        internal void Remove(MemberInfo member)
+        internal void Remove(object memberOrIndexOrKey)
         {
             Debug.Assert(!this.disposed, "this.disposed");
             lock (this.gate)
             {
-                this.borrowedDiffs.Value.Remove(member);
-                this.UpdateSubBuilder(member, null);
+                this.borrowedDiffs.Value.Remove(memberOrIndexOrKey);
+                this.UpdateSubBuilder(memberOrIndexOrKey, null);
             }
         }
 

@@ -94,17 +94,24 @@
                 {
                     collectionBuilder.Add(new IndexDiff(index, diff));
                 }
+                else
+                {
+                    collectionBuilder.Remove(index);
+                }
 
                 return;
             }
 
             if (settings.ReferenceHandling == ReferenceHandling.References)
             {
-                if (!ReferenceEquals(xItem, yItem))
+                if (ReferenceEquals(xItem, yItem))
+                {
+                    collectionBuilder.Remove(index);
+                }
+                else
                 {
                     collectionBuilder.Add(new IndexDiff(index, new ValueDiff(xItem, yItem)));
                 }
-
                 return;
             }
 
