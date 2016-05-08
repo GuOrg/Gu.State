@@ -89,6 +89,7 @@
     <Compile Include="Internals\IBorrowed.cs" />
     <Compile Include="Internals\IDisposer{T}.cs" />
     <Compile Include="Internals\IRefCounted{T}.cs" />
+    <Compile Include="Internals\ISubscription.cs" />
     <Compile Include="Internals\Pools\ConcurrentDictionaryPool.cs" />
     <Compile Include="Internals\Pools\DictionaryPool.cs" />
     <Compile Include="Internals\Pools\ListPool.cs" />
@@ -119,7 +120,6 @@
     <Compile Include="Internals\Set.cs" />
     <Compile Include="Internals\Try.cs" />
     <Compile Include="Settings\CustomCopy.cs" />
-    <Compile Include="Track\Dirty\DiffExt.cs" />
     <Compile Include="Internals\ChangeTrackerNode\EventArgs\ReplaceEventArgs.cs" />
     <Compile Include="Internals\Collections\DisposingMap{TKey, TValue}.cs" />
     <Compile Include="Internals\Collections\ImmutableList{T}.cs" />

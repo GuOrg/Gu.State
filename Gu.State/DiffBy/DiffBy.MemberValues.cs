@@ -6,6 +6,80 @@
 
     public static partial class DiffBy
     {
+        internal static void UpdateDiffs<T>(
+           this DiffBuilder builder,
+            T x,
+            T y,
+            IMemberSettings settings)
+        {
+            EqualBy.Verify.CanEqualByMemberValues(x, y, settings, typeof(DiffBy).Name, settings.DiffMethodName());
+            TryAddItemDiffs(x, y, settings, builder, TryAddItemDiff);
+            TryAddMemberDiffs(x, y, settings, builder);
+        }
+
+        internal static void UpdateMemberDiff(
+            this DiffBuilder builder,
+            object xSource,
+            object ySource,
+            MemberInfo member,
+            IMemberSettings settings)
+        {
+            if (settings.IsIgnoringMember(member))
+            {
+                return;
+            }
+
+            var getterAndSetter = settings.GetOrCreateGetterAndSetter(member);
+            bool equal;
+            object xValue;
+            object yValue;
+            if (getterAndSetter.TryGetValueEquals(xSource, ySource, settings, out equal, out xValue, out yValue))
+            {
+                if (equal)
+                {
+                    builder.Remove(member);
+                }
+                else
+                {
+                    builder.Add(State.MemberDiff.Create(member, xValue, yValue));
+                }
+
+                return;
+            }
+
+            switch (settings.ReferenceHandling)
+            {
+                case ReferenceHandling.References:
+                    if (ReferenceEquals(xValue, yValue))
+                    {
+                        builder.Remove(member);
+                    }
+                    else
+                    {
+                        builder.Add(State.MemberDiff.Create(member, new ValueDiff(xValue, yValue)));
+                    }
+
+                    return;
+                case ReferenceHandling.Structural:
+                case ReferenceHandling.StructuralWithReferenceLoops:
+                    IRefCounted<DiffBuilder> subDiffBuilder;
+                    if (DiffBuilder.TryCreate(xValue, yValue, settings, out subDiffBuilder))
+                    {
+                        subDiffBuilder.Value.UpdateDiffs(xValue, yValue, settings);
+                    }
+
+                    builder.AddLazy(member, subDiffBuilder.Value);
+                    return;
+                case ReferenceHandling.Throw:
+                    throw Throw.ShouldNeverGetHereException();
+                default:
+                    throw new ArgumentOutOfRangeException(
+                        nameof(settings.ReferenceHandling),
+                        settings.ReferenceHandling,
+                        null);
+            }
+        }
+
         private static ValueDiff TryCreateValueDiff<T>(T x, T y, IMemberSettings settings)
         {
             Debug.Assert(x != null, "x == null");
@@ -20,20 +94,9 @@
 
             using (var borrow = DiffBuilder.Create(x, y, settings))
             {
-                TryAddDiffs(x, y, settings, borrow.Value);
+                borrow.Value.UpdateDiffs(x, y, settings);
                 return borrow.Value.CreateValueDiff();
             }
-        }
-
-        private static void TryAddDiffs<T>(
-            T x,
-            T y,
-            IMemberSettings settings,
-            DiffBuilder builder)
-        {
-            EqualBy.Verify.CanEqualByMemberValues(x, y, settings, typeof(DiffBy).Name, settings.DiffMethodName());
-            TryAddItemDiffs(x, y, settings, builder, TryAddItemDiff);
-            TryAddMemberDiffs(x, y, settings, builder);
         }
 
         private static void TryAddMemberDiffs(
@@ -44,62 +107,7 @@
         {
             foreach (var member in settings.GetMembers(x.GetType()))
             {
-                TryAddMemberDiff(x, y, member, settings, builder);
-            }
-        }
-
-        private static void TryAddMemberDiff(
-            object xSource,
-            object ySource,
-            MemberInfo member,
-            IMemberSettings settings,
-            DiffBuilder builder)
-        {
-            if (settings.IsIgnoringMember(member))
-            {
-                return;
-            }
-
-            var getterAndSetter = settings.GetOrCreateGetterAndSetter(member);
-            bool equal;
-            object xValue;
-            object yValue;
-            if (getterAndSetter.TryGetValueEquals(xSource, ySource, settings, out equal, out xValue, out yValue))
-            {
-                if (!equal)
-                {
-                    builder.Add(State.MemberDiff.Create(member, xValue, yValue));
-                }
-
-                return;
-            }
-
-            switch (settings.ReferenceHandling)
-            {
-                case ReferenceHandling.References:
-                    if (!ReferenceEquals(xValue, yValue))
-                    {
-                        builder.Add(State.MemberDiff.Create(member, new ValueDiff(xValue, yValue)));
-                    }
-
-                    return;
-                case ReferenceHandling.Structural:
-                case ReferenceHandling.StructuralWithReferenceLoops:
-                    IRefCounted<DiffBuilder> subDiffBuilder;
-                    if (DiffBuilder.TryCreate(xValue, yValue, settings, out subDiffBuilder))
-                    {
-                        TryAddDiffs(xValue, yValue, settings, subDiffBuilder.Value);
-                    }
-
-                    builder.AddLazy(member, subDiffBuilder.Value);
-                    return;
-                case ReferenceHandling.Throw:
-                    throw Throw.ShouldNeverGetHereException();
-                default:
-                    throw new ArgumentOutOfRangeException(
-                        nameof(settings.ReferenceHandling),
-                        settings.ReferenceHandling,
-                        null);
+                builder.UpdateMemberDiff(x, y, member, settings);
             }
         }
 
@@ -163,7 +171,7 @@
             IRefCounted<DiffBuilder> subDiffBuilder;
             if (DiffBuilder.TryCreate(xItem, yItem, settings, out subDiffBuilder))
             {
-                TryAddDiffs(xItem, yItem, settings, subDiffBuilder.Value);
+                subDiffBuilder.Value.UpdateDiffs(xItem, yItem, settings);
             }
 
             collectionBuilder.AddLazy(index, subDiffBuilder.Value);

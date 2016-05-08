@@ -72,6 +72,15 @@
             }
         }
 
+        internal void Remove(MemberInfo member)
+        {
+            Debug.Assert(!this.disposed, "this.disposed");
+            lock (this.gate)
+            {
+                this.borrowedDiffs.Value.Remove(member);
+            }
+        }
+
         internal void Add(IndexDiff indexDiff)
         {
             Debug.Assert(!this.disposed, "this.disposed");

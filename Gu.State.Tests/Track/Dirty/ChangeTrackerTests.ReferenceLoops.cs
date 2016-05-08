@@ -11,7 +11,6 @@ namespace Gu.State.Tests
             [Test]
             public void ParentChildCreateWhenDirtyLoop()
             {
-                Assert.Fail();
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
                 var x = new Parent { Name = "p1", Child = new Child("c") };
