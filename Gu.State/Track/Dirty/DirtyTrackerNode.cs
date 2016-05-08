@@ -59,7 +59,9 @@
 
         public bool IsDirty => this.Diff != null;
 
-        public ValueDiff Diff => this.refcountedDiffBuilder.Value.CreateValueDiff();
+        public ValueDiff Diff => this.Builder?.CreateValueDiff();
+
+        private DiffBuilder Builder => this.refcountedDiffBuilder?.Value;
 
         private object X => this.xNode.Value.Source;
 
@@ -142,16 +144,20 @@
                 this.children.SetValue(propertyInfo, refCounted);
             }
 
+            return this.TryNotifyPropertyChange(propertyInfo, true);
+        }
+
+        private bool TryNotifyPropertyChange(PropertyInfo propertyInfo, bool needsRefresh)
+        {
             // we create the builder after subscribing so no guarantee that we have a builder if an event fires before the ctor is finished.
-            if (this.refcountedDiffBuilder == null)
+            if (this.Builder == null)
             {
                 return false;
             }
 
             var dirtyBefore = this.IsDirty;
-            var builder = this.refcountedDiffBuilder.Value;
-            builder.UpdateMemberDiff(this.X, this.Y, propertyInfo, this.Settings);
-            return this.TryNotifyChanges(dirtyBefore, propertyInfo);
+            this.Builder.UpdateMemberDiff(this.X, this.Y, propertyInfo, this.Settings);
+            return this.TryNotifyChanges(dirtyBefore, propertyInfo, needsRefresh);
         }
 
         private void OnTrackedAdd(object sender, AddEventArgs e)
@@ -189,7 +195,7 @@
             finally
             {
                 this.isResetting = false;
-                this.TryNotifyChanges(dirtyBefore, e);
+                this.TryNotifyChanges(dirtyBefore, e, true);
             }
         }
 
@@ -232,18 +238,17 @@
             }
 
             // we create the builder after subscribing so no guarantee that we have a builder if an event fires before the ctor is finished.
-            if (this.refcountedDiffBuilder == null)
+            if (this.Builder == null)
             {
                 return false;
             }
 
             var dirtyBefore = this.IsDirty;
-            var builder = this.refcountedDiffBuilder.Value;
-            builder.UpdateIndexDiff(this.X, this.Y, index, this.Settings);
-            return this.TryNotifyChanges(dirtyBefore, index);
+            this.Builder.UpdateIndexDiff(this.X, this.Y, index, this.Settings);
+            return this.TryNotifyChanges(dirtyBefore, index, true);
         }
 
-        private IDisposable CreateChild(object xValue, object yValue, object key)
+        private IUnsubscriber CreateChild(object xValue, object yValue, object key)
         {
             if (xValue == null || yValue == null)
             {
@@ -252,9 +257,11 @@
 
             var childNode = GetOrCreate(xValue, yValue, this.Settings);
             EventHandler<DirtyTrackerChangedEventArgs> onChanged = (sender, args) => this.OnChildChanged(sender, args, key);
+            childNode.Value.Changed += onChanged;
             return childNode.AsUnsubscribeOnDispose(x => x.Value.Changed -= onChanged);
         }
 
+        // ReSharper disable once UnusedParameter.Local
         private void OnChildChanged(object _, DirtyTrackerChangedEventArgs e, object key)
         {
             if (e.Contains(this))
@@ -265,17 +272,14 @@
             var propertyInfo = key as PropertyInfo;
             if (propertyInfo != null)
             {
-                this.isChanging = true;
-                try
+                if (this.Settings.IsIgnoringProperty(propertyInfo))
                 {
-                    if (this.UpdatePropertyNode(propertyInfo))
-                    {
-                        this.Changed?.Invoke(this, e.With(this, key));
-                    }
+                    return;
                 }
-                finally
+
+                if (this.TryNotifyPropertyChange(propertyInfo, false))
                 {
-                    this.isChanging = false;
+                    this.Changed?.Invoke(this, e.With(this, key));
                 }
             }
             else
@@ -297,9 +301,10 @@
             }
         }
 
-        private bool TryNotifyChanges(bool dirtyBefore, object propertyOrIndex)
+        private bool TryNotifyChanges(bool dirtyBefore, object propertyOrIndex, bool needsRefresh)
         {
-            if (!this.refcountedDiffBuilder.Value.TryRefresh(this.Settings))
+            if (needsRefresh &&
+                !this.refcountedDiffBuilder.Value.TryRefresh(this.Settings))
             {
                 return false;
             }
