@@ -13,6 +13,8 @@
     {
         private static readonly PropertyChangedEventArgs DiffPropertyChangedEventArgs = new PropertyChangedEventArgs(nameof(Diff));
         private static readonly PropertyChangedEventArgs IsDirtyPropertyChangedEventArgs = new PropertyChangedEventArgs(nameof(IsDirty));
+
+        private readonly IRefCounted<ReferencePair> refCountedPair;
         private readonly IRefCounted<ChangeTrackerNode> xNode;
         private readonly IRefCounted<ChangeTrackerNode> yNode;
         private readonly DisposingMap<IDisposable> children = new DisposingMap<IDisposable>();
@@ -21,8 +23,11 @@
         private bool isBubbling;
         private bool isBatchUpdating;
 
-        private DirtyTrackerNode(object x, object y, PropertiesSettings settings)
+        private DirtyTrackerNode(IRefCounted<ReferencePair> refCountedPair, PropertiesSettings settings)
         {
+            this.refCountedPair = refCountedPair;
+            var x = refCountedPair.Value.X;
+            var y = refCountedPair.Value.Y;
             this.xNode = ChangeTrackerNode.GetOrCreate(x, settings);
             this.yNode = ChangeTrackerNode.GetOrCreate(y, settings);
             this.xNode.Value.PropertyChange += this.OnTrackedPropertyChange;
@@ -117,6 +122,7 @@
             this.yNode.Dispose();
 
             this.children.Dispose();
+            this.refCountedPair.Dispose();
         }
 
         internal static IRefCounted<DirtyTrackerNode> GetOrCreate(object x, object y, PropertiesSettings settings)
@@ -125,7 +131,7 @@
             Debug.Assert(x is INotifyPropertyChanged || x is INotifyCollectionChanged, "Must notify");
             Debug.Assert(y != null, "Cannot track null");
             Debug.Assert(y is INotifyPropertyChanged || y is INotifyCollectionChanged, "Must notify");
-            return TrackerCache.GetOrAdd(x, y, settings, pair => new DirtyTrackerNode(pair.X, pair.Y, settings));
+            return TrackerCache.GetOrAdd(x, y, settings, pair => new DirtyTrackerNode(pair, settings));
         }
 
         private static bool IsTrackablePair(object x, object y, PropertiesSettings settings)

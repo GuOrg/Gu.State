@@ -5,6 +5,15 @@
 
     internal static class RefCounted
     {
+        internal static bool TryRefCount<TValue>(
+            this TValue value,
+            out IRefCounted<TValue> refCounted)
+            where TValue : class, IDisposable
+        {
+            bool created;
+            return TryRefCount(value, out refCounted, out created);
+        }
+
         internal static bool TryRefCount<TValue>(this TValue value, out IRefCounted<TValue> refCounted, out bool created)
             where TValue : class, IDisposable
         {

@@ -9,19 +9,22 @@
     internal sealed class DiffBuilder : IDisposable
     {
         private static readonly object RankDiffKey = new object();
+        private readonly IRefCounted<ReferencePair> refCountedPair;
         private readonly IBorrowed<Dictionary<object, SubDiff>> borrowedDiffs;
         private readonly IBorrowed<Dictionary<object, IRefCounted<DiffBuilder>>> borrowedSubBuilders;
         private readonly List<SubDiff> diffs = new List<SubDiff>();
         private readonly object gate = new object();
         private readonly ValueDiff valueDiff;
+
         private bool disposed;
         private bool isRefreshing;
 
-        private DiffBuilder(object x, object y)
+        private DiffBuilder(IRefCounted<ReferencePair> refCountedPair)
         {
+            this.refCountedPair = refCountedPair;
             this.borrowedDiffs = DictionaryPool<object, SubDiff>.Borrow();
             this.borrowedSubBuilders = DictionaryPool<object, IRefCounted<DiffBuilder>>.Borrow();
-            this.valueDiff = new ValueDiff(x, y, this.diffs);
+            this.valueDiff = new ValueDiff(refCountedPair.Value.X, refCountedPair.Value.Y, this.diffs);
         }
 
         private bool IsEmpty => this.borrowedDiffs.Value.Values.All(d => d.IsEmpty);
@@ -43,22 +46,19 @@
 
                 this.borrowedDiffs.Dispose();
                 this.borrowedSubBuilders.Dispose();
+                this.refCountedPair.Dispose();
             }
         }
 
         internal static IRefCounted<DiffBuilder> Create(object x, object y, IMemberSettings settings)
         {
-            return TrackerCache.GetOrAdd(x, y, settings, pair => new DiffBuilder(pair.X, pair.Y));
+            return TrackerCache.GetOrAdd(x, y, settings, pair => new DiffBuilder(pair));
         }
 
         internal static bool TryCreate(object x, object y, IMemberSettings settings, out IRefCounted<DiffBuilder> subDiffBuilder)
         {
             bool created;
-            subDiffBuilder = TrackerCache.GetOrAdd(
-                ReferencePair.GetOrCreate(x, y),
-                settings,
-                pair => new DiffBuilder(pair.X, pair.Y),
-                out created);
+            subDiffBuilder = TrackerCache.GetOrAdd(x, y, settings, pair => new DiffBuilder(pair), out created);
 
             return created;
         }

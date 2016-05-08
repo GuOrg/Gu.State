@@ -2,17 +2,17 @@ namespace Gu.State
 {
     using System;
     using System.Collections.Concurrent;
-    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Runtime.CompilerServices;
 
-    internal sealed class ReferencePair
+    internal sealed class ReferencePair : IDisposable
     {
-        private static readonly PairCache Cache = new PairCache();
-
+        private static readonly ConcurrentDictionary<ReferencePair, ReferencePair> Cache = new ConcurrentDictionary<ReferencePair, ReferencePair>();
         private readonly WeakReference x;
         private readonly WeakReference y;
         private readonly int hashCode;
+        private readonly object gate = new object();
+        private bool disposed;
 
         private ReferencePair(object x, object y)
         {
@@ -23,9 +23,34 @@ namespace Gu.State
             this.hashCode = GetHashCode(x, y);
         }
 
-        public object X => this.x.Target;
+        ~ReferencePair()
+        {
+            if (this.disposed || Environment.HasShutdownStarted)
+            {
+                return;
+            }
 
-        public object Y => this.y.Target;
+            ReferencePair temp;
+            Cache.TryRemove(this, out temp);
+        }
+
+        public object X
+        {
+            get
+            {
+                this.VerifyNotDisposed();
+                return this.x.Target;
+            }
+        }
+
+        public object Y
+        {
+            get
+            {
+                this.VerifyNotDisposed();
+                return this.y.Target;
+            }
+        }
 
         private bool IsAlive => this.x.IsAlive && this.y.IsAlive;
 
@@ -39,11 +64,25 @@ namespace Gu.State
             return !Equals(left, right);
         }
 
-        public static ReferencePair GetOrCreate<T>(T x, T y)
+        public static IRefCounted<ReferencePair> GetOrCreate<T>(T x, T y)
             where T : class
         {
-            var pair = Cache.GetValue(x, y);
-            return pair;
+            var key = new ReferencePair(x, y);
+            IRefCounted<ReferencePair> refcounted;
+            if (!Cache.GetOrAdd(key, p => p).TryRefCount(out refcounted))
+            {
+                if (!Cache.TryAdd(key, key))
+                {
+                    throw Throw.ShouldNeverGetHereException("Adding created pair failed");
+                }
+
+                if (!key.TryRefCount(out refcounted))
+                {
+                    throw Throw.ShouldNeverGetHereException("Refcounting created pair failed");
+                }
+            }
+
+            return refcounted;
         }
 
         public bool Equals(ReferencePair other)
@@ -87,6 +126,26 @@ namespace Gu.State
             return this.hashCode;
         }
 
+        public void Dispose()
+        {
+            if (this.disposed)
+            {
+                return;
+            }
+
+            lock (this.gate)
+            {
+                if (this.disposed)
+                {
+                    return;
+                }
+
+                this.disposed = true;
+                ReferencePair temp;
+                Cache.TryRemove(this, out temp);
+            }
+        }
+
         private static int GetHashCode(object x, object y)
         {
             unchecked
@@ -95,82 +154,13 @@ namespace Gu.State
             }
         }
 
-        private class PairCache
+        private void VerifyNotDisposed()
         {
-            private readonly ConcurrentDictionary<ReferencePair, ReferencePair> map;
-            private readonly List<ReferencePair> purgeList = new List<ReferencePair>();
-
-            private bool isPurging;
-
-            public PairCache()
+            if (this.disposed)
             {
-                this.map = new ConcurrentDictionary<ReferencePair, ReferencePair>(new PurgingComparer(this));
-            }
-
-            public ReferencePair GetValue(object xKey, object yKey)
-            {
-                var pair = this.map.GetOrAdd(new ReferencePair(xKey, yKey), referencePair => referencePair);
-
-                if (this.purgeList.Count > 0)
-                {
-                    lock (this.purgeList)
-                    {
-                        if (this.purgeList.Count > 0)
-                        {
-                            this.isPurging = true;
-                            for (int i = this.purgeList.Count - 1; i >= 0; i--)
-                            {
-                                ReferencePair temp;
-                                this.map.TryRemove(this.purgeList[i], out temp);
-                                this.purgeList.RemoveAt(i);
-                            }
-                        }
-                    }
-                }
-
-                this.isPurging = false;
-                return pair;
-            }
-
-            private class PurgingComparer : IEqualityComparer<ReferencePair>
-            {
-                private readonly PairCache cache;
-
-                public PurgingComparer(PairCache cache)
-                {
-                    this.cache = cache;
-                }
-
-                public bool Equals(ReferencePair x, ReferencePair y)
-                {
-                    if (this.TryAddToPurgeList(x) || this.TryAddToPurgeList(y))
-                    {
-                        return false;
-                    }
-
-                    return x.Equals(y);
-                }
-
-                public int GetHashCode(ReferencePair obj)
-                {
-                    this.TryAddToPurgeList(obj);
-                    return obj.GetHashCode();
-                }
-
-                private bool TryAddToPurgeList(ReferencePair pair)
-                {
-                    if (this.cache.isPurging || pair.IsAlive)
-                    {
-                        return false;
-                    }
-
-                    lock (this.cache.purgeList)
-                    {
-                        this.cache.purgeList.Add(pair);
-                    }
-
-                    return true;
-                }
+                throw new ObjectDisposedException(
+                    this.GetType()
+                        .FullName);
             }
         }
     }

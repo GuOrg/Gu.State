@@ -9,23 +9,31 @@
             TKey x,
             TKey y,
             IMemberSettings settings,
-            ConditionalWeakTable<ReferencePair, TValue>.CreateValueCallback creator)
+            ConditionalWeakTable<IRefCounted<ReferencePair>, TValue>.CreateValueCallback creator)
             where TKey : class
             where TValue : class, IDisposable
         {
-            return GetOrAdd(ReferencePair.GetOrCreate(x, y), settings, creator);
+            bool temp;
+            return GetOrAdd(x, y, settings, creator, out temp);
         }
 
         internal static IRefCounted<TValue> GetOrAdd<TKey, TValue>(
             TKey x,
             TKey y,
             IMemberSettings settings,
-            ConditionalWeakTable<ReferencePair, TValue>.CreateValueCallback creator,
+            ConditionalWeakTable<IRefCounted<ReferencePair>, TValue>.CreateValueCallback creator,
             out bool created)
             where TKey : class
             where TValue : class, IDisposable
         {
-            return GetOrAdd(ReferencePair.GetOrCreate(x, y), settings, creator, out created);
+            var refCounted = ReferencePair.GetOrCreate(x, y);
+            var value = GetOrAdd(refCounted, settings, creator, out created);
+            if (!created)
+            {
+                refCounted.Dispose();
+            }
+
+            return value;
         }
 
         internal static IRefCounted<TValue> GetOrAdd<TKey, TValue>(
@@ -39,7 +47,7 @@
             return GetOrAdd(key, settings, creator, out temp);
         }
 
-        internal static IRefCounted<TValue> GetOrAdd<TKey, TValue>(
+        private static IRefCounted<TValue> GetOrAdd<TKey, TValue>(
             TKey key,
             IMemberSettings settings,
             ConditionalWeakTable<TKey, TValue>.CreateValueCallback creator,
@@ -51,14 +59,14 @@
             lock (cache.Gate)
             {
                 var value = cache.GetOrAdd(key, creator);
-                IRefCounted<TValue> disposer;
-                if (value.TryRefCount(out disposer, out created))
+                IRefCounted<TValue> refCounted;
+                if (value.TryRefCount(out refCounted, out created))
                 {
-                    return disposer;
+                    return refCounted;
                 }
 
                 value = creator(key);
-                if (!value.TryRefCount(out disposer, out created))
+                if (!value.TryRefCount(out refCounted, out created))
                 {
                     throw Throw.ShouldNeverGetHereException("Refcounting created value failed.");
                 }
@@ -66,7 +74,7 @@
                 cache.Items.Remove(key);
                 cache.Items.Add(key, value);
                 created = true;
-                return disposer;
+                return refCounted;
             }
         }
 
