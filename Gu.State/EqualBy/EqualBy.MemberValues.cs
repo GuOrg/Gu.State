@@ -18,11 +18,11 @@
             }
 
             Verify.CanEqualByMemberValues(x, y, settings);
-            using (var pairs = settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops
+            using (var borrowed = settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops
                                    ? ReferencePairCollection.Borrow()
                                    : null)
             {
-                return MemberValues(x, y, settings, pairs);
+                return MemberValues(x, y, settings, borrowed?.Value);
             }
         }
 

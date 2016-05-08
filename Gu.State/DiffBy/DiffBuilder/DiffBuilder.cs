@@ -1,7 +1,6 @@
 ﻿namespace Gu.State
 {
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
@@ -9,122 +8,152 @@
 
     internal sealed class DiffBuilder : IDisposable
     {
-        private readonly ConcurrentDictionary<ReferencePair, DiffBuilder> builderCache;
+        private static readonly object RankDiffKey = new object();
+        private readonly IRefCounted<ReferencePair> refCountedPair;
+        private readonly IBorrowed<Dictionary<object, SubDiff>> borrowedDiffs;
+        private readonly IBorrowed<Dictionary<object, IRefCounted<DiffBuilder>>> borrowedSubBuilders;
         private readonly List<SubDiff> diffs = new List<SubDiff>();
-        private readonly List<Disposer<DiffBuilder>> disposers = new List<Disposer<DiffBuilder>>();
+        private readonly object gate = new object();
         private readonly ValueDiff valueDiff;
-        private bool disposed;
 
-        private DiffBuilder(object x, object y, ConcurrentDictionary<ReferencePair, DiffBuilder> builderCache)
+        private bool disposed;
+        private bool isRefreshing;
+
+        private DiffBuilder(IRefCounted<ReferencePair> refCountedPair)
         {
-            this.builderCache = builderCache;
-            this.valueDiff = new ValueDiff(x, y, this.diffs);
-            if (!this.builderCache.TryAdd(ReferencePair.GetOrCreate(x, y), this))
-            {
-                throw Throw.ShouldNeverGetHereException("Builder added twice");
-            }
+            this.refCountedPair = refCountedPair;
+            this.borrowedDiffs = DictionaryPool<object, SubDiff>.Borrow();
+            this.borrowedSubBuilders = DictionaryPool<object, IRefCounted<DiffBuilder>>.Borrow();
+            this.valueDiff = new ValueDiff(refCountedPair.Value.X, refCountedPair.Value.Y, this.diffs);
         }
 
-        internal event EventHandler Empty;
-
-        private bool IsEmpty => this.diffs.All(d => d.IsEmpty);
+        private bool IsEmpty => this.borrowedDiffs.Value.Values.All(d => d.IsEmpty);
 
         public void Dispose()
         {
-            if (this.disposed)
+            lock (this.gate)
             {
-                return;
+                if (this.disposed)
+                {
+                    return;
+                }
+
+                this.disposed = true;
+                foreach (var disposer in this.borrowedSubBuilders.Value.Values)
+                {
+                    disposer.Dispose();
+                }
+
+                this.borrowedDiffs.Dispose();
+                this.borrowedSubBuilders.Dispose();
+                this.refCountedPair.Dispose();
             }
-
-            this.disposed = true;
-            foreach (var disposer in this.disposers)
-            {
-                disposer.Dispose();
-            }
-
-            this.disposers.Clear();
         }
 
-        internal static Disposer<DiffBuilder> Create(object x, object y)
+        internal static IRefCounted<DiffBuilder> Create(object x, object y, IMemberSettings settings)
         {
-            var borrow = ConcurrentDictionaryPool<ReferencePair, DiffBuilder>.Borrow();
-            return Disposer.Create(
-                new DiffBuilder(x, y, borrow.Value),
-                builder =>
-                    {
-                        foreach (var kvp in builder.builderCache)
-                        {
-                            kvp.Value.Dispose();
-                        }
-                        borrow.Dispose();
-                    });
+            return TrackerCache.GetOrAdd(x, y, settings, pair => new DiffBuilder(pair));
         }
 
-        internal bool TryAdd(object x, object y, out DiffBuilder subDiffBuilder)
+        internal static bool TryCreate(object x, object y, IMemberSettings settings, out IRefCounted<DiffBuilder> subDiffBuilder)
         {
-            var added = false;
-            subDiffBuilder = this.builderCache.GetOrAdd(
-                ReferencePair.GetOrCreate(x, y),
-                pair =>
-                    {
-                        added = true;
-                        return new DiffBuilder(pair.X, pair.Y, this.builderCache);
-                    });
+            bool created;
+            subDiffBuilder = TrackerCache.GetOrAdd(x, y, settings, pair => new DiffBuilder(pair), out created);
 
-            subDiffBuilder.Empty += this.OnSubBuilderEmpty;
-            this.disposers.Add(Disposer.Create(subDiffBuilder, sdb => sdb.Empty -= this.OnSubBuilderEmpty));
-            return added;
+            return created;
         }
 
-        internal void Add(SubDiff subDiff)
+        internal void Add(MemberDiff memberDiff)
         {
             Debug.Assert(!this.disposed, "this.disposed");
-            this.diffs.Add(subDiff);
+            lock (this.gate)
+            {
+                this.borrowedDiffs.Value[memberDiff.MemberInfo] = memberDiff;
+            }
+        }
+
+        internal void Add(IndexDiff indexDiff)
+        {
+            Debug.Assert(!this.disposed, "this.disposed");
+            lock (this.gate)
+            {
+                this.borrowedDiffs.Value[indexDiff.Index] = indexDiff;
+            }
+        }
+
+        internal void Add(RankDiff rankDiff)
+        {
+            lock (this.gate)
+            {
+                this.borrowedDiffs.Value[RankDiffKey] = rankDiff;
+            }
         }
 
         internal void AddLazy(MemberInfo member, DiffBuilder builder)
         {
             Debug.Assert(!this.disposed, "this.disposed");
-            this.diffs.Add(MemberDiff.Create(member, builder.valueDiff));
+            lock (this.gate)
+            {
+                this.borrowedDiffs.Value[member] = MemberDiff.Create(member, builder.valueDiff);
+                this.AddSubBuilder(member, builder);
+            }
         }
 
         internal void AddLazy(object index, DiffBuilder builder)
         {
             Debug.Assert(!this.disposed, "this.disposed");
-            this.diffs.Add(new IndexDiff(index, builder.valueDiff));
+            lock (this.gate)
+            {
+                this.borrowedDiffs.Value[index] = new IndexDiff(index, builder.valueDiff);
+                this.AddSubBuilder(index, builder);
+            }
         }
 
         internal ValueDiff CreateValueDiff()
         {
             Debug.Assert(!this.disposed, "this.disposed");
-            this.PurgeEmptyBuilders();
-            return this.IsEmpty ? null : this.valueDiff;
+            lock (this.gate)
+            {
+                this.Refresh();
+                return this.IsEmpty
+                           ? null
+                           : this.valueDiff;
+            }
         }
 
-        private void OnSubBuilderEmpty(object sender, EventArgs e)
+        internal void Refresh()
         {
-            var builder = (DiffBuilder)sender;
-            if (this.IsEmpty)
+            if (this.isRefreshing)
             {
                 return;
             }
 
-            this.diffs.RemoveAll(x => x.ValueDiff == builder.valueDiff);
-            if (this.IsEmpty)
+            this.isRefreshing = true;
+            foreach (var keyAndBuilder in this.borrowedSubBuilders.Value)
             {
-                this.Empty?.Invoke(this, EventArgs.Empty);
-            }
-        }
-
-        private void PurgeEmptyBuilders()
-        {
-            foreach (var builder in this.builderCache.Values)
-            {
+                var builder = keyAndBuilder.Value.Value;
+                builder.Refresh();
                 if (builder.IsEmpty)
                 {
-                    builder.Empty?.Invoke(builder, EventArgs.Empty);
+                    this.borrowedDiffs.Value.Remove(keyAndBuilder.Key);
                 }
             }
+
+            this.diffs.Clear();
+            this.diffs.AddRange(this.borrowedDiffs.Value.Values);
+            this.isRefreshing = false;
+        }
+
+        private void AddSubBuilder(object key, DiffBuilder builder)
+        {
+            IRefCounted<DiffBuilder> refCounted;
+            bool created;
+            if (!builder.TryRefCount(out refCounted, out created))
+            {
+                throw Throw.ShouldNeverGetHereException("AddLazy failed, try refcount failed");
+            }
+
+            this.borrowedSubBuilders.Value.AddOrUpdate(key, refCounted);
         }
     }
 }

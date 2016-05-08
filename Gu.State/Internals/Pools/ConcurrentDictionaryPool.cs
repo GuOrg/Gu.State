@@ -6,7 +6,7 @@ namespace Gu.State
     {
         private static readonly ConcurrentQueue<ConcurrentDictionary<TKey, TValue>> Cache = new ConcurrentQueue<ConcurrentDictionary<TKey, TValue>>();
 
-        internal static Disposer<ConcurrentDictionary<TKey, TValue>> Borrow()
+        internal static IBorrowed<ConcurrentDictionary<TKey, TValue>> Borrow()
         {
             ConcurrentDictionary<TKey, TValue> dictionary;
             if (Cache.TryDequeue(out dictionary))

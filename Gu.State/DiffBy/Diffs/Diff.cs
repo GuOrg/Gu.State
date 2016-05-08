@@ -7,9 +7,9 @@
     /// <summary>A node in a diff tree.</summary>
     public abstract class Diff
     {
-        private static readonly IReadOnlyList<SubDiff> Empty = new SubDiff[0];
+        private static readonly IReadOnlyCollection<SubDiff> Empty = new SubDiff[0];
 
-        internal Diff(IReadOnlyList<SubDiff> diffs = null)
+        internal Diff(IReadOnlyCollection<SubDiff> diffs = null)
         {
             this.Diffs = diffs ?? Empty;
         }
@@ -17,7 +17,7 @@
         public abstract bool IsEmpty { get; }
 
         /// <summary>Gets the diffs for properties and indexes.</summary>
-        public IReadOnlyList<SubDiff> Diffs { get; }
+        public IReadOnlyCollection<SubDiff> Diffs { get; }
 
         /// <summary>
         /// Creates a report for all diffs
