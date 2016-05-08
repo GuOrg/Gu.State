@@ -16,5 +16,17 @@
 
             dictionary[key] = value;
         }
+
+        internal static void TryRemoveAndDispose<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key)
+    where TValue : IDisposable
+        {
+            TValue old;
+            if (dictionary.TryGetValue(key, out old))
+            {
+                old?.Dispose();
+            }
+
+            dictionary.Remove(key);
+        }
     }
 }

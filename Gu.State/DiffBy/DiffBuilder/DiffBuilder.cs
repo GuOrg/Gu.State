@@ -70,6 +70,7 @@
             lock (this.gate)
             {
                 this.borrowedDiffs.Value[memberDiff.MemberInfo] = memberDiff;
+                this.UpdateSubBuilder(memberDiff.MemberInfo, null);
             }
         }
 
@@ -79,6 +80,7 @@
             lock (this.gate)
             {
                 this.borrowedDiffs.Value.Remove(member);
+                this.UpdateSubBuilder(member, null);
             }
         }
 
@@ -88,6 +90,7 @@
             lock (this.gate)
             {
                 this.borrowedDiffs.Value[indexDiff.Index] = indexDiff;
+                this.UpdateSubBuilder(indexDiff.Index, null);
             }
         }
 
@@ -105,7 +108,7 @@
             lock (this.gate)
             {
                 this.borrowedDiffs.Value[member] = MemberDiff.Create(member, builder.valueDiff);
-                this.AddSubBuilder(member, builder);
+                this.UpdateSubBuilder(member, builder);
             }
         }
 
@@ -115,7 +118,7 @@
             lock (this.gate)
             {
                 this.borrowedDiffs.Value[index] = new IndexDiff(index, builder.valueDiff);
-                this.AddSubBuilder(index, builder);
+                this.UpdateSubBuilder(index, builder);
             }
         }
 
@@ -183,8 +186,14 @@
             }
         }
 
-        private void AddSubBuilder(object key, DiffBuilder builder)
+        private void UpdateSubBuilder(object key, DiffBuilder builder)
         {
+            if (builder == null)
+            {
+                this.borrowedSubBuilders.Value.TryRemoveAndDispose(key);
+                return;
+            }
+
             IRefCounted<DiffBuilder> refCounted;
             bool created;
             if (!builder.TryRefCount(out refCounted, out created))

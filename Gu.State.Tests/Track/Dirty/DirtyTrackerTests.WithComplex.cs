@@ -10,89 +10,54 @@
     {
         public class WithComplex
         {
-            [Test]
-            public void CreateAndDispose()
+            [TestCase(ReferenceHandling.Structural)]
+            [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
+            public void WithComplexPropertyHandlesNull(ReferenceHandling referenceHandling)
             {
-                var x = new WithComplexProperty { ComplexType = new ComplexType("a", 1) };
-                var y = new WithComplexProperty { ComplexType = new ComplexType("a", 1) };
+                var x = new WithComplexProperty();
+                var y = new WithComplexProperty();
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
-
-                using (var tracker = Track.IsDirty(x, y))
+                using (var tracker = Track.IsDirty(x, y, referenceHandling))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(false, tracker.IsDirty);
                     Assert.AreEqual(null, tracker.Diff);
                     CollectionAssert.IsEmpty(changes);
 
-                    var xc = x.ComplexType;
-                    x.ComplexType = null;
-                    var yc = y.ComplexType;
-                    y.ComplexType = null;
-                    Assert.AreEqual(false, tracker.IsDirty);
-                    Assert.AreEqual(null, tracker.Diff);
-                    expectedChanges.AddRange(new[] { "Diff", "IsDirty", "Diff", "IsDirty" });
+                    x.ComplexType = new ComplexType("a", 1);
+                    Assert.AreEqual(true, tracker.IsDirty);
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
+                    var expected = "WithComplexProperty ComplexType x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: null";
+                    var actual = tracker.Diff.ToString("", " ");
+                    Assert.AreEqual(expected, actual);
 
-#if (!DEBUG) // debug build keeps instances alive longer for nicer debugging experience
-                    var wrxc = new System.WeakReference(xc);
-                    var wryc = new System.WeakReference(yc);
-                    xc = null;
-                    yc = null;
-                    System.GC.Collect();
-                    Assert.AreEqual(false, wrxc.IsAlive);
-                    Assert.AreEqual(false, wryc.IsAlive);
-#endif
-                }
-
-                x.ComplexType = new ComplexType("b", 2);
-                CollectionAssert.AreEqual(expectedChanges, changes);
-
-#if (!DEBUG) // debug build keeps instances alive longer for nicer debugging experience
-                var wrx = new System.WeakReference(x);
-                var wry = new System.WeakReference(y);
-                x = null;
-                y = null;
-                System.GC.Collect();
-                Assert.AreEqual(false, wrx.IsAlive);
-                Assert.AreEqual(false, wry.IsAlive);
-#endif
-            }
-
-            [Test]
-            public void DoesNotLeakNested()
-            {
-                var x = new WithComplexProperty { ComplexType = new ComplexType("a", 1) };
-                var y = new WithComplexProperty { ComplexType = new ComplexType("a", 1) };
-                var changes = new List<string>();
-
-                using (var tracker = Track.IsDirty(x, y))
-                {
-                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    y.ComplexType = new ComplexType("a", 1);
                     Assert.AreEqual(false, tracker.IsDirty);
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
+                    CollectionAssert.AreEqual(expectedChanges, changes);
                     Assert.AreEqual(null, tracker.Diff);
-                    CollectionAssert.IsEmpty(changes);
 
-                    var xc = x.ComplexType;
                     x.ComplexType = null;
-                    var yc = y.ComplexType;
-                    y.ComplexType = null;
+                    Assert.AreEqual(true, tracker.IsDirty);
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
+                    CollectionAssert.AreEqual(expectedChanges, changes);
+                    expected = "WithComplexProperty ComplexType x: null y: Gu.State.Tests.DirtyTrackerTypes+ComplexType";
+                    actual = tracker.Diff.ToString("", " ");
+                    Assert.AreEqual(expected, actual);
 
-#if (!DEBUG) // debug build keeps instances alive longer for nicer debugging experience
-                    var wrxc = new System.WeakReference(xc);
-                    var wryc = new System.WeakReference(yc);
-                    xc = null;
-                    yc = null;
-                    System.GC.Collect();
-                    Assert.AreEqual(false, wrxc.IsAlive);
-                    Assert.AreEqual(false, wryc.IsAlive);
-#endif
+                    y.ComplexType = null;
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
+                    CollectionAssert.AreEqual(expectedChanges, changes);
+                    Assert.AreEqual(null, tracker.Diff);
                 }
             }
 
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
-            public void WithComplexPropertyTracks(ReferenceHandling referenceHandling)
+            public void WithComplexPropertyTracksNested(ReferenceHandling referenceHandling)
             {
                 var x = new WithComplexProperty();
                 var y = new WithComplexProperty();

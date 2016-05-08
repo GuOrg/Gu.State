@@ -155,6 +155,7 @@
     <Compile Include="Settings\PropertiesSettingsTests.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTypes.cs" />
     <Compile Include="Track\Dirty\ChangeTrackerTests.ReferenceLoops.cs" />
+    <Compile Include="Track\Dirty\DirtyTrackerTests.MemoryLeaks.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerTests.Throws.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerTypes.cs" />
     <Compile Include="EqualByTests\ClassesTests.cs" />
