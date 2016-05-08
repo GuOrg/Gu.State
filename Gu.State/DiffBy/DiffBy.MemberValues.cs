@@ -13,7 +13,7 @@
             IMemberSettings settings)
         {
             EqualBy.Verify.CanEqualByMemberValues(x, y, settings, typeof(DiffBy).Name, settings.DiffMethodName());
-            TryAddItemDiffs(x, y, settings, builder, TryAddItemDiff);
+            TryAddCollectionDiffs(x, y, settings, builder, UpdateIndexDiff);
             TryAddMemberDiffs(x, y, settings, builder);
         }
 
@@ -80,6 +80,43 @@
             }
         }
 
+        internal static void UpdateIndexDiff(
+            this DiffBuilder collectionBuilder,
+            object xItem,
+            object yItem,
+            object index,
+            IMemberSettings settings)
+        {
+            ValueDiff diff;
+            if (TryGetValueDiff(xItem, yItem, settings, out diff))
+            {
+                if (diff != null)
+                {
+                    collectionBuilder.Add(new IndexDiff(index, diff));
+                }
+
+                return;
+            }
+
+            if (settings.ReferenceHandling == ReferenceHandling.References)
+            {
+                if (!ReferenceEquals(xItem, yItem))
+                {
+                    collectionBuilder.Add(new IndexDiff(index, new ValueDiff(xItem, yItem)));
+                }
+
+                return;
+            }
+
+            IRefCounted<DiffBuilder> subDiffBuilder;
+            if (DiffBuilder.TryCreate(xItem, yItem, settings, out subDiffBuilder))
+            {
+                subDiffBuilder.Value.UpdateDiffs(xItem, yItem, settings);
+            }
+
+            collectionBuilder.AddLazy(index, subDiffBuilder.Value);
+        }
+
         private static ValueDiff TryCreateValueDiff<T>(T x, T y, IMemberSettings settings)
         {
             Debug.Assert(x != null, "x == null");
@@ -111,12 +148,12 @@
             }
         }
 
-        private static void TryAddItemDiffs<TSettings>(
+        private static void TryAddCollectionDiffs<TSettings>(
             object x,
             object y,
             TSettings settings,
             DiffBuilder collectionBuilder,
-            Action<object, object, object, TSettings, DiffBuilder> itemDiff)
+            Action<DiffBuilder, object, object, object, TSettings> itemDiff)
             where TSettings : IMemberSettings
         {
             if (!Is.Enumerable(x, y))
@@ -133,48 +170,11 @@
                 SetDiffBy.TryGetOrCreate(x, y, out comparer) ||
                 EnumerableDiffBy.TryGetOrCreate(x, y, out comparer))
             {
-                comparer.AddDiffs(x, y, settings, collectionBuilder, itemDiff);
+                comparer.AddDiffs(collectionBuilder, x, y, settings, itemDiff);
                 return;
             }
 
             throw Throw.ShouldNeverGetHereException("All enumarebles must be checked here");
-        }
-
-        private static void TryAddItemDiff(
-            object xItem,
-            object yItem,
-            object index,
-            IMemberSettings settings,
-            DiffBuilder collectionBuilder)
-        {
-            ValueDiff diff;
-            if (TryGetValueDiff(xItem, yItem, settings, out diff))
-            {
-                if (diff != null)
-                {
-                    collectionBuilder.Add(new IndexDiff(index, diff));
-                }
-
-                return;
-            }
-
-            if (settings.ReferenceHandling == ReferenceHandling.References)
-            {
-                if (!ReferenceEquals(xItem, yItem))
-                {
-                    collectionBuilder.Add(new IndexDiff(index, new ValueDiff(xItem, yItem)));
-                }
-
-                return;
-            }
-
-            IRefCounted<DiffBuilder> subDiffBuilder;
-            if (DiffBuilder.TryCreate(xItem, yItem, settings, out subDiffBuilder))
-            {
-                subDiffBuilder.Value.UpdateDiffs(xItem, yItem, settings);
-            }
-
-            collectionBuilder.AddLazy(index, subDiffBuilder.Value);
         }
     }
 }

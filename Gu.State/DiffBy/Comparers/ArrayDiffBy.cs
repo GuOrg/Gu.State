@@ -20,14 +20,14 @@
         }
 
         public void AddDiffs<TSettings>(
+            DiffBuilder collectionBuilder,
             object x,
             object y,
             TSettings settings,
-            DiffBuilder collectionBuilder,
-            Action<object, object, object, TSettings, DiffBuilder> itemDiff)
+            Action<DiffBuilder, object, object, object, TSettings> itemDiff)
                 where TSettings : IMemberSettings
         {
-            this.AddDiffs((Array)x, (Array)y, settings, collectionBuilder, itemDiff);
+            this.AddDiffs(collectionBuilder, (Array)x, (Array)y, settings, itemDiff);
         }
 
         private static IDiffBy Create(Type type)
@@ -40,11 +40,11 @@
         }
 
         private void AddDiffs<TSettings>(
+            DiffBuilder collectionBuilder,
             Array x,
             Array y,
             TSettings settings,
-            DiffBuilder collectionBuilder,
-            Action<object, object, object, TSettings, DiffBuilder> itemDiff)
+            Action<DiffBuilder, object, object, object, TSettings> itemDiff)
                 where TSettings : IMemberSettings
         {
             RankDiff rankDiff;
@@ -56,7 +56,7 @@
 
             foreach (var index in x.Indices())
             {
-                itemDiff(x.GetValue(index), y.GetValue(index), new Index(index), settings, collectionBuilder);
+                itemDiff(collectionBuilder, x.GetValue(index), y.GetValue(index), new Index(index), settings);
             }
         }
 

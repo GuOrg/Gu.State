@@ -8,16 +8,14 @@ namespace Gu.State
         private readonly DirtyTrackerChangedEventArgs previous;
         private readonly DirtyTrackerNode node;
 
-        public DirtyTrackerChangedEventArgs(DirtyTrackerNode originalSource)
+        public DirtyTrackerChangedEventArgs(
+            DirtyTrackerNode node, 
+            object key,
+            DirtyTrackerChangedEventArgs previous = null)
         {
-            this.node = originalSource;
-        }
-
-        public DirtyTrackerChangedEventArgs(DirtyTrackerNode node, object key, DirtyTrackerChangedEventArgs previous)
-        {
-            this.previous = previous;
             this.node = node;
             this.Key = key;
+            this.previous = previous;
         }
 
         public bool Contains(DirtyTrackerNode other)

@@ -125,11 +125,11 @@
             this.UpdatePropertyNode(e.PropertyInfo);
         }
 
-        private void UpdatePropertyNode(PropertyInfo propertyInfo)
+        private bool UpdatePropertyNode(PropertyInfo propertyInfo)
         {
             if (this.Settings.IsIgnoringProperty(propertyInfo))
             {
-                return;
+                return false;
             }
 
             if (this.TrackProperties.Contains(propertyInfo) &&
@@ -145,18 +145,18 @@
             // we create the builder after subscribing so no guarantee that we have a builder if an event fires before the ctor is finished.
             if (this.refcountedDiffBuilder == null)
             {
-                return;
+                return false;
             }
 
             var dirtyBefore = this.IsDirty;
             var builder = this.refcountedDiffBuilder.Value;
             builder.UpdateMemberDiff(this.X, this.Y, propertyInfo, this.Settings);
-            this.TryNotifyChanges(dirtyBefore);
+            return this.TryNotifyChanges(dirtyBefore, propertyInfo);
         }
 
         private void OnTrackedAdd(object sender, AddEventArgs e)
         {
-            this.UpdateIndexNode(e.Index);
+            this.TryUpdateIndexNode(e.Index);
         }
 
         private void OnTrackedRemove(object sender, RemoveEventArgs e)
@@ -174,7 +174,7 @@
 
         private void OnTrackedReplace(object sender, ReplaceEventArgs e)
         {
-            this.UpdateIndexNode(e.Index);
+            this.TryUpdateIndexNode(e.Index);
         }
 
         private void OnTrackedMove(object sender, MoveEventArgs e)
@@ -189,7 +189,7 @@
             finally
             {
                 this.isResetting = false;
-                this.TryNotifyChanges(dirtyBefore);
+                this.TryNotifyChanges(dirtyBefore, e);
             }
         }
 
@@ -205,7 +205,7 @@
             //    var max = Math.Max(maxDiffIndex, Math.Max(this.XList.Count, this.YList.Count));
             //    for (var i = 0; i < max; i++)
             //    {
-            //        this.UpdateIndexNode(i);
+            //        this.TryUpdateIndexNode(i);
             //    }
             //}
             //finally
@@ -215,7 +215,7 @@
             //}
         }
 
-        private void UpdateIndexNode(int index)
+        private bool TryUpdateIndexNode(int index)
         {
             var xValue = this.XList.ElementAtOrMissing(index);
             var yValue = this.YList.ElementAtOrMissing(index);
@@ -234,10 +234,13 @@
             // we create the builder after subscribing so no guarantee that we have a builder if an event fires before the ctor is finished.
             if (this.refcountedDiffBuilder == null)
             {
-                return;
+                return false;
             }
 
-            throw new NotImplementedException("message");
+            var dirtyBefore = this.IsDirty;
+            var builder = this.refcountedDiffBuilder.Value;
+            builder.UpdateIndexDiff(this.X, this.Y, index, this.Settings);
+            return this.TryNotifyChanges(dirtyBefore, index);
         }
 
         private IDisposable CreateChild(object xValue, object yValue, object key)
@@ -265,7 +268,10 @@
                 this.isChanging = true;
                 try
                 {
-                    this.UpdatePropertyNode(propertyInfo);
+                    if (this.UpdatePropertyNode(propertyInfo))
+                    {
+                        this.Changed?.Invoke(this, e.With(this, key));
+                    }
                 }
                 finally
                 {
@@ -275,7 +281,7 @@
             else
             {
                 throw new NotImplementedException("message");
-                
+
                 //var index = (int)key;
                 //this.isChanging = true;
                 //try
@@ -289,11 +295,9 @@
                 //    this.isChanging = false;
                 //}
             }
-
-            this.Changed?.Invoke(this, e.With(this, key));
         }
 
-        private bool TryNotifyChanges(bool dirtyBefore)
+        private bool TryNotifyChanges(bool dirtyBefore, object propertyOrIndex)
         {
             if (!this.refcountedDiffBuilder.Value.TryRefresh(this.Settings))
             {
@@ -308,7 +312,7 @@
 
             if (!this.isChanging)
             {
-                this.Changed?.Invoke(this, new DirtyTrackerChangedEventArgs(this));
+                this.Changed?.Invoke(this, new DirtyTrackerChangedEventArgs(this, propertyOrIndex));
             }
 
             return true;
