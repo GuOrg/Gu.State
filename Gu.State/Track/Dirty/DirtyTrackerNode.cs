@@ -138,7 +138,7 @@
 
             if (this.IsTrackingCollectionItems)
             {
-                for (int i = 0; i < Math.Max(this.XList.Count, this.YList.Count); i++)
+                for (var i = 0; i < Math.Max(this.XList.Count, this.YList.Count); i++)
                 {
                     this.UpdateIndexChildNode(i);
                 }

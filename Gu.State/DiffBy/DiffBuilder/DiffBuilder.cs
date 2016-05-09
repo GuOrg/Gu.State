@@ -210,10 +210,10 @@
 
                 this.isRefreshing = true;
                 this.Purge();
-                this.UpdateDiffs();
+                var changed = this.TryUpdateDiffs();
                 this.isRefreshing = false;
                 this.needsRefresh = false;
-                return true;
+                return changed;
             }
         }
 
@@ -270,36 +270,52 @@
             return result;
         }
 
-        private void UpdateDiffs()
+        private bool TryUpdateDiffs()
         {
             if (!this.needsRefresh || this.isUpdatingDiffs)
             {
-                return;
+                return false;
             }
 
             lock (this.gate)
             {
                 if (!this.needsRefresh || this.isUpdatingDiffs)
                 {
-                    return;
+                    return false;
                 }
 
+                var changed = this.diffs.Count != this.KeyedDiffs.Count;
                 this.isUpdatingDiffs = true;
                 foreach (var keyedSubBuilder in this.KeyedSubBuilders)
                 {
-                    keyedSubBuilder.Value.Value.UpdateDiffs();
+                    changed |= keyedSubBuilder.Value.Value.TryUpdateDiffs();
                 }
 
-                var i = 0;
-                foreach (var keyAndDiff in this.KeyedDiffs)
+                using (var borrow = ListPool<SubDiff>.Borrow())
                 {
-                    this.diffs.SetElementAt(i, keyAndDiff.Value);
-                    i++;
+                    var i = 0;
+                    foreach (var keyAndDiff in this.KeyedDiffs)
+                    {
+                        borrow.Value.Add(keyAndDiff.Value);
+                        i++;
+                    }
+
+                    borrow.Value.Sort(SubDiffComparer.Default);
+                    for (var index = 0; index < borrow.Value.Count; index++)
+                    {
+                        if (!changed)
+                        {
+                            changed |= !ReferenceEquals(borrow.Value[index], this.diffs[index]);
+                        }
+
+                        this.diffs.SetElementAt(index, borrow.Value[index]);
+                    }
+
+                    this.diffs.TrimLengthTo(this.KeyedDiffs.Count);
                 }
 
-                this.diffs.TrimLengthTo(this.KeyedDiffs.Count);
-                this.diffs.Sort(SubDiffComparer.Default);
                 this.isUpdatingDiffs = false;
+                return changed;
             }
         }
 
