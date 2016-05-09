@@ -18,6 +18,7 @@
         private readonly object gate = new object();
         private readonly ValueDiff valueDiff;
 
+        private bool needsRefresh;
         private bool disposed;
         private bool isRefreshing;
 
@@ -73,6 +74,7 @@
             Debug.Assert(!this.disposed, "this.disposed");
             lock (this.gate)
             {
+                this.needsRefresh = true;
                 this.KeyedDiffs[memberDiff.MemberInfo] = memberDiff;
                 this.UpdateSubBuilder(memberDiff.MemberInfo, null);
             }
@@ -83,6 +85,7 @@
             Debug.Assert(!this.disposed, "this.disposed");
             lock (this.gate)
             {
+                this.needsRefresh = true;
                 this.KeyedDiffs.Remove(memberOrIndexOrKey);
                 this.UpdateSubBuilder(memberOrIndexOrKey, null);
             }
@@ -106,6 +109,7 @@
 
                     foreach (var index in borrowed.Value)
                     {
+                        this.needsRefresh = true;
                         this.Remove(index);
                     }
                 }
@@ -117,6 +121,7 @@
             Debug.Assert(!this.disposed, "this.disposed");
             lock (this.gate)
             {
+                this.needsRefresh = true;
                 this.KeyedDiffs[indexDiff.Index] = indexDiff;
                 this.UpdateSubBuilder(indexDiff.Index, null);
             }
@@ -126,6 +131,7 @@
         {
             lock (this.gate)
             {
+                this.needsRefresh = true;
                 this.KeyedDiffs[RankDiffKey] = rankDiff;
             }
         }
@@ -135,6 +141,7 @@
             Debug.Assert(!this.disposed, "this.disposed");
             lock (this.gate)
             {
+                this.needsRefresh = true;
                 this.KeyedDiffs[member] = MemberDiff.Create(member, builder.valueDiff);
                 this.UpdateSubBuilder(member, builder);
             }
@@ -145,6 +152,7 @@
             Debug.Assert(!this.disposed, "this.disposed");
             lock (this.gate)
             {
+                this.needsRefresh = true;
                 this.KeyedDiffs[index] = new IndexDiff(index, builder.valueDiff);
                 this.UpdateSubBuilder(index, builder);
             }
@@ -171,6 +179,11 @@
         {
             lock (this.gate)
             {
+                if (!this.needsRefresh)
+                {
+                    return false;
+                }
+
                 if (this.isRefreshing)
                 {
                     return false;
@@ -214,7 +227,9 @@
                 }
 
                 changed |= ((IList)this.diffs).TryTrimLengthTo(this.KeyedDiffs.Count);
+                this.diffs.Sort(SubDiffComparer.Default);
                 this.isRefreshing = false;
+                this.needsRefresh = false;
                 return changed;
             }
         }
@@ -234,7 +249,102 @@
                 throw Throw.ShouldNeverGetHereException("AddLazy failed, try refcount failed");
             }
 
-           this.KeyedSubBuilders.AddOrUpdate(key, refCounted);
+            this.KeyedSubBuilders.AddOrUpdate(key, refCounted);
+        }
+
+        private class SubDiffComparer : IComparer<SubDiff>
+        {
+            public static readonly SubDiffComparer Default = new SubDiffComparer();
+
+            private SubDiffComparer()
+            {
+            }
+
+            public int Compare(SubDiff x, SubDiff y)
+            {
+                int result;
+                if (TryCompareType(x, y, out result))
+                {
+                    return result;
+                }
+
+                if (TryCompare<IndexDiff>(x, y, CompareIndex, out result) ||
+                    TryCompare<MemberDiff>(x, y, CompareMemberName, out result))
+                {
+                    return result;
+                }
+
+                return 0;
+            }
+
+            private static int CompareIndex(IndexDiff x, IndexDiff y)
+            {
+                var xIndex = x.Index as IComparable;
+                if (xIndex != null && y.Index is IComparable)
+                {
+                    return xIndex.CompareTo(y.Index);
+                }
+
+                return 0;
+            }
+
+            private static int CompareMemberName(MemberDiff x, MemberDiff y)
+            {
+                return string.Compare(x.MemberInfo.Name, y.MemberInfo.Name, StringComparison.Ordinal);
+            }
+
+            private static bool TryCompare<T>(SubDiff x, SubDiff y, Func<T, T, int> compare, out int result)
+                where T : SubDiff
+            {
+                if (x is T && y is T)
+                {
+                    result = compare((T)x, (T)y);
+                    return true;
+                }
+
+                result = 0;
+                return false;
+            }
+
+            private static bool TryCompareType(SubDiff x, SubDiff y, out int result)
+            {
+                if (x.GetType() == y.GetType())
+                {
+                    result = 0;
+                    return false;
+                }
+
+                if (TryIs<MemberDiff, IndexDiff>(x, y, out result) ||
+                    TryIs<MemberDiff, RankDiff>(x, y, out result) ||
+                    TryIs<RankDiff, IndexDiff>(x, y, out result))
+                {
+                    result = -1;
+                    return true;
+                }
+
+                result = 0;
+                return true;
+            }
+
+            private static bool TryIs<T1, T2>(SubDiff x, SubDiff y, out int result)
+                where T1 : SubDiff
+                where T2 : SubDiff
+            {
+                if (x is T1 && y is T2)
+                {
+                    result = 1;
+                    return true;
+                }
+
+                if (x is T2 && y is T1)
+                {
+                    result = -1;
+                    return true;
+                }
+
+                result = 0;
+                return false;
+            }
         }
     }
 }
