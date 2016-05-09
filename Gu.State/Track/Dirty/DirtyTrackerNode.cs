@@ -9,7 +9,7 @@
     using System.Linq;
     using System.Reflection;
 
-    internal sealed class DirtyTrackerNode : IDisposable, INotifyPropertyChanged
+    internal sealed class DirtyTrackerNode : IDisposable, IInitialize<DirtyTrackerNode>, INotifyPropertyChanged
     {
         private static readonly PropertyChangedEventArgs DiffPropertyChangedEventArgs = new PropertyChangedEventArgs(nameof(Diff));
         private static readonly PropertyChangedEventArgs IsDirtyPropertyChangedEventArgs = new PropertyChangedEventArgs(nameof(IsDirty));
@@ -22,6 +22,10 @@
 
         private bool isDirty;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DirtyTrackerNode"/> class.
+        /// A call to Initialize is needed after the ctor due to that we need to fetch child nodes and the graph can contain self
+        /// </summary>
         private DirtyTrackerNode(IRefCounted<ReferencePair> refCountedPair, PropertiesSettings settings)
         {
             this.refCountedPair = refCountedPair;
@@ -57,19 +61,6 @@
             builder.Value.Refresh();
             this.refcountedDiffBuilder = builder;
             this.isDirty = !this.Builder.IsEmpty;
-
-            foreach (var propertyInfo in this.TrackProperties)
-            {
-                this.UpdatePropertyChildNode(propertyInfo);
-            }
-
-            if (this.IsTrackingCollectionItems)
-            {
-                for (int i = 0; i < Math.Max(this.XList.Count, this.YList.Count); i++)
-                {
-                    this.UpdateIndexChildNode(i);
-                }
-            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -95,7 +86,7 @@
             }
         }
 
-        public ValueDiff Diff => this.Builder?.CreateValueDiff();
+        public ValueDiff Diff => this.Builder?.CreateValueDiffOrNull();
 
         private bool IsTrackingCollectionItems { get; }
 
@@ -136,6 +127,26 @@
             this.refcountedDiffBuilder.Dispose();
         }
 
+        // Initialize is needed here as we can't get recursive trackers in the ctor
+        // Call the ctor like new DirtyTrackerNode(pair, settings).Initialize()
+        DirtyTrackerNode IInitialize<DirtyTrackerNode>.Initialize()
+        {
+            foreach (var propertyInfo in this.TrackProperties)
+            {
+                this.UpdatePropertyChildNode(propertyInfo);
+            }
+
+            if (this.IsTrackingCollectionItems)
+            {
+                for (int i = 0; i < Math.Max(this.XList.Count, this.YList.Count); i++)
+                {
+                    this.UpdateIndexChildNode(i);
+                }
+            }
+
+            return this;
+        }
+
         internal static IRefCounted<DirtyTrackerNode> GetOrCreate(object x, object y, PropertiesSettings settings)
         {
             Debug.Assert(x != null, "Cannot track null");
@@ -167,7 +178,7 @@
         private void OnTrackedPropertyChange(object sender, PropertyChangeEventArgs e)
         {
             this.UpdatePropertyChildNode(e.PropertyInfo);
-            // we create the builder after subscribing so no guarantee that we have a builder if an event fires before the ctor is finished.
+            //// we create the builder after subscribing so no guarantee that we have a builder if an event fires before the ctor is finished.
             if (this.Builder == null ||
                 this.Settings.IsIgnoringProperty(e.PropertyInfo))
             {

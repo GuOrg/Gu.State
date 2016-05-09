@@ -168,7 +168,7 @@
             }
         }
 
-        internal ValueDiff CreateValueDiff()
+        internal ValueDiff CreateValueDiffOrNull()
         {
             Debug.Assert(!this.disposed, "this.disposed");
             lock (this.gate)
@@ -201,14 +201,22 @@
 
                 var changed = false;
                 this.isRefreshing = true;
-
-                foreach (var keyAndBuilder in this.KeyedSubBuilders)
+                using (var borrow = ListPool<object>.Borrow())
                 {
-                    var builder = keyAndBuilder.Value.Value;
-                    changed |= builder.TryRefresh(settings);
-                    if (builder.IsEmpty)
+                    borrow.Value.Clear();
+                    foreach (var keyAndBuilder in this.KeyedSubBuilders)
                     {
-                        this.KeyedDiffs.Remove(keyAndBuilder.Key);
+                        var builder = keyAndBuilder.Value.Value;
+                        changed |= builder.TryRefresh(settings);
+                        if (builder.IsEmpty)
+                        {
+                            borrow.Value.Add(keyAndBuilder.Key);
+                        }
+                    }
+
+                    foreach (var key in borrow.Value)
+                    {
+                        this.Remove(key);
                     }
                 }
 

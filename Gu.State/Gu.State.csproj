@@ -40,6 +40,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Internals\Contracts\IInitialize{T}.cs" />
     <Compile Include="Internals\CastingComparer.cs" />
     <Compile Include="Internals\CastingComparer{T}.cs" />
     <Compile Include="Copy\Copy.MemberValues.cs" />
@@ -86,11 +87,11 @@
     <Compile Include="Internals\ArrayExt.cs" />
     <Compile Include="Internals\DictionaryExt.cs" />
     <Compile Include="Internals\EnumerableExt.ElementAt.cs" />
-    <Compile Include="Internals\IBorrowed.cs" />
-    <Compile Include="Internals\IDisposer{T}.cs" />
-    <Compile Include="Internals\IRefCounted{T}.cs" />
-    <Compile Include="Internals\IUnsubscriber.cs" />
-    <Compile Include="Internals\IUnsubscriber{T}.cs" />
+    <Compile Include="Internals\Contracts\IBorrowed{T}.cs" />
+    <Compile Include="Internals\Contracts\IDisposer{T}.cs" />
+    <Compile Include="Internals\Contracts\IRefCounted{T}.cs" />
+    <Compile Include="Internals\Contracts\IUnsubscriber.cs" />
+    <Compile Include="Internals\Contracts\IUnsubscriber{T}.cs" />
     <Compile Include="Internals\ListExt.cs" />
     <Compile Include="Internals\Pools\ConcurrentDictionaryPool.cs" />
     <Compile Include="Internals\Pools\DictionaryPool.cs" />
@@ -220,7 +221,7 @@
     <Compile Include="Internals\Constants.cs" />
     <Compile Include="Track\Track.cs" />
     <Compile Include="Track\Dirty\DirtyTracker{T}.cs" />
-    <Compile Include="Contracts\IChangeTracker.cs" />
+    <Compile Include="Internals\Contracts\IChangeTracker.cs" />
     <Compile Include="Internals\Ensure\Ensure.cs" />
     <Compile Include="Internals\Ensure\Ensure.string.cs" />
     <Compile Include="Internals\Ensure\Ensure.type.cs" />

@@ -140,7 +140,7 @@
             using (var borrow = DiffBuilder.GetOrCreate(x, y, settings))
             {
                 borrow.Value.UpdateDiffs(x, y, settings);
-                return borrow.Value.CreateValueDiff();
+                return borrow.Value.CreateValueDiffOrNull();
             }
         }
 
