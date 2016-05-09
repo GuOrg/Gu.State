@@ -27,14 +27,15 @@
             this.refCountedPair = refCountedPair;
             var x = refCountedPair.Value.X;
             var y = refCountedPair.Value.Y;
-            this.IsTrackingCollectionItems = Is.Enumerable(x, y) &&
-                                             !settings.IsImmutable(x.GetType().GetItemType()) &&
-                                             !settings.IsImmutable(y.GetType().GetItemType());
 
             this.xNode = ChangeTrackerNode.GetOrCreate(x, settings);
             this.yNode = ChangeTrackerNode.GetOrCreate(y, settings);
             this.xNode.Value.PropertyChange += this.OnTrackedPropertyChange;
             this.yNode.Value.PropertyChange += this.OnTrackedPropertyChange;
+
+            this.IsTrackingCollectionItems = Is.Enumerable(x, y) &&
+                                 !settings.IsImmutable(x.GetType().GetItemType()) &&
+                                 !settings.IsImmutable(y.GetType().GetItemType());
 
             if (Is.NotifyCollections(x, y))
             {
