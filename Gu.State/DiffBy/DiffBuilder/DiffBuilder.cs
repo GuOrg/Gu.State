@@ -20,7 +20,11 @@
         private readonly object gate = new object();
         private readonly ValueDiff valueDiff;
 
-        private Status status;
+        private bool needsRefresh;
+        private bool isRefreshing;
+        private bool isPurging;
+        private bool isUpdatingDiffs;
+        private bool isCheckingHasMemberOrIndexDiff;
         private bool disposed;
 
         private DiffBuilder(IRefCounted<ReferencePair> refCountedPair, IMemberSettings settings)
@@ -50,30 +54,6 @@
         private Dictionary<object, SubDiff> KeyedDiffs => this.borrowedDiffs.Value;
 
         private Dictionary<object, IRefCounted<DiffBuilder>> KeyedSubBuilders => this.borrowedSubBuilders.Value;
-
-        private bool NeedsRefresh
-        {
-            get { return this.status.IsFlagSet(Status.NeedsRefresh); }
-            set { this.status = this.status.SetFlag(Status.NeedsRefresh, value); }
-        }
-
-        private bool IsRefreshing
-        {
-            get { return this.status.IsFlagSet(Status.IsRefreshing); }
-            set { this.status = this.status.SetFlag(Status.IsRefreshing, value); }
-        }
-
-        private bool IsPurging
-        {
-            get { return this.status.IsFlagSet(Status.IsPurging); }
-            set { this.status = this.status.SetFlag(Status.IsPurging, value); }
-        }
-
-        private bool IsUpdatingDiffs
-        {
-            get { return this.status.IsFlagSet(Status.IsUpdatingDiffs); }
-            set { this.status = this.status.SetFlag(Status.IsUpdatingDiffs, value); }
-        }
 
         public void Dispose()
         {
@@ -125,7 +105,7 @@
             Debug.Assert(!this.disposed, "this.disposed");
             lock (this.gate)
             {
-                this.NeedsRefresh = true;
+                this.needsRefresh = true;
                 this.KeyedDiffs[memberDiff.MemberInfo] = memberDiff;
                 this.UpdateSubBuilder(memberDiff.MemberInfo, null);
             }
@@ -136,7 +116,7 @@
             Debug.Assert(!this.disposed, "this.disposed");
             lock (this.gate)
             {
-                this.NeedsRefresh = true;
+                this.needsRefresh = true;
                 this.KeyedDiffs.Remove(memberOrIndexOrKey);
                 this.UpdateSubBuilder(memberOrIndexOrKey, null);
             }
@@ -160,7 +140,7 @@
 
                     foreach (var index in borrowed.Value)
                     {
-                        this.NeedsRefresh = true;
+                        this.needsRefresh = true;
                         this.Remove(index);
                     }
                 }
@@ -172,7 +152,7 @@
             Debug.Assert(!this.disposed, "this.disposed");
             lock (this.gate)
             {
-                this.NeedsRefresh = true;
+                this.needsRefresh = true;
                 this.KeyedDiffs[indexDiff.Index] = indexDiff;
                 this.UpdateSubBuilder(indexDiff.Index, null);
             }
@@ -182,7 +162,7 @@
         {
             lock (this.gate)
             {
-                this.NeedsRefresh = true;
+                this.needsRefresh = true;
                 this.KeyedDiffs[RankDiffKey] = rankDiff;
             }
         }
@@ -192,7 +172,7 @@
             Debug.Assert(!this.disposed, "this.disposed");
             lock (this.gate)
             {
-                this.NeedsRefresh = true;
+                this.needsRefresh = true;
                 this.KeyedDiffs[member] = MemberDiff.Create(member, builder.valueDiff);
                 this.UpdateSubBuilder(member, builder);
             }
@@ -203,7 +183,7 @@
             Debug.Assert(!this.disposed, "this.disposed");
             lock (this.gate)
             {
-                this.NeedsRefresh = true;
+                this.needsRefresh = true;
                 this.KeyedDiffs[index] = new IndexDiff(index, builder.valueDiff);
                 this.UpdateSubBuilder(index, builder);
             }
@@ -216,42 +196,42 @@
 
         internal bool TryRefresh()
         {
-            if (!this.NeedsRefresh || this.IsRefreshing)
+            if (!this.needsRefresh || this.isRefreshing)
             {
                 return false;
             }
 
             lock (this.gate)
             {
-                if (!this.NeedsRefresh || this.IsRefreshing)
+                if (!this.needsRefresh || this.isRefreshing)
                 {
                     return false;
                 }
 
-                this.IsRefreshing = true;
+                this.isRefreshing = true;
                 this.Purge();
                 this.UpdateDiffs();
-                this.IsRefreshing = false;
-                this.NeedsRefresh = false;
+                this.isRefreshing = false;
+                this.needsRefresh = false;
                 return true;
             }
         }
 
         private void Purge()
         {
-            if (!this.NeedsRefresh || this.IsPurging)
+            if (!this.needsRefresh || this.isPurging)
             {
                 return;
             }
 
             lock (this.gate)
             {
-                if (!this.NeedsRefresh || this.IsPurging)
+                if (!this.needsRefresh || this.isPurging)
                 {
                     return;
                 }
 
-                this.IsPurging = true;
+                this.isPurging = true;
                 using (var borrowedList = ListPool<object>.Borrow())
                 {
                     borrowedList.Value.Clear();
@@ -272,31 +252,39 @@
                     }
                 }
 
-                this.IsPurging = false;
+                this.isPurging = false;
             }
         }
 
         private bool HasMemberOrIndexDiff()
         {
-            return this.KeyedDiffs.Count > this.KeyedSubBuilders.Count ||
-                   this.KeyedSubBuilders.Any(kd => kd.Value.Value.HasMemberOrIndexDiff());
+            if (this.isCheckingHasMemberOrIndexDiff)
+            {
+                return false;
+            }
+
+            this.isCheckingHasMemberOrIndexDiff = true;
+            var result = this.KeyedDiffs.Count > this.KeyedSubBuilders.Count ||
+                         this.KeyedSubBuilders.Any(kd => kd.Value.Value.HasMemberOrIndexDiff());
+            this.isCheckingHasMemberOrIndexDiff = false;
+            return result;
         }
 
         private void UpdateDiffs()
         {
-            if (!this.NeedsRefresh || this.IsUpdatingDiffs)
+            if (!this.needsRefresh || this.isUpdatingDiffs)
             {
                 return;
             }
 
             lock (this.gate)
             {
-                if (!this.NeedsRefresh || this.IsUpdatingDiffs)
+                if (!this.needsRefresh || this.isUpdatingDiffs)
                 {
                     return;
                 }
 
-                this.IsUpdatingDiffs = true;
+                this.isUpdatingDiffs = true;
                 foreach (var keyedSubBuilder in this.KeyedSubBuilders)
                 {
                     keyedSubBuilder.Value.Value.UpdateDiffs();
@@ -311,7 +299,7 @@
 
                 this.diffs.TrimLengthTo(this.KeyedDiffs.Count);
                 this.diffs.Sort(SubDiffComparer.Default);
-                this.IsUpdatingDiffs = false;
+                this.isUpdatingDiffs = false;
             }
         }
 

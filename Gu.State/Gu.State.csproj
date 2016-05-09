@@ -40,8 +40,6 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DiffBy\DiffBuilder\Status.cs" />
-    <Compile Include="DiffBy\DiffBuilder\StatusExtensions.cs" />
     <Compile Include="Internals\Contracts\IInitialize{T}.cs" />
     <Compile Include="Internals\CastingComparer.cs" />
     <Compile Include="Internals\CastingComparer{T}.cs" />
