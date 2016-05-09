@@ -293,11 +293,9 @@
 
                 using (var borrow = ListPool<SubDiff>.Borrow())
                 {
-                    var i = 0;
                     foreach (var keyAndDiff in this.KeyedDiffs)
                     {
                         borrow.Value.Add(keyAndDiff.Value);
-                        i++;
                     }
 
                     borrow.Value.Sort(SubDiffComparer.Default);
