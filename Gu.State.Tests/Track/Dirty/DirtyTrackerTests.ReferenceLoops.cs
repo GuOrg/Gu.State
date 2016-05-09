@@ -8,6 +8,12 @@ namespace Gu.State.Tests
     {
         public class ReferenceLoops
         {
+            [SetUp]
+            public void SetUp()
+            {
+                Assert.Fail();
+            }
+
             [Test]
             public void ParentChildCreateWhenParentDirtyLoop()
             {

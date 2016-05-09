@@ -3,6 +3,7 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
@@ -28,7 +29,7 @@
             this.valueDiff = new ValueDiff(refCountedPair.Value.X, refCountedPair.Value.Y, this.diffs);
         }
 
-        internal bool IsEmpty => this.KeyedDiffs.Values.All(d => d.IsEmpty);
+        internal bool IsEmpty => this.diffs.All(d => d.IsEmpty);
 
         private Dictionary<object, SubDiff> KeyedDiffs => this.borrowedDiffs.Value;
 
@@ -154,11 +155,16 @@
             Debug.Assert(!this.disposed, "this.disposed");
             lock (this.gate)
             {
-                this.TryRefresh(null);
+                this.Refresh();
                 return this.IsEmpty
                            ? null
                            : this.valueDiff;
             }
+        }
+
+        internal void Refresh()
+        {
+            this.TryRefresh(null);
         }
 
         internal bool TryRefresh(IMemberSettings settings)

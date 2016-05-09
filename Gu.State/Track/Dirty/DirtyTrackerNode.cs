@@ -17,7 +17,7 @@
         private readonly IRefCounted<ReferencePair> refCountedPair;
         private readonly IRefCounted<ChangeTrackerNode> xNode;
         private readonly IRefCounted<ChangeTrackerNode> yNode;
-        private readonly DisposingMap<IDisposable> children = new DisposingMap<IDisposable>();
+        private readonly DisposingMap<IUnsubscriber<IRefCounted<DirtyTrackerNode>>> children = new DisposingMap<IUnsubscriber<IRefCounted<DirtyTrackerNode>>>();
         private readonly IRefCounted<DiffBuilder> refcountedDiffBuilder;
 
         private bool isDirty;
@@ -54,8 +54,22 @@
 
             var builder = DiffBuilder.Create(x, y, settings);
             builder.Value.UpdateDiffs(x, y, settings);
+            builder.Value.Refresh();
             this.refcountedDiffBuilder = builder;
             this.isDirty = !this.Builder.IsEmpty;
+
+            foreach (var propertyInfo in this.TrackProperties)
+            {
+                this.UpdatePropertyChildNode(propertyInfo);
+            }
+
+            if (this.IsTrackingCollectionItems)
+            {
+                for (int i = 0; i < Math.Max(this.XList.Count, this.YList.Count); i++)
+                {
+                    this.UpdateIndexChildNode(i);
+                }
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -128,7 +142,11 @@
             Debug.Assert(x is INotifyPropertyChanged || x is INotifyCollectionChanged, "Must notify");
             Debug.Assert(y != null, "Cannot track null");
             Debug.Assert(y is INotifyPropertyChanged || y is INotifyCollectionChanged, "Must notify");
-            return TrackerCache.GetOrAdd(x, y, settings, pair => new DirtyTrackerNode(pair, settings));
+            return TrackerCache.GetOrAdd(
+                x,
+                y,
+                settings,
+                pair => new DirtyTrackerNode(pair, settings));
         }
 
         private static bool IsTrackablePair(object x, object y, PropertiesSettings settings)
@@ -173,8 +191,15 @@
                 var getter = this.Settings.GetOrCreateGetterAndSetter(propertyInfo);
                 var xValue = getter.GetValue(this.X);
                 var yValue = getter.GetValue(this.Y);
-                var refCounted = this.CreateChild(xValue, yValue, propertyInfo);
-                this.children.SetValue(propertyInfo, refCounted);
+                if (IsTrackablePair(xValue, yValue, this.Settings))
+                {
+                    var child = this.CreateChild(xValue, yValue, propertyInfo);
+                    this.children.SetValue(propertyInfo, child);
+                }
+                else
+                {
+                    this.children.SetValue(propertyInfo, null);
+                }
             }
         }
 
@@ -235,8 +260,8 @@
             if (IsTrackablePair(xValue, yValue, this.Settings) &&
                (this.Settings.ReferenceHandling == ReferenceHandling.Structural || this.Settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops))
             {
-                var refCounted = this.CreateChild(xValue, yValue, index);
-                this.children.SetValue(index, refCounted);
+                var child = this.CreateChild(xValue, yValue, index);
+                this.children.SetValue(index, child);
             }
             else
             {
@@ -257,9 +282,9 @@
             this.Builder.UpdateIndexDiff(xValue, yValue, index, this.Settings);
         }
 
-        private IUnsubscriber CreateChild(object xValue, object yValue, object key)
+        private IUnsubscriber<IRefCounted<DirtyTrackerNode>> CreateChild(object xValue, object yValue, object key)
         {
-            if (xValue == null || yValue == null)
+            if (!IsTrackablePair(xValue, yValue, this.Settings))
             {
                 return null;
             }
@@ -285,9 +310,20 @@
                 {
                     return;
                 }
+
+                this.Builder.UpdateMemberDiff(this.X, this.Y, propertyInfo, this.Settings);
+            }
+            else if (key is int)
+            {
+                var index = (int)key;
+                this.Builder.UpdateIndexDiff(this.XList.ElementAtOrMissing(index), this.YList.ElementAtOrMissing(index), index, this.Settings);
+            }
+            else
+            {
+                throw Throw.ExpectedParameterOfTypes<int, PropertyInfo>("Key must be int or PropertyInfo");
             }
 
-            this.Builder.TryRefresh(null);
+            this.Builder.Refresh();
             this.PropertyChanged?.Invoke(this, DiffPropertyChangedEventArgs);
             this.IsDirty = !this.Builder.IsEmpty;
             this.Changed?.Invoke(this, e.With(this, key));

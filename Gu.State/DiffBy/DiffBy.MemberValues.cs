@@ -112,6 +112,7 @@
                 {
                     collectionBuilder.Add(new IndexDiff(index, new ValueDiff(xItem, yItem)));
                 }
+
                 return;
             }
 
