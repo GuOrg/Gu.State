@@ -346,8 +346,10 @@
 
                     item.Value++;
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("ObservableCollection<ComplexType> [0] x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: missing item", tracker.Diff.ToString("", " "));
-                    expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
+                    var expected = "ObservableCollection<ComplexType> [0] Value x: 2 y: 1 [1] Value x: 2 y: 1";
+                    var actual = tracker.Diff.ToString("", " ");
+                    Assert.AreEqual(expected, actual);
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty", "Diff" }); // not sure how we want this
                     CollectionAssert.AreEqual(expectedChanges, changes);
                 }
             }

@@ -8,6 +8,7 @@
     using System.Linq;
     using System.Reflection;
 
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     internal sealed class DiffBuilder : IDisposable
     {
         private static readonly object RankDiffKey = new object();
@@ -30,7 +31,16 @@
             this.valueDiff = new ValueDiff(refCountedPair.Value.X, refCountedPair.Value.Y, this.diffs);
         }
 
-        internal bool IsEmpty => this.diffs.All(d => d.IsEmpty);
+        internal bool IsEmpty
+        {
+            get
+            {
+                this.TryRefresh(null);
+                return this.diffs.All(d => d.IsEmpty);
+            }
+        }
+
+        private string DebuggerDisplay => $"{this.GetType().Name} for {this.refCountedPair.Value.X.GetType().Name}";
 
         private Dictionary<object, SubDiff> KeyedDiffs => this.borrowedDiffs.Value;
 
@@ -57,7 +67,7 @@
             }
         }
 
-        internal static IRefCounted<DiffBuilder> Create(object x, object y, IMemberSettings settings)
+        internal static IRefCounted<DiffBuilder> GetOrCreate(object x, object y, IMemberSettings settings)
         {
             return TrackerCache.GetOrAdd(x, y, settings, pair => new DiffBuilder(pair));
         }

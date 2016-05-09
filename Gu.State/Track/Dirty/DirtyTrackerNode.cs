@@ -52,7 +52,7 @@
                 this.yNode.Value.Reset += this.OnTrackedReset;
             }
 
-            var builder = DiffBuilder.Create(x, y, settings);
+            var builder = DiffBuilder.GetOrCreate(x, y, settings);
             builder.Value.UpdateDiffs(x, y, settings);
             builder.Value.Refresh();
             this.refcountedDiffBuilder = builder;

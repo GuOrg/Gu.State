@@ -11,7 +11,7 @@ namespace Gu.State.Tests
             [SetUp]
             public void SetUp()
             {
-                Assert.Fail();
+                Assert.Fail("must be fixed");
             }
 
             [Test]

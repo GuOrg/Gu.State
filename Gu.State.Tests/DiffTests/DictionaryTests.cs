@@ -9,7 +9,7 @@
         public abstract Diff DiffMethod<T>(T source, T target, ReferenceHandling referenceHandling) where T : class;
 
         [TestCase(1, "one", "Empty")]
-        [TestCase(2, "one", "Dictionary<int, string> [2] x: one y: missing item [1] x: missing item y: one")]
+        [TestCase(2, "one", "Dictionary<int, string> [1] x: missing item y: one [2] x: one y: missing item")]
         [TestCase(1, "two", "Dictionary<int, string> [1] x: two y: one")]
         public void DictionaryToSameLength(int key, string value, string expected)
         {
@@ -39,7 +39,7 @@
         }
 
         [TestCase(1, "one", "Empty")]
-        [TestCase(2, "one", "Dictionary<int, ComplexType> [2] x: Gu.State.Tests.DiffTests.DiffTypes+ComplexType y: missing item [1] x: missing item y: Gu.State.Tests.DiffTests.DiffTypes+ComplexType")]
+        [TestCase(2, "one", "Dictionary<int, ComplexType> [1] x: missing item y: Gu.State.Tests.DiffTests.DiffTypes+ComplexType [2] x: Gu.State.Tests.DiffTests.DiffTypes+ComplexType y: missing item")]
         [TestCase(1, "two", "Dictionary<int, ComplexType> [1] <member> x: two y: one")]
         public void DictionaryIntComplex(int key, string value, string expected)
         {

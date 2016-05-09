@@ -37,7 +37,7 @@ namespace Gu.State.Tests.DiffTests
             Assert.AreEqual("HashSet<int> [30] x: 30 y: missing item [40] x: missing item y: 40", result.ToString("", " "));
 
             result = this.DiffMethod(y, x, referenceHandling);
-            Assert.AreEqual("HashSet<int> [40] x: 40 y: missing item [30] x: missing item y: 30", result.ToString("", " "));
+            Assert.AreEqual("HashSet<int> [30] x: missing item y: 30 [40] x: 40 y: missing item", result.ToString("", " "));
         }
 
         [TestCase(ReferenceHandling.Throw)]
