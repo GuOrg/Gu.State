@@ -125,6 +125,7 @@
     <Compile Include="Internals\Reflection\TypeExtTests.ImmutableCollections.cs" />
     <Compile Include="Internals\SetTests.cs" />
     <Compile Include="Internals\RefcounterTests.cs" />
+    <Compile Include="Internals\TrackerCache.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTests.MemoryLeaks.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTests.Ignores.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTests.ReferenceLoops.cs" />
