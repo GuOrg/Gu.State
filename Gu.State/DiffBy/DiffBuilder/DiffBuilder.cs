@@ -36,7 +36,7 @@
             get
             {
                 this.TryRefresh(null);
-                return this.diffs.All(d => d.IsEmpty);
+                return this.KeyedDiffs.All(kd => kd.Value.IsEmpty);
             }
         }
 
