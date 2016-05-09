@@ -28,7 +28,11 @@
             this.valueDiff = new ValueDiff(refCountedPair.Value.X, refCountedPair.Value.Y, this.diffs);
         }
 
-        private bool IsEmpty => this.borrowedDiffs.Value.Values.All(d => d.IsEmpty);
+        internal bool IsEmpty => this.KeyedDiffs.Values.All(d => d.IsEmpty);
+
+        private Dictionary<object, SubDiff> KeyedDiffs => this.borrowedDiffs.Value;
+
+        private Dictionary<object, IRefCounted<DiffBuilder>> KeyedSubBuilders => this.borrowedSubBuilders.Value;
 
         public void Dispose()
         {
@@ -40,7 +44,7 @@
                 }
 
                 this.disposed = true;
-                foreach (var disposer in this.borrowedSubBuilders.Value.Values)
+                foreach (var disposer in this.KeyedSubBuilders.Values)
                 {
                     disposer.Dispose();
                 }
@@ -68,7 +72,7 @@
             Debug.Assert(!this.disposed, "this.disposed");
             lock (this.gate)
             {
-                this.borrowedDiffs.Value[memberDiff.MemberInfo] = memberDiff;
+                this.KeyedDiffs[memberDiff.MemberInfo] = memberDiff;
                 this.UpdateSubBuilder(memberDiff.MemberInfo, null);
             }
         }
@@ -78,8 +82,32 @@
             Debug.Assert(!this.disposed, "this.disposed");
             lock (this.gate)
             {
-                this.borrowedDiffs.Value.Remove(memberOrIndexOrKey);
+                this.KeyedDiffs.Remove(memberOrIndexOrKey);
                 this.UpdateSubBuilder(memberOrIndexOrKey, null);
+            }
+        }
+
+        internal void ClearIndexDiffs()
+        {
+            Debug.Assert(!this.disposed, "this.disposed");
+            lock (this.gate)
+            {
+                using (var borrowed = ListPool<object>.Borrow())
+                {
+                    foreach (var subDiff in this.KeyedDiffs)
+                    {
+                        var indexDiff = subDiff.Value as IndexDiff;
+                        if (indexDiff != null)
+                        {
+                            borrowed.Value.Add(indexDiff.Index);
+                        }
+                    }
+
+                    foreach (var index in borrowed.Value)
+                    {
+                        this.Remove(index);
+                    }
+                }
             }
         }
 
@@ -88,7 +116,7 @@
             Debug.Assert(!this.disposed, "this.disposed");
             lock (this.gate)
             {
-                this.borrowedDiffs.Value[indexDiff.Index] = indexDiff;
+                this.KeyedDiffs[indexDiff.Index] = indexDiff;
                 this.UpdateSubBuilder(indexDiff.Index, null);
             }
         }
@@ -97,7 +125,7 @@
         {
             lock (this.gate)
             {
-                this.borrowedDiffs.Value[RankDiffKey] = rankDiff;
+                this.KeyedDiffs[RankDiffKey] = rankDiff;
             }
         }
 
@@ -106,7 +134,7 @@
             Debug.Assert(!this.disposed, "this.disposed");
             lock (this.gate)
             {
-                this.borrowedDiffs.Value[member] = MemberDiff.Create(member, builder.valueDiff);
+                this.KeyedDiffs[member] = MemberDiff.Create(member, builder.valueDiff);
                 this.UpdateSubBuilder(member, builder);
             }
         }
@@ -116,7 +144,7 @@
             Debug.Assert(!this.disposed, "this.disposed");
             lock (this.gate)
             {
-                this.borrowedDiffs.Value[index] = new IndexDiff(index, builder.valueDiff);
+                this.KeyedDiffs[index] = new IndexDiff(index, builder.valueDiff);
                 this.UpdateSubBuilder(index, builder);
             }
         }
@@ -189,7 +217,7 @@
         {
             if (builder == null)
             {
-                this.borrowedSubBuilders.Value.TryRemoveAndDispose(key);
+                this.KeyedSubBuilders.TryRemoveAndDispose(key);
                 return;
             }
 
@@ -200,7 +228,7 @@
                 throw Throw.ShouldNeverGetHereException("AddLazy failed, try refcount failed");
             }
 
-            this.borrowedSubBuilders.Value.AddOrUpdate(key, refCounted);
+           this.KeyedSubBuilders.AddOrUpdate(key, refCounted);
         }
     }
 }
