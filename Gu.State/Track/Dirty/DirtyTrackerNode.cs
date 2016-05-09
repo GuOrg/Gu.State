@@ -30,6 +30,10 @@
             this.refCountedPair = refCountedPair;
             var x = refCountedPair.Value.X;
             var y = refCountedPair.Value.Y;
+            this.IsTrackingCollectionItems = Is.Enumerable(x, y) &&
+                                             !settings.IsImmutable(x.GetType().GetItemType()) &&
+                                             !settings.IsImmutable(y.GetType().GetItemType());
+
             this.xNode = ChangeTrackerNode.GetOrCreate(x, settings);
             this.yNode = ChangeTrackerNode.GetOrCreate(y, settings);
             this.xNode.Value.PropertyChange += this.OnTrackedPropertyChange;
@@ -80,6 +84,8 @@
         }
 
         public ValueDiff Diff => this.Builder?.CreateValueDiff();
+
+        private bool IsTrackingCollectionItems { get; }
 
         private DiffBuilder Builder => this.refcountedDiffBuilder?.Value;
 
@@ -209,7 +215,7 @@
             this.Builder?.ClearIndexDiffs();
             this.children.ClearIndexTrackers();
             var max = Math.Max(this.XList.Count, this.YList.Count);
-            for (var i = 0; i < max; i++)
+            for (int i = max - 1; i >= 0; i--)
             {
                 this.UpdateIndexChildNode(i);
                 this.UpdateIndexDiff(i);
@@ -220,6 +226,11 @@
 
         private void UpdateIndexChildNode(int index)
         {
+            if (!this.IsTrackingCollectionItems)
+            {
+                return;
+            }
+
             var xValue = this.XList.ElementAtOrMissing(index);
             var yValue = this.YList.ElementAtOrMissing(index);
 

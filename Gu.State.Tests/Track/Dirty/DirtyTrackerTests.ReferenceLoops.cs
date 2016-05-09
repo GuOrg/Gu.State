@@ -8,12 +8,6 @@ namespace Gu.State.Tests
     {
         public class ReferenceLoops
         {
-            [SetUp]
-            public void SetUp()
-            {
-                Assert.Fail();
-            }
-
             [Test]
             public void ParentChildCreateWhenParentDirtyLoop()
             {
@@ -86,7 +80,7 @@ namespace Gu.State.Tests
                     y.Child.Parent = y;
                     expectedChanges.Add("Diff");
                     CollectionAssert.AreEqual(expectedChanges, changes);
-                    expected = "Parent Name x: Poppa y: null Child Parent Name x: Poppa y: null Child Parent ...";
+                    expected = "Parent Name x: Poppa y: null Child Parent ...";
                     actual = tracker.Diff.ToString("", " ");
                     Assert.AreEqual(expected, actual);
 
@@ -161,7 +155,7 @@ namespace Gu.State.Tests
                     y.Value.Child.Parent = y.Value;
                     expectedChanges.Add("Diff");
                     CollectionAssert.AreEqual(expectedChanges, changes);
-                    expected = "With<Parent> Name x: Root y: null Value Name x: Poppa1 y: Poppa2 Child Name x: Child1 y: Child2 Parent Name x: Poppa1 y: Poppa2 Child Name x: Child1 y: Child2";
+                    expected = "With<Parent> Name x: Root y: null Value Name x: Poppa1 y: Poppa2 Child Name x: Child1 y: Child2 Parent ...";
                     actual = tracker.Diff.ToString("", " ");
                     Assert.AreEqual(expected, actual);
 
@@ -172,28 +166,14 @@ namespace Gu.State.Tests
                     actual = tracker.Diff.ToString("", " ");
                     Assert.AreEqual(expected, actual);
 
-                    x.Value.Child.Parent = x.Value;
-                    expectedChanges.Add("Diff");
-                    CollectionAssert.AreEqual(expectedChanges, changes);
-                    expected = "With<Parent> Name x: Root y: null Value Name x: Poppa1 y: Poppa2 Child Parent ...";
-                    actual = tracker.Diff.ToString("", " ");
-                    Assert.AreEqual(expected, actual);
-
-                    y.Value.Child = new Child("Child");
-                    expectedChanges.Add("Diff");
-                    CollectionAssert.AreEqual(expectedChanges, changes);
-                    expected = "With<Parent> Name x: Root y: null Value Name x: Poppa1 y: Poppa2 Child Parent ...";
-                    actual = tracker.Diff.ToString("", " ");
-                    Assert.AreEqual(expected, actual);
-
-                    y.Value.Child.Parent = y.Value;
-                    expectedChanges.Add("Diff");
-                    CollectionAssert.AreEqual(expectedChanges, changes);
-                    expected = "With<Parent> Name x: Root y: null Value Name x: Poppa1 y: Poppa2 Child Parent ...";
-                    actual = tracker.Diff.ToString("", " ");
-                    Assert.AreEqual(expected, actual);
-
                     y.Name = x.Name;
+                    expectedChanges.Add("Diff");
+                    CollectionAssert.AreEqual(expectedChanges, changes);
+                    expected = "With<Parent> Value Name x: Poppa1 y: Poppa2 Child Parent ...";
+                    actual = tracker.Diff.ToString("", " ");
+                    Assert.AreEqual(expected, actual);
+
+                    y.Value.Name = x.Value.Name;
                     expectedChanges.Add("Diff", "IsDirty");
                     CollectionAssert.AreEqual(expectedChanges, changes);
                     Assert.AreEqual(null, tracker.Diff);
