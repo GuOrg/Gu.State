@@ -20,9 +20,6 @@
         private readonly DisposingMap<IDisposable> children = new DisposingMap<IDisposable>();
         private readonly IRefCounted<DiffBuilder> refcountedDiffBuilder;
 
-        private bool isChanging;
-        private bool isResetting;
-
         private bool isDirty;
 
         private DirtyTrackerNode(IRefCounted<ReferencePair> refCountedPair, PropertiesSettings settings)
@@ -215,7 +212,7 @@
             this.Builder?.ClearIndexDiffs();
             this.children.ClearIndexTrackers();
             var max = Math.Max(this.XList.Count, this.YList.Count);
-            for (int i = max - 1; i >= 0; i--)
+            for (var i = 0; i < max; i++)
             {
                 this.UpdateIndexChildNode(i);
                 this.UpdateIndexDiff(i);
@@ -297,28 +294,22 @@
 
         private void TryRefreshAndNotify(object propertyOrIndex)
         {
-            if (this.Builder != null && this.Builder.TryRefresh(this.Settings))
+            if (this.Builder?.TryRefresh(this.Settings) == true)
             {
                 this.TryNotifyChanges(propertyOrIndex);
             }
         }
 
-        private bool TryNotifyChanges(object propertyOrIndex)
+        private void TryNotifyChanges(object propertyOrIndex)
         {
             if (this.Builder == null)
             {
-                return false;
+                return;
             }
 
             this.PropertyChanged?.Invoke(this, DiffPropertyChangedEventArgs);
             this.IsDirty = !this.Builder.IsEmpty;
-
-            if (!this.isChanging)
-            {
-                this.Changed?.Invoke(this, new DirtyTrackerChangedEventArgs(this, propertyOrIndex));
-            }
-
-            return true;
+            this.Changed?.Invoke(this, new DirtyTrackerChangedEventArgs(this, propertyOrIndex));
         }
     }
 }

@@ -172,20 +172,20 @@
 
                 var changed = false;
                 this.isRefreshing = true;
-                var keyAndDiffs = this.borrowedDiffs.Value;
-                foreach (var keyAndBuilder in this.borrowedSubBuilders.Value)
+
+                foreach (var keyAndBuilder in this.KeyedSubBuilders)
                 {
                     var builder = keyAndBuilder.Value.Value;
                     changed |= builder.TryRefresh(settings);
                     if (builder.IsEmpty)
                     {
-                        keyAndDiffs.Remove(keyAndBuilder.Key);
+                        this.KeyedDiffs.Remove(keyAndBuilder.Key);
                     }
                 }
 
                 var i = 0;
-                changed |= this.diffs.Count != keyAndDiffs.Count;
-                foreach (var keyAndDiff in keyAndDiffs)
+                changed |= this.diffs.Count != this.KeyedDiffs.Count;
+                foreach (var keyAndDiff in this.KeyedDiffs)
                 {
                     if (!changed && settings != null)
                     {
@@ -207,7 +207,7 @@
                     i++;
                 }
 
-                changed |= ((IList)this.diffs).TryTrimLengthTo(keyAndDiffs.Count);
+                changed |= ((IList)this.diffs).TryTrimLengthTo(this.KeyedDiffs.Count);
                 this.isRefreshing = false;
                 return changed;
             }
