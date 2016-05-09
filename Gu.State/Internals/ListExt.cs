@@ -21,36 +21,35 @@
             }
         }
 
-        internal static bool TryTrimLengthTo(this IList source, IList target)
+        internal static void TrimLengthTo(this IList source, IList target)
         {
-            return source.TryTrimLengthTo(target.Count);
+            source.TrimLengthTo(target.Count);
         }
 
-        internal static bool TryTrimLengthTo<T>(this IList<T> source, IList<T> target)
+        internal static void TrimLengthTo<T>(this IList<T> source, IList<T> target)
         {
-            return source.TryTrimLengthTo(target.Count);
+            source.TrimLengthTo(target.Count);
         }
 
-        internal static bool TryTrimLengthTo(this IList source, int targetCount)
+        internal static void TrimLengthTo<T>(this List<T> source, int targetCount)
         {
-            var trimmed = source.Count > targetCount;
+            ((IList<T>)source).TrimLengthTo(targetCount);
+        }
+
+        internal static void TrimLengthTo(this IList source, int targetCount)
+        {
             for (var i = source.Count - 1; i >= targetCount; i--)
             {
                 source.RemoveAt(i);
             }
-
-            return trimmed;
         }
 
-        internal static bool TryTrimLengthTo<T>(this IList<T> source, int targetCount)
+        internal static void TrimLengthTo<T>(this IList<T> source, int targetCount)
         {
-            var trimmed = source.Count > targetCount;
             for (var i = source.Count - 1; i >= targetCount; i--)
             {
                 source.RemoveAt(i);
             }
-
-            return trimmed;
         }
     }
 }

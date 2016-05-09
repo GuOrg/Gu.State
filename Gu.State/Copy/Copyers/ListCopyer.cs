@@ -64,7 +64,7 @@ namespace Gu.State
                 }
             }
 
-            target.TryTrimLengthTo(source);
+            target.TrimLengthTo(source);
         }
     }
 }

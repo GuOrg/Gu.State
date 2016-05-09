@@ -184,7 +184,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void DuplicatedItemNotifies()
+            public void SameItemTwiceNotifies()
             {
                 var changes = new List<object>();
                 var item = new ComplexType();

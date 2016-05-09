@@ -3,7 +3,6 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
@@ -15,16 +14,14 @@
         private readonly IRefCounted<ReferencePair> refCountedPair;
 
         private readonly IMemberSettings settings;
-
         private readonly IBorrowed<Dictionary<object, SubDiff>> borrowedDiffs;
         private readonly IBorrowed<Dictionary<object, IRefCounted<DiffBuilder>>> borrowedSubBuilders;
         private readonly List<SubDiff> diffs = new List<SubDiff>();
         private readonly object gate = new object();
         private readonly ValueDiff valueDiff;
 
-        private bool needsRefresh;
+        private Status status;
         private bool disposed;
-        private bool isRefreshing;
 
         private DiffBuilder(IRefCounted<ReferencePair> refCountedPair, IMemberSettings settings)
         {
@@ -43,7 +40,7 @@
                 lock (this.gate)
                 {
                     this.Refresh();
-                    return this.KeyedDiffs.All(kd => kd.Value.IsEmpty);
+                    return this.KeyedDiffs.Count == 0;
                 }
             }
         }
@@ -53,6 +50,30 @@
         private Dictionary<object, SubDiff> KeyedDiffs => this.borrowedDiffs.Value;
 
         private Dictionary<object, IRefCounted<DiffBuilder>> KeyedSubBuilders => this.borrowedSubBuilders.Value;
+
+        private bool NeedsRefresh
+        {
+            get { return this.status.IsFlagSet(Status.NeedsRefresh); }
+            set { this.status = this.status.SetFlag(Status.NeedsRefresh, value); }
+        }
+
+        private bool IsRefreshing
+        {
+            get { return this.status.IsFlagSet(Status.IsRefreshing); }
+            set { this.status = this.status.SetFlag(Status.IsRefreshing, value); }
+        }
+
+        private bool IsPurging
+        {
+            get { return this.status.IsFlagSet(Status.IsPurging); }
+            set { this.status = this.status.SetFlag(Status.IsPurging, value); }
+        }
+
+        private bool IsUpdatingDiffs
+        {
+            get { return this.status.IsFlagSet(Status.IsUpdatingDiffs); }
+            set { this.status = this.status.SetFlag(Status.IsUpdatingDiffs, value); }
+        }
 
         public void Dispose()
         {
@@ -104,7 +125,7 @@
             Debug.Assert(!this.disposed, "this.disposed");
             lock (this.gate)
             {
-                this.needsRefresh = true;
+                this.NeedsRefresh = true;
                 this.KeyedDiffs[memberDiff.MemberInfo] = memberDiff;
                 this.UpdateSubBuilder(memberDiff.MemberInfo, null);
             }
@@ -115,7 +136,7 @@
             Debug.Assert(!this.disposed, "this.disposed");
             lock (this.gate)
             {
-                this.needsRefresh = true;
+                this.NeedsRefresh = true;
                 this.KeyedDiffs.Remove(memberOrIndexOrKey);
                 this.UpdateSubBuilder(memberOrIndexOrKey, null);
             }
@@ -139,7 +160,7 @@
 
                     foreach (var index in borrowed.Value)
                     {
-                        this.needsRefresh = true;
+                        this.NeedsRefresh = true;
                         this.Remove(index);
                     }
                 }
@@ -151,7 +172,7 @@
             Debug.Assert(!this.disposed, "this.disposed");
             lock (this.gate)
             {
-                this.needsRefresh = true;
+                this.NeedsRefresh = true;
                 this.KeyedDiffs[indexDiff.Index] = indexDiff;
                 this.UpdateSubBuilder(indexDiff.Index, null);
             }
@@ -161,7 +182,7 @@
         {
             lock (this.gate)
             {
-                this.needsRefresh = true;
+                this.NeedsRefresh = true;
                 this.KeyedDiffs[RankDiffKey] = rankDiff;
             }
         }
@@ -171,7 +192,7 @@
             Debug.Assert(!this.disposed, "this.disposed");
             lock (this.gate)
             {
-                this.needsRefresh = true;
+                this.NeedsRefresh = true;
                 this.KeyedDiffs[member] = MemberDiff.Create(member, builder.valueDiff);
                 this.UpdateSubBuilder(member, builder);
             }
@@ -182,7 +203,7 @@
             Debug.Assert(!this.disposed, "this.disposed");
             lock (this.gate)
             {
-                this.needsRefresh = true;
+                this.NeedsRefresh = true;
                 this.KeyedDiffs[index] = new IndexDiff(index, builder.valueDiff);
                 this.UpdateSubBuilder(index, builder);
             }
@@ -195,68 +216,102 @@
 
         internal bool TryRefresh()
         {
+            if (!this.NeedsRefresh || this.IsRefreshing)
+            {
+                return false;
+            }
+
             lock (this.gate)
             {
-                if (!this.needsRefresh)
+                if (!this.NeedsRefresh || this.IsRefreshing)
                 {
                     return false;
                 }
 
-                if (this.isRefreshing)
+                this.IsRefreshing = true;
+                this.Purge();
+                this.UpdateDiffs();
+                this.IsRefreshing = false;
+                this.NeedsRefresh = false;
+                return true;
+            }
+        }
+
+        private void Purge()
+        {
+            if (!this.NeedsRefresh || this.IsPurging)
+            {
+                return;
+            }
+
+            lock (this.gate)
+            {
+                if (!this.NeedsRefresh || this.IsPurging)
                 {
-                    return false;
+                    return;
                 }
 
-                var changed = false;
-                this.isRefreshing = true;
-                using (var borrow = ListPool<object>.Borrow())
+                this.IsPurging = true;
+                using (var borrowedList = ListPool<object>.Borrow())
                 {
-                    borrow.Value.Clear();
+                    borrowedList.Value.Clear();
                     foreach (var keyAndBuilder in this.KeyedSubBuilders)
                     {
                         var builder = keyAndBuilder.Value.Value;
-                        changed |= builder.TryRefresh();
-                        if (builder.IsEmpty)
+                        builder.Purge();
+
+                        if (!builder.HasMemberOrIndexDiff())
                         {
-                            borrow.Value.Add(keyAndBuilder.Key);
+                            borrowedList.Value.Add(keyAndBuilder.Key);
                         }
                     }
 
-                    foreach (var key in borrow.Value)
+                    foreach (var key in borrowedList.Value)
                     {
                         this.Remove(key);
                     }
                 }
 
+                this.IsPurging = false;
+            }
+        }
+
+        private bool HasMemberOrIndexDiff()
+        {
+            return this.KeyedDiffs.Count > this.KeyedSubBuilders.Count ||
+                   this.KeyedSubBuilders.Any(kd => kd.Value.Value.HasMemberOrIndexDiff());
+        }
+
+        private void UpdateDiffs()
+        {
+            if (!this.NeedsRefresh || this.IsUpdatingDiffs)
+            {
+                return;
+            }
+
+            lock (this.gate)
+            {
+                if (!this.NeedsRefresh || this.IsUpdatingDiffs)
+                {
+                    return;
+                }
+
+                this.IsUpdatingDiffs = true;
+                foreach (var keyedSubBuilder in this.KeyedSubBuilders)
+                {
+                    keyedSubBuilder.Value.Value.UpdateDiffs();
+                }
+
                 var i = 0;
-                changed |= this.diffs.Count != this.KeyedDiffs.Count;
                 foreach (var keyAndDiff in this.KeyedDiffs)
                 {
-                    if (!changed)
-                    {
-                        var old = this.diffs[i];
-                        bool valueEquals;
-                        if (EqualBy.TryGetValueEquals(old.X, keyAndDiff.Value.X, this.settings, out valueEquals))
-                        {
-                            changed |= !valueEquals;
-                        }
-
-                        if (!changed &&
-                            EqualBy.TryGetValueEquals(old.Y, keyAndDiff.Value.Y, this.settings, out valueEquals))
-                        {
-                            changed |= !valueEquals;
-                        }
-                    }
-
                     this.diffs.SetElementAt(i, keyAndDiff.Value);
                     i++;
                 }
 
-                changed |= ((IList)this.diffs).TryTrimLengthTo(this.KeyedDiffs.Count);
+                this.diffs.TrimLengthTo(this.KeyedDiffs.Count);
                 this.diffs.Sort(SubDiffComparer.Default);
-                this.isRefreshing = false;
-                this.needsRefresh = false;
-                return changed;
+                this.IsUpdatingDiffs = false;
             }
         }
 

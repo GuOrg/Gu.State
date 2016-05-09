@@ -63,7 +63,7 @@ namespace Gu.State
                 target.SetElementAt(i, copy);
             }
 
-            target.TryTrimLengthTo(source);
+            target.TrimLengthTo(source);
         }
     }
 }
