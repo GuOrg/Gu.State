@@ -13,6 +13,9 @@
     {
         private static readonly object RankDiffKey = new object();
         private readonly IRefCounted<ReferencePair> refCountedPair;
+
+        private readonly IMemberSettings settings;
+
         private readonly IBorrowed<Dictionary<object, SubDiff>> borrowedDiffs;
         private readonly IBorrowed<Dictionary<object, IRefCounted<DiffBuilder>>> borrowedSubBuilders;
         private readonly List<SubDiff> diffs = new List<SubDiff>();
@@ -23,9 +26,10 @@
         private bool disposed;
         private bool isRefreshing;
 
-        private DiffBuilder(IRefCounted<ReferencePair> refCountedPair)
+        private DiffBuilder(IRefCounted<ReferencePair> refCountedPair, IMemberSettings settings)
         {
             this.refCountedPair = refCountedPair;
+            this.settings = settings;
             this.borrowedDiffs = DictionaryPool<object, SubDiff>.Borrow();
             this.borrowedSubBuilders = DictionaryPool<object, IRefCounted<DiffBuilder>>.Borrow();
             this.valueDiff = new ValueDiff(refCountedPair.Value.X, refCountedPair.Value.Y, this.diffs);
@@ -35,8 +39,12 @@
         {
             get
             {
-                this.TryRefresh(null);
-                return this.KeyedDiffs.All(kd => kd.Value.IsEmpty);
+                Debug.Assert(!this.disposed, "this.disposed");
+                lock (this.gate)
+                {
+                    this.Refresh();
+                    return this.KeyedDiffs.All(kd => kd.Value.IsEmpty);
+                }
             }
         }
 
@@ -69,14 +77,26 @@
 
         internal static IRefCounted<DiffBuilder> GetOrCreate(object x, object y, IMemberSettings settings)
         {
-            return TrackerCache.GetOrAdd(x, y, settings, pair => new DiffBuilder(pair));
+            return TrackerCache.GetOrAdd(x, y, settings, pair => new DiffBuilder(pair, settings));
         }
 
         internal static bool TryCreate(object x, object y, IMemberSettings settings, out IRefCounted<DiffBuilder> subDiffBuilder)
         {
             bool created;
-            subDiffBuilder = TrackerCache.GetOrAdd(x, y, settings, pair => new DiffBuilder(pair), out created);
+            subDiffBuilder = TrackerCache.GetOrAdd(x, y, settings, pair => new DiffBuilder(pair, settings), out created);
             return created;
+        }
+
+        internal ValueDiff CreateValueDiffOrNull()
+        {
+            Debug.Assert(!this.disposed, "this.disposed");
+            lock (this.gate)
+            {
+                this.Refresh();
+                return this.IsEmpty
+                           ? null
+                           : this.valueDiff;
+            }
         }
 
         internal void Add(MemberDiff memberDiff)
@@ -168,24 +188,12 @@
             }
         }
 
-        internal ValueDiff CreateValueDiffOrNull()
-        {
-            Debug.Assert(!this.disposed, "this.disposed");
-            lock (this.gate)
-            {
-                this.Refresh();
-                return this.IsEmpty
-                           ? null
-                           : this.valueDiff;
-            }
-        }
-
         internal void Refresh()
         {
-            this.TryRefresh(null);
+            this.TryRefresh();
         }
 
-        internal bool TryRefresh(IMemberSettings settings)
+        internal bool TryRefresh()
         {
             lock (this.gate)
             {
@@ -207,7 +215,7 @@
                     foreach (var keyAndBuilder in this.KeyedSubBuilders)
                     {
                         var builder = keyAndBuilder.Value.Value;
-                        changed |= builder.TryRefresh(settings);
+                        changed |= builder.TryRefresh();
                         if (builder.IsEmpty)
                         {
                             borrow.Value.Add(keyAndBuilder.Key);
@@ -224,17 +232,17 @@
                 changed |= this.diffs.Count != this.KeyedDiffs.Count;
                 foreach (var keyAndDiff in this.KeyedDiffs)
                 {
-                    if (!changed && settings != null)
+                    if (!changed)
                     {
                         var old = this.diffs[i];
                         bool valueEquals;
-                        if (EqualBy.TryGetValueEquals(old.X, keyAndDiff.Value.X, settings, out valueEquals))
+                        if (EqualBy.TryGetValueEquals(old.X, keyAndDiff.Value.X, this.settings, out valueEquals))
                         {
                             changed |= !valueEquals;
                         }
 
                         if (!changed &&
-                            EqualBy.TryGetValueEquals(old.Y, keyAndDiff.Value.Y, settings, out valueEquals))
+                            EqualBy.TryGetValueEquals(old.Y, keyAndDiff.Value.Y, this.settings, out valueEquals))
                         {
                             changed |= !valueEquals;
                         }

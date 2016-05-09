@@ -342,7 +342,7 @@
 
         private void TryRefreshAndNotify(object propertyOrIndex)
         {
-            if (this.Builder?.TryRefresh(this.Settings) == true)
+            if (this.Builder?.TryRefresh() == true)
             {
                 this.TryNotifyChanges(propertyOrIndex);
             }
