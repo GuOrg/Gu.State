@@ -7,7 +7,7 @@
     public class DiffBuilderTests
     {
         [Test]
-        public void ReturnsSameForSameWhileAlive()
+        public void ReturnsSameWhileAlive()
         {
             var x = new ComplexType();
             var y = new ComplexType();
