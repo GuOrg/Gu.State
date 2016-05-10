@@ -100,6 +100,54 @@
             }
         }
 
+        internal bool TryAdd(MemberInfo member, object xValue, object yValue)
+        {
+            Debug.Assert(!this.disposed, "this.disposed");
+            lock (this.gate)
+            {
+                if (this.KeyedSubBuilders.ContainsKey(member))
+                {
+                    this.Add(member, xValue, yValue);
+                    return true;
+                }
+
+                SubDiff old;
+                if (!this.KeyedDiffs.TryGetValue(member, out old))
+                {
+                    this.Add(member, xValue, yValue);
+                    return true;
+                }
+
+                if (old.Diffs.Count > 0)
+                {
+                    this.Add(member, xValue, yValue);
+                    return true;
+                }
+
+                bool xEqual;
+                bool yEqual;
+                if (EqualBy.TryGetValueEquals(xValue, old.X, this.settings, out xEqual) && xEqual &&
+                    EqualBy.TryGetValueEquals(yValue, old.Y, this.settings, out yEqual) && yEqual)
+                {
+                    return false;
+                }
+
+                this.Add(member, xValue, yValue);
+                return true;
+            }
+        }
+
+        internal void Add(MemberInfo member, object xValue, object yValue)
+        {
+            Debug.Assert(!this.disposed, "this.disposed");
+            lock (this.gate)
+            {
+                this.needsRefresh = true;
+                this.KeyedDiffs[member] = MemberDiff.Create(member, xValue, yValue);
+                this.UpdateSubBuilder(member, null);
+            }
+        }
+
         internal void Add(MemberDiff memberDiff)
         {
             Debug.Assert(!this.disposed, "this.disposed");

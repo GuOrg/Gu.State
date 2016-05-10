@@ -41,7 +41,7 @@
                 }
                 else
                 {
-                    builder.Add(State.MemberDiff.Create(member, xValue, yValue));
+                    builder.TryAdd(member, xValue, yValue);
                 }
 
                 return;
@@ -56,7 +56,7 @@
                     }
                     else
                     {
-                        builder.Add(State.MemberDiff.Create(member, new ValueDiff(xValue, yValue)));
+                        builder.TryAdd(member, xValue, yValue);
                     }
 
                     return;
