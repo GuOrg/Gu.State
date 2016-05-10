@@ -12,7 +12,7 @@
         public abstract bool EqualMethod<T>(
             T x,
             T y,
-            ReferenceHandling referenceHandling = ReferenceHandling.Throw,
+            ReferenceHandling referenceHandling = ReferenceHandling.Structural,
             string excludedMembers = null,
             Type excludedType = null) where T : class;
 
@@ -280,7 +280,7 @@
         {
             var x = new EqualByTypes.WithComplexProperty(xv, 1, new EqualByTypes.ComplexType("b", 2));
             var y = new EqualByTypes.WithComplexProperty("a", 1, new EqualByTypes.ComplexType("c", 2));
-            var result = this.EqualMethod(x, y, referenceHandling: ReferenceHandling.Structural, excludedType: typeof(EqualByTypes.ComplexType));
+            var result = this.EqualMethod(x, y, ReferenceHandling.Structural, excludedType: typeof(EqualByTypes.ComplexType));
             Assert.AreEqual(expected, result);
         }
     }

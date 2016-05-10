@@ -9,7 +9,7 @@ namespace Gu.State.Tests.EqualByTests
 
     public abstract class VerifyTests
     {
-        public abstract void VerifyMethod<T>(ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excludedMembers = null, Type excludedType = null);
+        public abstract void VerifyMethod<T>(ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type excludedType = null);
 
         [Test]
         public void ComplexValueThrowsWithoutReferenceHandling()
@@ -111,29 +111,29 @@ namespace Gu.State.Tests.EqualByTests
         [Test]
         public void DoesNotThrowForArrayOfint()
         {
-            Assert.DoesNotThrow(() => this.VerifyMethod<int[]>(referenceHandling: ReferenceHandling.Throw));
+            Assert.DoesNotThrow(() => this.VerifyMethod<int[]>(ReferenceHandling.Throw));
         }
 
         [Test]
         public void ThrowsForArrayOfComplex()
         {
-            Assert.Throws<NotSupportedException>(() => this.VerifyMethod<ComplexType[]>(referenceHandling: ReferenceHandling.Throw));
-            Assert.DoesNotThrow(() => this.VerifyMethod<ComplexType[]>(referenceHandling: ReferenceHandling.References));
-            Assert.DoesNotThrow(() => this.VerifyMethod<ComplexType[]>(referenceHandling: ReferenceHandling.Structural));
+            Assert.Throws<NotSupportedException>(() => this.VerifyMethod<ComplexType[]>(ReferenceHandling.Throw));
+            Assert.DoesNotThrow(() => this.VerifyMethod<ComplexType[]>(ReferenceHandling.References));
+            Assert.DoesNotThrow(() => this.VerifyMethod<ComplexType[]>(ReferenceHandling.Structural));
         }
 
         [Test]
         public void DoesNotThrowForDictionaryOfIntAndString()
         {
-            Assert.DoesNotThrow(() => this.VerifyMethod<Dictionary<int, string>>(referenceHandling: ReferenceHandling.Throw));
+            Assert.DoesNotThrow(() => this.VerifyMethod<Dictionary<int, string>>(ReferenceHandling.Throw));
         }
 
         [Test]
         public void ThrowsForDictionaryOfIntAndString()
         {
-            Assert.Throws<NotSupportedException>(() => this.VerifyMethod<Dictionary<int, ComplexType>>(referenceHandling: ReferenceHandling.Throw));
-            Assert.DoesNotThrow(() => this.VerifyMethod<Dictionary<int, ComplexType>>(referenceHandling: ReferenceHandling.References));
-            Assert.DoesNotThrow(() => this.VerifyMethod<Dictionary<int, ComplexType>>(referenceHandling: ReferenceHandling.Structural));
+            Assert.Throws<NotSupportedException>(() => this.VerifyMethod<Dictionary<int, ComplexType>>(ReferenceHandling.Throw));
+            Assert.DoesNotThrow(() => this.VerifyMethod<Dictionary<int, ComplexType>>(ReferenceHandling.References));
+            Assert.DoesNotThrow(() => this.VerifyMethod<Dictionary<int, ComplexType>>(ReferenceHandling.Structural));
         }
 
         [Test]

@@ -7,7 +7,7 @@
 
     public abstract class ThrowTests
     {
-        public abstract void CopyMethod<T>(T source, T target, ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excluded = null) where T : class;
+        public abstract void CopyMethod<T>(T source, T target, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excluded = null) where T : class;
 
         [TestCase(ReferenceHandling.Throw)]
         public void WithComplexThrows(ReferenceHandling? referenceHandling)
@@ -190,7 +190,7 @@
             var x = new CopyTypes.WithProperty<CopyTypes.WithoutDefaultCtor>(new CopyTypes.WithoutDefaultCtor(1));
             var y = new CopyTypes.WithProperty<CopyTypes.WithoutDefaultCtor>(null);
 
-            var exception = Assert.Throws<InvalidOperationException>(() => this.CopyMethod(x, y, referenceHandling: ReferenceHandling.Structural));
+            var exception = Assert.Throws<InvalidOperationException>(() => this.CopyMethod(x, y, ReferenceHandling.Structural));
 
             Assert.AreEqual(expected, exception.Message);
         }

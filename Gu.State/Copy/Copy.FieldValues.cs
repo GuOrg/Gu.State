@@ -19,11 +19,11 @@
         public static void FieldValues<T>(
             T source,
             T target,
-            ReferenceHandling referenceHandling = ReferenceHandling.Throw,
+            ReferenceHandling referenceHandling = ReferenceHandling.Structural,
             BindingFlags bindingFlags = Constants.DefaultFieldBindingFlags)
             where T : class
         {
-            var settings = FieldsSettings.GetOrCreate(bindingFlags, referenceHandling);
+            var settings = FieldsSettings.GetOrCreate(referenceHandling, bindingFlags);
             FieldValues(source, target, settings);
         }
 

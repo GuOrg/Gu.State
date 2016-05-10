@@ -8,7 +8,7 @@ namespace Gu.State.Tests.DiffTests
 
     public abstract class VerifyTests
     {
-        public abstract void VerifyMethod<T>(ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excludedMembers = null, Type excludedType = null);
+        public abstract void VerifyMethod<T>(ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type excludedType = null);
 
         [Test]
         public void ComplexValueThrowsWithoutReferenceHandling()
@@ -37,10 +37,13 @@ namespace Gu.State.Tests.DiffTests
                                  "  - Exclude a combination of the following:\r\n" +
                                  "    - The property WithProperty<ComplexType>.Value.\r\n" +
                                  "    - The type ComplexType.\r\n";
-            var exception = Assert.Throws<NotSupportedException>(() => this.VerifyMethod<WithProperty<ComplexType>>());
+            var exception = Assert.Throws<NotSupportedException>(() => this.VerifyMethod<WithProperty<ComplexType>>(ReferenceHandling.Throw));
             Assert.AreEqual(expected, exception.Message);
 
-            Assert.DoesNotThrow(() => this.VerifyMethod<ComplexType>());
+            Assert.DoesNotThrow(() => this.VerifyMethod<ComplexType>(ReferenceHandling.Throw));
+            Assert.DoesNotThrow(() => this.VerifyMethod<WithProperty<ComplexType>>());
+            Assert.DoesNotThrow(() => this.VerifyMethod<WithProperty<ComplexType>>(ReferenceHandling.Structural));
+            Assert.DoesNotThrow(() => this.VerifyMethod<WithProperty<ComplexType>>(ReferenceHandling.References));
         }
 
         [Test]

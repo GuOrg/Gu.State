@@ -16,7 +16,7 @@ namespace Gu.State.Tests.DiffTests
         {
             var x = xs.Split(',').Select(int.Parse);
             var y = ys.Split(',').Select(int.Parse);
-            var diff = this.DiffMethod(x, y, referenceHandling: ReferenceHandling.Structural);
+            var diff = this.DiffMethod(x, y, ReferenceHandling.Structural);
             var actual = diff.ToString("", " ");
             Assert.AreEqual(expected, actual);
         }
@@ -32,7 +32,7 @@ namespace Gu.State.Tests.DiffTests
         {
             var x = Enumerable.Repeat(startX, countX);
             var y = Enumerable.Repeat(startY, countY);
-            var diff = this.DiffMethod(x, y, referenceHandling: ReferenceHandling.Structural);
+            var diff = this.DiffMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(expected, diff.ToString("", " "));
         }
 
@@ -41,19 +41,19 @@ namespace Gu.State.Tests.DiffTests
         {
             var x = new object[] { 1, null }.Select(z => z);
             var y = new object[] { 1, null }.Select(z => z);
-            var diff = this.DiffMethod(x, y, referenceHandling: ReferenceHandling.Structural);
+            var diff = this.DiffMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual("Empty", diff.ToString());
 
             x = new object[] { 1 }.Select(z => z);
             y = new object[] { 1, null }.Select(z => z);
-            diff = this.DiffMethod(x, y, referenceHandling: ReferenceHandling.Structural);
+            diff = this.DiffMethod(x, y, ReferenceHandling.Structural);
             var expected = "WhereSelectArrayIterator<Object, Object> [Skip(1)] x: missing item y: null";
             var actual = diff.ToString("", " ");
             Assert.AreEqual(expected, actual);
 
             x = new object[] { 1, null }.Select(z => z);
             y = new object[] { 1 }.Select(z => z);
-            diff = this.DiffMethod(x, y, referenceHandling: ReferenceHandling.Structural);
+            diff = this.DiffMethod(x, y, ReferenceHandling.Structural);
             expected = "WhereSelectArrayIterator<Object, Object> [Skip(1)] x: null y: missing item";
             actual = diff.ToString("", " ");
             Assert.AreEqual(expected, actual);

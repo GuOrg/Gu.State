@@ -16,7 +16,7 @@ namespace Gu.State.Tests.EqualByTests
         {
             var x = xs.Split(',').Select(int.Parse);
             var y = ys.Split(',').Select(int.Parse);
-            Assert.AreEqual(expected, this.EqualByMethod(x, y, referenceHandling: ReferenceHandling.Structural));
+            Assert.AreEqual(expected, this.EqualByMethod(x, y, ReferenceHandling.Structural));
         }
 
         [TestCase(0, 0, 0, 0, true)]
@@ -30,7 +30,7 @@ namespace Gu.State.Tests.EqualByTests
         {
             var x = Enumerable.Repeat(startX, countX);
             var y = Enumerable.Repeat(startY, countY);
-            Assert.AreEqual(expected, this.EqualByMethod(x, y, referenceHandling: ReferenceHandling.Structural));
+            Assert.AreEqual(expected, this.EqualByMethod(x, y, ReferenceHandling.Structural));
         }
 
         [Test]
@@ -38,15 +38,15 @@ namespace Gu.State.Tests.EqualByTests
         {
             var x = new object[] { 1, null }.Select(z => z);
             var y = new object[] { 1, null }.Select(z => z);
-            Assert.AreEqual(true, this.EqualByMethod(x, y, referenceHandling: ReferenceHandling.Structural));
+            Assert.AreEqual(true, this.EqualByMethod(x, y, ReferenceHandling.Structural));
 
             x = new object[] { 1 }.Select(z => z);
             y = new object[] { 1, null }.Select(z => z);
-            Assert.AreEqual(false, this.EqualByMethod(x, y, referenceHandling: ReferenceHandling.Structural));
+            Assert.AreEqual(false, this.EqualByMethod(x, y, ReferenceHandling.Structural));
 
             x = new object[] { 1, null }.Select(z => z);
             y = new object[] { 1 }.Select(z => z);
-            Assert.AreEqual(false, this.EqualByMethod(x, y, referenceHandling: ReferenceHandling.Structural));
+            Assert.AreEqual(false, this.EqualByMethod(x, y, ReferenceHandling.Structural));
         }
     }
 }

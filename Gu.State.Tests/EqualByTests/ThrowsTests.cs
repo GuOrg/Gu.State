@@ -8,7 +8,7 @@ namespace Gu.State.Tests.EqualByTests
 
     public abstract class ThrowsTests
     {
-        public abstract bool EqualByMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excludedMembers = null, Type excludedType = null);
+        public abstract bool EqualByMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type excludedType = null);
 
         [Test]
         public void ComplexValueThrowsWithoutReferenceHandling()
@@ -39,10 +39,13 @@ namespace Gu.State.Tests.EqualByTests
                                  "    - The type ComplexType.\r\n";
             var x = new WithComplexProperty();
             var y = new WithComplexProperty();
-            var exception = Assert.Throws<NotSupportedException>(() => this.EqualByMethod(x, y));
+            var exception = Assert.Throws<NotSupportedException>(() => this.EqualByMethod(x, y, ReferenceHandling.Throw));
             Assert.AreEqual(expected, exception.Message);
 
             Assert.DoesNotThrow(() => this.EqualByMethod(new ComplexType(), new ComplexType()));
+            Assert.DoesNotThrow(() => this.EqualByMethod(x, y));
+            Assert.DoesNotThrow(() => this.EqualByMethod(x, y, ReferenceHandling.Structural));
+            Assert.DoesNotThrow(() => this.EqualByMethod(x, y, ReferenceHandling.References));
         }
 
         [Test]

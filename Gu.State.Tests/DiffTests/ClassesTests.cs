@@ -12,7 +12,7 @@
         public abstract Diff DiffMethod<T>(
             T x,
             T y,
-            ReferenceHandling referenceHandling = ReferenceHandling.Throw,
+            ReferenceHandling referenceHandling = ReferenceHandling.Structural,
             string excludedMembers = null,
             Type excludedType = null) where T : class;
 
@@ -334,7 +334,7 @@
             var result = this.DiffMethod(
                 x,
                 y,
-                referenceHandling: ReferenceHandling.Structural,
+                ReferenceHandling.Structural,
                 excludedType: typeof(ComplexType));
             Assert.AreEqual(expected, result.ToString("", " "));
         }

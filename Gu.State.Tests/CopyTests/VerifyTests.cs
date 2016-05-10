@@ -25,9 +25,8 @@
             this.VerifyMethod<WithCalculatedProperty>();
         }
 
-        [TestCase(null)]
         [TestCase(ReferenceHandling.Throw)]
-        public void CanCopyWithComplexThrows(ReferenceHandling? referenceHandling)
+        public void CanCopyWithComplexThrows(ReferenceHandling referenceHandling)
         {
             var expected = this.GetType() == typeof(FieldValues.Verify)
                    ? "Copy.FieldValues(x, y) failed.\r\n" +
@@ -65,10 +64,7 @@
                      "  - Exclude a combination of the following:\r\n" +
                      "    - The property WithComplexProperty.ComplexType.\r\n" +
                      "    - The type ComplexType.\r\n";
-            var exception = referenceHandling != null
-                                ? Assert.Throws<NotSupportedException>(() => this.VerifyMethod<WithComplexProperty>(referenceHandling.Value))
-                                : Assert.Throws<NotSupportedException>(this.VerifyMethod<WithComplexProperty>);
-
+            var exception = Assert.Throws<NotSupportedException>(() => this.VerifyMethod<WithComplexProperty>(referenceHandling));
             Assert.AreEqual(expected, exception.Message);
         }
 
@@ -79,7 +75,6 @@
             this.VerifyMethod<WithComplexProperty>(referenceHandling);
         }
 
-        [TestCase(null)]
         [TestCase(ReferenceHandling.Throw)]
         public void CanCopyListOfComplexTypeThrows(ReferenceHandling? referenceHandling)
         {

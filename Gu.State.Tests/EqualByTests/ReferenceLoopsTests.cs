@@ -8,7 +8,7 @@ namespace Gu.State.Tests.EqualByTests
 
     public abstract class ReferenceLoopsTests
     {
-        public abstract bool EqualMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excludedMembers = null, Type excludedType = null) where T : class;
+        public abstract bool EqualMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type excludedType = null) where T : class;
 
         [TestCase("p", "c", true)]
         [TestCase("", "c", false)]

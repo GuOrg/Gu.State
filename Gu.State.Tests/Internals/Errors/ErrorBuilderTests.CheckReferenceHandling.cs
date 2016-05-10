@@ -27,7 +27,7 @@
             [TestCase(false)]
             public void CheckReferenceHandlingWhenRootError(bool requiresRef)
             {
-                var settings = PropertiesSettings.GetOrCreate();
+                var settings = PropertiesSettings.GetOrCreate(ReferenceHandling.Throw);
                 var type = typeof(List<ComplexType>);
                 var errors = ErrorBuilder.Start()
                                          .CheckRequiresReferenceHandling(type, settings, _ => requiresRef)
@@ -58,7 +58,7 @@
             [Test]
             public void CheckReferenceHandlingWhenPropertyError()
             {
-                var settings = PropertiesSettings.GetOrCreate();
+                var settings = PropertiesSettings.GetOrCreate(ReferenceHandling.Throw);
                 var type = typeof(With<List<int>>);
                 var errors = ErrorBuilder.Start()
                                          .CheckRequiresReferenceHandling(type, settings, _ => true)

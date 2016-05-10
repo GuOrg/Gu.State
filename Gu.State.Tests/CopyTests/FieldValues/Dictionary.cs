@@ -4,7 +4,7 @@
     {
         public override void CopyMethod<T>(T source, T target, ReferenceHandling referenceHandling)
         {
-            Copy.FieldValues(source, target, referenceHandling: referenceHandling);
+            Copy.FieldValues(source, target, referenceHandling);
         }
     }
 }

@@ -22,10 +22,10 @@ namespace Gu.State
         public static bool FieldValues<T>(
             T x,
             T y,
-            ReferenceHandling referenceHandling = ReferenceHandling.Throw,
+            ReferenceHandling referenceHandling = ReferenceHandling.Structural,
             BindingFlags bindingFlags = Constants.DefaultFieldBindingFlags)
         {
-            var settings = FieldsSettings.GetOrCreate(bindingFlags, referenceHandling);
+            var settings = FieldsSettings.GetOrCreate(referenceHandling, bindingFlags);
             return FieldValues(x, y, settings);
         }
 

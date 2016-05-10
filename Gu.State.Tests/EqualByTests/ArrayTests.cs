@@ -20,7 +20,7 @@ namespace Gu.State.Tests.EqualByTests
             var y = ys.Split(',')
                       .Select(int.Parse)
                       .ToArray();
-            Assert.AreEqual(expected, this.EqualByMethod(x, y, referenceHandling: ReferenceHandling.Structural));
+            Assert.AreEqual(expected, this.EqualByMethod(x, y, ReferenceHandling.Structural));
         }
 
         [TestCase(ReferenceHandling.Throw)]

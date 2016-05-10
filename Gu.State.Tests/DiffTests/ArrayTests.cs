@@ -22,7 +22,7 @@
             var y = ys.Split(',')
                       .Select(int.Parse)
                       .ToArray();
-            var result = this.DiffMethod(x, y, referenceHandling: ReferenceHandling.Structural);
+            var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(expected, result.ToString("", " "));
         }
 

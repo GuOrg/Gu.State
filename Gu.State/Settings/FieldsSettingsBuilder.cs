@@ -13,14 +13,25 @@
         private readonly Dictionary<Type, CastingComparer> comparers = new Dictionary<Type, CastingComparer>();
         private readonly Dictionary<Type, CustomCopy> copyers = new Dictionary<Type, CustomCopy>();
 
-        public FieldsSettings CreateSettings(ReferenceHandling referenceHandling = ReferenceHandling.Throw, BindingFlags bindingFlags = Constants.DefaultFieldBindingFlags)
+        public FieldsSettings CreateSettings(
+            ReferenceHandling referenceHandling = ReferenceHandling.Structural,
+            BindingFlags bindingFlags = Constants.DefaultFieldBindingFlags)
         {
-            if (this.ignoredFields.Count == 0 && this.ignoredTypes == null)
+            if (this.ignoredFields.Count == 0 &&
+                this.ignoredTypes == null &&
+                this.comparers.Count == 0 &&
+                this.copyers.Count == 0)
             {
-                return FieldsSettings.GetOrCreate(bindingFlags, referenceHandling);
+                return FieldsSettings.GetOrCreate(referenceHandling, bindingFlags);
             }
 
-            return new FieldsSettings(this.ignoredFields, this.ignoredTypes, this.comparers, this.copyers, bindingFlags, referenceHandling);
+            return new FieldsSettings(
+                this.ignoredFields,
+                this.ignoredTypes,
+                this.comparers,
+                this.copyers,
+                referenceHandling,
+                bindingFlags);
         }
 
         public FieldsSettingsBuilder AddImmutableType<T>()
