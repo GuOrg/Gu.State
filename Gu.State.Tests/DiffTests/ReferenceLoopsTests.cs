@@ -9,7 +9,7 @@ namespace Gu.State.Tests.DiffTests
 
     public abstract class ReferenceLoopsTests
     {
-        public abstract Diff DiffMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excludedMembers = null, Type excludedType = null) where T : class;
+        public abstract Diff DiffMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type excludedType = null) where T : class;
 
         [Test]
         public void ParentChildCreateWhenParentDirtyLoop()
@@ -25,7 +25,7 @@ namespace Gu.State.Tests.DiffTests
             var expected = this is FieldValues.ReferenceLoops
                                ? "Parent <Child>k__BackingField <Parent>k__BackingField ... <Name>k__BackingField x: p1 y: p2"
                                : "Parent Child Parent ... Name x: p1 y: p2";
-            var result = this.DiffMethod(x, y, ReferenceHandling.StructuralWithReferenceLoops);
+            var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
             Assert.AreSame(result, result.Diffs.Single(d => d.X == x.Child).Diffs.Single().ValueDiff);
             var actual = result.ToString("", " ");
             Assert.AreEqual(expected, actual);
@@ -47,10 +47,10 @@ namespace Gu.State.Tests.DiffTests
             Assert.AreSame(y, y.Child.Parent);
             Assert.AreSame(y.Child, y.Child.Parent.Child);
 
-            var result = this.DiffMethod(x, y, ReferenceHandling.StructuralWithReferenceLoops);
+            var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(expected, result.ToString("", " "));
 
-            result = this.DiffMethod(x, y, ReferenceHandling.StructuralWithReferenceLoops);
+            result = this.DiffMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(expected, result.ToString("", " "));
         }
 
@@ -59,7 +59,7 @@ namespace Gu.State.Tests.DiffTests
         {
             var x = new Parent("p", new Child("c"));
             var y = new Parent("p", null);
-            var result = this.DiffMethod(x, y, ReferenceHandling.StructuralWithReferenceLoops);
+            var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
             var expected = this is FieldValues.ReferenceLoops
                                ? "Parent <Child>k__BackingField x: Gu.State.Tests.DiffTests.DiffTypes+Child y: null"
                                : "Parent Child x: Gu.State.Tests.DiffTests.DiffTypes+Child y: null";
@@ -77,7 +77,7 @@ namespace Gu.State.Tests.DiffTests
         {
             var x = new Parent("p", null);
             var y = new Parent("p", new Child("c"));
-            var result = this.DiffMethod(x, y, ReferenceHandling.StructuralWithReferenceLoops);
+            var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
             var expected = this is FieldValues.ReferenceLoops
                                ? "Parent <Child>k__BackingField x: null y: Gu.State.Tests.DiffTests.DiffTypes+Child"
                                : "Parent Child x: null y: Gu.State.Tests.DiffTests.DiffTypes+Child";

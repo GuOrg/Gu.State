@@ -6,7 +6,7 @@
 
     public abstract class ClassesTests
     {
-        public abstract void CopyMethod<T>(T source, T target, ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excluded = null) where T : class;
+        public abstract void CopyMethod<T>(T source, T target, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excluded = null) where T : class;
 
         [Test]
         public void WithSimpleHappyPath()

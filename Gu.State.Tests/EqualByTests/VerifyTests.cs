@@ -9,7 +9,7 @@ namespace Gu.State.Tests.EqualByTests
 
     public abstract class VerifyTests
     {
-        public abstract void VerifyMethod<T>(ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excludedMembers = null, Type excludedType = null);
+        public abstract void VerifyMethod<T>(ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type excludedType = null);
 
         [Test]
         public void ComplexValueThrowsWithoutReferenceHandling()
@@ -22,7 +22,6 @@ namespace Gu.State.Tests.EqualByTests
                                  "* Implement IEquatable<ComplexType> for ComplexType or use a type that does.\r\n" +
                                  "* Use FieldsSettings and specify how comparing is performed:\r\n" +
                                  "  - ReferenceHandling.Structural means that a deep equals is performed.\r\n" +
-                                 "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but handles reference loops.\r\n" +
                                  "  - ReferenceHandling.References means that reference equality is used.\r\n" +
                                  "  - Exclude a combination of the following:\r\n" +
                                  "    - The field WithProperty<ComplexType>.<Value>k__BackingField.\r\n" +
@@ -35,12 +34,11 @@ namespace Gu.State.Tests.EqualByTests
                                  "* Implement IEquatable<ComplexType> for ComplexType or use a type that does.\r\n" +
                                  "* Use PropertiesSettings and specify how comparing is performed:\r\n" +
                                  "  - ReferenceHandling.Structural means that a deep equals is performed.\r\n" +
-                                 "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but handles reference loops.\r\n" +
                                  "  - ReferenceHandling.References means that reference equality is used.\r\n" +
                                  "  - Exclude a combination of the following:\r\n" +
                                  "    - The property WithProperty<ComplexType>.Value.\r\n" +
                                  "    - The type ComplexType.\r\n";
-            var exception = Assert.Throws<NotSupportedException>(() => this.VerifyMethod<WithProperty<ComplexType>>());
+            var exception = Assert.Throws<NotSupportedException>(() => this.VerifyMethod<WithProperty<ComplexType>>(ReferenceHandling.Throw));
             Assert.AreEqual(expected, exception.Message);
 
             Assert.DoesNotThrow(() => this.VerifyMethod<ComplexType>());
@@ -113,31 +111,29 @@ namespace Gu.State.Tests.EqualByTests
         [Test]
         public void DoesNotThrowForArrayOfint()
         {
-            Assert.DoesNotThrow(() => this.VerifyMethod<int[]>(referenceHandling: ReferenceHandling.Throw));
+            Assert.DoesNotThrow(() => this.VerifyMethod<int[]>(ReferenceHandling.Throw));
         }
 
         [Test]
         public void ThrowsForArrayOfComplex()
         {
-            Assert.Throws<NotSupportedException>(() => this.VerifyMethod<ComplexType[]>(referenceHandling: ReferenceHandling.Throw));
-            Assert.DoesNotThrow(() => this.VerifyMethod<ComplexType[]>(referenceHandling: ReferenceHandling.References));
-            Assert.DoesNotThrow(() => this.VerifyMethod<ComplexType[]>(referenceHandling: ReferenceHandling.Structural));
-            Assert.DoesNotThrow(() => this.VerifyMethod<ComplexType[]>(referenceHandling: ReferenceHandling.StructuralWithReferenceLoops));
+            Assert.Throws<NotSupportedException>(() => this.VerifyMethod<ComplexType[]>(ReferenceHandling.Throw));
+            Assert.DoesNotThrow(() => this.VerifyMethod<ComplexType[]>(ReferenceHandling.References));
+            Assert.DoesNotThrow(() => this.VerifyMethod<ComplexType[]>(ReferenceHandling.Structural));
         }
 
         [Test]
         public void DoesNotThrowForDictionaryOfIntAndString()
         {
-            Assert.DoesNotThrow(() => this.VerifyMethod<Dictionary<int, string>>(referenceHandling: ReferenceHandling.Throw));
+            Assert.DoesNotThrow(() => this.VerifyMethod<Dictionary<int, string>>(ReferenceHandling.Throw));
         }
 
         [Test]
         public void ThrowsForDictionaryOfIntAndString()
         {
-            Assert.Throws<NotSupportedException>(() => this.VerifyMethod<Dictionary<int, ComplexType>>(referenceHandling: ReferenceHandling.Throw));
-            Assert.DoesNotThrow(() => this.VerifyMethod<Dictionary<int, ComplexType>>(referenceHandling: ReferenceHandling.References));
-            Assert.DoesNotThrow(() => this.VerifyMethod<Dictionary<int, ComplexType>>(referenceHandling: ReferenceHandling.Structural));
-            Assert.DoesNotThrow(() => this.VerifyMethod<Dictionary<int, ComplexType>>(referenceHandling: ReferenceHandling.StructuralWithReferenceLoops));
+            Assert.Throws<NotSupportedException>(() => this.VerifyMethod<Dictionary<int, ComplexType>>(ReferenceHandling.Throw));
+            Assert.DoesNotThrow(() => this.VerifyMethod<Dictionary<int, ComplexType>>(ReferenceHandling.References));
+            Assert.DoesNotThrow(() => this.VerifyMethod<Dictionary<int, ComplexType>>(ReferenceHandling.Structural));
         }
 
         [Test]
@@ -153,7 +149,7 @@ namespace Gu.State.Tests.EqualByTests
                      "* Implement IEquatable<Parent> for Parent or use a type that does.\r\n" +
                      "* Implement IEquatable<Child> for Child or use a type that does.\r\n" +
                      "* Use FieldsSettings and specify how comparing is performed:\r\n" +
-                     "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but handles reference loops.\r\n" +
+                     "  - ReferenceHandling.Structural means that a deep equals is performed.\r\n" +
                      "  - ReferenceHandling.References means that reference equality is used.\r\n" +
                      "  - Exclude a combination of the following:\r\n" +
                      "    - The field Parent.<Child>k__BackingField.\r\n" +
@@ -169,16 +165,16 @@ namespace Gu.State.Tests.EqualByTests
                      "* Implement IEquatable<Parent> for Parent or use a type that does.\r\n" +
                      "* Implement IEquatable<Child> for Child or use a type that does.\r\n" +
                      "* Use PropertiesSettings and specify how comparing is performed:\r\n" +
-                     "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but handles reference loops.\r\n" +
+                     "  - ReferenceHandling.Structural means that a deep equals is performed.\r\n" +
                      "  - ReferenceHandling.References means that reference equality is used.\r\n" +
                      "  - Exclude a combination of the following:\r\n" +
                      "    - The property Parent.Child.\r\n" +
                      "    - The property Child.Parent.\r\n" +
                      "    - The type Child.\r\n";
-            var exception = Assert.Throws<NotSupportedException>(() => this.VerifyMethod<Parent>(ReferenceHandling.Structural));
+            var exception = Assert.Throws<NotSupportedException>(() => this.VerifyMethod<Parent>(ReferenceHandling.Throw));
             Assert.AreEqual(expected, exception.Message);
 
-            Assert.DoesNotThrow(() => this.VerifyMethod<Parent>(ReferenceHandling.StructuralWithReferenceLoops));
+            Assert.DoesNotThrow(() => this.VerifyMethod<Parent>(ReferenceHandling.Structural));
             Assert.DoesNotThrow(() => this.VerifyMethod<Parent>(ReferenceHandling.References));
         }
     }

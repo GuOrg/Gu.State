@@ -15,7 +15,6 @@
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.References)]
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         public void ListOfIntsToEmpty(ReferenceHandling referenceHandling)
         {
             var x = new List<int> { 1, 2, 3 };
@@ -146,7 +145,6 @@
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.References)]
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         public void ImmutableListOfIntsWhenEqual(ReferenceHandling referenceHandling)
         {
             var x = System.Collections.Immutable.ImmutableList.Create(1, 2, 3);

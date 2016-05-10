@@ -21,11 +21,11 @@ namespace Gu.State
         public static IDisposable PropertyValues<T>(
             T source,
             T target,
-            ReferenceHandling referenceHandling = ReferenceHandling.Throw,
+            ReferenceHandling referenceHandling = ReferenceHandling.Structural,
             BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
             where T : class, INotifyPropertyChanged
         {
-            var settings = PropertiesSettings.GetOrCreate(bindingFlags, referenceHandling);
+            var settings = PropertiesSettings.GetOrCreate(referenceHandling, bindingFlags);
             return new PropertySynchronizer<T>(source, target, settings);
         }
 

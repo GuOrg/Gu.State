@@ -15,7 +15,7 @@ namespace Gu.State.Tests.EqualByTests
             T x,
             T y,
             IEqualityComparer<TValue> comparer,
-            ReferenceHandling referenceHandling = ReferenceHandling.Throw)
+            ReferenceHandling referenceHandling = ReferenceHandling.Structural)
             where T : class;
 
         [TestCase(true)]

@@ -25,7 +25,6 @@
                 case ReferenceHandling.References:
                     break;
                 case ReferenceHandling.Structural:
-                case ReferenceHandling.StructuralWithReferenceLoops:
                     this.refcountedNode.Value.PropertyChange += this.OnTrackedPropertyChange;
                     this.refcountedNode.Value.Add += this.OnTrackedAdd;
                     this.refcountedNode.Value.Remove += this.OnTrackedRemove;
@@ -104,7 +103,7 @@
         private void OnTrackedPropertyChange(object sender, PropertyChangeEventArgs e)
         {
             if (this.TrackProperties.Contains(e.PropertyInfo) &&
-               (this.Settings.ReferenceHandling == ReferenceHandling.Structural || this.Settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops))
+               (this.Settings.ReferenceHandling == ReferenceHandling.Structural))
             {
                 this.UpdatePropertyNode(e.PropertyInfo);
             }

@@ -4,7 +4,7 @@ namespace Gu.State.Tests.DiffTests.PropertyValues
 
     public class ReferenceLoops : ReferenceLoopsTests
     {
-        public override Diff DiffMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excludedMembers = null, Type excludedType = null)
+        public override Diff DiffMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type excludedType = null)
         {
             var builder = PropertiesSettings.Build();
             if (excludedMembers != null)

@@ -18,10 +18,10 @@
         /// </param>
         /// <param name="bindingFlags">The binding flags to use when getting properties</param>
         public static void VerifyCanSynchronize<T>(
-            ReferenceHandling referenceHandling = ReferenceHandling.Throw,
+            ReferenceHandling referenceHandling = ReferenceHandling.Structural,
             BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
         {
-            var settings = PropertiesSettings.GetOrCreate(bindingFlags, referenceHandling);
+            var settings = PropertiesSettings.GetOrCreate(referenceHandling, bindingFlags);
             VerifyCanSynchronize<T>(settings);
         }
 

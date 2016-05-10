@@ -11,7 +11,6 @@
         public class Immutable
         {
             [TestCase(ReferenceHandling.Structural)]
-            [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
             [TestCase(ReferenceHandling.References)]
             public void Tracks(ReferenceHandling referenceHandling)
             {

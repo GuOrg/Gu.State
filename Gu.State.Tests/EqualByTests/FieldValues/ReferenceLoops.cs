@@ -2,10 +2,9 @@
 {
     using System;
 
-    public class Throws : ThrowsTests
+    public class ReferenceLoops : ReferenceLoopsTests
     {
-
-        public override bool EqualByMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type excludedType = null)
+        public override bool EqualMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type excludedType = null)
         {
             var builder = FieldsSettings.Build();
             if (excludedMembers != null)

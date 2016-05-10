@@ -6,7 +6,7 @@
 
     public class Classes : ClassesTests
     {
-        public override void CopyMethod<T>(T source, T target, ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excluded = null)
+        public override void CopyMethod<T>(T source, T target, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excluded = null)
         {
             var builder = FieldsSettings.Build();
             if (excluded != null)
@@ -35,7 +35,6 @@
                            "Solve the problem by any of:\r\n" +
                            "* Use FieldsSettings and specify how copying is performed:\r\n" +
                            "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
-                           "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but tracks reference loops.\r\n" +
                            "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
                            "  - ReferenceHandling.References means that references are copied.\r\n" +
                            "  - Exclude a combination of the following:\r\n" +

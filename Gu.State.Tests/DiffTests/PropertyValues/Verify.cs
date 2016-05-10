@@ -4,7 +4,7 @@
 
     public class Verify : VerifyTests
     {
-        public override void VerifyMethod<T>(ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excludedMembers = null, Type excludedType = null)
+        public override void VerifyMethod<T>(ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type excludedType = null)
         {
             var builder = PropertiesSettings.Build();
             if (excludedMembers != null)

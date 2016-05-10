@@ -21,7 +21,6 @@
 
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
         public void Immutables(ReferenceHandling referenceHandling)
         {
@@ -35,7 +34,6 @@
 
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
         public void Ints2D(ReferenceHandling referenceHandling)
         {

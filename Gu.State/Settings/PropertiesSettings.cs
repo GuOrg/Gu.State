@@ -29,9 +29,9 @@
             IEnumerable<Type> ignoredTypes,
             IReadOnlyDictionary<Type, CastingComparer> comparers,
             IReadOnlyDictionary<Type, CustomCopy> copyers,
-            BindingFlags bindingFlags,
-            ReferenceHandling referenceHandling)
-            : base(ignoredProperties, ignoredTypes, comparers, copyers, bindingFlags, referenceHandling)
+            ReferenceHandling referenceHandling = ReferenceHandling.Structural,
+            BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
+            : base(ignoredProperties, ignoredTypes, comparers, copyers, referenceHandling, bindingFlags)
         {
         }
 
@@ -53,10 +53,14 @@
         /// Activator.CreateInstance is sued to new up references so a default constructor is required, can be private
         /// </param>
         /// <returns>An instance of <see cref="PropertiesSettings"/></returns>
-        public static PropertiesSettings GetOrCreate(BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags, ReferenceHandling referenceHandling = ReferenceHandling.Throw)
+        public static PropertiesSettings GetOrCreate(
+            ReferenceHandling referenceHandling = ReferenceHandling.Structural,
+            BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
         {
             var key = new BindingFlagsAndReferenceHandling(bindingFlags, referenceHandling);
-            return Cache.GetOrAdd(key, x => new PropertiesSettings(null, null, null, null, bindingFlags, referenceHandling));
+            return Cache.GetOrAdd(
+                key,
+                x => new PropertiesSettings(null, null, null, null, referenceHandling, bindingFlags));
         }
 
         public bool IsIgnoringProperty(PropertyInfo propertyInfo)

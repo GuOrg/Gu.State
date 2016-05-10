@@ -86,7 +86,6 @@
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.References)]
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         public void ImmutableDictionaryOfIntsAndStringsWhenEqual(ReferenceHandling referenceHandling)
         {
             var builder = System.Collections.Immutable.ImmutableDictionary.CreateBuilder<int, string>();

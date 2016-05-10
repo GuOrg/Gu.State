@@ -15,14 +15,25 @@
         private readonly Dictionary<Type, CastingComparer> comparers = new Dictionary<Type, CastingComparer>();
         private readonly Dictionary<Type, CustomCopy> copyers = new Dictionary<Type, CustomCopy>();
 
-        public PropertiesSettings CreateSettings(ReferenceHandling referenceHandling = ReferenceHandling.Throw, BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
+        public PropertiesSettings CreateSettings(
+            ReferenceHandling referenceHandling = ReferenceHandling.Structural,
+            BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
         {
-            if (this.ignoredProperties.Count == 0 && this.ignoredTypes == null)
+            if (this.ignoredProperties.Count == 0 &&
+                this.ignoredTypes == null &&
+                this.comparers.Count == 0 &&
+                this.copyers.Count == 0)
             {
-                return PropertiesSettings.GetOrCreate(bindingFlags, referenceHandling);
+                return PropertiesSettings.GetOrCreate(referenceHandling, bindingFlags);
             }
 
-            return new PropertiesSettings(this.ignoredProperties, this.ignoredTypes, this.comparers, this.copyers, bindingFlags, referenceHandling);
+            return new PropertiesSettings(
+                this.ignoredProperties,
+                this.ignoredTypes,
+                this.comparers,
+                this.copyers,
+                referenceHandling,
+                bindingFlags);
         }
 
         public PropertiesSettingsBuilder IgnoreType<T>()

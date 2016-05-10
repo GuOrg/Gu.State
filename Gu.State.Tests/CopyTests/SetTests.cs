@@ -12,7 +12,6 @@ namespace Gu.State.Tests.CopyTests
 
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
         public void HashSetOfIntsWhenEqual(ReferenceHandling referenceHandling)
         {
@@ -27,7 +26,6 @@ namespace Gu.State.Tests.CopyTests
 
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
         public void HashSetOfIntsWhenNotEqual(ReferenceHandling referenceHandling)
         {
@@ -40,7 +38,6 @@ namespace Gu.State.Tests.CopyTests
         }
 
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
         public void HashSetOfIntsWhenLonger(ReferenceHandling referenceHandling)
         {
@@ -53,7 +50,6 @@ namespace Gu.State.Tests.CopyTests
         }
 
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         public void HashSetOfComplexWhenEqual(ReferenceHandling referenceHandling)
         {
             var source = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 1) };
@@ -65,7 +61,6 @@ namespace Gu.State.Tests.CopyTests
         }
 
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         public void HashSetOfComplexWhenNotEqual(ReferenceHandling referenceHandling)
         {
             var source = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 1) };

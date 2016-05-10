@@ -18,8 +18,8 @@
             IEnumerable<Type> ignoredTypes,
             IReadOnlyDictionary<Type, CastingComparer> comparers,
             IReadOnlyDictionary<Type, CustomCopy> copyers,
-            BindingFlags bindingFlags,
-            ReferenceHandling referenceHandling)
+            ReferenceHandling referenceHandling,
+            BindingFlags bindingFlags)
         {
             this.comparers = comparers;
             this.copyers = copyers;

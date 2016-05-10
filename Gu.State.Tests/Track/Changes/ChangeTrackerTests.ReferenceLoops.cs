@@ -15,7 +15,7 @@ namespace Gu.State.Tests
             {
                 var changes = new List<object>();
                 var parent = new Parent();
-                using (var tracker = Track.Changes(parent, ReferenceHandling.StructuralWithReferenceLoops))
+                using (var tracker = Track.Changes(parent, ReferenceHandling.Structural))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);

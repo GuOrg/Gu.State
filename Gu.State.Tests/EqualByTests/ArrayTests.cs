@@ -20,12 +20,11 @@ namespace Gu.State.Tests.EqualByTests
             var y = ys.Split(',')
                       .Select(int.Parse)
                       .ToArray();
-            Assert.AreEqual(expected, this.EqualByMethod(x, y, referenceHandling: ReferenceHandling.Structural));
+            Assert.AreEqual(expected, this.EqualByMethod(x, y, ReferenceHandling.Structural));
         }
 
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
         public void IntsWhenEqual(ReferenceHandling referenceHandling)
         {
@@ -68,7 +67,6 @@ namespace Gu.State.Tests.EqualByTests
 
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
         public void ArrayOfImmutableWhenNotEqual(ReferenceHandling referenceHandling)
         {
@@ -80,7 +78,6 @@ namespace Gu.State.Tests.EqualByTests
 
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
         public void ArrayOfImmutableWhenEqual(ReferenceHandling referenceHandling)
         {
@@ -93,7 +90,6 @@ namespace Gu.State.Tests.EqualByTests
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.References)]
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         public void ImmutableListOfIntsWhenEqual(ReferenceHandling referenceHandling)
         {
             var x = System.Collections.Immutable.ImmutableArray.Create(1, 2, 3);

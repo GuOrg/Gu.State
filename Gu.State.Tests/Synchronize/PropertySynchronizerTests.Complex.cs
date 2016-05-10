@@ -13,7 +13,7 @@
             {
                 var source = new SynchronizerTypes.WithComplexProperty("a", 1) { ComplexType = new SynchronizerTypes.ComplexType("b", 2) };
                 var target = new SynchronizerTypes.WithComplexProperty("c", 3) { ComplexType = new SynchronizerTypes.ComplexType("d", 4) };
-                using (Synchronize.PropertyValues(source, target, referenceHandling: ReferenceHandling.Structural))
+                using (Synchronize.PropertyValues(source, target, ReferenceHandling.Structural))
                 {
                     Assert.AreEqual("a", source.Name);
                     Assert.AreEqual("a", target.Name);
@@ -104,11 +104,11 @@
             }
 
             [Test]
-            public void CreateAndDisposeStructuralWithReferenceLoops()
+            public void CreateAndDisposeStructural1()
             {
                 var source = new SynchronizerTypes.WithTwoComplexProperties("a", 1) { ComplexValue1 = new SynchronizerTypes.ComplexType("a.1", 2), ComplexValue2 = new SynchronizerTypes.ComplexType("a.2", 3) };
                 var target = new SynchronizerTypes.WithTwoComplexProperties("b", 3) { ComplexValue1 = new SynchronizerTypes.ComplexType("b.1", 4) };
-                using (Synchronize.PropertyValues(source, target, referenceHandling: ReferenceHandling.StructuralWithReferenceLoops))
+                using (Synchronize.PropertyValues(source, target, ReferenceHandling.Structural))
                 {
                     Assert.AreEqual("a", source.Name);
                     Assert.AreEqual("a", target.Name);
@@ -178,7 +178,7 @@
             {
                 var source = new SynchronizerTypes.Parent("a", new SynchronizerTypes.Child("b"));
                 var target = new SynchronizerTypes.Parent("b", new SynchronizerTypes.Child());
-                using (Synchronize.PropertyValues(source, target, referenceHandling: ReferenceHandling.StructuralWithReferenceLoops))
+                using (Synchronize.PropertyValues(source, target, ReferenceHandling.Structural))
                 {
                     Assert.AreEqual("a", source.Name);
                     Assert.AreEqual("a", target.Name);
@@ -225,7 +225,7 @@
             {
                 var source = new SynchronizerTypes.WithComplexProperty("a", 1) { ComplexType = new SynchronizerTypes.ComplexType("b", 2) };
                 var target = new SynchronizerTypes.WithComplexProperty("c", 3) { ComplexType = new SynchronizerTypes.ComplexType("d", 4) };
-                using (Synchronize.PropertyValues(source, target, referenceHandling: ReferenceHandling.References))
+                using (Synchronize.PropertyValues(source, target, ReferenceHandling.References))
                 {
                     Assert.AreEqual("a", source.Name);
                     Assert.AreEqual("a", target.Name);
@@ -273,7 +273,7 @@
                     ComplexType = new SynchronizerTypes.ComplexType("d", 4)
                 };
 
-                using (Synchronize.PropertyValues(source, target, referenceHandling: ReferenceHandling.Structural))
+                using (Synchronize.PropertyValues(source, target, ReferenceHandling.Structural))
                 {
                     Assert.AreEqual("a", source.Name);
                     Assert.AreEqual("a", target.Name);
@@ -471,7 +471,7 @@
                 {
                     ComplexType = new SynchronizerTypes.ComplexType("d", 4)
                 };
-                using (Synchronize.PropertyValues(source, target, referenceHandling: ReferenceHandling.Structural))
+                using (Synchronize.PropertyValues(source, target, ReferenceHandling.Structural))
                 {
                     source.OnPropertyChanged("Missing");
                     Assert.AreEqual("a", source.Name);
@@ -513,7 +513,7 @@
                     ComplexType = new SynchronizerTypes.ComplexType("d", 4)
                 };
 
-                using (Synchronize.PropertyValues(source, target, referenceHandling: ReferenceHandling.Structural))
+                using (Synchronize.PropertyValues(source, target, ReferenceHandling.Structural))
                 {
                     source.SetFields("e", 5, new SynchronizerTypes.ComplexType("f", 6));
                     source.OnPropertyChanged(prop);
@@ -531,7 +531,7 @@
             }
 
             [Test]
-            public void WithComplexPropertyThrowsWithoutReferenceHandling()
+            public void WithComplexPropertyThrowsWithReferenceHandlingThrow()
             {
                 var expected = "Copy.PropertyValues(x, y) failed.\r\n" +
                                "The property WithComplexProperty.ComplexType of type ComplexType is not supported.\r\n" +
@@ -545,7 +545,6 @@
                                "    - Event fields are ignored.\r\n" +
                                "* Use PropertiesSettings and specify how copying is performed:\r\n" +
                                "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
-                               "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but tracks reference loops.\r\n" +
                                "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
                                "  - ReferenceHandling.References means that references are copied.\r\n" +
                                "  - Exclude a combination of the following:\r\n" +
@@ -553,7 +552,7 @@
                                "    - The type ComplexType.\r\n";
                 var source = new SynchronizerTypes.WithComplexProperty();
                 var target = new SynchronizerTypes.WithComplexProperty();
-                var exception = Assert.Throws<NotSupportedException>(() => Synchronize.PropertyValues(source, target));
+                var exception = Assert.Throws<NotSupportedException>(() => Synchronize.PropertyValues(source, target, ReferenceHandling.Throw));
 
                 Assert.AreEqual(expected, exception.Message);
             }

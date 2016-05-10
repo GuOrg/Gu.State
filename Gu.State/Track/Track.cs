@@ -14,7 +14,7 @@ namespace Gu.State
         /// <param name="x">The first item to track changes for and compare to <paramref name="y"/>.</param>
         /// <param name="y">The othe item to track changes for and compare to <paramref name="x"/>.</param>
         /// <param name="referenceHandling">
-        /// - Structural or StructuralWithReferenceLoops is used property values for sub properties are tracked for the entire graph.
+        /// - Structural tracks property values for the entire graph.
         /// - References tracks only one level and uses reference equality.
         /// - Throw throws and exception if there are nested trackable types
         /// </param>
@@ -29,7 +29,7 @@ namespace Gu.State
             BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
             where T : class, INotifyPropertyChanged
         {
-            var settings = PropertiesSettings.GetOrCreate(bindingFlags, referenceHandling);
+            var settings = PropertiesSettings.GetOrCreate(referenceHandling, bindingFlags);
             return new DirtyTracker<T>(x, y, settings);
         }
 
@@ -56,7 +56,7 @@ namespace Gu.State
         /// </summary>
         /// <param name="root">The item to track changes for.</param>
         /// <param name="referenceHandling">
-        /// - Structural or StructuralWithReferenceLoops is used property values for sub properties are tracked for the entire graph.
+        /// - Structural tracks property values for the entire graph.
         /// - References tracks only one level.
         /// - Throw throws and exception if there are nested trackable types
         /// </param>
