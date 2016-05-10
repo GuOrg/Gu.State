@@ -10,8 +10,8 @@
     {
         public class WithComplex
         {
+            [TestCase(ReferenceHandling.References)]
             [TestCase(ReferenceHandling.Structural)]
-            [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
             public void HandlesNull(ReferenceHandling referenceHandling)
             {
                 var x = new WithComplexProperty();

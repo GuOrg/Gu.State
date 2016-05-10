@@ -67,7 +67,6 @@ namespace Gu.State.Tests.EqualByTests
 
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
         public void ArrayOfImmutableWhenNotEqual(ReferenceHandling referenceHandling)
         {

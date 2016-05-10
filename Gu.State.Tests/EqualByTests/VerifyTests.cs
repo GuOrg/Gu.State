@@ -122,7 +122,6 @@ namespace Gu.State.Tests.EqualByTests
             Assert.Throws<NotSupportedException>(() => this.VerifyMethod<ComplexType[]>(referenceHandling: ReferenceHandling.Throw));
             Assert.DoesNotThrow(() => this.VerifyMethod<ComplexType[]>(referenceHandling: ReferenceHandling.References));
             Assert.DoesNotThrow(() => this.VerifyMethod<ComplexType[]>(referenceHandling: ReferenceHandling.Structural));
-            Assert.DoesNotThrow(() => this.VerifyMethod<ComplexType[]>(referenceHandling: ReferenceHandling.StructuralWithReferenceLoops));
         }
 
         [Test]
@@ -137,7 +136,6 @@ namespace Gu.State.Tests.EqualByTests
             Assert.Throws<NotSupportedException>(() => this.VerifyMethod<Dictionary<int, ComplexType>>(referenceHandling: ReferenceHandling.Throw));
             Assert.DoesNotThrow(() => this.VerifyMethod<Dictionary<int, ComplexType>>(referenceHandling: ReferenceHandling.References));
             Assert.DoesNotThrow(() => this.VerifyMethod<Dictionary<int, ComplexType>>(referenceHandling: ReferenceHandling.Structural));
-            Assert.DoesNotThrow(() => this.VerifyMethod<Dictionary<int, ComplexType>>(referenceHandling: ReferenceHandling.StructuralWithReferenceLoops));
         }
 
         [Test]
@@ -178,7 +176,7 @@ namespace Gu.State.Tests.EqualByTests
             var exception = Assert.Throws<NotSupportedException>(() => this.VerifyMethod<Parent>(ReferenceHandling.Structural));
             Assert.AreEqual(expected, exception.Message);
 
-            Assert.DoesNotThrow(() => this.VerifyMethod<Parent>(ReferenceHandling.StructuralWithReferenceLoops));
+            Assert.DoesNotThrow(() => this.VerifyMethod<Parent>(ReferenceHandling.Structural));
             Assert.DoesNotThrow(() => this.VerifyMethod<Parent>(ReferenceHandling.References));
         }
     }

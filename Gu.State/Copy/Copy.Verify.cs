@@ -118,7 +118,6 @@
                 case ReferenceHandling.References:
                     return typeErrors;
                 case ReferenceHandling.Structural:
-                case ReferenceHandling.StructuralWithReferenceLoops:
                     if (!IsCopyableCollectionType(type))
                     {
                         return typeErrors.CreateIfNull(type)

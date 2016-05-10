@@ -18,7 +18,7 @@
             }
 
             Verify.CanEqualByMemberValues(x, y, settings);
-            using (var borrowed = settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops
+            using (var borrowed = settings.ReferenceHandling == ReferenceHandling.Structural
                                    ? ReferencePairCollection.Borrow()
                                    : null)
             {

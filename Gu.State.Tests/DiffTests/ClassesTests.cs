@@ -55,9 +55,6 @@
 
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(expected, result.ToString("", " "));
-
-            result = this.DiffMethod(x, y, ReferenceHandling.StructuralWithReferenceLoops);
-            Assert.AreEqual(expected, result.ToString("", " "));
         }
 
         [Test]
@@ -121,7 +118,6 @@
         }
 
         [TestCase(ReferenceHandling.Structural, "Empty")]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops, "Empty")]
         [TestCase(ReferenceHandling.References, "WithComplexProperty <member> x: Gu.State.Tests.DiffTests.DiffTypes+ComplexType y: Gu.State.Tests.DiffTests.DiffTypes+ComplexType")]
         public void WithComplexReferenceWhenNotSame(ReferenceHandling referenceHandling, string expected)
         {

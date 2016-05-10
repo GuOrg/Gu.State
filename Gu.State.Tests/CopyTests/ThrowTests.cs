@@ -225,7 +225,6 @@
         [TestCase(null)]
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
         public void CanCopyImmutable(ReferenceHandling? referenceHandling)
         {

@@ -153,7 +153,7 @@ namespace Gu.State.Tests.EqualByTests
             var exception = Assert.Throws<NotSupportedException>(() => this.EqualByMethod(x, y, ReferenceHandling.Structural));
             Assert.AreEqual(expected, exception.Message);
 
-            Assert.AreEqual(true, this.EqualByMethod(x, y, ReferenceHandling.StructuralWithReferenceLoops));
+            Assert.AreEqual(true, this.EqualByMethod(x, y, ReferenceHandling.Structural));
             Assert.AreEqual(false, this.EqualByMethod(x, y, ReferenceHandling.References));
         }
     }

@@ -197,7 +197,7 @@
             }
 
             if (this.TrackProperties.Contains(propertyInfo) &&
-               (this.Settings.ReferenceHandling == ReferenceHandling.Structural || this.Settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops))
+               (this.Settings.ReferenceHandling == ReferenceHandling.Structural))
             {
                 var getter = this.Settings.GetOrCreateGetterAndSetter(propertyInfo);
                 var xValue = getter.GetValue(this.X);
@@ -269,7 +269,7 @@
             var yValue = this.YList.ElementAtOrMissing(index);
 
             if (IsTrackablePair(xValue, yValue, this.Settings) &&
-               (this.Settings.ReferenceHandling == ReferenceHandling.Structural || this.Settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops))
+               (this.Settings.ReferenceHandling == ReferenceHandling.Structural))
             {
                 var child = this.CreateChild(xValue, yValue, index);
                 this.children.SetValue(index, child);

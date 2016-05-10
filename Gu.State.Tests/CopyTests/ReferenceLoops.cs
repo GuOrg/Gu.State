@@ -30,7 +30,7 @@
         {
             var source = new Parent("p", null);
             var target = new Parent(null, new Child("c"));
-            this.CopyMethod(source, target, ReferenceHandling.StructuralWithReferenceLoops);
+            this.CopyMethod(source, target, ReferenceHandling.Structural);
             Assert.AreEqual("p", source.Name);
             Assert.AreEqual("p", target.Name);
             Assert.AreEqual(null, source.Child);

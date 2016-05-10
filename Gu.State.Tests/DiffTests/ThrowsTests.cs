@@ -153,7 +153,7 @@ namespace Gu.State.Tests.DiffTests
             var exception = Assert.Throws<NotSupportedException>(() => this.DiffMethod(x, y, ReferenceHandling.Structural));
             Assert.AreEqual(expected, exception.Message);
 
-            Assert.AreEqual("Empty", this.DiffMethod(x, y, ReferenceHandling.StructuralWithReferenceLoops).ToString());
+            Assert.AreEqual("Empty", this.DiffMethod(x, y, ReferenceHandling.Structural).ToString());
             expected = this is FieldValues.Throws
                            ? "Parent <Child>k__BackingField x: Gu.State.Tests.DiffTests.DiffTypes+Child y: Gu.State.Tests.DiffTests.DiffTypes+Child"
                            : "Parent Child x: Gu.State.Tests.DiffTests.DiffTypes+Child y: Gu.State.Tests.DiffTests.DiffTypes+Child";

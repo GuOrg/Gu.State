@@ -108,7 +108,7 @@
             {
                 var source = new SynchronizerTypes.WithTwoComplexProperties("a", 1) { ComplexValue1 = new SynchronizerTypes.ComplexType("a.1", 2), ComplexValue2 = new SynchronizerTypes.ComplexType("a.2", 3) };
                 var target = new SynchronizerTypes.WithTwoComplexProperties("b", 3) { ComplexValue1 = new SynchronizerTypes.ComplexType("b.1", 4) };
-                using (Synchronize.PropertyValues(source, target, referenceHandling: ReferenceHandling.StructuralWithReferenceLoops))
+                using (Synchronize.PropertyValues(source, target, referenceHandling: ReferenceHandling.Structural))
                 {
                     Assert.AreEqual("a", source.Name);
                     Assert.AreEqual("a", target.Name);
@@ -178,7 +178,7 @@
             {
                 var source = new SynchronizerTypes.Parent("a", new SynchronizerTypes.Child("b"));
                 var target = new SynchronizerTypes.Parent("b", new SynchronizerTypes.Child());
-                using (Synchronize.PropertyValues(source, target, referenceHandling: ReferenceHandling.StructuralWithReferenceLoops))
+                using (Synchronize.PropertyValues(source, target, referenceHandling: ReferenceHandling.Structural))
                 {
                     Assert.AreEqual("a", source.Name);
                     Assert.AreEqual("a", target.Name);

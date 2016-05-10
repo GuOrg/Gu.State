@@ -193,7 +193,6 @@
                             .AppendSuggestDefaultCtor(errors)
                             .AppendLine($"* Use {typeof(TSettings).Name} and specify how change tracking is performed:")
                             .AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Structural)} means that a the entire graph is tracked.")
-                            .AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.StructuralWithReferenceLoops)} same as Structural but handles reference loops.")
                             .AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.References)} means that only the root level changes are tracked.")
                             .AppendSuggestExclude(errors);
 

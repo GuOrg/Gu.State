@@ -110,44 +110,9 @@ namespace Gu.State.Tests.DiffTests
         }
 
         [Test]
-        public void DetectsReferenceLoop()
+        public void ReferenceLoop()
         {
-            var expected = this is DiffTests.FieldValues.Verify
-                   ? "DiffBy.FieldValues(x, y) failed.\r\n" +
-                     "The field Parent.<Child>k__BackingField of type Child is in a reference loop.\r\n" +
-                     "  - The loop is Parent.<Child>k__BackingField.<Parent>k__BackingField.<Child>k__BackingField...\r\n" +
-                     "The field Parent.<Child>k__BackingField of type Child is not supported.\r\n" +
-                     "The field Child.<Parent>k__BackingField of type Parent is not supported.\r\n" +
-                     "Solve the problem by any of:\r\n" +
-                     "* Implement IEquatable<Parent> for Parent or use a type that does.\r\n" +
-                     "* Implement IEquatable<Child> for Child or use a type that does.\r\n" +
-                     "* Use FieldsSettings and specify how comparing is performed:\r\n" +
-                     "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but handles reference loops.\r\n" +
-                     "  - ReferenceHandling.References means that reference equality is used.\r\n" +
-                     "  - Exclude a combination of the following:\r\n" +
-                     "    - The field Parent.<Child>k__BackingField.\r\n" +
-                     "    - The field Child.<Parent>k__BackingField.\r\n" +
-                     "    - The type Child.\r\n"
-
-                   : "DiffBy.PropertyValues(x, y) failed.\r\n" +
-                     "The property Parent.Child of type Child is in a reference loop.\r\n" +
-                     "  - The loop is Parent.Child.Parent.Child...\r\n" +
-                     "The property Parent.Child of type Child is not supported.\r\n" +
-                     "The property Child.Parent of type Parent is not supported.\r\n" +
-                     "Solve the problem by any of:\r\n" +
-                     "* Implement IEquatable<Parent> for Parent or use a type that does.\r\n" +
-                     "* Implement IEquatable<Child> for Child or use a type that does.\r\n" +
-                     "* Use PropertiesSettings and specify how comparing is performed:\r\n" +
-                     "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but handles reference loops.\r\n" +
-                     "  - ReferenceHandling.References means that reference equality is used.\r\n" +
-                     "  - Exclude a combination of the following:\r\n" +
-                     "    - The property Parent.Child.\r\n" +
-                     "    - The property Child.Parent.\r\n" +
-                     "    - The type Child.\r\n";
-            var exception = Assert.Throws<NotSupportedException>(() => this.VerifyMethod<Parent>(ReferenceHandling.Structural));
-            Assert.AreEqual(expected, exception.Message);
-
-            Assert.DoesNotThrow(() => this.VerifyMethod<Parent>(ReferenceHandling.StructuralWithReferenceLoops));
+            Assert.DoesNotThrow(() => this.VerifyMethod<Parent>(ReferenceHandling.Structural));
             Assert.DoesNotThrow(() => this.VerifyMethod<Parent>(ReferenceHandling.References));
         }
     }

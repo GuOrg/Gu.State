@@ -290,40 +290,36 @@
         {
             var x = new Parent("p", new Child("c"));
             var y = new Parent(p, new Child(c));
-            var result = this.EqualMethod(x, y, ReferenceHandling.StructuralWithReferenceLoops);
+            var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(expected, result);
 
-            result = this.EqualMethod(y, x, ReferenceHandling.StructuralWithReferenceLoops);
+            result = this.EqualMethod(y, x, ReferenceHandling.Structural);
             Assert.AreEqual(expected, result);
         }
 
-        [Test]
-        public void ParentChildWhenTargetChildIsNull()
+        [TestCase(ReferenceHandling.Structural)]
+        [TestCase(ReferenceHandling.References)]
+        public void ParentChildWhenTargetChildIsNull(ReferenceHandling referenceHandling)
         {
             var x = new Parent("p", new Child("c"));
             var y = new Parent("p", null);
-            var result = this.EqualMethod(x, y, ReferenceHandling.StructuralWithReferenceLoops);
+            var result = this.EqualMethod(x, y, referenceHandling);
             Assert.AreEqual(false, result);
 
-            //result = this.EqualMethod(y, x, ReferenceHandling.Structural);
-            //Assert.AreEqual(false, result);
-
-            result = this.EqualMethod(y, x, ReferenceHandling.References);
+            result = this.EqualMethod(y, x, referenceHandling);
             Assert.AreEqual(false, result);
         }
 
-        [Test]
-        public void ParentChildWhenSourceChildIsNull()
+        [TestCase(ReferenceHandling.Structural)]
+        [TestCase(ReferenceHandling.References)]
+        public void ParentChildWhenSourceChildIsNull(ReferenceHandling referenceHandling)
         {
             var x = new Parent("p", null);
             var y = new Parent("p", new Child("c"));
-            var result = this.EqualMethod(x, y, ReferenceHandling.StructuralWithReferenceLoops);
+            var result = this.EqualMethod(x, y, referenceHandling);
             Assert.AreEqual(false, result);
 
-            //result = this.EqualMethod(y, x, ReferenceHandling.Structural);
-            //Assert.AreEqual(false, result);
-
-            result = this.EqualMethod(y, x, ReferenceHandling.References);
+            result = this.EqualMethod(y, x, referenceHandling);
             Assert.AreEqual(false, result);
         }
     }

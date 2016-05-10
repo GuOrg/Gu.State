@@ -44,7 +44,7 @@
             {
                 var source = new ObservableCollection<SynchronizerTypes.ComplexType> { new SynchronizerTypes.ComplexType("a", 1), new SynchronizerTypes.ComplexType("b", 2) };
                 var target = new ObservableCollection<SynchronizerTypes.ComplexType>();
-                using (Synchronize.PropertyValues(source, target, referenceHandling: ReferenceHandling.StructuralWithReferenceLoops))
+                using (Synchronize.PropertyValues(source, target, referenceHandling: ReferenceHandling.Structural))
                 {
                     var expected = new[] { new SynchronizerTypes.ComplexType("a", 1), new SynchronizerTypes.ComplexType("b", 2) };
                     CollectionAssert.AreEqual(expected, source, SynchronizerTypes.ComplexType.Comparer);

@@ -24,8 +24,8 @@
             Assert.AreEqual(true, result);
         }
 
+        [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
         public void IntsWhenNotEqual(ReferenceHandling referenceHandling)
         {

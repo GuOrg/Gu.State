@@ -18,7 +18,7 @@
                 return;
             }
 
-            using (var borrowed = settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops
+            using (var borrowed = settings.ReferenceHandling == ReferenceHandling.Structural
                                    ? ReferencePairCollection.Borrow()
                                    : null)
             {
@@ -163,8 +163,6 @@
                         getterAndSetter.CopyValue(source, target);
                         return;
                     case ReferenceHandling.Structural:
-                    case ReferenceHandling.StructuralWithReferenceLoops:
-
                         var tv = getterAndSetter.GetValue(target);
                         if (tv != null)
                         {

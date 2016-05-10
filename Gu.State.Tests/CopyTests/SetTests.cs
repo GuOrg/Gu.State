@@ -26,7 +26,6 @@ namespace Gu.State.Tests.CopyTests
 
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
         public void HashSetOfIntsWhenNotEqual(ReferenceHandling referenceHandling)
         {

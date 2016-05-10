@@ -24,7 +24,7 @@ namespace Gu.State
         /// <param name="settings">Contains configuration for how synchronization will be performed</param>
         /// <returns>A disposable that when disposed stops synchronizing</returns>
         public PropertySynchronizer(T source, T target, PropertiesSettings settings)
-            : this(source, target, settings, settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops ? new TwoItemsTrackerReferenceCollection<IPropertySynchronizer>() : null)
+            : this(source, target, settings, settings.ReferenceHandling == ReferenceHandling.Structural ? new TwoItemsTrackerReferenceCollection<IPropertySynchronizer>() : null)
         {
             Ensure.NotSame(source, target, nameof(source), nameof(target));
             Ensure.SameType(source, target, nameof(source), nameof(target));
