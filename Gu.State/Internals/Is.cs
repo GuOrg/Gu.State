@@ -61,9 +61,9 @@
             return xArgs[0] == yArgs[0] && xArgs[1] == yArgs[1];
         }
 
-        internal static bool Enumerable(object source, object target)
+        internal static bool Enumerable(object x, object y)
         {
-            return source is IEnumerable && target is IEnumerable;
+            return x is IEnumerable && y is IEnumerable;
         }
 
         internal static bool IsFixedSize(IEnumerable x, IEnumerable y)

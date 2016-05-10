@@ -10,24 +10,15 @@
         /// <summary>Initializes a new instance of the <see cref="ValueDiff"/> class.</summary>
         /// <param name="xValue">The x value.</param>
         /// <param name="yValue">The y value.</param>
-        public ValueDiff(object xValue, object yValue)
-        {
-            this.X = xValue;
-            this.Y = yValue;
-        }
-
-        /// <summary>Initializes a new instance of the <see cref="ValueDiff"/> class.</summary>
-        /// <param name="xValue">The x value.</param>
-        /// <param name="yValue">The y value.</param>
         /// <param name="diffs">The nested diffs.</param>
-        public ValueDiff(object xValue, object yValue, IReadOnlyCollection<SubDiff> diffs)
+        public ValueDiff(object xValue, object yValue, IReadOnlyCollection<SubDiff> diffs = null)
             : base(diffs)
         {
             this.X = xValue;
             this.Y = yValue;
         }
 
-        public override bool IsEmpty => !this.HasNodeDiff();
+        public override bool IsEmpty => false;
 
         /// <summary>Gets the X value.</summary>
         public object X { get; }
@@ -73,42 +64,6 @@
 
             writer.Indent--;
             return writer;
-        }
-
-        private bool HasNodeDiff()
-        {
-            if (this.Diffs.Count == 0)
-            {
-                return true;
-            }
-
-            using (var diffs = BorrowValueDiffReferenceSet())
-            {
-                return this.HasNodeDiff(diffs.Value);
-            }
-        }
-
-        private bool HasNodeDiff(HashSet<ValueDiff> @checked)
-        {
-            foreach (var subDiff in this.Diffs)
-            {
-                if (!@checked.Add(subDiff.ValueDiff))
-                {
-                    continue;
-                }
-
-                if (subDiff.Diffs.Count == 0)
-                {
-                    return true;
-                }
-
-                if (subDiff.ValueDiff.HasNodeDiff(@checked))
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
     }
 }

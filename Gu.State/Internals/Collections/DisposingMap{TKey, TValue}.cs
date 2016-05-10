@@ -64,6 +64,16 @@
             this.collectionItems.Value.RemoveAt(index);
         }
 
+        public void ClearIndexTrackers()
+        {
+            if (!this.collectionItems.IsValueCreated)
+            {
+                return;
+            }
+
+            this.collectionItems.Value.Clear();
+        }
+
         internal void Move(int fromIndex, int toIndex)
         {
             this.collectionItems.Value.Move(fromIndex, toIndex);

@@ -3,7 +3,7 @@
     using System;
     using System.Diagnostics;
 
-    internal sealed class Disposer<T> : IDisposer<T>, IBorrowed<T>
+    internal sealed class Disposer<T> : IDisposer<T>, IBorrowed<T>, IUnsubscriber<T>
     {
         private readonly Action<T> dispose;
         private readonly object gate = new object();

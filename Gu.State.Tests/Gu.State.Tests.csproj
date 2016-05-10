@@ -62,6 +62,7 @@
     <Compile Include="DiffTests\ClassesTests.cs" />
     <Compile Include="DiffTests\CollectionTests.cs" />
     <Compile Include="DiffTests\DictionaryTests.cs" />
+    <Compile Include="DiffTests\DiffBuilder\DiffBuilderTests.cs" />
     <Compile Include="DiffTests\Diffs\DiffToStringTests.cs" />
     <Compile Include="DiffTests\DiffTypes.cs" />
     <Compile Include="DiffTests\EnumerableTests.cs" />
@@ -124,6 +125,8 @@
     <Compile Include="Internals\Reflection\TypeExtTests.ImmutableCollections.cs" />
     <Compile Include="Internals\SetTests.cs" />
     <Compile Include="Internals\RefcounterTests.cs" />
+    <Compile Include="Internals\TrackerCacheTests.cs" />
+    <Compile Include="Sandbox\GetOrCreate.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTests.MemoryLeaks.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTests.Ignores.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTests.ReferenceLoops.cs" />
@@ -154,7 +157,9 @@
     <Compile Include="CopyTests\VerifyTests.cs" />
     <Compile Include="Settings\PropertiesSettingsTests.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTypes.cs" />
-    <Compile Include="Track\Dirty\ChangeTrackerTests.ReferenceLoops.cs" />
+    <Compile Include="Track\Dirty\DirtyTrackerNodeTests.Caching.cs" />
+    <Compile Include="Track\Dirty\DirtyTrackerTests.ReferenceLoops.cs" />
+    <Compile Include="Track\Dirty\DirtyTrackerTests.MemoryLeaks.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerTests.Throws.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerTypes.cs" />
     <Compile Include="EqualByTests\ClassesTests.cs" />
@@ -179,7 +184,7 @@
     <Compile Include="Synchronize\PropertySynchronizerTests.WithObservableCollectionProperty.cs" />
     <Compile Include="Synchronize\PropertySynchronizerTests.ObservableCollectionOfComplexTypes.cs" />
     <Compile Include="CopyTests\PropertyValues\Classes.cs" />
-    <Compile Include="Track\Dirty\DirtyTrackerTests.Complex.cs" />
+    <Compile Include="Track\Dirty\DirtyTrackerTests.WithComplex.cs" />
     <Compile Include="EqualByTests\EqualByTestsShared.cs" />
     <Compile Include="CopyTests\FieldValues\Classes.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerTests.Simple.cs" />

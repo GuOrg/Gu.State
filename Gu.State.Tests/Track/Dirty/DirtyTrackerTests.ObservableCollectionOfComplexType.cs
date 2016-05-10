@@ -328,6 +328,31 @@
                     CollectionAssert.AreEqual(expectedChanges, changes);
                 }
             }
+
+            [Test]
+            public void DuplicateItemOneNotification()
+            {
+                var item = new ComplexType("a", 1);
+                var x = new ObservableCollection<ComplexType> { item, item };
+                var y = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("a", 1) };
+                var changes = new List<string>();
+                var expectedChanges = new List<string>();
+                using (var tracker = Track.IsDirty(x, y, referenceHandling: ReferenceHandling.Structural))
+                {
+                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    Assert.AreEqual(null, tracker.Diff);
+                    CollectionAssert.IsEmpty(changes);
+
+                    item.Value++;
+                    Assert.AreEqual(true, tracker.IsDirty);
+                    var expected = "ObservableCollection<ComplexType> [0] Value x: 2 y: 1 [1] Value x: 2 y: 1";
+                    var actual = tracker.Diff.ToString("", " ");
+                    Assert.AreEqual(expected, actual);
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty", "Diff" }); // not sure how we want this
+                    CollectionAssert.AreEqual(expectedChanges, changes);
+                }
+            }
         }
     }
 }

@@ -23,8 +23,8 @@ namespace Gu.State.Tests.DiffTests
             Assert.AreSame(y.Child, y.Child.Parent.Child);
 
             var expected = this is FieldValues.ReferenceLoops
-                               ? "Parent <Name>k__BackingField x: p1 y: p2 <Child>k__BackingField <Parent>k__BackingField ..."
-                               : "Parent Name x: p1 y: p2 Child Parent ...";
+                               ? "Parent <Child>k__BackingField <Parent>k__BackingField ... <Name>k__BackingField x: p1 y: p2"
+                               : "Parent Child Parent ... Name x: p1 y: p2";
             var result = this.DiffMethod(x, y, ReferenceHandling.StructuralWithReferenceLoops);
             Assert.AreSame(result, result.Diffs.Single(d => d.X == x.Child).Diffs.Single().ValueDiff);
             var actual = result.ToString("", " ");
@@ -32,7 +32,7 @@ namespace Gu.State.Tests.DiffTests
         }
 
         [TestCase("p", "c", "Empty")]
-        [TestCase("", "c", "Parent <member2> x: p y:  <member1> <member3> ...")]
+        [TestCase("", "c", "Parent <member1> <member3> ... <member2> x: p y: ")]
         [TestCase("p", "", "Parent <member1> <member2> x: c y:  <member3> ...")]
         public void ParentChild(string p, string c, string expected)
         {
