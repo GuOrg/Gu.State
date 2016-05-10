@@ -18,19 +18,19 @@
         /// <param name="ignoredTypes">The types to ignore</param>
         /// <param name="comparers">Custom comparers. Use this to get better performance or for custom equality for types.</param>
         /// <param name="copyers">Custom copyers.</param>
-        /// <param name="bindingFlags">The binding flags to use when getting properties</param>
         /// <param name="referenceHandling">
         /// If Structural is used property values for sub properties are copied for the entire graph.
         /// Activator.CreateInstance is sued to new up references so a default constructor is required, can be private.
         /// </param>
+        /// <param name="bindingFlags">The binding flags to use when getting properties</param>
         public FieldsSettings(
             IEnumerable<FieldInfo> ignoredFields,
             IEnumerable<Type> ignoredTypes,
             IReadOnlyDictionary<Type, CastingComparer> comparers,
             IReadOnlyDictionary<Type, CustomCopy> copyers,
-            BindingFlags bindingFlags,
-            ReferenceHandling referenceHandling)
-            : base(ignoredFields, ignoredTypes, comparers, copyers, bindingFlags, referenceHandling)
+            ReferenceHandling referenceHandling = ReferenceHandling.Structural,
+            BindingFlags bindingFlags = Constants.DefaultFieldBindingFlags)
+            : base(ignoredFields, ignoredTypes, comparers, copyers, referenceHandling, bindingFlags)
         {
         }
 
@@ -53,10 +53,12 @@
         /// Activator.CreateInstance is sued to new up references so a default constructor is required, can be private
         /// </param>
         /// <returns>An instance of <see cref="FieldsSettings"/></returns>
-        public static FieldsSettings GetOrCreate(BindingFlags bindingFlags = Constants.DefaultFieldBindingFlags, ReferenceHandling referenceHandling = ReferenceHandling.Throw)
+        public static FieldsSettings GetOrCreate(
+            ReferenceHandling referenceHandling = ReferenceHandling.Structural,
+            BindingFlags bindingFlags = Constants.DefaultFieldBindingFlags)
         {
             var key = new BindingFlagsAndReferenceHandling(bindingFlags, referenceHandling);
-            return Cache.GetOrAdd(key, x => new FieldsSettings(null, null, null, null, bindingFlags, referenceHandling));
+            return Cache.GetOrAdd(key, x => new FieldsSettings(null, null, null, null, referenceHandling, bindingFlags));
         }
 
         public bool IsIgnoringField(FieldInfo fieldInfo)

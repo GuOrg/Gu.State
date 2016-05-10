@@ -27,9 +27,9 @@ Compares two instances.
 ### 1.1. FieldValues
 Compares x and y by field values.
 ```
-EqualBy.FieldValues(x, y);
+EqualBy.FieldValues(x, y); // default is ReferenceHandling.Structural
+EqualBy.FieldValues(x, y, ReferenceHandling.Throw);  
 EqualBy.FieldValues(x, y, ReferenceHandling.Structural); 
-EqualBy.FieldValues(x, y, ReferenceHandling.StructuralWithReferenceLoops); 
 EqualBy.FieldValues(x, y, ReferenceHandling.References);
 EqualBy.FieldValues(x, y, settings);
 ```
@@ -42,10 +42,10 @@ Asserts that instances of type `<T>` can be compared using the `EqualBy.FieldVal
 This can be useful in unit tests.
 Throws an exception with a message describing the problem(s) found and suggestions for fixes.
 ```
-EqualBy.VerifyCanEqualByFieldValues<T>();
+EqualBy.VerifyCanEqualByFieldValues<T>(); // default is ReferenceHandling.Structural
 EqualBy.VerifyCanEqualByFieldValues<T>(ReferenceHandling.Structural); 
-EqualBy.VerifyCanEqualByFieldValues<T>(ReferenceHandling.StructuralWithReferenceLoops); 
 EqualBy.VerifyCanEqualByFieldValues<T>(ReferenceHandling.References);
+EqualBy.VerifyCanEqualByFieldValues<T>(ReferenceHandling.Throw); 
 EqualBy.VerifyCanEqualByFieldValues<T>(settings);
 ```
 
@@ -53,8 +53,8 @@ EqualBy.VerifyCanEqualByFieldValues<T>(settings);
 ```
 EqualBy.PropertyValues(x, y);
 EqualBy.PropertyValues(x, y, ReferenceHandling.Structural); 
-EqualBy.PropertyValues(x, y, ReferenceHandling.StructuralWithReferenceLoops); 
 EqualBy.PropertyValues(x, y, ReferenceHandling.References);
+EqualBy.PropertyValues(x, y, ReferenceHandling.Throw); 
 EqualBy.PropertyValues(x, y, settings);
 ```
 
@@ -66,8 +66,8 @@ Throws an exception with a message describing the problem(s) found and suggestio
 ```
 EqualBy.VerifyCanEqualByPropertyValues<T>();
 EqualBy.VerifyCanEqualByPropertyValues<T>(ReferenceHandling.Structural); 
-EqualBy.VerifyCanEqualByPropertyValues<T>(ReferenceHandling.StructuralWithReferenceLoops); 
 EqualBy.VerifyCanEqualByPropertyValues<T>(ReferenceHandling.References);
+EqualBy.VerifyCanEqualByPropertyValues<T>(ReferenceHandling.Throw); 
 EqualBy.VerifyCanEqualByPropertyValues<T>(settings);
 ```
 
@@ -81,16 +81,16 @@ Immutable types are copied by value/reference.
 ```
 Copy.FieldValues(source, target);
 Copy.FieldValues(source, target, ReferenceHandling.Structural); 
-Copy.FieldValues(source, target, ReferenceHandling.StructuralWithReferenceLoops); 
 Copy.FieldValues(source, target, ReferenceHandling.References);
+Copy.FieldValues(source, target, ReferenceHandling.Throw); 
 ```
 
 ### 2.2. PropertyValues
 ```
 Copy.PropertyValues(source, target);
 Copy.PropertyValues(source, target, ReferenceHandling.Structural); 
-Copy.PropertyValues(source, target, ReferenceHandling.StructuralWithReferenceLoops); 
 Copy.PropertyValues(source, target, ReferenceHandling.References);
+Copy.PropertyValues(source, target, ReferenceHandling.Throw); 
 ```
 
 ## 3. DiffBy
@@ -103,8 +103,8 @@ Types implementing `IEquatable` are compared using `object.Equals(x, y)`
 ```
 DiffBy.FieldValues(x, y);
 DiffBy.FieldValues(x, y, ReferenceHandling.Structural); 
-DiffBy.FieldValues(x, y, ReferenceHandling.StructuralWithReferenceLoops); 
 DiffBy.FieldValues(x, y, ReferenceHandling.References);
+DiffBy.FieldValues(x, y, ReferenceHandling.Throw); 
 ```
 - Ignores event fields
 
@@ -112,8 +112,8 @@ DiffBy.FieldValues(x, y, ReferenceHandling.References);
 ```
 DiffBy.PropertyValues(x, y);
 DiffBy.PropertyValues(x, y, ReferenceHandling.Structural); 
-DiffBy.PropertyValues(x, y, ReferenceHandling.StructuralWithReferenceLoops); 
 DiffBy.PropertyValues(x, y, ReferenceHandling.References);
+DiffBy.PropertyValues(x, y, ReferenceHandling.Throw); 
 ```
 
 ## 4. Track

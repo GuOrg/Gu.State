@@ -15,20 +15,20 @@
         /// Use this to fail fast or in unit tests.
         /// </summary>
         /// <typeparam name="T">The type to get ignore properties for settings for</typeparam>
-        /// <param name="bindingFlags">
-        /// The binding flags to use when getting properties
-        /// Default is BindingFlags.Instance | BindingFlags.Public
-        /// </param>
         /// <param name="referenceHandling">
         /// If Structural is used property values for sub properties are copied for the entire graph.
         /// Activator.CreateInstance is sued to new up references so a default constructor is required, can be private
         /// </param>
+        /// <param name="bindingFlags">
+        /// The binding flags to use when getting properties
+        /// Default is BindingFlags.Instance | BindingFlags.Public
+        /// </param>
         public static void VerifyCanTrackIsDirty<T>(
-            BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags,
-            ReferenceHandling referenceHandling = ReferenceHandling.Structural)
+            ReferenceHandling referenceHandling = ReferenceHandling.Structural,
+            BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
             where T : class, INotifyPropertyChanged
         {
-            var settings = PropertiesSettings.GetOrCreate(bindingFlags, referenceHandling);
+            var settings = PropertiesSettings.GetOrCreate(referenceHandling, bindingFlags);
             VerifyCanTrackIsDirty<T>(settings);
         }
 
@@ -67,16 +67,16 @@
         /// Use this to fail fast or in unit tests.
         /// </summary>
         /// <typeparam name="T">The type to check</typeparam>
-        /// <param name="bindingFlags">The binding flags to use when getting properties</param>
         /// <param name="referenceHandling">
         /// If Structural is used property values for sub properties are copied for the entire graph.
         /// Activator.CreateInstance is used to new up references so a default constructor is required, can be private
         /// </param>
+        /// <param name="bindingFlags">The binding flags to use when getting properties</param>
         public static void VerifyCanTrackChanges<T>(
-            BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags,
-            ReferenceHandling referenceHandling = ReferenceHandling.Structural)
+            ReferenceHandling referenceHandling = ReferenceHandling.Structural,
+            BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
         {
-            var settings = PropertiesSettings.GetOrCreate(bindingFlags, referenceHandling);
+            var settings = PropertiesSettings.GetOrCreate(referenceHandling, bindingFlags);
             VerifyCanTrackChanges<T>(settings);
         }
 
@@ -193,7 +193,6 @@
                             .AppendSuggestDefaultCtor(errors)
                             .AppendLine($"* Use {typeof(TSettings).Name} and specify how change tracking is performed:")
                             .AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Structural)} means that a the entire graph is tracked.")
-                            .AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.StructuralWithReferenceLoops)} same as Structural but handles reference loops.")
                             .AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.References)} means that only the root level changes are tracked.")
                             .AppendSuggestExclude(errors);
 

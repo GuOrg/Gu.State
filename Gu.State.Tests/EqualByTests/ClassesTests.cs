@@ -9,7 +9,12 @@
 
     public abstract class ClassesTests
     {
-        public abstract bool EqualMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excludedMembers = null, Type excludedType = null) where T : class;
+        public abstract bool EqualMethod<T>(
+            T x,
+            T y,
+            ReferenceHandling referenceHandling = ReferenceHandling.Structural,
+            string excludedMembers = null,
+            Type excludedType = null) where T : class;
 
         public static IReadOnlyList<EqualByTestsShared.EqualsData> EqualsSource => EqualByTestsShared.EqualsSource;
 
@@ -42,15 +47,9 @@
         [TestCase("b", "c", false)]
         public void WithComplexStructural(string xn, string yn, bool expected)
         {
-            var x = new WithComplexProperty("a", 1)
-            {
-                ComplexType = new ComplexType { Name = xn, Value = 2 }
-            };
+            var x = new WithComplexProperty("a", 1) { ComplexType = new ComplexType { Name = xn, Value = 2 } };
 
-            var y = new WithComplexProperty("a", 1)
-            {
-                ComplexType = new ComplexType { Name = yn, Value = 2 }
-            };
+            var y = new WithComplexProperty("a", 1) { ComplexType = new ComplexType { Name = yn, Value = 2 } };
             var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(expected, result);
         }
@@ -98,17 +97,12 @@
         public void WithComplexReferenceWhenSame()
         {
             var x = new WithComplexProperty
-            {
-                Name = "a",
-                Value = 1,
-                ComplexType = new ComplexType { Name = "b", Value = 2 }
-            };
-            var y = new WithComplexProperty
-            {
-                Name = "a",
-                Value = 1,
-                ComplexType = x.ComplexType
-            };
+                        {
+                            Name = "a",
+                            Value = 1,
+                            ComplexType = new ComplexType { Name = "b", Value = 2 }
+                        };
+            var y = new WithComplexProperty { Name = "a", Value = 1, ComplexType = x.ComplexType };
             var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
 
@@ -120,17 +114,17 @@
         public void WithComplexReferenceWhenNotSame()
         {
             var x = new WithComplexProperty
-            {
-                Name = "a",
-                Value = 1,
-                ComplexType = new ComplexType { Name = "b", Value = 2 }
-            };
+                        {
+                            Name = "a",
+                            Value = 1,
+                            ComplexType = new ComplexType { Name = "b", Value = 2 }
+                        };
             var y = new WithComplexProperty
-            {
-                Name = "a",
-                Value = 1,
-                ComplexType = new ComplexType { Name = "b", Value = 2 }
-            };
+                        {
+                            Name = "a",
+                            Value = 1,
+                            ComplexType = new ComplexType { Name = "b", Value = 2 }
+                        };
             var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
 
@@ -244,7 +238,14 @@
         public void WithListOfComplexPropertyToLonger()
         {
             var source = new WithListProperty<ComplexType> { Items = { new ComplexType("a", 1) } };
-            var target = new WithListProperty<ComplexType> { Items = { new ComplexType("a", 1), new ComplexType("a", 1) } };
+            var target = new WithListProperty<ComplexType>
+                             {
+                                 Items =
+                                     {
+                                         new ComplexType("a", 1),
+                                         new ComplexType("a", 1)
+                                     }
+                             };
             var result = this.EqualMethod(source, target, ReferenceHandling.Structural);
             Assert.AreEqual(false, result);
         }
@@ -259,8 +260,8 @@
             var x = new WithSimpleProperties(xv, null, "3", StringSplitOptions.RemoveEmptyEntries);
             var y = new WithSimpleProperties(yv, 2, "3", StringSplitOptions.RemoveEmptyEntries);
             var excluded = this.GetType() == typeof(FieldValues.Classes)
-                        ? "nullableIntValue"
-                        : nameof(WithSimpleProperties.NullableIntValue);
+                               ? "nullableIntValue"
+                               : nameof(WithSimpleProperties.NullableIntValue);
             if (referenceHandling == null)
             {
                 var result = this.EqualMethod(x, y, excludedMembers: excluded);
@@ -277,54 +278,10 @@
         [TestCase("b", false)]
         public void IgnoresType(string xv, bool expected)
         {
-            var x = new WithComplexProperty(xv, 1, new ComplexType("b", 2));
-            var y = new WithComplexProperty("a", 1, new ComplexType("c", 2));
-            var result = this.EqualMethod(x, y, referenceHandling: ReferenceHandling.Structural, excludedType: typeof(ComplexType));
+            var x = new EqualByTypes.WithComplexProperty(xv, 1, new EqualByTypes.ComplexType("b", 2));
+            var y = new EqualByTypes.WithComplexProperty("a", 1, new EqualByTypes.ComplexType("c", 2));
+            var result = this.EqualMethod(x, y, ReferenceHandling.Structural, excludedType: typeof(EqualByTypes.ComplexType));
             Assert.AreEqual(expected, result);
-        }
-
-        [TestCase("p", "c", true)]
-        [TestCase("", "c", false)]
-        [TestCase("p", "", false)]
-        public void ParentChild(string p, string c, bool expected)
-        {
-            var x = new Parent("p", new Child("c"));
-            var y = new Parent(p, new Child(c));
-            var result = this.EqualMethod(x, y, ReferenceHandling.StructuralWithReferenceLoops);
-            Assert.AreEqual(expected, result);
-
-            result = this.EqualMethod(y, x, ReferenceHandling.StructuralWithReferenceLoops);
-            Assert.AreEqual(expected, result);
-        }
-
-        [Test]
-        public void ParentChildWhenTargetChildIsNull()
-        {
-            var x = new Parent("p", new Child("c"));
-            var y = new Parent("p", null);
-            var result = this.EqualMethod(x, y, ReferenceHandling.StructuralWithReferenceLoops);
-            Assert.AreEqual(false, result);
-
-            //result = this.EqualMethod(y, x, ReferenceHandling.Structural);
-            //Assert.AreEqual(false, result);
-
-            result = this.EqualMethod(y, x, ReferenceHandling.References);
-            Assert.AreEqual(false, result);
-        }
-
-        [Test]
-        public void ParentChildWhenSourceChildIsNull()
-        {
-            var x = new Parent("p", null);
-            var y = new Parent("p", new Child("c"));
-            var result = this.EqualMethod(x, y, ReferenceHandling.StructuralWithReferenceLoops);
-            Assert.AreEqual(false, result);
-
-            //result = this.EqualMethod(y, x, ReferenceHandling.Structural);
-            //Assert.AreEqual(false, result);
-
-            result = this.EqualMethod(y, x, ReferenceHandling.References);
-            Assert.AreEqual(false, result);
         }
     }
 }

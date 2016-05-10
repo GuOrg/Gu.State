@@ -22,14 +22,13 @@
             var y = ys.Split(',')
                       .Select(int.Parse)
                       .ToArray();
-            var result = this.DiffMethod(x, y, referenceHandling: ReferenceHandling.Structural);
+            var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(expected, result.ToString("", " "));
         }
 
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.References)]
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         public void IntsWhenEqual(ReferenceHandling referenceHandling)
         {
             var x = new[] { 1, 2, 3 };
@@ -44,7 +43,6 @@
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.References)]
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         public void ImmutableArrayOfIntsWhenEqual(ReferenceHandling referenceHandling)
         {
             var x = System.Collections.Immutable.ImmutableArray.Create(1, 2, 3);
@@ -68,10 +66,9 @@
             Assert.AreEqual(expected, result.ToString("", " "));
         }
 
-        //[TestCase(ReferenceHandling.Throw)]
+        [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.References)]
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         public void Ints2DWhenRankDiffers(ReferenceHandling referenceHandling)
         {
             var x = new int[2, 3];

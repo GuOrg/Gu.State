@@ -21,7 +21,7 @@
 
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
-                using (var tracker = Track.IsDirty(x, y, referenceHandling: ReferenceHandling.Structural))
+                using (var tracker = Track.IsDirty(x, y, ReferenceHandling.Structural))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(false, tracker.IsDirty);
@@ -61,7 +61,7 @@
                 var y = new WithObservableCollectionProperties();
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
-                using (var tracker = Track.IsDirty(x, y, referenceHandling: ReferenceHandling.Structural))
+                using (var tracker = Track.IsDirty(x, y, ReferenceHandling.Structural))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(false, tracker.IsDirty);
@@ -101,7 +101,7 @@
                 var y = new WithObservableCollectionProperties(new ComplexType("a", 1));
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
-                using (var tracker = Track.IsDirty(x, y, referenceHandling: ReferenceHandling.Structural))
+                using (var tracker = Track.IsDirty(x, y, ReferenceHandling.Structural))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(true, tracker.IsDirty);
@@ -123,7 +123,7 @@
                 var y = new WithObservableCollectionProperties(new ComplexType("c", 3));
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
-                using (var tracker = Track.IsDirty(x, y, referenceHandling: ReferenceHandling.Structural))
+                using (var tracker = Track.IsDirty(x, y, ReferenceHandling.Structural))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(true, tracker.IsDirty);
@@ -147,7 +147,7 @@
                 var y = new WithObservableCollectionProperties(new ComplexType("a", 1), new ComplexType("b", 2));
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
-                using (var tracker = Track.IsDirty(x, y, referenceHandling: ReferenceHandling.Structural))
+                using (var tracker = Track.IsDirty(x, y, ReferenceHandling.Structural))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(false, tracker.IsDirty);
@@ -176,7 +176,7 @@
                 var y = new WithObservableCollectionProperties(new ComplexType("c", 2), new ComplexType("d", 4), new ComplexType("e", 5));
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
-                using (var tracker = Track.IsDirty(x, y, referenceHandling: ReferenceHandling.Structural))
+                using (var tracker = Track.IsDirty(x, y, ReferenceHandling.Structural))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(true, tracker.IsDirty);
@@ -208,7 +208,7 @@
                 var y = new WithObservableCollectionProperties(new ComplexType("a", 1), new ComplexType("b", 2));
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
-                using (var tracker = Track.IsDirty(x, y, referenceHandling: ReferenceHandling.Structural))
+                using (var tracker = Track.IsDirty(x, y, ReferenceHandling.Structural))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(false, tracker.IsDirty);
@@ -238,7 +238,7 @@
                 var y = new WithObservableCollectionProperties(new ComplexType("a", 1), new ComplexType("b", 2));
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
-                using (var tracker = Track.IsDirty(x, y, referenceHandling: ReferenceHandling.Structural))
+                using (var tracker = Track.IsDirty(x, y, ReferenceHandling.Structural))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(false, tracker.IsDirty);
@@ -266,7 +266,7 @@
                 var y = new WithObservableCollectionProperties(new ComplexType("a", 1), new ComplexType("b", 2));
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
-                using (var tracker = Track.IsDirty(x, y, referenceHandling: ReferenceHandling.Structural))
+                using (var tracker = Track.IsDirty(x, y, ReferenceHandling.Structural))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(false, tracker.IsDirty);
@@ -294,7 +294,7 @@
                 var y = new WithObservableCollectionProperties();
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
-                using (var tracker = Track.IsDirty(x, y, referenceHandling: ReferenceHandling.Structural))
+                using (var tracker = Track.IsDirty(x, y, ReferenceHandling.Structural))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(false, tracker.IsDirty);

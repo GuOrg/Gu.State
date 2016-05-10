@@ -2,7 +2,7 @@
 {
     public class Throws : ThrowTests
     {
-        public override void CopyMethod<T>(T source, T target, ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excluded = null)
+        public override void CopyMethod<T>(T source, T target, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excluded = null)
         {
             var builder = FieldsSettings.Build();
             if (excluded != null)

@@ -5,7 +5,7 @@
         public override void CopyMethod<T>(
             T source,
             T target,
-            ReferenceHandling referenceHandling = ReferenceHandling.Throw,
+            ReferenceHandling referenceHandling = ReferenceHandling.Structural,
             string excluded = null)
         {
             var builder = PropertiesSettings.Build();

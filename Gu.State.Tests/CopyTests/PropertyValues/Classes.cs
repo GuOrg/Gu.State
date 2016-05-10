@@ -4,7 +4,7 @@
 
     public class Classes : ClassesTests
     {
-        public override void CopyMethod<T>(T source, T target, ReferenceHandling referenceHandling = ReferenceHandling.Throw, string excluded = null)
+        public override void CopyMethod<T>(T source, T target, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excluded = null)
         {
             var builder = PropertiesSettings.Build();
             if (excluded != null)

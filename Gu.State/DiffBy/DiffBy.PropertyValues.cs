@@ -21,10 +21,10 @@
         public static Diff PropertyValues<T>(
             T x,
             T y,
-            ReferenceHandling referenceHandling = ReferenceHandling.Throw,
+            ReferenceHandling referenceHandling = ReferenceHandling.Structural,
             BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
         {
-            var settings = PropertiesSettings.GetOrCreate(bindingFlags, referenceHandling);
+            var settings = PropertiesSettings.GetOrCreate(referenceHandling, bindingFlags);
             return PropertyValues(x, y, settings);
         }
 

@@ -61,7 +61,6 @@
 
                     return;
                 case ReferenceHandling.Structural:
-                case ReferenceHandling.StructuralWithReferenceLoops:
                     IRefCounted<DiffBuilder> subDiffBuilder;
                     if (DiffBuilder.TryCreate(xValue, yValue, settings, out subDiffBuilder))
                     {

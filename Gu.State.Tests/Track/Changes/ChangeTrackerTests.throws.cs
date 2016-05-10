@@ -31,7 +31,6 @@ namespace Gu.State.Tests
                                "    - Event fields are ignored.\r\n" +
                                "* Use PropertiesSettings and specify how change tracking is performed:\r\n" +
                                "  - ReferenceHandling.Structural means that a the entire graph is tracked.\r\n" +
-                               "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but handles reference loops.\r\n" +
                                "  - ReferenceHandling.References means that only the root level changes are tracked.\r\n" +
                                "  - Exclude a combination of the following:\r\n" +
                                "    - The property IllegalSubType.Illegal.\r\n" +
@@ -65,7 +64,6 @@ namespace Gu.State.Tests
                                "    - Event fields are ignored.\r\n" +
                                "* Use PropertiesSettings and specify how change tracking is performed:\r\n" +
                                "  - ReferenceHandling.Structural means that a the entire graph is tracked.\r\n" +
-                               "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but handles reference loops.\r\n" +
                                "  - ReferenceHandling.References means that only the root level changes are tracked.\r\n" +
                                "  - Exclude a combination of the following:\r\n" +
                                "    - The property IllegalSubType.Illegal.\r\n" +
@@ -98,7 +96,6 @@ namespace Gu.State.Tests
                                "    - Event fields are ignored.\r\n" +
                                "* Use PropertiesSettings and specify how change tracking is performed:\r\n" +
                                "  - ReferenceHandling.Structural means that a the entire graph is tracked.\r\n" +
-                               "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but handles reference loops.\r\n" +
                                "  - ReferenceHandling.References means that only the root level changes are tracked.\r\n" +
                                "  - Exclude a combination of the following:\r\n" +
                                "    - The property WithIllegal.Illegal.\r\n" +
@@ -125,7 +122,6 @@ namespace Gu.State.Tests
                                "* Implement INotifyCollectionChanged for IllegalEnumerable or use a type that does.\r\n" +
                                "* Use PropertiesSettings and specify how change tracking is performed:\r\n" +
                                "  - ReferenceHandling.Structural means that a the entire graph is tracked.\r\n" +
-                               "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but handles reference loops.\r\n" +
                                "  - ReferenceHandling.References means that only the root level changes are tracked.\r\n";
 
                 var item = new IllegalEnumerable();
@@ -157,7 +153,6 @@ namespace Gu.State.Tests
                    "    - Event fields are ignored.\r\n" +
                    "* Use PropertiesSettings and specify how change tracking is performed:\r\n" +
                    "  - ReferenceHandling.Structural means that a the entire graph is tracked.\r\n" +
-                   "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but handles reference loops.\r\n" +
                    "  - ReferenceHandling.References means that only the root level changes are tracked.\r\n" +
                    "  - Exclude a combination of the following:\r\n" +
                    "    - The property With<List<int>>.Value.\r\n" +

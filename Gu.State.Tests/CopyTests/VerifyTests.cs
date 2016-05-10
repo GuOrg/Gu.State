@@ -25,9 +25,8 @@
             this.VerifyMethod<WithCalculatedProperty>();
         }
 
-        [TestCase(null)]
         [TestCase(ReferenceHandling.Throw)]
-        public void CanCopyWithComplexThrows(ReferenceHandling? referenceHandling)
+        public void CanCopyWithComplexThrows(ReferenceHandling referenceHandling)
         {
             var expected = this.GetType() == typeof(FieldValues.Verify)
                    ? "Copy.FieldValues(x, y) failed.\r\n" +
@@ -42,7 +41,6 @@
                      "    - Event fields are ignored.\r\n" +
                      "* Use FieldsSettings and specify how copying is performed:\r\n" +
                      "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
-                     "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but tracks reference loops.\r\n" +
                      "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
                      "  - ReferenceHandling.References means that references are copied.\r\n" +
                      "  - Exclude a combination of the following:\r\n" +
@@ -61,16 +59,12 @@
                      "    - Event fields are ignored.\r\n" +
                      "* Use PropertiesSettings and specify how copying is performed:\r\n" +
                      "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
-                     "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but tracks reference loops.\r\n" +
                      "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
                      "  - ReferenceHandling.References means that references are copied.\r\n" +
                      "  - Exclude a combination of the following:\r\n" +
                      "    - The property WithComplexProperty.ComplexType.\r\n" +
                      "    - The type ComplexType.\r\n";
-            var exception = referenceHandling != null
-                                ? Assert.Throws<NotSupportedException>(() => this.VerifyMethod<WithComplexProperty>(referenceHandling.Value))
-                                : Assert.Throws<NotSupportedException>(this.VerifyMethod<WithComplexProperty>);
-
+            var exception = Assert.Throws<NotSupportedException>(() => this.VerifyMethod<WithComplexProperty>(referenceHandling));
             Assert.AreEqual(expected, exception.Message);
         }
 
@@ -81,7 +75,6 @@
             this.VerifyMethod<WithComplexProperty>(referenceHandling);
         }
 
-        [TestCase(null)]
         [TestCase(ReferenceHandling.Throw)]
         public void CanCopyListOfComplexTypeThrows(ReferenceHandling? referenceHandling)
         {
@@ -98,7 +91,6 @@
         [TestCase(null)]
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
         public void CanCopyEnumerableOfIntsThrows(ReferenceHandling? referenceHandling)
         {
@@ -112,7 +104,6 @@
         [TestCase(null)]
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
         public void CanCopyImmutableThrows(ReferenceHandling? referenceHandling)
         {
@@ -141,7 +132,6 @@
                                  "Solve the problem by any of:\r\n" +
                                  "* Use FieldsSettings and specify how copying is performed:\r\n" +
                                  "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
-                                 "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but tracks reference loops.\r\n" +
                                  "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
                                  "  - ReferenceHandling.References means that references are copied.\r\n" +
                                  "  - Exclude a combination of the following:\r\n" +
@@ -153,7 +143,6 @@
                                  "Solve the problem by any of:\r\n" +
                                  "* Use PropertiesSettings and specify how copying is performed:\r\n" +
                                  "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
-                                 "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but tracks reference loops.\r\n" +
                                  "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
                                  "  - ReferenceHandling.References means that references are copied.\r\n" +
                                  "  - Exclude a combination of the following:\r\n" +
@@ -182,7 +171,6 @@
                      "    - Event fields are ignored.\r\n" +
                      "* Use FieldsSettings and specify how copying is performed:\r\n" +
                      "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
-                     "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but tracks reference loops.\r\n" +
                      "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
                      "  - ReferenceHandling.References means that references are copied.\r\n" +
                      "  - Exclude a combination of the following:\r\n" +
@@ -205,17 +193,16 @@
                      "    - Event fields are ignored.\r\n" +
                      "* Use PropertiesSettings and specify how copying is performed:\r\n" +
                      "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
-                     "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but tracks reference loops.\r\n" +
                      "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
                      "  - ReferenceHandling.References means that references are copied.\r\n" +
                      "  - Exclude a combination of the following:\r\n" +
                      "    - The property Parent.Child.\r\n" +
                      "    - The property Child.Parent.\r\n" +
                      "    - The type Child.\r\n";
-            var exception = Assert.Throws<NotSupportedException>(() => this.VerifyMethod<Parent>(ReferenceHandling.Structural));
+            var exception = Assert.Throws<NotSupportedException>(() => this.VerifyMethod<Parent>(ReferenceHandling.Throw));
             Assert.AreEqual(expected, exception.Message);
 
-            Assert.DoesNotThrow(() => this.VerifyMethod<Parent>(ReferenceHandling.StructuralWithReferenceLoops));
+            Assert.DoesNotThrow(() => this.VerifyMethod<Parent>(ReferenceHandling.Structural));
             Assert.DoesNotThrow(() => this.VerifyMethod<Parent>(ReferenceHandling.References));
         }
     }

@@ -1,10 +1,10 @@
-﻿namespace Gu.State.Tests.DiffTests.PropertyValues
+﻿namespace Gu.State.Tests.EqualByTests.PropertyValues
 {
     using System;
 
-    public class Classes : ClassesTests
+    public class ReferenceLoops : ReferenceLoopsTests
     {
-        public override Diff DiffMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type excludedType = null)
+        public override bool EqualMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type excludedType = null)
         {
             var builder = PropertiesSettings.Build();
             if (excludedMembers != null)
@@ -18,7 +18,7 @@
             }
 
             var settings = builder.CreateSettings(referenceHandling);
-            return DiffBy.PropertyValues(x, y, settings);
+            return EqualBy.PropertyValues(x, y, settings);
         }
     }
 }

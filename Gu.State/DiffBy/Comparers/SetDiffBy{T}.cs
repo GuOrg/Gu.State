@@ -76,7 +76,6 @@
                     }
 
                 case ReferenceHandling.Structural:
-                case ReferenceHandling.StructuralWithReferenceLoops:
                     using (var borrow = SetPool<T>.Borrow((xi, yi) => EqualBy.MemberValues(xi, yi, settings), xi => 0))
                     {
                         AddItemDiffs(collectionBuilder, x, y, borrow.Value);

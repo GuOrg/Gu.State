@@ -13,7 +13,7 @@
             {
                 var source = new SynchronizerTypes.WithObservableCollectionProperties(new SynchronizerTypes.ComplexType("a", 1), new SynchronizerTypes.ComplexType("b", 2));
                 var target = new SynchronizerTypes.WithObservableCollectionProperties();
-                using (Synchronize.PropertyValues(source, target, referenceHandling: ReferenceHandling.Structural))
+                using (Synchronize.PropertyValues(source, target, ReferenceHandling.Structural))
                 {
                     var expected = new[] { new SynchronizerTypes.ComplexType("a", 1), new SynchronizerTypes.ComplexType("b", 2) };
                     CollectionAssert.AreEqual(expected, source.Complexes, SynchronizerTypes.ComplexType.Comparer);
@@ -54,7 +54,7 @@
             {
                 var source = new SynchronizerTypes.WithObservableCollectionProperties();
                 var target = new SynchronizerTypes.WithObservableCollectionProperties();
-                using (Synchronize.PropertyValues(source, target, referenceHandling: referenceHandling))
+                using (Synchronize.PropertyValues(source, target, referenceHandling))
                 {
                     source.Complexes.Add(new SynchronizerTypes.ComplexType("a", 1));
                     var expected = new[] { new SynchronizerTypes.ComplexType("a", 1) };
@@ -74,7 +74,7 @@
             {
                 var source = new SynchronizerTypes.WithObservableCollectionProperties(new SynchronizerTypes.ComplexType("a", 1), new SynchronizerTypes.ComplexType("b", 2));
                 var target = new SynchronizerTypes.WithObservableCollectionProperties(new SynchronizerTypes.ComplexType("a", 1), new SynchronizerTypes.ComplexType("b", 2));
-                using (Synchronize.PropertyValues(source, target, referenceHandling: referenceHandling))
+                using (Synchronize.PropertyValues(source, target, referenceHandling))
                 {
                     source.Complexes.RemoveAt(1);
                     var expected = new[] { new SynchronizerTypes.ComplexType("a", 1) };
@@ -92,7 +92,7 @@
             {
                 var source = new SynchronizerTypes.WithObservableCollectionProperties(new SynchronizerTypes.ComplexType("a", 1), new SynchronizerTypes.ComplexType("b", 2));
                 var target = new SynchronizerTypes.WithObservableCollectionProperties(new SynchronizerTypes.ComplexType("a", 1), new SynchronizerTypes.ComplexType("b", 2));
-                using (Synchronize.PropertyValues(source, target, referenceHandling: referenceHandling))
+                using (Synchronize.PropertyValues(source, target, referenceHandling))
                 {
                     source.Complexes.Insert(1, new SynchronizerTypes.ComplexType("c", 3));
                     var expected = new[] { new SynchronizerTypes.ComplexType("a", 1), new SynchronizerTypes.ComplexType("c", 3), new SynchronizerTypes.ComplexType("b", 2) };
@@ -117,7 +117,7 @@
             {
                 var source = new SynchronizerTypes.WithObservableCollectionProperties(new SynchronizerTypes.ComplexType("a", 1), new SynchronizerTypes.ComplexType("b", 2));
                 var target = new SynchronizerTypes.WithObservableCollectionProperties(new SynchronizerTypes.ComplexType("a", 1), new SynchronizerTypes.ComplexType("b", 2));
-                using (Synchronize.PropertyValues(source, target, referenceHandling: referenceHandling))
+                using (Synchronize.PropertyValues(source, target, referenceHandling))
                 {
                     source.Complexes.Move(1, 0);
                     var expected = new[] { new SynchronizerTypes.ComplexType("b", 2), new SynchronizerTypes.ComplexType("a", 1) };
@@ -137,7 +137,7 @@
             {
                 var source = new SynchronizerTypes.WithObservableCollectionProperties(new SynchronizerTypes.ComplexType("a", 1), new SynchronizerTypes.ComplexType("b", 2));
                 var target = new SynchronizerTypes.WithObservableCollectionProperties(new SynchronizerTypes.ComplexType("a", 1), new SynchronizerTypes.ComplexType("b", 2));
-                using (Synchronize.PropertyValues(source, target, referenceHandling: referenceHandling))
+                using (Synchronize.PropertyValues(source, target, referenceHandling))
                 {
                     source.Complexes[0] = new SynchronizerTypes.ComplexType("c", 3);
                     var expected = new[] { new SynchronizerTypes.ComplexType("c", 3), new SynchronizerTypes.ComplexType("b", 2) };
@@ -156,7 +156,7 @@
             {
                 var source = new SynchronizerTypes.WithObservableCollectionProperties(new SynchronizerTypes.ComplexType("a", 1), new SynchronizerTypes.ComplexType("b", 2));
                 var target = new SynchronizerTypes.WithObservableCollectionProperties();
-                using (Synchronize.PropertyValues(source, target, referenceHandling: ReferenceHandling.Structural))
+                using (Synchronize.PropertyValues(source, target, ReferenceHandling.Structural))
                 {
                     var expected = new List<SynchronizerTypes.ComplexType> { new SynchronizerTypes.ComplexType("a", 1), new SynchronizerTypes.ComplexType("b", 2) };
                     CollectionAssert.AreEqual(expected, source.Complexes, SynchronizerTypes.ComplexType.Comparer);

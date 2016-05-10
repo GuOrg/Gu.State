@@ -12,67 +12,110 @@
         /// Use this to fail fast or in unit tests.
         /// </summary>
         /// <typeparam name="T">The type to get ignore properties for settings for</typeparam>
-        /// <param name="bindingFlags">The binding flags to use when getting properties</param>
         /// <param name="referenceHandling">
         /// If Structural is used a deep equality check is performed.
         /// </param>
+        /// <param name="bindingFlags">The binding flags to use when getting properties</param>
         public static void VerifyCanEqualByPropertyValues<T>(
-            BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags,
-            ReferenceHandling referenceHandling = ReferenceHandling.Throw)
+            ReferenceHandling referenceHandling = ReferenceHandling.Structural,
+            BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
         {
-            var settings = PropertiesSettings.GetOrCreate(bindingFlags, referenceHandling);
+            var settings = PropertiesSettings.GetOrCreate(referenceHandling, bindingFlags);
             VerifyCanEqualByPropertyValues<T>(settings);
         }
 
+        /// <summary>
+        /// Check if the properties of <typeparamref name="T"/> can be compared for equality
+        /// This method will throw an exception if copy cannot be performed for <typeparamref name="T"/>
+        /// Read the exception message for detailed instructions about what is wrong.
+        /// Use this to fail fast or in unit tests.
+        /// </summary>
+        /// <typeparam name="T">The type to check.</typeparam>
+        /// <param name="settings">The settings to use.</param>
         public static void VerifyCanEqualByPropertyValues<T>(PropertiesSettings settings)
         {
             var type = typeof(T);
             VerifyCanEqualByPropertyValues(type, settings);
         }
 
-        public static void VerifyCanEqualByPropertyValues<T>(PropertiesSettings settings, string className, string methodName)
-        {
-            var type = typeof(T);
-            VerifyCanEqualByPropertyValues(type, settings, className, methodName);
-        }
-
+        /// <summary>
+        /// Check if the properties of <paramref name="type"/> can be compared for equality
+        /// This method will throw an exception if copy cannot be performed for <paramref name="type"/>
+        /// Read the exception message for detailed instructions about what is wrong.
+        /// Use this to fail fast or in unit tests.
+        /// </summary>
+        /// <param name="type">The type to check.</param>
+        /// <param name="settings">The settings to use.</param>
         public static void VerifyCanEqualByPropertyValues(Type type, PropertiesSettings settings)
         {
             VerifyCanEqualByPropertyValues(type, settings, typeof(EqualBy).Name, nameof(EqualBy.PropertyValues));
         }
 
-        public static void VerifyCanEqualByPropertyValues(Type type, PropertiesSettings settings, string className, string methodName)
-        {
-            Verify.GetPropertiesErrors(type, settings)
-                  .ThrowIfHasErrors(settings, className, methodName);
-        }
-
+        /// <summary>
+        /// Check if the fields of <typeparamref name="T"/> can be compared for equality
+        /// This method will throw an exception if copy cannot be performed for <typeparamref name="T"/>
+        /// Read the exception message for detailed instructions about what is wrong.
+        /// Use this to fail fast or in unit tests.
+        /// </summary>
+        /// <typeparam name="T">The type to get ignore fields for settings for</typeparam>
+        /// <param name="referenceHandling">
+        /// If Structural is used a deep equality check is performed.
+        /// </param>
+        /// <param name="bindingFlags">The binding flags to use when getting fields</param>
         public static void VerifyCanEqualByFieldValues<T>(
-            BindingFlags bindingFlags = Constants.DefaultFieldBindingFlags,
-            ReferenceHandling referenceHandling = ReferenceHandling.Throw)
+            ReferenceHandling referenceHandling = ReferenceHandling.Structural,
+            BindingFlags bindingFlags = Constants.DefaultFieldBindingFlags)
         {
-            var settings = FieldsSettings.GetOrCreate(bindingFlags, referenceHandling);
+            var settings = FieldsSettings.GetOrCreate(referenceHandling, bindingFlags);
             VerifyCanEqualByFieldValues<T>(settings);
         }
 
+        /// <summary>
+        /// Check if the fields of <typeparamref name="T"/> can be compared for equality
+        /// This method will throw an exception if copy cannot be performed for <typeparamref name="T"/>
+        /// Read the exception message for detailed instructions about what is wrong.
+        /// Use this to fail fast or in unit tests.
+        /// </summary>
+        /// <typeparam name="T">The type to check.</typeparam>
+        /// <param name="settings">The settings to use.</param>
         public static void VerifyCanEqualByFieldValues<T>(FieldsSettings settings)
         {
             var type = typeof(T);
             VerifyCanEqualByFieldValues(type, settings);
         }
 
-        public static void VerifyCanEqualByFieldValues<T>(FieldsSettings settings, string className, string methodName)
-        {
-            var type = typeof(T);
-            VerifyCanEqualByFieldValues(type, settings, className, methodName);
-        }
-
+        /// <summary>
+        /// Check if the fields of <paramref name="type"/> can be compared for equality
+        /// This method will throw an exception if copy cannot be performed for <paramref name="type"/>
+        /// Read the exception message for detailed instructions about what is wrong.
+        /// Use this to fail fast or in unit tests.
+        /// </summary>
+        /// <param name="type">The type to check.</param>
+        /// <param name="settings">The settings to use.</param>
         public static void VerifyCanEqualByFieldValues(Type type, FieldsSettings settings)
         {
             VerifyCanEqualByFieldValues(type, settings, typeof(EqualBy).Name, nameof(EqualBy.FieldValues));
         }
 
-        public static void VerifyCanEqualByFieldValues(Type type, FieldsSettings settings, string className, string methodName)
+        internal static void VerifyCanEqualByPropertyValues<T>(PropertiesSettings settings, string className, string methodName)
+        {
+            var type = typeof(T);
+            VerifyCanEqualByPropertyValues(type, settings, className, methodName);
+        }
+
+        internal static void VerifyCanEqualByPropertyValues(Type type, PropertiesSettings settings, string className, string methodName)
+        {
+            Verify.GetPropertiesErrors(type, settings)
+                  .ThrowIfHasErrors(settings, className, methodName);
+        }
+
+        internal static void VerifyCanEqualByFieldValues<T>(FieldsSettings settings, string className, string methodName)
+        {
+            var type = typeof(T);
+            VerifyCanEqualByFieldValues(type, settings, className, methodName);
+        }
+
+        internal static void VerifyCanEqualByFieldValues(Type type, FieldsSettings settings, string className, string methodName)
         {
             Verify.GetFieldsErrors(type, settings)
                   .ThrowIfHasErrors(settings, className, methodName);

@@ -18,11 +18,11 @@
         public static void PropertyValues<T>(
             T source,
             T target,
-            ReferenceHandling referenceHandling = ReferenceHandling.Throw,
+            ReferenceHandling referenceHandling = ReferenceHandling.Structural,
             BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
             where T : class
         {
-            var settings = PropertiesSettings.GetOrCreate(bindingFlags, referenceHandling);
+            var settings = PropertiesSettings.GetOrCreate(referenceHandling, bindingFlags);
             PropertyValues(source, target, settings);
         }
 

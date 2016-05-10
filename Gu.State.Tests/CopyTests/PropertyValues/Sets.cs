@@ -4,7 +4,7 @@ namespace Gu.State.Tests.CopyTests.PropertyValues
     {
         public override void CopyMethod<T>(T source, T target, ReferenceHandling referenceHandling)
         {
-            Copy.PropertyValues(source, target, referenceHandling: referenceHandling);
+            Copy.PropertyValues(source, target, referenceHandling);
         }
     }
 }

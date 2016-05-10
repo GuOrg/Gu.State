@@ -277,17 +277,13 @@ namespace Gu.State
             memberPath = memberPath.WithMember(memberInfo);
             if (memberPath.HasLoop())
             {
-                if (settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops)
-                {
-                    return typeErrors;
-                }
-
-                if (settings.ReferenceHandling == ReferenceHandling.Structural)
+                if (settings.ReferenceHandling == ReferenceHandling.Throw)
                 {
                     typeErrors = typeErrors.CreateIfNull(type)
                                            .Add(new ReferenceLoop(memberPath));
-                    return typeErrors;
                 }
+
+                return typeErrors;
             }
 
             var recursiveErrors = getErrorsRecursively(settings, memberPath);

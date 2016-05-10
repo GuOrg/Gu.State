@@ -17,7 +17,7 @@ namespace Gu.State.Tests
                 x.Child.Parent = x;
                 var y = new Parent { Name = "p2", Child = new Child("c") };
                 y.Child.Parent = y;
-                using (var tracker = Track.IsDirty(x, y, ReferenceHandling.StructuralWithReferenceLoops))
+                using (var tracker = Track.IsDirty(x, y, ReferenceHandling.Structural))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
 
@@ -42,7 +42,7 @@ namespace Gu.State.Tests
                 var expectedChanges = new List<string>();
                 var x = new Parent();
                 var y = new Parent();
-                using (var tracker = Track.IsDirty(x, y, ReferenceHandling.StructuralWithReferenceLoops))
+                using (var tracker = Track.IsDirty(x, y, ReferenceHandling.Structural))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(false, tracker.IsDirty);
@@ -107,7 +107,7 @@ namespace Gu.State.Tests
                 var expectedChanges = new List<string>();
                 var x = new With<Parent>();
                 var y = new With<Parent>();
-                using (var tracker = Track.IsDirty(x, y, ReferenceHandling.StructuralWithReferenceLoops))
+                using (var tracker = Track.IsDirty(x, y, ReferenceHandling.Structural))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(false, tracker.IsDirty);
@@ -201,7 +201,7 @@ namespace Gu.State.Tests
                 var expectedChanges = new List<string>();
                 var x = new Parent();
                 var y = new Parent();
-                using (var tracker = Track.IsDirty(x, y, ReferenceHandling.StructuralWithReferenceLoops))
+                using (var tracker = Track.IsDirty(x, y, ReferenceHandling.Structural))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(false, tracker.IsDirty);

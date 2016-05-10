@@ -21,10 +21,5 @@ namespace Gu.State
         /// Copies by walking the graph copying immutable submember values.
         /// </summary>
         Structural,
-
-        /// <summary>
-        /// Same as structural but handles reference loops
-        /// </summary>
-        StructuralWithReferenceLoops
     }
 }

@@ -20,8 +20,8 @@
         public void WithSimpleFieldsHappyPath()
         {
             Copy.VerifyCanCopyFieldValues<CopyTypes.WithSimpleFields>();
-            Copy.VerifyCanCopyFieldValues<CopyTypes.WithSimpleFields>(BindingFlags.Public | BindingFlags.Instance);
-            Copy.VerifyCanCopyFieldValues<CopyTypes.WithSimpleFields>(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            Copy.VerifyCanCopyFieldValues<CopyTypes.WithSimpleFields>(ReferenceHandling.Structural, BindingFlags.Public | BindingFlags.Instance);
+            Copy.VerifyCanCopyFieldValues<CopyTypes.WithSimpleFields>(ReferenceHandling.Structural, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
         }
     }
 }

@@ -12,7 +12,7 @@
         public abstract Diff DiffMethod<T>(
             T x,
             T y,
-            ReferenceHandling referenceHandling = ReferenceHandling.Throw,
+            ReferenceHandling referenceHandling = ReferenceHandling.Structural,
             string excludedMembers = null,
             Type excludedType = null) where T : class;
 
@@ -54,9 +54,6 @@
             var y = new WithComplexProperty("a", 1) { ComplexType = new ComplexType { Name = yn, Value = 2 } };
 
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(expected, result.ToString("", " "));
-
-            result = this.DiffMethod(x, y, ReferenceHandling.StructuralWithReferenceLoops);
             Assert.AreEqual(expected, result.ToString("", " "));
         }
 
@@ -106,7 +103,6 @@
         }
 
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
         public void WithComplexReferenceWhenSame(ReferenceHandling referenceHandling)
         {
@@ -122,7 +118,6 @@
         }
 
         [TestCase(ReferenceHandling.Structural, "Empty")]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops, "Empty")]
         [TestCase(ReferenceHandling.References, "WithComplexProperty <member> x: Gu.State.Tests.DiffTests.DiffTypes+ComplexType y: Gu.State.Tests.DiffTests.DiffTypes+ComplexType")]
         public void WithComplexReferenceWhenNotSame(ReferenceHandling referenceHandling, string expected)
         {
@@ -339,7 +334,7 @@
             var result = this.DiffMethod(
                 x,
                 y,
-                referenceHandling: ReferenceHandling.Structural,
+                ReferenceHandling.Structural,
                 excludedType: typeof(ComplexType));
             Assert.AreEqual(expected, result.ToString("", " "));
         }
