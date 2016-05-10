@@ -46,7 +46,7 @@
             }
 
             [Test]
-            public void DoesNotLeakNested()
+            public void DoesNotLeakTrackedProperty()
             {
                 var x = new WithComplexProperty {ComplexType = new ComplexType("a", 1)};
                 var y = new WithComplexProperty {ComplexType = new ComplexType("a", 1)};
@@ -62,8 +62,6 @@
                     Assert.AreEqual(false, wrxc.IsAlive);
 
                     var wryc = new System.WeakReference(y.ComplexType);
-                    Assert.AreEqual(true, wryc.IsAlive);
-
                     y.ComplexType = null;
                     System.GC.Collect();
                     Assert.AreEqual(false, wryc.IsAlive);
