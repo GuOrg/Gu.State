@@ -30,7 +30,6 @@
                 case ReferenceHandling.References:
                     return sourceItem;
                 case ReferenceHandling.Structural:
-                case ReferenceHandling.StructuralWithReferenceLoops:
                     if (targetItem == null)
                     {
                         targetItem = (T)State.Copy.CreateInstance(sourceItem, null, settings);

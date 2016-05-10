@@ -12,7 +12,6 @@
 
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
         public void IntsWhenEqual(ReferenceHandling referenceHandling)
         {
@@ -40,7 +39,6 @@
         }
 
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
         public void IntsWhenLonger(ReferenceHandling referenceHandling)
         {
@@ -54,7 +52,6 @@
         }
 
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         public void ComplexWhenEqual(ReferenceHandling referenceHandling)
         {
             var x = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 1) };
@@ -67,7 +64,6 @@
         }
 
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
         public void ComplexWhenNotEqual(ReferenceHandling referenceHandling)
         {
@@ -81,7 +77,6 @@
         }
 
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
         public void WithCollisionsWhenEqual(ReferenceHandling referenceHandling)
         {
@@ -97,7 +92,6 @@
         }
 
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
         public void WithCollisionsWhenNotEqual(ReferenceHandling referenceHandling)
         {
@@ -114,7 +108,6 @@
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.References)]
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         public void ImmutableHashSetOfIntsWhenEqual(ReferenceHandling referenceHandling)
         {
             var x = System.Collections.Immutable.ImmutableHashSet.Create(1, 2, 3);

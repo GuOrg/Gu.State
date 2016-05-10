@@ -106,7 +106,6 @@
         }
 
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
         public void WithComplexReferenceWhenSame(ReferenceHandling referenceHandling)
         {

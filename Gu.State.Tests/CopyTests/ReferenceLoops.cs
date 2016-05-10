@@ -18,7 +18,7 @@
         {
             var source = new Parent("p", new Child("c"));
             var target = new Parent(p, new Child(c));
-            this.CopyMethod(source, target, ReferenceHandling.StructuralWithReferenceLoops);
+            this.CopyMethod(source, target, ReferenceHandling.Structural);
             Assert.AreEqual("p", source.Name);
             Assert.AreEqual("p", target.Name);
             Assert.AreEqual("c", source.Child.Name);
@@ -46,7 +46,7 @@
             }
             var source = new Parent("p", new Child("c"));
             var target = new Parent(null, null);
-            this.CopyMethod(source, target, ReferenceHandling.StructuralWithReferenceLoops);
+            this.CopyMethod(source, target, ReferenceHandling.Structural);
             Assert.AreEqual("p", source.Name);
             Assert.AreEqual("p", target.Name);
             Assert.AreEqual("c", source.Child.Name);
@@ -62,7 +62,7 @@
             source.Add(complexType);
             var target = new ObservableCollection<ComplexType>();
 
-            this.CopyMethod(source, target, ReferenceHandling.StructuralWithReferenceLoops);
+            this.CopyMethod(source, target, ReferenceHandling.Structural);
             var expected = new[] { new ComplexType("a", 1), new ComplexType("a", 1) };
             CollectionAssert.AreEqual(expected, source, ComplexType.Comparer);
             CollectionAssert.AreEqual(expected, target, ComplexType.Comparer);
@@ -76,7 +76,7 @@
             source.Add(source);
             var target = new ObservableCollection<ICollection>();
 
-            this.CopyMethod(source, target, ReferenceHandling.StructuralWithReferenceLoops);
+            this.CopyMethod(source, target, ReferenceHandling.Structural);
             Assert.AreEqual(1, source.Count);
             Assert.AreEqual(1, target.Count);
 

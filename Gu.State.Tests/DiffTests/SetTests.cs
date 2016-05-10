@@ -12,7 +12,6 @@ namespace Gu.State.Tests.DiffTests
 
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
         public void HashSetOfIntsWhenEqual(ReferenceHandling referenceHandling)
         {
@@ -42,7 +41,6 @@ namespace Gu.State.Tests.DiffTests
 
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
         public void HashSetOfIntsWhenLonger(ReferenceHandling referenceHandling)
         {
@@ -56,7 +54,6 @@ namespace Gu.State.Tests.DiffTests
         }
 
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         public void HashSetOfComplexWhenEqual(ReferenceHandling referenceHandling)
         {
             var x = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 1) };
@@ -69,7 +66,6 @@ namespace Gu.State.Tests.DiffTests
         }
 
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         public void HashSetOfComplexWhenNotEqual(ReferenceHandling referenceHandling)
         {
             var x = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 1) };
@@ -100,7 +96,6 @@ namespace Gu.State.Tests.DiffTests
         }
 
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
         public void HashSetOfWithCollisionsWhenEqual(ReferenceHandling referenceHandling)
         {
@@ -116,7 +111,6 @@ namespace Gu.State.Tests.DiffTests
         }
 
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         public void HashSetOfWithCollisionsWhenNotEqual(ReferenceHandling referenceHandling)
         {
             var e1 = new HashCollisionType();
@@ -152,7 +146,6 @@ namespace Gu.State.Tests.DiffTests
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.References)]
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         public void ImmutableHashSetOfIntsWhenEqual(ReferenceHandling referenceHandling)
         {
             var x = System.Collections.Immutable.ImmutableHashSet.Create(1, 2, 3);

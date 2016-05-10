@@ -29,7 +29,6 @@
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.References)]
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         public void IntsWhenEqual(ReferenceHandling referenceHandling)
         {
             var x = new[] { 1, 2, 3 };
@@ -68,10 +67,9 @@
             Assert.AreEqual(expected, result.ToString("", " "));
         }
 
-        //[TestCase(ReferenceHandling.Throw)]
+        [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.References)]
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         public void Ints2DWhenRankDiffers(ReferenceHandling referenceHandling)
         {
             var x = new int[2, 3];

@@ -78,7 +78,6 @@
 
                     break;
                 case ReferenceHandling.Structural:
-                case ReferenceHandling.StructuralWithReferenceLoops:
                     IEqualityComparer<T> comparer;
                     if (!Set.TryGetComparer(source, out comparer))
                     {

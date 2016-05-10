@@ -37,7 +37,6 @@ namespace Gu.State.Tests.EqualByTests
         }
 
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
         public void OneLonger(ReferenceHandling referenceHandling)
         {
@@ -84,7 +83,6 @@ namespace Gu.State.Tests.EqualByTests
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.References)]
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         public void ImmutableDictionaryOfIntsAndStringsWhenNotEqualKeys(ReferenceHandling referenceHandling)
         {
             var builder = System.Collections.Immutable.ImmutableDictionary.CreateBuilder<int, string>();
@@ -103,7 +101,6 @@ namespace Gu.State.Tests.EqualByTests
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.References)]
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         public void ImmutableDictionaryOfIntsAndStringsWhenNotEqualValues(ReferenceHandling referenceHandling)
         {
             var builder = System.Collections.Immutable.ImmutableDictionary.CreateBuilder<int, string>();

@@ -209,7 +209,6 @@
         [TestCase(null)]
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
         public void CanCopyEnumerableOfIntsThrows(ReferenceHandling? referenceHandling)
         {

@@ -139,7 +139,6 @@
                 case ReferenceHandling.References:
                     return ReferenceEquals(x, y);
                 case ReferenceHandling.Structural:
-                case ReferenceHandling.StructuralWithReferenceLoops:
                     Verify.CanEqualByMemberValues(x, y, settings);
                     return MemberValues(x, y, settings, referencePairs);
                 case ReferenceHandling.Throw:

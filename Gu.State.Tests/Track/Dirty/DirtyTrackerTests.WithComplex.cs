@@ -56,7 +56,6 @@
             }
 
             [TestCase(ReferenceHandling.Structural)]
-            [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
             public void TracksNested(ReferenceHandling referenceHandling)
             {
                 var x = new WithComplexProperty();
@@ -121,7 +120,6 @@
             }
 
             [TestCase(ReferenceHandling.Structural)]
-            [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
             public void WhenNestedNameChanged(ReferenceHandling referenceHandling)
             {
                 var x = new WithComplexProperty { ComplexType = new ComplexType("a", 1) };
@@ -150,7 +148,6 @@
             }
 
             [TestCase(ReferenceHandling.Structural)]
-            [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
             public void WhenRootNameChanged(ReferenceHandling referenceHandling)
             {
                 var x = new WithComplexProperty { ComplexType = new ComplexType("a", 1) };

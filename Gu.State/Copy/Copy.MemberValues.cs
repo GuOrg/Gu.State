@@ -48,7 +48,7 @@
                 //    return copy;
                 //}
 
-                using (var borrowed = settings.ReferenceHandling == ReferenceHandling.StructuralWithReferenceLoops
+                using (var borrowed = settings.ReferenceHandling == ReferenceHandling.Structural
                                        ? ReferencePairCollection.Borrow()
                                        : null)
                 {

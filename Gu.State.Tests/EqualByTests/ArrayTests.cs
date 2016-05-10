@@ -25,7 +25,6 @@ namespace Gu.State.Tests.EqualByTests
 
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
         public void IntsWhenEqual(ReferenceHandling referenceHandling)
         {
@@ -80,7 +79,6 @@ namespace Gu.State.Tests.EqualByTests
 
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         [TestCase(ReferenceHandling.References)]
         public void ArrayOfImmutableWhenEqual(ReferenceHandling referenceHandling)
         {
@@ -93,7 +91,6 @@ namespace Gu.State.Tests.EqualByTests
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.References)]
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         public void ImmutableListOfIntsWhenEqual(ReferenceHandling referenceHandling)
         {
             var x = System.Collections.Immutable.ImmutableArray.Create(1, 2, 3);

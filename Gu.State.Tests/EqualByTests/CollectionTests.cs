@@ -15,7 +15,6 @@
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.References)]
         [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.StructuralWithReferenceLoops)]
         public void ListOfIntsToEmpty(ReferenceHandling referenceHandling)
         {
             var x = new List<int> { 1, 2, 3 };
