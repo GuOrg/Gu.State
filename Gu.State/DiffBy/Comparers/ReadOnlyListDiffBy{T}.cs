@@ -12,29 +12,29 @@
         }
 
         public void AddDiffs<TSettings>(
+            DiffBuilder collectionBuilder,
             object x,
             object y,
             TSettings settings,
-            DiffBuilder collectionBuilder,
-            Action<object, object, object, TSettings, DiffBuilder> itemDiff)
+            Action<DiffBuilder, object, object, object, TSettings> itemDiff)
             where TSettings : IMemberSettings
         {
-            this.AddDiffs((IReadOnlyList<T>)x, (IReadOnlyList<T>)y, settings, collectionBuilder, itemDiff);
+            this.AddDiffs(collectionBuilder, (IReadOnlyList<T>)x, (IReadOnlyList<T>)y, settings, itemDiff);
         }
 
         private void AddDiffs<TSettings>(
+            DiffBuilder collectionBuilder,
             IReadOnlyList<T> x,
             IReadOnlyList<T> y,
             TSettings settings,
-            DiffBuilder collectionBuilder,
-            Action<object, object, object, TSettings, DiffBuilder> itemDiff)
+            Action<DiffBuilder, object, object, object, TSettings> itemDiff)
             where TSettings : IMemberSettings
         {
             for (var i = 0; i < Math.Max(x.Count, y.Count); i++)
             {
                 var xv = x.ElementAtOrMissing(i);
                 var yv = y.ElementAtOrMissing(i);
-                itemDiff(xv, yv, i, settings, collectionBuilder);
+                itemDiff(collectionBuilder, xv, yv, i, settings);
             }
         }
     }

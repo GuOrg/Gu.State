@@ -2,6 +2,7 @@ namespace Gu.State
 {
     using System;
     using System.Collections;
+    using Gu.State.Internals;
 
     public class ListCopyer : ICopyer
     {
@@ -63,10 +64,7 @@ namespace Gu.State
                 }
             }
 
-            for (var i = target.Count - 1; i >= source.Count; i--)
-            {
-                target.RemoveAt(i);
-            }
+            target.TrimLengthTo(source);
         }
     }
 }

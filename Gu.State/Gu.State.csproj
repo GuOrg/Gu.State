@@ -40,6 +40,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Internals\Contracts\IInitialize{T}.cs" />
     <Compile Include="Internals\CastingComparer.cs" />
     <Compile Include="Internals\CastingComparer{T}.cs" />
     <Compile Include="Copy\Copy.MemberValues.cs" />
@@ -86,9 +87,12 @@
     <Compile Include="Internals\ArrayExt.cs" />
     <Compile Include="Internals\DictionaryExt.cs" />
     <Compile Include="Internals\EnumerableExt.ElementAt.cs" />
-    <Compile Include="Internals\IBorrowed.cs" />
-    <Compile Include="Internals\IDisposer{T}.cs" />
-    <Compile Include="Internals\IRefCounted{T}.cs" />
+    <Compile Include="Internals\Contracts\IBorrowed{T}.cs" />
+    <Compile Include="Internals\Contracts\IDisposer{T}.cs" />
+    <Compile Include="Internals\Contracts\IRefCounted{T}.cs" />
+    <Compile Include="Internals\Contracts\IUnsubscriber.cs" />
+    <Compile Include="Internals\Contracts\IUnsubscriber{T}.cs" />
+    <Compile Include="Internals\ListExt.cs" />
     <Compile Include="Internals\Pools\ConcurrentDictionaryPool.cs" />
     <Compile Include="Internals\Pools\DictionaryPool.cs" />
     <Compile Include="Internals\Pools\ListPool.cs" />
@@ -118,9 +122,9 @@
     <Compile Include="Internals\Reflection\TypeExt.ImmutableCollections.cs" />
     <Compile Include="Internals\Set.cs" />
     <Compile Include="Internals\Try.cs" />
+    <Compile Include="Internals\Unsubscriber.cs" />
     <Compile Include="Settings\CustomCopy.cs" />
-    <Compile Include="Track\Dirty\DiffExt.cs" />
-    <Compile Include="Internals\ChangeTrackerNode\EventArgs\ReplaceEventArgs.cs" />
+    <Compile Include="Track\Changes\ChangeTrackerNode\EventArgs\ReplaceEventArgs.cs" />
     <Compile Include="Internals\Collections\DisposingMap{TKey, TValue}.cs" />
     <Compile Include="Internals\Collections\ImmutableList{T}.cs" />
     <Compile Include="Internals\Collections\ReferenceComparer.cs" />
@@ -173,14 +177,15 @@
     <Compile Include="Copy\Copy.Shared.cs" />
     <Compile Include="Copy\Copy.Throw.cs" />
     <Compile Include="Copy\Copy.Verify.cs" />
-    <Compile Include="Internals\ChangeTrackerNode\EventArgs\AddEventArgs.cs" />
-    <Compile Include="Internals\ChangeTrackerNode\EventArgs\MoveEventArgs.cs" />
-    <Compile Include="Internals\ChangeTrackerNode\EventArgs\RemoveEventArgs.cs" />
-    <Compile Include="Internals\ChangeTrackerNode\EventArgs\ResetEventArgs.cs" />
-    <Compile Include="Internals\ChangeTrackerNode\EventArgs\PropertyChangeEventArgs.cs" />
+    <Compile Include="Track\Changes\ChangeTrackerNode\EventArgs\AddEventArgs.cs" />
+    <Compile Include="Track\Changes\ChangeTrackerNode\EventArgs\MoveEventArgs.cs" />
+    <Compile Include="Track\Changes\ChangeTrackerNode\EventArgs\RemoveEventArgs.cs" />
+    <Compile Include="Track\Changes\ChangeTrackerNode\EventArgs\ResetEventArgs.cs" />
+    <Compile Include="Track\Changes\ChangeTrackerNode\EventArgs\PropertyChangeEventArgs.cs" />
     <Compile Include="Track\Dirty\DirtyTracker.cs" />
+    <Compile Include="Track\Dirty\DirtyTrackerChangedEventArgs.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerNode.cs" />
-    <Compile Include="Internals\ChangeTrackerNode\ChangeTrackerNode.cs" />
+    <Compile Include="Track\Changes\ChangeTrackerNode\ChangeTrackerNode.cs" />
     <Compile Include="Track\Track.Verify.cs" />
     <Compile Include="EqualBy\EqualBy.Enumerable.cs" />
     <Compile Include="EqualBy\EqualBy.Throw.cs" />
@@ -216,7 +221,7 @@
     <Compile Include="Internals\Constants.cs" />
     <Compile Include="Track\Track.cs" />
     <Compile Include="Track\Dirty\DirtyTracker{T}.cs" />
-    <Compile Include="Contracts\IChangeTracker.cs" />
+    <Compile Include="Internals\Contracts\IChangeTracker.cs" />
     <Compile Include="Internals\Ensure\Ensure.cs" />
     <Compile Include="Internals\Ensure\Ensure.string.cs" />
     <Compile Include="Internals\Ensure\Ensure.type.cs" />

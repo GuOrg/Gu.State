@@ -41,7 +41,7 @@ namespace Gu.State
         private static int[] GetLengths(Array array)
         {
             var lengths = new int[array.Rank];
-            for (int i = 0; i < array.Rank; i++)
+            for (var i = 0; i < array.Rank; i++)
             {
                 lengths[i] = array.GetLength(i);
             }

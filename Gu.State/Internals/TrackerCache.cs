@@ -62,10 +62,16 @@
                 IRefCounted<TValue> refCounted;
                 if (value.TryRefCount(out refCounted, out created))
                 {
+                    if (created)
+                    {
+                        (value as IInitialize<TValue>)?.Initialize();
+                    }
+
                     return refCounted;
                 }
 
                 value = creator(key);
+
                 if (!value.TryRefCount(out refCounted, out created))
                 {
                     throw Throw.ShouldNeverGetHereException("Refcounting created value failed.");
@@ -73,6 +79,7 @@
 
                 cache.Items.Remove(key);
                 cache.Items.Add(key, value);
+                (value as IInitialize<TValue>)?.Initialize();
                 created = true;
                 return refCounted;
             }

@@ -5,11 +5,11 @@ namespace Gu.State
     interface IDiffBy
     {
         void AddDiffs<TSettings>(
+            DiffBuilder collectionBuilder,
             object x,
             object y,
             TSettings settings,
-            DiffBuilder collectionBuilder,
-            Action<object, object, object, TSettings, DiffBuilder> itemDiff)
+            Action<DiffBuilder, object, object, object, TSettings> itemDiff)
             where TSettings : IMemberSettings;
     }
 }
