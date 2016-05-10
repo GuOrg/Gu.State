@@ -21,7 +21,6 @@ namespace Gu.State.Tests.DiffTests
                                  "* Implement IEquatable<ComplexType> for ComplexType or use a type that does.\r\n" +
                                  "* Use FieldsSettings and specify how comparing is performed:\r\n" +
                                  "  - ReferenceHandling.Structural means that a deep equals is performed.\r\n" +
-                                 "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but handles reference loops.\r\n" +
                                  "  - ReferenceHandling.References means that reference equality is used.\r\n" +
                                  "  - Exclude a combination of the following:\r\n" +
                                  "    - The field WithComplexProperty.complexType.\r\n" +
@@ -34,16 +33,17 @@ namespace Gu.State.Tests.DiffTests
                                  "* Implement IEquatable<ComplexType> for ComplexType or use a type that does.\r\n" +
                                  "* Use PropertiesSettings and specify how comparing is performed:\r\n" +
                                  "  - ReferenceHandling.Structural means that a deep equals is performed.\r\n" +
-                                 "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but handles reference loops.\r\n" +
                                  "  - ReferenceHandling.References means that reference equality is used.\r\n" +
                                  "  - Exclude a combination of the following:\r\n" +
                                  "    - The property WithComplexProperty.ComplexType.\r\n" +
                                  "    - The type ComplexType.\r\n";
             var x = new WithComplexProperty();
             var y = new WithComplexProperty();
-            var exception = Assert.Throws<NotSupportedException>(() => this.DiffMethod<WithComplexProperty>(x, y));
+            var exception = Assert.Throws<NotSupportedException>(() => this.DiffMethod<WithComplexProperty>(x, y, ReferenceHandling.Throw));
             Assert.AreEqual(expected, exception.Message);
 
+            Assert.DoesNotThrow(() => this.DiffMethod<WithComplexProperty>(x, y, ReferenceHandling.Structural));
+            Assert.DoesNotThrow(() => this.DiffMethod<WithComplexProperty>(x, y, ReferenceHandling.References));
             Assert.DoesNotThrow(() => this.DiffMethod<ComplexType>(new ComplexType(), new ComplexType()));
         }
 
@@ -125,7 +125,7 @@ namespace Gu.State.Tests.DiffTests
                      "* Implement IEquatable<Parent> for Parent or use a type that does.\r\n" +
                      "* Implement IEquatable<Child> for Child or use a type that does.\r\n" +
                      "* Use FieldsSettings and specify how comparing is performed:\r\n" +
-                     "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but handles reference loops.\r\n" +
+                     "  - ReferenceHandling.Structural means that a deep equals is performed.\r\n" +
                      "  - ReferenceHandling.References means that reference equality is used.\r\n" +
                      "  - Exclude a combination of the following:\r\n" +
                      "    - The field Parent.<Child>k__BackingField.\r\n" +
@@ -141,7 +141,7 @@ namespace Gu.State.Tests.DiffTests
                      "* Implement IEquatable<Parent> for Parent or use a type that does.\r\n" +
                      "* Implement IEquatable<Child> for Child or use a type that does.\r\n" +
                      "* Use PropertiesSettings and specify how comparing is performed:\r\n" +
-                     "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but handles reference loops.\r\n" +
+                     "  - ReferenceHandling.Structural means that a deep equals is performed.\r\n" +
                      "  - ReferenceHandling.References means that reference equality is used.\r\n" +
                      "  - Exclude a combination of the following:\r\n" +
                      "    - The property Parent.Child.\r\n" +
@@ -150,7 +150,7 @@ namespace Gu.State.Tests.DiffTests
 
             var x = new Parent("p", new Child("c"));
             var y = new Parent("p", new Child("c"));
-            var exception = Assert.Throws<NotSupportedException>(() => this.DiffMethod(x, y, ReferenceHandling.Structural));
+            var exception = Assert.Throws<NotSupportedException>(() => this.DiffMethod(x, y, ReferenceHandling.Throw));
             Assert.AreEqual(expected, exception.Message);
 
             Assert.AreEqual("Empty", this.DiffMethod(x, y, ReferenceHandling.Structural).ToString());
@@ -158,6 +158,9 @@ namespace Gu.State.Tests.DiffTests
                            ? "Parent <Child>k__BackingField x: Gu.State.Tests.DiffTests.DiffTypes+Child y: Gu.State.Tests.DiffTests.DiffTypes+Child"
                            : "Parent Child x: Gu.State.Tests.DiffTests.DiffTypes+Child y: Gu.State.Tests.DiffTests.DiffTypes+Child";
             Assert.AreEqual(expected, this.DiffMethod(x, y, ReferenceHandling.References).ToString("", " "));
+
+            Assert.DoesNotThrow(() => this.DiffMethod(x, y, ReferenceHandling.Structural));
+            Assert.DoesNotThrow(() => this.DiffMethod(x, y, ReferenceHandling.References));
         }
     }
 }

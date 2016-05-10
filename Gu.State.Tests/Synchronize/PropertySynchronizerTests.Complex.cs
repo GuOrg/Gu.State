@@ -531,7 +531,7 @@
             }
 
             [Test]
-            public void WithComplexPropertyThrowsWithoutReferenceHandling()
+            public void WithComplexPropertyThrowsWithReferenceHandlingThrow()
             {
                 var expected = "Copy.PropertyValues(x, y) failed.\r\n" +
                                "The property WithComplexProperty.ComplexType of type ComplexType is not supported.\r\n" +
@@ -545,7 +545,6 @@
                                "    - Event fields are ignored.\r\n" +
                                "* Use PropertiesSettings and specify how copying is performed:\r\n" +
                                "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
-                               "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but tracks reference loops.\r\n" +
                                "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
                                "  - ReferenceHandling.References means that references are copied.\r\n" +
                                "  - Exclude a combination of the following:\r\n" +
@@ -553,7 +552,7 @@
                                "    - The type ComplexType.\r\n";
                 var source = new SynchronizerTypes.WithComplexProperty();
                 var target = new SynchronizerTypes.WithComplexProperty();
-                var exception = Assert.Throws<NotSupportedException>(() => Synchronize.PropertyValues(source, target));
+                var exception = Assert.Throws<NotSupportedException>(() => Synchronize.PropertyValues(source, target, ReferenceHandling.Throw));
 
                 Assert.AreEqual(expected, exception.Message);
             }

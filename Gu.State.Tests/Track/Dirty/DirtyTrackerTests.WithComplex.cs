@@ -10,7 +10,7 @@
     {
         public class WithComplex
         {
-            [TestCase(ReferenceHandling.References)]
+            //[TestCase(ReferenceHandling.References)]
             [TestCase(ReferenceHandling.Structural)]
             public void HandlesNull(ReferenceHandling referenceHandling)
             {

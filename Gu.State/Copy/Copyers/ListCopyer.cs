@@ -2,7 +2,6 @@ namespace Gu.State
 {
     using System;
     using System.Collections;
-    using Gu.State.Internals;
 
     public class ListCopyer : ICopyer
     {

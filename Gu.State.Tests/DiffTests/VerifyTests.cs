@@ -21,7 +21,6 @@ namespace Gu.State.Tests.DiffTests
                                  "* Implement IEquatable<ComplexType> for ComplexType or use a type that does.\r\n" +
                                  "* Use FieldsSettings and specify how comparing is performed:\r\n" +
                                  "  - ReferenceHandling.Structural means that a deep equals is performed.\r\n" +
-                                 "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but handles reference loops.\r\n" +
                                  "  - ReferenceHandling.References means that reference equality is used.\r\n" +
                                  "  - Exclude a combination of the following:\r\n" +
                                  "    - The field WithProperty<ComplexType>.<Value>k__BackingField.\r\n" +
@@ -34,7 +33,6 @@ namespace Gu.State.Tests.DiffTests
                                  "* Implement IEquatable<ComplexType> for ComplexType or use a type that does.\r\n" +
                                  "* Use PropertiesSettings and specify how comparing is performed:\r\n" +
                                  "  - ReferenceHandling.Structural means that a deep equals is performed.\r\n" +
-                                 "  - ReferenceHandling.StructuralWithReferenceLoops same as Structural but handles reference loops.\r\n" +
                                  "  - ReferenceHandling.References means that reference equality is used.\r\n" +
                                  "  - Exclude a combination of the following:\r\n" +
                                  "    - The property WithProperty<ComplexType>.Value.\r\n" +

@@ -281,8 +281,9 @@ namespace Gu.State
                 {
                     typeErrors = typeErrors.CreateIfNull(type)
                                            .Add(new ReferenceLoop(memberPath));
-                    return typeErrors;
                 }
+
+                return typeErrors;
             }
 
             var recursiveErrors = getErrorsRecursively(settings, memberPath);
