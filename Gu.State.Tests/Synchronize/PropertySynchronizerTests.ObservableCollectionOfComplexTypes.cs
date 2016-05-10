@@ -40,7 +40,7 @@
             }
 
             [Test]
-            public void CreateAndDisposeStructuralWithReferenceLoops()
+            public void CreateAndDisposeStructural1()
             {
                 var source = new ObservableCollection<SynchronizerTypes.ComplexType> { new SynchronizerTypes.ComplexType("a", 1), new SynchronizerTypes.ComplexType("b", 2) };
                 var target = new ObservableCollection<SynchronizerTypes.ComplexType>();
