@@ -38,7 +38,7 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ComplexType.cs" />
+    <Compile Include="Types\ComplexType.cs" />
     <Compile Include="CopyArray2DByBenchmarks.cs" />
     <Compile Include="CopyArray3DBenchmarks.cs" />
     <Compile Include="CopyListBenchmarks.cs" />
@@ -46,6 +46,7 @@
     <Compile Include="EqualByDynamicComplexTypeBenchmarks.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Types\With.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
