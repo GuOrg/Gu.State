@@ -18,9 +18,8 @@
 #endif
             }
 
-
             [Test]
-            public void CreateAndDisposeComplexComplexType()
+            public void ComplexType()
             {
                 var x = new ComplexType("a", 1);
                 var y = new ComplexType("a", 1);
@@ -45,17 +44,20 @@
             }
 
             [Test]
-            public void CreateAndDisposeWithComplexProperty()
+            public void WithComplexProperty()
             {
                 var x = new WithComplexProperty { ComplexType = new ComplexType("a", 1) };
                 var y = new WithComplexProperty { ComplexType = new ComplexType("a", 1) };
                 var changes = new List<string>();
-
-                using (var tracker = Track.IsDirty(x, y))
+                var settings = PropertiesSettings.GetOrCreate();
+                using (var tracker = Track.IsDirty(x, y, settings))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(false, tracker.IsDirty);
                 }
+
+                var node = DirtyTrackerNode.GetOrCreate(x.Value, y.Value, settings);
+                Assert.AreEqual(1, node.Count);
 
                 x.ComplexType = new ComplexType("b", 2);
                 CollectionAssert.IsEmpty(changes);
@@ -83,16 +85,16 @@
                 {
                     Assert.AreEqual(false, tracker.IsDirty);
 
-                    var wrxc = new System.WeakReference(x.ComplexType);
-                    Assert.AreEqual(true, wrxc.IsAlive);
+                    var weakReference = new System.WeakReference(x.ComplexType);
+                    Assert.AreEqual(true, weakReference.IsAlive);
                     x.ComplexType = null;
                     System.GC.Collect();
-                    Assert.AreEqual(false, wrxc.IsAlive);
+                    Assert.AreEqual(false, weakReference.IsAlive);
 
-                    var wryc = new System.WeakReference(y.ComplexType);
+                    weakReference.Target = y.ComplexType;
                     y.ComplexType = null;
                     System.GC.Collect();
-                    Assert.AreEqual(false, wryc.IsAlive);
+                    Assert.AreEqual(false, weakReference.IsAlive);
                 }
             }
         }
