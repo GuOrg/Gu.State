@@ -108,6 +108,7 @@
     <Compile Include="EqualByTests\PropertyValues\Sets.cs" />
     <Compile Include="EqualByTests\ReferenceLoopsTests.cs" />
     <Compile Include="EqualByTests\SetTests.cs" />
+    <Compile Include="IngoredTests.cs" />
     <Compile Include="Internals\ArrayExt.cs" />
     <Compile Include="Internals\Collections\DisposingListTests.cs" />
     <Compile Include="Internals\Collections\DisposingMapTests.cs" />
