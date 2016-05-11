@@ -13,10 +13,12 @@
 
         public abstract void VerifyMethod<T>(ReferenceHandling referenceHandling) where T : class;
 
-        [Test]
-        public void CanCopyHappyPath()
+        [TestCase(ReferenceHandling.Throw)]
+        [TestCase(ReferenceHandling.References)]
+        [TestCase(ReferenceHandling.Structural)]
+        public void WithSimpleProperties(ReferenceHandling referenceHandling)
         {
-            this.VerifyMethod<WithSimpleProperties>();
+            this.VerifyMethod<WithSimpleProperties>(referenceHandling);
         }
 
         [Test]
