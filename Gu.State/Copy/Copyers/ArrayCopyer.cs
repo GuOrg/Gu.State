@@ -3,9 +3,9 @@
     using System;
     using System.Reflection;
 
-    public class ArrayCopyer : ICopyer
+    internal class ArrayCopyer : ICopyer
     {
-        public static readonly ArrayCopyer Default = new ArrayCopyer();
+        private static readonly ArrayCopyer Default = new ArrayCopyer();
 
         private ArrayCopyer()
         {
@@ -13,7 +13,7 @@
 
         public static bool TryGetOrCreate(object x, object y, out ICopyer comparer)
         {
-            if (x is Array && y is Array)
+            if (Is.Type<Array>(x, y))
             {
                 comparer = Default;
                 return true;
@@ -161,7 +161,7 @@
             {
                 var sv = sourceArray.GetValue(index);
                 var tv = targetArray.GetValue(index);
-                var copy= State.Copy.Item(sv, tv, copyItem, settings, referencePairs, isImmutable);
+                var copy = State.Copy.Item(sv, tv, copyItem, settings, referencePairs, isImmutable);
                 targetArray.SetValue(copy, index);
             }
         }

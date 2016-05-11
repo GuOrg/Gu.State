@@ -34,9 +34,11 @@
             var x = new[] { 1, 2, 3 };
             var y = new[] { 1, 2, 3 };
             var result = this.DiffMethod(x, y, referenceHandling);
+            Assert.AreEqual(true, result.IsEmpty);
             Assert.AreEqual("Empty", result.ToString());
 
             result = this.DiffMethod(y, x, referenceHandling);
+            Assert.AreEqual(true, result.IsEmpty);
             Assert.AreEqual("Empty", result.ToString());
         }
 
@@ -48,9 +50,11 @@
             var x = System.Collections.Immutable.ImmutableArray.Create(1, 2, 3);
             var y = System.Collections.Immutable.ImmutableArray.Create(1, 2, 3);
             var result = this.DiffMethod(x, y, referenceHandling);
+            Assert.AreEqual(true, result.IsEmpty);
             Assert.AreEqual("Empty", result.ToString());
 
             result = this.DiffMethod(y, x, referenceHandling);
+            Assert.AreEqual(true, result.IsEmpty);
             Assert.AreEqual("Empty", result.ToString());
         }
 
@@ -74,9 +78,11 @@
             var x = new int[2, 3];
             var y = new int[3, 2];
             var result = this.DiffMethod(x, y, referenceHandling);
+            Assert.AreEqual(false, result.IsEmpty);
             Assert.AreEqual("int[,] x: [2,3] y: [3,2]", result.ToString("", " "));
 
             result = this.DiffMethod(y, x, referenceHandling);
+            Assert.AreEqual(false, result.IsEmpty);
             Assert.AreEqual("int[,] x: [3,2] y: [2,3]", result.ToString("", " "));
         }
 
@@ -86,8 +92,9 @@
         {
             var source = new[] { new Immutable(1), new Immutable(2), new Immutable(3) };
             var target = new[] { new Immutable(1), new Immutable(2), new Immutable(3) };
-            var diff = this.DiffMethod(source, target, referenceHandling);
-            Assert.AreEqual("Empty", diff.ToString());
+            var result = this.DiffMethod(source, target, referenceHandling);
+            Assert.AreEqual(true, result.IsEmpty);
+            Assert.AreEqual("Empty", result.ToString());
         }
     }
 }

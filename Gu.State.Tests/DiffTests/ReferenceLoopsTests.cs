@@ -27,6 +27,7 @@ namespace Gu.State.Tests.DiffTests
                                ? "Parent <Child>k__BackingField <Parent>k__BackingField ... <Name>k__BackingField x: p1 y: p2"
                                : "Parent Child Parent ... Name x: p1 y: p2";
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
+            Assert.AreEqual(false, result.IsEmpty);
             Assert.AreSame(result, result.Diffs.Single(d => d.X == x.Child).Diffs.Single().ValueDiff);
             var actual = result.ToString("", " ");
             Assert.AreEqual(expected, actual);
@@ -49,9 +50,11 @@ namespace Gu.State.Tests.DiffTests
             Assert.AreSame(y.Child, y.Child.Parent.Child);
 
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
+            Assert.AreEqual(expected == "Empty", result.IsEmpty);
             Assert.AreEqual(expected, result.ToString("", " "));
 
             result = this.DiffMethod(x, y, ReferenceHandling.Structural);
+            Assert.AreEqual(expected == "Empty", result.IsEmpty);
             Assert.AreEqual(expected, result.ToString("", " "));
         }
 
@@ -70,6 +73,7 @@ namespace Gu.State.Tests.DiffTests
             //Assert.AreEqual(false, result);
 
             result = this.DiffMethod(x, y, ReferenceHandling.References);
+            Assert.AreEqual(false, result.IsEmpty);
             Assert.AreEqual(expected, result.ToString("", " "));
         }
 
@@ -88,6 +92,7 @@ namespace Gu.State.Tests.DiffTests
             //Assert.AreEqual(false, result);
 
             result = this.DiffMethod(x, y, ReferenceHandling.References);
+            Assert.AreEqual(false, result.IsEmpty);
             Assert.AreEqual(expected, result.ToString("", " "));
         }
     }
