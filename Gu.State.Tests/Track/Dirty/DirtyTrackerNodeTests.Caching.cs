@@ -11,8 +11,8 @@ namespace Gu.State.Tests
             [Test]
             public void ReturnsSameForSameWhileAlive()
             {
-                var x = new SimpleDirtyTrackClass { Value1 = 1, Value2 = 2 };
-                var y = new SimpleDirtyTrackClass { Value1 = 1, Value2 = 2 };
+                var x = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
+                var y = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
                 var settings = PropertiesSettings.GetOrCreate(referenceHandling: ReferenceHandling.Structural);
                 var t1 = DirtyTrackerNode.GetOrCreate(x, y, settings);
                 var t2 = DirtyTrackerNode.GetOrCreate(x, y, settings);
@@ -27,8 +27,8 @@ namespace Gu.State.Tests
             [Test]
             public void ReturnsDifferentForDifferentPairs()
             {
-                var x = new SimpleDirtyTrackClass { Value1 = 1, Value2 = 2 };
-                var y = new SimpleDirtyTrackClass { Value1 = 1, Value2 = 2 };
+                var x = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
+                var y = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
                 var settings = PropertiesSettings.GetOrCreate(referenceHandling: ReferenceHandling.Structural);
                 var t1 = DirtyTrackerNode.GetOrCreate(x, y, settings);
                 var t2 = DirtyTrackerNode.GetOrCreate(y, x, settings);
@@ -38,8 +38,8 @@ namespace Gu.State.Tests
             [Test]
             public void ReturnsDifferentForDifferentSettings()
             {
-                var x = new SimpleDirtyTrackClass { Value1 = 1, Value2 = 2 };
-                var y = new SimpleDirtyTrackClass { Value1 = 1, Value2 = 2 };
+                var x = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
+                var y = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
                 var t1 = DirtyTrackerNode.GetOrCreate(x, y, PropertiesSettings.GetOrCreate(referenceHandling: ReferenceHandling.Structural));
                 var t2 = DirtyTrackerNode.GetOrCreate(x, y, PropertiesSettings.GetOrCreate(referenceHandling: ReferenceHandling.References));
                 Assert.AreNotSame(t1, t2);

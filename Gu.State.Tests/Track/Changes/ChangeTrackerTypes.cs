@@ -18,6 +18,56 @@
             int Excluded { get; set; }
         }
 
+        public class WithSimpleProperties : INotifyPropertyChanged
+        {
+            private int value1;
+            private int value2;
+
+            public event PropertyChangedEventHandler PropertyChanged;
+
+            public int Value1
+            {
+                get { return this.value1; }
+                set
+                {
+                    if (value == this.value1)
+                    {
+                        return;
+                    }
+
+                    this.value1 = value;
+                    this.OnPropertyChanged();
+                }
+            }
+
+            public int Value2
+            {
+                get { return this.value2; }
+                set
+                {
+                    if (value == this.value2)
+                    {
+                        return;
+                    }
+
+                    this.value2 = value;
+                    this.OnPropertyChanged();
+                }
+            }
+
+            [NotifyPropertyChangedInvocator]
+            public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+            {
+                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+
+            public void SetFields(int value, int excluded)
+            {
+                this.Value1 = value;
+                this.Value2 = excluded;
+            }
+        }
+
         public class ComplexType : INotifyPropertyChanged, IBaseClass
         {
             private int value;

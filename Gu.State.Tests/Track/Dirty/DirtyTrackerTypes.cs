@@ -124,7 +124,7 @@
             public IllegalType Illegal { get; set; }
         }
 
-        public class SimpleDirtyTrackClass : INotifyPropertyChanged
+        public class WithSimpleProperties : INotifyPropertyChanged
         {
             private int value1;
             private int value2;
