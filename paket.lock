@@ -4,6 +4,7 @@ NUGET
     BenchmarkDotNet (0.9.5)
     JetBrains.Annotations (10.1.4)
       System.Runtime (>= 4.0) - framework: dnxcore50
+    JetBrains.DotMemoryUnit (2.2.20160412.92019)
     Moq (4.2.1510.2205)
     NUnit (2.6.4)
     StyleCop.Analyzers (1.0)

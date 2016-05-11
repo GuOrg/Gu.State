@@ -163,6 +163,7 @@
     <Compile Include="Settings\PropertiesSettingsTests.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTypes.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerNodeTests.Caching.cs" />
+    <Compile Include="Track\Dirty\DirtyTrackerTests.DotMemory.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerTests.Verify.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerTests.ReferenceLoops.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerTests.MemoryLeaks.cs" />
@@ -267,6 +268,13 @@
       </ItemGroup>
     </When>
   </Choose>
+  <ItemGroup>
+    <Reference Include="dotMemory.Unit">
+      <HintPath>..\packages\JetBrains.DotMemoryUnit\Lib\dotMemory.Unit.dll</HintPath>
+      <Private>True</Private>
+      <Paket>True</Paket>
+    </Reference>
+  </ItemGroup>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v3.5'">
       <ItemGroup>

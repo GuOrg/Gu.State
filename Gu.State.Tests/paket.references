@@ -1,4 +1,5 @@
 JetBrains.Annotations
+JetBrains.DotMemoryUnit
 System.Collections.Immutable
 Moq
 NUnit
