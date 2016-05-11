@@ -130,6 +130,7 @@
     <Compile Include="Internals\RefcounterTests.cs" />
     <Compile Include="Internals\TrackerCacheTests.cs" />
     <Compile Include="Sandbox\GetOrCreate.cs" />
+    <Compile Include="Track\Changes\ChangeTrackerTests.Verify.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTests.Simple.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTests.MemoryLeaks.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTests.Ignores.cs" />
@@ -162,6 +163,7 @@
     <Compile Include="Settings\PropertiesSettingsTests.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTypes.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerNodeTests.Caching.cs" />
+    <Compile Include="Track\Dirty\DirtyTrackerTests.Verify.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerTests.ReferenceLoops.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerTests.MemoryLeaks.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerTests.Throws.cs" />
