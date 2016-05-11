@@ -1,4 +1,5 @@
-﻿namespace Gu.State.Tests.DiffTests
+﻿// ReSharper disable RedundantArgumentDefaultValue
+namespace Gu.State.Tests.DiffTests
 {
     using System;
     using System.Collections.Generic;

@@ -29,7 +29,7 @@
                 var exception = Assert.Throws<NotSupportedException>(() => Track.IsDirty(x, y, ReferenceHandling.Throw));
                 Assert.AreEqual(expected, exception.Message);
 
-                exception = Assert.Throws<NotSupportedException>(() => Track.VerifyCanTrackIsDirty<WithComplexProperty>(referenceHandling: ReferenceHandling.Throw));
+                exception = Assert.Throws<NotSupportedException>(() => Track.VerifyCanTrackIsDirty<WithComplexProperty>(ReferenceHandling.Throw));
                 Assert.AreEqual(expected, exception.Message);
             }
         }

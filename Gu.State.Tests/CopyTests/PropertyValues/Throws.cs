@@ -1,4 +1,5 @@
-﻿namespace Gu.State.Tests.CopyTests.PropertyValues
+﻿// ReSharper disable RedundantArgumentDefaultValue
+namespace Gu.State.Tests.CopyTests.PropertyValues
 {
     using System;
 

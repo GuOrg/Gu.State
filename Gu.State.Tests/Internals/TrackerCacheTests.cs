@@ -1,4 +1,5 @@
-﻿namespace Gu.State.Tests.Internals
+﻿// ReSharper disable RedundantArgumentDefaultValue
+namespace Gu.State.Tests.Internals
 {
     using System;
 
@@ -13,7 +14,7 @@
             var y = new object();
             var pair = ReferencePair.GetOrCreate(x, y);
             Assert.AreEqual(pair.Count, 1);
-            var settings = PropertiesSettings.GetOrCreate(referenceHandling: ReferenceHandling.Structural);
+            var settings = PropertiesSettings.GetOrCreate(ReferenceHandling.Structural);
             using (var created = TrackerCache.GetOrAdd(x, y, settings, p => p))
             {
                 Assert.AreSame(pair, created.Value);

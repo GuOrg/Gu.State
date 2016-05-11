@@ -10,6 +10,23 @@
     {
         public class WithComplex
         {
+            [Test]
+            public void CreateAndDisposeStopsListeningToSubProperties()
+            {
+                var x = new WithComplexProperty { ComplexType = new ComplexType("a", 1) };
+                var y = new WithComplexProperty { ComplexType = new ComplexType("a", 1) };
+                var changes = new List<string>();
+                var settings = PropertiesSettings.GetOrCreate();
+                using (var tracker = Track.IsDirty(x, y, settings))
+                {
+                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    Assert.AreEqual(false, tracker.IsDirty);
+                }
+
+                x.ComplexType.Value++;
+                CollectionAssert.IsEmpty(changes);
+            }
+
             //[TestCase(ReferenceHandling.References)]
             [TestCase(ReferenceHandling.Structural)]
             public void HandlesNull(ReferenceHandling referenceHandling)

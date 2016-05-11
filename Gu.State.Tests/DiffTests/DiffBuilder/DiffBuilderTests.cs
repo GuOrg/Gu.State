@@ -1,4 +1,5 @@
-﻿namespace Gu.State.Tests.DiffTests
+﻿// ReSharper disable RedundantArgumentDefaultValue
+namespace Gu.State.Tests.DiffTests
 {
     using NUnit.Framework;
 
@@ -11,7 +12,7 @@
         {
             var x = new ComplexType();
             var y = new ComplexType();
-            var structuralSettings = PropertiesSettings.GetOrCreate(referenceHandling: ReferenceHandling.Structural);
+            var structuralSettings = PropertiesSettings.GetOrCreate(ReferenceHandling.Structural);
             var t1 = DiffBuilder.GetOrCreate(x, y, structuralSettings);
             var t2 = DiffBuilder.GetOrCreate(x, y, structuralSettings);
             Assert.AreSame(t1, t2);
@@ -27,8 +28,8 @@
         {
             var x = new ComplexType();
             var y = new ComplexType();
-            var t1 = DiffBuilder.GetOrCreate(x, y, PropertiesSettings.GetOrCreate(referenceHandling: ReferenceHandling.Structural));
-            var t2 = DiffBuilder.GetOrCreate(x, y, PropertiesSettings.GetOrCreate(referenceHandling: ReferenceHandling.Throw));
+            var t1 = DiffBuilder.GetOrCreate(x, y, PropertiesSettings.GetOrCreate(ReferenceHandling.Structural));
+            var t2 = DiffBuilder.GetOrCreate(x, y, PropertiesSettings.GetOrCreate(ReferenceHandling.Throw));
             Assert.AreNotSame(t1, t2);
         }
 
@@ -37,7 +38,7 @@
         {
             var x = new ComplexType();
             var y = new ComplexType();
-            var structuralSettings = PropertiesSettings.GetOrCreate(referenceHandling: ReferenceHandling.Structural);
+            var structuralSettings = PropertiesSettings.GetOrCreate(ReferenceHandling.Structural);
             var t1 = DiffBuilder.GetOrCreate(x, y, structuralSettings);
             var t2 = DiffBuilder.GetOrCreate(y, x, structuralSettings);
             Assert.AreNotSame(t1, t2);

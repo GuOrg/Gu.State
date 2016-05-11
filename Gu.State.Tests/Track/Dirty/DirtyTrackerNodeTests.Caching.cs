@@ -1,10 +1,11 @@
+// ReSharper disable RedundantArgumentDefaultValue
 namespace Gu.State.Tests
 {
     using NUnit.Framework;
 
     using static DirtyTrackerTypes;
 
-    public partial class DirtyTrackerNodeTests
+    public class DirtyTrackerNodeTests
     {
         public class Caching
         {
@@ -13,7 +14,7 @@ namespace Gu.State.Tests
             {
                 var x = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
                 var y = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
-                var settings = PropertiesSettings.GetOrCreate(referenceHandling: ReferenceHandling.Structural);
+                var settings = PropertiesSettings.GetOrCreate(ReferenceHandling.Structural);
                 var t1 = DirtyTrackerNode.GetOrCreate(x, y, settings, true);
                 var t2 = DirtyTrackerNode.GetOrCreate(x, y, settings, true);
                 Assert.AreSame(t1, t2);
@@ -29,7 +30,7 @@ namespace Gu.State.Tests
             {
                 var x = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
                 var y = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
-                var settings = PropertiesSettings.GetOrCreate(referenceHandling: ReferenceHandling.Structural);
+                var settings = PropertiesSettings.GetOrCreate(ReferenceHandling.Structural);
                 var t1 = DirtyTrackerNode.GetOrCreate(x, y, settings, true);
                 var t2 = DirtyTrackerNode.GetOrCreate(y, x, settings, true);
                 Assert.AreNotSame(t1, t2);
@@ -40,8 +41,8 @@ namespace Gu.State.Tests
             {
                 var x = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
                 var y = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
-                var t1 = DirtyTrackerNode.GetOrCreate(x, y, PropertiesSettings.GetOrCreate(referenceHandling: ReferenceHandling.Structural), true);
-                var t2 = DirtyTrackerNode.GetOrCreate(x, y, PropertiesSettings.GetOrCreate(referenceHandling: ReferenceHandling.References), true);
+                var t1 = DirtyTrackerNode.GetOrCreate(x, y, PropertiesSettings.GetOrCreate(ReferenceHandling.Structural), true);
+                var t2 = DirtyTrackerNode.GetOrCreate(x, y, PropertiesSettings.GetOrCreate(ReferenceHandling.References), true);
                 Assert.AreNotSame(t1, t2);
             }
         }

@@ -1,4 +1,5 @@
-﻿namespace Gu.State.Tests.EqualByTests
+﻿// ReSharper disable RedundantArgumentDefaultValue
+namespace Gu.State.Tests.EqualByTests
 {
     using System;
     using System.Collections.Generic;
