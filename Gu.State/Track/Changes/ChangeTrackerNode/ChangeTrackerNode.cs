@@ -76,11 +76,19 @@
             }
         }
 
-        internal static IRefCounted<ChangeTrackerNode> GetOrCreate(object source, PropertiesSettings settings)
+        internal static IRefCounted<ChangeTrackerNode> GetOrCreate(object source, PropertiesSettings settings, bool isRoot)
         {
             Debug.Assert(source != null, "Cannot track null");
             Debug.Assert(source is INotifyPropertyChanged || source is INotifyCollectionChanged, "Must notify");
-            Track.Verify.IsTrackableValue(source, settings);
+            if (isRoot)
+            {
+                Track.Verify.IsTrackableType(source.GetType(), settings);
+            }
+            else
+            {
+                Track.Verify.IsTrackableValue(source, settings);
+            }
+
             return TrackerCache.GetOrAdd(source, settings, s => new ChangeTrackerNode(s, settings));
         }
 

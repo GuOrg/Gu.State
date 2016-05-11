@@ -26,14 +26,14 @@
         /// Initializes a new instance of the <see cref="DirtyTrackerNode"/> class.
         /// A call to Initialize is needed after the ctor due to that we need to fetch child nodes and the graph can contain self
         /// </summary>
-        private DirtyTrackerNode(IRefCounted<ReferencePair> refCountedPair, PropertiesSettings settings)
+        private DirtyTrackerNode(IRefCounted<ReferencePair> refCountedPair, PropertiesSettings settings, bool isRoot)
         {
             this.refCountedPair = refCountedPair;
             var x = refCountedPair.Value.X;
             var y = refCountedPair.Value.Y;
 
-            this.xNode = ChangeTrackerNode.GetOrCreate(x, settings);
-            this.yNode = ChangeTrackerNode.GetOrCreate(y, settings);
+            this.xNode = ChangeTrackerNode.GetOrCreate(x, settings, isRoot);
+            this.yNode = ChangeTrackerNode.GetOrCreate(y, settings, isRoot);
             this.xNode.Value.PropertyChange += this.OnTrackedPropertyChange;
             this.yNode.Value.PropertyChange += this.OnTrackedPropertyChange;
 
@@ -147,7 +147,7 @@
             return this;
         }
 
-        internal static IRefCounted<DirtyTrackerNode> GetOrCreate(object x, object y, PropertiesSettings settings)
+        internal static IRefCounted<DirtyTrackerNode> GetOrCreate(object x, object y, PropertiesSettings settings, bool isRoot)
         {
             Debug.Assert(x != null, "Cannot track null");
             Debug.Assert(x is INotifyPropertyChanged || x is INotifyCollectionChanged, "Must notify");
@@ -157,7 +157,7 @@
                 x,
                 y,
                 settings,
-                pair => new DirtyTrackerNode(pair, settings));
+                pair => new DirtyTrackerNode(pair, settings, isRoot));
         }
 
         private static bool IsTrackablePair(object x, object y, PropertiesSettings settings)
@@ -300,7 +300,7 @@
                 return null;
             }
 
-            var childNode = GetOrCreate(xValue, yValue, this.Settings);
+            var childNode = GetOrCreate(xValue, yValue, this.Settings, false);
             EventHandler<DirtyTrackerChangedEventArgs> onChanged = (sender, args) => this.OnChildChanged(sender, args, key);
             childNode.Value.Changed += onChanged;
             return childNode.AsUnsubscribeOnDispose(x => x.Value.Changed -= onChanged);
