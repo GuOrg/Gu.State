@@ -1,4 +1,5 @@
-﻿namespace Gu.State.Tests.CopyTests.FieldValues
+﻿// ReSharper disable RedundantArgumentDefaultValue
+namespace Gu.State.Tests.CopyTests.FieldValues
 {
     using System.Reflection;
 
@@ -13,7 +14,7 @@
 
         public override void VerifyMethod<T>(ReferenceHandling referenceHandling)
         {
-            Copy.VerifyCanCopyFieldValues<T>(referenceHandling: referenceHandling);
+            Copy.VerifyCanCopyFieldValues<T>(referenceHandling);
         }
 
         [Test]
