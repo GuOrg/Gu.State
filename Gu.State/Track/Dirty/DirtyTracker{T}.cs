@@ -27,7 +27,7 @@
             Ensure.SameType(x, y);
             Track.VerifyCanTrackIsDirty<T>(settings);
             this.Settings = settings;
-            this.node = DirtyTrackerNode.GetOrCreate(x, y, settings);
+            this.node = DirtyTrackerNode.GetOrCreate(x, y, settings, true);
             this.node.Value.PropertyChanged += this.OnNodeChanged;
         }
 

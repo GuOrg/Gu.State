@@ -14,9 +14,9 @@
         private readonly IRefCounted<ChangeTrackerNode> refcountedNode;
         private readonly DisposingMap<IDisposable> children = new DisposingMap<IDisposable>();
 
-        private ChangeNode(object source, PropertiesSettings settings)
+        private ChangeNode(object source, PropertiesSettings settings, bool isRoot)
         {
-            this.refcountedNode = ChangeTrackerNode.GetOrCreate(source, settings);
+            this.refcountedNode = ChangeTrackerNode.GetOrCreate(source, settings, isRoot);
             this.refcountedNode.Value.Change += this.OnTrackerChange;
             switch (this.refcountedNode.Value.Settings.ReferenceHandling)
             {
@@ -76,11 +76,11 @@
             this.children.Dispose();
         }
 
-        internal static IRefCounted<ChangeNode> GetOrCreate(object source, PropertiesSettings settings)
+        internal static IRefCounted<ChangeNode> GetOrCreate(object source, PropertiesSettings settings, bool isRoot)
         {
             Debug.Assert(source != null, "Cannot track null");
             Debug.Assert(source is INotifyPropertyChanged || source is INotifyCollectionChanged, "Must notify");
-            return TrackerCache.GetOrAdd(source, settings, s => new ChangeNode(s, settings));
+            return TrackerCache.GetOrAdd(source, settings, s => new ChangeNode(s, settings, isRoot));
         }
 
         private void OnTrackerChange(object sender, EventArgs e)
@@ -177,7 +177,7 @@
 
         private IDisposable CreateChild(object child)
         {
-            var childNode = GetOrCreate(child, this.refcountedNode.Value.Settings);
+            var childNode = GetOrCreate(child, this.refcountedNode.Value.Settings, false);
             childNode.Value.BubbleChange += this.OnBubbleChange;
             var disposable = new Disposer(() =>
                 {

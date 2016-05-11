@@ -21,7 +21,7 @@
             Ensure.NotNull(settings, nameof(settings));
             Track.Verify.IsTrackableType(source.GetType(), settings);
             this.Settings = settings;
-            this.node = ChangeNode.GetOrCreate(source, settings);
+            this.node = ChangeNode.GetOrCreate(source, settings, true);
             this.node.Value.Changed += this.OnNodeChange;
         }
 

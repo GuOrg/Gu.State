@@ -56,7 +56,7 @@
                     Assert.AreEqual(false, tracker.IsDirty);
                 }
 
-                var node = DirtyTrackerNode.GetOrCreate(x.Value, y.Value, settings);
+                var node = DirtyTrackerNode.GetOrCreate(x.Value, y.Value, settings, true);
                 Assert.AreEqual(1, node.Count);
 
                 x.ComplexType = new ComplexType("b", 2);
