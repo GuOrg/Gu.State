@@ -44,7 +44,8 @@
                 Assert.AreEqual(false, wry.IsAlive);
             }
 
-            [Test, Explicit("Think this test is broken. DotMemoryUnit says 'this is fine'")]
+            [Explicit(IngoredTests.MemoryLeak)]
+            [Test]
             public void WithComplexProperty()
             {
                 var x = new WithComplexProperty { ComplexType = new ComplexType("a", 1) };
@@ -73,7 +74,8 @@
                 Assert.AreEqual(false, wryc.IsAlive);
             }
 
-            [Test, Explicit("Think this test is broken. DotMemoryUnit says 'this is fine'")]
+            [Explicit(IngoredTests.MemoryLeak)]
+            [Test]
             public void DoesNotLeakTrackedProperty()
             {
                 var x = new WithComplexProperty { ComplexType = new ComplexType("a", 1) };
