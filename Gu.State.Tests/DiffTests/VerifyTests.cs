@@ -10,6 +10,14 @@ namespace Gu.State.Tests.DiffTests
     {
         public abstract void VerifyMethod<T>(ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type excludedType = null);
 
+        [TestCase(ReferenceHandling.Throw)]
+        [TestCase(ReferenceHandling.References)]
+        [TestCase(ReferenceHandling.Structural)]
+        public void WithSimpleProperties(ReferenceHandling referenceHandling)
+        {
+            this.VerifyMethod<WithSimpleProperties>(referenceHandling);
+        }
+
         [Test]
         public void ComplexValueThrowsWithoutReferenceHandling()
         {

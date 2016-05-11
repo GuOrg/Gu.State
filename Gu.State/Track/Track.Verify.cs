@@ -106,6 +106,21 @@
             Verify.IsTrackableType(type, settings);
         }
 
+        private static bool HasErrors(this TypeErrors errors)
+        {
+            if (errors == null)
+            {
+                return false;
+            }
+
+            if (errors.Errors.Count == 1 && ReferenceEquals(errors.Errors[0], RequiresReferenceHandling.ComplexType))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         /// <summary>
         /// This class is used for failing fast and throwing with nice exception messages.
         /// </summary>
@@ -165,18 +180,11 @@
             internal static void IfHasErrors<TSetting>(TypeErrors errors, TSetting settings)
                 where TSetting : class, IMemberSettings
             {
-                if (errors == null)
+                if (errors.HasErrors())
                 {
-                    return;
+                    var message = GetErrorText(errors, settings);
+                    throw new NotSupportedException(message);
                 }
-
-                if (errors.Errors.Count == 1 && ReferenceEquals(errors.Errors[0], RequiresReferenceHandling.ComplexType))
-                {
-                    return;
-                }
-
-                var message = GetErrorText(errors, settings);
-                throw new NotSupportedException(message);
             }
 
             // ReSharper disable once UnusedParameter.Local
