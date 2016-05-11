@@ -1,6 +1,8 @@
 ﻿namespace Gu.State.Tests
 {
     using System;
+    using System.Collections.Generic;
+
     using NUnit.Framework;
 
     using static ChangeTrackerTypes;
@@ -18,7 +20,7 @@
             }
 
             [Test]
-            public void ComplexType()
+            public void CreateAndDisposeComplexType()
             {
                 var item = new ComplexType();
                 WeakReference weakReference = new WeakReference(item);
@@ -31,7 +33,24 @@
             }
 
             [Test]
-            public void DoesNotLeakLevel()
+            public void CreateAndDisposeWithComplexType()
+            {
+                var x = new With<ComplexType> { Value = new ComplexType(1, 2) };
+
+                using (var tracker = Track.Changes(x, ReferenceHandling.Structural))
+                {
+                }
+
+                var wrx = new System.WeakReference(x);
+                var wrxc = new System.WeakReference(x.Value);
+                x = null;
+                System.GC.Collect();
+                Assert.AreEqual(false, wrx.IsAlive);
+                Assert.AreEqual(false, wrxc.IsAlive);
+            }
+
+            [Test]
+            public void DoesNotLeakTrackedProperty()
             {
                 var item = new With<ComplexType> { Value = new ComplexType() };
                 using (var tracker = Track.Changes(item, ReferenceHandling.Structural))

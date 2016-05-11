@@ -24,6 +24,16 @@
             private int excluded;
             public event PropertyChangedEventHandler PropertyChanged;
 
+            public ComplexType()
+            {
+            }
+
+            public ComplexType(int value, int excluded)
+            {
+                this.value = value;
+                this.excluded = excluded;
+            }
+
             public int Value
             {
                 get { return this.value; }
