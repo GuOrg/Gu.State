@@ -34,7 +34,7 @@
         {
             var itemType = type.GetItemType();
             var comparer = (IDiffBy)typeof(ArrayDiffBy).MakeGenericType(itemType)
-                                                         .GetField(nameof(ArrayDiffBy.Default), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
+                                                         .GetField(nameof(Default), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
                                                          .GetValue(null);
             return comparer;
         }

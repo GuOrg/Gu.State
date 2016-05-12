@@ -58,12 +58,12 @@ namespace Gu.State
             if (settings.ReferenceHandling == ReferenceHandling.References)
             {
                 return isEquatable
-                           ? ItemsEquals(x, y, object.Equals)
+                           ? ItemsEquals(x, y, Equals)
                            : ItemsEquals(x, y, ReferenceEquals);
             }
 
             return isEquatable
-                       ? ItemsEquals(x, y, object.Equals)
+                       ? ItemsEquals(x, y, Equals)
                        : ItemsEquals(x, y, (xi, yi) => compareItem(xi, yi, settings, referencePairs));
         }
 
