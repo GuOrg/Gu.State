@@ -131,6 +131,7 @@
     <Compile Include="Internals\RefcounterTests.cs" />
     <Compile Include="Internals\TrackerCacheTests.cs" />
     <Compile Include="Sandbox\GetOrCreate.cs" />
+    <Compile Include="Synchronize\PropertySynchronizerTests.Verify.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTests.Verify.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTests.Simple.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTests.MemoryLeaks.cs" />
