@@ -23,7 +23,7 @@
             }
 
             T copy;
-            if (MemberValues.TryCustomCopy(sourceItem, targetItem, settings, out copy))
+            if (TryCustomCopy(sourceItem, targetItem, settings, out copy))
             {
                 return copy;
             }
