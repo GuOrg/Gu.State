@@ -40,7 +40,7 @@
             Ensure.NotNull(target, nameof(target));
             Ensure.SameType(source, target, nameof(source), nameof(target));
             Verify.CanCopyRoot(typeof(T), settings);
-            MemberValues(source, target, settings);
+            Sync(source, target, settings);
         }
     }
 }

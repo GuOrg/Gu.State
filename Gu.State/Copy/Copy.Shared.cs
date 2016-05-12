@@ -50,13 +50,25 @@
             bool isImmutable)
             where TSettings : class, IMemberSettings
         {
-            if (sourceItem == null || settings.ReferenceHandling == ReferenceHandling.References || isImmutable
-                || ReferenceEquals(sourceItem, targetItem))
+            if (sourceItem == null ||
+                settings.ReferenceHandling == ReferenceHandling.References ||
+                isImmutable ||
+                ReferenceEquals(sourceItem, targetItem))
             {
                 return sourceItem;
             }
 
             T copy;
+            if (TryCopyValue(sourceItem, targetItem, settings, out copy))
+            {
+                return copy;
+            }
+
+            if (referencePairs?.Add(sourceItem, targetItem) == false)
+            {
+                return targetItem;
+            }
+
             if (TryCustomCopy(sourceItem, targetItem, settings, out copy))
             {
                 return copy;
@@ -72,7 +84,7 @@
                         targetItem = (T)CreateInstance(sourceItem, null, settings);
                     }
 
-                    MemberValues(sourceItem, targetItem, settings, referencePairs);
+                    Sync(sourceItem, targetItem, settings, referencePairs);
                     return targetItem;
                 case ReferenceHandling.Throw:
                     throw State.Throw.ShouldNeverGetHereException();
@@ -82,6 +94,30 @@
                         settings.ReferenceHandling,
                         null);
             }
+        }
+
+        internal static bool TryCopyValue<T>(T x, T y, IMemberSettings settings, out T result)
+        {
+            if (ReferenceEquals(x, y))
+            {
+                result = x;
+                return true;
+            }
+
+            if (x == null)
+            {
+                result = x;
+                return true;
+            }
+
+            if (settings.IsImmutable(x.GetType()))
+            {
+                result = x;
+                return true;
+            }
+
+            result = default(T);
+            return false;
         }
 
         private static bool TryCustomCopy<T>(T source, T target, IMemberSettings settings, out T copy)

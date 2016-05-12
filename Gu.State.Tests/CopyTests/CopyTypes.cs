@@ -244,13 +244,13 @@
             public List<T> Items { get; } = new List<T>();
         }
 
-        public class WithProperty<T>
+        public class With<T>
         {
-            public WithProperty()
+            public With()
             {
             }
 
-            public WithProperty(T value)
+            public With(T value)
             {
                 this.Value = value;
             }

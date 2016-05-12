@@ -22,17 +22,11 @@
             return new Disposer<ReferencePairCollection>(new ReferencePairCollection(), Return);
         }
 
-        internal bool Add(object x, object y)
+        internal bool? Add(object x, object y)
         {
-            if (x == null || y == null)
+            if (!IsReferencePair(x, y))
             {
-                return false;
-            }
-
-            var type = x.GetType();
-            if (type.IsValueType || type.IsEnum)
-            {
-                return false;
+                return null;
             }
 
             var refCounted = ReferencePair.GetOrCreate(x, y);
@@ -47,7 +41,31 @@
 
         internal bool Contains(object x, object y)
         {
-            return this.pairs.Contains(ReferencePair.GetOrCreate(x, y));
+            if (!IsReferencePair(x, y))
+            {
+                return false;
+            }
+
+            using (var pair = ReferencePair.GetOrCreate(x, y))
+            {
+                return this.pairs.Contains(pair);
+            }
+        }
+
+        private static bool IsReferencePair(object x, object y)
+        {
+            if (x == null || y == null)
+            {
+                return false;
+            }
+
+            var type = x.GetType();
+            if (type.IsValueType || type.IsEnum)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private static void Return(ReferencePairCollection pairs)

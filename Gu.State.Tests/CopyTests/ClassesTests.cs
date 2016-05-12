@@ -11,12 +11,14 @@ namespace Gu.State.Tests.CopyTests
     {
         public abstract void CopyMethod<T>(T source, T target, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excluded = null) where T : class;
 
-        [Test]
-        public void WithSimpleHappyPath()
+        [TestCase(ReferenceHandling.Throw)]
+        [TestCase(ReferenceHandling.Structural)]
+        [TestCase(ReferenceHandling.References)]
+        public void WithSimpleHappyPath(ReferenceHandling referenceHandling)
         {
             var source = new WithSimpleProperties(1, 2, "3", StringSplitOptions.RemoveEmptyEntries);
             var target = new WithSimpleProperties { IntValue = 3, NullableIntValue = 4 };
-            this.CopyMethod(source, target);
+            this.CopyMethod(source, target, referenceHandling);
             Assert.AreEqual(1, source.IntValue);
             Assert.AreEqual(1, target.IntValue);
             Assert.AreEqual(2, source.NullableIntValue);
@@ -124,8 +126,8 @@ namespace Gu.State.Tests.CopyTests
         [TestCase(ReferenceHandling.References)]
         public void WithImmutableStructural(ReferenceHandling? referenceHandling)
         {
-            var source = new WithProperty<Immutable>(new Immutable(1));
-            var target = new WithProperty<Immutable>(new Immutable(2));
+            var source = new With<Immutable>(new Immutable(1));
+            var target = new With<Immutable>(new Immutable(2));
             if (referenceHandling == null)
             {
                 this.CopyMethod(source, target);
@@ -149,17 +151,25 @@ namespace Gu.State.Tests.CopyTests
             CollectionAssert.AreEqual(source.Items, target.Items);
         }
 
-        [Test]
-        public void WithArrayWhenTargetArrayIsNullStructural()
+        [TestCase(ReferenceHandling.Structural)]
+        [TestCase(ReferenceHandling.References)]
+        public void WithArrayWhenTargetArrayIsNullStructural(ReferenceHandling referenceHandling)
         {
             var source = new WithArrayProperty("a", 1, new[] { 1, 2 });
             var target = new WithArrayProperty("a", 1, null);
-            this.CopyMethod(source, target, ReferenceHandling.Structural);
+            this.CopyMethod(source, target, referenceHandling);
             Assert.AreEqual("a", source.Name);
             Assert.AreEqual("a", target.Name);
             Assert.AreEqual(1, source.Value);
             Assert.AreEqual(1, target.Value);
-            Assert.AreNotSame(source.Array, target.Array);
+            if (referenceHandling == ReferenceHandling.Structural)
+            {
+                Assert.AreNotSame(source.Array, target.Array);
+            }
+            else
+            {
+                Assert.AreSame(source.Array, target.Array);
+            }
             CollectionAssert.AreEqual(new[] { 1, 2 }, source.Array);
             CollectionAssert.AreEqual(new[] { 1, 2 }, target.Array);
         }
@@ -234,9 +244,9 @@ namespace Gu.State.Tests.CopyTests
         [Test]
         public void Ignores()
         {
-            var source = new WithSimpleProperties(1, 2, "3", StringSplitOptions.RemoveEmptyEntries);
-            var target = new WithSimpleProperties { IntValue = 3, NullableIntValue = 4 };
-            var excluded = this.GetType() == typeof(FieldValues.Classes)
+            var source = new WithSimpleProperties { IntValue = 1, NullableIntValue = 2, StringValue = "3", EnumValue = StringSplitOptions.RemoveEmptyEntries };
+            var target = new WithSimpleProperties { IntValue = 2, NullableIntValue = 4, StringValue = "4", EnumValue = StringSplitOptions.None };
+            var excluded = this is FieldValues.Classes
                         ? "nullableIntValue"
                         : nameof(WithSimpleProperties.NullableIntValue);
             this.CopyMethod(source, target, excluded: excluded);

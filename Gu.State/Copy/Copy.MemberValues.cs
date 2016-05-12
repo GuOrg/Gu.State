@@ -1,6 +1,5 @@
 ﻿namespace Gu.State
 {
-    using System;
     using System.Diagnostics;
     using System.Reflection;
 
@@ -22,11 +21,11 @@
                                    ? ReferencePairCollection.Borrow()
                                    : null)
             {
-                Member(source, target, settings, member, borrowed?.Value);
+                Member(source, target, settings, borrowed?.Value, member);
             }
         }
 
-        private static void MemberValues<T>(T source, T target, IMemberSettings settings)
+        private static void Sync<T>(T source, T target, IMemberSettings settings)
             where T : class
         {
             ////T copy;
@@ -47,16 +46,11 @@
                                    ? ReferencePairCollection.Borrow()
                                    : null)
             {
-                MemberValues(source, target, settings, borrowed?.Value);
-                return;
+                Sync(source, target, settings, borrowed?.Value);
             }
         }
 
-        private static T MemberValues<T>(
-          T source,
-          T target,
-          IMemberSettings settings,
-          ReferencePairCollection referencePairs)
+        private static void Sync<T>(T source, T target, IMemberSettings settings, ReferencePairCollection referencePairs)
         {
             Debug.Assert(source != null, nameof(source));
             Debug.Assert(target != null, nameof(target));
@@ -65,157 +59,101 @@
 
             if (referencePairs?.Add(source, target) == false)
             {
-                return target;
+                return;
             }
 
             T copy;
             if (TryCustomCopy(source, target, settings, out copy))
             {
-                return copy;
+                return;
             }
 
             CollectionItems(source, target, settings, referencePairs);
-            MutableMembers(source, target, settings, referencePairs);
-            InitiOnlyMembers(source, target, settings, referencePairs);
-            return target;
+            Members(source, target, settings, referencePairs);
         }
 
         private static void Member<T>(
             T source,
             T target,
             IMemberSettings settings,
-            MemberInfo member,
-            ReferencePairCollection referencePairs)
+            ReferencePairCollection referencePairs,
+            MemberInfo member)
         {
+            if (settings.IsIgnoringMember(member))
+            {
+                return;
+            }
+
             var getterAndSetter = settings.GetOrCreateGetterAndSetter(member);
-            if (getterAndSetter.IsInitOnly)
-            {
-                InitOnlyMember(source, target, settings, referencePairs, member);
-            }
-            else
-            {
-                MutableMember(source, target, settings, referencePairs, member);
-            }
+            Member(source, target, settings, referencePairs, getterAndSetter);
         }
 
-        private static void MutableMembers<T>(T source, T target, IMemberSettings settings, ReferencePairCollection referencePairs)
-        {
-            Debug.Assert(source != null, nameof(source));
-            Debug.Assert(target != null, nameof(target));
-            Debug.Assert(source.GetType() == target.GetType(), "Must be same type");
-
-            foreach (var memberInfo in settings.GetMembers(source.GetType()))
-            {
-                MutableMember(source, target, settings, referencePairs, memberInfo);
-            }
-        }
-
-        private static void MutableMember<T>(
+        private static void Member<T>(
             T source,
             T target,
             IMemberSettings settings,
             ReferencePairCollection referencePairs,
-            MemberInfo memberInfo)
+            IGetterAndSetter getterAndSetter)
         {
-            if (settings.IsIgnoringMember(memberInfo))
-            {
-                return;
-            }
-
-            var getterAndSetter = settings.GetOrCreateGetterAndSetter(memberInfo);
+            var sv = getterAndSetter.GetValue(source);
+            var tv = getterAndSetter.GetValue(target);
             if (getterAndSetter.IsInitOnly)
             {
+                if (settings.IsImmutable(getterAndSetter.ValueType) || sv == null)
+                {
+                    return;
+                }
+
+                Sync(sv, tv, settings, referencePairs);
                 return;
             }
 
-            var sv = getterAndSetter.GetValue(source);
             if (settings.IsImmutable(getterAndSetter.ValueType) || sv == null)
             {
                 getterAndSetter.CopyValue(source, target);
                 return;
             }
 
-            object copy;
-            if (TryCustomCopy(sv, getterAndSetter.GetValue(target), settings, out copy))
+            var copy = Item(sv, tv, settings, referencePairs, false);
+            if (!ReferenceEquals(tv, copy))
             {
                 getterAndSetter.SetValue(target, copy);
             }
+        }
 
-            switch (settings.ReferenceHandling)
+        private static void Members<T>(T source, T target, IMemberSettings settings, ReferencePairCollection referencePairs)
+        {
+            Debug.Assert(source != null, nameof(source));
+            Debug.Assert(target != null, nameof(target));
+            Debug.Assert(source.GetType() == target.GetType(), "Must be same type");
+
+            using (var borrowed = ListPool<IGetterAndSetter>.Borrow())
             {
-                case ReferenceHandling.References:
-                    getterAndSetter.CopyValue(source, target);
-                    return;
-                case ReferenceHandling.Structural:
-                    var tv = getterAndSetter.GetValue(target);
-                    if (tv != null)
+                foreach (var member in settings.GetMembers(source.GetType()))
+                {
+                    if (settings.IsIgnoringMember(member))
                     {
-                        MemberValues(sv, tv, settings, referencePairs);
-                        return;
+                        continue;
                     }
 
-                    tv = CreateInstance(sv, memberInfo, settings);
-                    getterAndSetter.SetValue(target, tv);
-                    MemberValues(sv, tv, settings, referencePairs);
-                    return;
-                case ReferenceHandling.Throw:
-                    throw State.Throw.ShouldNeverGetHereException();
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);
-            }
-        }
+                    var getterAndSetter = settings.GetOrCreateGetterAndSetter(member);
+                    Member(source, target, settings, referencePairs, getterAndSetter);
+                    if (getterAndSetter.IsInitOnly)
+                    {
+                        borrowed.Value.Add(getterAndSetter);
+                    }
+                }
 
-        private static void InitiOnlyMembers(
-            object source,
-            object target,
-            IMemberSettings settings,
-            ReferencePairCollection referencePairs)
-        {
-            foreach (var memberInfo in settings.GetMembers(source.GetType()))
-            {
-                InitOnlyMember(source, target, settings, referencePairs, memberInfo);
-            }
-        }
+                foreach (var getterAndSetter in borrowed.Value)
+                {
+                    var sv = getterAndSetter.GetValue(source);
+                    var tv = getterAndSetter.GetValue(target);
 
-        private static void InitOnlyMember(
-            object source,
-            object target,
-            IMemberSettings settings,
-            ReferencePairCollection referencePairs,
-            MemberInfo memberInfo)
-        {
-            if (settings.IsIgnoringMember(memberInfo))
-            {
-                return;
-            }
-
-            var getterAndSetter = settings.GetOrCreateGetterAndSetter(memberInfo);
-            if (!getterAndSetter.IsInitOnly)
-            {
-                return;
-            }
-
-            var sv = getterAndSetter.GetValue(source);
-            var tv = getterAndSetter.GetValue(target);
-            bool equals;
-            if (EqualBy.TryGetValueEquals(source, target, settings, out equals) && equals)
-            {
-                return;
-            }
-
-            object copy;
-            if (TryCustomCopy(sv, tv, settings, out copy))
-            {
-                // nop called for side effect. Checked for equality below.
-            }
-            else if (!settings.IsImmutable(getterAndSetter.ValueType))
-            {
-                MemberValues(sv, tv, settings, referencePairs);
-            }
-
-            if (!EqualBy.MemberValues(sv, tv, settings))
-            {
-                Throw.ReadonlyMemberDiffers(new SourceAndTargetValue(source, sv, target, tv), memberInfo, settings);
+                    if (!EqualBy.MemberValues(sv, tv, settings))
+                    {
+                        Throw.ReadonlyMemberDiffers(new SourceAndTargetValue(source, sv, target, tv), getterAndSetter.Member, settings);
+                    }
+                }
             }
         }
     }

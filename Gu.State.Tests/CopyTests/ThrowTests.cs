@@ -190,8 +190,8 @@ namespace Gu.State.Tests.CopyTests
                      "  - Exclude a combination of the following:\r\n" +
                      "    - The property WithProperty<WithoutDefaultCtor>.Value.\r\n";
 
-            var x = new WithProperty<WithoutDefaultCtor>(new WithoutDefaultCtor(1));
-            var y = new WithProperty<WithoutDefaultCtor>(null);
+            var x = new With<WithoutDefaultCtor>(new WithoutDefaultCtor(1));
+            var y = new With<WithoutDefaultCtor>(null);
 
             var exception = Assert.Throws<InvalidOperationException>(() => this.CopyMethod(x, y, ReferenceHandling.Structural));
 

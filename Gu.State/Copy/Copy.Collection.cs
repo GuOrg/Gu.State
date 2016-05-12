@@ -1,6 +1,5 @@
 ﻿namespace Gu.State
 {
-    using System;
     using System.Collections;
 
     public static partial class Copy
@@ -17,7 +16,8 @@
                 return;
             }
 
-            if (!settings.IsEquatable(source.GetType().GetItemType()) && settings.ReferenceHandling == ReferenceHandling.Throw)
+            if (settings.ReferenceHandling == ReferenceHandling.Throw &&
+                !settings.IsImmutable(source.GetType().GetItemType()))
             {
                 throw State.Throw.ShouldNeverGetHereException("Should have been checked for throw before copy");
             }
