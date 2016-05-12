@@ -2,6 +2,8 @@
 {
     using NUnit.Framework;
 
+    using static CopyTypes;
+
     public class Classes : ClassesTests
     {
         public override void CopyMethod<T>(T source, T target, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excluded = null)
@@ -24,8 +26,8 @@
         [Test]
         public void WithCalculatedPropertyHappyPath()
         {
-            var source = new CopyTypes.WithCalculatedProperty { Value = 1 };
-            var target = new CopyTypes.WithCalculatedProperty { Value = 3 };
+            var source = new WithCalculatedProperty { Value = 1 };
+            var target = new WithCalculatedProperty { Value = 3 };
             Copy.PropertyValues(source, target);
             Assert.AreEqual(1, source.Value);
             Assert.AreEqual(1, target.Value);
@@ -36,18 +38,14 @@
         [Test]
         public void WithSpecialCopyPropertyWhenNull()
         {
-            Assert.Inconclusive();
-            //var source = new CopyTypes.WithProperty<CopyTypes.WithReadonlyProperty<int>>(new CopyTypes.WithReadonlyProperty<int>(1));
-            //var target = new CopyTypes.WithProperty<CopyTypes.WithReadonlyProperty<int>>();
-            //var copyProperty = SpecialCopyProperty.CreateClone<CopyTypes.WithComplexProperty, CopyTypes.ComplexType>(
-            //    x => x.ComplexType,
-            //    () => new CopyTypes.ComplexType());
-            //Assert.Inconclusive("Not sure we want to keep this mess");
-            //Copy.PropertyValues(source, target, new[] { copyProperty });
-            //Assert.AreEqual(source.Name, target.Name);
-            //Assert.AreEqual(source.Value, target.Value);
-            //Assert.IsNull(source.ComplexType);
-            //Assert.IsNull(target.ComplexType);
+            var source = new With<WithReadonlyProperty<int>>(new WithReadonlyProperty<int>(1));
+            var target = new With<WithReadonlyProperty<int>>();
+            var settings = PropertiesSettings.Build()
+                                             .AddCustomCopy<WithReadonlyProperty<int>>((x, y) => new WithReadonlyProperty<int>(5))
+                                             .CreateSettings();
+            Copy.PropertyValues(source, target, settings);
+            Assert.AreEqual(1, source.Value.Value);
+            Assert.AreEqual(5, target.Value.Value);
         }
     }
 }

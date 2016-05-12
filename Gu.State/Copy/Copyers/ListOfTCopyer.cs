@@ -27,7 +27,6 @@ namespace Gu.State
         public void Copy<TSettings>(
             object source,
             object target,
-            Func<object, object, TSettings, ReferencePairCollection, object> copyItem,
             TSettings settings,
             ReferencePairCollection referencePairs)
             where TSettings : class, IMemberSettings
@@ -36,13 +35,12 @@ namespace Gu.State
             var copyMethod = this.GetType()
                                         .GetMethod(nameof(Copy), BindingFlags.NonPublic | BindingFlags.Static)
                                         .MakeGenericMethod(itemType, typeof(TSettings));
-            copyMethod.Invoke(null, new[] { source, target, copyItem, settings, referencePairs });
+            copyMethod.Invoke(null, new[] { source, target, settings, referencePairs });
         }
 
         private static void Copy<T, TSettings>(
             IList<T> source,
             IList<T> target,
-            Func<object, object, TSettings, ReferencePairCollection, object> copyItem,
             TSettings settings,
             ReferencePairCollection referencePairs)
             where TSettings : class, IMemberSettings
@@ -52,15 +50,31 @@ namespace Gu.State
                 throw State.Copy.Throw.CannotCopyFixesSizeCollections(source, target, settings);
             }
 
-            var isImmutable = settings.IsImmutable(
-                source.GetType()
-                      .GetItemType());
+            var copyValues = State.Copy.IsCopyValue(
+                        source.GetType().GetItemType(),
+                        settings);
             for (var i = 0; i < source.Count; i++)
             {
+                if (copyValues)
+                {
+                    target.SetElementAt(i, source[i]);
+                    continue;
+                }
+
                 var sv = source[i];
                 var tv = target.ElementAtOrDefault(i);
-                var copy = State.Copy.Item(sv, tv, copyItem, settings, referencePairs, isImmutable);
-                target.SetElementAt(i, copy);
+                bool created;
+                bool needsSync;
+                var clone = State.Copy.CloneWithoutSync(sv, tv, settings, out created, out needsSync);
+                if (created)
+                {
+                    target.SetElementAt(i, clone);
+                }
+
+                if (needsSync)
+                {
+                    State.Copy.Sync(sv, clone, settings, referencePairs);
+                }
             }
 
             target.TrimLengthTo(source);

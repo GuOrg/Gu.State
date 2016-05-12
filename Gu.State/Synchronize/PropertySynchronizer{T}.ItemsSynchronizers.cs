@@ -103,7 +103,7 @@
                                 }
                                 else
                                 {
-                                    tv = Copy.CreateInstance(sv, null, this.settings);
+                                    tv = Copy.CreateInstance(sv, this.settings);
                                     Copy.PropertyValues(sv, tv, this.settings);
                                 }
                             }
