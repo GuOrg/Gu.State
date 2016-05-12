@@ -50,9 +50,7 @@ namespace Gu.State
                 throw State.Copy.Throw.CannotCopyFixesSizeCollections(source, target, settings);
             }
 
-            var isImmutable = settings.IsImmutable(
-                source.GetType()
-                      .GetItemType());
+            var isImmutable = settings.IsImmutable(source.GetType().GetItemType());
             for (var i = 0; i < source.Count; i++)
             {
                 var sv = source[i];

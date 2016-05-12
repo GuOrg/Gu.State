@@ -51,10 +51,13 @@
                         .AppendSuggestImmutable(errors)
                         .AppendSuggestResizableCollection(errors)
                         .AppendSuggestDefaultCtor(errors)
-                        .AppendLine($"* Use {settings.GetType().Name} and specify how copying is performed:")
-                        .AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Structural)} means that a the entire graph is traversed and immutable property values are copied.")
-                        .AppendLine($"    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.")
-                        .AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.References)} means that references are copied.")
+                        .AppendLine($"* Use {settings.GetType() .Name} and specify how copying is performed:")
+                        .AppendLine(
+                            $"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Structural)} means that a the entire graph is traversed and immutable property values are copied.")
+                        .AppendLine(
+                            $"    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.")
+                        .AppendLine(
+                            $"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.References)} means that references are copied.")
                         .AppendSuggestExclude(errors);
 
             var message = errorBuilder.ToString();
@@ -67,8 +70,7 @@
             internal static void ReadonlyMemberDiffers<T>(
                 SourceAndTargetValue sourceAndTargetValue,
                 MemberInfo member,
-                T settings)
-                where T : class, IMemberSettings
+                T settings) where T : class, IMemberSettings
             {
                 var error = new ReadonlyMemberDiffersError(sourceAndTargetValue, member);
                 var typeErrors = new TypeErrors(sourceAndTargetValue.Source?.GetType(), error);
@@ -78,8 +80,10 @@
             }
 
             // ReSharper disable once UnusedParameter.Local
-            internal static Exception CannotCopyFixesSizeCollections<TSettings>(IEnumerable source, IEnumerable target, TSettings settings)
-                where TSettings : class, IMemberSettings
+            internal static Exception CannotCopyFixesSizeCollections<TSettings>(
+                IEnumerable source,
+                IEnumerable target,
+                TSettings settings) where TSettings : class, IMemberSettings
             {
                 var error = new CannotCopyFixedSizeCollectionsError(source, target);
                 var typeErrors = new TypeErrors(target.GetType(), error);
@@ -87,12 +91,13 @@
                 return new InvalidOperationException(message);
             }
 
-            internal static InvalidOperationException CreateCannotCreateInstanceException<TSettings>(object sourceValue, MemberInfo member, TSettings settings, Exception exception)
-                                where TSettings : class, IMemberSettings
+            internal static InvalidOperationException CreateCannotCreateInstanceException<TSettings>(
+                object sourceValue,
+                TSettings settings,
+                Exception exception) where TSettings : class, IMemberSettings
             {
                 var cannotCopyError = new CannotCreateInstanceError(sourceValue);
-                var memberErrors = new MemberErrors(member);
-                var typeErrors = new TypeErrors(sourceValue.GetType(), new Error[] { memberErrors, cannotCopyError });
+                var typeErrors = new TypeErrors(sourceValue.GetType(), new Error[] { cannotCopyError });
                 var message = typeErrors.GetErrorText(settings);
                 return new InvalidOperationException(message, exception);
             }

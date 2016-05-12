@@ -10,7 +10,7 @@
     /// </summary>
     public static partial class Copy
     {
-        internal static object CreateInstance<TSettings>(object sourceValue, MemberInfo member, TSettings settings)
+        internal static object CreateInstance<TSettings>(object sourceValue, TSettings settings)
             where TSettings : class, IMemberSettings
         {
             if (sourceValue == null)
@@ -38,7 +38,7 @@
             }
             catch (Exception e)
             {
-                throw Throw.CreateCannotCreateInstanceException(sourceValue, member, settings, e);
+                throw Throw.CreateCannotCreateInstanceException(sourceValue, settings, e);
             }
         }
 
@@ -64,11 +64,6 @@
                 return copy;
             }
 
-            if (referencePairs?.Add(sourceItem, targetItem) == false)
-            {
-                return targetItem;
-            }
-
             if (TryCustomCopy(sourceItem, targetItem, settings, out copy))
             {
                 return copy;
@@ -81,7 +76,7 @@
                 case ReferenceHandling.Structural:
                     if (targetItem == null)
                     {
-                        targetItem = (T)CreateInstance(sourceItem, null, settings);
+                        targetItem = (T)CreateInstance(sourceItem, settings);
                     }
 
                     Sync(sourceItem, targetItem, settings, referencePairs);
