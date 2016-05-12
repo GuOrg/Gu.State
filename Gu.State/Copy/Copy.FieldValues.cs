@@ -42,7 +42,7 @@
             Ensure.NotNull(target, nameof(target));
             Ensure.SameType(source, target, nameof(source), nameof(target));
             Verify.CanCopyRoot(typeof(T), settings);
-            MemberValues.Copy(source, target, settings);
+            MemberValues(source, target, settings);
         }
     }
 }

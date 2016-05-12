@@ -22,219 +22,213 @@
                                    ? ReferencePairCollection.Borrow()
                                    : null)
             {
-                MemberValues.Copy(source, target, settings, member, borrowed?.Value);
+                Member(source, target, settings, member, borrowed?.Value);
             }
         }
 
-        private static class MemberValues
+        private static void MemberValues<T>(T source, T target, IMemberSettings settings)
+            where T : class
         {
-            internal static T Copy<T>(
-                T source,
-                T target,
-                IMemberSettings settings)
-                where T : class
+            ////T copy;
+            ////if (TryCustomCopy(source, target, settings, out copy))
+            ////{
+            ////    if (copy != null && !ReferenceEquals(target, copy))
+            ////    {
+            ////        var message = $"The type {source.GetType()} has custom copy specified. For the root object the copy must be a side effect.\r\n" +
+            ////                      $"This means that the custom copy must return null or the target instance.\r\n" +
+            ////                      $"Also it makes little sense using this method with custom copy for the root type.";
+            ////        throw new InvalidOperationException(message);
+            ////    }
+
+            ////    return copy;
+            ////}
+
+            using (var borrowed = settings.ReferenceHandling == ReferenceHandling.Structural
+                                   ? ReferencePairCollection.Borrow()
+                                   : null)
             {
-                ////T copy;
-                ////if (TryCustomCopy(source, target, settings, out copy))
-                ////{
-                ////    if (copy != null && !ReferenceEquals(target, copy))
-                ////    {
-                ////        var message = $"The type {source.GetType()} has custom copy specified. For the root object the copy must be a side effect.\r\n" +
-                ////                      $"This means that the custom copy must return null or the target instance.\r\n" +
-                ////                      $"Also it makes little sense using this method with custom copy for the root type.";
-                ////        throw new InvalidOperationException(message);
-                ////    }
-
-                ////    return copy;
-                ////}
-
-                using (var borrowed = settings.ReferenceHandling == ReferenceHandling.Structural
-                                       ? ReferencePairCollection.Borrow()
-                                       : null)
-                {
-                    Copy(source, target, settings, borrowed?.Value);
-                    return target;
-                }
+                MemberValues(source, target, settings, borrowed?.Value);
+                return;
             }
+        }
 
-            internal static T Copy<T>(
-              T source,
-              T target,
-              IMemberSettings settings,
-              ReferencePairCollection referencePairs)
+        private static T MemberValues<T>(
+          T source,
+          T target,
+          IMemberSettings settings,
+          ReferencePairCollection referencePairs)
+        {
+            Debug.Assert(source != null, nameof(source));
+            Debug.Assert(target != null, nameof(target));
+            Debug.Assert(source.GetType() == target.GetType(), "Must be same type");
+            Verify.CanCopyMemberValues(source, target, settings);
+
+            if (referencePairs?.Add(source, target) == false)
             {
-                Debug.Assert(source != null, nameof(source));
-                Debug.Assert(target != null, nameof(target));
-                Debug.Assert(source.GetType() == target.GetType(), "Must be same type");
-                Verify.CanCopyMemberValues(source, target, settings);
-
-                if (referencePairs?.Add(source, target) == false)
-                {
-                    return target;
-                }
-
-                T copy;
-                if (TryCustomCopy(source, target, settings, out copy))
-                {
-                    return copy;
-                }
-
-                CopyCollectionItems(source, target, Copy, settings, referencePairs);
-                MutableMembers(source, target, settings, referencePairs);
-                InitiOnlyMembers(source, target, settings, referencePairs);
                 return target;
             }
 
-            internal static void Copy<T>(
-                T source,
-                T target,
-                IMemberSettings settings,
-                MemberInfo member,
-                ReferencePairCollection referencePairs)
+            T copy;
+            if (TryCustomCopy(source, target, settings, out copy))
             {
-                var getterAndSetter = settings.GetOrCreateGetterAndSetter(member);
-                if (getterAndSetter.IsInitOnly)
-                {
-                    InitOnlyMember(source, target, settings, referencePairs, member);
-                }
-                else
-                {
-                    MutableMember(source, target, settings, referencePairs, member);
-                }
+                return copy;
             }
 
-            internal static bool TryCustomCopy<T>(T source, T target, IMemberSettings settings, out T copy)
-            {
-                CustomCopy copyer;
-                if (settings.TryGetCopyer(source.GetType(), out copyer))
-                {
-                    copy = ((CustomCopy<T>)copyer).Copy(source, target);
-                    return true;
-                }
+            CopyCollectionItems(source, target, MemberValues, settings, referencePairs);
+            MutableMembers(source, target, settings, referencePairs);
+            InitiOnlyMembers(source, target, settings, referencePairs);
+            return target;
+        }
 
-                copy = default(T);
-                return false;
+        private static void Member<T>(
+            T source,
+            T target,
+            IMemberSettings settings,
+            MemberInfo member,
+            ReferencePairCollection referencePairs)
+        {
+            var getterAndSetter = settings.GetOrCreateGetterAndSetter(member);
+            if (getterAndSetter.IsInitOnly)
+            {
+                InitOnlyMember(source, target, settings, referencePairs, member);
+            }
+            else
+            {
+                MutableMember(source, target, settings, referencePairs, member);
+            }
+        }
+
+        private static bool TryCustomCopy<T>(T source, T target, IMemberSettings settings, out T copy)
+        {
+            CustomCopy copyer;
+            if (settings.TryGetCopyer(source.GetType(), out copyer))
+            {
+                copy = ((CustomCopy<T>)copyer).Copy(source, target);
+                return true;
             }
 
-            private static void MutableMembers<T>(T source, T target, IMemberSettings settings, ReferencePairCollection referencePairs)
-            {
-                Debug.Assert(source != null, nameof(source));
-                Debug.Assert(target != null, nameof(target));
-                Debug.Assert(source.GetType() == target.GetType(), "Must be same type");
+            copy = default(T);
+            return false;
+        }
 
-                foreach (var memberInfo in settings.GetMembers(source.GetType()))
-                {
-                    MutableMember(source, target, settings, referencePairs, memberInfo);
-                }
+        private static void MutableMembers<T>(T source, T target, IMemberSettings settings, ReferencePairCollection referencePairs)
+        {
+            Debug.Assert(source != null, nameof(source));
+            Debug.Assert(target != null, nameof(target));
+            Debug.Assert(source.GetType() == target.GetType(), "Must be same type");
+
+            foreach (var memberInfo in settings.GetMembers(source.GetType()))
+            {
+                MutableMember(source, target, settings, referencePairs, memberInfo);
+            }
+        }
+
+        private static void MutableMember<T>(
+            T source,
+            T target,
+            IMemberSettings settings,
+            ReferencePairCollection referencePairs,
+            MemberInfo memberInfo)
+        {
+            if (settings.IsIgnoringMember(memberInfo))
+            {
+                return;
             }
 
-            private static void MutableMember<T>(
-                T source,
-                T target,
-                IMemberSettings settings,
-                ReferencePairCollection referencePairs,
-                MemberInfo memberInfo)
+            var getterAndSetter = settings.GetOrCreateGetterAndSetter(memberInfo);
+            if (getterAndSetter.IsInitOnly)
             {
-                if (settings.IsIgnoringMember(memberInfo))
-                {
-                    return;
-                }
+                return;
+            }
 
-                var getterAndSetter = settings.GetOrCreateGetterAndSetter(memberInfo);
-                if (getterAndSetter.IsInitOnly)
-                {
-                    return;
-                }
+            var sv = getterAndSetter.GetValue(source);
+            if (settings.IsImmutable(getterAndSetter.ValueType) || sv == null)
+            {
+                getterAndSetter.CopyValue(source, target);
+                return;
+            }
 
-                var sv = getterAndSetter.GetValue(source);
-                if (settings.IsImmutable(getterAndSetter.ValueType) || sv == null)
-                {
+            object copy;
+            if (TryCustomCopy(sv, getterAndSetter.GetValue(target), settings, out copy))
+            {
+                getterAndSetter.SetValue(target, copy);
+            }
+
+            switch (settings.ReferenceHandling)
+            {
+                case ReferenceHandling.References:
                     getterAndSetter.CopyValue(source, target);
                     return;
-                }
-
-                object copy;
-                if (TryCustomCopy(sv, getterAndSetter.GetValue(target), settings, out copy))
-                {
-                    getterAndSetter.SetValue(target, copy);
-                }
-
-                switch (settings.ReferenceHandling)
-                {
-                    case ReferenceHandling.References:
-                        getterAndSetter.CopyValue(source, target);
+                case ReferenceHandling.Structural:
+                    var tv = getterAndSetter.GetValue(target);
+                    if (tv != null)
+                    {
+                        MemberValues(sv, tv, settings, referencePairs);
                         return;
-                    case ReferenceHandling.Structural:
-                        var tv = getterAndSetter.GetValue(target);
-                        if (tv != null)
-                        {
-                            Copy(sv, tv, settings, referencePairs);
-                            return;
-                        }
+                    }
 
-                        tv = CreateInstance(sv, memberInfo, settings);
-                        getterAndSetter.SetValue(target, tv);
-                        Copy(sv, tv, settings, referencePairs);
-                        return;
-                    case ReferenceHandling.Throw:
-                        throw State.Throw.ShouldNeverGetHereException();
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);
-                }
+                    tv = CreateInstance(sv, memberInfo, settings);
+                    getterAndSetter.SetValue(target, tv);
+                    MemberValues(sv, tv, settings, referencePairs);
+                    return;
+                case ReferenceHandling.Throw:
+                    throw State.Throw.ShouldNeverGetHereException();
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(settings.ReferenceHandling), settings.ReferenceHandling, null);
+            }
+        }
+
+        private static void InitiOnlyMembers(
+            object source,
+            object target,
+            IMemberSettings settings,
+            ReferencePairCollection referencePairs)
+        {
+            foreach (var memberInfo in settings.GetMembers(source.GetType()))
+            {
+                InitOnlyMember(source, target, settings, referencePairs, memberInfo);
+            }
+        }
+
+        private static void InitOnlyMember(
+            object source,
+            object target,
+            IMemberSettings settings,
+            ReferencePairCollection referencePairs,
+            MemberInfo memberInfo)
+        {
+            if (settings.IsIgnoringMember(memberInfo))
+            {
+                return;
             }
 
-            private static void InitiOnlyMembers(
-                object source,
-                object target,
-                IMemberSettings settings,
-                ReferencePairCollection referencePairs)
+            var getterAndSetter = settings.GetOrCreateGetterAndSetter(memberInfo);
+            if (!getterAndSetter.IsInitOnly)
             {
-                foreach (var memberInfo in settings.GetMembers(source.GetType()))
-                {
-                    InitOnlyMember(source, target, settings, referencePairs, memberInfo);
-                }
+                return;
             }
 
-            private static void InitOnlyMember(
-                object source,
-                object target,
-                IMemberSettings settings,
-                ReferencePairCollection referencePairs,
-                MemberInfo memberInfo)
+            var sv = getterAndSetter.GetValue(source);
+            var tv = getterAndSetter.GetValue(target);
+            bool equals;
+            if (EqualBy.TryGetValueEquals(source, target, settings, out equals) && equals)
             {
-                if (settings.IsIgnoringMember(memberInfo))
-                {
-                    return;
-                }
+                return;
+            }
 
-                var getterAndSetter = settings.GetOrCreateGetterAndSetter(memberInfo);
-                if (!getterAndSetter.IsInitOnly)
-                {
-                    return;
-                }
+            object copy;
+            if (TryCustomCopy(sv, tv, settings, out copy))
+            {
+                // nop called for side effect. Checked for equality below.
+            }
+            else if (!settings.IsImmutable(getterAndSetter.ValueType))
+            {
+                MemberValues(sv, tv, settings, referencePairs);
+            }
 
-                var sv = getterAndSetter.GetValue(source);
-                var tv = getterAndSetter.GetValue(target);
-                bool equals;
-                if (EqualBy.TryGetValueEquals(source, target, settings, out equals) && equals)
-                {
-                    return;
-                }
-
-                object copy;
-                if (TryCustomCopy(sv, tv, settings, out copy))
-                {
-                    // nop called for side effect. Checked for equality below.
-                }
-                else if (!settings.IsImmutable(getterAndSetter.ValueType))
-                {
-                    Copy(sv, tv, settings, referencePairs);
-                }
-
-                if (!EqualBy.MemberValues(sv, tv, settings))
-                {
-                    Throw.ReadonlyMemberDiffers(new SourceAndTargetValue(source, sv, target, tv), memberInfo, settings);
-                }
+            if (!EqualBy.MemberValues(sv, tv, settings))
+            {
+                Throw.ReadonlyMemberDiffers(new SourceAndTargetValue(source, sv, target, tv), memberInfo, settings);
             }
         }
     }
