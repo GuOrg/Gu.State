@@ -50,7 +50,7 @@ namespace Gu.State
             {
                 var sv = source[i];
                 var tv = target.ElementAtOrDefault(i);
-                var copy = State.Copy.Item(sv, tv, settings, referencePairs, isImmutable);
+                var copy = State.Copy.CloneAndSync(sv, tv, settings, referencePairs, isImmutable);
                 if (i < target.Count)
                 {
                     target[i] = copy;

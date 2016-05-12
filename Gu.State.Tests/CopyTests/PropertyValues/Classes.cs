@@ -36,7 +36,7 @@
         [Test]
         public void WithSpecialCopyPropertyWhenNull()
         {
-            Assert.Inconclusive();
+            Assert.Fail();
             //var source = new CopyTypes.WithProperty<CopyTypes.WithReadonlyProperty<int>>(new CopyTypes.WithReadonlyProperty<int>(1));
             //var target = new CopyTypes.WithProperty<CopyTypes.WithReadonlyProperty<int>>();
             //var copyProperty = SpecialCopyProperty.CreateClone<CopyTypes.WithComplexProperty, CopyTypes.ComplexType>(

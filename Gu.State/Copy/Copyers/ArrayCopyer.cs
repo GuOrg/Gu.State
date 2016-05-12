@@ -89,7 +89,7 @@
             {
                 var sv = sourceArray[i];
                 var tv = targetArray[i];
-                var copy = State.Copy.Item(sv, tv, settings, referencePairs, isImmutable);
+                var copy = State.Copy.CloneAndSync(sv, tv, settings, referencePairs, isImmutable);
                 targetArray[i] = copy;
             }
         }
@@ -110,7 +110,7 @@
                 {
                     var sv = sourceArray[i, j];
                     var tv = targetArray[i, j];
-                    var copy = State.Copy.Item(sv, tv, settings, referencePairs, isImmutable);
+                    var copy = State.Copy.CloneAndSync(sv, tv, settings, referencePairs, isImmutable);
                     targetArray[i, j] = copy;
                 }
             }
@@ -134,7 +134,7 @@
                     {
                         var sv = sourceArray[i, j, k];
                         var tv = targetArray[i, j, k];
-                        var copy = State.Copy.Item(sv, tv, settings, referencePairs, isImmutable);
+                        var copy = State.Copy.CloneAndSync(sv, tv, settings, referencePairs, isImmutable);
                         targetArray[i, j, k] = copy;
                     }
                 }
@@ -155,7 +155,7 @@
             {
                 var sv = sourceArray.GetValue(index);
                 var tv = targetArray.GetValue(index);
-                var copy = State.Copy.Item(sv, tv, settings, referencePairs, isImmutable);
+                var copy = State.Copy.CloneAndSync(sv, tv, settings, referencePairs, isImmutable);
                 targetArray.SetValue(copy, index);
             }
         }

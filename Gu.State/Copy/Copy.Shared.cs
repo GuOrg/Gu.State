@@ -1,6 +1,7 @@
 ﻿namespace Gu.State
 {
     using System;
+    using System.Diagnostics;
 
     /// <summary>
     /// Defines methods for copying values from one instance to another
@@ -39,7 +40,7 @@
             }
         }
 
-        internal static T Item<T, TSettings>(
+        internal static T CloneAndSync<T, TSettings>(
             T sourceItem,
             T targetItem,
             TSettings settings,
@@ -55,29 +56,105 @@
                 return sourceItem;
             }
 
+            T clone;
+            if (TryCloneWithoutSync(sourceItem, targetItem, settings, out clone))
+            {
+                Sync(sourceItem, clone, settings, referencePairs);
+            }
+
+            return clone;
+        }
+
+        private static void Sync<T>(T source, T target, IMemberSettings settings)
+            where T : class
+        {
+            ////T copy;
+            ////if (TryCustomCopy(source, target, settings, out copy))
+            ////{
+            ////    if (copy != null && !ReferenceEquals(target, copy))
+            ////    {
+            ////        var message = $"The type {source.GetType()} has custom copy specified. For the root object the copy must be a side effect.\r\n" +
+            ////                      $"This means that the custom copy must return null or the target instance.\r\n" +
+            ////                      $"Also it makes little sense using this method with custom copy for the root type.";
+            ////        throw new InvalidOperationException(message);
+            ////    }
+
+            ////    return copy;
+            ////}
+
+            using (var borrowed = settings.ReferenceHandling == ReferenceHandling.Structural
+                                   ? ReferencePairCollection.Borrow()
+                                   : null)
+            {
+                Sync(source, target, settings, borrowed?.Value);
+            }
+        }
+
+        private static void Sync<T>(T source, T target, IMemberSettings settings, ReferencePairCollection referencePairs)
+        {
+            Debug.Assert(source != null, nameof(source));
+            Debug.Assert(target != null, nameof(target));
+            Debug.Assert(source.GetType() == target.GetType(), "Must be same type");
+            Verify.CanCopyMemberValues(source, target, settings);
+
+            if (referencePairs?.Add(source, target) == false)
+            {
+                return;
+            }
+
+            T copy;
+            if (TryCustomCopy(source, target, settings, out copy))
+            {
+                return;
+            }
+
+            CollectionItems(source, target, settings, referencePairs);
+            Members(source, target, settings, referencePairs);
+        }
+
+        private static bool TryCloneWithoutSync<T, TSettings>(
+            T sourceItem,
+            T targetItem,
+            TSettings settings,
+            out T clone)
+            where TSettings : class, IMemberSettings
+        {
+            if (sourceItem == null ||
+                settings.ReferenceHandling == ReferenceHandling.References ||
+                ReferenceEquals(sourceItem, targetItem))
+            {
+                clone = sourceItem;
+                return false;
+            }
+
             T copy;
             if (TryCopyValue(sourceItem, targetItem, settings, out copy))
             {
-                return copy;
+                clone = copy;
+                return false;
             }
 
-            if (TryCustomCopy(sourceItem, targetItem, settings, out copy))
+            if (TryCustomCopy(sourceItem, targetItem, settings, out clone))
             {
-                return copy;
+                return false;
             }
 
             switch (settings.ReferenceHandling)
             {
                 case ReferenceHandling.References:
-                    return sourceItem;
+                    clone = sourceItem;
+                    return false;
                 case ReferenceHandling.Structural:
                     if (targetItem == null)
                     {
-                        targetItem = (T)CreateInstance(sourceItem, settings);
+                        clone = (T)CreateInstance(sourceItem, settings);
+                    }
+                    else
+                    {
+                        clone = targetItem;
                     }
 
-                    Sync(sourceItem, targetItem, settings, referencePairs);
-                    return targetItem;
+                    return true;
                 case ReferenceHandling.Throw:
                     throw State.Throw.ShouldNeverGetHereException();
                 default:

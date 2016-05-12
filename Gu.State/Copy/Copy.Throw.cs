@@ -67,10 +67,10 @@
         internal static class Throw
         {
             // ReSharper disable once UnusedParameter.Local
-            internal static void ReadonlyMemberDiffers<T>(
+            internal static void ReadonlyMemberDiffers(
                 SourceAndTargetValue sourceAndTargetValue,
                 MemberInfo member,
-                T settings) where T : class, IMemberSettings
+                IMemberSettings settings)
             {
                 var error = new ReadonlyMemberDiffersError(sourceAndTargetValue, member);
                 var typeErrors = new TypeErrors(sourceAndTargetValue.Source?.GetType(), error);
@@ -80,10 +80,10 @@
             }
 
             // ReSharper disable once UnusedParameter.Local
-            internal static Exception CannotCopyFixesSizeCollections<TSettings>(
+            internal static Exception CannotCopyFixesSizeCollections(
                 IEnumerable source,
                 IEnumerable target,
-                TSettings settings) where TSettings : class, IMemberSettings
+                IMemberSettings settings)
             {
                 var error = new CannotCopyFixedSizeCollectionsError(source, target);
                 var typeErrors = new TypeErrors(target.GetType(), error);
@@ -91,10 +91,10 @@
                 return new InvalidOperationException(message);
             }
 
-            internal static InvalidOperationException CreateCannotCreateInstanceException<TSettings>(
+            internal static InvalidOperationException CreateCannotCreateInstanceException(
                 object sourceValue,
-                TSettings settings,
-                Exception exception) where TSettings : class, IMemberSettings
+                IMemberSettings settings,
+                Exception exception)
             {
                 var cannotCopyError = new CannotCreateInstanceError(sourceValue);
                 var typeErrors = new TypeErrors(sourceValue.GetType(), new Error[] { cannotCopyError });

@@ -75,7 +75,7 @@
                 var sv = source[key];
                 TValue tv;
                 target.TryGetValue(key, out tv);
-                var copy = State.Copy.Item(sv, tv, settings, referencePairs, settings.IsImmutable(sv.GetType()));
+                var copy = State.Copy.CloneAndSync(sv, tv, settings, referencePairs, settings.IsImmutable(sv.GetType()));
                 target[key] = copy;
             }
         }

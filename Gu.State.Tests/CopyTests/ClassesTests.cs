@@ -215,7 +215,6 @@ namespace Gu.State.Tests.CopyTests
         [Test]
         public void WithListOfComplexPropertyToEmptyReference()
         {
-            Assert.Inconclusive("Not sure how to handle this");
             var source = new WithListProperty<ComplexType>();
             source.Items.Add(new ComplexType("a", 1));
             var target = new WithListProperty<ComplexType>();

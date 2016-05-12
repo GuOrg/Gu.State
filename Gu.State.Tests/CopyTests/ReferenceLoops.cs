@@ -67,10 +67,13 @@ namespace Gu.State.Tests.CopyTests
             this.CopyMethod(source, target, ReferenceHandling.Structural);
             var expected = new[] { new ComplexType("a", 1), new ComplexType("a", 1) };
             CollectionAssert.AreEqual(expected, source, ComplexType.Comparer);
+            Assert.AreSame(source[0], source[1]);
+
             CollectionAssert.AreEqual(expected, target, ComplexType.Comparer);
+            Assert.AreSame(target[0], target[1]);
         }
 
-        [Explicit(IgnoredTests.NewFeature)]
+        //[Explicit(IgnoredTests.NewFeature)]
         [Test]
         public void CollectionWithSelf()
         {

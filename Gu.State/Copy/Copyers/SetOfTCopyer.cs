@@ -123,7 +123,7 @@
                 var result = this.inner.Equals(x, y);
                 if (result && this.isCopying)
                 {
-                    State.Copy.Item(x, y, this.settings, this.referencePairs, false);
+                    State.Copy.CloneAndSync(x, y, this.settings, this.referencePairs, false);
                 }
 
                 return result;

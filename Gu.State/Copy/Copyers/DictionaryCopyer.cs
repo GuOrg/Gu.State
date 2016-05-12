@@ -64,7 +64,7 @@
             {
                 var sv = source[key];
                 var tv = target.ElementAtOrDefault(key);
-                var copy = State.Copy.Item(sv, tv, settings, referencePairs, settings.IsImmutable(sv.GetType()));
+                var copy = State.Copy.CloneAndSync(sv, tv, settings, referencePairs, settings.IsImmutable(sv.GetType()));
                 target[key] = copy;
             }
         }

@@ -25,51 +25,40 @@
             }
         }
 
-        private static void Sync<T>(T source, T target, IMemberSettings settings)
-            where T : class
-        {
-            ////T copy;
-            ////if (TryCustomCopy(source, target, settings, out copy))
-            ////{
-            ////    if (copy != null && !ReferenceEquals(target, copy))
-            ////    {
-            ////        var message = $"The type {source.GetType()} has custom copy specified. For the root object the copy must be a side effect.\r\n" +
-            ////                      $"This means that the custom copy must return null or the target instance.\r\n" +
-            ////                      $"Also it makes little sense using this method with custom copy for the root type.";
-            ////        throw new InvalidOperationException(message);
-            ////    }
-
-            ////    return copy;
-            ////}
-
-            using (var borrowed = settings.ReferenceHandling == ReferenceHandling.Structural
-                                   ? ReferencePairCollection.Borrow()
-                                   : null)
-            {
-                Sync(source, target, settings, borrowed?.Value);
-            }
-        }
-
-        private static void Sync<T>(T source, T target, IMemberSettings settings, ReferencePairCollection referencePairs)
+        private static void Members<T>(T source, T target, IMemberSettings settings, ReferencePairCollection referencePairs)
         {
             Debug.Assert(source != null, nameof(source));
             Debug.Assert(target != null, nameof(target));
             Debug.Assert(source.GetType() == target.GetType(), "Must be same type");
-            Verify.CanCopyMemberValues(source, target, settings);
 
-            if (referencePairs?.Add(source, target) == false)
+            using (var borrowed = ListPool<IGetterAndSetter>.Borrow())
             {
-                return;
-            }
+                foreach (var member in settings.GetMembers(source.GetType()))
+                {
+                    if (settings.IsIgnoringMember(member))
+                    {
+                        continue;
+                    }
 
-            T copy;
-            if (TryCustomCopy(source, target, settings, out copy))
-            {
-                return;
-            }
+                    var getterAndSetter = settings.GetOrCreateGetterAndSetter(member);
+                    Member(source, target, settings, referencePairs, getterAndSetter);
+                    if (getterAndSetter.IsInitOnly)
+                    {
+                        borrowed.Value.Add(getterAndSetter);
+                    }
+                }
 
-            CollectionItems(source, target, settings, referencePairs);
-            Members(source, target, settings, referencePairs);
+                foreach (var getterAndSetter in borrowed.Value)
+                {
+                    var sv = getterAndSetter.GetValue(source);
+                    var tv = getterAndSetter.GetValue(target);
+
+                    if (!EqualBy.MemberValues(sv, tv, settings))
+                    {
+                        Throw.ReadonlyMemberDiffers(new SourceAndTargetValue(source, sv, target, tv), getterAndSetter.Member, settings);
+                    }
+                }
+            }
         }
 
         private static void Member<T>(
@@ -114,46 +103,19 @@
                 return;
             }
 
-            var copy = Item(sv, tv, settings, referencePairs, false);
-            if (!ReferenceEquals(tv, copy))
+            object clone;
+            if (TryCloneWithoutSync(sv, tv, settings, out clone))
             {
-                getterAndSetter.SetValue(target, copy);
+                if (!ReferenceEquals(tv, clone))
+                {
+                    getterAndSetter.SetValue(target, clone);
+                }
+
+                Sync(sv, clone, settings, referencePairs);
             }
-        }
-
-        private static void Members<T>(T source, T target, IMemberSettings settings, ReferencePairCollection referencePairs)
-        {
-            Debug.Assert(source != null, nameof(source));
-            Debug.Assert(target != null, nameof(target));
-            Debug.Assert(source.GetType() == target.GetType(), "Must be same type");
-
-            using (var borrowed = ListPool<IGetterAndSetter>.Borrow())
+            else if (!ReferenceEquals(tv, clone))
             {
-                foreach (var member in settings.GetMembers(source.GetType()))
-                {
-                    if (settings.IsIgnoringMember(member))
-                    {
-                        continue;
-                    }
-
-                    var getterAndSetter = settings.GetOrCreateGetterAndSetter(member);
-                    Member(source, target, settings, referencePairs, getterAndSetter);
-                    if (getterAndSetter.IsInitOnly)
-                    {
-                        borrowed.Value.Add(getterAndSetter);
-                    }
-                }
-
-                foreach (var getterAndSetter in borrowed.Value)
-                {
-                    var sv = getterAndSetter.GetValue(source);
-                    var tv = getterAndSetter.GetValue(target);
-
-                    if (!EqualBy.MemberValues(sv, tv, settings))
-                    {
-                        Throw.ReadonlyMemberDiffers(new SourceAndTargetValue(source, sv, target, tv), getterAndSetter.Member, settings);
-                    }
-                }
+                getterAndSetter.SetValue(target, clone);
             }
         }
     }
