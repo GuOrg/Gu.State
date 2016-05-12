@@ -74,7 +74,7 @@
                 return copy;
             }
 
-            CopyCollectionItems(source, target, MemberValues, settings, referencePairs);
+            CollectionItems(source, target, MemberValues, settings, referencePairs);
             MutableMembers(source, target, settings, referencePairs);
             InitiOnlyMembers(source, target, settings, referencePairs);
             return target;
@@ -96,19 +96,6 @@
             {
                 MutableMember(source, target, settings, referencePairs, member);
             }
-        }
-
-        private static bool TryCustomCopy<T>(T source, T target, IMemberSettings settings, out T copy)
-        {
-            CustomCopy copyer;
-            if (settings.TryGetCopyer(source.GetType(), out copyer))
-            {
-                copy = ((CustomCopy<T>)copyer).Copy(source, target);
-                return true;
-            }
-
-            copy = default(T);
-            return false;
         }
 
         private static void MutableMembers<T>(T source, T target, IMemberSettings settings, ReferencePairCollection referencePairs)
