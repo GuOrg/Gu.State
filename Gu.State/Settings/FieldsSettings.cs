@@ -44,13 +44,13 @@
         /// <summary>
         /// Creates an instance of <see cref="FieldsSettings"/>. or gets from cache.
         /// </summary>
-        /// <param name="bindingFlags">
-        /// The binding flags to use when getting fields
-        /// Default is BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic
-        /// </param>
         /// <param name="referenceHandling">
         /// If Structural is used property values for sub fields are copied for the entire graph.
         /// Activator.CreateInstance is sued to new up references so a default constructor is required, can be private
+        /// </param>
+        /// <param name="bindingFlags">
+        /// The binding flags to use when getting fields
+        /// Default is BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic
         /// </param>
         /// <returns>An instance of <see cref="FieldsSettings"/></returns>
         public static FieldsSettings GetOrCreate(

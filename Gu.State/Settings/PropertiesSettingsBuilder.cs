@@ -81,8 +81,9 @@
         /// <summary>
         /// Sample: AddExplicitProperty{<typeparamref name="TSource"/>}(x => x.Bar)
         /// </summary>
-        /// <typeparam name="TSource"></typeparam>
-        /// <param name="property"></param>
+        /// <typeparam name="TSource">The type of the parameter in the lambda</typeparam>
+        /// <param name="property">Sample x => x.SomeProperty</param>
+        /// <returns>Returns self for chaining.</returns>
         public PropertiesSettingsBuilder IgnoreProperty<TSource>(Expression<Func<TSource, object>> property)
         {
             var memberExpression = property.Body as MemberExpression;

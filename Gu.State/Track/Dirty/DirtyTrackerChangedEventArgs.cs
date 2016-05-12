@@ -9,7 +9,7 @@ namespace Gu.State
         private readonly DirtyTrackerNode node;
 
         public DirtyTrackerChangedEventArgs(
-            DirtyTrackerNode node, 
+            DirtyTrackerNode node,
             object key,
             DirtyTrackerChangedEventArgs previous = null)
         {

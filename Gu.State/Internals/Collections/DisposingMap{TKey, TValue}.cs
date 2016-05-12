@@ -64,7 +64,7 @@
             this.collectionItems.Value.RemoveAt(index);
         }
 
-        public void ClearIndexTrackers()
+        internal void ClearIndexTrackers()
         {
             if (!this.collectionItems.IsValueCreated)
             {

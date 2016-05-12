@@ -31,7 +31,7 @@
                 }
                 else
                 {
-                    foreach (var nested in GetIndices(indices, array, dimension+1))
+                    foreach (var nested in GetIndices(indices, array, dimension + 1))
                     {
                         yield return nested;
                     }

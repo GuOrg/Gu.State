@@ -7,7 +7,7 @@
     {
         public static readonly ArrayDiffBy Default = new ArrayDiffBy();
 
-        internal static bool TryGetOrCreate(object x, object y, out IDiffBy result)
+        public static bool TryGetOrCreate(object x, object y, out IDiffBy result)
         {
             if (x is Array && y is Array)
             {
@@ -39,27 +39,6 @@
             return comparer;
         }
 
-        private void AddDiffs<TSettings>(
-            DiffBuilder collectionBuilder,
-            Array x,
-            Array y,
-            TSettings settings,
-            Action<DiffBuilder, object, object, object, TSettings> itemDiff)
-                where TSettings : IMemberSettings
-        {
-            RankDiff rankDiff;
-            if (TryGetRankDiff(x, y, out rankDiff))
-            {
-                collectionBuilder.Add(rankDiff);
-                return;
-            }
-
-            foreach (var index in x.Indices())
-            {
-                itemDiff(collectionBuilder, x.GetValue(index), y.GetValue(index), new Index(index), settings);
-            }
-        }
-
         private static bool TryGetRankDiff(Array x, Array y, out RankDiff rankDiff)
         {
             if (x.Length != y.Length || x.Rank != y.Rank)
@@ -80,6 +59,27 @@
 
             rankDiff = null;
             return false;
+        }
+
+        private void AddDiffs<TSettings>(
+            DiffBuilder collectionBuilder,
+            Array x,
+            Array y,
+            TSettings settings,
+            Action<DiffBuilder, object, object, object, TSettings> itemDiff)
+                where TSettings : IMemberSettings
+        {
+            RankDiff rankDiff;
+            if (TryGetRankDiff(x, y, out rankDiff))
+            {
+                collectionBuilder.Add(rankDiff);
+                return;
+            }
+
+            foreach (var index in x.Indices())
+            {
+                itemDiff(collectionBuilder, x.GetValue(index), y.GetValue(index), new Index(index), settings);
+            }
         }
     }
 }

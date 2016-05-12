@@ -102,7 +102,7 @@
                             references));
                 }
 
-                return new PropertySynchronizer<INotifyPropertyChanged>((INotifyPropertyChanged)sv, (INotifyPropertyChanged)tv, settings, references);
+                return new PropertySynchronizer<INotifyPropertyChanged>((INotifyPropertyChanged)sv, (INotifyPropertyChanged)tv, settings, null);
             }
 
             private void OnSourcePropertyChanged(object sender, PropertyChangedEventArgs e)

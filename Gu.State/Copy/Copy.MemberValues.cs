@@ -34,19 +34,19 @@
                 IMemberSettings settings)
                 where T : class
             {
-                //T copy;
-                //if (TryCustomCopy(source, target, settings, out copy))
-                //{
-                //    if (copy != null && !ReferenceEquals(target, copy))
-                //    {
-                //        var message = $"The type {source.GetType()} has custom copy specified. For the root object the copy must be a side effect.\r\n" +
-                //                      $"This means that the custom copy must return null or the target instance.\r\n" +
-                //                      $"Also it makes little sense using this method with custom copy for the root type.";
-                //        throw new InvalidOperationException(message);
-                //    }
+                ////T copy;
+                ////if (TryCustomCopy(source, target, settings, out copy))
+                ////{
+                ////    if (copy != null && !ReferenceEquals(target, copy))
+                ////    {
+                ////        var message = $"The type {source.GetType()} has custom copy specified. For the root object the copy must be a side effect.\r\n" +
+                ////                      $"This means that the custom copy must return null or the target instance.\r\n" +
+                ////                      $"Also it makes little sense using this method with custom copy for the root type.";
+                ////        throw new InvalidOperationException(message);
+                ////    }
 
-                //    return copy;
-                //}
+                ////    return copy;
+                ////}
 
                 using (var borrowed = settings.ReferenceHandling == ReferenceHandling.Structural
                                        ? ReferencePairCollection.Borrow()

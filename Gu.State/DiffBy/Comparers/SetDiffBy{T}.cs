@@ -46,12 +46,12 @@
             }
         }
 
+        // ReSharper disable once UnusedParameter.Local
         private void AddDiffs<TSettings>(
             DiffBuilder collectionBuilder,
             ISet<T> x,
             ISet<T> y,
             TSettings settings,
-            // ReSharper disable once UnusedParameter.Local
             Action<DiffBuilder, object, object, object, TSettings> itemDiff)
                 where TSettings : IMemberSettings
         {
