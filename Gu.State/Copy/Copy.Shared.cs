@@ -48,21 +48,23 @@
             bool isImmutable)
             where TSettings : class, IMemberSettings
         {
-            if (sourceItem == null ||
-                settings.ReferenceHandling == ReferenceHandling.References ||
-                isImmutable ||
-                ReferenceEquals(sourceItem, targetItem))
-            {
-                return sourceItem;
-            }
+            throw new NotImplementedException("message");
+            
+            //if (sourceItem == null ||
+            //    settings.ReferenceHandling == ReferenceHandling.References ||
+            //    isImmutable ||
+            //    ReferenceEquals(sourceItem, targetItem))
+            //{
+            //    return sourceItem;
+            //}
 
-            T clone;
-            if (TryCloneWithoutSync(sourceItem, targetItem, settings, out clone))
-            {
-                Sync(sourceItem, clone, settings, referencePairs);
-            }
+            //T clone;
+            //if (CloneSetAndSync(sourceItem, targetItem, settings, out clone))
+            //{
+            //    Sync(sourceItem, clone, settings, referencePairs);
+            //}
 
-            return clone;
+            //return clone;
         }
 
         private static void Sync<T>(T source, T target, IMemberSettings settings)
@@ -112,49 +114,49 @@
             Members(source, target, settings, referencePairs);
         }
 
-        private static bool TryCloneWithoutSync<T, TSettings>(
+        private static void CloneSetAndSync<T>(
             T sourceItem,
             T targetItem,
-            TSettings settings,
-            out T clone)
-            where TSettings : class, IMemberSettings
+            Action<T> setter,
+            IMemberSettings settings,
+            ReferencePairCollection referencePairs)
         {
             if (sourceItem == null ||
                 settings.ReferenceHandling == ReferenceHandling.References ||
                 ReferenceEquals(sourceItem, targetItem))
             {
-                clone = sourceItem;
-                return false;
+                setter(sourceItem);
             }
 
             T copy;
-            if (TryCopyValue(sourceItem, targetItem, settings, out copy))
+            if (TryCopyValue(sourceItem, targetItem, settings, out copy) ||
+                TryCustomCopy(sourceItem, targetItem, settings, out copy))
             {
-                clone = copy;
-                return false;
-            }
-
-            if (TryCustomCopy(sourceItem, targetItem, settings, out clone))
-            {
-                return false;
+                setter(copy);
             }
 
             switch (settings.ReferenceHandling)
             {
                 case ReferenceHandling.References:
-                    clone = sourceItem;
-                    return false;
+                    setter(sourceItem);
+                    return;
                 case ReferenceHandling.Structural:
                     if (targetItem == null)
                     {
-                        clone = (T)CreateInstance(sourceItem, settings);
+                        copy = (T)CreateInstance(sourceItem, settings);
                     }
                     else
                     {
-                        clone = targetItem;
+                        copy = targetItem;
                     }
 
-                    return true;
+                    if (!ReferenceEquals(targetItem, copy))
+                    {
+                        setter(copy);
+                    }
+
+                    Sync(sourceItem, copy, settings, referencePairs);
+                    return;
                 case ReferenceHandling.Throw:
                     throw State.Throw.ShouldNeverGetHereException();
                 default:

@@ -104,19 +104,7 @@
             }
 
             object clone;
-            if (TryCloneWithoutSync(sv, tv, settings, out clone))
-            {
-                if (!ReferenceEquals(tv, clone))
-                {
-                    getterAndSetter.SetValue(target, clone);
-                }
-
-                Sync(sv, clone, settings, referencePairs);
-            }
-            else if (!ReferenceEquals(tv, clone))
-            {
-                getterAndSetter.SetValue(target, clone);
-            }
+            CloneSetAndSync(sv, tv, copy => getterAndSetter.SetValue(target, copy), settings, referencePairs);
         }
     }
 }
