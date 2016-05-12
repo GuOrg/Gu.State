@@ -74,7 +74,7 @@
                 return copy;
             }
 
-            CollectionItems(source, target, MemberValues, settings, referencePairs);
+            CollectionItems(source, target, settings, referencePairs);
             MutableMembers(source, target, settings, referencePairs);
             InitiOnlyMembers(source, target, settings, referencePairs);
             return target;

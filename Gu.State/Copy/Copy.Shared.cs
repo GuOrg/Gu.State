@@ -45,10 +45,9 @@
         internal static T Item<T, TSettings>(
             T sourceItem,
             T targetItem,
-            Func<object, object, TSettings, ReferencePairCollection, object> copyItem,
             TSettings settings,
             ReferencePairCollection referencePairs,
-            bool isImmutable) 
+            bool isImmutable)
             where TSettings : class, IMemberSettings
         {
             if (sourceItem == null || settings.ReferenceHandling == ReferenceHandling.References || isImmutable
@@ -73,7 +72,7 @@
                         targetItem = (T)CreateInstance(sourceItem, null, settings);
                     }
 
-                    copyItem(sourceItem, targetItem, settings, referencePairs);
+                    MemberValues(sourceItem, targetItem, settings, referencePairs);
                     return targetItem;
                 case ReferenceHandling.Throw:
                     throw State.Throw.ShouldNeverGetHereException();

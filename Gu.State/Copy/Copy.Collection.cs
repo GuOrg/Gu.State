@@ -8,7 +8,6 @@
         private static void CollectionItems<TSettings>(
             object source,
             object target,
-            Func<object, object, TSettings, ReferencePairCollection, object> copyItem,
             TSettings settings,
             ReferencePairCollection referencePairs)
              where TSettings : class, IMemberSettings
@@ -31,7 +30,7 @@
                 DictionaryCopyer.TryGetOrCreate(source, target, out copyer) ||
                 SetOfTCopyer.TryGetOrCreate(source, target, out copyer))
             {
-                copyer.Copy(source, target, copyItem, settings, referencePairs);
+                copyer.Copy(source, target, settings, referencePairs);
                 return;
             }
 

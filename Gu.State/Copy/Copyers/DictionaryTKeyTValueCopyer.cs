@@ -28,7 +28,6 @@
         public void Copy<TSettings>(
             object source,
             object target,
-            Func<object, object, TSettings, ReferencePairCollection, object> copyItem,
             TSettings settings,
             ReferencePairCollection referencePairs)
             where TSettings : class, IMemberSettings
@@ -41,13 +40,12 @@
             var copyMethod = this.GetType()
                                  .GetMethod(nameof(State.Copy), BindingFlags.NonPublic | BindingFlags.Static)
                                  .MakeGenericMethod(genericArguments[0], genericArguments[1], typeof(TSettings));
-            copyMethod.Invoke(null, new[] { source, target, copyItem, settings, referencePairs });
+            copyMethod.Invoke(null, new[] { source, target, settings, referencePairs });
         }
 
         internal static void Copy<TKey, TValue, TSettings>(
             IDictionary<TKey, TValue> source,
             IDictionary<TKey, TValue> target,
-            Func<object, object, TSettings, ReferencePairCollection, object> copyItem,
             TSettings settings,
             ReferencePairCollection referencePairs)
             where TSettings : class, IMemberSettings
@@ -77,7 +75,7 @@
                 var sv = source[key];
                 TValue tv;
                 target.TryGetValue(key, out tv);
-                var copy = State.Copy.Item(sv, tv, copyItem, settings, referencePairs, settings.IsImmutable(sv.GetType()));
+                var copy = State.Copy.Item(sv, tv, settings, referencePairs, settings.IsImmutable(sv.GetType()));
                 target[key] = copy;
             }
         }
