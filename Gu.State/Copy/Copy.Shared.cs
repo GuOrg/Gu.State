@@ -194,7 +194,7 @@
             CustomCopy copyer;
             if (settings.TryGetCopyer(source.GetType(), out copyer))
             {
-                copy = ((CustomCopy<T>)copyer).Copy(source, target);
+                copy = (T)copyer.Copy(source, target);
                 return true;
             }
 

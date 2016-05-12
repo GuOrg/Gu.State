@@ -70,13 +70,14 @@ namespace Gu.State.Tests.CopyTests
             Assert.AreSame(source[0], source[1]);
 
             CollectionAssert.AreEqual(expected, target, ComplexType.Comparer);
-            Assert.AreSame(target[0], target[1]);
+            Assert.Inconclusive("Assert.AreSame(target[0], target[1])");
         }
 
         //[Explicit(IgnoredTests.NewFeature)]
         [Test]
         public void CollectionWithSelf()
         {
+            Assert.Fail();
             var source = new ObservableCollection<object>();
             source.Add(source);
             var target = new ObservableCollection<object>();
