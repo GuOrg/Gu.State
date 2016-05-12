@@ -26,44 +26,7 @@
             }
         }
 
-        internal static bool TryGetValueEquals<T>(T x, T y, IMemberSettings settings, out bool result)
-        {
-            if (ReferenceEquals(x, y))
-            {
-                result = true;
-                return true;
-            }
-
-            if (x == null || y == null)
-            {
-                result = false;
-                return true;
-            }
-
-            if (x.GetType() != y.GetType())
-            {
-                result = false;
-                return true;
-            }
-
-            CastingComparer comparer;
-            if (settings.TryGetComparer(x.GetType(), out comparer))
-            {
-                result = comparer.Equals(x, y);
-                return true;
-            }
-
-            if (settings.IsEquatable(x.GetType()))
-            {
-                result = Equals(x, y);
-                return true;
-            }
-
-            result = false;
-            return false;
-        }
-
-        private static bool MemberValues<T>(
+        internal static bool MemberValues<T>(
             T x,
             T y,
             IMemberSettings settings,
@@ -79,7 +42,7 @@
 
             if (x is IEnumerable)
             {
-                if (!EnumerableEquals(x, y, MemberValues, settings, referencePairs))
+                if (!EnumerableEquals(x, y, settings, referencePairs))
                 {
                     return false;
                 }
@@ -118,6 +81,43 @@
             }
 
             return true;
+        }
+
+        internal static bool TryGetValueEquals<T>(T x, T y, IMemberSettings settings, out bool result)
+        {
+            if (ReferenceEquals(x, y))
+            {
+                result = true;
+                return true;
+            }
+
+            if (x == null || y == null)
+            {
+                result = false;
+                return true;
+            }
+
+            if (x.GetType() != y.GetType())
+            {
+                result = false;
+                return true;
+            }
+
+            CastingComparer comparer;
+            if (settings.TryGetComparer(x.GetType(), out comparer))
+            {
+                result = comparer.Equals(x, y);
+                return true;
+            }
+
+            if (settings.IsEquatable(x.GetType()))
+            {
+                result = Equals(x, y);
+                return true;
+            }
+
+            result = false;
+            return false;
         }
 
         // ReSharper disable once UnusedParameter.Local

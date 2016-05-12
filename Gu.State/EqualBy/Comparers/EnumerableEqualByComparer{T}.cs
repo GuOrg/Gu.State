@@ -14,11 +14,10 @@
         }
 
         /// <inheritdoc />
-        public override bool Equals<TSetting>(
+        public override bool Equals(
             object x,
             object y,
-            Func<object, object, TSetting, ReferencePairCollection, bool> compareItem,
-            TSetting settings,
+            IMemberSettings settings,
             ReferencePairCollection referencePairs)
         {
             bool result;
@@ -37,7 +36,7 @@
 
             return isEquatable
                        ? ItemsEquals((IEnumerable<T>)x, (IEnumerable<T>)y, EqualityComparer<T>.Default.Equals)
-                       : ItemsEquals((IEnumerable<T>)x, (IEnumerable<T>)y, (xi, yi) => compareItem(xi, yi, settings, referencePairs));
+                       : ItemsEquals((IEnumerable<T>)x, (IEnumerable<T>)y, (xi, yi) => EqualBy.MemberValues(xi, yi, settings, referencePairs));
         }
 
         private static bool ItemsEquals(IEnumerable<T> x, IEnumerable<T> y, Func<T, T, bool> compare)

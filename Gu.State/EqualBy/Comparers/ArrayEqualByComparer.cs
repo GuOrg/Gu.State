@@ -25,11 +25,10 @@ namespace Gu.State
         }
 
         /// <inheritdoc />
-        public override bool Equals<TSetting>(
+        public override bool Equals(
             object x,
             object y,
-            Func<object, object, TSetting, ReferencePairCollection, bool> compareItem,
-            TSetting settings,
+            IMemberSettings settings,
             ReferencePairCollection referencePairs)
         {
             bool result;
@@ -38,16 +37,14 @@ namespace Gu.State
                 return result;
             }
 
-            return Equals((Array)x, (Array)y, compareItem, settings, referencePairs);
+            return Equals((Array)x, (Array)y, settings, referencePairs);
         }
 
-        private static bool Equals<TSetting>(
+        private static bool Equals(
             Array x,
             Array y,
-            Func<object, object, TSetting, ReferencePairCollection, bool> compareItem,
-            TSetting settings,
+            IMemberSettings settings,
             ReferencePairCollection referencePairs)
-            where TSetting : IMemberSettings
         {
             if (!Is.SameSize(x, y))
             {
@@ -64,7 +61,7 @@ namespace Gu.State
 
             return isEquatable
                        ? ItemsEquals(x, y, Equals)
-                       : ItemsEquals(x, y, (xi, yi) => compareItem(xi, yi, settings, referencePairs));
+                       : ItemsEquals(x, y, (xi, yi) => EqualBy.MemberValues(xi, yi, settings, referencePairs));
         }
 
         private static bool ItemsEquals(Array x, Array y, Func<object, object, bool> compare)

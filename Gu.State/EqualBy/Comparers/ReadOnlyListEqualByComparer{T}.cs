@@ -11,11 +11,10 @@ namespace Gu.State
         {
         }
 
-        public override bool Equals<TSetting>(
+        public override bool Equals(
             object x,
             object y,
-            Func<object, object, TSetting, ReferencePairCollection, bool> compareItem,
-            TSetting settings,
+            IMemberSettings settings,
             ReferencePairCollection referencePairs)
         {
             bool result;
@@ -41,14 +40,13 @@ namespace Gu.State
 
             return isEquatable
                        ? ItemsEquals(xl, yl, EqualityComparer<T>.Default.Equals)
-                       : Equals(xl, yl, compareItem, settings, referencePairs);
+                       : Equals(xl, yl, settings, referencePairs);
         }
 
-        private static bool Equals<TSetting>(
+        private static bool Equals(
             IReadOnlyList<T> x,
             IReadOnlyList<T> y,
-            Func<object, object, TSetting, ReferencePairCollection, bool> compareItem,
-            TSetting settings,
+            IMemberSettings settings,
             ReferencePairCollection referencePairs)
         {
             for (var i = 0; i < x.Count; i++)
@@ -60,7 +58,7 @@ namespace Gu.State
                     continue;
                 }
 
-                if (!compareItem(xv, yv, settings, referencePairs))
+                if (!EqualBy.MemberValues(xv, yv, settings, referencePairs))
                 {
                     return false;
                 }

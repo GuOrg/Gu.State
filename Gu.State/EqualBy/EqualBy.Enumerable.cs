@@ -7,7 +7,6 @@
         private static bool EnumerableEquals<TSetting>(
             object x,
             object y,
-            Func<object, object, TSetting, ReferencePairCollection, bool> compareItem,
             TSetting settings,
             ReferencePairCollection referencePairs)
             where TSetting : class, IMemberSettings
@@ -21,7 +20,7 @@
                 ReadOnlyDictionaryEqualByComparer.TryGetOrCreate(x, y, out comparer) ||
                 EnumerableEqualByComparer.TryGetOrCreate(x, y, out comparer))
             {
-                return comparer.Equals(x, y, compareItem, settings, referencePairs);
+                return comparer.Equals(x, y, settings, referencePairs);
             }
 
             throw Throw.ShouldNeverGetHereException($"Could not compare enumerables of type {x.GetType().PrettyName()}");
