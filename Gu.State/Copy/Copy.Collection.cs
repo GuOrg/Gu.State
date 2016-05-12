@@ -1,9 +1,21 @@
 ﻿namespace Gu.State
 {
+    using System;
     using System.Collections;
+    using System.Collections.Generic;
 
     public static partial class Copy
     {
+        private static bool IsCopyableCollectionType(Type type)
+        {
+            return type.IsArray ||
+                   typeof(IList).IsAssignableFrom(type) ||
+                   type.Implements(typeof(IList<>)) ||
+                   typeof(IDictionary).IsAssignableFrom(type) ||
+                   type.Implements(typeof(IDictionary<,>)) ||
+                   type.Implements(typeof(ISet<>));
+        }
+
         private static void CollectionItems<TSettings>(
             object source,
             object target,

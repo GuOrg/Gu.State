@@ -1,9 +1,6 @@
 ﻿namespace Gu.State
 {
     using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Reflection;
 
     /// <summary>
     /// Defines methods for copying values from one instance to another
@@ -91,7 +88,7 @@
             }
         }
 
-        internal static bool TryCopyValue<T>(T x, T y, IMemberSettings settings, out T result)
+        private static bool TryCopyValue<T>(T x, T y, IMemberSettings settings, out T result)
         {
             if (ReferenceEquals(x, y))
             {
@@ -126,13 +123,6 @@
 
             copy = default(T);
             return false;
-        }
-
-        private static bool IsCopyableCollectionType(Type type)
-        {
-            return typeof(IList).IsAssignableFrom(type) ||
-                   typeof(IDictionary).IsAssignableFrom(type) ||
-                   type.Implements(typeof(ISet<>));
         }
     }
 }
