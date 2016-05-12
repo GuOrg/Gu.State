@@ -62,20 +62,21 @@
               T target,
               IMemberSettings settings,
               ReferencePairCollection referencePairs)
-              where T : class
             {
                 Debug.Assert(source != null, nameof(source));
                 Debug.Assert(target != null, nameof(target));
                 Debug.Assert(source.GetType() == target.GetType(), "Must be same type");
                 Verify.CanCopyMemberValues(source, target, settings);
-                if (referencePairs?.Contains(source, target) == true)
-                {
-                    return target;
-                }
 
                 if (referencePairs?.Add(source, target) == false)
                 {
                     return target;
+                }
+
+                T copy;
+                if (TryCustomCopy(source, target, settings, out copy))
+                {
+                    return copy;
                 }
 
                 CopyCollectionItems(source, target, Copy, settings, referencePairs);
@@ -90,7 +91,6 @@
                 IMemberSettings settings,
                 MemberInfo member,
                 ReferencePairCollection referencePairs)
-                where T : class
             {
                 var getterAndSetter = settings.GetOrCreateGetterAndSetter(member);
                 if (getterAndSetter.IsInitOnly)
@@ -117,7 +117,6 @@
             }
 
             private static void MutableMembers<T>(T source, T target, IMemberSettings settings, ReferencePairCollection referencePairs)
-                where T : class
             {
                 Debug.Assert(source != null, nameof(source));
                 Debug.Assert(target != null, nameof(target));
@@ -135,7 +134,6 @@
                 IMemberSettings settings,
                 ReferencePairCollection referencePairs,
                 MemberInfo memberInfo)
-                where T : class
             {
                 if (settings.IsIgnoringMember(memberInfo))
                 {

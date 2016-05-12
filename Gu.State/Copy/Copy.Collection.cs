@@ -16,7 +16,8 @@
         {
             if (sourceItem == null ||
                 settings.ReferenceHandling == ReferenceHandling.References ||
-                isImmutable)
+                isImmutable ||
+                ReferenceEquals(sourceItem, targetItem))
             {
                 return sourceItem;
             }
