@@ -24,7 +24,7 @@
             var y = ys.Split(',').Select(int.Parse);
             var comparer = EnumerableEqualByComparer<int>.Default;
             var settings = PropertiesSettings.GetOrCreate();
-            Assert.AreEqual(expected, comparer.Equals(x, y, null, settings, null));
+            Assert.AreEqual(expected, comparer.Equals(x, y, settings, null));
         }
     }
 }

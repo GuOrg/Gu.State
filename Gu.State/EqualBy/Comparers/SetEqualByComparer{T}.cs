@@ -15,11 +15,10 @@
         }
 
         /// <inheritdoc />
-        public override bool Equals<TSetting>(
+        public override bool Equals(
             object x,
             object y,
-            Func<object, object, TSetting, ReferencePairCollection, bool> compareItem,
-            TSetting settings,
+            IMemberSettings settings,
             ReferencePairCollection referencePairs)
         {
             bool result;
@@ -55,10 +54,10 @@
             var hashCodeMethod = typeof(T).GetMethod(nameof(this.GetHashCode), new Type[0]);
             if (hashCodeMethod.DeclaringType == typeof(object))
             {
-                return this.ItemsEquals(xs, ys, (xi, yi) => compareItem(xi, yi, settings, referencePairs), _ => 0);
+                return this.ItemsEquals(xs, ys, (xi, yi) => EqualBy.MemberValues(xi, yi, settings, referencePairs), _ => 0);
             }
 
-            return this.ItemsEquals(xs, ys, (xi, yi) => compareItem(xi, yi, settings, referencePairs), xi => xi.GetHashCode());
+            return this.ItemsEquals(xs, ys, (xi, yi) => EqualBy.MemberValues(xi, yi, settings, referencePairs), xi => xi.GetHashCode());
         }
 
         private bool ItemsEquals(ISet<T> x, ISet<T> y, Func<T, T, bool> compare, Func<T, int> getHashCode)

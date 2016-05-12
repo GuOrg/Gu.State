@@ -13,11 +13,10 @@
         }
 
         /// <inheritdoc />
-        public override bool Equals<TSetting>(
+        public override bool Equals(
             object x,
             object y,
-            Func<object, object, TSetting, ReferencePairCollection, bool> compareItem,
-            TSetting settings,
+            IMemberSettings settings,
             ReferencePairCollection referencePairs)
         {
             bool result;
@@ -43,14 +42,13 @@
                 return KeysAndValuesEquals(xd, yd, (xi, yi) => ReferenceEquals(xi, yi));
             }
 
-            return KeysAndValuesEquals(xd, yd, compareItem, settings, referencePairs);
+            return KeysAndValuesEquals(xd, yd, settings, referencePairs);
         }
 
-        internal static bool KeysAndValuesEquals<TSetting>(
+        internal static bool KeysAndValuesEquals(
             IReadOnlyDictionary<TKey, TValue> x,
             IReadOnlyDictionary<TKey, TValue> y,
-            Func<object, object, TSetting, ReferencePairCollection, bool> compareItem,
-            TSetting settings,
+            IMemberSettings settings,
             ReferencePairCollection referencePairs)
         {
             foreach (var key in x.Keys)
@@ -68,7 +66,7 @@
                     continue;
                 }
 
-                if (!compareItem(xv, yv, settings, referencePairs))
+                if (!EqualBy.MemberValues(xv, yv, settings, referencePairs))
                 {
                     return false;
                 }
