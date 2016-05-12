@@ -2,7 +2,7 @@ namespace Gu.State
 {
     using System;
 
-    interface IDiffBy
+    internal interface IDiffBy
     {
         void AddDiffs<TSettings>(
             DiffBuilder collectionBuilder,

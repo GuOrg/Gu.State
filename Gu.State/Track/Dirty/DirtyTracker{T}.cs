@@ -33,11 +33,11 @@
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public PropertiesSettings Settings { get; }
+
         public override bool IsDirty => this.node.Value.IsDirty;
 
         internal override ValueDiff Diff => this.node.Value.Diff;
-
-        public PropertiesSettings Settings { get; }
 
         public void Dispose()
         {

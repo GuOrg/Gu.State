@@ -40,6 +40,41 @@
             return this.GetEnumerator();
         }
 
+        private static void Add(IReadOnlyCollection<Error> errors, List<Error> allErrors, List<IWithErrors> withErrors = null)
+        {
+            if (errors == null)
+            {
+                return;
+            }
+
+            foreach (var error in errors)
+            {
+                if (!allErrors.Contains(error, ErrorComparer.Default))
+                {
+                    allErrors.Add(error);
+                }
+
+                var we = error as IWithErrors;
+                if (we != null)
+                {
+                    if (withErrors == null)
+                    {
+                        withErrors = new List<IWithErrors>();
+                    }
+                    else
+                    {
+                        if (withErrors.Any(e => ReferenceEquals(e, error)))
+                        {
+                            continue;
+                        }
+                    }
+
+                    withErrors.Add(we);
+                    Add(we.Errors, allErrors, withErrors);
+                }
+            }
+        }
+
         private void Merge(Error error)
         {
             if (this.TryMerge(error as TypeErrors) || this.TryMerge(error as MemberErrors))
@@ -94,41 +129,6 @@
 
             this.errors.Add(error);
             return true;
-        }
-
-        private static void Add(IReadOnlyCollection<Error> errors, List<Error> allErrors, List<IWithErrors> withErrors = null)
-        {
-            if (errors == null)
-            {
-                return;
-            }
-
-            foreach (var error in errors)
-            {
-                if (!allErrors.Contains(error, ErrorComparer.Default))
-                {
-                    allErrors.Add(error);
-                }
-
-                var we = error as IWithErrors;
-                if (we != null)
-                {
-                    if (withErrors == null)
-                    {
-                        withErrors = new List<IWithErrors>();
-                    }
-                    else
-                    {
-                        if (withErrors.Any(e => ReferenceEquals(e, error)))
-                        {
-                            continue;
-                        }
-                    }
-
-                    withErrors.Add(we);
-                    Add(we.Errors, allErrors, withErrors);
-                }
-            }
         }
 
         private class ErrorComparer : IEqualityComparer<Error>

@@ -3,7 +3,7 @@
     using System.Collections.Generic;
 
     internal class ReferenceComparer<T> : IEqualityComparer<T>
-        where T : class 
+        where T : class
     {
         public static readonly ReferenceComparer<T> Default = new ReferenceComparer<T>();
 

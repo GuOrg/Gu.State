@@ -47,11 +47,11 @@
         /// <summary>
         /// Creates an instance of <see cref="PropertiesSettings"/> or gets it from cache.
         /// </summary>
-        /// <param name="bindingFlags">The binding flags to use when getting properties</param>
         /// <param name="referenceHandling">
         /// If Structural is used property values for sub properties are copied for the entire graph.
         /// Activator.CreateInstance is sued to new up references so a default constructor is required, can be private
         /// </param>
+        /// <param name="bindingFlags">The binding flags to use when getting properties</param>
         /// <returns>An instance of <see cref="PropertiesSettings"/></returns>
         public static PropertiesSettings GetOrCreate(
             ReferenceHandling referenceHandling = ReferenceHandling.Structural,
