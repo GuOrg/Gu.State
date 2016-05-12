@@ -44,7 +44,7 @@
                 Assert.AreEqual(false, wry.IsAlive);
             }
 
-            [Explicit(IngoredTests.MemoryLeak)]
+            [Explicit(IgnoredTests.MemoryLeak)]
             [Test]
             public void WithComplexProperty()
             {
@@ -74,7 +74,7 @@
                 Assert.AreEqual(false, wryc.IsAlive);
             }
 
-            [Explicit(IngoredTests.MemoryLeak)]
+            [Explicit(IgnoredTests.MemoryLeak)]
             [Test]
             public void DoesNotLeakTrackedProperty()
             {

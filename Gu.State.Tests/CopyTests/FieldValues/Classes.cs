@@ -4,6 +4,8 @@
 
     using NUnit.Framework;
 
+    using static CopyTypes;
+
     public class Classes : ClassesTests
     {
         public override void CopyMethod<T>(T source, T target, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excluded = null)
@@ -26,8 +28,8 @@
         [Test]
         public void WithReadonlyFieldThrows()
         {
-            var x = new CopyTypes.WithReadonlyField(1, 2);
-            var y = new CopyTypes.WithReadonlyField(3, 4);
+            var x = new WithReadonlyField(1, 2);
+            var y = new WithReadonlyField(3, 4);
             var expected = "Copy.FieldValues(x, y) failed.\r\n" +
                            "The readonly field WithReadonlyField.ReadonlyValue differs after copy.\r\n" +
                            " - Source value (int): 1.\r\n" +

@@ -26,18 +26,16 @@
         public void Copy<TSettings>(
             object source,
             object target,
-            Func<object, object, TSettings, ReferencePairCollection, object> copyItem,
             TSettings settings,
             ReferencePairCollection referencePairs)
             where TSettings : class, IMemberSettings
         {
-            Copy((IDictionary)source, (IDictionary)target, copyItem, settings, referencePairs);
+            Copy((IDictionary)source, (IDictionary)target, settings, referencePairs);
         }
 
         internal static void Copy<TSettings>(
             IDictionary source,
             IDictionary target,
-            Func<object, object, TSettings, ReferencePairCollection, object> copyItem,
             TSettings settings,
             ReferencePairCollection referencePairs)
             where TSettings : class, IMemberSettings
@@ -66,8 +64,18 @@
             {
                 var sv = source[key];
                 var tv = target.ElementAtOrDefault(key);
-                var copy = State.Copy.Item(sv, tv, copyItem, settings, referencePairs, settings.IsImmutable(sv.GetType()));
-                target[key] = copy;
+                bool created;
+                bool needsSync;
+                var clone = State.Copy.CloneWithoutSync(sv, tv, settings, out created, out needsSync);
+                if (created)
+                {
+                    target[key] = clone;
+                }
+
+                if (needsSync)
+                {
+                    State.Copy.Sync(sv, clone, settings, referencePairs);
+                }
             }
         }
     }

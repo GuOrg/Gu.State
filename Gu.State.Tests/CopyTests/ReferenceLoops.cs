@@ -45,6 +45,7 @@ namespace Gu.State.Tests.CopyTests
             {
                 Assert.Inconclusive("Not supporting this");
             }
+
             var source = new Parent("p", new Child("c"));
             var target = new Parent(null, null);
             this.CopyMethod(source, target, ReferenceHandling.Structural);
@@ -66,23 +67,26 @@ namespace Gu.State.Tests.CopyTests
             this.CopyMethod(source, target, ReferenceHandling.Structural);
             var expected = new[] { new ComplexType("a", 1), new ComplexType("a", 1) };
             CollectionAssert.AreEqual(expected, source, ComplexType.Comparer);
+            Assert.AreSame(source[0], source[1]);
+
             CollectionAssert.AreEqual(expected, target, ComplexType.Comparer);
+            Assert.Inconclusive("Assert.AreSame(target[0], target[1])");
         }
 
+        [Explicit(IgnoredTests.NewFeature)]
         [Test]
         public void CollectionWithSelf()
         {
-            Assert.Inconclusive("Probably not possible without references");
-            var source = new ObservableCollection<ICollection>();
+            var source = new ObservableCollection<object>();
             source.Add(source);
-            var target = new ObservableCollection<ICollection>();
+            var target = new ObservableCollection<object>();
 
             this.CopyMethod(source, target, ReferenceHandling.Structural);
             Assert.AreEqual(1, source.Count);
             Assert.AreEqual(1, target.Count);
 
-            Assert.AreEqual(1, source[0].Count);
-            Assert.AreEqual(1, target[0].Count);
+            Assert.AreEqual(1, ((ObservableCollection<object>)source[0]).Count);
+            Assert.AreEqual(1, ((ObservableCollection<object>)source[0]).Count);
         }
     }
 }
