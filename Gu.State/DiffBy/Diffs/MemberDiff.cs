@@ -31,7 +31,7 @@ namespace Gu.State
                 return new PropertyDiff(propertyInfo, diff);
             }
 
-            throw State.Throw.ExpectedParameterOfTypes<PropertyInfo, FieldInfo>("MemberDiff.Create(MemberInfo member, object xValue, object yValue)");
+            throw Throw.ExpectedParameterOfTypes<PropertyInfo, FieldInfo>("MemberDiff.Create(MemberInfo member, object xValue, object yValue)");
         }
     }
 }

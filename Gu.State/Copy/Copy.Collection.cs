@@ -14,7 +14,9 @@
             bool isImmutable)
             where TSettings : class, IMemberSettings
         {
-            if (sourceItem == null || settings.ReferenceHandling == ReferenceHandling.References || isImmutable)
+            if (sourceItem == null ||
+                settings.ReferenceHandling == ReferenceHandling.References ||
+                isImmutable)
             {
                 return sourceItem;
             }
@@ -32,7 +34,7 @@
                 case ReferenceHandling.Structural:
                     if (targetItem == null)
                     {
-                        targetItem = (T)State.Copy.CreateInstance(sourceItem, null, settings);
+                        targetItem = (T)CreateInstance(sourceItem, null, settings);
                     }
 
                     copyItem(sourceItem, targetItem, settings, referencePairs);
@@ -62,7 +64,7 @@
 
             if (!settings.IsEquatable(source.GetType().GetItemType()) && settings.ReferenceHandling == ReferenceHandling.Throw)
             {
-                throw Gu.State.Throw.ShouldNeverGetHereException("Should have been checked for throw before copy");
+                throw State.Throw.ShouldNeverGetHereException("Should have been checked for throw before copy");
             }
 
             ICopyer copyer;

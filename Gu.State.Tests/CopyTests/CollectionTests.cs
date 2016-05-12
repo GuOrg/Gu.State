@@ -79,6 +79,22 @@
         }
 
         [Test]
+        public void ListOfComplexSameItems()
+        {
+            var item1 = new ComplexType("a", 1);
+            var source = new List<ComplexType> { item1, item1 };
+            var item2 = new ComplexType("b", 2);
+            var target = new List<ComplexType> { item2, item2 };
+            var item = target[0];
+            this.CopyMethod(source, target, ReferenceHandling.Structural);
+            var expected = new[] { new ComplexType("a", 1), new ComplexType("a", 1) };
+            CollectionAssert.AreEqual(expected, source, ComplexType.Comparer);
+            CollectionAssert.AreEqual(expected, target, ComplexType.Comparer);
+            Assert.AreSame(item, target[0]);
+            Assert.AreNotSame(source[0], target[0]);
+        }
+
+        [Test]
         public void ObservableCollectionOfIntsToEmpty()
         {
             var source = new ObservableCollection<int> { 1, 2, 3 };

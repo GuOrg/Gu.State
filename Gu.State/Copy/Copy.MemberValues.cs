@@ -73,7 +73,11 @@
                     return target;
                 }
 
-                referencePairs?.Add(source, target);
+                if (referencePairs?.Add(source, target) == false)
+                {
+                    return target;
+                }
+
                 CopyCollectionItems(source, target, Copy, settings, referencePairs);
                 MutableMembers(source, target, settings, referencePairs);
                 InitiOnlyMembers(source, target, settings, referencePairs);
@@ -152,7 +156,7 @@
                 }
 
                 object copy;
-                if (MemberValues.TryCustomCopy(sv, getterAndSetter.GetValue(target), settings, out copy))
+                if (TryCustomCopy(sv, getterAndSetter.GetValue(target), settings, out copy))
                 {
                     getterAndSetter.SetValue(target, copy);
                 }
@@ -213,13 +217,14 @@
 
                 var sv = getterAndSetter.GetValue(source);
                 var tv = getterAndSetter.GetValue(target);
-                if (sv == null && tv == null)
+                bool equals;
+                if (EqualBy.TryGetValueEquals(source, target, settings, out equals) && equals)
                 {
                     return;
                 }
 
                 object copy;
-                if (MemberValues.TryCustomCopy(sv, tv, settings, out copy))
+                if (TryCustomCopy(sv, tv, settings, out copy))
                 {
                     // nop called for side effect. Checked for equality below.
                 }

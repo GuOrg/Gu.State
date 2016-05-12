@@ -7,7 +7,7 @@
 
     public class SetOfTCopyer : ICopyer
     {
-        public static readonly State.SetOfTCopyer Default = new State.SetOfTCopyer();
+        public static readonly SetOfTCopyer Default = new SetOfTCopyer();
 
         private SetOfTCopyer()
         {

@@ -14,7 +14,7 @@
                 return nameof(FieldValues);
             }
 
-            throw State.Throw.ExpectedParameterOfTypes<FieldsSettings, PropertiesSettings>("DiffMethodName failed.");
+            throw Throw.ExpectedParameterOfTypes<FieldsSettings, PropertiesSettings>("DiffMethodName failed.");
         }
 
         private static bool TryGetValueDiff<TSettings>(object x, object y, TSettings settings, out ValueDiff diff)
