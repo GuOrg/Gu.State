@@ -5,6 +5,8 @@ namespace Gu.State.Tests.CopyTests
 
     using NUnit.Framework;
 
+    using static CopyTypes;
+
     public abstract class ClassesTests
     {
         public abstract void CopyMethod<T>(T source, T target, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excluded = null) where T : class;
@@ -12,8 +14,8 @@ namespace Gu.State.Tests.CopyTests
         [Test]
         public void WithSimpleHappyPath()
         {
-            var source = new CopyTypes.WithSimpleProperties(1, 2, "3", StringSplitOptions.RemoveEmptyEntries);
-            var target = new CopyTypes.WithSimpleProperties { IntValue = 3, NullableIntValue = 4 };
+            var source = new WithSimpleProperties(1, 2, "3", StringSplitOptions.RemoveEmptyEntries);
+            var target = new WithSimpleProperties { IntValue = 3, NullableIntValue = 4 };
             this.CopyMethod(source, target);
             Assert.AreEqual(1, source.IntValue);
             Assert.AreEqual(1, target.IntValue);
@@ -28,13 +30,13 @@ namespace Gu.State.Tests.CopyTests
         [Test]
         public void WithComplexStructuralHappyPath()
         {
-            var source = new CopyTypes.WithComplexProperty
+            var source = new WithComplexProperty
             {
                 Name = "a",
                 Value = 1,
-                ComplexType = new CopyTypes.ComplexType { Name = "b", Value = 2 }
+                ComplexType = new ComplexType { Name = "b", Value = 2 }
             };
-            var target = new CopyTypes.WithComplexProperty();
+            var target = new WithComplexProperty();
             this.CopyMethod(source, target, ReferenceHandling.Structural);
             Assert.AreEqual(source.Name, target.Name);
             Assert.AreEqual(source.Value, target.Value);
@@ -45,8 +47,8 @@ namespace Gu.State.Tests.CopyTests
         [Test]
         public void WithComplexStructuralHappyPathWhenTargetMemberIsNull()
         {
-            var source = new CopyTypes.WithComplexProperty { Name = "a", Value = 1 };
-            var target = new CopyTypes.WithComplexProperty();
+            var source = new WithComplexProperty { Name = "a", Value = 1 };
+            var target = new WithComplexProperty();
             this.CopyMethod(source, target, ReferenceHandling.Structural);
             Assert.AreEqual(source.Name, target.Name);
             Assert.AreEqual(source.Value, target.Value);
@@ -57,13 +59,13 @@ namespace Gu.State.Tests.CopyTests
         [Test]
         public void WithComplexReferenceHappyPath()
         {
-            var source = new CopyTypes.WithComplexProperty
+            var source = new WithComplexProperty
             {
                 Name = "a",
                 Value = 1,
-                ComplexType = new CopyTypes.ComplexType { Name = "b", Value = 2 }
+                ComplexType = new ComplexType { Name = "b", Value = 2 }
             };
-            var target = new CopyTypes.WithComplexProperty();
+            var target = new WithComplexProperty();
             this.CopyMethod(source, target, ReferenceHandling.References);
             Assert.AreEqual(source.Name, target.Name);
             Assert.AreEqual(source.Value, target.Value);
@@ -73,8 +75,8 @@ namespace Gu.State.Tests.CopyTests
         [Test]
         public void WithComplexReferenceHappyPathSourceMemberIsNull()
         {
-            var source = new CopyTypes.WithComplexProperty { Name = "a", Value = 1 };
-            var target = new CopyTypes.WithComplexProperty();
+            var source = new WithComplexProperty { Name = "a", Value = 1 };
+            var target = new WithComplexProperty();
             this.CopyMethod(source, target, ReferenceHandling.References);
             Assert.AreEqual(source.Name, target.Name);
             Assert.AreEqual(source.Value, target.Value);
@@ -85,8 +87,8 @@ namespace Gu.State.Tests.CopyTests
         [Test]
         public void WithComplexReferenceHappyPathTargetMemberIsNull()
         {
-            var source = new CopyTypes.WithComplexProperty { Name = "a", Value = 1 };
-            var target = new CopyTypes.WithComplexProperty { ComplexType = new CopyTypes.ComplexType("b", 1) };
+            var source = new WithComplexProperty { Name = "a", Value = 1 };
+            var target = new WithComplexProperty { ComplexType = new ComplexType("b", 1) };
             this.CopyMethod(source, target, ReferenceHandling.References);
             Assert.AreEqual(source.Name, target.Name);
             Assert.AreEqual(source.Value, target.Value);
@@ -97,8 +99,8 @@ namespace Gu.State.Tests.CopyTests
         [Test]
         public void WithReadonlyHappyPath()
         {
-            var x = new CopyTypes.WithReadonlyProperty<int>(1);
-            var y = new CopyTypes.WithReadonlyProperty<int>(1);
+            var x = new WithReadonlyProperty<int>(1);
+            var y = new WithReadonlyProperty<int>(1);
             this.CopyMethod(x, y);
             Assert.AreEqual(1, x.Value);
             Assert.AreEqual(1, y.Value);
@@ -107,8 +109,8 @@ namespace Gu.State.Tests.CopyTests
         [Test]
         public void WithReadonlyComplex()
         {
-            var source = new CopyTypes.WithReadonlyProperty<CopyTypes.ComplexType>(new CopyTypes.ComplexType("a", 1));
-            var target = new CopyTypes.WithReadonlyProperty<CopyTypes.ComplexType>(new CopyTypes.ComplexType("b", 2));
+            var source = new WithReadonlyProperty<ComplexType>(new ComplexType("a", 1));
+            var target = new WithReadonlyProperty<ComplexType>(new ComplexType("b", 2));
             this.CopyMethod(source, target, ReferenceHandling.Structural);
             Assert.AreEqual("a", source.Value.Name);
             Assert.AreEqual("a", target.Value.Name);
@@ -122,8 +124,8 @@ namespace Gu.State.Tests.CopyTests
         [TestCase(ReferenceHandling.References)]
         public void WithImmutableStructural(ReferenceHandling? referenceHandling)
         {
-            var source = new CopyTypes.WithProperty<CopyTypes.Immutable>(new CopyTypes.Immutable(1));
-            var target = new CopyTypes.WithProperty<CopyTypes.Immutable>(new CopyTypes.Immutable(2));
+            var source = new WithProperty<Immutable>(new Immutable(1));
+            var target = new WithProperty<Immutable>(new Immutable(2));
             if (referenceHandling == null)
             {
                 this.CopyMethod(source, target);
@@ -140,9 +142,9 @@ namespace Gu.State.Tests.CopyTests
         [Test]
         public void WithListOfIntsToEmpty()
         {
-            var source = new CopyTypes.WithListProperty<int>();
+            var source = new WithListProperty<int>();
             source.Items.AddRange(new[] { 1, 2, 3 });
-            var target = new CopyTypes.WithListProperty<int>();
+            var target = new WithListProperty<int>();
             this.CopyMethod(source, target, ReferenceHandling.Structural);
             CollectionAssert.AreEqual(source.Items, target.Items);
         }
@@ -150,8 +152,8 @@ namespace Gu.State.Tests.CopyTests
         [Test]
         public void WithArrayWhenTargetArrayIsNullStructural()
         {
-            var source = new CopyTypes.WithArrayProperty("a", 1, new[] { 1, 2 });
-            var target = new CopyTypes.WithArrayProperty("a", 1, null);
+            var source = new WithArrayProperty("a", 1, new[] { 1, 2 });
+            var target = new WithArrayProperty("a", 1, null);
             this.CopyMethod(source, target, ReferenceHandling.Structural);
             Assert.AreEqual("a", source.Name);
             Assert.AreEqual("a", target.Name);
@@ -165,8 +167,8 @@ namespace Gu.State.Tests.CopyTests
         [Test]
         public void WithArrayWhenTargetArrayIsNullReference()
         {
-            var source = new CopyTypes.WithArrayProperty("a", 1, new[] { 1, 2 });
-            var target = new CopyTypes.WithArrayProperty("a", 1, null);
+            var source = new WithArrayProperty("a", 1, new[] { 1, 2 });
+            var target = new WithArrayProperty("a", 1, null);
             this.CopyMethod(source, target, ReferenceHandling.References);
             Assert.AreEqual("a", source.Name);
             Assert.AreEqual("a", target.Name);
@@ -179,9 +181,9 @@ namespace Gu.State.Tests.CopyTests
         [Test]
         public void WithListOfIntsPropertyToLonger()
         {
-            var source = new CopyTypes.WithListProperty<int>();
+            var source = new WithListProperty<int>();
             source.Items.AddRange(new[] { 1, 2, 3 });
-            var target = new CopyTypes.WithListProperty<int>();
+            var target = new WithListProperty<int>();
             target.Items.AddRange(new[] { 1, 2, 3, 4 });
             this.CopyMethod(source, target, ReferenceHandling.Structural);
             CollectionAssert.AreEqual(source.Items, target.Items);
@@ -190,13 +192,13 @@ namespace Gu.State.Tests.CopyTests
         [Test]
         public void WithListOfComplexPropertyToEmptyStructural()
         {
-            var source = new CopyTypes.WithListProperty<CopyTypes.ComplexType>();
-            source.Items.Add(new CopyTypes.ComplexType("a", 1));
-            var target = new CopyTypes.WithListProperty<CopyTypes.ComplexType>();
+            var source = new WithListProperty<ComplexType>();
+            source.Items.Add(new ComplexType("a", 1));
+            var target = new WithListProperty<ComplexType>();
             this.CopyMethod(source, target, ReferenceHandling.Structural);
-            var expected = new[] { new CopyTypes.ComplexType("a", 1) };
-            CollectionAssert.AreEqual(expected, source.Items, CopyTypes.ComplexType.Comparer);
-            CollectionAssert.AreEqual(expected, target.Items, CopyTypes.ComplexType.Comparer);
+            var expected = new[] { new ComplexType("a", 1) };
+            CollectionAssert.AreEqual(expected, source.Items, ComplexType.Comparer);
+            CollectionAssert.AreEqual(expected, target.Items, ComplexType.Comparer);
             Assert.AreNotSame(source.Items[0], target.Items[0]);
         }
 
@@ -204,39 +206,39 @@ namespace Gu.State.Tests.CopyTests
         public void WithListOfComplexPropertyToEmptyReference()
         {
             Assert.Inconclusive("Not sure how to handle this");
-            var source = new CopyTypes.WithListProperty<CopyTypes.ComplexType>();
-            source.Items.Add(new CopyTypes.ComplexType("a", 1));
-            var target = new CopyTypes.WithListProperty<CopyTypes.ComplexType>();
+            var source = new WithListProperty<ComplexType>();
+            source.Items.Add(new ComplexType("a", 1));
+            var target = new WithListProperty<ComplexType>();
             this.CopyMethod(source, target, ReferenceHandling.References);
-            var expected = new[] { new CopyTypes.ComplexType("a", 1) };
-            CollectionAssert.AreEqual(expected, source.Items, CopyTypes.ComplexType.Comparer);
-            CollectionAssert.AreEqual(expected, target.Items, CopyTypes.ComplexType.Comparer);
+            var expected = new[] { new ComplexType("a", 1) };
+            CollectionAssert.AreEqual(expected, source.Items, ComplexType.Comparer);
+            CollectionAssert.AreEqual(expected, target.Items, ComplexType.Comparer);
             Assert.AreSame(source.Items[0], target.Items[0]);
         }
 
         [Test]
         public void WithListOfComplexPropertyToLonger()
         {
-            var source = new CopyTypes.WithListProperty<CopyTypes.ComplexType>();
-            source.Items.Add(new CopyTypes.ComplexType("a", 1));
-            var target = new CopyTypes.WithListProperty<CopyTypes.ComplexType>();
-            target.Items.AddRange(new[] { new CopyTypes.ComplexType("b", 2), new CopyTypes.ComplexType("c", 3) });
+            var source = new WithListProperty<ComplexType>();
+            source.Items.Add(new ComplexType("a", 1));
+            var target = new WithListProperty<ComplexType>();
+            target.Items.AddRange(new[] { new ComplexType("b", 2), new ComplexType("c", 3) });
             var item = target.Items[0];
             this.CopyMethod(source, target, ReferenceHandling.Structural);
-            var expected = new[] { new CopyTypes.ComplexType("a", 1) };
-            CollectionAssert.AreEqual(expected, source.Items, CopyTypes.ComplexType.Comparer);
-            CollectionAssert.AreEqual(expected, target.Items, CopyTypes.ComplexType.Comparer);
+            var expected = new[] { new ComplexType("a", 1) };
+            CollectionAssert.AreEqual(expected, source.Items, ComplexType.Comparer);
+            CollectionAssert.AreEqual(expected, target.Items, ComplexType.Comparer);
             Assert.AreSame(item, target.Items[0]);
         }
 
         [Test]
         public void Ignores()
         {
-            var source = new CopyTypes.WithSimpleProperties(1, 2, "3", StringSplitOptions.RemoveEmptyEntries);
-            var target = new CopyTypes.WithSimpleProperties { IntValue = 3, NullableIntValue = 4 };
+            var source = new WithSimpleProperties(1, 2, "3", StringSplitOptions.RemoveEmptyEntries);
+            var target = new WithSimpleProperties { IntValue = 3, NullableIntValue = 4 };
             var excluded = this.GetType() == typeof(FieldValues.Classes)
                         ? "nullableIntValue"
-                        : nameof(CopyTypes.WithSimpleProperties.NullableIntValue);
+                        : nameof(WithSimpleProperties.NullableIntValue);
             this.CopyMethod(source, target, excluded: excluded);
             Assert.AreEqual(1, source.IntValue);
             Assert.AreEqual(1, target.IntValue);
