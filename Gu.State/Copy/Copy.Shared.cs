@@ -40,31 +40,85 @@
             }
         }
 
-        internal static T CloneAndSync<T, TSettings>(
-            T sourceItem,
-            T targetItem,
-            TSettings settings,
-            ReferencePairCollection referencePairs,
-            bool isImmutable)
-            where TSettings : class, IMemberSettings
+        internal static void Sync<T>(T source, T target, IMemberSettings settings, ReferencePairCollection referencePairs)
         {
-            throw new NotImplementedException("message");
-            
-            //if (sourceItem == null ||
-            //    settings.ReferenceHandling == ReferenceHandling.References ||
-            //    isImmutable ||
-            //    ReferenceEquals(sourceItem, targetItem))
-            //{
-            //    return sourceItem;
-            //}
+            Debug.Assert(source != null, nameof(source));
+            Debug.Assert(target != null, nameof(target));
+            Debug.Assert(source.GetType() == target.GetType(), "Must be same type");
+            Verify.CanCopyMemberValues(source, target, settings);
 
-            //T clone;
-            //if (CloneSetAndSync(sourceItem, targetItem, settings, out clone))
-            //{
-            //    Sync(sourceItem, clone, settings, referencePairs);
-            //}
+            if (referencePairs?.Add(source, target) == false)
+            {
+                return;
+            }
 
-            //return clone;
+            T copy;
+            if (TryCustomCopy(source, target, settings, out copy))
+            {
+                return;
+            }
+
+            CollectionItems(source, target, settings, referencePairs);
+            Members(source, target, settings, referencePairs);
+        }
+
+        internal static T CloneWithoutSync<T>(T sourceItem, T targetItem, IMemberSettings settings, out bool createdValue, out bool needsSync)
+        {
+            if (sourceItem == null || settings.ReferenceHandling == ReferenceHandling.References
+                || ReferenceEquals(sourceItem, targetItem))
+            {
+                needsSync = false;
+                createdValue = true;
+                return sourceItem;
+            }
+
+            T copy;
+            if (TryCopyValue(sourceItem, targetItem, settings, out copy) ||
+                TryCustomCopy(sourceItem, targetItem, settings, out copy))
+            {
+                needsSync = false;
+                createdValue = true;
+                return copy;
+            }
+
+            switch (settings.ReferenceHandling)
+            {
+                case ReferenceHandling.References:
+                    needsSync = false;
+                    createdValue = true;
+                    return sourceItem;
+                case ReferenceHandling.Structural:
+                    if (targetItem == null)
+                    {
+                        copy = (T)CreateInstance(sourceItem, settings);
+                        createdValue = true;
+                    }
+                    else
+                    {
+                        copy = targetItem;
+                        createdValue = false;
+                    }
+
+                    needsSync = true;
+                    return copy;
+                case ReferenceHandling.Throw:
+                    throw State.Throw.ShouldNeverGetHereException();
+                default:
+                    throw new ArgumentOutOfRangeException(
+                        nameof(settings.ReferenceHandling),
+                        settings.ReferenceHandling,
+                        null);
+            }
+        }
+
+        internal static bool IsCopyValue(Type type, IMemberSettings settings)
+        {
+            if (settings.IsImmutable(type) || settings.ReferenceHandling == ReferenceHandling.References)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         private static void Sync<T>(T source, T target, IMemberSettings settings)
@@ -89,81 +143,6 @@
                                    : null)
             {
                 Sync(source, target, settings, borrowed?.Value);
-            }
-        }
-
-        private static void Sync<T>(T source, T target, IMemberSettings settings, ReferencePairCollection referencePairs)
-        {
-            Debug.Assert(source != null, nameof(source));
-            Debug.Assert(target != null, nameof(target));
-            Debug.Assert(source.GetType() == target.GetType(), "Must be same type");
-            Verify.CanCopyMemberValues(source, target, settings);
-
-            if (referencePairs?.Add(source, target) == false)
-            {
-                return;
-            }
-
-            T copy;
-            if (TryCustomCopy(source, target, settings, out copy))
-            {
-                return;
-            }
-
-            CollectionItems(source, target, settings, referencePairs);
-            Members(source, target, settings, referencePairs);
-        }
-
-        private static void CloneSetAndSync<T>(
-            T sourceItem,
-            T targetItem,
-            Action<T> setter,
-            IMemberSettings settings,
-            ReferencePairCollection referencePairs)
-        {
-            if (sourceItem == null ||
-                settings.ReferenceHandling == ReferenceHandling.References ||
-                ReferenceEquals(sourceItem, targetItem))
-            {
-                setter(sourceItem);
-            }
-
-            T copy;
-            if (TryCopyValue(sourceItem, targetItem, settings, out copy) ||
-                TryCustomCopy(sourceItem, targetItem, settings, out copy))
-            {
-                setter(copy);
-            }
-
-            switch (settings.ReferenceHandling)
-            {
-                case ReferenceHandling.References:
-                    setter(sourceItem);
-                    return;
-                case ReferenceHandling.Structural:
-                    if (targetItem == null)
-                    {
-                        copy = (T)CreateInstance(sourceItem, settings);
-                    }
-                    else
-                    {
-                        copy = targetItem;
-                    }
-
-                    if (!ReferenceEquals(targetItem, copy))
-                    {
-                        setter(copy);
-                    }
-
-                    Sync(sourceItem, copy, settings, referencePairs);
-                    return;
-                case ReferenceHandling.Throw:
-                    throw State.Throw.ShouldNeverGetHereException();
-                default:
-                    throw new ArgumentOutOfRangeException(
-                        nameof(settings.ReferenceHandling),
-                        settings.ReferenceHandling,
-                        null);
             }
         }
 

@@ -73,11 +73,10 @@ namespace Gu.State.Tests.CopyTests
             Assert.Inconclusive("Assert.AreSame(target[0], target[1])");
         }
 
-        //[Explicit(IgnoredTests.NewFeature)]
+        [Explicit(IgnoredTests.NewFeature)]
         [Test]
         public void CollectionWithSelf()
         {
-            Assert.Fail();
             var source = new ObservableCollection<object>();
             source.Add(source);
             var target = new ObservableCollection<object>();

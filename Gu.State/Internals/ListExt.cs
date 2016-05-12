@@ -5,6 +5,22 @@
 
     internal static class ListExt
     {
+        internal static void SetElementAt(this IList list, int index, object item)
+        {
+            if (index >= 0 && index < list.Count)
+            {
+                list[index] = item;
+            }
+            else if (index == list.Count)
+            {
+                list.Add(item);
+            }
+            else
+            {
+                throw Throw.ShouldNeverGetHereException($"Trying to set index: {index} when length is {list.Count}");
+            }
+        }
+
         internal static void SetElementAt<T>(this IList<T> list, int index, T item)
         {
             if (index >= 0 && index < list.Count)

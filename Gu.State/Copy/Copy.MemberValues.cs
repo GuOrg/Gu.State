@@ -103,8 +103,18 @@
                 return;
             }
 
-            object clone;
-            CloneSetAndSync(sv, tv, copy => getterAndSetter.SetValue(target, copy), settings, referencePairs);
+            bool created;
+            bool needsSync;
+            var clone = CloneWithoutSync(sv, tv, settings, out created, out needsSync);
+            if (created)
+            {
+                getterAndSetter.SetValue(target, clone);
+            }
+
+            if (needsSync)
+            {
+                Sync(sv, clone, settings, referencePairs);
+            }
         }
     }
 }

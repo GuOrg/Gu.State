@@ -101,7 +101,6 @@
              where TSettings : class, IMemberSettings
         {
             private readonly IEqualityComparer<T> inner;
-            private readonly Func<object, object, TSettings, ReferencePairCollection, object> copyItem;
             private readonly TSettings settings;
             private readonly ReferencePairCollection referencePairs;
 
@@ -113,7 +112,6 @@
                 ReferencePairCollection referencePairs)
             {
                 this.inner = inner;
-                this.copyItem = copyItem;
                 this.settings = settings;
                 this.referencePairs = referencePairs;
             }
@@ -123,7 +121,7 @@
                 var result = this.inner.Equals(x, y);
                 if (result && this.isCopying)
                 {
-                    State.Copy.CloneAndSync(x, y, this.settings, this.referencePairs, false);
+                    State.Copy.Sync(x, y, this.settings, this.referencePairs);
                 }
 
                 return result;

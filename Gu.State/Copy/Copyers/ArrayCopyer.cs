@@ -82,15 +82,31 @@
             ReferencePairCollection referencePairs)
             where TSettings : class, IMemberSettings
         {
-            var isImmutable = settings.IsImmutable(
-                sourceArray.GetType()
-                           .GetItemType());
+            var copyValues = State.Copy.IsCopyValue(
+                        sourceArray.GetType().GetItemType(),
+                        settings);
             for (var i = 0; i < sourceArray.Length; i++)
             {
+                if (copyValues)
+                {
+                    targetArray[i] = sourceArray[i];
+                    continue;
+                }
+
                 var sv = sourceArray[i];
                 var tv = targetArray[i];
-                var copy = State.Copy.CloneAndSync(sv, tv, settings, referencePairs, isImmutable);
-                targetArray[i] = copy;
+                bool created;
+                bool needsSync;
+                var clone = State.Copy.CloneWithoutSync(sv, tv, settings, out created, out needsSync);
+                if (created)
+                {
+                    targetArray[i] = clone;
+                }
+
+                if (needsSync)
+                {
+                    State.Copy.Sync(sv, clone, settings, referencePairs);
+                }
             }
         }
 
@@ -101,17 +117,33 @@
             ReferencePairCollection referencePairs)
             where TSettings : class, IMemberSettings
         {
-            var isImmutable = settings.IsImmutable(
-                sourceArray.GetType()
-                           .GetItemType());
+            var copyValues = State.Copy.IsCopyValue(
+                        sourceArray.GetType().GetItemType(),
+                        settings);
             for (var i = sourceArray.GetLowerBound(0); i <= sourceArray.GetUpperBound(0); i++)
             {
                 for (var j = sourceArray.GetLowerBound(1); j <= sourceArray.GetUpperBound(1); j++)
                 {
+                    if (copyValues)
+                    {
+                        targetArray[i, j] = sourceArray[i, j];
+                        continue;
+                    }
+
                     var sv = sourceArray[i, j];
                     var tv = targetArray[i, j];
-                    var copy = State.Copy.CloneAndSync(sv, tv, settings, referencePairs, isImmutable);
-                    targetArray[i, j] = copy;
+                    bool created;
+                    bool needsSync;
+                    var clone = State.Copy.CloneWithoutSync(sv, tv, settings, out created, out needsSync);
+                    if (created)
+                    {
+                        targetArray[i, j] = clone;
+                    }
+
+                    if (needsSync)
+                    {
+                        State.Copy.Sync(sv, clone, settings, referencePairs);
+                    }
                 }
             }
         }
@@ -123,19 +155,35 @@
             ReferencePairCollection referencePairs)
             where TSettings : class, IMemberSettings
         {
-            var isImmutable = settings.IsImmutable(
-                sourceArray.GetType()
-                           .GetItemType());
+            var copyValues = State.Copy.IsCopyValue(
+                        sourceArray.GetType().GetItemType(),
+                        settings);
             for (var i = sourceArray.GetLowerBound(0); i <= sourceArray.GetUpperBound(0); i++)
             {
                 for (var j = sourceArray.GetLowerBound(1); j <= sourceArray.GetUpperBound(1); j++)
                 {
                     for (var k = sourceArray.GetLowerBound(2); k <= sourceArray.GetUpperBound(2); k++)
                     {
+                        if (copyValues)
+                        {
+                            targetArray[i, j, k] = sourceArray[i, j, k];
+                            continue;
+                        }
+
                         var sv = sourceArray[i, j, k];
                         var tv = targetArray[i, j, k];
-                        var copy = State.Copy.CloneAndSync(sv, tv, settings, referencePairs, isImmutable);
-                        targetArray[i, j, k] = copy;
+                        bool created;
+                        bool needsSync;
+                        var clone = State.Copy.CloneWithoutSync(sv, tv, settings, out created, out needsSync);
+                        if (created)
+                        {
+                            targetArray[i, j, k] = clone;
+                        }
+
+                        if (needsSync)
+                        {
+                            State.Copy.Sync(sv, clone, settings, referencePairs);
+                        }
                     }
                 }
             }
@@ -148,15 +196,31 @@
             ReferencePairCollection referencePairs)
             where TSettings : class, IMemberSettings
         {
-            var isImmutable = settings.IsImmutable(
-                sourceArray.GetType()
-                           .GetItemType());
+            var copyValues = State.Copy.IsCopyValue(
+                        sourceArray.GetType().GetItemType(),
+                        settings);
             foreach (var index in sourceArray.Indices())
             {
+                if (copyValues)
+                {
+                    targetArray.SetValue(sourceArray.GetValue(index), index);
+                    continue;
+                }
+
                 var sv = sourceArray.GetValue(index);
                 var tv = targetArray.GetValue(index);
-                var copy = State.Copy.CloneAndSync(sv, tv, settings, referencePairs, isImmutable);
-                targetArray.SetValue(copy, index);
+                bool created;
+                bool needsSync;
+                var clone = State.Copy.CloneWithoutSync(sv, tv, settings, out created, out needsSync);
+                if (created)
+                {
+                    targetArray.SetValue(clone, index);
+                }
+
+                if (needsSync)
+                {
+                    State.Copy.Sync(sv, clone, settings, referencePairs);
+                }
             }
         }
     }
