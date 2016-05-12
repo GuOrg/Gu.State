@@ -105,6 +105,11 @@
             }
         }
 
+        public struct Struct
+        {
+            public int Value { get; set; }
+        }
+
         public sealed class Immutable : IEquatable<Immutable>
         {
             public Immutable(int value)

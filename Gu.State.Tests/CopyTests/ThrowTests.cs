@@ -6,6 +6,8 @@ namespace Gu.State.Tests.CopyTests
 
     using NUnit.Framework;
 
+    using static CopyTypes;
+
     public abstract class ThrowTests
     {
         public abstract void CopyMethod<T>(T source, T target, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excluded = null) where T : class;
@@ -49,8 +51,8 @@ namespace Gu.State.Tests.CopyTests
                      "  - Exclude a combination of the following:\r\n" +
                      "    - The property WithComplexProperty.ComplexType.\r\n" +
                      "    - The type ComplexType.\r\n";
-            var source = new CopyTypes.WithComplexProperty();
-            var target = new CopyTypes.WithComplexProperty();
+            var source = new WithComplexProperty();
+            var target = new WithComplexProperty();
 
             var exception = referenceHandling == null
                 ? Assert.Throws<NotSupportedException>(() => this.CopyMethod(source, target))
@@ -87,8 +89,8 @@ namespace Gu.State.Tests.CopyTests
                     "  - Exclude a combination of the following:\r\n" +
                     "    - The property WithReadonlyProperty<Immutable>.Value.\r\n";
 
-            var source = new CopyTypes.WithReadonlyProperty<CopyTypes.Immutable>(new CopyTypes.Immutable(1));
-            var target = new CopyTypes.WithReadonlyProperty<CopyTypes.Immutable>(new CopyTypes.Immutable(2));
+            var source = new WithReadonlyProperty<Immutable>(new Immutable(1));
+            var target = new WithReadonlyProperty<Immutable>(new Immutable(2));
 
             var exception = Assert.Throws<InvalidOperationException>(() => this.CopyMethod(source, target, referenceHandling));
             Assert.AreEqual(expected, exception.Message);
@@ -153,8 +155,8 @@ namespace Gu.State.Tests.CopyTests
                                  "  - ReferenceHandling.References means that references are copied.\r\n" +
                                  "  - Exclude a combination of the following:\r\n" +
                                  "    - The indexer property WithIndexerType.Item.\r\n";
-            var source = new CopyTypes.WithIndexerType();
-            var target = new CopyTypes.WithIndexerType();
+            var source = new WithIndexerType();
+            var target = new WithIndexerType();
 
             var exception = Assert.Throws<NotSupportedException>(() => this.CopyMethod(source, target, ReferenceHandling.Structural));
             Assert.AreEqual(expected, exception.Message);
@@ -188,8 +190,8 @@ namespace Gu.State.Tests.CopyTests
                      "  - Exclude a combination of the following:\r\n" +
                      "    - The property WithProperty<WithoutDefaultCtor>.Value.\r\n";
 
-            var x = new CopyTypes.WithProperty<CopyTypes.WithoutDefaultCtor>(new CopyTypes.WithoutDefaultCtor(1));
-            var y = new CopyTypes.WithProperty<CopyTypes.WithoutDefaultCtor>(null);
+            var x = new WithProperty<WithoutDefaultCtor>(new WithoutDefaultCtor(1));
+            var y = new WithProperty<WithoutDefaultCtor>(null);
 
             var exception = Assert.Throws<InvalidOperationException>(() => this.CopyMethod(x, y, ReferenceHandling.Structural));
 
@@ -219,8 +221,8 @@ namespace Gu.State.Tests.CopyTests
         public void CanCopyImmutable(ReferenceHandling? referenceHandling)
         {
             var expected = "Cannot copy the members of an immutable object";
-            var x = new CopyTypes.Immutable(1);
-            var y = new CopyTypes.Immutable(1);
+            var x = new Immutable(1);
+            var y = new Immutable(1);
             var exception = referenceHandling != null
                 ? Assert.Throws<NotSupportedException>(() => this.CopyMethod(x, y, referenceHandling.Value))
                 : Assert.Throws<NotSupportedException>(() => this.CopyMethod(x, y));
