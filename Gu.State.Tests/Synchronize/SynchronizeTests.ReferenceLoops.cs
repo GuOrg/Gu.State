@@ -11,6 +11,7 @@
             [Test]
             public void CreateAndDisposeParentChild()
             {
+                Assert.Fail();
                 var source = new Parent("a", new Child("b"));
                 var target = new Parent("b", new Child());
                 using (Synchronize.PropertyValues(source, target, ReferenceHandling.Structural))

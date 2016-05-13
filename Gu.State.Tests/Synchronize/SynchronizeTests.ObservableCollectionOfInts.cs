@@ -113,19 +113,6 @@ namespace Gu.State.Tests
                     CollectionAssert.AreEqual(new[] { 3, 4 }, target);
                 }
             }
-
-            [Test]
-            public void ThrowsIfTargetCollectionChanges()
-            {
-                var source = new ObservableCollection<int> { 1, 2 };
-                var target = new ObservableCollection<int> { 1, 2 };
-                using (Synchronize.PropertyValues(source, target, ReferenceHandling.Structural))
-                {
-                    var exception = Assert.Throws<InvalidOperationException>(() => target.Add(3));
-                    var expected = "You cannot modify the target collection when you have applied a PropertySynchronizer on it";
-                    Assert.AreEqual(expected, exception.Message);
-                }
-            }
         }
     }
 }

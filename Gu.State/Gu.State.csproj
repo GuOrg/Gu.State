@@ -40,6 +40,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Internals\Borrowed.cs" />
     <Compile Include="Internals\Contracts\IInitialize{T}.cs" />
     <Compile Include="Internals\CastingComparer.cs" />
     <Compile Include="Internals\CastingComparer{T}.cs" />
@@ -94,12 +95,12 @@
     <Compile Include="Internals\Contracts\IUnsubscriber{T}.cs" />
     <Compile Include="Internals\Extensions\ListExt.cs" />
     <Compile Include="Internals\Pools\ConcurrentDictionaryPool.cs" />
-    <Compile Include="Internals\Pools\ConcurrentQueuePool.cs" />
-    <Compile Include="Internals\Pools\DictionaryPool.cs" />
-    <Compile Include="Internals\Pools\ListPool.cs" />
-    <Compile Include="Internals\Pools\SetPool.cs" />
+    <Compile Include="Internals\Pools\ConcurrentQueuePool{T}.cs" />
+    <Compile Include="Internals\Pools\DictionaryPool{TKey, TValue}.cs" />
+    <Compile Include="Internals\Pools\ListPool{T}.cs" />
+    <Compile Include="Internals\Pools\HashSetPool{T}.cs" />
     <Compile Include="Internals\Collections\ReferenceComparer{T}.cs" />
-    <Compile Include="Internals\Pools\ReferenceSetPool.cs" />
+    <Compile Include="Internals\Pools\ReferenceSetPool{T}.cs" />
     <Compile Include="DiffBy\Diffs\SubDiff.cs" />
     <Compile Include="DiffBy\Diffs\EmptyDiff.cs" />
     <Compile Include="DiffBy\Diffs\ValueDiff.cs" />

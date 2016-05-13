@@ -10,8 +10,10 @@
     {
         public class Simple
         {
-            [Test]
-            public void HappyPath()
+            [TestCase(ReferenceHandling.Throw)]
+            [TestCase(ReferenceHandling.Structural)]
+            [TestCase(ReferenceHandling.References)]
+            public void HappyPath(ReferenceHandling referenceHandling)
             {
                 var source = new WithSimpleProperties
                 {
@@ -21,7 +23,7 @@
                     EnumValue = StringSplitOptions.RemoveEmptyEntries
                 };
                 var target = new WithSimpleProperties { IntValue = 3, NullableIntValue = 4 };
-                using (Synchronize.PropertyValues(source, target))
+                using (Synchronize.PropertyValues(source, target, referenceHandling))
                 {
                     Assert.AreEqual(1, source.IntValue);
                     Assert.AreEqual(1, target.IntValue);
