@@ -56,8 +56,7 @@
         /// <param name="settings">Contains configuration for how tracking is performed</param>
         public static void VerifyCanTrackIsDirty(Type type, PropertiesSettings settings)
         {
-            EqualBy.VerifyCanEqualByPropertyValues(type, settings, typeof(Track).Name, nameof(VerifyCanTrackIsDirty));
-            VerifyCanTrackChanges(type, settings);
+            VerifyCanTrackIsDirty(type, settings, typeof(Track).Name, nameof(VerifyCanTrackIsDirty));
         }
 
         /// <summary>
@@ -106,7 +105,7 @@
             VerifyCanTrackChanges(type, settings, typeof(Track).Name, nameof(VerifyCanTrackChanges));
         }
 
-        public static void VerifyCanTrackChanges(Type type, PropertiesSettings settings, string className, string methodName)
+        internal static void VerifyCanTrackChanges(Type type, PropertiesSettings settings, string className, string methodName)
         {
             Verify.IsTrackableType(type, settings, className, methodName);
         }

@@ -48,6 +48,11 @@ namespace Gu.State
         public static DirtyTracker<T> IsDirty<T>(T x, T y, PropertiesSettings settings)
             where T : class, INotifyPropertyChanged
         {
+            Ensure.NotNull(x, nameof(x));
+            Ensure.NotNull(y, nameof(y));
+            Ensure.NotSame(x, y, nameof(x), nameof(y));
+            Ensure.SameType(x, y);
+            VerifyCanTrackIsDirty(x.GetType(), settings, typeof(Track).Name, nameof(IsDirty));
             return new DirtyTracker<T>(x, y, settings);
         }
 

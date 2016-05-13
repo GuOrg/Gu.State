@@ -53,8 +53,8 @@
 
         private static void VerifyCanSynchronize(Type type, PropertiesSettings settings, string className, string methodName)
         {
-            Track.VerifyCanTrackIsDirty(type, settings, className, methodName);
             Copy.VerifyCanCopyPropertyValues(type, settings, className, methodName);
+            Track.VerifyCanTrackIsDirty(type, settings, className, methodName);
         }
     }
 }

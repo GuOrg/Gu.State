@@ -19,13 +19,8 @@
         private readonly IRefCounted<DirtyTrackerNode> node;
         private bool disposed;
 
-        public DirtyTracker(T x, T y, PropertiesSettings settings)
+        internal DirtyTracker(T x, T y, PropertiesSettings settings)
         {
-            Ensure.NotNull(x, nameof(x));
-            Ensure.NotNull(y, nameof(y));
-            Ensure.NotSame(x, y, nameof(x), nameof(y));
-            Ensure.SameType(x, y);
-            Track.VerifyCanTrackIsDirty<T>(settings);
             this.Settings = settings;
             this.node = DirtyTrackerNode.GetOrCreate(x, y, settings, true);
             this.node.Value.PropertyChanged += this.OnNodeChanged;
