@@ -1,32 +1,40 @@
 namespace Gu.State
 {
     using System;
+    using System.Collections;
+    using System.Collections.Generic;
 
     internal class DirtyTrackerChangedEventArgs : EventArgs
     {
-        internal readonly object Key;
-        private readonly DirtyTrackerChangedEventArgs previous;
-        private readonly DirtyTrackerNode node;
-
         public DirtyTrackerChangedEventArgs(
             DirtyTrackerNode node,
-            object key,
+            object memberOrIndex,
             DirtyTrackerChangedEventArgs previous = null)
         {
-            this.node = node;
-            this.Key = key;
-            this.previous = previous;
+            this.Node = node;
+            this.MemberOrIndex = memberOrIndex;
+            this.Previous = previous;
         }
+
+        public object MemberOrIndex { get; }
+
+        public DirtyTrackerChangedEventArgs Previous { get; }
+
+        public DirtyTrackerNode Node { get; }
+
+        public DirtyTrackerChangedEventArgs Root => this.Previous != null
+                                                        ? this.Previous.Root
+                                                        : this;
 
         public bool Contains(DirtyTrackerNode other)
         {
-            return ReferenceEquals(other, this.node) ||
-                   this.previous?.Contains(other) == true;
+            return ReferenceEquals(other, this.Node) ||
+                   this.Previous?.Contains(other) == true;
         }
 
-        public DirtyTrackerChangedEventArgs With(DirtyTrackerNode next, object key)
+        internal DirtyTrackerChangedEventArgs With(DirtyTrackerNode next, object memberOrIndex)
         {
-            return new DirtyTrackerChangedEventArgs(next, key, this);
+            return new DirtyTrackerChangedEventArgs(next, memberOrIndex, this);
         }
     }
 }

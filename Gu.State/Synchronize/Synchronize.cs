@@ -26,7 +26,7 @@ namespace Gu.State
             where T : class, INotifyPropertyChanged
         {
             var settings = PropertiesSettings.GetOrCreate(referenceHandling, bindingFlags);
-            return new PropertySynchronizer<T>(source, target, settings);
+            return PropertyValues(source, target, settings);
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace Gu.State
         public static IDisposable PropertyValues<T>(T source, T target, PropertiesSettings settings)
             where T : class, INotifyPropertyChanged
         {
-            return new PropertySynchronizer<T>(source, target, settings);
+            return TrackerCache.GetOrAdd(source, target, settings, pair => new Synchronizer(source, target, settings));
         }
     }
 }

@@ -6,7 +6,7 @@ namespace Gu.State.Tests
 
     using NUnit.Framework;
 
-    public partial class PropertySynchronizerTests
+    public partial class SynchronizeTests
     {
         public class ObservableCollectionOfInts
         {

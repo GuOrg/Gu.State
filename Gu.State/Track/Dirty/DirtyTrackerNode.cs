@@ -92,13 +92,13 @@
 
         private DiffBuilder Builder => this.refcountedDiffBuilder?.Value;
 
-        private object X => this.xNode.Value.Source;
+        internal object X => this.xNode.Value.Source;
 
-        private IList XList => (IList)this.X;
+        internal IList XList => (IList)this.X;
 
-        private object Y => this.yNode.Value.Source;
+        internal object Y => this.yNode.Value.Source;
 
-        private IList YList => (IList)this.Y;
+        internal IList YList => (IList)this.Y;
 
         private IReadOnlyCollection<PropertyInfo> TrackProperties => this.xNode.Value.TrackProperties;
 

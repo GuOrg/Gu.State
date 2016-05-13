@@ -124,6 +124,7 @@
     <Compile Include="Internals\Try.cs" />
     <Compile Include="Internals\Unsubscriber.cs" />
     <Compile Include="Settings\CustomCopy.cs" />
+    <Compile Include="Synchronize\Synchronize.Synchronizer.cs" />
     <Compile Include="Track\Changes\ChangeNode\EventArgs\ReplaceEventArgs.cs" />
     <Compile Include="Internals\Collections\DisposingMap{TKey, TValue}.cs" />
     <Compile Include="Internals\Collections\ImmutableList{T}.cs" />
@@ -162,8 +163,6 @@
     <Compile Include="Internals\MemberPath\FieldItem.cs" />
     <Compile Include="Internals\MemberPath\IMemberItem.cs" />
     <Compile Include="Internals\MemberPath\ITypedNode.cs" />
-    <Compile Include="Synchronize\PropertySynchronizer{T}.ItemsSynchronizers.cs" />
-    <Compile Include="Synchronize\PropertySynchronizer{T}.PropertiesSynchronizers.cs" />
     <Compile Include="Settings\FieldsSettingsBuilder.cs" />
     <Compile Include="Settings\FieldsSettings.cs" />
     <Compile Include="Contracts\IBindingFlags.cs" />
@@ -209,7 +208,6 @@
     <Compile Include="Internals\Errors\StringBuilderExt.cs" />
     <Compile Include="Settings\MemberSettings.IsImmutable.cs" />
     <Compile Include="Internals\MemberPath\MemberPath.cs" />
-    <Compile Include="Synchronize\IPropertySynchronizer.cs" />
     <Compile Include="Synchronize\Synchronize.Verify.cs" />
     <Compile Include="ReferenceHandling.cs" />
     <Compile Include="Settings\CustomCopy{T}.cs" />
@@ -229,7 +227,6 @@
     <Compile Include="Internals\Reflection\TypeExt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Synchronize\Synchronize.cs" />
-    <Compile Include="Synchronize\PropertySynchronizer{T}.cs" />
     <Compile Include="Settings\PropertiesSettings.cs" />
     <Compile Include="Copy\Copy.FieldValues.cs" />
   </ItemGroup>
