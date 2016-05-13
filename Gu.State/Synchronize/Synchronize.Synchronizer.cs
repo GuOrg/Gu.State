@@ -2,7 +2,6 @@ namespace Gu.State
 {
     using System;
     using System.ComponentModel;
-    using System.Reflection;
 
     public static partial class Synchronize
     {
@@ -10,14 +9,8 @@ namespace Gu.State
         {
             private readonly IRefCounted<DirtyTrackerNode> dirtyTrackerNode;
 
-            public Synchronizer(INotifyPropertyChanged source, INotifyPropertyChanged target, PropertiesSettings settings)
+            internal Synchronizer(INotifyPropertyChanged source, INotifyPropertyChanged target, PropertiesSettings settings)
             {
-                Ensure.NotNull(source, nameof(source));
-                Ensure.NotNull(target, nameof(target));
-                Ensure.NotSame(source, target, nameof(source), nameof(target));
-                Ensure.SameType(source, target);
-                Track.VerifyCanTrackIsDirty(source.GetType(), settings);
-                Copy.VerifyCanCopyPropertyValues(source.GetType(), settings);
                 this.Settings = settings;
                 Copy.PropertyValues(source, target, settings);
                 this.dirtyTrackerNode = DirtyTrackerNode.GetOrCreate(source, target, settings, true);
@@ -46,24 +39,21 @@ namespace Gu.State
                     return;
                 }
 
-                var propertyInfo = root.MemberOrIndex as PropertyInfo;
-                if (propertyInfo != null)
-                {
-                    if (this.Settings.IsIgnoringProperty(propertyInfo))
-                    {
-                        return;
-                    }
+                Copy.PropertyValues(root.Node.X, root.Node.Y, this.Settings);
+            }
 
-                    Copy.Member(root.Node.X, root.Node.Y, this.Settings, propertyInfo);
-                }
-                else if (root.MemberOrIndex is int)
-                {
-                    throw new NotImplementedException("Get list copyer and copy index");
-                }
-                else
-                {
-                    throw Throw.ExpectedParameterOfTypes<PropertyInfo, int>("OnNodeChanged failed");
-                }
+            private void OnTargetChanged(object sender, EventArgs e)
+            {
+                //if (this.isSynchronizing)
+                //{
+                //    return;
+                //}
+
+                // think we want to track and throw here.
+                // this is not perfect
+                var message = "Target cannot be modified when a synchronizer is applied to it\r\n" +
+                              "The change would just trigger a dirty notification and the value would be updated with the value from source.";
+                throw new InvalidOperationException(message);
             }
         }
     }

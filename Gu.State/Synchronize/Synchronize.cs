@@ -40,6 +40,11 @@ namespace Gu.State
         public static IDisposable PropertyValues<T>(T source, T target, PropertiesSettings settings)
             where T : class, INotifyPropertyChanged
         {
+            Ensure.NotNull(source, nameof(source));
+            Ensure.NotNull(target, nameof(target));
+            Ensure.NotSame(source, target, nameof(source), nameof(target));
+            Ensure.SameType(source, target);
+            VerifyCanSynchronize(source.GetType(), settings);
             return TrackerCache.GetOrAdd(source, target, settings, pair => new Synchronizer(source, target, settings));
         }
     }

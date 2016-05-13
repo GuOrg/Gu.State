@@ -18,16 +18,9 @@ namespace Gu.State.Tests
                 var target = new ObservableCollection<int>();
                 using (var synchronizer = Synchronize.PropertyValues(source, target, referenceHandling))
                 {
-                    var itemsSynchronizerField = synchronizer.GetType().GetField("itemsSynchronizer", Constants.DefaultFieldBindingFlags);
-                    Assert.NotNull(itemsSynchronizerField);
-                    var itemsSynchronizer = itemsSynchronizerField.GetValue(synchronizer);
-                    Assert.NotNull(itemsSynchronizer);
-                    var itemSynchronizersField = itemsSynchronizer.GetType().GetField("itemSynchronizers", Constants.DefaultFieldBindingFlags);
-                    Assert.NotNull(itemSynchronizersField);
-                    Assert.IsNull(itemSynchronizersField.GetValue(itemsSynchronizer));
-
-                    CollectionAssert.AreEqual(new[] { 1, 2 }, source);
-                    CollectionAssert.AreEqual(new[] { 1, 2 }, target);
+                    var expected = new[] { 1, 2 };
+                    CollectionAssert.AreEqual(expected, source);
+                    CollectionAssert.AreEqual(expected, target);
                 }
 
                 source.Add(3);

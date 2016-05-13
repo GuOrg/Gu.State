@@ -2,6 +2,8 @@
 {
     using NUnit.Framework;
 
+    using static SynchronizeTypes;
+
     public partial class SynchronizeTests
     {
         public class ReferenceLoops
@@ -9,8 +11,8 @@
             [Test]
             public void CreateAndDisposeParentChild()
             {
-                var source = new SynchronizeTypes.Parent("a", new SynchronizeTypes.Child("b"));
-                var target = new SynchronizeTypes.Parent("b", new SynchronizeTypes.Child());
+                var source = new Parent("a", new Child("b"));
+                var target = new Parent("b", new Child());
                 using (Synchronize.PropertyValues(source, target, ReferenceHandling.Structural))
                 {
                     Assert.AreEqual("a", source.Name);
