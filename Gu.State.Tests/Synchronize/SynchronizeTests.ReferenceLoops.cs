@@ -1,4 +1,5 @@
-﻿namespace Gu.State.Tests
+﻿// ReSharper disable RedundantArgumentDefaultValue
+namespace Gu.State.Tests
 {
     using NUnit.Framework;
 
@@ -11,7 +12,6 @@
             [Test]
             public void CreateAndDisposeParentChild()
             {
-                Assert.Fail();
                 var source = new Parent("a", new Child("b"));
                 var target = new Parent("b", new Child());
                 using (Synchronize.PropertyValues(source, target, ReferenceHandling.Structural))

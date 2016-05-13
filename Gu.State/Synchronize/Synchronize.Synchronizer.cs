@@ -10,7 +10,7 @@ namespace Gu.State
         {
             private readonly IRefCounted<DirtyTrackerNode> dirtyTrackerNode;
             private readonly IBorrowed<ConcurrentQueue<DirtyTrackerNode>> borrowedQueue;
-            private readonly IRefCounted<ChangeTrackerNode> targetTracker;
+            private readonly IUnsubscriber<IChangeTracker> targetSubscription;
             private readonly object gate = new object();
             private bool isProcessingQueue;
 
@@ -19,8 +19,14 @@ namespace Gu.State
                 this.Settings = settings;
                 this.dirtyTrackerNode = DirtyTrackerNode.GetOrCreate(source, target, settings, true);
                 this.dirtyTrackerNode.Value.Changed += this.OnDirtyTrackerNodeChanged;
-                this.targetTracker = ChangeTrackerNode.GetOrCreate(target, settings, true);
-                this.targetTracker.Value.Changed += this.OnTargetChanged;
+                var targetTracker = Track.Changes(target, settings);
+                targetTracker.Changed += this.OnTargetChanged;
+                this.targetSubscription = targetTracker.AsUnsubscribeOnDispose(
+                    x =>
+                        {
+                            x.Changed -= this.OnTargetChanged;
+                            x.Dispose();
+                        });
                 this.borrowedQueue = ConcurrentQueuePool<DirtyTrackerNode>.Borrow();
                 this.AddToSyncQueue(this.dirtyTrackerNode.Value);
             }
@@ -32,8 +38,7 @@ namespace Gu.State
                 this.dirtyTrackerNode.Value.Changed -= this.OnDirtyTrackerNodeChanged;
                 this.dirtyTrackerNode.Dispose();
                 this.borrowedQueue.Dispose();
-                this.targetTracker.Value.Changed -= this.OnTargetChanged;
-                this.targetTracker.Dispose();
+                this.targetSubscription.Dispose();
             }
 
             private void OnDirtyTrackerNodeChanged(object sender, DirtyTrackerChangedEventArgs e)
