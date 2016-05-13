@@ -290,7 +290,7 @@
 
             var xValue = this.XList.ElementAtOrMissing(index);
             var yValue = this.YList.ElementAtOrMissing(index);
-            this.Builder.UpdateIndexDiff(xValue, yValue, index, this.Settings);
+            this.Builder.UpdateCollectionItemDiff(xValue, yValue, index, this.Settings);
         }
 
         private IUnsubscriber<IRefCounted<DirtyTrackerNode>> CreateChild(object xValue, object yValue, object key)
@@ -327,7 +327,7 @@
             else if (key is int)
             {
                 var index = (int)key;
-                this.Builder.UpdateIndexDiff(this.XList.ElementAtOrMissing(index), this.YList.ElementAtOrMissing(index), index, this.Settings);
+                this.Builder.UpdateCollectionItemDiff(this.XList.ElementAtOrMissing(index), this.YList.ElementAtOrMissing(index), index, this.Settings);
             }
             else
             {

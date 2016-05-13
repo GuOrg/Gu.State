@@ -12,15 +12,13 @@
         {
         }
 
-        public void AddDiffs<TSettings>(
+        public void AddDiffs(
             DiffBuilder collectionBuilder,
             object x,
             object y,
-            TSettings settings,
-            Action<DiffBuilder, object, object, object, TSettings> itemDiff)
-            where TSettings : IMemberSettings
+            IMemberSettings settings)
         {
-            this.AddDiffs(collectionBuilder, (ISet<T>)x, (ISet<T>)y, settings, itemDiff);
+            this.AddDiffs(collectionBuilder, (ISet<T>)x, (ISet<T>)y, settings);
         }
 
         private static void AddItemDiffs(DiffBuilder collectionBuilder, ISet<T> x, ISet<T> y, HashSet<T> borrow)
@@ -47,13 +45,11 @@
         }
 
         // ReSharper disable once UnusedParameter.Local
-        private void AddDiffs<TSettings>(
+        private void AddDiffs(
             DiffBuilder collectionBuilder,
             ISet<T> x,
             ISet<T> y,
-            TSettings settings,
-            Action<DiffBuilder, object, object, object, TSettings> itemDiff)
-                where TSettings : IMemberSettings
+            IMemberSettings settings)
         {
             if (typeof(T).Implements<IEquatable<T>>())
             {

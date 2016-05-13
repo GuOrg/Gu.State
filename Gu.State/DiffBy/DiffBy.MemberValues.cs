@@ -13,7 +13,7 @@
             IMemberSettings settings)
         {
             EqualBy.Verify.CanEqualByMemberValues(x, y, settings, typeof(DiffBy).Name, settings.DiffMethodName());
-            TryAddCollectionDiffs(x, y, settings, builder, UpdateIndexDiff);
+            builder.TryAddCollectionDiffs(x, y, settings);
             TryAddMemberDiffs(x, y, settings, builder);
         }
 
@@ -79,7 +79,7 @@
             }
         }
 
-        internal static void UpdateIndexDiff(
+        internal static void UpdateCollectionItemDiff(
             this DiffBuilder collectionBuilder,
             object xItem,
             object yItem,
@@ -155,13 +155,11 @@
             }
         }
 
-        private static void TryAddCollectionDiffs<TSettings>(
+        private static void TryAddCollectionDiffs(
+            this DiffBuilder collectionBuilder,
             object x,
             object y,
-            TSettings settings,
-            DiffBuilder collectionBuilder,
-            Action<DiffBuilder, object, object, object, TSettings> itemDiff)
-            where TSettings : IMemberSettings
+            IMemberSettings settings)
         {
             if (!Is.Enumerable(x, y))
             {
@@ -177,7 +175,7 @@
                 SetDiffBy.TryGetOrCreate(x, y, out comparer) ||
                 EnumerableDiffBy.TryGetOrCreate(x, y, out comparer))
             {
-                comparer.AddDiffs(collectionBuilder, x, y, settings, itemDiff);
+                comparer.AddDiffs(collectionBuilder, x, y, settings);
                 return;
             }
 

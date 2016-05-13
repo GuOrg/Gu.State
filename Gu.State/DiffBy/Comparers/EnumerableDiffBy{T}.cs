@@ -11,30 +11,26 @@
         {
         }
 
-        public void AddDiffs<TSettings>(
+        public void AddDiffs(
             DiffBuilder collectionBuilder,
             object x,
             object y,
-            TSettings settings,
-            Action<DiffBuilder, object, object, object, TSettings> itemDiff)
-            where TSettings : IMemberSettings
+            IMemberSettings settings)
         {
-            this.AddDiffs(collectionBuilder, (IEnumerable<T>)x, (IEnumerable<T>)y, settings, itemDiff);
+            this.AddDiffs(collectionBuilder, (IEnumerable<T>)x, (IEnumerable<T>)y, settings);
         }
 
-        private void AddDiffs<TSettings>(
+        private void AddDiffs(
             DiffBuilder collectionBuilder,
             IEnumerable<T> x,
             IEnumerable<T> y,
-            TSettings settings,
-            Action<DiffBuilder, object, object, object, TSettings> itemDiff)
-                where TSettings : IMemberSettings
+            IMemberSettings settings)
         {
             var i = -1;
             foreach (var pair in new PaddedPairs(x, y))
             {
                 i++;
-                itemDiff(collectionBuilder, pair.X, pair.Y, new Skip(i), settings);
+                collectionBuilder.UpdateCollectionItemDiff(pair.X, pair.Y, new Skip(i), settings);
             }
         }
     }
