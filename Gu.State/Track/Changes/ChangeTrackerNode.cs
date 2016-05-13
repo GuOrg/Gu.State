@@ -9,14 +9,14 @@
     using System.Linq;
     using System.Reflection;
 
-    internal sealed class ChangeNode : IDisposable
+    internal sealed class ChangeTrackerNode : IDisposable
     {
-        private readonly IRefCounted<ChangeTrackerNode> refcountedNode;
+        private readonly IRefCounted<ChangeNode> refcountedNode;
         private readonly DisposingMap<IDisposable> children = new DisposingMap<IDisposable>();
 
-        private ChangeNode(object source, PropertiesSettings settings, bool isRoot)
+        private ChangeTrackerNode(object source, PropertiesSettings settings, bool isRoot)
         {
-            this.refcountedNode = ChangeTrackerNode.GetOrCreate(source, settings, isRoot);
+            this.refcountedNode = ChangeNode.GetOrCreate(source, settings, isRoot);
             this.refcountedNode.Value.Change += this.OnTrackerChange;
             switch (this.refcountedNode.Value.Settings.ReferenceHandling)
             {
@@ -57,7 +57,7 @@
 
         public event EventHandler Changed;
 
-        public event EventHandler<ChangeNode> BubbleChange;
+        public event EventHandler<ChangeTrackerNode> BubbleChange;
 
         private IReadOnlyCollection<PropertyInfo> TrackProperties => this.refcountedNode.Value.TrackProperties;
 
@@ -76,11 +76,11 @@
             this.children.Dispose();
         }
 
-        internal static IRefCounted<ChangeNode> GetOrCreate(object source, PropertiesSettings settings, bool isRoot)
+        internal static IRefCounted<ChangeTrackerNode> GetOrCreate(object source, PropertiesSettings settings, bool isRoot)
         {
             Debug.Assert(source != null, "Cannot track null");
             Debug.Assert(source is INotifyPropertyChanged || source is INotifyCollectionChanged, "Must notify");
-            return TrackerCache.GetOrAdd(source, settings, s => new ChangeNode(s, settings, isRoot));
+            return TrackerCache.GetOrAdd(source, settings, s => new ChangeTrackerNode(s, settings, isRoot));
         }
 
         private void OnTrackerChange(object sender, EventArgs e)
@@ -89,7 +89,7 @@
             this.BubbleChange?.Invoke(this, this);
         }
 
-        private void OnBubbleChange(object sender, ChangeNode originalSource)
+        private void OnBubbleChange(object sender, ChangeTrackerNode originalSource)
         {
             if (ReferenceEquals(this, originalSource))
             {

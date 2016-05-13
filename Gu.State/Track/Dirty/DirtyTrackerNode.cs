@@ -15,8 +15,8 @@
         private static readonly PropertyChangedEventArgs IsDirtyPropertyChangedEventArgs = new PropertyChangedEventArgs(nameof(IsDirty));
 
         private readonly IRefCounted<ReferencePair> refCountedPair;
-        private readonly IRefCounted<ChangeTrackerNode> xNode;
-        private readonly IRefCounted<ChangeTrackerNode> yNode;
+        private readonly IRefCounted<ChangeNode> xNode;
+        private readonly IRefCounted<ChangeNode> yNode;
         private readonly DisposingMap<IUnsubscriber<IRefCounted<DirtyTrackerNode>>> children = new DisposingMap<IUnsubscriber<IRefCounted<DirtyTrackerNode>>>();
         private readonly IRefCounted<DiffBuilder> refcountedDiffBuilder;
 
@@ -32,8 +32,8 @@
             var x = refCountedPair.Value.X;
             var y = refCountedPair.Value.Y;
 
-            this.xNode = ChangeTrackerNode.GetOrCreate(x, settings, isRoot);
-            this.yNode = ChangeTrackerNode.GetOrCreate(y, settings, isRoot);
+            this.xNode = ChangeNode.GetOrCreate(x, settings, isRoot);
+            this.yNode = ChangeNode.GetOrCreate(y, settings, isRoot);
             this.xNode.Value.PropertyChange += this.OnTrackedPropertyChange;
             this.yNode.Value.PropertyChange += this.OnTrackedPropertyChange;
 

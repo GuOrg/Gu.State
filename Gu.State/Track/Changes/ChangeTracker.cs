@@ -10,7 +10,7 @@
     public sealed class ChangeTracker : IChangeTracker
     {
         private static readonly PropertyChangedEventArgs ChangesEventArgs = new PropertyChangedEventArgs(nameof(Changes));
-        private readonly IRefCounted<ChangeNode> node;
+        private readonly IRefCounted<ChangeTrackerNode> node;
         private bool disposed;
 
         private int changes;
@@ -21,7 +21,7 @@
             Ensure.NotNull(settings, nameof(settings));
             Track.Verify.IsTrackableType(source.GetType(), settings);
             this.Settings = settings;
-            this.node = ChangeNode.GetOrCreate(source, settings, true);
+            this.node = ChangeTrackerNode.GetOrCreate(source, settings, true);
             this.node.Value.Changed += this.OnNodeChange;
         }
 
