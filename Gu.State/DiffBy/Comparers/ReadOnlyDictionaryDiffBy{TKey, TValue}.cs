@@ -11,24 +11,20 @@
         {
         }
 
-        public void AddDiffs<TSettings>(
+        public void AddDiffs(
             DiffBuilder collectionBuilder,
             object x,
             object y,
-            TSettings settings,
-            Action<DiffBuilder, object, object, object, TSettings> itemDiff)
-            where TSettings : IMemberSettings
+            IMemberSettings settings)
         {
-            this.AddDiffs(collectionBuilder, (IReadOnlyDictionary<TKey, TValue>)x, (IReadOnlyDictionary<TKey, TValue>)y, settings, itemDiff);
+            this.AddDiffs(collectionBuilder, (IReadOnlyDictionary<TKey, TValue>)x, (IReadOnlyDictionary<TKey, TValue>)y, settings);
         }
 
-        private void AddDiffs<TSettings>(
+        private void AddDiffs(
             DiffBuilder collectionBuilder,
             IReadOnlyDictionary<TKey, TValue> x,
             IReadOnlyDictionary<TKey, TValue> y,
-            TSettings settings,
-            Action<DiffBuilder, object, object, object, TSettings> itemDiff)
-                where TSettings : IMemberSettings
+            IMemberSettings settings)
         {
             using (var borrow = SetPool<TKey>.Borrow(EqualityComparer<TKey>.Default.Equals, EqualityComparer<TKey>.Default.GetHashCode))
             {
@@ -38,7 +34,7 @@
                 {
                     var xv = x.ElementAtOrMissing(key);
                     var yv = y.ElementAtOrMissing(key);
-                    itemDiff(collectionBuilder, xv, yv, key, settings);
+                    collectionBuilder.UpdateCollectionItemDiff(xv, yv, key, settings);
                 }
             }
         }

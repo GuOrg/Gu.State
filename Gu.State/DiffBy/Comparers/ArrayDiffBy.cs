@@ -19,15 +19,13 @@
             return false;
         }
 
-        public void AddDiffs<TSettings>(
+        public void AddDiffs(
             DiffBuilder collectionBuilder,
             object x,
             object y,
-            TSettings settings,
-            Action<DiffBuilder, object, object, object, TSettings> itemDiff)
-                where TSettings : IMemberSettings
+            IMemberSettings settings)
         {
-            this.AddDiffs(collectionBuilder, (Array)x, (Array)y, settings, itemDiff);
+            this.AddDiffs(collectionBuilder, (Array)x, (Array)y, settings);
         }
 
         private static IDiffBy Create(Type type)
@@ -61,13 +59,11 @@
             return false;
         }
 
-        private void AddDiffs<TSettings>(
+        private void AddDiffs(
             DiffBuilder collectionBuilder,
             Array x,
             Array y,
-            TSettings settings,
-            Action<DiffBuilder, object, object, object, TSettings> itemDiff)
-                where TSettings : IMemberSettings
+            IMemberSettings settings)
         {
             RankDiff rankDiff;
             if (TryGetRankDiff(x, y, out rankDiff))
@@ -78,7 +74,7 @@
 
             foreach (var index in x.Indices())
             {
-                itemDiff(collectionBuilder, x.GetValue(index), y.GetValue(index), new Index(index), settings);
+                collectionBuilder.UpdateCollectionItemDiff(x.GetValue(index), y.GetValue(index), new Index(index), settings);
             }
         }
     }
