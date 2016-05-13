@@ -1,7 +1,5 @@
-﻿// ReSharper disable RedundantArgumentDefaultValue
-namespace Gu.State.Tests
+﻿namespace Gu.State.Tests
 {
-    using System;
     using System.Collections.ObjectModel;
 
     using NUnit.Framework;
@@ -10,13 +8,14 @@ namespace Gu.State.Tests
     {
         public class ObservableCollectionOfInts
         {
+            [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
             public void CreateAndDispose(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<int> { 1, 2 };
                 var target = new ObservableCollection<int>();
-                using (var synchronizer = Synchronize.PropertyValues(source, target, referenceHandling))
+                using (Synchronize.PropertyValues(source, target, referenceHandling))
                 {
                     var expected = new[] { 1, 2 };
                     CollectionAssert.AreEqual(expected, source);
@@ -28,6 +27,7 @@ namespace Gu.State.Tests
                 CollectionAssert.AreEqual(new[] { 1, 2 }, target);
             }
 
+            [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
             public void Add(ReferenceHandling referenceHandling)
@@ -46,6 +46,7 @@ namespace Gu.State.Tests
                 CollectionAssert.AreEqual(new[] { 1 }, target);
             }
 
+            [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
             public void Remove(ReferenceHandling referenceHandling)
@@ -64,6 +65,7 @@ namespace Gu.State.Tests
                 }
             }
 
+            [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
             public void Insert(ReferenceHandling referenceHandling)
@@ -78,6 +80,7 @@ namespace Gu.State.Tests
                 }
             }
 
+            [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
             public void Move(ReferenceHandling referenceHandling)
@@ -96,6 +99,7 @@ namespace Gu.State.Tests
                 }
             }
 
+            [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
             public void Replace(ReferenceHandling referenceHandling)

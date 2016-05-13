@@ -17,15 +17,8 @@ namespace Gu.State.Tests
             {
                 var source = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
                 var target = new ObservableCollection<WithGetReadOnlyPropertySealed<int>>();
-                using (var synchronizer = Synchronize.PropertyValues(source, target, referenceHandling))
+                using (Synchronize.PropertyValues(source, target, referenceHandling))
                 {
-                    var itemsSynchronizerField = synchronizer.GetType().GetField("itemsSynchronizer", Constants.DefaultFieldBindingFlags);
-                    Assert.NotNull(itemsSynchronizerField);
-                    var itemsSynchronizer = itemsSynchronizerField.GetValue(synchronizer);
-                    Assert.NotNull(itemsSynchronizer);
-                    var itemSynchronizersField = itemsSynchronizer.GetType().GetField("itemSynchronizers", Constants.DefaultFieldBindingFlags);
-                    Assert.NotNull(itemSynchronizersField);
-                    Assert.IsNull(itemSynchronizersField.GetValue(itemsSynchronizer));
                     var expected = new[] { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
                     CollectionAssert.AreEqual(expected, source);
                     CollectionAssert.AreEqual(expected, target);
@@ -48,8 +41,6 @@ namespace Gu.State.Tests
                     var expected = new[] { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
                     CollectionAssert.AreEqual(expected, source);
                     CollectionAssert.AreEqual(expected, target);
-                    Assert.AreSame(source[0], target[0]);
-                    Assert.AreSame(source[1], target[1]);
                 }
 
                 source.Add(new WithGetReadOnlyPropertySealed<int>(3));
@@ -67,8 +58,8 @@ namespace Gu.State.Tests
                     var expected = new[] { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
                     CollectionAssert.AreEqual(expected, source);
                     CollectionAssert.AreEqual(expected, target);
-                    Assert.AreSame(source[0], target[0]);
-                    Assert.AreSame(source[1], target[1]);
+                    //Assert.AreSame(source[0], target[0]);
+                    //Assert.AreSame(source[1], target[1]);
                 }
 
                 source.Add(new WithGetReadOnlyPropertySealed<int>(3));

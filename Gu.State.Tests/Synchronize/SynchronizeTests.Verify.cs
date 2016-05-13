@@ -2,6 +2,8 @@
 {
     using NUnit.Framework;
 
+    using static SynchronizeTypes;
+
     public partial class SynchronizeTests
     {
         public class Verify
@@ -11,9 +13,9 @@
             [TestCase(ReferenceHandling.Structural)]
             public void WithSimpleProperties(ReferenceHandling referenceHandling)
             {
-                Synchronize.VerifyCanSynchronize<DirtyTrackerTypes.WithSimpleProperties>(referenceHandling);
-                Synchronize.VerifyCanSynchronize<DirtyTrackerTypes.WithSimpleProperties>(PropertiesSettings.GetOrCreate(referenceHandling));
-                Synchronize.VerifyCanSynchronize(typeof(DirtyTrackerTypes.WithSimpleProperties), PropertiesSettings.GetOrCreate(referenceHandling));
+                Synchronize.VerifyCanSynchronize<WithSimpleProperties>(referenceHandling);
+                Synchronize.VerifyCanSynchronize<WithSimpleProperties>(PropertiesSettings.GetOrCreate(referenceHandling));
+                Synchronize.VerifyCanSynchronize(typeof(WithSimpleProperties), PropertiesSettings.GetOrCreate(referenceHandling));
             }
         }
     }
