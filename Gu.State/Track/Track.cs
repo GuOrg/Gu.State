@@ -30,7 +30,7 @@ namespace Gu.State
             where T : class, INotifyPropertyChanged
         {
             var settings = PropertiesSettings.GetOrCreate(referenceHandling, bindingFlags);
-            return new DirtyTracker<T>(x, y, settings);
+            return IsDirty(x, y, settings);
         }
 
         /// <summary>

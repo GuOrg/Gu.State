@@ -44,7 +44,7 @@ namespace Gu.State
             Ensure.NotNull(target, nameof(target));
             Ensure.NotSame(source, target, nameof(source), nameof(target));
             Ensure.SameType(source, target);
-            VerifyCanSynchronize(source.GetType(), settings);
+            VerifyCanSynchronize(source.GetType(), settings, typeof(Synchronize).Name, nameof(PropertyValues));
             return TrackerCache.GetOrAdd(source, target, settings, pair => new Synchronizer(source, target, settings));
         }
     }

@@ -1,4 +1,5 @@
-﻿namespace Gu.State.Tests
+﻿// ReSharper disable RedundantArgumentDefaultValue
+namespace Gu.State.Tests
 {
     using System;
     using System.Collections.ObjectModel;
@@ -16,7 +17,7 @@
             [Test]
             public void WithComplexPropertyThrows()
             {
-                var expected = "Copy.PropertyValues(x, y) failed.\r\n" +
+                var expected = "Synchronize.PropertyValues(x, y) failed.\r\n" +
                                "The property WithComplexProperty.ComplexType of type ComplexType is not supported.\r\n" +
                                "Solve the problem by any of:\r\n" +
                                "* Make ComplexType immutable or use an immutable type.\r\n" +
@@ -38,6 +39,9 @@
                 var exception = Assert.Throws<NotSupportedException>(() => Synchronize.PropertyValues(source, target, ReferenceHandling.Throw));
 
                 Assert.AreEqual(expected, exception.Message);
+
+                Assert.DoesNotThrow(() => Synchronize.PropertyValues(source, target, ReferenceHandling.Structural));
+                Assert.DoesNotThrow(() => Synchronize.PropertyValues(source, target, ReferenceHandling.References));
             }
 
             [TestCase(ReferenceHandling.Throw)]

@@ -1,4 +1,5 @@
-﻿namespace Gu.State.Tests
+﻿// ReSharper disable RedundantArgumentDefaultValue
+namespace Gu.State.Tests
 {
     using System;
     using NUnit.Framework;
@@ -12,7 +13,7 @@
             [Test]
             public void WithComplexProperty()
             {
-                var expected = "EqualBy.PropertyValues(x, y) failed.\r\n" +
+                var expected = "Track.IsDirty(x, y) failed.\r\n" +
                                "The property WithComplexProperty.ComplexType of type ComplexType is not supported.\r\n" +
                                "Solve the problem by any of:\r\n" +
                                "* Implement IEquatable<WithComplexProperty> for WithComplexProperty or use a type that does.\r\n" +
@@ -28,9 +29,8 @@
 
                 var exception = Assert.Throws<NotSupportedException>(() => Track.IsDirty(x, y, ReferenceHandling.Throw));
                 Assert.AreEqual(expected, exception.Message);
-
-                exception = Assert.Throws<NotSupportedException>(() => Track.VerifyCanTrackIsDirty<WithComplexProperty>(ReferenceHandling.Throw));
-                Assert.AreEqual(expected, exception.Message);
+                Assert.DoesNotThrow(() => Track.IsDirty(x, y, ReferenceHandling.Structural));
+                Assert.DoesNotThrow(() => Track.IsDirty(x, y, ReferenceHandling.References));
             }
         }
     }

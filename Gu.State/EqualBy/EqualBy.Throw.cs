@@ -11,6 +11,21 @@
             return errorBuilder.AppendLine($"{className}.{methodName}(x, y) failed.");
         }
 
+        private static string EqualByMethodName(this IMemberSettings settings)
+        {
+            if (settings is FieldsSettings)
+            {
+                return nameof(FieldValues);
+            }
+
+            if (settings is PropertiesSettings)
+            {
+                return nameof(PropertyValues);
+            }
+
+            throw State.Throw.ExpectedParameterOfTypes<FieldsSettings, PropertiesSettings>("{T}");
+        }
+
         private static StringBuilder AppendSuggestReferenceHandling(
             this StringBuilder errorBuilder,
             TypeErrors errors,

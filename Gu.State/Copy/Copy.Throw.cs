@@ -7,23 +7,28 @@
 
     public static partial class Copy
     {
-        private static StringBuilder AppendCopyFailed(this StringBuilder errorBuilder, IMemberSettings settings)
+        private static StringBuilder AppendCopyFailed(this StringBuilder errorBuilder, string className, string methodName)
+        {
+            return errorBuilder.AppendLine($"{className}.{methodName}(x, y) failed.");
+        }
+
+        private static string CopyMethodName(this IMemberSettings settings)
         {
             if (settings is FieldsSettings)
             {
-                return errorBuilder.AppendLine($"Copy.{nameof(Copy.FieldValues)}(x, y) failed.");
+                return nameof(FieldValues);
             }
 
             if (settings is PropertiesSettings)
             {
-                return errorBuilder.AppendLine($"Copy.{nameof(Copy.PropertyValues)}(x, y) failed.");
+                return nameof(PropertyValues);
             }
 
             throw State.Throw.ExpectedParameterOfTypes<FieldsSettings, PropertiesSettings>("{T}");
         }
 
         // ReSharper disable once UnusedParameter.Local
-        private static void ThrowIfHasErrors<TSetting>(this TypeErrors errors, TSetting settings)
+        private static void ThrowIfHasErrors<TSetting>(this TypeErrors errors, TSetting settings, string className, string methodName)
             where TSetting : class, IMemberSettings
         {
             if (errors == null)
@@ -36,16 +41,16 @@
                 return;
             }
 
-            var message = errors.GetErrorText(settings);
+            var message = errors.GetErrorText(settings, className, methodName);
             throw new NotSupportedException(message);
         }
 
         // ReSharper disable once UnusedParameter.Local
-        private static string GetErrorText<TSettings>(this TypeErrors errors, TSettings settings)
+        private static string GetErrorText<TSettings>(this TypeErrors errors, TSettings settings, string className, string methodName)
             where TSettings : class, IMemberSettings
         {
             var errorBuilder = new StringBuilder();
-            errorBuilder.AppendCopyFailed(settings)
+            errorBuilder.AppendCopyFailed(className, methodName)
                         .AppendNotSupported(errors)
                         .AppendSolveTheProblemBy()
                         .AppendSuggestImmutable(errors)
@@ -75,7 +80,7 @@
                 var error = new ReadonlyMemberDiffersError(sourceAndTargetValue, member);
                 var typeErrors = new TypeErrors(sourceAndTargetValue.Source?.GetType(), error);
 
-                var message = typeErrors.GetErrorText(settings);
+                var message = typeErrors.GetErrorText(settings, typeof(Copy).Name, settings.CopyMethodName());
                 throw new InvalidOperationException(message);
             }
 
@@ -87,7 +92,7 @@
             {
                 var error = new CannotCopyFixedSizeCollectionsError(source, target);
                 var typeErrors = new TypeErrors(target.GetType(), error);
-                var message = typeErrors.GetErrorText(settings);
+                var message = typeErrors.GetErrorText(settings, typeof(Copy).Name, settings.CopyMethodName());
                 return new InvalidOperationException(message);
             }
 
@@ -98,7 +103,7 @@
             {
                 var cannotCopyError = new CannotCreateInstanceError(sourceValue);
                 var typeErrors = new TypeErrors(sourceValue.GetType(), new Error[] { cannotCopyError });
-                var message = typeErrors.GetErrorText(settings);
+                var message = typeErrors.GetErrorText(settings, typeof(Copy).Name, settings.CopyMethodName());
                 return new InvalidOperationException(message, exception);
             }
         }
