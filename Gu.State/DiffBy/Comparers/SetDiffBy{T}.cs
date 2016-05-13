@@ -53,7 +53,7 @@
         {
             if (typeof(T).Implements<IEquatable<T>>())
             {
-                using (var borrow = SetPool<T>.Borrow(EqualityComparer<T>.Default.Equals, EqualityComparer<T>.Default.GetHashCode))
+                using (var borrow = HashSetPool<T>.Borrow(EqualityComparer<T>.Default.Equals, EqualityComparer<T>.Default.GetHashCode))
                 {
                     AddItemDiffs(collectionBuilder, x, y, borrow.Value);
                     return;
@@ -65,14 +65,14 @@
                 case ReferenceHandling.Throw:
                     throw Throw.ShouldNeverGetHereException("ReferenceHandling should be checked before");
                 case ReferenceHandling.References:
-                    using (var borrow = SetPool<T>.Borrow((xi, yi) => ReferenceEquals(xi, yi), item => RuntimeHelpers.GetHashCode(item)))
+                    using (var borrow = HashSetPool<T>.Borrow((xi, yi) => ReferenceEquals(xi, yi), item => RuntimeHelpers.GetHashCode(item)))
                     {
                         AddItemDiffs(collectionBuilder, x, y, borrow.Value);
                         return;
                     }
 
                 case ReferenceHandling.Structural:
-                    using (var borrow = SetPool<T>.Borrow((xi, yi) => EqualBy.MemberValues(xi, yi, settings), xi => 0))
+                    using (var borrow = HashSetPool<T>.Borrow((xi, yi) => EqualBy.MemberValues(xi, yi, settings), xi => 0))
                     {
                         AddItemDiffs(collectionBuilder, x, y, borrow.Value);
                         return;

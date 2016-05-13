@@ -12,15 +12,9 @@ namespace Gu.State
             internal Synchronizer(INotifyPropertyChanged source, INotifyPropertyChanged target, PropertiesSettings settings)
             {
                 this.Settings = settings;
-                Copy.PropertyValues(source, target, settings);
                 this.dirtyTrackerNode = DirtyTrackerNode.GetOrCreate(source, target, settings, true);
                 this.dirtyTrackerNode.Value.Changed += this.OnDirtyTrackerNodeChanged;
-                if (this.dirtyTrackerNode.Value.IsDirty)
-                {
-                    // this could happen if another thread updated source or target between creating and sunscribing to the tracker
-                    // Keeping it simple and copying all again here.
-                    Copy.PropertyValues(source, target, settings);
-                }
+                Copy.PropertyValues(source, target, settings);
             }
 
             public PropertiesSettings Settings { get; }

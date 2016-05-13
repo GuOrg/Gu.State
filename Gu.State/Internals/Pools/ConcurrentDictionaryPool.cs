@@ -11,10 +11,10 @@ namespace Gu.State
             ConcurrentDictionary<TKey, TValue> dictionary;
             if (Cache.TryDequeue(out dictionary))
             {
-                return Disposer.Create(dictionary, Return);
+                return Borrowed.Create(dictionary, Return);
             }
 
-            return Disposer.Create(new ConcurrentDictionary<TKey, TValue>(), Return);
+            return Borrowed.Create(new ConcurrentDictionary<TKey, TValue>(), Return);
         }
 
         private static void Return(ConcurrentDictionary<TKey, TValue> dictionary)

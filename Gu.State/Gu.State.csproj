@@ -94,6 +94,7 @@
     <Compile Include="Internals\Contracts\IUnsubscriber{T}.cs" />
     <Compile Include="Internals\Extensions\ListExt.cs" />
     <Compile Include="Internals\Pools\ConcurrentDictionaryPool.cs" />
+    <Compile Include="Internals\Pools\ConcurrentQueuePool.cs" />
     <Compile Include="Internals\Pools\DictionaryPool.cs" />
     <Compile Include="Internals\Pools\ListPool.cs" />
     <Compile Include="Internals\Pools\SetPool.cs" />
