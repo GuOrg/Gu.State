@@ -4,10 +4,16 @@ namespace Gu.State
 
     internal static class Unsubscriber
     {
-        internal static IUnsubscriber<T> AsUnsubscribeOnDispose<T>(this T source, Action<T> unsubscribe)
+        internal static IUnsubscriber<T> UnsubscribeAndDispose<T>(this T source, Action<T> unsubscribe)
             where T : IDisposable
         {
-            return new Disposer<T>(source, unsubscribe);
+            return new Disposer<T>(
+                source,
+                x =>
+                    {
+                        unsubscribe(x);
+                        x.Dispose();
+                    });
         }
     }
 }
