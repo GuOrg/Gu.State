@@ -17,7 +17,7 @@
         private readonly IRefCounted<ReferencePair> refCountedPair;
         private readonly IRefCounted<ChangeNode> xNode;
         private readonly IRefCounted<ChangeNode> yNode;
-        private readonly DisposingMap<IUnsubscriber<IRefCounted<DirtyTrackerNode>>> children = new DisposingMap<IUnsubscriber<IRefCounted<DirtyTrackerNode>>>();
+        private readonly IBorrowed<DisposingMap<IUnsubscriber<IRefCounted<DirtyTrackerNode>>>> children;
         private readonly IRefCounted<DiffBuilder> refcountedDiffBuilder;
 
         private bool isDirty;
@@ -31,7 +31,7 @@
             this.refCountedPair = refCountedPair;
             var x = refCountedPair.Value.X;
             var y = refCountedPair.Value.Y;
-
+            this.children = DisposingMap<IUnsubscriber<IRefCounted<DirtyTrackerNode>>>.Borrow();
             this.xNode = ChangeNode.GetOrCreate(x, settings, isRoot);
             this.yNode = ChangeNode.GetOrCreate(y, settings, isRoot);
             this.xNode.Value.PropertyChange += this.OnTrackedPropertyChange;
@@ -101,6 +101,8 @@
         internal IList YList => (IList)this.Y;
 
         private IReadOnlyCollection<PropertyInfo> TrackProperties => this.xNode.Value.TrackProperties;
+
+        private DisposingMap<IUnsubscriber<IRefCounted<DirtyTrackerNode>>> Children => this.children.Value;
 
         private PropertiesSettings Settings => this.xNode.Value.Settings;
 
@@ -205,11 +207,11 @@
                 if (IsTrackablePair(xValue, yValue, this.Settings))
                 {
                     var child = this.CreateChild(xValue, yValue, propertyInfo);
-                    this.children.SetValue(propertyInfo, child);
+                    this.Children.SetValue(propertyInfo, child);
                 }
                 else
                 {
-                    this.children.SetValue(propertyInfo, null);
+                    this.Children.SetValue(propertyInfo, null);
                 }
             }
         }
@@ -247,7 +249,7 @@
         private void OnTrackedReset(object sender, ResetEventArgs e)
         {
             this.Builder?.ClearIndexDiffs();
-            this.children.ClearIndexTrackers();
+            this.Children.ClearIndexTrackers();
             var max = Math.Max(this.XList.Count, this.YList.Count);
             for (var i = 0; i < max; i++)
             {
@@ -272,11 +274,11 @@
                (this.Settings.ReferenceHandling == ReferenceHandling.Structural))
             {
                 var child = this.CreateChild(xValue, yValue, index);
-                this.children.SetValue(index, child);
+                this.Children.SetValue(index, child);
             }
             else
             {
-                this.children.SetValue(index, null);
+                this.Children.SetValue(index, null);
             }
         }
 
