@@ -65,7 +65,7 @@
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        internal event EventHandler<DirtyTrackerChangedEventArgs> Changed;
+        internal event EventHandler<TrackerChangedEventArgs<DirtyTrackerNode>> Changed;
 
         public bool IsDirty
         {
@@ -303,13 +303,13 @@
             }
 
             var childNode = GetOrCreate(xValue, yValue, this.Settings, false);
-            EventHandler<DirtyTrackerChangedEventArgs> onChanged = (sender, args) => this.OnChildChanged(sender, args, key);
+            EventHandler<TrackerChangedEventArgs<DirtyTrackerNode>> onChanged = (sender, args) => this.OnChildChanged(sender, args, key);
             childNode.Value.Changed += onChanged;
             return childNode.UnsubscribeAndDispose(x => x.Value.Changed -= onChanged);
         }
 
         // ReSharper disable once UnusedParameter.Local
-        private void OnChildChanged(object _, DirtyTrackerChangedEventArgs e, object key)
+        private void OnChildChanged(object _, TrackerChangedEventArgs<DirtyTrackerNode> e, object key)
         {
             if (e.Contains(this) || this.Builder == null)
             {
@@ -359,7 +359,7 @@
 
             this.PropertyChanged?.Invoke(this, DiffPropertyChangedEventArgs);
             this.IsDirty = !this.Builder.IsEmpty;
-            this.Changed?.Invoke(this, new DirtyTrackerChangedEventArgs(this, propertyOrIndex));
+            this.Changed?.Invoke(this, TrackerChangedEventArgs.Create(this, propertyOrIndex));
         }
     }
 }

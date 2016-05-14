@@ -36,7 +36,7 @@ namespace Gu.State
                 this.targetSubscription.Dispose();
             }
 
-            private void OnDirtyTrackerNodeChanged(object sender, DirtyTrackerChangedEventArgs e)
+            private void OnDirtyTrackerNodeChanged(object sender, TrackerChangedEventArgs<DirtyTrackerNode> e)
             {
                 var root = e.Root;
                 if (!root.Node.IsDirty)

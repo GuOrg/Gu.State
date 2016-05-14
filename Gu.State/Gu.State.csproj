@@ -183,7 +183,8 @@
     <Compile Include="Track\Changes\ChangeNode\EventArgs\ResetEventArgs.cs" />
     <Compile Include="Track\Changes\ChangeNode\EventArgs\PropertyChangeEventArgs.cs" />
     <Compile Include="Track\Dirty\DirtyTracker.cs" />
-    <Compile Include="Track\Dirty\DirtyTrackerChangedEventArgs.cs" />
+    <Compile Include="Track\TrackerChangedEventArgs.cs" />
+    <Compile Include="Track\TrackerChangedEventArgs{T}.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerNode.cs" />
     <Compile Include="Track\Changes\ChangeNode\ChangeNode.cs" />
     <Compile Include="Track\Track.Verify.cs" />

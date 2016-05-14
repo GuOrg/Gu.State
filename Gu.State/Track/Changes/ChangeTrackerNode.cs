@@ -21,9 +21,7 @@
             this.children = DisposingMap<IUnsubscriber<IRefCounted<ChangeTrackerNode>>>.Borrow();
         }
 
-        public event EventHandler Changed;
-
-        public event EventHandler<ChangeTrackerNode> BubbleChange;
+        public event EventHandler<TrackerChangedEventArgs<ChangeTrackerNode>> Changed;
 
         private IReadOnlyCollection<PropertyInfo> TrackProperties => this.refcountedNode.Value.TrackProperties;
 
@@ -99,19 +97,17 @@
 
         private void OnTrackerChange(object sender, EventArgs e)
         {
-            this.Changed?.Invoke(this, EventArgs.Empty);
-            this.BubbleChange?.Invoke(this, this);
+            this.Changed?.Invoke(this, TrackerChangedEventArgs.Create(this, null));
         }
 
-        private void OnBubbleChange(object sender, ChangeTrackerNode originalSource)
+        private void OnChildChanged(object sender, TrackerChangedEventArgs<ChangeTrackerNode> e)
         {
-            if (ReferenceEquals(this, originalSource))
+            if (e.Contains(this))
             {
                 return;
             }
 
-            this.Changed?.Invoke(this, EventArgs.Empty);
-            this.BubbleChange?.Invoke(this, originalSource);
+            this.Changed?.Invoke(this, e.With(this, null));
         }
 
         private void OnTrackedPropertyChange(object sender, PropertyChangeEventArgs e)
@@ -193,8 +189,8 @@
         private IUnsubscriber<IRefCounted<ChangeTrackerNode>> CreateChild(object child)
         {
             var childNode = GetOrCreate(child, this.refcountedNode.Value.Settings, false);
-            childNode.Value.BubbleChange += this.OnBubbleChange;
-            return childNode.UnsubscribeAndDispose(x => x.Value.BubbleChange -= this.OnBubbleChange);
+            childNode.Value.Changed += this.OnChildChanged;
+            return childNode.UnsubscribeAndDispose(x => x.Value.Changed -= this.OnChildChanged);
         }
     }
 }
