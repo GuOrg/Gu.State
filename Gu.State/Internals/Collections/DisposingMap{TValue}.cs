@@ -42,6 +42,11 @@
             this.RemoveCore(index);
         }
 
+        internal void Remove(PropertyInfo property)
+        {
+            this.RemoveCore(property);
+        }
+
         internal void ClearIndexTrackers()
         {
             lock (this.gate)

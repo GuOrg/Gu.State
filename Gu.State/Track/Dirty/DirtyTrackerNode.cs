@@ -214,7 +214,7 @@
                 }
                 else
                 {
-                    this.Children.SetValue(propertyInfo, null);
+                    this.Children.Remove(propertyInfo);
                 }
             }
         }

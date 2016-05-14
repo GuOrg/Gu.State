@@ -1,11 +1,13 @@
 namespace Gu.State
 {
+    using System.Diagnostics;
     using System.Reflection;
 
     public static class TrackerChangedEventArgs
     {
         internal static PropertyGraphChangedEventArgs<T> Create<T>(T root, PropertyInfo property)
         {
+            Debug.Assert(property != null, "property == null");
             return new PropertyGraphChangedEventArgs<T>(root, property);
         }
 
