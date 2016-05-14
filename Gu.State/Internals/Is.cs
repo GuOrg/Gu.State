@@ -102,14 +102,14 @@
             return type.Implements(typeof(IEquatable<>), type);
         }
 
-        internal static bool NotifyCollections(object x, object y)
+        internal static bool NotifyingCollections(object x, object y)
         {
-            return NotifyCollection(x) && NotifyCollection(y);
+            return NotifyingCollection(x) && NotifyingCollection(y);
         }
 
-        internal static bool NotifyCollection(object collection)
+        internal static bool NotifyingCollection(object collection)
         {
-            return collection is INotifyCollectionChanged && collection is IList;
+            return collection is INotifyCollectionChanged && collection is IEnumerable;
         }
     }
 }

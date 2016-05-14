@@ -15,8 +15,8 @@
         private static readonly PropertyChangedEventArgs IsDirtyPropertyChangedEventArgs = new PropertyChangedEventArgs(nameof(IsDirty));
 
         private readonly IRefCounted<ReferencePair> refCountedPair;
-        private readonly IRefCounted<ChangeNode> xNode;
-        private readonly IRefCounted<ChangeNode> yNode;
+        private readonly IRefCounted<RootChanges> xNode;
+        private readonly IRefCounted<RootChanges> yNode;
         private readonly IBorrowed<DisposingMap<IUnsubscriber<IRefCounted<DirtyTrackerNode>>>> children;
         private readonly IRefCounted<DiffBuilder> refcountedDiffBuilder;
 
@@ -29,11 +29,11 @@
         private DirtyTrackerNode(IRefCounted<ReferencePair> refCountedPair, PropertiesSettings settings, bool isRoot)
         {
             this.refCountedPair = refCountedPair;
-            var x = refCountedPair.Value.X;
-            var y = refCountedPair.Value.Y;
+            var x = (INotifyPropertyChanged)refCountedPair.Value.X;
+            var y = (INotifyPropertyChanged)refCountedPair.Value.Y;
             this.children = DisposingMap<IUnsubscriber<IRefCounted<DirtyTrackerNode>>>.Borrow();
-            this.xNode = ChangeNode.GetOrCreate(x, settings, isRoot);
-            this.yNode = ChangeNode.GetOrCreate(y, settings, isRoot);
+            this.xNode = RootChanges.GetOrCreate(x, settings, isRoot);
+            this.yNode = RootChanges.GetOrCreate(y, settings, isRoot);
             this.xNode.Value.PropertyChange += this.OnTrackedPropertyChange;
             this.yNode.Value.PropertyChange += this.OnTrackedPropertyChange;
 
@@ -41,7 +41,7 @@
                                  !settings.IsImmutable(x.GetType().GetItemType()) &&
                                  !settings.IsImmutable(y.GetType().GetItemType());
 
-            if (Is.NotifyCollections(x, y))
+            if (Is.NotifyingCollections(x, y))
             {
                 this.xNode.Value.Add += this.OnTrackedAdd;
                 this.xNode.Value.Remove += this.OnTrackedRemove;
