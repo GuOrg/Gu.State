@@ -128,8 +128,8 @@
     <Compile Include="Internals\Unsubscriber.cs" />
     <Compile Include="Settings\CustomCopy.cs" />
     <Compile Include="Synchronize\Synchronize.Synchronizer.cs" />
-    <Compile Include="Track\Changes\ChangeNode\EventArgs\IRootChangeEventArgs.cs" />
-    <Compile Include="Track\Changes\ChangeNode\EventArgs\ReplaceEventArgs.cs" />
+    <Compile Include="Track\Changes\RootChangeEventArgs\IRootChangeEventArgs.cs" />
+    <Compile Include="Track\Changes\RootChangeEventArgs\ReplaceEventArgs.cs" />
     <Compile Include="Internals\Collections\DisposingMap{TValue}.cs" />
     <Compile Include="Internals\Collections\ReferenceComparer.cs" />
     <Compile Include="Internals\ReferencePair.cs" />
@@ -179,11 +179,11 @@
     <Compile Include="Copy\Copy.Shared.cs" />
     <Compile Include="Copy\Copy.Throw.cs" />
     <Compile Include="Copy\Copy.Verify.cs" />
-    <Compile Include="Track\Changes\ChangeNode\EventArgs\AddEventArgs.cs" />
-    <Compile Include="Track\Changes\ChangeNode\EventArgs\MoveEventArgs.cs" />
-    <Compile Include="Track\Changes\ChangeNode\EventArgs\RemoveEventArgs.cs" />
-    <Compile Include="Track\Changes\ChangeNode\EventArgs\ResetEventArgs.cs" />
-    <Compile Include="Track\Changes\ChangeNode\EventArgs\PropertyChangeEventArgs.cs" />
+    <Compile Include="Track\Changes\RootChangeEventArgs\AddEventArgs.cs" />
+    <Compile Include="Track\Changes\RootChangeEventArgs\MoveEventArgs.cs" />
+    <Compile Include="Track\Changes\RootChangeEventArgs\RemoveEventArgs.cs" />
+    <Compile Include="Track\Changes\RootChangeEventArgs\ResetEventArgs.cs" />
+    <Compile Include="Track\Changes\RootChangeEventArgs\PropertyChangeEventArgs.cs" />
     <Compile Include="Contracts\IDirtyTracker{T}.cs" />
     <Compile Include="Track\Dirty\DirtyTracker.cs" />
     <Compile Include="Track\Eventargs\GraphChangeEventArgs{T}.cs" />
