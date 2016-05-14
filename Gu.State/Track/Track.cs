@@ -21,8 +21,8 @@ namespace Gu.State
         /// <param name="bindingFlags">
         /// The <see cref="BindingFlags"/> to use when getting properties to track
         /// </param>
-        /// <returns>An <see cref="DirtyTracker{T}"/> that signals on differences between in <paramref name="x"/> and <paramref name="y"/></returns>
-        public static DirtyTracker<T> IsDirty<T>(
+        /// <returns>An <see cref="IDirtyTracker"/> that signals on differences between in <paramref name="x"/> and <paramref name="y"/></returns>
+        public static IDirtyTracker IsDirty<T>(
             T x,
             T y,
             ReferenceHandling referenceHandling = ReferenceHandling.Structural,
@@ -44,8 +44,8 @@ namespace Gu.State
         /// <param name="settings">
         /// An instance of <see cref="PropertiesSettings"/> configuring how tracking will be performed
         /// </param>
-        /// <returns>An <see cref="DirtyTracker{T}"/> that signals on differences between in <paramref name="x"/> and <paramref name="y"/></returns>
-        public static DirtyTracker<T> IsDirty<T>(T x, T y, PropertiesSettings settings)
+        /// <returns>An <see cref="IDirtyTracker"/> that signals on differences between in <paramref name="x"/> and <paramref name="y"/></returns>
+        public static IDirtyTracker IsDirty<T>(T x, T y, PropertiesSettings settings)
             where T : class, INotifyPropertyChanged
         {
             Ensure.NotNull(x, nameof(x));
@@ -53,7 +53,7 @@ namespace Gu.State
             Ensure.NotSame(x, y, nameof(x), nameof(y));
             Ensure.SameType(x, y);
             VerifyCanTrackIsDirty(x.GetType(), settings, typeof(Track).Name, nameof(IsDirty));
-            return new DirtyTracker<T>(x, y, settings);
+            return new DirtyTracker(x, y, settings);
         }
 
         /// <summary>

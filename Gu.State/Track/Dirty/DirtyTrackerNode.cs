@@ -9,7 +9,7 @@
     using System.Linq;
     using System.Reflection;
 
-    internal sealed class DirtyTrackerNode : IDisposable, IInitialize<DirtyTrackerNode>, INotifyPropertyChanged
+    internal sealed class DirtyTrackerNode : IDirtyTracker, IInitialize<DirtyTrackerNode>
     {
         private static readonly PropertyChangedEventArgs DiffPropertyChangedEventArgs = new PropertyChangedEventArgs(nameof(Diff));
         private static readonly PropertyChangedEventArgs IsDirtyPropertyChangedEventArgs = new PropertyChangedEventArgs(nameof(IsDirty));
@@ -67,6 +67,8 @@
 
         internal event EventHandler<TrackerChangedEventArgs<DirtyTrackerNode>> Changed;
 
+        public PropertiesSettings Settings => this.xNode.Value.Settings;
+
         public bool IsDirty
         {
             get
@@ -103,8 +105,6 @@
         private IReadOnlyCollection<PropertyInfo> TrackProperties => this.xNode.Value.TrackProperties;
 
         private DisposingMap<IUnsubscriber<IRefCounted<DirtyTrackerNode>>> Children => this.children.Value;
-
-        private PropertiesSettings Settings => this.xNode.Value.Settings;
 
         public void Dispose()
         {

@@ -97,7 +97,7 @@
 
         private void OnTrackerChange(object sender, EventArgs e)
         {
-            this.Changed?.Invoke(this, TrackerChangedEventArgs.Create(this, null));
+            this.Changed?.Invoke(this, GraphChangeEventArgs.Create(this, null));
         }
 
         private void OnChildChanged(object sender, TrackerChangedEventArgs<ChangeTrackerNode> e)

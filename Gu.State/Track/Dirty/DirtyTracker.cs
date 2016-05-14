@@ -2,18 +2,55 @@
 {
     using System.ComponentModel;
 
-    public abstract class DirtyTracker
+    internal class DirtyTracker : IDirtyTracker
     {
         protected static readonly PropertyChangedEventArgs DiffPropertyChangedEventArgs = new PropertyChangedEventArgs(nameof(Diff));
         protected static readonly PropertyChangedEventArgs IsDirtyPropertyChangedEventArgs = new PropertyChangedEventArgs(nameof(IsDirty));
 
-        internal DirtyTracker()
+        private readonly IRefCounted<DirtyTrackerNode> node;
+        private bool disposed;
+
+        internal DirtyTracker(INotifyPropertyChanged x, INotifyPropertyChanged y, PropertiesSettings settings)
         {
+            this.Settings = settings;
+            this.node = DirtyTrackerNode.GetOrCreate(x, y, settings, true);
+            this.node.Value.PropertyChanged += this.OnNodeChanged;
         }
 
-        public abstract bool IsDirty { get; }
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        // This is mutable for now
-        internal abstract ValueDiff Diff { get; }
+        public PropertiesSettings Settings { get; }
+
+        public bool IsDirty => this.node.Value.IsDirty;
+
+        public ValueDiff Diff => this.node.Value.Diff;
+
+        public void Dispose()
+        {
+            if (this.disposed)
+            {
+                return;
+            }
+
+            this.disposed = true;
+            this.node.Value.PropertyChanged -= this.OnNodeChanged;
+            this.node.Dispose();
+        }
+
+        private void OnNodeChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(DirtyTrackerNode.Diff))
+            {
+                this.PropertyChanged?.Invoke(this, DiffPropertyChangedEventArgs);
+            }
+            else if (e.PropertyName == nameof(DirtyTrackerNode.IsDirty))
+            {
+                this.PropertyChanged?.Invoke(this, IsDirtyPropertyChangedEventArgs);
+            }
+            else
+            {
+                throw Throw.ShouldNeverGetHereException($"Expected property name {nameof(DirtyTrackerNode.Diff)} || {nameof(DirtyTrackerNode.IsDirty)}");
+            }
+        }
     }
 }

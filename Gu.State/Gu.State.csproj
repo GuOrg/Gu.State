@@ -184,13 +184,14 @@
     <Compile Include="Track\Changes\ChangeNode\EventArgs\RemoveEventArgs.cs" />
     <Compile Include="Track\Changes\ChangeNode\EventArgs\ResetEventArgs.cs" />
     <Compile Include="Track\Changes\ChangeNode\EventArgs\PropertyChangeEventArgs.cs" />
+    <Compile Include="Contracts\IDirtyTracker{T}.cs" />
     <Compile Include="Track\Dirty\DirtyTracker.cs" />
     <Compile Include="Track\Eventargs\GraphChangeEventArgs{T}.cs" />
     <Compile Include="Track\Eventargs\RootChangeEventArgs.cs" />
     <Compile Include="Track\Eventargs\RootChangeEventArgs{T}.cs" />
     <Compile Include="Track\Eventargs\ItemGraphChangedEventArgs{T}.cs" />
     <Compile Include="Track\Eventargs\PropertyGraphChangedEventArgs{T}.cs" />
-    <Compile Include="Track\Eventargs\TrackerChangedEventArgs.cs" />
+    <Compile Include="Track\Eventargs\GraphChangeEventArgs.cs" />
     <Compile Include="Track\Eventargs\TrackerChangedEventArgs{T}.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerNode.cs" />
     <Compile Include="Track\Changes\ChangeNode\ChangeNode.cs" />
@@ -224,7 +225,6 @@
     <Compile Include="Internals\Reflection\FieldInfoExt.cs" />
     <Compile Include="Internals\Constants.cs" />
     <Compile Include="Track\Track.cs" />
-    <Compile Include="Track\Dirty\DirtyTracker{T}.cs" />
     <Compile Include="Internals\Ensure\Ensure.cs" />
     <Compile Include="Internals\Ensure\Ensure.string.cs" />
     <Compile Include="Internals\Ensure\Ensure.type.cs" />
