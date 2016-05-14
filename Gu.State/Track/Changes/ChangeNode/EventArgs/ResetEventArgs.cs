@@ -2,7 +2,7 @@ namespace Gu.State
 {
     using System.Collections;
 
-    internal struct ResetEventArgs
+    internal struct ResetEventArgs : IRootChangeEventArgs
     {
         private static readonly IList Empty = new object[0];
 

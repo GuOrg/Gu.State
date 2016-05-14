@@ -1,20 +1,17 @@
 namespace Gu.State
 {
     using System;
+    using System.Reflection;
 
-    internal class TrackerChangedEventArgs<T> : EventArgs
+    internal abstract class TrackerChangedEventArgs<T> : EventArgs
     {
-        public TrackerChangedEventArgs(
+        protected TrackerChangedEventArgs(
             T node,
-            object memberOrIndex,
             TrackerChangedEventArgs<T> previous = null)
         {
             this.Node = node;
-            this.MemberOrIndex = memberOrIndex;
             this.Previous = previous;
         }
-
-        public object MemberOrIndex { get; }
 
         public TrackerChangedEventArgs<T> Previous { get; }
 
@@ -30,9 +27,14 @@ namespace Gu.State
                    this.Previous?.Contains(node) == true;
         }
 
-        internal TrackerChangedEventArgs<T> With(T next, object memberOrIndex)
+        internal TrackerChangedEventArgs<T> With(T next, int index)
         {
-            return new TrackerChangedEventArgs<T>(next, memberOrIndex, this);
+            return new ItemGraphChangedEventArgs<T>(next, index, this);
+        }
+
+        internal TrackerChangedEventArgs<T> With(T next, PropertyInfo property)
+        {
+            return new PropertyGraphChangedEventArgs<T>(next, property, this);
         }
     }
 }

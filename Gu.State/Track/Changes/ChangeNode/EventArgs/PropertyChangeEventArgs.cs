@@ -2,9 +2,9 @@ namespace Gu.State
 {
     using System.Reflection;
 
-    internal struct PropertyChangeEventArgs
+    internal struct PropertyChangeEventArgs : IRootChangeEventArgs
     {
-        internal PropertyInfo PropertyInfo;
+        internal readonly PropertyInfo PropertyInfo;
 
         public PropertyChangeEventArgs(PropertyInfo propertyInfo)
         {

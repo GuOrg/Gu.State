@@ -204,9 +204,12 @@
                 var getter = this.Settings.GetOrCreateGetterAndSetter(propertyInfo);
                 var xValue = getter.GetValue(this.X);
                 var yValue = getter.GetValue(this.Y);
-                if (IsTrackablePair(xValue, yValue, this.Settings))
+                IRefCounted<DirtyTrackerNode> childNode;
+                if (this.TrCreateChild(xValue, yValue, out childNode))
                 {
-                    var child = this.CreateChild(xValue, yValue, propertyInfo);
+                    EventHandler<TrackerChangedEventArgs<DirtyTrackerNode>> onChanged = (sender, args) => this.OnChildChanged(sender, args, propertyInfo);
+                    childNode.Value.Changed += onChanged;
+                    var child = childNode.UnsubscribeAndDispose(x => x.Value.Changed -= onChanged);
                     this.Children.SetValue(propertyInfo, child);
                 }
                 else
@@ -270,10 +273,12 @@
             var xValue = this.XList.ElementAtOrMissing(index);
             var yValue = this.YList.ElementAtOrMissing(index);
 
-            if (IsTrackablePair(xValue, yValue, this.Settings) &&
-               (this.Settings.ReferenceHandling == ReferenceHandling.Structural))
+            IRefCounted<DirtyTrackerNode> childNode;
+            if (this.TrCreateChild(xValue, yValue, out childNode))
             {
-                var child = this.CreateChild(xValue, yValue, index);
+                EventHandler<TrackerChangedEventArgs<DirtyTrackerNode>> onChanged = (sender, args) => this.OnChildChanged(sender, args, index);
+                childNode.Value.Changed += onChanged;
+                var child = childNode.UnsubscribeAndDispose(x => x.Value.Changed -= onChanged);
                 this.Children.SetValue(index, child);
             }
             else
@@ -295,71 +300,62 @@
             this.Builder.UpdateCollectionItemDiff(xValue, yValue, index, this.Settings);
         }
 
-        private IUnsubscriber<IRefCounted<DirtyTrackerNode>> CreateChild(object xValue, object yValue, object key)
+        private bool TrCreateChild(object xValue, object yValue, out IRefCounted<DirtyTrackerNode> childNode)
         {
-            if (!IsTrackablePair(xValue, yValue, this.Settings))
+            if (!IsTrackablePair(xValue, yValue, this.Settings) ||
+                this.Settings.ReferenceHandling != ReferenceHandling.Structural)
             {
-                return null;
+                childNode = null;
+                return false;
             }
 
-            var childNode = GetOrCreate(xValue, yValue, this.Settings, false);
-            EventHandler<TrackerChangedEventArgs<DirtyTrackerNode>> onChanged = (sender, args) => this.OnChildChanged(sender, args, key);
-            childNode.Value.Changed += onChanged;
-            return childNode.UnsubscribeAndDispose(x => x.Value.Changed -= onChanged);
+            childNode = GetOrCreate(xValue, yValue, this.Settings, false);
+            return true;
         }
 
         // ReSharper disable once UnusedParameter.Local
-        private void OnChildChanged(object _, TrackerChangedEventArgs<DirtyTrackerNode> e, object key)
+        private void OnChildChanged(object _, TrackerChangedEventArgs<DirtyTrackerNode> e, int index)
         {
             if (e.Contains(this) || this.Builder == null)
             {
                 return;
             }
 
-            var propertyInfo = key as PropertyInfo;
-            if (propertyInfo != null)
-            {
-                if (this.Settings.IsIgnoringProperty(propertyInfo))
-                {
-                    return;
-                }
-
-                this.Builder.UpdateMemberDiff(this.X, this.Y, propertyInfo, this.Settings);
-            }
-            else if (key is int)
-            {
-                var index = (int)key;
-                this.Builder.UpdateCollectionItemDiff(this.XList.ElementAtOrMissing(index), this.YList.ElementAtOrMissing(index), index, this.Settings);
-            }
-            else
-            {
-                throw Throw.ExpectedParameterOfTypes<int, PropertyInfo>("Key must be int or PropertyInfo");
-            }
-
+            this.Builder.UpdateCollectionItemDiff(this.XList.ElementAtOrMissing(index), this.YList.ElementAtOrMissing(index), index, this.Settings);
             this.Builder.Refresh();
             this.PropertyChanged?.Invoke(this, DiffPropertyChangedEventArgs);
             this.IsDirty = !this.Builder.IsEmpty;
-            this.Changed?.Invoke(this, e.With(this, key));
+            this.Changed?.Invoke(this, e.With(this, index));
         }
 
-        private void TryRefreshAndNotify(object propertyOrIndex)
+        private void OnChildChanged(object _, TrackerChangedEventArgs<DirtyTrackerNode> e, PropertyInfo property)
         {
-            if (this.Builder?.TryRefresh() == true)
-            {
-                this.TryNotifyChanges(propertyOrIndex);
-            }
-        }
-
-        private void TryNotifyChanges(object propertyOrIndex)
-        {
-            if (this.Builder == null)
+            if (e.Contains(this) || this.Builder == null)
             {
                 return;
             }
 
+            if (this.Settings.IsIgnoringProperty(property))
+            {
+                return;
+            }
+
+            this.Builder.UpdateMemberDiff(this.X, this.Y, property, this.Settings);
+            this.Builder.Refresh();
             this.PropertyChanged?.Invoke(this, DiffPropertyChangedEventArgs);
             this.IsDirty = !this.Builder.IsEmpty;
-            this.Changed?.Invoke(this, TrackerChangedEventArgs.Create(this, propertyOrIndex));
+            this.Changed?.Invoke(this, e.With(this, property));
+        }
+
+        private void TryRefreshAndNotify<T>(T e)
+            where T : IRootChangeEventArgs
+        {
+            if (this.Builder?.TryRefresh() == true)
+            {
+                this.PropertyChanged?.Invoke(this, DiffPropertyChangedEventArgs);
+                this.IsDirty = !this.Builder.IsEmpty;
+                this.Changed?.Invoke(this, RootChangeEventArgs.Create(this, e));
+            }
         }
     }
 }

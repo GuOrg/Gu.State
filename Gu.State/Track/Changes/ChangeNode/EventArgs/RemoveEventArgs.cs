@@ -1,6 +1,6 @@
 namespace Gu.State
 {
-    internal struct RemoveEventArgs
+    internal struct RemoveEventArgs : IRootChangeEventArgs
     {
         internal readonly int Index;
 
