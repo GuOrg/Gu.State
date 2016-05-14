@@ -303,7 +303,7 @@
             var childNode = GetOrCreate(xValue, yValue, this.Settings, false);
             EventHandler<DirtyTrackerChangedEventArgs> onChanged = (sender, args) => this.OnChildChanged(sender, args, key);
             childNode.Value.Changed += onChanged;
-            return childNode.AsUnsubscribeOnDispose(x => x.Value.Changed -= onChanged);
+            return childNode.UnsubscribeAndDispose(x => x.Value.Changed -= onChanged);
         }
 
         // ReSharper disable once UnusedParameter.Local
