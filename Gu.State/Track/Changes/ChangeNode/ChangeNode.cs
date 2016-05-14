@@ -94,7 +94,7 @@
 
         private void OnTrackedCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            this.Change?.Invoke(this, EventArgs.Empty);
+            this.Change?.Invoke(this, e);
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
@@ -139,8 +139,7 @@
         {
             if (string.IsNullOrEmpty(e.PropertyName))
             {
-                this.Change?.Invoke(this, EventArgs.Empty);
-                this.OnResetProperties();
+                this.OnResetProperties(sender, e);
                 return;
             }
 
@@ -151,17 +150,23 @@
                 return;
             }
 
-            this.Change?.Invoke(this, EventArgs.Empty);
+            this.Change?.Invoke(this, e);
             this.PropertyChange?.Invoke(this, new PropertyChangeEventArgs(propertyInfo));
         }
 
-        private void OnResetProperties()
+        private void OnResetProperties(object sender, PropertyChangedEventArgs e)
         {
+            this.Change?.Invoke(this, e);
             var handler = this.PropertyChange;
             if (handler != null)
             {
-                foreach (var propertyInfo in this.TrackProperties)
+                foreach (var propertyInfo in this.Settings.GetProperties(sender.GetType()))
                 {
+                    if (this.Settings.IsIgnoringProperty(propertyInfo))
+                    {
+                        continue;
+                    }
+
                     handler.Invoke(this, new PropertyChangeEventArgs(propertyInfo));
                 }
             }

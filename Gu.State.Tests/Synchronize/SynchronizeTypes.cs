@@ -9,7 +9,7 @@
 
     using JetBrains.Annotations;
 
-    public static class SynchronizerTypes
+    public static class SynchronizeTypes
     {
         public class ComplexType : INotifyPropertyChanged
         {

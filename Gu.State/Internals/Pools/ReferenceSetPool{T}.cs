@@ -13,11 +13,11 @@
             HashSet<T> set;
             if (Pool.TryDequeue(out set))
             {
-                return Disposer.Create(set, Return);
+                return Borrowed.Create(set, Return);
             }
             else
             {
-                return Disposer.Create(new HashSet<T>(ReferenceComparer<T>.Default), Return);
+                return Borrowed.Create(new HashSet<T>(ReferenceComparer<T>.Default), Return);
             }
         }
 

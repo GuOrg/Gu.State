@@ -15,13 +15,13 @@
             this.dispose = dispose;
         }
 
-        public static Disposer<T> Create<T>(T value, Action<T> dispose)
-        {
-            return new Disposer<T>(value, dispose);
-        }
-
         public void Dispose()
         {
+            if (this.disposed)
+            {
+                return;
+            }
+
             lock (this.gate)
             {
                 if (this.disposed)

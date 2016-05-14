@@ -30,8 +30,8 @@
         [TestCase(ReferenceHandling.Throw)]
         public void CanCopyWithComplexThrows(ReferenceHandling referenceHandling)
         {
-            var expected = this.GetType() == typeof(FieldValues.Verify)
-                   ? "Copy.FieldValues(x, y) failed.\r\n" +
+            var expected = this is FieldValues.Verify
+                   ? "Copy.VerifyCanCopyFieldValues(x, y) failed.\r\n" +
                      "The field WithComplexProperty.<ComplexType>k__BackingField of type ComplexType is not supported.\r\n" +
                      "Solve the problem by any of:\r\n" +
                      "* Make ComplexType immutable or use an immutable type.\r\n" +
@@ -49,7 +49,7 @@
                      "    - The field WithComplexProperty.<ComplexType>k__BackingField.\r\n" +
                      "    - The type ComplexType.\r\n"
 
-                   : "Copy.PropertyValues(x, y) failed.\r\n" +
+                   : "Copy.VerifyCanCopyPropertyValues(x, y) failed.\r\n" +
                      "The property WithComplexProperty.ComplexType of type ComplexType is not supported.\r\n" +
                      "Solve the problem by any of:\r\n" +
                      "* Make ComplexType immutable or use an immutable type.\r\n" +
@@ -128,7 +128,7 @@
         public void WithIndexerThrows()
         {
             var expected = this is FieldValues.Verify
-                               ? "Copy.FieldValues(x, y) failed.\r\n" +
+                               ? "Copy.VerifyCanCopyFieldValues(x, y) failed.\r\n" +
                                  "Indexers are not supported.\r\n" +
                                  "  - The property WithIndexerType.Item is an indexer and not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
@@ -139,7 +139,7 @@
                                  "  - Exclude a combination of the following:\r\n" +
                                  "    - The indexer property WithIndexerType.Item.\r\n"
 
-                               : "Copy.PropertyValues(x, y) failed.\r\n" +
+                               : "Copy.VerifyCanCopyPropertyValues(x, y) failed.\r\n" +
                                  "Indexers are not supported.\r\n" +
                                  "  - The property WithIndexerType.Item is an indexer and not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
@@ -157,8 +157,8 @@
         [Test]
         public void DetectsReferenceLoop()
         {
-            var expected = this.GetType() == typeof(FieldValues.Verify)
-                   ? "Copy.FieldValues(x, y) failed.\r\n" +
+            var expected = this is FieldValues.Verify
+                   ? "Copy.VerifyCanCopyFieldValues(x, y) failed.\r\n" +
                      "The field Parent.child of type Child is in a reference loop.\r\n" +
                      "  - The loop is Parent.child.<Parent>k__BackingField.child...\r\n" +
                      "The field Parent.child of type Child is not supported.\r\n" +
@@ -180,7 +180,7 @@
                      "    - The field Child.<Parent>k__BackingField.\r\n" +
                      "    - The type Child.\r\n"
 
-                   : "Copy.PropertyValues(x, y) failed.\r\n" +
+                   : "Copy.VerifyCanCopyPropertyValues(x, y) failed.\r\n" +
                      "The property Parent.Child of type Child is in a reference loop.\r\n" +
                      "  - The loop is Parent.Child.Parent.Child...\r\n" +
                      "The property Parent.Child of type Child is not supported.\r\n" +

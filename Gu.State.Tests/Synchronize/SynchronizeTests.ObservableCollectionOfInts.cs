@@ -1,33 +1,25 @@
-﻿// ReSharper disable RedundantArgumentDefaultValue
-namespace Gu.State.Tests
+﻿namespace Gu.State.Tests
 {
-    using System;
     using System.Collections.ObjectModel;
 
     using NUnit.Framework;
 
-    public partial class PropertySynchronizerTests
+    public partial class SynchronizeTests
     {
         public class ObservableCollectionOfInts
         {
+            [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
             public void CreateAndDispose(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<int> { 1, 2 };
                 var target = new ObservableCollection<int>();
-                using (var synchronizer = Synchronize.PropertyValues(source, target, referenceHandling))
+                using (Synchronize.PropertyValues(source, target, referenceHandling))
                 {
-                    var itemsSynchronizerField = synchronizer.GetType().GetField("itemsSynchronizer", Constants.DefaultFieldBindingFlags);
-                    Assert.NotNull(itemsSynchronizerField);
-                    var itemsSynchronizer = itemsSynchronizerField.GetValue(synchronizer);
-                    Assert.NotNull(itemsSynchronizer);
-                    var itemSynchronizersField = itemsSynchronizer.GetType().GetField("itemSynchronizers", Constants.DefaultFieldBindingFlags);
-                    Assert.NotNull(itemSynchronizersField);
-                    Assert.IsNull(itemSynchronizersField.GetValue(itemsSynchronizer));
-
-                    CollectionAssert.AreEqual(new[] { 1, 2 }, source);
-                    CollectionAssert.AreEqual(new[] { 1, 2 }, target);
+                    var expected = new[] { 1, 2 };
+                    CollectionAssert.AreEqual(expected, source);
+                    CollectionAssert.AreEqual(expected, target);
                 }
 
                 source.Add(3);
@@ -35,6 +27,7 @@ namespace Gu.State.Tests
                 CollectionAssert.AreEqual(new[] { 1, 2 }, target);
             }
 
+            [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
             public void Add(ReferenceHandling referenceHandling)
@@ -53,6 +46,7 @@ namespace Gu.State.Tests
                 CollectionAssert.AreEqual(new[] { 1 }, target);
             }
 
+            [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
             public void Remove(ReferenceHandling referenceHandling)
@@ -71,6 +65,7 @@ namespace Gu.State.Tests
                 }
             }
 
+            [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
             public void Insert(ReferenceHandling referenceHandling)
@@ -85,6 +80,7 @@ namespace Gu.State.Tests
                 }
             }
 
+            [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
             public void Move(ReferenceHandling referenceHandling)
@@ -103,6 +99,7 @@ namespace Gu.State.Tests
                 }
             }
 
+            [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
             public void Replace(ReferenceHandling referenceHandling)
@@ -118,19 +115,6 @@ namespace Gu.State.Tests
                     source[1] = 4;
                     CollectionAssert.AreEqual(new[] { 3, 4 }, source);
                     CollectionAssert.AreEqual(new[] { 3, 4 }, target);
-                }
-            }
-
-            [Test]
-            public void ThrowsIfTargetCollectionChanges()
-            {
-                var source = new ObservableCollection<int> { 1, 2 };
-                var target = new ObservableCollection<int> { 1, 2 };
-                using (Synchronize.PropertyValues(source, target, ReferenceHandling.Structural))
-                {
-                    var exception = Assert.Throws<InvalidOperationException>(() => target.Add(3));
-                    var expected = "You cannot modify the target collection when you have applied a PropertySynchronizer on it";
-                    Assert.AreEqual(expected, exception.Message);
                 }
             }
         }

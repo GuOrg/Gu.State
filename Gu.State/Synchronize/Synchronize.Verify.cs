@@ -48,8 +48,13 @@
         /// <param name="settings">Contains configuration for how synchronization will be performed</param>
         public static void VerifyCanSynchronize(Type type, PropertiesSettings settings)
         {
-            Track.VerifyCanTrackChanges(type, settings);
-            Copy.VerifyCanCopyPropertyValues(type, settings);
+            VerifyCanSynchronize(type, settings, typeof(Synchronize).Name, nameof(VerifyCanSynchronize));
+        }
+
+        private static void VerifyCanSynchronize(Type type, PropertiesSettings settings, string className, string methodName)
+        {
+            Copy.VerifyCanCopyPropertyValues(type, settings, className, methodName);
+            Track.VerifyCanTrackIsDirty(type, settings, className, methodName);
         }
     }
 }

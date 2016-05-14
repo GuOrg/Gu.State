@@ -260,7 +260,7 @@ namespace Gu.State.Tests.EqualByTests
         {
             var x = new WithSimpleProperties(xv, null, "3", StringSplitOptions.RemoveEmptyEntries);
             var y = new WithSimpleProperties(yv, 2, "3", StringSplitOptions.RemoveEmptyEntries);
-            var excluded = this.GetType() == typeof(FieldValues.Classes)
+            var excluded = this is FieldValues.Classes
                                ? "nullableIntValue"
                                : nameof(WithSimpleProperties.NullableIntValue);
             if (referenceHandling == null)

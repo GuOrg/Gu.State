@@ -12,10 +12,10 @@ namespace Gu.State
             List<T> list;
             if (Cache.TryDequeue(out list))
             {
-                return Disposer.Create(list, Return);
+                return Borrowed.Create(list, Return);
             }
 
-            return Disposer.Create(new List<T>(), Return);
+            return Borrowed.Create(new List<T>(), Return);
         }
 
         private static void Return(List<T> list)

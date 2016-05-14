@@ -12,10 +12,10 @@ namespace Gu.State
             Dictionary<TKey, TValue> dictionary;
             if (Cache.TryDequeue(out dictionary))
             {
-                return Disposer.Create(dictionary, Return);
+                return Borrowed.Create(dictionary, Return);
             }
 
-            return Disposer.Create(new Dictionary<TKey, TValue>(), Return);
+            return Borrowed.Create(new Dictionary<TKey, TValue>(), Return);
         }
 
         private static void Return(Dictionary<TKey, TValue> dictionary)
