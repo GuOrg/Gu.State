@@ -56,8 +56,7 @@
         /// <param name="settings">Contains configuration for how tracking is performed</param>
         public static void VerifyCanTrackIsDirty(Type type, PropertiesSettings settings)
         {
-            EqualBy.VerifyCanEqualByPropertyValues(type, settings);
-            VerifyCanTrackChanges(type, settings);
+            VerifyCanTrackIsDirty(type, settings, typeof(Track).Name, nameof(VerifyCanTrackIsDirty));
         }
 
         /// <summary>
@@ -103,7 +102,18 @@
         /// <param name="settings">Contains configuration for how tracking will be performed</param>
         public static void VerifyCanTrackChanges(Type type, PropertiesSettings settings)
         {
-            Verify.IsTrackableType(type, settings);
+            VerifyCanTrackChanges(type, settings, typeof(Track).Name, nameof(VerifyCanTrackChanges));
+        }
+
+        internal static void VerifyCanTrackChanges(Type type, PropertiesSettings settings, string className, string methodName)
+        {
+            Verify.IsTrackableType(type, settings, className, methodName);
+        }
+
+        internal static void VerifyCanTrackIsDirty(Type type, PropertiesSettings settings, string className, string methodName)
+        {
+            EqualBy.VerifyCanEqualByPropertyValues(type, settings, className, methodName);
+            VerifyCanTrackChanges(type, settings, className, methodName);
         }
 
         private static bool HasErrors(this TypeErrors errors)
@@ -132,16 +142,16 @@
                 if (errors != null)
                 {
                     var typeErrors = new TypeErrors(null, errors);
-                    Throw.IfHasErrors(typeErrors, settings);
+                    Throw.IfHasErrors(typeErrors, settings, typeof(Track).Name, nameof(Track.Changes));
                 }
             }
 
-            internal static void IsTrackableType(Type type, PropertiesSettings settings)
+            internal static void IsTrackableType(Type type, PropertiesSettings settings, string className = null, string methodName = null)
             {
                 var errors = GetErrors(type, settings, null);
                 if (errors != null)
                 {
-                    Throw.IfHasErrors(errors, settings);
+                    Throw.IfHasErrors(errors, settings, className ?? typeof(Track).Name, methodName ?? nameof(Track.Changes));
                 }
             }
 
@@ -177,22 +187,22 @@
         private static class Throw
         {
             // ReSharper disable once UnusedParameter.Local
-            internal static void IfHasErrors<TSetting>(TypeErrors errors, TSetting settings)
+            internal static void IfHasErrors<TSetting>(TypeErrors errors, TSetting settings, string className, string methodName)
                 where TSetting : class, IMemberSettings
             {
                 if (errors.HasErrors())
                 {
-                    var message = GetErrorText(errors, settings);
+                    var message = GetErrorText(errors, settings, className, methodName);
                     throw new NotSupportedException(message);
                 }
             }
 
             // ReSharper disable once UnusedParameter.Local
-            private static string GetErrorText<TSettings>(TypeErrors errors, TSettings settings)
+            private static string GetErrorText<TSettings>(TypeErrors errors, TSettings settings, string className, string methodName)
                 where TSettings : class, IMemberSettings
             {
                 var errorBuilder = new StringBuilder();
-                errorBuilder.AppendLine("Track changes failed.")
+                errorBuilder.AppendLine($"{className}.{methodName}(x, y) failed.")
                             .AppendNotSupported(errors)
                             .AppendSolveTheProblemBy()
                             .AppendSuggestNotify(errors)

@@ -53,7 +53,7 @@
 
             if (settings.IsImmutable(typeof(T)))
             {
-                using (var borrow = SetPool<T>.Borrow(EqualityComparer<T>.Default))
+                using (var borrow = HashSetPool<T>.Borrow(EqualityComparer<T>.Default))
                 {
                     borrow.Value.UnionWith(source);
                     target.IntersectWith(borrow.Value);
@@ -67,7 +67,7 @@
                 case ReferenceHandling.Throw:
                     break;
                 case ReferenceHandling.References:
-                    using (var borrow = SetPool<T>.Borrow((x, y) => ReferenceEquals(x, y), x => RuntimeHelpers.GetHashCode(x)))
+                    using (var borrow = HashSetPool<T>.Borrow((x, y) => ReferenceEquals(x, y), x => RuntimeHelpers.GetHashCode(x)))
                     {
                         borrow.Value.UnionWith(source);
                         target.IntersectWith(borrow.Value);
@@ -83,7 +83,7 @@
                     }
 
                     var copyIngComparer = new CopyIngComparer<T, TSettings>(comparer, settings, referencePairs);
-                    using (var borrow = SetPool<T>.Borrow(copyIngComparer))
+                    using (var borrow = HashSetPool<T>.Borrow(copyIngComparer))
                     {
                         borrow.Value.UnionWith(source);
                         target.IntersectWith(borrow.Value);

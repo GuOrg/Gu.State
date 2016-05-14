@@ -26,7 +26,7 @@
             IReadOnlyDictionary<TKey, TValue> y,
             IMemberSettings settings)
         {
-            using (var borrow = SetPool<TKey>.Borrow(EqualityComparer<TKey>.Default.Equals, EqualityComparer<TKey>.Default.GetHashCode))
+            using (var borrow = HashSetPool<TKey>.Borrow(EqualityComparer<TKey>.Default.Equals, EqualityComparer<TKey>.Default.GetHashCode))
             {
                 borrow.Value.UnionWith(x.Keys);
                 borrow.Value.UnionWith(y.Keys);

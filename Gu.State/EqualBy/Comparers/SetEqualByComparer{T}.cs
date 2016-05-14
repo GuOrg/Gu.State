@@ -62,7 +62,7 @@
 
         private bool ItemsEquals(ISet<T> x, ISet<T> y, Func<T, T, bool> compare, Func<T, int> getHashCode)
         {
-            using (var borrow = SetPool<T>.Borrow(compare, getHashCode))
+            using (var borrow = HashSetPool<T>.Borrow(compare, getHashCode))
             {
                 borrow.Value.UnionWith(x);
                 var result = borrow.Value.SetEquals(y);

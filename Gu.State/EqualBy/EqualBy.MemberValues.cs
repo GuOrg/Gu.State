@@ -17,7 +17,7 @@
                 return result;
             }
 
-            Verify.CanEqualByMemberValues(x, y, settings);
+            Verify.CanEqualByMemberValues(x, y, settings, typeof(EqualBy).Name, settings.EqualByMethodName());
             using (var borrowed = settings.ReferenceHandling == ReferenceHandling.Structural
                                    ? ReferencePairCollection.Borrow()
                                    : null)

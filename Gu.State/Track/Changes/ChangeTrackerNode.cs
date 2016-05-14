@@ -9,7 +9,7 @@
     using System.Linq;
     using System.Reflection;
 
-    internal sealed class ChangeTrackerNode : IDisposable
+    internal sealed class ChangeTrackerNode : IDisposable, IInitialize<ChangeTrackerNode>
     {
         private readonly IRefCounted<ChangeNode> refcountedNode;
         private readonly DisposingMap<IDisposable> children = new DisposingMap<IDisposable>();
@@ -18,6 +18,31 @@
         {
             this.refcountedNode = ChangeNode.GetOrCreate(source, settings, isRoot);
             this.refcountedNode.Value.Change += this.OnTrackerChange;
+        }
+
+        public event EventHandler Changed;
+
+        public event EventHandler<ChangeTrackerNode> BubbleChange;
+
+        private IReadOnlyCollection<PropertyInfo> TrackProperties => this.refcountedNode.Value.TrackProperties;
+
+        private PropertiesSettings Settings => this.refcountedNode.Value.Settings;
+
+        public void Dispose()
+        {
+            this.refcountedNode.Value.Change -= this.OnTrackerChange;
+            this.refcountedNode.Value.PropertyChange -= this.OnTrackedPropertyChange;
+            this.refcountedNode.Value.Add -= this.OnTrackedAdd;
+            this.refcountedNode.Value.Remove -= this.OnTrackedRemove;
+            this.refcountedNode.Value.Replace -= this.OnTrackedReplace;
+            this.refcountedNode.Value.Move -= this.OnTrackedMove;
+            this.refcountedNode.Value.Reset -= this.OnTrackedReset;
+            this.refcountedNode.Dispose();
+            this.children.Dispose();
+        }
+
+        public ChangeTrackerNode Initialize()
+        {
             switch (this.refcountedNode.Value.Settings.ReferenceHandling)
             {
                 case ReferenceHandling.Throw:
@@ -40,7 +65,7 @@
                     if (list != null)
                     {
                         var itemType = list.GetType().GetItemType();
-                        if (!settings.IsImmutable(itemType) && !this.refcountedNode.Value.Settings.IsIgnoringDeclaringType(itemType))
+                        if (!this.Settings.IsImmutable(itemType) && !this.refcountedNode.Value.Settings.IsIgnoringDeclaringType(itemType))
                         {
                             for (var i = 0; i < list.Count; i++)
                             {
@@ -53,27 +78,8 @@
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-        }
 
-        public event EventHandler Changed;
-
-        public event EventHandler<ChangeTrackerNode> BubbleChange;
-
-        private IReadOnlyCollection<PropertyInfo> TrackProperties => this.refcountedNode.Value.TrackProperties;
-
-        private PropertiesSettings Settings => this.refcountedNode.Value.Settings;
-
-        public void Dispose()
-        {
-            this.refcountedNode.Value.Change -= this.OnTrackerChange;
-            this.refcountedNode.Value.PropertyChange -= this.OnTrackedPropertyChange;
-            this.refcountedNode.Value.Add -= this.OnTrackedAdd;
-            this.refcountedNode.Value.Remove -= this.OnTrackedRemove;
-            this.refcountedNode.Value.Replace -= this.OnTrackedReplace;
-            this.refcountedNode.Value.Move -= this.OnTrackedMove;
-            this.refcountedNode.Value.Reset -= this.OnTrackedReset;
-            this.refcountedNode.Dispose();
-            this.children.Dispose();
+            return this;
         }
 
         internal static IRefCounted<ChangeTrackerNode> GetOrCreate(object source, PropertiesSettings settings, bool isRoot)

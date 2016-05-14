@@ -50,9 +50,7 @@
         /// <param name="settings">Contains configuration for how copy will be performed</param>
         public static void VerifyCanCopyPropertyValues(Type type, PropertiesSettings settings)
         {
-            Verify.CanCopyRoot(type, settings);
-            Verify.GetPropertiesErrors(type, settings)
-                  .ThrowIfHasErrors(settings);
+            VerifyCanCopyPropertyValues(type, settings, typeof(Copy).Name, nameof(VerifyCanCopyPropertyValues));
         }
 
         /// <summary>
@@ -101,7 +99,14 @@
         {
             Verify.CanCopyRoot(type, settings);
             Verify.GetFieldsErrors(type, settings)
-                  .ThrowIfHasErrors(settings);
+                  .ThrowIfHasErrors(settings, typeof(Copy).Name, nameof(VerifyCanCopyFieldValues));
+        }
+
+        internal static void VerifyCanCopyPropertyValues(Type type, PropertiesSettings settings, string classname, string methodName)
+        {
+            Verify.CanCopyRoot(type, settings);
+            Verify.GetPropertiesErrors(type, settings)
+                  .ThrowIfHasErrors(settings, classname, methodName);
         }
 
         private static ErrorBuilder.TypeErrorsBuilder CheckIsCopyableEnumerable<TSetting>(this ErrorBuilder.TypeErrorsBuilder typeErrors, Type type, TSetting settings)
@@ -141,7 +146,7 @@
                 if (propertiesSettings != null)
                 {
                     GetPropertiesErrors(type, propertiesSettings)
-                        .ThrowIfHasErrors(propertiesSettings);
+                        .ThrowIfHasErrors(propertiesSettings, typeof(Copy).Name, settings.CopyMethodName());
                     return;
                 }
 
@@ -149,7 +154,7 @@
                 if (fieldsSettings != null)
                 {
                     GetFieldsErrors(type, fieldsSettings)
-                        .ThrowIfHasErrors(settings);
+                        .ThrowIfHasErrors(settings, typeof(Copy).Name, settings.CopyMethodName());
                     return;
                 }
 
@@ -171,25 +176,11 @@
                 }
             }
 
-            internal static void CanCopyPropertyValues<T>(T x, T y, PropertiesSettings settings)
-            {
-                var type = x?.GetType() ?? y?.GetType() ?? typeof(T);
-                GetPropertiesErrors(type, settings)
-                    .ThrowIfHasErrors(settings);
-            }
-
             internal static TypeErrors GetPropertiesErrors(Type type, PropertiesSettings settings, MemberPath path = null)
             {
                 return settings.CopyErrors.GetOrAdd(type, t => VerifyCore(settings, t)
                                                                    .VerifyRecursive(t, settings, path, GetRecursivePropertiesErrors)
                                                                    .Finnish());
-            }
-
-            internal static void CanCopyFieldValues<T>(T x, T y, FieldsSettings settings)
-            {
-                var type = x?.GetType() ?? y?.GetType() ?? typeof(T);
-                GetFieldsErrors(type, settings)
-                    .ThrowIfHasErrors(settings);
             }
 
             internal static TypeErrors GetFieldsErrors(Type type, FieldsSettings settings, MemberPath path = null)

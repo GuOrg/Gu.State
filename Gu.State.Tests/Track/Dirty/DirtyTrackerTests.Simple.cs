@@ -84,6 +84,33 @@ namespace Gu.State.Tests
 #endif
             }
 
+
+            [Test]
+            public void DoesNotNotifyWhenMissingProperty()
+            {
+                var x = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
+                var y = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
+                var changes = new List<string>();
+
+                using (var tracker = Track.IsDirty(x, y))
+                {
+                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    Assert.AreEqual(null, tracker.Diff);
+                    CollectionAssert.IsEmpty(changes);
+
+                    x.OnPropertyChanged("Missing");
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    Assert.AreEqual(null, tracker.Diff?.ToString("", " "));
+                    CollectionAssert.IsEmpty(changes);
+
+                    y.OnPropertyChanged("Missing");
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    Assert.AreEqual(null, tracker.Diff?.ToString("", " "));
+                    CollectionAssert.IsEmpty(changes);
+                }
+            }
+
             [Test]
             public void DoesNotNotifyWhenNoChangeWhenNotDirty()
             {
@@ -231,6 +258,30 @@ namespace Gu.State.Tests
                     y.Value2 = 3;
                     Assert.AreEqual(true, tracker.IsDirty);
                     Assert.AreEqual("WithSimpleProperties Value2 x: 2 y: 3", tracker.Diff.ToString("", " "));
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
+                    CollectionAssert.AreEqual(expectedChanges, changes);
+                }
+            }
+
+            [TestCase(null)]
+            [TestCase("")]
+            public void HandlesPropertyChangedEmptyAndNull(string prop)
+            {
+                var x = new WithSimpleProperties(1, 2);
+                var y = new WithSimpleProperties(1, 2);
+                var changes = new List<string>();
+                var expectedChanges = new List<string>();
+                using (var tracker = Track.IsDirty(x, y))
+                {
+                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    Assert.AreEqual(null, tracker.Diff);
+                    CollectionAssert.IsEmpty(changes);
+
+                    x.SetFields(1, 4);
+                    x.OnPropertyChanged(prop);
+                    Assert.AreEqual(true, tracker.IsDirty);
+                    Assert.AreEqual("WithSimpleProperties Value2 x: 4 y: 2", tracker.Diff.ToString("", " "));
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
                 }

@@ -5,7 +5,7 @@
     using System.Collections.Generic;
     using System.Diagnostics;
 
-    internal static class SetPool<T>
+    internal static class HashSetPool<T>
     {
         private static readonly ConcurrentQueue<HashSet<T>> Cache = new ConcurrentQueue<HashSet<T>>();
 
@@ -24,11 +24,11 @@
             {
                 ((WrappingComparer)set.Comparer).Compare = compare;
                 ((WrappingComparer)set.Comparer).HashCode = getHashCode;
-                return Disposer.Create(set, Return);
+                return Borrowed.Create(set, Return);
             }
 
             set = new HashSet<T>(new WrappingComparer { Compare = compare, HashCode = getHashCode });
-            return Disposer.Create(set, Return);
+            return Borrowed.Create(set, Return);
         }
 
         private static void Return(HashSet<T> set)
