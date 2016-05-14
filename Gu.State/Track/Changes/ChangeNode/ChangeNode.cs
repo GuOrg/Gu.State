@@ -55,7 +55,7 @@
 
         public PropertiesSettings Settings { get; }
 
-        void IDisposable.Dispose()
+        public void Dispose()
         {
             if (this.disposed)
             {

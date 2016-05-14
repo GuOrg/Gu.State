@@ -110,7 +110,6 @@
     <Compile Include="EqualByTests\SetTests.cs" />
     <Compile Include="IgnoredTests.cs" />
     <Compile Include="Internals\ArrayExt.cs" />
-    <Compile Include="Internals\Collections\DisposingListTests.cs" />
     <Compile Include="Internals\Collections\DisposingMapTests.cs" />
     <Compile Include="Internals\Pools\ReferenceSetPoolTests.cs" />
     <Compile Include="Internals\Errors\ErrorBuilderTests.WithReferenceLoop.cs" />

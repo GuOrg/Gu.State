@@ -12,12 +12,13 @@
     internal sealed class ChangeTrackerNode : IDisposable, IInitialize<ChangeTrackerNode>
     {
         private readonly IRefCounted<ChangeNode> refcountedNode;
-        private readonly DisposingMap<IDisposable> children = new DisposingMap<IDisposable>();
+        private readonly IBorrowed<DisposingMap<IUnsubscriber<IRefCounted<ChangeTrackerNode>>>> children;
 
         private ChangeTrackerNode(object source, PropertiesSettings settings, bool isRoot)
         {
             this.refcountedNode = ChangeNode.GetOrCreate(source, settings, isRoot);
             this.refcountedNode.Value.Change += this.OnTrackerChange;
+            this.children = DisposingMap<IUnsubscriber<IRefCounted<ChangeTrackerNode>>>.Borrow();
         }
 
         public event EventHandler Changed;
@@ -25,6 +26,12 @@
         public event EventHandler<ChangeTrackerNode> BubbleChange;
 
         private IReadOnlyCollection<PropertyInfo> TrackProperties => this.refcountedNode.Value.TrackProperties;
+
+        private IList SourceList => (IList)this.Source;
+
+        private object Source => this.refcountedNode.Value.Source;
+
+        private DisposingMap<IUnsubscriber<IRefCounted<ChangeTrackerNode>>> Children => this.children.Value;
 
         private PropertiesSettings Settings => this.refcountedNode.Value.Settings;
 
@@ -43,7 +50,8 @@
 
         public ChangeTrackerNode Initialize()
         {
-            switch (this.refcountedNode.Value.Settings.ReferenceHandling)
+            var settings = this.Settings;
+            switch (settings.ReferenceHandling)
             {
                 case ReferenceHandling.Throw:
                     break;
@@ -61,11 +69,11 @@
                         this.UpdatePropertyNode(property);
                     }
 
-                    var list = this.refcountedNode.Value.Source as IList;
+                    var list = this.Source as IList;
                     if (list != null)
                     {
                         var itemType = list.GetType().GetItemType();
-                        if (!this.Settings.IsImmutable(itemType) && !this.refcountedNode.Value.Settings.IsIgnoringDeclaringType(itemType))
+                        if (!settings.IsImmutable(itemType) && !settings.IsIgnoringDeclaringType(itemType))
                         {
                             for (var i = 0; i < list.Count; i++)
                             {
@@ -124,7 +132,7 @@
         {
             if (!this.Settings.IsImmutable(this.refcountedNode.Value.Source.GetType().GetItemType()))
             {
-                this.children.Remove(e.Index);
+                this.Children.Remove(e.Index);
             }
         }
 
@@ -137,60 +145,56 @@
         {
             if (!this.Settings.IsImmutable(this.refcountedNode.Value.Source.GetType().GetItemType()))
             {
-                this.children.Move(e.FromIndex, e.ToIndex);
+                this.Children.Move(e.FromIndex, e.ToIndex);
             }
         }
 
         private void OnTrackedReset(object sender, ResetEventArgs e)
         {
-            var newItems = new List<IDisposable>(e.NewItems.Count);
-            foreach (var newItem in e.NewItems)
+            using (var borrow = ListPool<IUnsubscriber<IRefCounted<ChangeTrackerNode>>>.Borrow())
             {
-                newItems.Add(this.CreateChild(newItem));
-            }
+                foreach (var newItem in e.NewItems)
+                {
+                    borrow.Value.Add(this.CreateChild(newItem));
+                }
 
-            this.children.Reset(newItems);
+                this.Children.Reset(borrow.Value);
+            }
         }
 
         private void UpdatePropertyNode(PropertyInfo property)
         {
-            var value = property.GetValue(this.refcountedNode.Value.Source);
+            var value = property.GetValue(this.Source);
             if (value != null)
             {
                 var child = this.CreateChild(value);
-                this.children.SetValue(property, child);
+                this.Children.SetValue(property, child);
             }
             else
             {
-                this.children.SetValue(property, null);
+                this.Children.SetValue(property, null);
             }
         }
 
         private void UpdateIndexNode(int index)
         {
-            var list = (IList)this.refcountedNode.Value.Source;
-            var value = list[index];
+            var value = this.SourceList[index];
             if (value != null && !this.Settings.IsImmutable(value.GetType()))
             {
                 var child = this.CreateChild(value);
-                this.children.SetValue(index, child);
+                this.Children.SetValue(index, child);
             }
             else
             {
-                this.children.SetValue(index, null);
+                this.Children.SetValue(index, null);
             }
         }
 
-        private IDisposable CreateChild(object child)
+        private IUnsubscriber<IRefCounted<ChangeTrackerNode>> CreateChild(object child)
         {
             var childNode = GetOrCreate(child, this.refcountedNode.Value.Settings, false);
             childNode.Value.BubbleChange += this.OnBubbleChange;
-            var disposable = new Disposer(() =>
-                {
-                    childNode.Value.BubbleChange -= this.OnBubbleChange;
-                    childNode.Dispose();
-                });
-            return disposable;
+            return childNode.UnsubscribeAndDispose(x => x.Value.BubbleChange -= this.OnBubbleChange);
         }
     }
 }

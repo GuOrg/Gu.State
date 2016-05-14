@@ -128,7 +128,7 @@
     <Compile Include="Settings\CustomCopy.cs" />
     <Compile Include="Synchronize\Synchronize.Synchronizer.cs" />
     <Compile Include="Track\Changes\ChangeNode\EventArgs\ReplaceEventArgs.cs" />
-    <Compile Include="Internals\Collections\DisposingMap{TKey, TValue}.cs" />
+    <Compile Include="Internals\Collections\DisposingMap{TValue}.cs" />
     <Compile Include="Internals\Collections\ReferenceComparer.cs" />
     <Compile Include="Internals\ReferencePair.cs" />
     <Compile Include="Internals\Disposer.cs" />
@@ -193,7 +193,6 @@
     <Compile Include="Internals\BindingFlagsAndReferenceHandling.cs" />
     <Compile Include="Internals\Collections\ConcurrentSet.cs" />
     <Compile Include="Internals\Collections\IgnoredTypes.cs" />
-    <Compile Include="Internals\Collections\DisposingList{T}.cs" />
     <Compile Include="Internals\PaddedPairs.cs" />
     <Compile Include="Internals\MemberPath\IndexItem.cs" />
     <Compile Include="Internals\MemberPath\PathItem.cs" />
