@@ -2,7 +2,7 @@ namespace Gu.State
 {
     using System.Collections;
 
-    internal struct ResetEventArgs : IRootChangeEventArgs
+    public struct ResetEventArgs : IRootChangeEventArgs
     {
         private static readonly IList Empty = new object[0];
 
@@ -12,8 +12,8 @@ namespace Gu.State
             this.NewItems = newItems ?? Empty;
         }
 
-        public IList OldItems { get; }
+        internal IList OldItems { get; }
 
-        public IList NewItems { get; }
+        internal IList NewItems { get; }
     }
 }

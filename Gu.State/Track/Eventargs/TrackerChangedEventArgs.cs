@@ -2,7 +2,7 @@ namespace Gu.State
 {
     using System.Reflection;
 
-    internal static class TrackerChangedEventArgs
+    public static class TrackerChangedEventArgs
     {
         internal static PropertyGraphChangedEventArgs<T> Create<T>(T root, PropertyInfo property)
         {

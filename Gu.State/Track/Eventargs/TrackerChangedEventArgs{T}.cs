@@ -3,7 +3,7 @@ namespace Gu.State
     using System;
     using System.Reflection;
 
-    internal abstract class TrackerChangedEventArgs<T> : EventArgs
+    public abstract class TrackerChangedEventArgs<T> : EventArgs
     {
         protected TrackerChangedEventArgs(
             T node,

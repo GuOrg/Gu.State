@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Internals\Borrowed.cs" />
+    <Compile Include="Contracts\IChangeTracker.cs" />
     <Compile Include="Internals\Contracts\IInitialize{T}.cs" />
     <Compile Include="Internals\CastingComparer.cs" />
     <Compile Include="Internals\CastingComparer{T}.cs" />
@@ -224,7 +225,6 @@
     <Compile Include="Internals\Constants.cs" />
     <Compile Include="Track\Track.cs" />
     <Compile Include="Track\Dirty\DirtyTracker{T}.cs" />
-    <Compile Include="Internals\Contracts\IChangeTracker.cs" />
     <Compile Include="Internals\Ensure\Ensure.cs" />
     <Compile Include="Internals\Ensure\Ensure.string.cs" />
     <Compile Include="Internals\Ensure\Ensure.type.cs" />

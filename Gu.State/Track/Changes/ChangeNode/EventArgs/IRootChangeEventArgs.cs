@@ -1,6 +1,6 @@
 namespace Gu.State
 {
-    interface IRootChangeEventArgs
+    public interface IRootChangeEventArgs
     {
     }
 }
