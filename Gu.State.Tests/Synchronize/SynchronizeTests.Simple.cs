@@ -1,6 +1,7 @@
 ﻿namespace Gu.State.Tests
 {
     using System;
+    using System.Linq;
 
     using NUnit.Framework;
 
@@ -44,12 +45,14 @@
                 Assert.AreEqual(5, target.IntValue);
             }
 
-            [Test]
-            public void WithCalculated()
+            [TestCase(ReferenceHandling.Throw)]
+            [TestCase(ReferenceHandling.Structural)]
+            [TestCase(ReferenceHandling.References)]
+            public void WithCalculated(ReferenceHandling referenceHandling)
             {
                 var source = new WithCalculatedProperty { Value = 1 };
                 var target = new WithCalculatedProperty { Value = 3 };
-                using (Synchronize.PropertyValues(source, target))
+                using (Synchronize.PropertyValues(source, target, referenceHandling))
                 {
                     Assert.AreEqual(1, source.Value);
                     Assert.AreEqual(1, target.Value);
@@ -64,14 +67,16 @@
                 Assert.AreEqual(5, target.Value);
             }
 
-            [Test]
-            public void Excludes()
+            [TestCase(ReferenceHandling.Throw)]
+            [TestCase(ReferenceHandling.Structural)]
+            [TestCase(ReferenceHandling.References)]
+            public void Excludes(ReferenceHandling referenceHandling)
             {
                 var source = new WithSimpleProperties { IntValue = 1, StringValue = "2" };
                 var target = new WithSimpleProperties { IntValue = 3, StringValue = "4" };
                 var settings = PropertiesSettings.Build()
                                                  .IgnoreProperty<WithSimpleProperties>(x => x.StringValue)
-                                                 .CreateSettings();
+                                                 .CreateSettings(referenceHandling);
                 using (Synchronize.PropertyValues(source, target, settings))
                 {
                     Assert.AreEqual(1, source.IntValue);
@@ -95,12 +100,14 @@
                 Assert.AreEqual("4", target.StringValue);
             }
 
-            [Test]
-            public void HandlesMissingProperty()
+            [TestCase(ReferenceHandling.Throw)]
+            [TestCase(ReferenceHandling.Structural)]
+            [TestCase(ReferenceHandling.References)]
+            public void HandlesMissingProperty(ReferenceHandling referenceHandling)
             {
                 var source = new WithSimpleProperties { IntValue = 1, StringValue = "2" };
                 var target = new WithSimpleProperties { IntValue = 3, StringValue = "4" };
-                using (Synchronize.PropertyValues(source, target))
+                using (Synchronize.PropertyValues(source, target, referenceHandling))
                 {
                     Assert.AreEqual(1, source.IntValue);
                     Assert.AreEqual(1, target.IntValue);
@@ -127,19 +134,26 @@
             {
                 var source = new WithSimpleProperties { IntValue = 1, StringValue = "2" };
                 var target = new WithSimpleProperties { IntValue = 3, StringValue = "4" };
-                using (Synchronize.PropertyValues(source, target))
+                foreach (var referenceHandling in Enum.GetValues(typeof(ReferenceHandling)).Cast<ReferenceHandling>())
                 {
-                    Assert.AreEqual(1, source.IntValue);
-                    Assert.AreEqual(1, target.IntValue);
-                    Assert.AreEqual("2", source.StringValue);
-                    Assert.AreEqual("2", target.StringValue);
+                    source.IntValue = 1;
+                    source.StringValue = "2";
+                    target.IntValue = 3;
+                    target.StringValue = "4";
+                    using (Synchronize.PropertyValues(source, target, referenceHandling))
+                    {
+                        Assert.AreEqual(1, source.IntValue);
+                        Assert.AreEqual(1, target.IntValue);
+                        Assert.AreEqual("2", source.StringValue);
+                        Assert.AreEqual("2", target.StringValue);
 
-                    source.SetFields(5, "6");
-                    source.OnPropertyChanged(prop);
-                    Assert.AreEqual(5, source.IntValue);
-                    Assert.AreEqual(5, target.IntValue);
-                    Assert.AreEqual("6", source.StringValue);
-                    Assert.AreEqual("6", target.StringValue);
+                        source.SetFields(5, "6");
+                        source.OnPropertyChanged(prop);
+                        Assert.AreEqual(5, source.IntValue);
+                        Assert.AreEqual(5, target.IntValue);
+                        Assert.AreEqual("6", source.StringValue);
+                        Assert.AreEqual("6", target.StringValue);
+                    }
                 }
             }
         }
