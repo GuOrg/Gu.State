@@ -108,7 +108,10 @@
     <Compile Include="EqualByTests\PropertyValues\Sets.cs" />
     <Compile Include="EqualByTests\ReferenceLoopsTests.cs" />
     <Compile Include="EqualByTests\SetTests.cs" />
-    <Compile Include="IgnoredTests.cs" />
+    <Compile Include="TestHelpers\AddEventArgsComparer.cs" />
+    <Compile Include="TestHelpers\EventArgsComparer.cs" />
+    <Compile Include="TestHelpers\EventArgsComparer{T}.cs" />
+    <Compile Include="TestHelpers\IgnoredTests.cs" />
     <Compile Include="Internals\ArrayExt.cs" />
     <Compile Include="Internals\Collections\DisposingMapTests.cs" />
     <Compile Include="Internals\Pools\ReferenceSetPoolTests.cs" />
@@ -133,6 +136,13 @@
     <Compile Include="Synchronize\SynchronizeTests.Throws.cs" />
     <Compile Include="Synchronize\SynchronizeTests.ReferenceLoops.cs" />
     <Compile Include="Synchronize\SynchronizeTests.Verify.cs" />
+    <Compile Include="TestHelpers\ItemGraphChangedEventArgsComparer.cs" />
+    <Compile Include="TestHelpers\MoveEventArgsComparer.cs" />
+    <Compile Include="TestHelpers\PropertyChangedEventArgsComparer.cs" />
+    <Compile Include="TestHelpers\PropertyGraphChangedEventArgsComparer.cs" />
+    <Compile Include="TestHelpers\RemoveEventArgsComparer.cs" />
+    <Compile Include="TestHelpers\ReplaceEventArgsComparer.cs" />
+    <Compile Include="TestHelpers\RootChangeEventArgsEventArgsComparer.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTests.Verify.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTests.Simple.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTests.MemoryLeaks.cs" />
@@ -202,7 +212,7 @@
     <Compile Include="Synchronize\SynchronizeTests.Complex.cs" />
     <Compile Include="Synchronize\SynchronizeTests.Simple.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestHelpers.cs" />
+    <Compile Include="TestHelpers\TestHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CopyTests\PropertyValues\Throws.cs" />

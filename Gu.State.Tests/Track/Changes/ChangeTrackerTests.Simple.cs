@@ -30,8 +30,8 @@
                     x.Value1++;
                     Assert.AreEqual(1, tracker.Changes);
                     CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
-                    var expected = new[] { RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(x, tracker.Settings, false), new PropertyChangeEventArgs(x.GetType().GetProperty(nameof(x.Value1)))) };
-                    CollectionAssert.AreEqual(expected, changes);
+                    var expected = new[] { RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(x, tracker.Settings, false).Value, new PropertyChangeEventArgs(x.GetType().GetProperty(nameof(x.Value1)))) };
+                    CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
                 }
 
                 x.Value1++;

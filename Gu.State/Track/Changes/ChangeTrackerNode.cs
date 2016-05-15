@@ -137,6 +137,7 @@
         private void OnSourcePropertyChange(object sender, PropertyChangeEventArgs e)
         {
             this.UpdatePropertyNode(e.PropertyInfo);
+            this.Changed?.Invoke(this, RootChangeEventArgs.Create(this, e));
         }
 
         private void OnSourceAdd(object sender, AddEventArgs e)

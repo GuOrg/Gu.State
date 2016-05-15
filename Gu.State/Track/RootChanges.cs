@@ -24,13 +24,13 @@
             var inpc = source as INotifyPropertyChanged;
             if (inpc != null)
             {
-                inpc.PropertyChanged += this.OnTrackedPropertyChanged;
+                inpc.PropertyChanged += this.OnSourcePropertyChanged;
             }
 
             var incc = source as INotifyCollectionChanged;
             if (incc != null)
             {
-                incc.CollectionChanged += this.OnTrackedCollectionChanged;
+                incc.CollectionChanged += this.OnSourceCollectionChanged;
             }
         }
 
@@ -65,13 +65,13 @@
             var inpc = this.Source as INotifyPropertyChanged;
             if (inpc != null)
             {
-                inpc.PropertyChanged -= this.OnTrackedPropertyChanged;
+                inpc.PropertyChanged -= this.OnSourcePropertyChanged;
             }
 
             var incc = this.Source as INotifyCollectionChanged;
             if (incc != null)
             {
-                incc.CollectionChanged -= this.OnTrackedCollectionChanged;
+                incc.CollectionChanged -= this.OnSourceCollectionChanged;
             }
         }
 
@@ -100,7 +100,7 @@
             return TrackerCache.GetOrAdd(source, settings, s => new RootChanges(s, settings));
         }
 
-        private void OnTrackedCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void OnSourceCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             this.RawChange?.Invoke(this, e);
             switch (e.Action)
@@ -143,7 +143,7 @@
             }
         }
 
-        private void OnTrackedPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void OnSourcePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (string.IsNullOrEmpty(e.PropertyName))
             {
