@@ -16,25 +16,25 @@
             [TestCase(ReferenceHandling.Structural)]
             public void CreateAndDispose(ReferenceHandling referenceHandling)
             {
-                var x = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
+                var source = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
                 var propertyChanges = new List<string>();
                 var changes = new List<EventArgs>();
 
-                using (var tracker = Track.Changes(x, referenceHandling))
+                using (var tracker = Track.Changes(source, referenceHandling))
                 {
                     tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
                     CollectionAssert.IsEmpty(propertyChanges);
                     CollectionAssert.IsEmpty(changes);
 
-                    x.Value1++;
+                    source.Value1++;
                     Assert.AreEqual(1, tracker.Changes);
                     CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
-                    var expected = new[] { RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(x, tracker.Settings, false).Value, new PropertyChangeEventArgs(x.GetType().GetProperty(nameof(x.Value1)))) };
+                    var expected = new[] { RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(source, tracker.Settings, false).Value, new PropertyChangeEventArgs(source.GetType().GetProperty(nameof(source.Value1)))) };
                     CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
                 }
 
-                x.Value1++;
+                source.Value1++;
                 Assert.AreEqual(1, propertyChanges.Count);
                 Assert.AreEqual(1, changes.Count);
 #if (!DEBUG) // debug build keeps instances alive longer for nicer debugging experience
@@ -50,27 +50,27 @@
             [TestCase(ReferenceHandling.Structural)]
             public void CreateAndDisposeExplicitSetting(ReferenceHandling referenceHandling)
             {
-                var x = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
+                var source = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
                 var propertyChanges = new List<string>();
                 var expectedPropertyChanges = new List<string>();
                 var changes = new List<EventArgs>();
 
-                using (var tracker = Track.Changes(x, referenceHandling))
+                using (var tracker = Track.Changes(source, referenceHandling))
                 {
                     tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
                     CollectionAssert.IsEmpty(propertyChanges);
                     CollectionAssert.IsEmpty(changes);
 
-                    x.Value1++;
+                    source.Value1++;
                     Assert.AreEqual(1, tracker.Changes);
                     expectedPropertyChanges.AddRange(new[] { "Changes" });
                     CollectionAssert.AreEqual(expectedPropertyChanges, propertyChanges);
-                    var expected = new[] { RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(x, tracker.Settings, false).Value, new PropertyChangeEventArgs(x.GetType().GetProperty(nameof(x.Value1)))) };
+                    var expected = new[] { RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(source, tracker.Settings, false).Value, new PropertyChangeEventArgs(source.GetType().GetProperty(nameof(source.Value1)))) };
                     CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
                 }
 
-                x.Value1++;
+                source.Value1++;
                 CollectionAssert.AreEqual(expectedPropertyChanges, propertyChanges);
 
 #if (!DEBUG) // debug build keeps instances alive longer for nicer debugging experience

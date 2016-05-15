@@ -57,9 +57,9 @@ namespace Gu.State
         }
 
         /// <summary>
-        /// Creates a tracker that detects and notifies about changes of any property or subproperty of <paramref name="root"/>
+        /// Creates a tracker that detects and notifies about changes of any property or subproperty of <paramref name="source"/>
         /// </summary>
-        /// <param name="root">The item to track changes for.</param>
+        /// <param name="source">The item to track changes for.</param>
         /// <param name="referenceHandling">
         /// - Structural tracks property values for the entire graph.
         /// - References tracks only one level.
@@ -68,21 +68,21 @@ namespace Gu.State
         /// <param name="bindingFlags">
         /// The <see cref="BindingFlags"/> to use when getting properties to track
         /// </param>
-        /// <returns>An <see cref="IChangeTracker"/> that signals on changes in <paramref name="root"/></returns>
+        /// <returns>An <see cref="IChangeTracker"/> that signals on changes in <paramref name="source"/></returns>
         public static IChangeTracker Changes(
-            INotifyPropertyChanged root,
+            INotifyPropertyChanged source,
             ReferenceHandling referenceHandling = ReferenceHandling.Structural,
             BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
         {
-            Ensure.NotNull(root, nameof(root));
+            Ensure.NotNull(source, nameof(source));
             var settings = PropertiesSettings.GetOrCreate(referenceHandling: referenceHandling, bindingFlags: bindingFlags);
-            return Changes(root, settings);
+            return Changes(source, settings);
         }
 
         /// <summary>
-        /// Creates a tracker that detects and notifies about changes of any property or subproperty of <paramref name="root"/>
+        /// Creates a tracker that detects and notifies about changes of any property or subproperty of <paramref name="source"/>
         /// </summary>
-        /// <param name="root">The item to track changes for.</param>
+        /// <param name="source">The item to track changes for.</param>
         /// <param name="settings">
         /// Configuration for how to track.
         /// For best performance settings should be cached between usages if anthing other than <see cref="ReferenceHandling"/> or <see cref="BindingFlags"/> is configured.
@@ -90,12 +90,12 @@ namespace Gu.State
         /// <returns>
         /// An <see cref="IChangeTracker"/> that signals on changes.
         /// Disposing it stops tracking.
-        /// <paramref name="root"/></returns>
-        public static IChangeTracker Changes(INotifyPropertyChanged root, PropertiesSettings settings)
+        /// <paramref name="source"/></returns>
+        public static IChangeTracker Changes(INotifyPropertyChanged source, PropertiesSettings settings)
         {
-            Ensure.NotNull(root, nameof(root));
+            Ensure.NotNull(source, nameof(source));
             Ensure.NotNull(settings, nameof(settings));
-            return new ChangeTracker(root, settings);
+            return new ChangeTracker(source, settings);
         }
     }
 }

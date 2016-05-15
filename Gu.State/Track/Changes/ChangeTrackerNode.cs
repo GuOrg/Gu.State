@@ -115,13 +115,13 @@
         internal static IRefCounted<ChangeTrackerNode> GetOrCreate(INotifyPropertyChanged source, PropertiesSettings settings, bool isRoot)
         {
             Debug.Assert(source != null, "Cannot track null");
-            return TrackerCache.GetOrAdd(source, settings, s => new ChangeTrackerNode(s, settings, isRoot));
+            return TrackerCache.GetOrAdd((object)source, settings, s => new ChangeTrackerNode(s, settings, isRoot));
         }
 
         internal static IRefCounted<ChangeTrackerNode> GetOrCreate(INotifyCollectionChanged source, PropertiesSettings settings, bool isRoot)
         {
             Debug.Assert(source != null, "Cannot track null");
-            return TrackerCache.GetOrAdd(source, settings, s => new ChangeTrackerNode(s, settings, isRoot));
+            return TrackerCache.GetOrAdd((object)source, settings, s => new ChangeTrackerNode(s, settings, isRoot));
         }
 
         private void OnChildChanged(object sender, TrackerChangedEventArgs<ChangeTrackerNode> e)
@@ -143,27 +143,26 @@
         private void OnSourceAdd(object sender, AddEventArgs e)
         {
             this.UpdateIndexNode(e.Index);
+            this.Changed?.Invoke(this, RootChangeEventArgs.Create(this, e));
         }
 
         private void OnSourceRemove(object sender, RemoveEventArgs e)
         {
-            if (!this.Settings.IsImmutable(this.refcountedRootChanges.Value.Source.GetType().GetItemType()))
-            {
-                this.Children.Remove(e.Index);
-            }
+            throw new NotImplementedException("Test: change item at higher index after remove");
+            this.Children.Remove(e.Index);
+            this.Changed?.Invoke(this, RootChangeEventArgs.Create(this, e));
         }
 
         private void OnSourceReplace(object sender, ReplaceEventArgs e)
         {
             this.UpdateIndexNode(e.Index);
+            this.Changed?.Invoke(this, RootChangeEventArgs.Create(this, e));
         }
 
         private void OnSourceMove(object sender, MoveEventArgs e)
         {
-            if (!this.Settings.IsImmutable(this.refcountedRootChanges.Value.Source.GetType().GetItemType()))
-            {
-                this.Children.Move(e.FromIndex, e.ToIndex);
-            }
+            this.Children.Move(e.FromIndex, e.ToIndex);
+            this.Changed?.Invoke(this, RootChangeEventArgs.Create(this, e));
         }
 
         private void OnSourceReset(object sender, ResetEventArgs e)
@@ -190,6 +189,7 @@
                 }
 
                 this.Children.Reset(borrow.Value);
+                this.Changed?.Invoke(this, RootChangeEventArgs.Create(this, e));
             }
         }
 
