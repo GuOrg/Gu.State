@@ -189,13 +189,13 @@
     <Compile Include="Track\RootChangeEventArgs\PropertyChangeEventArgs.cs" />
     <Compile Include="Contracts\IDirtyTracker{T}.cs" />
     <Compile Include="Track\Dirty\DirtyTracker.cs" />
-    <Compile Include="Track\Eventargs\GraphChangeEventArgs{T}.cs" />
-    <Compile Include="Track\Eventargs\RootChangeEventArgs.cs" />
-    <Compile Include="Track\Eventargs\RootChangeEventArgs{T}.cs" />
-    <Compile Include="Track\Eventargs\ItemGraphChangedEventArgs{T}.cs" />
-    <Compile Include="Track\Eventargs\PropertyGraphChangedEventArgs{T}.cs" />
-    <Compile Include="Track\Eventargs\GraphChangeEventArgs.cs" />
-    <Compile Include="Track\Eventargs\TrackerChangedEventArgs{T}.cs" />
+    <Compile Include="Track\ChangeEventargs\GraphChangeEventArgs{T}.cs" />
+    <Compile Include="Track\ChangeEventargs\RootChangeEventArgs.cs" />
+    <Compile Include="Track\ChangeEventargs\RootChangeEventArgs{T}.cs" />
+    <Compile Include="Track\ChangeEventargs\ItemGraphChangedEventArgs{T}.cs" />
+    <Compile Include="Track\ChangeEventargs\PropertyGraphChangedEventArgs{T}.cs" />
+    <Compile Include="Track\ChangeEventargs\GraphChangeEventArgs.cs" />
+    <Compile Include="Track\ChangeEventargs\TrackerChangedEventArgs{T}.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerNode.cs" />
     <Compile Include="Track\RootChanges.cs" />
     <Compile Include="Track\Track.Verify.cs" />
@@ -253,7 +253,6 @@
   -->
   <ItemGroup>
     <Folder Include="Settings\Errors\" />
-    <Folder Include="Track\Changes\ChangeNode\" />
   </ItemGroup>
   <Import Project="..\.paket\paket.targets" />
   <Choose>
