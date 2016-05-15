@@ -128,9 +128,9 @@
     <Compile Include="Internals\Unsubscriber.cs" />
     <Compile Include="Settings\CustomCopy.cs" />
     <Compile Include="Synchronize\Synchronize.Synchronizer.cs" />
-    <Compile Include="Track\Changes\IChildNode.cs" />
-    <Compile Include="Track\Changes\IndexNode.cs" />
-    <Compile Include="Track\Changes\PropertyNode.cs" />
+    <Compile Include="Track\ChildNodes\IChildNode.cs" />
+    <Compile Include="Track\ChildNodes\IndexNode.cs" />
+    <Compile Include="Track\ChildNodes\PropertyNode.cs" />
     <Compile Include="Track\RootChangeEventArgs\IRootChangeEventArgs.cs" />
     <Compile Include="Track\RootChangeEventArgs\ReplaceEventArgs.cs" />
     <Compile Include="Internals\Collections\DisposingMap{TValue}.cs" />
