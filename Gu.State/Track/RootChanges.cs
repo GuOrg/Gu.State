@@ -12,7 +12,7 @@
     {
         private bool disposed;
 
-        private RootChanges(INotifyPropertyChanged source, PropertiesSettings settings)
+        private RootChanges(object source, PropertiesSettings settings)
         {
             this.Source = source;
             this.Settings = settings;
@@ -21,7 +21,11 @@
                                        .Where(p => !this.Settings.IsIgnoringProperty(p))
                                        .Where(p => !settings.IsImmutable(p.PropertyType))
                                        .ToArray();
-            source.PropertyChanged += this.OnTrackedPropertyChanged;
+            var inpc = source as INotifyPropertyChanged;
+            if (inpc != null)
+            {
+                inpc.PropertyChanged += this.OnTrackedPropertyChanged;
+            }
 
             var incc = source as INotifyCollectionChanged;
             if (incc != null)
@@ -44,7 +48,7 @@
 
         public event EventHandler<EventArgs> RawChange;
 
-        public INotifyPropertyChanged Source { get; }
+        public object Source { get; }
 
         public IReadOnlyCollection<PropertyInfo> TrackProperties { get; }
 
@@ -72,6 +76,16 @@
         }
 
         internal static IRefCounted<RootChanges> GetOrCreate(INotifyPropertyChanged source, PropertiesSettings settings, bool isRoot)
+        {
+            return GetOrCreate((object)source, settings, isRoot);
+        }
+
+        internal static IRefCounted<RootChanges> GetOrCreate(INotifyCollectionChanged source, PropertiesSettings settings, bool isRoot)
+        {
+            return GetOrCreate((object)source, settings, isRoot);
+        }
+
+        internal static IRefCounted<RootChanges> GetOrCreate(object source, PropertiesSettings settings, bool isRoot)
         {
             Debug.Assert(source != null, "Cannot track null");
             if (isRoot)

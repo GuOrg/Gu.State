@@ -1,16 +1,16 @@
 namespace Gu.State
 {
     using System;
-    using System.Reflection;
+    using System.Collections.Specialized;
 
-    internal sealed class PropertyNode : IChildNode
+    internal sealed class IndexNode : IChildNode
     {
-        internal readonly PropertyInfo PropertyInfo;
+        internal readonly int Index;
         private readonly IRefCounted<ChangeTrackerNode> node;
 
-        private PropertyNode(IRefCounted<ChangeTrackerNode> node, PropertyInfo propertyInfo)
+        private IndexNode(IRefCounted<ChangeTrackerNode> node, int index)
         {
-            this.PropertyInfo = propertyInfo;
+            this.Index = index;
             this.node = node;
             this.node.Value.Changed += this.OnNodeChanged;
         }
@@ -23,12 +23,12 @@ namespace Gu.State
             this.node.Dispose();
         }
 
-        internal static bool TryCreate(object value, PropertiesSettings settings, PropertyInfo propertyInfo, out  PropertyNode result)
+        internal static bool TryCreate(object value, PropertiesSettings settings, int index, out IndexNode result)
         {
             IRefCounted<ChangeTrackerNode> node;
             if (ChangeTrackerNode.TryGetOrCreate(value, settings, false, out node))
             {
-                result = new PropertyNode(node, propertyInfo);
+                result = new IndexNode(node, index);
                 return true;
             }
 
@@ -38,7 +38,7 @@ namespace Gu.State
 
         private void OnNodeChanged(object sender, TrackerChangedEventArgs<ChangeTrackerNode> e)
         {
-            this.Changed?.Invoke(this, e.With(this.node.Value, this.PropertyInfo));
+            this.Changed?.Invoke(this, e.With(this.node.Value, this.Index));
         }
     }
 }

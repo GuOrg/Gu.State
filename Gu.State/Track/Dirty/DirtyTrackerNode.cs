@@ -29,8 +29,8 @@
         private DirtyTrackerNode(IRefCounted<ReferencePair> refCountedPair, PropertiesSettings settings, bool isRoot)
         {
             this.refCountedPair = refCountedPair;
-            var x = (INotifyPropertyChanged)refCountedPair.Value.X;
-            var y = (INotifyPropertyChanged)refCountedPair.Value.Y;
+            var x = refCountedPair.Value.X;
+            var y = refCountedPair.Value.Y;
             this.children = DisposingMap<IUnsubscriber<IRefCounted<DirtyTrackerNode>>>.Borrow();
             this.xNode = RootChanges.GetOrCreate(x, settings, isRoot);
             this.yNode = RootChanges.GetOrCreate(y, settings, isRoot);

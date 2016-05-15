@@ -4,6 +4,7 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.Specialized;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
@@ -92,14 +93,25 @@
             return x?.GetType().Implements(type) == true;
         }
 
-        internal static bool IsEquatable<T>()
+        internal static bool Equatable<T>()
         {
-            return typeof(T).IsEquatable();
+            return typeof(T).Equatable();
         }
 
-        internal static bool IsEquatable(this Type type)
+        internal static bool Equatable(this Type type)
         {
             return type.Implements(typeof(IEquatable<>), type);
+        }
+
+        internal static bool Trackable<T>()
+        {
+            return typeof(T).Equatable();
+        }
+
+        internal static bool Trackable(Type type)
+        {
+            return typeof(INotifyPropertyChanged).IsAssignableFrom(type)
+                   || typeof(INotifyCollectionChanged).IsAssignableFrom(type);
         }
 
         internal static bool NotifyingCollections(object x, object y)
