@@ -35,7 +35,6 @@ namespace Gu.State.Tests
                 }
             }
 
-
             [Test]
             public void NotifiesNextLevel()
             {
