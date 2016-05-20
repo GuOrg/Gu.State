@@ -1,6 +1,7 @@
 // ReSharper disable RedundantArgumentDefaultValue
 namespace Gu.State.Tests
 {
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
 
@@ -13,25 +14,43 @@ namespace Gu.State.Tests
         public class Levels
         {
             [Test]
-            public void NotifiesOnCurrentLevelAndStopsOnDisposed()
+            public void CreateAndDispose()
             {
-                var changes = new List<object>();
-                var root = new Level();
-                using (var tracker = Track.Changes(root, ReferenceHandling.Structural))
+                var source = new Level();
+                var propertyChanges = new List<string>();
+                var changes = new List<EventArgs>();
+                using (var tracker = Track.Changes(source, ReferenceHandling.Structural))
                 {
-                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
-                    Assert.AreEqual(0, tracker.Changes);
+                    CollectionAssert.IsEmpty(propertyChanges);
+                    CollectionAssert.IsEmpty(changes);
+                }
+
+                source.Value++;
+                CollectionAssert.IsEmpty(propertyChanges);
+                CollectionAssert.IsEmpty(changes);
+            }
+
+            [Test]
+            public void NotifiesOnRootLevel()
+            {
+                var source = new Level();
+                var propertyChanges = new List<string>();
+                var changes = new List<EventArgs>();
+                using (var tracker = Track.Changes(source, ReferenceHandling.Structural))
+                {
+                    tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
+                    tracker.Changed += (_, e) => changes.Add(e);
+                    CollectionAssert.IsEmpty(propertyChanges);
                     CollectionAssert.IsEmpty(changes);
 
-                    root.Value++;
+                    source.Value++;
                     Assert.AreEqual(1, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
-
-                    tracker.Dispose();
-                    root.Value++;
-                    Assert.AreEqual(1, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
+                    CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
+                    var node = ChangeTrackerNode.GetOrCreate(source, tracker.Settings, false).Value;
+                    var expected = new[] { RootChangeEventArgs.Create(node, new PropertyChangeEventArgs(source.GetType().GetProperty(nameof(source.Value)))) };
+                    CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
                 }
             }
 
@@ -39,15 +58,15 @@ namespace Gu.State.Tests
             public void NotifiesNextLevel()
             {
                 var changes = new List<object>();
-                var level = new Level { Next = new Level() };
-                using (var tracker = Track.Changes(level, ReferenceHandling.Structural))
+                var source = new Level { Next = new Level() };
+                using (var tracker = Track.Changes(source, ReferenceHandling.Structural))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
                     Assert.AreEqual(0, tracker.Changes);
                     CollectionAssert.IsEmpty(changes);
 
-                    level.Next.Value++;
+                    source.Next.Value++;
                     Assert.AreEqual(1, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
                 }
@@ -57,8 +76,8 @@ namespace Gu.State.Tests
             public void NotifiesOnAdd()
             {
                 var changes = new List<object>();
-                var root = new Level();
-                using (var tracker = Track.Changes(root, ReferenceHandling.Structural))
+                var source = new Level();
+                using (var tracker = Track.Changes(source, ReferenceHandling.Structural))
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
@@ -66,7 +85,7 @@ namespace Gu.State.Tests
                     CollectionAssert.IsEmpty(changes);
 
                     var level = new Level();
-                    root.Levels.Add(level);
+                    source.Levels.Add(level);
                     Assert.AreEqual(1, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
 
@@ -74,15 +93,15 @@ namespace Gu.State.Tests
                     Assert.AreEqual(2, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(2), changes);
 
-                    root.Levels.Add(level);
+                    source.Levels.Add(level);
                     Assert.AreEqual(3, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(3), changes);
 
-                    root.Levels.Add(new Level());
+                    source.Levels.Add(new Level());
                     Assert.AreEqual(4, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(4), changes);
 
-                    root.Levels = new ObservableCollection<Level>();
+                    source.Levels = new ObservableCollection<Level>();
                     Assert.AreEqual(5, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(5), changes);
 
@@ -92,40 +111,9 @@ namespace Gu.State.Tests
                     Assert.AreEqual(5, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(5), changes);
 
-                    root.Levels.Add(new Level());
+                    source.Levels.Add(new Level());
                     Assert.AreEqual(5, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(5), changes);
-                }
-            }
-
-            [Test]
-            public void NotifiesOnAddSpecialCollection()
-            {
-                var changes = new List<object>();
-                var root = new SpecialCollection();
-                using (var tracker = Track.Changes(root, ReferenceHandling.Structural))
-                {
-                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
-                    tracker.Changed += (_, e) => changes.Add(e);
-                    Assert.AreEqual(0, tracker.Changes);
-                    CollectionAssert.IsEmpty(changes);
-
-                    var level = new Level();
-                    root.Add(level);
-                    Assert.AreEqual(1, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
-
-                    level.Value++;
-                    Assert.AreEqual(2, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(2), changes);
-
-                    root.Remove(level);
-                    Assert.AreEqual(3, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(3), changes);
-
-                    level.Value++;
-                    Assert.AreEqual(3, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(3), changes);
                 }
             }
 
@@ -209,7 +197,6 @@ namespace Gu.State.Tests
                 }
             }
 
-
             [Test]
             public void StartSubscribingToNextLevel()
             {
@@ -252,6 +239,37 @@ namespace Gu.State.Tests
                     next.Value++;
                     Assert.AreEqual(1, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
+                }
+            }
+
+            [Test]
+            public void NotifiesOnAddSpecialCollection()
+            {
+                var changes = new List<object>();
+                var source = new SpecialCollection();
+                using (var tracker = Track.Changes(source, ReferenceHandling.Structural))
+                {
+                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    tracker.Changed += (_, e) => changes.Add(e);
+                    Assert.AreEqual(0, tracker.Changes);
+                    CollectionAssert.IsEmpty(changes);
+
+                    var level = new Level();
+                    source.Add(level);
+                    Assert.AreEqual(1, tracker.Changes);
+                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
+
+                    level.Value++;
+                    Assert.AreEqual(2, tracker.Changes);
+                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(2), changes);
+
+                    source.Remove(level);
+                    Assert.AreEqual(3, tracker.Changes);
+                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(3), changes);
+
+                    level.Value++;
+                    Assert.AreEqual(3, tracker.Changes);
+                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(3), changes);
                 }
             }
         }

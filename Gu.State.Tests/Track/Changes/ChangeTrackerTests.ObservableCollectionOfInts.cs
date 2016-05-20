@@ -146,7 +146,7 @@ namespace Gu.State.Tests
                     Assert.AreEqual(1, tracker.Changes);
                     CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
                     var node = ChangeTrackerNode.GetOrCreate((INotifyCollectionChanged)source, tracker.Settings, false).Value;
-                    var expected = new[] { RootChangeEventArgs.Create(node, new ResetEventArgs()) };
+                    var expected = new[] { RootChangeEventArgs.Create(node, new ResetEventArgs(null, null)) };
                     CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
 
                     source.Clear();
@@ -154,8 +154,8 @@ namespace Gu.State.Tests
                     CollectionAssert.AreEqual(new[] { "Changes", "Changes" }, propertyChanges);
                     expected = new[]
                                    {
-                                       RootChangeEventArgs.Create(node, new ResetEventArgs()),
-                                       RootChangeEventArgs.Create(node, new ResetEventArgs())
+                                       RootChangeEventArgs.Create(node, new ResetEventArgs(null, null)),
+                                       RootChangeEventArgs.Create(node, new ResetEventArgs(null, null))
                                    };
                     CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
                 }

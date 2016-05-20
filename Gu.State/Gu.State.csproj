@@ -88,7 +88,7 @@
     <Compile Include="EqualBy\Comparers\ReadOnlyListEqualByComparer{T}.cs" />
     <Compile Include="Internals\Extensions\ArrayExt.cs" />
     <Compile Include="Internals\Extensions\DictionaryExt.cs" />
-    <Compile Include="Internals\EnumerableExt.ElementAt.cs" />
+    <Compile Include="Internals\Extensions\EnumerableExt.ElementAt.cs" />
     <Compile Include="Internals\Contracts\IBorrowed{T}.cs" />
     <Compile Include="Internals\Contracts\IDisposer{T}.cs" />
     <Compile Include="Internals\Contracts\IRefCounted{T}.cs" />
