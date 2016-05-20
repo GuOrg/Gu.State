@@ -173,6 +173,7 @@
         {
             if (!Is.Trackable(this.ItemType))
             {
+                this.Changed?.Invoke(this, RootChangeEventArgs.Create(this, e));
                 return;
             }
 

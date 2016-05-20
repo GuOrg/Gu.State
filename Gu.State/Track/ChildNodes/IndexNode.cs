@@ -1,7 +1,6 @@
 namespace Gu.State
 {
     using System;
-    using System.Collections.Specialized;
 
     internal sealed class IndexNode : IChildNode
     {
