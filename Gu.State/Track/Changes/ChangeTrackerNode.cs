@@ -21,6 +21,8 @@
             sourceChanges.PropertyChange += this.OnSourcePropertyChange;
             if (Is.NotifyingCollection(source))
             {
+                this.ItemType = this.SourceList.GetType()
+                                    .GetItemType();
                 sourceChanges.Add += this.OnSourceAdd;
                 sourceChanges.Remove += this.OnSourceRemove;
                 sourceChanges.Replace += this.OnSourceReplace;
@@ -36,6 +38,8 @@
         private IReadOnlyCollection<PropertyInfo> TrackProperties => this.refcountedRootChanges.Value.TrackProperties;
 
         private IList SourceList => (IList)this.Source;
+
+        private Type ItemType { get; }
 
         private object Source => this.refcountedRootChanges.Value.Source;
 
@@ -167,7 +171,7 @@
 
         private void OnSourceReset(object sender, ResetEventArgs e)
         {
-            if (!Is.Trackable(sender.GetType().GetItemType()))
+            if (!Is.Trackable(this.ItemType))
             {
                 return;
             }

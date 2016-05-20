@@ -1,6 +1,7 @@
 ﻿// ReSharper disable RedundantArgumentDefaultValue
 namespace Gu.State.Tests
 {
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
 
@@ -12,85 +13,52 @@ namespace Gu.State.Tests
     {
         public class PropertyChanged
         {
-            [Test]
-            public void WithImmutable()
+            [TestCase(ReferenceHandling.Throw)]
+            [TestCase(ReferenceHandling.Structural)]
+            [TestCase(ReferenceHandling.References)]
+            public void WithImmutable(ReferenceHandling referenceHandling)
             {
-                var changes = new List<object>();
-                var root = new With<Immutable>();
+                var source = new With<Immutable>();
 
-                using (var tracker = Track.Changes(root))
+                var propertyChanges = new List<string>();
+                var changes = new List<EventArgs>();
+
+                using (var tracker = Track.Changes(source, referenceHandling))
                 {
-                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
-                    Assert.AreEqual(0, tracker.Changes);
+                    CollectionAssert.IsEmpty(propertyChanges);
                     CollectionAssert.IsEmpty(changes);
 
-                    root.Value = new Immutable();
+                    source.Value = new Immutable();
                     Assert.AreEqual(1, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
+                    CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
+                    var node = ChangeTrackerNode.GetOrCreate(source, tracker.Settings, false).Value;
+                    var expected = new[] { RootChangeEventArgs.Create(node, new PropertyChangeEventArgs(source.GetType().GetProperty(nameof(source.Value)))) };
+                    CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
                 }
             }
 
             [Test]
-            public void TracksCollectionItem()
+            public void TracksCollectionProperty()
             {
-                var changes = new List<object>();
-                var root = new Level { Next = new Level { Levels = new ObservableCollection<Level>(new[] { new Level(), }) } };
-                using (var tracker = Track.Changes(root, ReferenceHandling.Structural))
+                var source = new Level { Next = new Level { Levels = new ObservableCollection<Level>(new[] { new Level(), }) } };
+                var propertyChanges = new List<string>();
+                var changes = new List<EventArgs>();
+
+                using (var tracker = Track.Changes(source, ReferenceHandling.Structural))
                 {
-                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
-                    Assert.AreEqual(0, tracker.Changes);
+                    CollectionAssert.IsEmpty(propertyChanges);
                     CollectionAssert.IsEmpty(changes);
 
-                    root.Next.Levels[0].Value++;
+                    source.Next.Levels[0].Value++;
                     Assert.AreEqual(1, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
-                }
-            }
-
-            [Test]
-            public void StartSubscribingToNextLevel()
-            {
-                var changes = new List<object>();
-                var root = new Level();
-                using (var tracker = Track.Changes(root, ReferenceHandling.Structural))
-                {
-                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
-                    tracker.Changed += (_, e) => changes.Add(e);
-                    Assert.AreEqual(0, tracker.Changes);
-                    CollectionAssert.IsEmpty(changes);
-
-                    root.Next = new Level();
-                    Assert.AreEqual(1, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
-
-                    root.Next.Value++;
-                    Assert.AreEqual(2, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(2), changes);
-                }
-            }
-
-            [Test]
-            public void StopsSubscribingNextLevel()
-            {
-                var changes = new List<object>();
-                var level = new Level { Next = new Level() };
-                using (var tracker = Track.Changes(level, ReferenceHandling.Structural))
-                {
-                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
-                    tracker.Changed += (_, e) => changes.Add(e);
-                    Assert.AreEqual(0, tracker.Changes);
-                    CollectionAssert.IsEmpty(changes);
-
-                    var next = level.Next;
-                    level.Next = null;
-                    Assert.AreEqual(1, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
-
-                    next.Value++;
-                    Assert.AreEqual(1, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
+                    CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
+                    var node = ChangeTrackerNode.GetOrCreate(source, tracker.Settings, false).Value;
+                    var expected = new[] { RootChangeEventArgs.Create(node, new PropertyChangeEventArgs(source.GetType().GetProperty(nameof(source.Next)))) };
+                    CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
                 }
             }
         }

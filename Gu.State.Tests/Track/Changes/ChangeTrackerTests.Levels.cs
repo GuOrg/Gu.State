@@ -160,7 +160,6 @@ namespace Gu.State.Tests
                 }
             }
 
-
             [Test]
             public void NotifiesThreeLevels()
             {
@@ -207,6 +206,52 @@ namespace Gu.State.Tests
                     level.Next.Value++;
                     Assert.AreEqual(3, tracker.Changes);
                     CollectionAssert.AreEqual(CreateExpectedChangeArgs(3), changes);
+                }
+            }
+
+
+            [Test]
+            public void StartSubscribingToNextLevel()
+            {
+                var changes = new List<object>();
+                var root = new Level();
+                using (var tracker = Track.Changes(root, ReferenceHandling.Structural))
+                {
+                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    tracker.Changed += (_, e) => changes.Add(e);
+                    Assert.AreEqual(0, tracker.Changes);
+                    CollectionAssert.IsEmpty(changes);
+
+                    root.Next = new Level();
+                    Assert.AreEqual(1, tracker.Changes);
+                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
+
+                    root.Next.Value++;
+                    Assert.AreEqual(2, tracker.Changes);
+                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(2), changes);
+                }
+            }
+
+            [Test]
+            public void StopsSubscribingNextLevel()
+            {
+                var changes = new List<object>();
+                var level = new Level { Next = new Level() };
+                using (var tracker = Track.Changes(level, ReferenceHandling.Structural))
+                {
+                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    tracker.Changed += (_, e) => changes.Add(e);
+                    Assert.AreEqual(0, tracker.Changes);
+                    CollectionAssert.IsEmpty(changes);
+
+                    var next = level.Next;
+                    level.Next = null;
+                    Assert.AreEqual(1, tracker.Changes);
+                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
+
+                    next.Value++;
+                    Assert.AreEqual(1, tracker.Changes);
+                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
                 }
             }
         }
