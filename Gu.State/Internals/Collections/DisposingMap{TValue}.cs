@@ -24,7 +24,7 @@
                 return Borrowed.Create(map, Return);
             }
 
-            return Borrowed.Create(map, Return);
+            return Borrowed.Create(new DisposingMap<TValue>(), Return);
         }
 
         internal void SetValue(PropertyInfo property, TValue value)
