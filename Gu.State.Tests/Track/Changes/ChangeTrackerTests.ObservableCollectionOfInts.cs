@@ -191,18 +191,23 @@ namespace Gu.State.Tests
             [TestCase(ReferenceHandling.References)]
             public void Move(ReferenceHandling referenceHandling)
             {
-                var changes = new List<object>();
                 var source = new ObservableCollection<int> { 1, 2 };
+                var propertyChanges = new List<string>();
+                var changes = new List<EventArgs>();
                 using (var tracker = Track.Changes(source, referenceHandling))
                 {
-                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
                     Assert.AreEqual(0, tracker.Changes);
+                    CollectionAssert.IsEmpty(propertyChanges);
                     CollectionAssert.IsEmpty(changes);
 
                     source.Move(1, 0);
                     Assert.AreEqual(1, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
+                    CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
+                    var node = ChangeTrackerNode.GetOrCreate((INotifyCollectionChanged)source, tracker.Settings, false).Value;
+                    var expected = new[] { RootChangeEventArgs.Create(node, new MoveEventArgs(1, 0)) };
+                    CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
                 }
             }
         }

@@ -34,6 +34,7 @@ namespace Gu.State.Tests
                 TryCompare<AddEventArgs>(x, y, AddEventArgsComparer.Default.Equals, out result) ||
                 TryCompare<RemoveEventArgs>(x, y, RemoveEventArgsComparer.Default.Equals, out result) ||
                 TryCompare<ReplaceEventArgs>(x, y, ReplaceEventArgsComparer.Default.Equals, out result) ||
+                TryCompare<MoveEventArgs>(x, y, MoveEventArgsComparer.Default.Equals, out result) ||
                 TryCompare<ResetEventArgs>(x, y, ResetEventArgsComparer.Default.Equals, out result) ||
                 TryCompare<RootChangeEventArgs<ChangeTrackerNode>>(x, y, RootChangeEventArgsEventArgsComparer<ChangeTrackerNode>.Default.Equals, out result) ||
                 TryCompare<RootChangeEventArgs<DirtyTrackerNode>>(x, y, RootChangeEventArgsEventArgsComparer<DirtyTrackerNode>.Default.Equals, out result) ||

@@ -166,6 +166,45 @@ namespace Gu.State.Tests
             }
 
             [Test]
+            public void MoveToHigherThenItemChange()
+            {
+                Assert.Fail();
+                var changes = new List<object>();
+                var root = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType(), new ComplexType() };
+                using (var tracker = Track.Changes(root))
+                {
+                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    tracker.Changed += (_, e) => changes.Add(e);
+                    Assert.AreEqual(0, tracker.Changes);
+                    CollectionAssert.IsEmpty(changes);
+
+                    root.Move(1, 0);
+                    Assert.AreEqual(1, tracker.Changes);
+                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
+                }
+            }
+
+
+            [Test]
+            public void MoveToLowerThenItemChange()
+            {
+                Assert.Fail();
+                var changes = new List<object>();
+                var root = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType(), new ComplexType() };
+                using (var tracker = Track.Changes(root))
+                {
+                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    tracker.Changed += (_, e) => changes.Add(e);
+                    Assert.AreEqual(0, tracker.Changes);
+                    CollectionAssert.IsEmpty(changes);
+
+                    root.Move(1, 0);
+                    Assert.AreEqual(1, tracker.Changes);
+                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
+                }
+            }
+
+            [Test]
             public void ItemNotifies()
             {
                 var changes = new List<object>();

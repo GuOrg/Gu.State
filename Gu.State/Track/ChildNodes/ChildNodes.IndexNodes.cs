@@ -80,6 +80,11 @@
                 lock (this.nodes)
                 {
                     var fi = this.IndexOf(fromIndex);
+                    if (fi < 0)
+                    {
+                        return;
+                    }
+
                     var node = this.nodes[fi];
                     this.nodes.RemoveAt(fi);
                     var ti = this.IndexOf(toIndex);
