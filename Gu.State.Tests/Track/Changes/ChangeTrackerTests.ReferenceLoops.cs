@@ -1,6 +1,7 @@
 // ReSharper disable RedundantArgumentDefaultValue
 namespace Gu.State.Tests
 {
+    using System;
     using System.Collections.Generic;
 
     using NUnit.Framework;
@@ -14,19 +15,54 @@ namespace Gu.State.Tests
             [Test]
             public void CreateAndDisposeParentChildLoop()
             {
-                var changes = new List<object>();
                 var parent = new Parent { Child = new Child("c") };
                 parent.Child.Parent = parent;
+
+                var propertyChanges = new List<string>();
+                var changes = new List<EventArgs>();
+                var tracker = Track.Changes(parent, ReferenceHandling.Structural);
+                tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
+                tracker.Changed += (_, e) => changes.Add(e);
+                Assert.AreEqual(0, tracker.Changes);
+                CollectionAssert.IsEmpty(propertyChanges);
+                CollectionAssert.IsEmpty(changes);
+
+                tracker.Dispose();
+                Assert.AreEqual(0, tracker.Changes);
+                CollectionAssert.IsEmpty(propertyChanges);
+                CollectionAssert.IsEmpty(changes);
+
+                parent.Name += "abc";
+                Assert.AreEqual(0, tracker.Changes);
+                CollectionAssert.IsEmpty(propertyChanges);
+                CollectionAssert.IsEmpty(changes);
+
+                parent.Child.Name += "abc";
+                Assert.AreEqual(0, tracker.Changes);
+                CollectionAssert.IsEmpty(propertyChanges);
+                CollectionAssert.IsEmpty(changes);
+            }
+
+            [Test]
+            public void ParentNameChangesUgh()
+            {
+                var parent = new Parent { Child = new Child("c") };
+                Assert.AreSame(parent, parent.Child.Parent);
+                var propertyChanges = new List<string>();
+                var changes = new List<EventArgs>();
                 using (var tracker = Track.Changes(parent, ReferenceHandling.Structural))
                 {
-                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
                     Assert.AreEqual(0, tracker.Changes);
+                    CollectionAssert.IsEmpty(propertyChanges);
                     CollectionAssert.IsEmpty(changes);
 
                     parent.Name = "Poppa";
                     Assert.AreEqual(1, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
+                    CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
+                    var expected = new[] { RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(parent, tracker.Settings, false).Value, new PropertyChangeEventArgs(parent.GetType().GetProperty(nameof(parent.Name)))) };
+                    CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
 
                     parent.Child = new Child("Child");
                     Assert.AreEqual(2, tracker.Changes);
@@ -43,32 +79,78 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void ParentChild()
+            public void ParentChanges()
             {
-                var changes = new List<object>();
-                var parent = new Parent();
+                var parent = new Parent { Child = new Child("c") };
+                Assert.AreSame(parent, parent.Child.Parent);
+                var propertyChanges = new List<string>();
+                var changes = new List<EventArgs>();
                 using (var tracker = Track.Changes(parent, ReferenceHandling.Structural))
                 {
-                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
+                    Assert.AreEqual(0, tracker.Changes);
+                    CollectionAssert.IsEmpty(propertyChanges);
+                    CollectionAssert.IsEmpty(changes);
                     Assert.AreEqual(0, tracker.Changes);
                     CollectionAssert.IsEmpty(changes);
 
-                    parent.Name = "Poppa";
-                    Assert.AreEqual(1, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
-
-                    parent.Child = new Child("Child");
-                    Assert.AreEqual(2, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(2), changes);
-
                     parent.Child.Parent = parent;
-                    Assert.AreEqual(3, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(3), changes);
+                    Assert.AreEqual(1, tracker.Changes);
+                    CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
+                    var expected = new[] { RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(parent, tracker.Settings, false).Value, new PropertyChangeEventArgs(parent.GetType().GetProperty(nameof(parent.Name)))) };
+                    CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
+                }
+            }
 
-                    parent.Name += "meh";
-                    Assert.AreEqual(4, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(4), changes);
+            [Test]
+            public void ParentNameChanges()
+            {
+                var parent = new Parent { Child = new Child("") };
+                parent.Child.Parent = parent;
+                var propertyChanges = new List<string>();
+                var changes = new List<EventArgs>();
+                using (var tracker = Track.Changes(parent, ReferenceHandling.Structural))
+                {
+                    tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
+                    tracker.Changed += (_, e) => changes.Add(e);
+                    Assert.AreEqual(0, tracker.Changes);
+                    CollectionAssert.IsEmpty(propertyChanges);
+                    CollectionAssert.IsEmpty(changes);
+                    Assert.AreEqual(0, tracker.Changes);
+                    CollectionAssert.IsEmpty(changes);
+
+                    parent.Name += "abc";
+                    Assert.AreEqual(1, tracker.Changes);
+                    CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
+                    var expected = new[] { RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(parent, tracker.Settings, false).Value, new PropertyChangeEventArgs(parent.GetType().GetProperty(nameof(parent.Name)))) };
+                    CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
+                }
+            }
+
+            [Test]
+            public void ChildNameChanges()
+            {
+                var parent = new Parent { Child = new Child("") };
+                parent.Child.Parent = parent;
+                var propertyChanges = new List<string>();
+                var changes = new List<EventArgs>();
+                using (var tracker = Track.Changes(parent, ReferenceHandling.Structural))
+                {
+                    tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
+                    tracker.Changed += (_, e) => changes.Add(e);
+                    Assert.AreEqual(0, tracker.Changes);
+                    CollectionAssert.IsEmpty(propertyChanges);
+                    CollectionAssert.IsEmpty(changes);
+                    Assert.AreEqual(0, tracker.Changes);
+                    CollectionAssert.IsEmpty(changes);
+
+                    parent.Child.Name += "abc";
+                    Assert.AreEqual(1, tracker.Changes);
+                    CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
+                    var rootChangeEventArgs = RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(parent.Child, tracker.Settings, false).Value, new PropertyChangeEventArgs(parent.Child.GetType().GetProperty(nameof(Child.Name))));
+                    var expected = new[] { new PropertyGraphChangedEventArgs<ChangeTrackerNode>(ChangeTrackerNode.GetOrCreate(parent, tracker.Settings, false).Value, parent.GetType().GetProperty("Child"), rootChangeEventArgs) };
+                    CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
                 }
             }
         }

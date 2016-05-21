@@ -324,7 +324,6 @@ namespace Gu.State.Tests
                 }
             }
 
-
             [Test]
             public void ReplaceStartsListeningToNew()
             {
@@ -395,7 +394,6 @@ namespace Gu.State.Tests
                 }
             }
 
-
             [Test]
             public void MoveToLowerThenItemChange()
             {
@@ -432,10 +430,15 @@ namespace Gu.State.Tests
                     source[0].Value++;
                     Assert.AreEqual(1, tracker.Changes);
                     CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
+                    var itemNode = ChangeTrackerNode.GetOrCreate(source[0], tracker.Settings, false)
+                                                    .Value;
+                    var propertyInfo = source[0].GetType().GetProperty(nameof(ComplexType.Value));
+                    var propertyGraphChangedEventArgs = new PropertyGraphChangedEventArgs<ChangeTrackerNode>(itemNode, propertyInfo, null);
+                    var sourceNode = ChangeTrackerNode.GetOrCreate((INotifyCollectionChanged)source, tracker.Settings, false)
+                                         .Value;
                     var expected = new[]
                                        {
-                                           GraphChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate((INotifyCollectionChanged)source, tracker.Settings, false).Value, 0)
-                                                               .With(ChangeTrackerNode.GetOrCreate(source[0], tracker.Settings, false).Value, source[0].GetType().GetProperty(nameof(ComplexType.Value)))
+                                           new ItemGraphChangedEventArgs<ChangeTrackerNode>(sourceNode, 0, propertyGraphChangedEventArgs)
                                        };
                     CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
                 }
