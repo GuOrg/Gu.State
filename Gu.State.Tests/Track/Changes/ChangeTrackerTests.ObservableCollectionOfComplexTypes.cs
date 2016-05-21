@@ -5,6 +5,7 @@ namespace Gu.State.Tests
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Collections.Specialized;
+    using System.ComponentModel;
 
     using NUnit.Framework;
 
@@ -18,7 +19,7 @@ namespace Gu.State.Tests
             public void CreateAndDispose()
             {
                 var item = new ComplexType();
-                var source = new ObservableCollection<ComplexType> {item};
+                var source = new ObservableCollection<ComplexType> { item };
                 var propertyChanges = new List<string>();
                 var changes = new List<EventArgs>();
                 var tracker = Track.Changes(source, ReferenceHandling.Structural);
@@ -35,7 +36,7 @@ namespace Gu.State.Tests
                 CollectionAssert.IsEmpty(propertyChanges);
                 CollectionAssert.IsEmpty(changes);
 
-                item.Value ++;
+                item.Value++;
                 Assert.AreEqual(0, tracker.Changes);
                 CollectionAssert.IsEmpty(propertyChanges);
                 CollectionAssert.IsEmpty(changes);
@@ -122,27 +123,33 @@ namespace Gu.State.Tests
             [Test]
             public void Remove()
             {
-                var changes = new List<object>();
-                var root = new ObservableCollection<ComplexType> { new ComplexType(), null };
-                using (var tracker = Track.Changes(root))
+                var source = new ObservableCollection<ComplexType> { new ComplexType(), null };
+                var propertyChanges = new List<string>();
+                var changes = new List<EventArgs>();
+                using (var tracker = Track.Changes(source, ReferenceHandling.Structural))
                 {
-                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
                     Assert.AreEqual(0, tracker.Changes);
+                    CollectionAssert.IsEmpty(propertyChanges);
                     CollectionAssert.IsEmpty(changes);
 
-                    root.RemoveAt(1);
+                    source.RemoveAt(1);
                     Assert.AreEqual(1, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
+                    CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
+                    var node = ChangeTrackerNode.GetOrCreate((INotifyCollectionChanged)source, tracker.Settings, false).Value;
+                    var expected = new[] { RootChangeEventArgs.Create(node, new RemoveEventArgs(1)) };
+                    CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
 
-                    var complexType = root[0];
-                    root.RemoveAt(0);
+                    source.RemoveAt(0);
                     Assert.AreEqual(2, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(2), changes);
-
-                    complexType.Value++;
-                    Assert.AreEqual(2, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(2), changes);
+                    CollectionAssert.AreEqual(new[] { "Changes", "Changes" }, propertyChanges);
+                    expected = new[]
+                                   {
+                                       RootChangeEventArgs.Create(node, new RemoveEventArgs(1)),
+                                       RootChangeEventArgs.Create(node, new RemoveEventArgs(0))
+                                   };
+                    CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
                 }
             }
 
@@ -268,18 +275,81 @@ namespace Gu.State.Tests
             [Test]
             public void Replace()
             {
-                var changes = new List<object>();
-                var root = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType() };
-                using (var tracker = Track.Changes(root))
+                var source = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType() };
+                var propertyChanges = new List<string>();
+                var changes = new List<EventArgs>();
+                using (var tracker = Track.Changes(source, ReferenceHandling.Structural))
                 {
-                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
                     Assert.AreEqual(0, tracker.Changes);
+                    CollectionAssert.IsEmpty(propertyChanges);
                     CollectionAssert.IsEmpty(changes);
 
-                    root[0] = new ComplexType();
+                    source[0] = new ComplexType();
                     Assert.AreEqual(1, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
+                    CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
+                    var node = ChangeTrackerNode.GetOrCreate((INotifyCollectionChanged)source, tracker.Settings, false).Value;
+                    var expected = new[] { RootChangeEventArgs.Create(node, new ReplaceEventArgs(0)) };
+                    CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
+                }
+            }
+
+            [Test]
+            public void ReplaceStopsListeningToOld()
+            {
+                var source = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType() };
+                var propertyChanges = new List<string>();
+                var changes = new List<EventArgs>();
+                using (var tracker = Track.Changes(source, ReferenceHandling.Structural))
+                {
+                    tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
+                    tracker.Changed += (_, e) => changes.Add(e);
+                    Assert.AreEqual(0, tracker.Changes);
+                    CollectionAssert.IsEmpty(propertyChanges);
+                    CollectionAssert.IsEmpty(changes);
+
+                    var old = source[0];
+                    source[0] = new ComplexType();
+                    Assert.AreEqual(1, tracker.Changes);
+                    CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
+                    var node = ChangeTrackerNode.GetOrCreate((INotifyCollectionChanged)source, tracker.Settings, false).Value;
+                    var expected = new[] { RootChangeEventArgs.Create(node, new ReplaceEventArgs(0)) };
+                    CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
+
+                    old.Value++;
+                    Assert.AreEqual(1, tracker.Changes);
+                    CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
+                    CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
+                }
+            }
+
+
+            [Test]
+            public void ReplaceStartsListeningToNew()
+            {
+                var source = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType() };
+                var propertyChanges = new List<string>();
+                var changes = new List<EventArgs>();
+                using (var tracker = Track.Changes(source, ReferenceHandling.Structural))
+                {
+                    tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
+                    tracker.Changed += (_, e) => changes.Add(e);
+                    Assert.AreEqual(0, tracker.Changes);
+                    CollectionAssert.IsEmpty(propertyChanges);
+                    CollectionAssert.IsEmpty(changes);
+
+                    source[0] = new ComplexType();
+                    Assert.AreEqual(1, tracker.Changes);
+                    CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
+                    var node = ChangeTrackerNode.GetOrCreate((INotifyCollectionChanged)source, tracker.Settings, false).Value;
+                    var expected = new[] { RootChangeEventArgs.Create(node, new ReplaceEventArgs(0)) };
+                    CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
+
+                    source[0].Value++;
+                    Assert.AreEqual(2, tracker.Changes);
+                    CollectionAssert.AreEqual(new[] { "Changes", "Changes" }, propertyChanges);
+                    CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default); // fix this
                 }
             }
 
@@ -348,18 +418,26 @@ namespace Gu.State.Tests
             [Test]
             public void ItemNotifies()
             {
-                var changes = new List<object>();
                 var source = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType() };
-                using (var tracker = Track.Changes(source))
+                var propertyChanges = new List<string>();
+                var changes = new List<EventArgs>();
+                using (var tracker = Track.Changes(source, ReferenceHandling.Structural))
                 {
-                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
                     Assert.AreEqual(0, tracker.Changes);
+                    CollectionAssert.IsEmpty(propertyChanges);
                     CollectionAssert.IsEmpty(changes);
 
                     source[0].Value++;
                     Assert.AreEqual(1, tracker.Changes);
-                    CollectionAssert.AreEqual(CreateExpectedChangeArgs(1), changes);
+                    CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
+                    var expected = new[]
+                                       {
+                                           GraphChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate((INotifyCollectionChanged)source, tracker.Settings, false).Value, 0)
+                                                               .With(ChangeTrackerNode.GetOrCreate(source[0], tracker.Settings, false).Value, source[0].GetType().GetProperty(nameof(ComplexType.Value)))
+                                       };
+                    CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
                 }
             }
 
