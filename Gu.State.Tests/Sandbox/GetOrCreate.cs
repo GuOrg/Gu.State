@@ -1,6 +1,7 @@
 ﻿namespace Gu.State.Tests.Sandbox
 {
     using System.Collections.Concurrent;
+    using System.Collections.Generic;
     using System.Runtime.CompilerServices;
 
     using NUnit.Framework;

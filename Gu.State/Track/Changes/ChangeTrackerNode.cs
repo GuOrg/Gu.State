@@ -12,12 +12,13 @@
     internal sealed class ChangeTrackerNode : IDisposable, IInitialize<ChangeTrackerNode>
     {
         private readonly IRefCounted<RootChanges> refcountedRootChanges;
-        private readonly IBorrowed<DisposingMap<IUnsubscriber<IChildNode>>> children;
+        private readonly IBorrowed<ChildNodes> children;
 
         private ChangeTrackerNode(object source, PropertiesSettings settings, bool isRoot)
         {
             this.refcountedRootChanges = RootChanges.GetOrCreate(source, settings, isRoot);
             var sourceChanges = this.refcountedRootChanges.Value;
+            this.children = ChildNodes.Borrow();
             sourceChanges.PropertyChange += this.OnSourcePropertyChange;
             if (Is.NotifyingCollection(source))
             {
@@ -29,8 +30,6 @@
                 sourceChanges.Move += this.OnSourceMove;
                 sourceChanges.Reset += this.OnSourceReset;
             }
-
-            this.children = DisposingMap<IUnsubscriber<IChildNode>>.Borrow();
         }
 
         public event EventHandler<TrackerChangedEventArgs<ChangeTrackerNode>> Changed;
@@ -43,7 +42,7 @@
 
         private object Source => this.refcountedRootChanges.Value.Source;
 
-        private DisposingMap<IUnsubscriber<IChildNode>> Children => this.children.Value;
+        private ChildNodes Children => this.children.Value;
 
         private PropertiesSettings Settings => this.refcountedRootChanges.Value.Settings;
 
@@ -152,7 +151,6 @@
 
         private void OnSourceRemove(object sender, RemoveEventArgs e)
         {
-            throw new NotImplementedException("Test: change item at higher index after remove");
             this.Children.Remove(e.Index);
             this.Changed?.Invoke(this, RootChangeEventArgs.Create(this, e));
         }
@@ -179,7 +177,7 @@
 
             using (var borrow = ListPool<IUnsubscriber<IChildNode>>.Borrow())
             {
-                for (int i = 0; i < e.NewItems.Count; i++)
+                for (var i = 0; i < e.NewItems.Count; i++)
                 {
                     var newItem = e.NewItems[i];
                     IUnsubscriber<IChildNode> childNode;
@@ -233,8 +231,8 @@
 
         private bool TryCreateChildNode(object value, PropertyInfo propertyInfo, out IUnsubscriber<IChildNode> result)
         {
-            PropertyNode propertyNode;
-            if (PropertyNode.TryCreate(value, this.Settings, propertyInfo, out propertyNode))
+            IChildNode propertyNode;
+            if (ChildNodes.TryCreate(value, this.Settings, propertyInfo, out propertyNode))
             {
                 propertyNode.Changed += this.OnChildChanged;
                 result = propertyNode.UnsubscribeAndDispose(n => n.Changed -= this.OnChildChanged);
@@ -247,8 +245,8 @@
 
         private bool TryCreateChildNode(object value, int index, out IUnsubscriber<IChildNode> result)
         {
-            IndexNode indexNode;
-            if (IndexNode.TryCreate(value, this.Settings, index, out indexNode))
+            IChildNode indexNode;
+            if (ChildNodes.TryCreate(value, this.Settings, index, out indexNode))
             {
                 indexNode.Changed += this.OnChildChanged;
                 result = indexNode.UnsubscribeAndDispose(n => n.Changed -= this.OnChildChanged);

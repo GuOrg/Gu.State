@@ -21,10 +21,10 @@
             DisposingMap<TValue> map;
             if (Cache.TryDequeue(out map))
             {
-                return new Disposer<DisposingMap<TValue>>(map, Return);
+                return Borrowed.Create(map, Return);
             }
 
-            return new Disposer<DisposingMap<TValue>>(new DisposingMap<TValue>(), Return);
+            return Borrowed.Create(map, Return);
         }
 
         internal void SetValue(PropertyInfo property, TValue value)

@@ -2,7 +2,7 @@ namespace Gu.State
 {
     using System;
 
-    interface IChildNode : IDisposable
+    internal interface IChildNode : IDisposable
     {
         event EventHandler<TrackerChangedEventArgs<ChangeTrackerNode>> Changed;
     }

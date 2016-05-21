@@ -116,7 +116,7 @@ namespace Gu.State.Tests
 
                     source.RemoveAt(0);
                     Assert.AreEqual(2, tracker.Changes);
-                    CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
+                    CollectionAssert.AreEqual(new[] { "Changes", "Changes" }, propertyChanges);
                     expected = new[]
                                    {
                                        RootChangeEventArgs.Create(node, new RemoveEventArgs(1)),
