@@ -1,7 +1,6 @@
 ﻿// ReSharper disable RedundantArgumentDefaultValue
 namespace Gu.State.Tests.CopyTests
 {
-    using System.Collections;
     using System.Collections.ObjectModel;
 
     using NUnit.Framework;

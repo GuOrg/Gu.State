@@ -78,6 +78,7 @@
             {
                 lock (this.nodes)
                 {
+
                     var fi = this.IndexOf(fromIndex);
                     if (fi < 0)
                     {
@@ -87,6 +88,11 @@
                     var node = this.nodes[fi];
                     this.nodes.RemoveAt(fi);
                     var ti = this.IndexOf(toIndex);
+                    if (ti < 0)
+                    {
+                        ti = ~ti;
+                    }
+
                     this.nodes.Insert(ti, node);
                     ((IndexNode)node.Value).Index = toIndex;
                     if (ti < fi)

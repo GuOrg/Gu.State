@@ -1,8 +1,6 @@
 ﻿// ReSharper disable RedundantArgumentDefaultValue
 namespace Gu.State.Tests
 {
-    using System;
-
     using NUnit.Framework;
 
     using static SynchronizeTypes;

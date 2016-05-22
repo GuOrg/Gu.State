@@ -4,8 +4,6 @@ namespace Gu.State.Tests
     using System;
     using System.Collections.ObjectModel;
 
-    using Gu.State.Tests.DiffTests;
-
     using NUnit.Framework;
 
     using static SynchronizeTypes;
