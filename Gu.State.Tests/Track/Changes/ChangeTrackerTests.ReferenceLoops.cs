@@ -13,6 +13,36 @@ namespace Gu.State.Tests
         public class ReferenceLoops
         {
             [Test]
+            public void WithSelf()
+            {
+                var source = new WithSelf();
+                var propertyChanges = new List<string>();
+                var changes = new List<EventArgs>();
+                var expectedChanges = new List<EventArgs>();
+
+                using (var tracker = Track.Changes(source, ReferenceHandling.Structural))
+                {
+                    tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
+                    tracker.Changed += (_, e) => changes.Add(e);
+                    Assert.AreEqual(0, tracker.Changes);
+                    CollectionAssert.IsEmpty(propertyChanges);
+                    CollectionAssert.IsEmpty(changes);
+
+                    source.Value = source;
+                    Assert.AreEqual(1, tracker.Changes);
+                    CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
+                    expectedChanges.Add(RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(source, tracker.Settings, false).Value, new PropertyChangeEventArgs(source.GetProperty(nameof(source.Value)))));
+                    CollectionAssert.AreEqual(expectedChanges, changes, EventArgsComparer.Default);
+
+                    source.Name += "abc";
+                    Assert.AreEqual(2, tracker.Changes);
+                    CollectionAssert.AreEqual(new[] { "Changes", "Changes" }, propertyChanges);
+                    expectedChanges.Add(RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(source, tracker.Settings, false).Value, new PropertyChangeEventArgs(source.GetProperty(nameof(source.Name)))));
+                    CollectionAssert.AreEqual(expectedChanges, changes, EventArgsComparer.Default);
+                }
+            }
+
+            [Test]
             public void CreateAndDisposeParentChildLoop()
             {
                 var parent = new Parent { Child = new Child("c") };
