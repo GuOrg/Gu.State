@@ -4,19 +4,19 @@ namespace Gu.State.Tests
     {
         public static readonly RootChangeEventArgsEventArgsComparer<TNode> Default = new RootChangeEventArgsEventArgsComparer<TNode>();
 
-        public override bool Equals(RootChangeEventArgs<TNode> x, RootChangeEventArgs<TNode> y)
+        public override bool Equals(RootChangeEventArgs<TNode> expected, RootChangeEventArgs<TNode> actual)
         {
-            if (!ReferenceEquals(x.Node, y.Node))
+            if (!ReferenceEquals(expected.Node, actual.Node))
             {
                 return false;
             }
 
-            if (x.Previous != null && !EventArgsComparer.Default.Equals(x.Previous, y.Previous))
+            if (expected.Previous != null && !EventArgsComparer.Default.Equals(expected.Previous, actual.Previous))
             {
                 return false;
             }
 
-            return EventArgsComparer.Default.Equals(x.EventArgs, y.EventArgs);
+            return EventArgsComparer.Default.Equals(expected.EventArgs, actual.EventArgs);
         }
     }
 }

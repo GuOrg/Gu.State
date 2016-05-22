@@ -1,5 +1,7 @@
 namespace Gu.State.Tests
 {
+    using NUnit.Framework;
+
     public class PropertyGraphChangedEventArgsComparer<TNode> : EventArgsComparer<PropertyGraphChangedEventArgs<TNode>>
     {
         public static readonly PropertyGraphChangedEventArgsComparer<TNode> Default = new PropertyGraphChangedEventArgsComparer<TNode>();
@@ -8,19 +10,19 @@ namespace Gu.State.Tests
         {
         }
 
-        public override bool Equals(PropertyGraphChangedEventArgs<TNode> x, PropertyGraphChangedEventArgs<TNode> y)
+        public override bool Equals(PropertyGraphChangedEventArgs<TNode> expected, PropertyGraphChangedEventArgs<TNode> actual)
         {
-            if (!ReferenceEquals(x.Node, y.Node))
+            if (!ReferenceEquals(expected.Node, actual.Node))
+            {
+                throw new AssertionException($"Expected actual.Node to be same as expected.Node");
+            }
+
+            if (!EventArgsComparer.Default.Equals(expected.Previous, actual.Previous))
             {
                 return false;
             }
 
-            if (x.Previous != null && !EventArgsComparer.Default.Equals(x.Previous, y.Previous))
-            {
-                return false;
-            }
-
-            return EventArgsComparer.Default.Equals(x.Property, y.Property);
+            return EventArgsComparer.Default.Equals(expected.Property, actual.Property);
         }
     }
 }

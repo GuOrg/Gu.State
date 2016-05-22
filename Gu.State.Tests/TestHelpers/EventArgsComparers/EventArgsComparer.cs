@@ -4,6 +4,10 @@ namespace Gu.State.Tests
     using System.Collections;
     using System.Collections.Generic;
 
+    using NUnit.Framework;
+
+    using Is = Gu.State.Is;
+
     public class EventArgsComparer : IEqualityComparer<object>, IComparer
     {
         public static readonly EventArgsComparer Default = new EventArgsComparer();
@@ -12,41 +16,46 @@ namespace Gu.State.Tests
         {
         }
 
-        public new bool Equals(object x, object y)
+        public new bool Equals(object expected, object actual)
         {
-            if (x == null && y == null)
+            if (expected == null && actual == null)
             {
                 return true;
             }
 
-            if (x == null || y == null)
+            if (expected == null && actual != null)
             {
-                return false;
+                throw new AssertionException($"Expected actual to be null but was: {actual}");
             }
 
-            if (x.GetType() != y.GetType())
+            if (expected != null && actual == null)
             {
-                return false;
+                throw new AssertionException($"Expected actual to be {expected} but was: null");
+            }
+
+            if (expected.GetType() != actual.GetType())
+            {
+                throw new AssertionException($"Expected actual to be of type {expected.GetType().Name} but was: {actual.GetType().Name}");
             }
 
             bool result;
-            if (TryCompare<PropertyChangeEventArgs>(x,y, PropertyChangedEventArgsComparer.Default.Equals, out result) ||
-                TryCompare<AddEventArgs>(x, y, AddEventArgsComparer.Default.Equals, out result) ||
-                TryCompare<RemoveEventArgs>(x, y, RemoveEventArgsComparer.Default.Equals, out result) ||
-                TryCompare<ReplaceEventArgs>(x, y, ReplaceEventArgsComparer.Default.Equals, out result) ||
-                TryCompare<MoveEventArgs>(x, y, MoveEventArgsComparer.Default.Equals, out result) ||
-                TryCompare<ResetEventArgs>(x, y, ResetEventArgsComparer.Default.Equals, out result) ||
-                TryCompare<RootChangeEventArgs<ChangeTrackerNode>>(x, y, RootChangeEventArgsEventArgsComparer<ChangeTrackerNode>.Default.Equals, out result) ||
-                TryCompare<RootChangeEventArgs<DirtyTrackerNode>>(x, y, RootChangeEventArgsEventArgsComparer<DirtyTrackerNode>.Default.Equals, out result) ||
-                TryCompare<PropertyGraphChangedEventArgs<ChangeTrackerNode>>(x, y, PropertyGraphChangedEventArgsComparer<ChangeTrackerNode>.Default.Equals, out result) ||
-                TryCompare<PropertyGraphChangedEventArgs<DirtyTrackerNode>>(x, y, PropertyGraphChangedEventArgsComparer<DirtyTrackerNode>.Default.Equals, out result) ||
-                TryCompare<ItemGraphChangedEventArgs<ChangeTrackerNode>>(x, y, ItemGraphChangedEventArgsComparer<ChangeTrackerNode>.Default.Equals, out result) ||
-                TryCompare<ItemGraphChangedEventArgs<DirtyTrackerNode>>(x, y, ItemGraphChangedEventArgsComparer<DirtyTrackerNode>.Default.Equals, out result))
+            if (TryCompare<PropertyChangeEventArgs>(expected,actual, PropertyChangedEventArgsComparer.Default.Equals, out result) ||
+                TryCompare<AddEventArgs>(expected, actual, AddEventArgsComparer.Default.Equals, out result) ||
+                TryCompare<RemoveEventArgs>(expected, actual, RemoveEventArgsComparer.Default.Equals, out result) ||
+                TryCompare<ReplaceEventArgs>(expected, actual, ReplaceEventArgsComparer.Default.Equals, out result) ||
+                TryCompare<MoveEventArgs>(expected, actual, MoveEventArgsComparer.Default.Equals, out result) ||
+                TryCompare<ResetEventArgs>(expected, actual, ResetEventArgsComparer.Default.Equals, out result) ||
+                TryCompare<RootChangeEventArgs<ChangeTrackerNode>>(expected, actual, RootChangeEventArgsEventArgsComparer<ChangeTrackerNode>.Default.Equals, out result) ||
+                TryCompare<RootChangeEventArgs<DirtyTrackerNode>>(expected, actual, RootChangeEventArgsEventArgsComparer<DirtyTrackerNode>.Default.Equals, out result) ||
+                TryCompare<PropertyGraphChangedEventArgs<ChangeTrackerNode>>(expected, actual, PropertyGraphChangedEventArgsComparer<ChangeTrackerNode>.Default.Equals, out result) ||
+                TryCompare<PropertyGraphChangedEventArgs<DirtyTrackerNode>>(expected, actual, PropertyGraphChangedEventArgsComparer<DirtyTrackerNode>.Default.Equals, out result) ||
+                TryCompare<ItemGraphChangedEventArgs<ChangeTrackerNode>>(expected, actual, ItemGraphChangedEventArgsComparer<ChangeTrackerNode>.Default.Equals, out result) ||
+                TryCompare<ItemGraphChangedEventArgs<DirtyTrackerNode>>(expected, actual, ItemGraphChangedEventArgsComparer<DirtyTrackerNode>.Default.Equals, out result))
             {
                 return result;
             }
 
-            throw new NotImplementedException("Handle: " + x.GetType().Name);
+            throw new NotImplementedException("Handle: " + expected.GetType().Name);
         }
 
         private static bool TryCompare<T>(object x, object y, Func<T, T, bool> compare, out  bool result)

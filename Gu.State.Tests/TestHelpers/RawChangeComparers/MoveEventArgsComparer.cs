@@ -1,12 +1,24 @@
 namespace Gu.State.Tests
 {
+    using NUnit.Framework;
+
     public class MoveEventArgsComparer : EventArgsComparer<MoveEventArgs>
     {
         public static readonly MoveEventArgsComparer Default = new MoveEventArgsComparer();
 
-        public override bool Equals(MoveEventArgs x, MoveEventArgs y)
+        public override bool Equals(MoveEventArgs expected, MoveEventArgs actual)
         {
-            return x.FromIndex == y.FromIndex && x.ToIndex == y.ToIndex;
+            if (expected.FromIndex != actual.FromIndex)
+            {
+                throw new AssertionException($"Expected FromIndex to be {expected.FromIndex} but was {actual.FromIndex}");
+            }
+
+            if (expected.ToIndex != actual.ToIndex)
+            {
+                throw new AssertionException($"Expected ToIndex to be {expected.FromIndex} but was {actual.FromIndex}");
+            }
+
+            return true;
         }
     }
 }

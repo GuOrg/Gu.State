@@ -6,9 +6,9 @@ namespace Gu.State.Tests
     {
         public static readonly ResetEventArgsComparer Default = new ResetEventArgsComparer();
 
-        public override bool Equals(ResetEventArgs x, ResetEventArgs y)
+        public override bool Equals(ResetEventArgs expected, ResetEventArgs actual)
         {
-            return Equals(x.OldItems, y.OldItems) && Equals(x.NewItems, y.NewItems);
+            return Equals(expected.OldItems, actual.OldItems) && Equals(expected.NewItems, actual.NewItems);
         }
 
         private static bool Equals(IList x, IList y)

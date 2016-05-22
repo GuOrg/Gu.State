@@ -7,7 +7,7 @@
     {
         public Type Type => typeof(T);
 
-        public abstract bool Equals(T x, T y);
+        public abstract bool Equals(T expected, T actual);
 
         public int GetHashCode(T obj)
         {

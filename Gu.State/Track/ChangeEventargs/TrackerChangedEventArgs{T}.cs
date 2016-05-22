@@ -1,6 +1,7 @@
 namespace Gu.State
 {
     using System;
+    using System.Diagnostics;
     using System.Reflection;
 
     public abstract class TrackerChangedEventArgs<T> : EventArgs
@@ -34,6 +35,7 @@ namespace Gu.State
 
         internal TrackerChangedEventArgs<T> With(T next, PropertyInfo property)
         {
+            Debug.Assert(property != null, "property == null");
             return new PropertyGraphChangedEventArgs<T>(next, property, this);
         }
     }

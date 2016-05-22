@@ -134,7 +134,7 @@
                 return;
             }
 
-            this.Changed?.Invoke(this, e.With(this, null));
+            this.Changed?.Invoke(this, e);
         }
 
         private void OnSourcePropertyChange(object sender, PropertyChangeEventArgs e)
