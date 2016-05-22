@@ -22,7 +22,12 @@ namespace Gu.State.Tests
                 return false;
             }
 
-            return EventArgsComparer.Default.Equals(expected.Property, actual.Property);
+            if (expected.Property != actual.Property)
+            {
+                throw new AssertionException($"Expected property {expected.Property.Name} but was {actual.Property.Name}");
+            }
+
+            return true;
         }
     }
 }

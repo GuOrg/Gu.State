@@ -34,17 +34,17 @@
 
         public event EventHandler<TrackerChangedEventArgs<ChangeTrackerNode>> Changed;
 
+        internal object Source => this.refcountedRootChanges.Value.Source;
+
+        internal PropertiesSettings Settings => this.refcountedRootChanges.Value.Settings;
+
         private IReadOnlyCollection<PropertyInfo> TrackProperties => this.refcountedRootChanges.Value.TrackProperties;
 
         private IList SourceList => (IList)this.Source;
 
         private Type ItemType { get; }
 
-        private object Source => this.refcountedRootChanges.Value.Source;
-
         private ChildNodes Children => this.children.Value;
-
-        private PropertiesSettings Settings => this.refcountedRootChanges.Value.Settings;
 
         public void Dispose()
         {
@@ -129,7 +129,7 @@
 
         private void OnChildChanged(object sender, TrackerChangedEventArgs<ChangeTrackerNode> e)
         {
-            if (e.Contains(this))
+            if (e.Previous?.Contains(this) == true)
             {
                 return;
             }
@@ -198,15 +198,17 @@
 
         private void UpdatePropertyNode(PropertyInfo property)
         {
-            if (this.Settings.IsIgnoringProperty(property))
+            if (this.Settings.IsIgnoringProperty(property) ||
+                !Is.Trackable(property.PropertyType))
             {
                 return;
             }
 
-            var value = this.Settings.GetOrCreateGetterAndSetter(property).GetValue(this.Source);
-            IUnsubscriber<IChildNode> childNode;
-            if (this.TryCreateChildNode(value, property, out childNode))
+            IChildNode propertyNode;
+            if (ChildNodes.TryCreate(this, property, out propertyNode))
             {
+                propertyNode.Changed += this.OnChildChanged;
+                IUnsubscriber<IChildNode> childNode = propertyNode.UnsubscribeAndDispose(n => n.Changed -= this.OnChildChanged);
                 this.Children.SetValue(property, childNode);
             }
             else
@@ -227,20 +229,6 @@
             {
                 this.Children.Remove(index);
             }
-        }
-
-        private bool TryCreateChildNode(object value, PropertyInfo propertyInfo, out IUnsubscriber<IChildNode> result)
-        {
-            IChildNode propertyNode;
-            if (ChildNodes.TryCreate(value, this.Settings, propertyInfo, out propertyNode))
-            {
-                propertyNode.Changed += this.OnChildChanged;
-                result = propertyNode.UnsubscribeAndDispose(n => n.Changed -= this.OnChildChanged);
-                return true;
-            }
-
-            result = null;
-            return false;
         }
 
         private bool TryCreateChildNode(object value, int index, out IUnsubscriber<IChildNode> result)

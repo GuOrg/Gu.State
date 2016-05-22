@@ -8,10 +8,12 @@ namespace Gu.State
         private sealed class PropertyNode : IChildNode
         {
             internal readonly PropertyInfo PropertyInfo;
+            private readonly ChangeTrackerNode parent;
             private readonly IRefCounted<ChangeTrackerNode> node;
 
-            internal PropertyNode(IRefCounted<ChangeTrackerNode> node, PropertyInfo propertyInfo)
+            internal PropertyNode(ChangeTrackerNode parent, IRefCounted<ChangeTrackerNode> node, PropertyInfo propertyInfo)
             {
+                this.parent = parent;
                 this.PropertyInfo = propertyInfo;
                 this.node = node;
                 this.node.Value.Changed += this.OnNodeChanged;
@@ -27,7 +29,7 @@ namespace Gu.State
 
             private void OnNodeChanged(object sender, TrackerChangedEventArgs<ChangeTrackerNode> e)
             {
-                this.Changed?.Invoke(this, e.With(this.node.Value, this.PropertyInfo));
+                this.Changed?.Invoke(this, e.With(this.parent, this.PropertyInfo));
             }
         }
     }

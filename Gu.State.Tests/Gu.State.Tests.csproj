@@ -137,12 +137,13 @@
     <Compile Include="Synchronize\SynchronizeTests.Verify.cs" />
     <Compile Include="TestHelpers\EventArgsComparers\ItemGraphChangedEventArgsComparer.cs" />
     <Compile Include="TestHelpers\RawChangeComparers\MoveEventArgsComparer.cs" />
-    <Compile Include="TestHelpers\EventArgsComparers\PropertyChangedEventArgsComparer.cs" />
+    <Compile Include="TestHelpers\RawChangeComparers\PropertyChangedEventArgsComparer.cs" />
     <Compile Include="TestHelpers\EventArgsComparers\PropertyGraphChangedEventArgsComparer.cs" />
     <Compile Include="TestHelpers\RawChangeComparers\RemoveEventArgsComparer.cs" />
     <Compile Include="TestHelpers\RawChangeComparers\ReplaceEventArgsComparer.cs" />
     <Compile Include="TestHelpers\RawChangeComparers\ResetEventArgsComparer.cs" />
     <Compile Include="TestHelpers\EventArgsComparers\RootChangeEventArgsEventArgsComparer.cs" />
+    <Compile Include="Track\Changes\ChangeTrackerTests.WithComplex.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTests.Verify.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTests.Simple.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTests.MemoryLeaks.cs" />

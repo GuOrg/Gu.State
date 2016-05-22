@@ -22,7 +22,12 @@ namespace Gu.State.Tests
                 return false;
             }
 
-            return EventArgsComparer.Default.Equals(expected.Index, actual.Index);
+            if (expected.Index != actual.Index)
+            {
+                throw new AssertionException($"Expected index to be {expected.Index} but was {actual.Index}");
+            }
+
+            return true;
         }
     }
 }

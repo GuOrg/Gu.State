@@ -24,6 +24,7 @@
                 {
                     tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
+                    Assert.AreEqual(0, tracker.Changes);
                     CollectionAssert.IsEmpty(propertyChanges);
                     CollectionAssert.IsEmpty(changes);
 

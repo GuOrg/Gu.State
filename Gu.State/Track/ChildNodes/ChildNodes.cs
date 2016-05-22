@@ -38,12 +38,14 @@
             return false;
         }
 
-        internal static bool TryCreate(object value, PropertiesSettings settings, PropertyInfo propertyInfo, out IChildNode result)
+        internal static bool TryCreate(ChangeTrackerNode parent, PropertyInfo propertyInfo, out IChildNode result)
         {
             IRefCounted<ChangeTrackerNode> node;
-            if (ChangeTrackerNode.TryGetOrCreate(value, settings, false, out node))
+            var getter = parent.Settings.GetOrCreateGetterAndSetter(propertyInfo);
+            var value = getter.GetValue(parent.Source);
+            if (ChangeTrackerNode.TryGetOrCreate(value, parent.Settings, false, out node))
             {
-                result = new PropertyNode(node, propertyInfo);
+                result = new PropertyNode(parent, node, propertyInfo);
                 return true;
             }
 
