@@ -1,6 +1,5 @@
 ﻿namespace Gu.State
 {
-    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
@@ -68,7 +67,7 @@
 
                     this.nodes[i].Dispose();
                     this.nodes.RemoveAt(i);
-                    for (var j = i + 1; j < this.nodes.Count; j++)
+                    for (var j = i; j < this.nodes.Count; j++)
                     {
                         ((IndexNode)this.nodes[j].Value).Index--;
                     }
