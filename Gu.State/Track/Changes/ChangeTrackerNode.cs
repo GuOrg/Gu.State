@@ -40,7 +40,7 @@
 
         private IReadOnlyCollection<PropertyInfo> TrackProperties => this.refcountedRootChanges.Value.TrackProperties;
 
-        private IList SourceList => (IList)this.Source;
+        internal IList SourceList => (IList)this.Source;
 
         private Type ItemType { get; }
 
@@ -179,9 +179,8 @@
             {
                 for (var i = 0; i < e.NewItems.Count; i++)
                 {
-                    var newItem = e.NewItems[i];
                     IUnsubscriber<IChildNode> childNode;
-                    if (this.TryCreateChildNode(newItem, i, out childNode))
+                    if (this.TryCreateChildNode(i, out childNode))
                     {
                         borrow.Value.Add(childNode);
                     }
@@ -219,9 +218,8 @@
 
         private void UpdateIndexNode(int index)
         {
-            var value = this.SourceList[index];
             IUnsubscriber<IChildNode> childNode;
-            if (this.TryCreateChildNode(value, index, out childNode))
+            if (this.TryCreateChildNode(index, out childNode))
             {
                 this.Children.SetValue(index, childNode);
             }
@@ -231,10 +229,10 @@
             }
         }
 
-        private bool TryCreateChildNode(object value, int index, out IUnsubscriber<IChildNode> result)
+        private bool TryCreateChildNode(int index, out IUnsubscriber<IChildNode> result)
         {
             IChildNode indexNode;
-            if (ChildNodes.TryCreate(value, this.Settings, index, out indexNode))
+            if (ChildNodes.TryCreate(this, index, out indexNode))
             {
                 indexNode.Changed += this.OnChildChanged;
                 result = indexNode.UnsubscribeAndDispose(n => n.Changed -= this.OnChildChanged);

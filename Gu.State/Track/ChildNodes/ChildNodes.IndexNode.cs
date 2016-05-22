@@ -7,10 +7,12 @@
         private sealed class IndexNode : IChildNode
         {
             internal int Index;
+            private readonly ChangeTrackerNode parent;
             private readonly IRefCounted<ChangeTrackerNode> node;
 
-            internal IndexNode(IRefCounted<ChangeTrackerNode> node, int index)
+            internal IndexNode(ChangeTrackerNode parent, IRefCounted<ChangeTrackerNode> node, int index)
             {
+                this.parent = parent;
                 this.Index = index;
                 this.node = node;
                 this.node.Value.Changed += this.OnNodeChanged;
@@ -26,7 +28,7 @@
 
             private void OnNodeChanged(object sender, TrackerChangedEventArgs<ChangeTrackerNode> e)
             {
-                this.Changed?.Invoke(this, e.With(this.node.Value, this.Index));
+                this.Changed?.Invoke(this, e.With(this.parent, this.Index));
             }
         }
     }
