@@ -70,7 +70,12 @@
             this.propertyNodes.Remove(property);
         }
 
-        internal void SetValue(int index, IUnsubscriber<IChildNode> childNode)
+        internal void Insert(int index, IUnsubscriber<IChildNode> childNode)
+        {
+            this.indexNodes.Insert(index, childNode);
+        }
+
+        internal void Replace(int index, IUnsubscriber<IChildNode> childNode)
         {
             this.indexNodes.SetValue(index, childNode);
         }

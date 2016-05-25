@@ -123,8 +123,10 @@ namespace Gu.State.Tests
                 }
             }
 
-            [Test]
-            public void Insert()
+            [TestCase(0)]
+            [TestCase(1)]
+            [TestCase(2)]
+            public void Insert(int index)
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType() };
                 var propertyChanges = new List<string>();
@@ -137,11 +139,11 @@ namespace Gu.State.Tests
                     CollectionAssert.IsEmpty(propertyChanges);
                     CollectionAssert.IsEmpty(changes);
 
-                    source.Insert(0, new ComplexType());
+                    source.Insert(index, new ComplexType());
                     Assert.AreEqual(1, tracker.Changes);
                     CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
                     var node = ChangeTrackerNode.GetOrCreate((INotifyCollectionChanged)source, tracker.Settings, false).Value;
-                    var expected = new[] { RootChangeEventArgs.Create(node, new AddEventArgs(0)) };
+                    var expected = new[] { RootChangeEventArgs.Create(node, new AddEventArgs(index)) };
                     CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
                 }
             }
@@ -222,8 +224,10 @@ namespace Gu.State.Tests
                 }
             }
 
-            [Test]
-            public void Remove0ThenItemNotifies()
+            [TestCase(0)]
+            [TestCase(1)]
+            [TestCase(2)]
+            public void RemoveThenItemNotifies(int index)
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType(), new ComplexType() };
                 var propertyChanges = new List<string>();
@@ -237,47 +241,11 @@ namespace Gu.State.Tests
                     CollectionAssert.IsEmpty(propertyChanges);
                     CollectionAssert.IsEmpty(changes);
 
-                    source.RemoveAt(0);
+                    source.RemoveAt(index);
                     Assert.AreEqual(1, tracker.Changes);
                     CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
                     var sourceNode = ChangeTrackerNode.GetOrCreate((INotifyCollectionChanged)source, tracker.Settings, false).Value;
-                    expectedChanges.Add(RootChangeEventArgs.Create(sourceNode, new RemoveEventArgs(0)));
-                    CollectionAssert.AreEqual(expectedChanges, changes, EventArgsComparer.Default);
-
-                    source[0].Value++;
-                    Assert.AreEqual(2, tracker.Changes);
-                    CollectionAssert.AreEqual(new[] { "Changes", "Changes" }, propertyChanges);
-                    expectedChanges.Add(new ItemGraphChangedEventArgs<ChangeTrackerNode>(sourceNode, 0, RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(source[0], tracker.Settings, false).Value, new PropertyChangeEventArgs(source[0].GetProperty("Value")))));
-                    CollectionAssert.AreEqual(expectedChanges, changes, EventArgsComparer.Default);
-
-                    source[1].Value++;
-                    Assert.AreEqual(3, tracker.Changes);
-                    CollectionAssert.AreEqual(new[] { "Changes", "Changes", "Changes" }, propertyChanges);
-                    expectedChanges.Add(new ItemGraphChangedEventArgs<ChangeTrackerNode>(sourceNode, 1, RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(source[1], tracker.Settings, false).Value, new PropertyChangeEventArgs(source[1].GetProperty("Value")))));
-                    CollectionAssert.AreEqual(expectedChanges, changes, EventArgsComparer.Default);
-                }
-            }
-
-            [Test]
-            public void Remove1ThenItemNotifies()
-            {
-                var source = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType(), new ComplexType() };
-                var propertyChanges = new List<string>();
-                var changes = new List<EventArgs>();
-                var expectedChanges = new List<EventArgs>();
-                using (var tracker = Track.Changes(source, ReferenceHandling.Structural))
-                {
-                    tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
-                    tracker.Changed += (_, e) => changes.Add(e);
-                    Assert.AreEqual(0, tracker.Changes);
-                    CollectionAssert.IsEmpty(propertyChanges);
-                    CollectionAssert.IsEmpty(changes);
-
-                    source.RemoveAt(1);
-                    Assert.AreEqual(1, tracker.Changes);
-                    CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
-                    var sourceNode = ChangeTrackerNode.GetOrCreate((INotifyCollectionChanged)source, tracker.Settings, false).Value;
-                    expectedChanges.Add(RootChangeEventArgs.Create(sourceNode, new RemoveEventArgs(1)));
+                    expectedChanges.Add(RootChangeEventArgs.Create(sourceNode, new RemoveEventArgs(index)));
                     CollectionAssert.AreEqual(expectedChanges, changes, EventArgsComparer.Default);
 
                     source[0].Value++;
@@ -507,7 +475,7 @@ namespace Gu.State.Tests
             [TestCase(2, 0)]
             [TestCase(2, 1)]
             [TestCase(1, 0)]
-            public void MoveThenNotify(int from, int to)
+            public void MoveThenItemsNotifies(int from, int to)
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType(), new ComplexType() };
                 var propertyChanges = new List<string>();

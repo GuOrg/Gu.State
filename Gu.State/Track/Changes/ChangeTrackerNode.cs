@@ -145,7 +145,12 @@
 
         private void OnSourceAdd(object sender, AddEventArgs e)
         {
-            this.UpdateIndexNode(e.Index);
+            IUnsubscriber<IChildNode> childNode;
+            if (this.TryCreateChildNode(e.Index, out childNode))
+            {
+                this.Children.Insert(e.Index, childNode);
+            }
+
             this.Changed?.Invoke(this, RootChangeEventArgs.Create(this, e));
         }
 
@@ -221,7 +226,7 @@
             IUnsubscriber<IChildNode> childNode;
             if (this.TryCreateChildNode(index, out childNode))
             {
-                this.Children.SetValue(index, childNode);
+                this.Children.Replace(index, childNode);
             }
             else
             {

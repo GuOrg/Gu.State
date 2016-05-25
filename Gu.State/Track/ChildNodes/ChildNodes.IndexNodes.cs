@@ -22,6 +22,31 @@
                 }
             }
 
+            internal void Insert(int index, IUnsubscriber<IChildNode> childNode)
+            {
+                if (childNode == null)
+                {
+                    this.Remove(index);
+                }
+                else
+                {
+                    Debug.Assert(childNode.Value is IndexNode, "childNode.Value is IndexNode");
+                    lock (this.nodes)
+                    {
+                        var indexOf = this.IndexOf(index);
+                        var insertIndex = indexOf < 0
+                                              ? ~indexOf
+                                              : indexOf;
+                        for (var j = insertIndex; j < this.nodes.Count; j++)
+                        {
+                            ((IndexNode)this.nodes[j].Value).Index++;
+                        }
+
+                        this.nodes.Insert(insertIndex, childNode);
+                    }
+                }
+            }
+
             internal void SetValue(int index, IUnsubscriber<IChildNode> childNode)
             {
                 if (childNode == null)
@@ -34,22 +59,14 @@
                     lock (this.nodes)
                     {
                         var indexOf = this.IndexOf(index);
-                        int insertIndex;
                         if (indexOf < 0)
                         {
-                            insertIndex = ~indexOf;
-                            this.nodes.Insert(insertIndex, childNode);
+                            this.Insert(index, childNode);
                         }
                         else
                         {
-                            insertIndex = indexOf;
-                            this.nodes[insertIndex].Dispose();
-                            this.nodes[insertIndex] = childNode;
-                        }
-
-                        for (var j = insertIndex + 1; j < this.nodes.Count; j++)
-                        {
-                            ((IndexNode)this.nodes[j].Value).Index++;
+                            this.nodes[indexOf].Dispose();
+                            this.nodes[indexOf] = childNode;
                         }
                     }
                 }
