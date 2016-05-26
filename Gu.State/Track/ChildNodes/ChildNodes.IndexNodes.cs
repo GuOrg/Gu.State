@@ -95,23 +95,21 @@
             {
                 lock (this.nodes)
                 {
-
                     var fi = this.IndexOf(fromIndex);
                     if (fi < 0)
                     {
                         return;
                     }
 
-                    var node = this.nodes[fi];
-                    this.nodes.RemoveAt(fi);
                     var ti = this.IndexOf(toIndex);
                     if (ti < 0)
                     {
                         ti = ~ti;
                     }
 
-                    this.nodes.Insert(ti, node);
-                    ((IndexNode)node.Value).Index = toIndex;
+                    var node = this.nodes[fi];
+                    this.nodes.RemoveAt(fi);
+
                     if (ti < fi)
                     {
                         for (var i = ti; i < fi; i++)
@@ -126,6 +124,9 @@
                             ((IndexNode)this.nodes[i].Value).Index--;
                         }
                     }
+
+                    ((IndexNode)node.Value).Index = toIndex;
+                    this.nodes.Insert(ti, node);
                 }
             }
 
