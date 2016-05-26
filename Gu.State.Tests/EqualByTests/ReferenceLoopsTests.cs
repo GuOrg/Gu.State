@@ -17,7 +17,10 @@ namespace Gu.State.Tests.EqualByTests
         public void ParentChild(string p, string c, bool expected)
         {
             var x = new Parent("p", new Child("c"));
+            Assert.AreSame(x, x.Child.Parent);
+
             var y = new Parent(p, new Child(c));
+            Assert.AreSame(y, y.Child.Parent);
             var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(expected, result);
 

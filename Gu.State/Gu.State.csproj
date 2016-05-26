@@ -41,6 +41,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Internals\Borrowed.cs" />
+    <Compile Include="Contracts\IChangeTracker.cs" />
+    <Compile Include="Track\ChildNodes\ChildNodes.cs" />
     <Compile Include="Internals\Contracts\IInitialize{T}.cs" />
     <Compile Include="Internals\CastingComparer.cs" />
     <Compile Include="Internals\CastingComparer{T}.cs" />
@@ -87,7 +89,7 @@
     <Compile Include="EqualBy\Comparers\ReadOnlyListEqualByComparer{T}.cs" />
     <Compile Include="Internals\Extensions\ArrayExt.cs" />
     <Compile Include="Internals\Extensions\DictionaryExt.cs" />
-    <Compile Include="Internals\EnumerableExt.ElementAt.cs" />
+    <Compile Include="Internals\Extensions\EnumerableExt.ElementAt.cs" />
     <Compile Include="Internals\Contracts\IBorrowed{T}.cs" />
     <Compile Include="Internals\Contracts\IDisposer{T}.cs" />
     <Compile Include="Internals\Contracts\IRefCounted{T}.cs" />
@@ -127,7 +129,15 @@
     <Compile Include="Internals\Unsubscriber.cs" />
     <Compile Include="Settings\CustomCopy.cs" />
     <Compile Include="Synchronize\Synchronize.Synchronizer.cs" />
-    <Compile Include="Track\Changes\ChangeNode\EventArgs\ReplaceEventArgs.cs" />
+    <Compile Include="Track\ChildNodes\ChildNodes.IndexNodes.cs" />
+    <Compile Include="Track\ChildNodes\ChildNodes.IndexNode.cs" />
+    <Compile Include="Track\ChildNodes\ChildNodes.PropertyNode.cs" />
+    <Compile Include="Track\ChildNodes\ChildNodes.PropertyNodes.cs" />
+    <Compile Include="Track\ChildNodes\IChildNode.cs" />
+    <Compile Include="Track\ChildNodes\IndexNode.cs" />
+    <Compile Include="Track\ChildNodes\PropertyNode.cs" />
+    <Compile Include="Track\RootChangeEventArgs\IRootChangeEventArgs.cs" />
+    <Compile Include="Track\RootChangeEventArgs\ReplaceEventArgs.cs" />
     <Compile Include="Internals\Collections\DisposingMap{TValue}.cs" />
     <Compile Include="Internals\Collections\ReferenceComparer.cs" />
     <Compile Include="Internals\ReferencePair.cs" />
@@ -177,15 +187,22 @@
     <Compile Include="Copy\Copy.Shared.cs" />
     <Compile Include="Copy\Copy.Throw.cs" />
     <Compile Include="Copy\Copy.Verify.cs" />
-    <Compile Include="Track\Changes\ChangeNode\EventArgs\AddEventArgs.cs" />
-    <Compile Include="Track\Changes\ChangeNode\EventArgs\MoveEventArgs.cs" />
-    <Compile Include="Track\Changes\ChangeNode\EventArgs\RemoveEventArgs.cs" />
-    <Compile Include="Track\Changes\ChangeNode\EventArgs\ResetEventArgs.cs" />
-    <Compile Include="Track\Changes\ChangeNode\EventArgs\PropertyChangeEventArgs.cs" />
+    <Compile Include="Track\RootChangeEventArgs\AddEventArgs.cs" />
+    <Compile Include="Track\RootChangeEventArgs\MoveEventArgs.cs" />
+    <Compile Include="Track\RootChangeEventArgs\RemoveEventArgs.cs" />
+    <Compile Include="Track\RootChangeEventArgs\ResetEventArgs.cs" />
+    <Compile Include="Track\RootChangeEventArgs\PropertyChangeEventArgs.cs" />
+    <Compile Include="Contracts\IDirtyTracker{T}.cs" />
     <Compile Include="Track\Dirty\DirtyTracker.cs" />
-    <Compile Include="Track\Dirty\DirtyTrackerChangedEventArgs.cs" />
+    <Compile Include="Track\ChangeEventargs\GraphChangeEventArgs{T}.cs" />
+    <Compile Include="Track\ChangeEventargs\RootChangeEventArgs.cs" />
+    <Compile Include="Track\ChangeEventargs\RootChangeEventArgs{T}.cs" />
+    <Compile Include="Track\ChangeEventargs\ItemGraphChangedEventArgs{T}.cs" />
+    <Compile Include="Track\ChangeEventargs\PropertyGraphChangedEventArgs{T}.cs" />
+    <Compile Include="Track\ChangeEventargs\GraphChangeEventArgs.cs" />
+    <Compile Include="Track\ChangeEventargs\TrackerChangedEventArgs{T}.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerNode.cs" />
-    <Compile Include="Track\Changes\ChangeNode\ChangeNode.cs" />
+    <Compile Include="Track\RootChanges.cs" />
     <Compile Include="Track\Track.Verify.cs" />
     <Compile Include="EqualBy\EqualBy.Enumerable.cs" />
     <Compile Include="EqualBy\EqualBy.Throw.cs" />
@@ -216,8 +233,6 @@
     <Compile Include="Internals\Reflection\FieldInfoExt.cs" />
     <Compile Include="Internals\Constants.cs" />
     <Compile Include="Track\Track.cs" />
-    <Compile Include="Track\Dirty\DirtyTracker{T}.cs" />
-    <Compile Include="Internals\Contracts\IChangeTracker.cs" />
     <Compile Include="Internals\Ensure\Ensure.cs" />
     <Compile Include="Internals\Ensure\Ensure.string.cs" />
     <Compile Include="Internals\Ensure\Ensure.type.cs" />

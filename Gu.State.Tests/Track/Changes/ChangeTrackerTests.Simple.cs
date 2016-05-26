@@ -1,5 +1,6 @@
 ﻿namespace Gu.State.Tests
 {
+    using System;
     using System.Collections.Generic;
 
     using NUnit.Framework;
@@ -15,24 +16,28 @@
             [TestCase(ReferenceHandling.Structural)]
             public void CreateAndDispose(ReferenceHandling referenceHandling)
             {
-                var x = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
-                var changes = new List<string>();
-                var expectedChanges = new List<string>();
+                var source = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
+                var propertyChanges = new List<string>();
+                var changes = new List<EventArgs>();
 
-                using (var tracker = Track.Changes(x, referenceHandling))
+                using (var tracker = Track.Changes(source, referenceHandling))
                 {
-                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
+                    tracker.Changed += (_, e) => changes.Add(e);
+                    Assert.AreEqual(0, tracker.Changes);
+                    CollectionAssert.IsEmpty(propertyChanges);
                     CollectionAssert.IsEmpty(changes);
 
-                    x.Value1++;
+                    source.Value1++;
                     Assert.AreEqual(1, tracker.Changes);
-                    expectedChanges.AddRange(new[] { "Changes" });
-                    CollectionAssert.AreEqual(expectedChanges, changes);
+                    CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
+                    var expected = new[] { RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(source, tracker.Settings, false).Value, new PropertyChangeEventArgs(source.GetType().GetProperty(nameof(source.Value1)))) };
+                    CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
                 }
 
-                x.Value1++;
-                CollectionAssert.AreEqual(expectedChanges, changes);
-
+                source.Value1++;
+                Assert.AreEqual(1, propertyChanges.Count);
+                Assert.AreEqual(1, changes.Count);
 #if (!DEBUG) // debug build keeps instances alive longer for nicer debugging experience
                 var wrx = new System.WeakReference(x);
                 x = null;
@@ -46,23 +51,28 @@
             [TestCase(ReferenceHandling.Structural)]
             public void CreateAndDisposeExplicitSetting(ReferenceHandling referenceHandling)
             {
-                var x = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
-                var changes = new List<string>();
-                var expectedChanges = new List<string>();
+                var source = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
+                var propertyChanges = new List<string>();
+                var expectedPropertyChanges = new List<string>();
+                var changes = new List<EventArgs>();
 
-                using (var tracker = Track.Changes(x, PropertiesSettings.GetOrCreate(referenceHandling)))
+                using (var tracker = Track.Changes(source, referenceHandling))
                 {
-                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
+                    tracker.Changed += (_, e) => changes.Add(e);
+                    CollectionAssert.IsEmpty(propertyChanges);
                     CollectionAssert.IsEmpty(changes);
 
-                    x.Value1++;
+                    source.Value1++;
                     Assert.AreEqual(1, tracker.Changes);
-                    expectedChanges.AddRange(new[] { "Changes" });
-                    CollectionAssert.AreEqual(expectedChanges, changes);
+                    expectedPropertyChanges.AddRange(new[] { "Changes" });
+                    CollectionAssert.AreEqual(expectedPropertyChanges, propertyChanges);
+                    var expected = new[] { RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(source, tracker.Settings, false).Value, new PropertyChangeEventArgs(source.GetType().GetProperty(nameof(source.Value1)))) };
+                    CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
                 }
 
-                x.Value1++;
-                CollectionAssert.AreEqual(expectedChanges, changes);
+                source.Value1++;
+                CollectionAssert.AreEqual(expectedPropertyChanges, propertyChanges);
 
 #if (!DEBUG) // debug build keeps instances alive longer for nicer debugging experience
                 var wrx = new System.WeakReference(x);

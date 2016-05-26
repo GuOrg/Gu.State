@@ -108,7 +108,10 @@
     <Compile Include="EqualByTests\PropertyValues\Sets.cs" />
     <Compile Include="EqualByTests\ReferenceLoopsTests.cs" />
     <Compile Include="EqualByTests\SetTests.cs" />
-    <Compile Include="IgnoredTests.cs" />
+    <Compile Include="TestHelpers\RawChangeComparers\AddEventArgsComparer.cs" />
+    <Compile Include="TestHelpers\EventArgsComparers\EventArgsComparer.cs" />
+    <Compile Include="TestHelpers\EventArgsComparers\EventArgsComparer{T}.cs" />
+    <Compile Include="TestHelpers\IgnoredTests.cs" />
     <Compile Include="Internals\ArrayExt.cs" />
     <Compile Include="Internals\Collections\DisposingMapTests.cs" />
     <Compile Include="Internals\Pools\ReferenceSetPoolTests.cs" />
@@ -129,10 +132,18 @@
     <Compile Include="Internals\SetTests.cs" />
     <Compile Include="Internals\RefcounterTests.cs" />
     <Compile Include="Internals\TrackerCacheTests.cs" />
-    <Compile Include="Sandbox\GetOrCreate.cs" />
     <Compile Include="Synchronize\SynchronizeTests.Throws.cs" />
     <Compile Include="Synchronize\SynchronizeTests.ReferenceLoops.cs" />
     <Compile Include="Synchronize\SynchronizeTests.Verify.cs" />
+    <Compile Include="TestHelpers\EventArgsComparers\ItemGraphChangedEventArgsComparer.cs" />
+    <Compile Include="TestHelpers\RawChangeComparers\MoveEventArgsComparer.cs" />
+    <Compile Include="TestHelpers\RawChangeComparers\PropertyChangedEventArgsComparer.cs" />
+    <Compile Include="TestHelpers\EventArgsComparers\PropertyGraphChangedEventArgsComparer.cs" />
+    <Compile Include="TestHelpers\RawChangeComparers\RemoveEventArgsComparer.cs" />
+    <Compile Include="TestHelpers\RawChangeComparers\ReplaceEventArgsComparer.cs" />
+    <Compile Include="TestHelpers\RawChangeComparers\ResetEventArgsComparer.cs" />
+    <Compile Include="TestHelpers\EventArgsComparers\RootChangeEventArgsEventArgsComparer.cs" />
+    <Compile Include="Track\Changes\ChangeTrackerTests.WithComplex.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTests.Verify.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTests.Simple.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTests.MemoryLeaks.cs" />
@@ -166,6 +177,7 @@
     <Compile Include="Settings\PropertiesSettingsTests.cs" />
     <Compile Include="Track\Changes\ChangeTrackerTypes.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerNodeTests.Caching.cs" />
+    <Compile Include="Track\Dirty\DirtyTrackerTests.Levels.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerTests.Verify.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerTests.ReferenceLoops.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerTests.MemoryLeaks.cs" />
@@ -201,7 +213,7 @@
     <Compile Include="Synchronize\SynchronizeTests.Complex.cs" />
     <Compile Include="Synchronize\SynchronizeTests.Simple.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestHelpers.cs" />
+    <Compile Include="TestHelpers\TestHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CopyTests\PropertyValues\Throws.cs" />
@@ -305,6 +317,9 @@
       <Private>True</Private>
       <Paket>True</Paket>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Sandbox\" />
   </ItemGroup>
   <Choose>
     <When Condition="($(TargetFrameworkIdentifier) == 'WindowsPhoneApp') Or ($(TargetFrameworkIdentifier) == '.NETCore') Or ($(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1' Or $(TargetFrameworkVersion) == 'v4.6.2')) Or ($(TargetFrameworkIdentifier) == 'WindowsPhone' And ($(TargetFrameworkVersion) == 'v8.0' Or $(TargetFrameworkVersion) == 'v8.1')) Or ($(TargetFrameworkIdentifier) == 'MonoAndroid') Or ($(TargetFrameworkIdentifier) == 'MonoTouch') Or ($(TargetFrameworkIdentifier) == 'Xamarin.iOS') Or ($(TargetFrameworkIdentifier) == 'Xamarin.Mac') Or ($(TargetFrameworkProfile) == 'Profile7') Or ($(TargetFrameworkProfile) == 'Profile31') Or ($(TargetFrameworkProfile) == 'Profile32') Or ($(TargetFrameworkProfile) == 'Profile44') Or ($(TargetFrameworkProfile) == 'Profile49') Or ($(TargetFrameworkProfile) == 'Profile78') Or ($(TargetFrameworkProfile) == 'Profile84') Or ($(TargetFrameworkProfile) == 'Profile111') Or ($(TargetFrameworkProfile) == 'Profile151') Or ($(TargetFrameworkProfile) == 'Profile157') Or ($(TargetFrameworkProfile) == 'Profile259')">
