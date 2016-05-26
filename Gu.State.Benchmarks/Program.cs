@@ -1,9 +1,6 @@
 ﻿namespace Gu.State.Benchmarks
 {
     using System;
-    using System.Diagnostics;
-
-    using BenchmarkDotNet.Running;
 
     public class Program
     {

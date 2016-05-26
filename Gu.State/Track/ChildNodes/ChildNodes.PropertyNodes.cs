@@ -50,7 +50,8 @@ namespace Gu.State
 
             internal void Clear()
             {
-                lock (this.nodes) // lock not needed here, just muting the warning
+                // lock not needed here, just muting the warning
+                lock (this.nodes)
                 {
                     for (var i = this.nodes.Count - 1; i >= 0; i--)
                     {

@@ -1,7 +1,5 @@
 ﻿namespace Gu.State
 {
-    using System;
-
     public static partial class EqualBy
     {
         private static bool EnumerableEquals<TSetting>(

@@ -1,6 +1,5 @@
 ﻿namespace Gu.State
 {
-    using System;
     using System.Collections.Generic;
 
     internal class DictionaryDiffBy<TKey, TValue> : DictionaryDiffBy, IDiffBy

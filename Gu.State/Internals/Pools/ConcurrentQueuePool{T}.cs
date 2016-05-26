@@ -1,7 +1,6 @@
 namespace Gu.State
 {
     using System.Collections.Concurrent;
-    using System.Collections.Generic;
 
     internal static class ConcurrentQueuePool<T>
     {

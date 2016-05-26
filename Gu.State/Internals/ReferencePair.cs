@@ -142,6 +142,7 @@ namespace Gu.State
                     return;
                 }
 
+                GC.SuppressFinalize(this);
                 ReferencePair temp;
                 Cache.TryRemove(this, out temp);
                 this.disposed = true;

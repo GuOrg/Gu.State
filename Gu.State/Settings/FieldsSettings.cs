@@ -7,7 +7,7 @@
     using System.Diagnostics;
     using System.Reflection;
 
-    public class FieldsSettings : MemberSettings<FieldInfo>, IMemberSettings
+    public sealed class FieldsSettings : MemberSettings<FieldInfo>, IMemberSettings
     {
         private static readonly ConcurrentDictionary<BindingFlagsAndReferenceHandling, FieldsSettings> Cache = new ConcurrentDictionary<BindingFlagsAndReferenceHandling, FieldsSettings>();
 
