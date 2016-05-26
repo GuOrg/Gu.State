@@ -134,8 +134,6 @@
     <Compile Include="Track\ChildNodes\ChildNodes.PropertyNode.cs" />
     <Compile Include="Track\ChildNodes\ChildNodes.PropertyNodes.cs" />
     <Compile Include="Track\ChildNodes\IChildNode.cs" />
-    <Compile Include="Track\ChildNodes\IndexNode.cs" />
-    <Compile Include="Track\ChildNodes\PropertyNode.cs" />
     <Compile Include="Track\RootChangeEventArgs\IRootChangeEventArgs.cs" />
     <Compile Include="Track\RootChangeEventArgs\ReplaceEventArgs.cs" />
     <Compile Include="Internals\Collections\DisposingMap{TValue}.cs" />

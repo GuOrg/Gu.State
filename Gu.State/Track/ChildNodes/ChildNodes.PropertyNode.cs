@@ -23,7 +23,7 @@ namespace Gu.State
 
             public void Dispose()
             {
-                this.node.Value.Changed += this.OnNodeChanged;
+                this.node.Value.Changed -= this.OnNodeChanged;
                 this.node.Dispose();
             }
 
