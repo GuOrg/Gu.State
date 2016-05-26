@@ -90,17 +90,17 @@
 
         public ValueDiff Diff => this.Builder?.CreateValueDiffOrNull();
 
+        internal object X => this.xNode.Value.Source;
+
+        internal object Y => this.yNode.Value.Source;
+
         private bool IsTrackingCollectionItems { get; }
 
         private DiffBuilder Builder => this.refcountedDiffBuilder?.Value;
 
-        internal object X => this.xNode.Value.Source;
+        private IList XList => (IList)this.X;
 
-        internal IList XList => (IList)this.X;
-
-        internal object Y => this.yNode.Value.Source;
-
-        internal IList YList => (IList)this.Y;
+        private IList YList => (IList)this.Y;
 
         private IReadOnlyCollection<PropertyInfo> TrackProperties => this.xNode.Value.TrackProperties;
 
