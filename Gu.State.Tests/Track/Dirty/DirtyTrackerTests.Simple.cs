@@ -15,25 +15,25 @@ namespace Gu.State.Tests
             {
                 var x = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
                 var y = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
-                var changes = new List<string>();
+                var propertyChanges = new List<string>();
                 var expectedChanges = new List<string>();
 
                 using (var tracker = Track.IsDirty(x, y, referenceHandling))
                 {
-                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
                     Assert.AreEqual(false, tracker.IsDirty);
                     Assert.AreEqual(null, tracker.Diff);
-                    CollectionAssert.IsEmpty(changes);
+                    CollectionAssert.IsEmpty(propertyChanges);
 
                     x.Value1++;
                     Assert.AreEqual(true, tracker.IsDirty);
                     Assert.AreEqual("WithSimpleProperties Value1 x: 2 y: 1", tracker.Diff.ToString("", " "));
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
-                    CollectionAssert.AreEqual(expectedChanges, changes);
+                    CollectionAssert.AreEqual(expectedChanges, propertyChanges);
                 }
 
                 x.Value1++;
-                CollectionAssert.AreEqual(expectedChanges, changes);
+                CollectionAssert.AreEqual(expectedChanges, propertyChanges);
 
 #if (!DEBUG) // debug build keeps instances alive longer for nicer debugging experience
                 var wrx = new System.WeakReference(x);
@@ -53,25 +53,25 @@ namespace Gu.State.Tests
             {
                 var x = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
                 var y = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
-                var changes = new List<string>();
+                var propertyChanges = new List<string>();
                 var expectedChanges = new List<string>();
 
                 using (var tracker = Track.IsDirty(x, y, PropertiesSettings.GetOrCreate(referenceHandling)))
                 {
-                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
                     Assert.AreEqual(false, tracker.IsDirty);
                     Assert.AreEqual(null, tracker.Diff);
-                    CollectionAssert.IsEmpty(changes);
+                    CollectionAssert.IsEmpty(propertyChanges);
 
                     x.Value1++;
                     Assert.AreEqual(true, tracker.IsDirty);
                     Assert.AreEqual("WithSimpleProperties Value1 x: 2 y: 1", tracker.Diff.ToString("", " "));
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
-                    CollectionAssert.AreEqual(expectedChanges, changes);
+                    CollectionAssert.AreEqual(expectedChanges, propertyChanges);
                 }
 
                 x.Value1++;
-                CollectionAssert.AreEqual(expectedChanges, changes);
+                CollectionAssert.AreEqual(expectedChanges, propertyChanges);
 
 #if (!DEBUG) // debug build keeps instances alive longer for nicer debugging experience
                 var wrx = new System.WeakReference(x);
@@ -90,24 +90,24 @@ namespace Gu.State.Tests
             {
                 var x = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
                 var y = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
-                var changes = new List<string>();
+                var propertyChanges = new List<string>();
 
                 using (var tracker = Track.IsDirty(x, y))
                 {
-                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
                     Assert.AreEqual(false, tracker.IsDirty);
                     Assert.AreEqual(null, tracker.Diff);
-                    CollectionAssert.IsEmpty(changes);
+                    CollectionAssert.IsEmpty(propertyChanges);
 
                     x.OnPropertyChanged("Missing");
                     Assert.AreEqual(false, tracker.IsDirty);
                     Assert.AreEqual(null, tracker.Diff?.ToString("", " "));
-                    CollectionAssert.IsEmpty(changes);
+                    CollectionAssert.IsEmpty(propertyChanges);
 
                     y.OnPropertyChanged("Missing");
                     Assert.AreEqual(false, tracker.IsDirty);
                     Assert.AreEqual(null, tracker.Diff?.ToString("", " "));
-                    CollectionAssert.IsEmpty(changes);
+                    CollectionAssert.IsEmpty(propertyChanges);
                 }
             }
 
@@ -116,34 +116,34 @@ namespace Gu.State.Tests
             {
                 var x = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
                 var y = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
-                var changes = new List<string>();
+                var propertyChanges = new List<string>();
 
                 using (var tracker = Track.IsDirty(x, y))
                 {
-                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
                     Assert.AreEqual(false, tracker.IsDirty);
                     Assert.AreEqual(null, tracker.Diff);
-                    CollectionAssert.IsEmpty(changes);
+                    CollectionAssert.IsEmpty(propertyChanges);
 
                     x.OnPropertyChanged(nameof(WithSimpleProperties.Value1));
                     Assert.AreEqual(false, tracker.IsDirty);
                     Assert.AreEqual(null, tracker.Diff?.ToString("", " "));
-                    CollectionAssert.IsEmpty(changes);
+                    CollectionAssert.IsEmpty(propertyChanges);
 
                     x.OnPropertyChanged(nameof(WithSimpleProperties.Value2));
                     Assert.AreEqual(false, tracker.IsDirty);
                     Assert.AreEqual(null, tracker.Diff?.ToString("", " "));
-                    CollectionAssert.IsEmpty(changes);
+                    CollectionAssert.IsEmpty(propertyChanges);
 
                     y.OnPropertyChanged(nameof(WithSimpleProperties.Value1));
                     Assert.AreEqual(false, tracker.IsDirty);
                     Assert.AreEqual(null, tracker.Diff?.ToString("", " "));
-                    CollectionAssert.IsEmpty(changes);
+                    CollectionAssert.IsEmpty(propertyChanges);
 
                     y.OnPropertyChanged(nameof(WithSimpleProperties.Value2));
                     Assert.AreEqual(false, tracker.IsDirty);
                     Assert.AreEqual(null, tracker.Diff?.ToString("", " "));
-                    CollectionAssert.IsEmpty(changes);
+                    CollectionAssert.IsEmpty(propertyChanges);
                 }
             }
 
@@ -152,33 +152,33 @@ namespace Gu.State.Tests
             {
                 var x = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
                 var y = new WithSimpleProperties { Value1 = 1, Value2 = 3 };
-                var changes = new List<string>();
+                var propertyChanges = new List<string>();
                 using (var tracker = Track.IsDirty(x, y))
                 {
-                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
                     Assert.AreEqual(true, tracker.IsDirty);
                     Assert.AreEqual("WithSimpleProperties Value2 x: 2 y: 3", tracker.Diff.ToString("", " "));
-                    CollectionAssert.IsEmpty(changes);
+                    CollectionAssert.IsEmpty(propertyChanges);
 
                     x.OnPropertyChanged(nameof(WithSimpleProperties.Value1));
                     Assert.AreEqual(true, tracker.IsDirty);
                     Assert.AreEqual("WithSimpleProperties Value2 x: 2 y: 3", tracker.Diff.ToString("", " "));
-                    CollectionAssert.IsEmpty(changes);
+                    CollectionAssert.IsEmpty(propertyChanges);
 
                     x.OnPropertyChanged(nameof(WithSimpleProperties.Value2));
                     Assert.AreEqual(true, tracker.IsDirty);
                     Assert.AreEqual("WithSimpleProperties Value2 x: 2 y: 3", tracker.Diff.ToString("", " "));
-                    CollectionAssert.IsEmpty(changes);
+                    CollectionAssert.IsEmpty(propertyChanges);
 
                     y.OnPropertyChanged(nameof(WithSimpleProperties.Value1));
                     Assert.AreEqual(true, tracker.IsDirty);
                     Assert.AreEqual("WithSimpleProperties Value2 x: 2 y: 3", tracker.Diff.ToString("", " "));
-                    CollectionAssert.IsEmpty(changes);
+                    CollectionAssert.IsEmpty(propertyChanges);
 
                     y.OnPropertyChanged(nameof(WithSimpleProperties.Value2));
                     Assert.AreEqual(true, tracker.IsDirty);
                     Assert.AreEqual("WithSimpleProperties Value2 x: 2 y: 3", tracker.Diff.ToString("", " "));
-                    CollectionAssert.IsEmpty(changes);
+                    CollectionAssert.IsEmpty(propertyChanges);
                 }
             }
 
@@ -187,39 +187,39 @@ namespace Gu.State.Tests
             {
                 var x = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
                 var y = new WithSimpleProperties { Value1 = 3, Value2 = 4 };
-                var changes = new List<string>();
+                var propertyChanges = new List<string>();
                 var expectedChanges = new List<string>();
 
                 using (var tracker = Track.IsDirty(x, y))
                 {
-                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
                     Assert.AreEqual(true, tracker.IsDirty);
                     Assert.AreEqual("WithSimpleProperties Value1 x: 1 y: 3 Value2 x: 2 y: 4", tracker.Diff.ToString("", " "));
-                    CollectionAssert.IsEmpty(changes);
+                    CollectionAssert.IsEmpty(propertyChanges);
 
                     x.Value1 = 5;
                     Assert.AreEqual(true, tracker.IsDirty);
                     Assert.AreEqual("WithSimpleProperties Value1 x: 5 y: 3 Value2 x: 2 y: 4", tracker.Diff.ToString("", " "));
                     expectedChanges.Add("Diff");
-                    CollectionAssert.AreEqual(expectedChanges, changes);
+                    CollectionAssert.AreEqual(expectedChanges, propertyChanges);
 
                     x.Value1 = 3;
                     Assert.AreEqual(true, tracker.IsDirty);
                     Assert.AreEqual("WithSimpleProperties Value2 x: 2 y: 4", tracker.Diff.ToString("", " "));
                     expectedChanges.Add("Diff");
-                    CollectionAssert.AreEqual(expectedChanges, changes);
+                    CollectionAssert.AreEqual(expectedChanges, propertyChanges);
 
                     x.Value2 = 4;
                     Assert.AreEqual(false, tracker.IsDirty);
                     Assert.AreEqual(null, tracker.Diff);
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
-                    CollectionAssert.AreEqual(expectedChanges, changes);
+                    CollectionAssert.AreEqual(expectedChanges, propertyChanges);
 
                     x.Value2 = 3;
                     Assert.AreEqual(true, tracker.IsDirty);
                     Assert.AreEqual("WithSimpleProperties Value2 x: 3 y: 4", tracker.Diff.ToString("", " "));
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
-                    CollectionAssert.AreEqual(expectedChanges, changes);
+                    CollectionAssert.AreEqual(expectedChanges, propertyChanges);
                 }
             }
 
@@ -228,38 +228,38 @@ namespace Gu.State.Tests
             {
                 var x = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
                 var y = new WithSimpleProperties { Value1 = 3, Value2 = 4 };
-                var changes = new List<string>();
+                var propertyChanges = new List<string>();
                 var expectedChanges = new List<string>();
                 using (var tracker = Track.IsDirty(x, y))
                 {
-                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
                     Assert.AreEqual(true, tracker.IsDirty);
                     Assert.AreEqual("WithSimpleProperties Value1 x: 1 y: 3 Value2 x: 2 y: 4", tracker.Diff.ToString("", " "));
-                    CollectionAssert.IsEmpty(changes);
+                    CollectionAssert.IsEmpty(propertyChanges);
 
                     y.Value1 = 5;
                     Assert.AreEqual(true, tracker.IsDirty);
                     Assert.AreEqual("WithSimpleProperties Value1 x: 1 y: 5 Value2 x: 2 y: 4", tracker.Diff.ToString("", " "));
                     expectedChanges.Add("Diff");
-                    CollectionAssert.AreEqual(expectedChanges, changes);
+                    CollectionAssert.AreEqual(expectedChanges, propertyChanges);
 
                     y.Value1 = 1;
                     Assert.AreEqual(true, tracker.IsDirty);
                     Assert.AreEqual("WithSimpleProperties Value2 x: 2 y: 4", tracker.Diff.ToString("", " "));
                     expectedChanges.Add("Diff");
-                    CollectionAssert.AreEqual(expectedChanges, changes);
+                    CollectionAssert.AreEqual(expectedChanges, propertyChanges);
 
                     y.Value2 = 2;
                     Assert.AreEqual(false, tracker.IsDirty);
                     Assert.AreEqual(null, tracker.Diff?.ToString("", " "));
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
-                    CollectionAssert.AreEqual(expectedChanges, changes);
+                    CollectionAssert.AreEqual(expectedChanges, propertyChanges);
 
                     y.Value2 = 3;
                     Assert.AreEqual(true, tracker.IsDirty);
                     Assert.AreEqual("WithSimpleProperties Value2 x: 2 y: 3", tracker.Diff.ToString("", " "));
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
-                    CollectionAssert.AreEqual(expectedChanges, changes);
+                    CollectionAssert.AreEqual(expectedChanges, propertyChanges);
                 }
             }
 
@@ -269,21 +269,21 @@ namespace Gu.State.Tests
             {
                 var x = new WithSimpleProperties(1, 2);
                 var y = new WithSimpleProperties(1, 2);
-                var changes = new List<string>();
+                var propertyChanges = new List<string>();
                 var expectedChanges = new List<string>();
                 using (var tracker = Track.IsDirty(x, y))
                 {
-                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
                     Assert.AreEqual(false, tracker.IsDirty);
                     Assert.AreEqual(null, tracker.Diff);
-                    CollectionAssert.IsEmpty(changes);
+                    CollectionAssert.IsEmpty(propertyChanges);
 
                     x.SetFields(1, 4);
                     x.OnPropertyChanged(prop);
                     Assert.AreEqual(true, tracker.IsDirty);
                     Assert.AreEqual("WithSimpleProperties Value2 x: 4 y: 2", tracker.Diff.ToString("", " "));
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
-                    CollectionAssert.AreEqual(expectedChanges, changes);
+                    CollectionAssert.AreEqual(expectedChanges, propertyChanges);
                 }
             }
         }

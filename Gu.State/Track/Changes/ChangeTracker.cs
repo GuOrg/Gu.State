@@ -53,10 +53,7 @@
             }
         }
 
-        /// <summary>
-        /// Dispose(true); //I am calling you from Dispose, it's safe
-        /// GC.SuppressFinalize(this); //Hey, GC: don't bother calling finalize later
-        /// </summary>
+        /// <inheritdoc/>
         public void Dispose()
         {
             if (this.disposed)

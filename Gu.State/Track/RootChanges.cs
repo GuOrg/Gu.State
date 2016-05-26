@@ -8,11 +8,11 @@
     using System.Linq;
     using System.Reflection;
 
-    internal sealed class ChangeNode : IDisposable
+    internal sealed class RootChanges : IDisposable
     {
         private bool disposed;
 
-        private ChangeNode(object source, PropertiesSettings settings)
+        private RootChanges(object source, PropertiesSettings settings)
         {
             this.Source = source;
             this.Settings = settings;
@@ -21,17 +21,16 @@
                                        .Where(p => !this.Settings.IsIgnoringProperty(p))
                                        .Where(p => !settings.IsImmutable(p.PropertyType))
                                        .ToArray();
-
             var inpc = source as INotifyPropertyChanged;
             if (inpc != null)
             {
-                inpc.PropertyChanged += this.OnTrackedPropertyChanged;
+                inpc.PropertyChanged += this.OnSourcePropertyChanged;
             }
 
             var incc = source as INotifyCollectionChanged;
             if (incc != null)
             {
-                incc.CollectionChanged += this.OnTrackedCollectionChanged;
+                incc.CollectionChanged += this.OnSourceCollectionChanged;
             }
         }
 
@@ -47,7 +46,7 @@
 
         public event EventHandler<MoveEventArgs> Move;
 
-        public event EventHandler<EventArgs> Change;
+        public event EventHandler<EventArgs> RawChange;
 
         public object Source { get; }
 
@@ -66,20 +65,29 @@
             var inpc = this.Source as INotifyPropertyChanged;
             if (inpc != null)
             {
-                inpc.PropertyChanged -= this.OnTrackedPropertyChanged;
+                inpc.PropertyChanged -= this.OnSourcePropertyChanged;
             }
 
             var incc = this.Source as INotifyCollectionChanged;
             if (incc != null)
             {
-                incc.CollectionChanged -= this.OnTrackedCollectionChanged;
+                incc.CollectionChanged -= this.OnSourceCollectionChanged;
             }
         }
 
-        internal static IRefCounted<ChangeNode> GetOrCreate(object source, PropertiesSettings settings, bool isRoot)
+        internal static IRefCounted<RootChanges> GetOrCreate(INotifyPropertyChanged source, PropertiesSettings settings, bool isRoot)
+        {
+            return GetOrCreate((object)source, settings, isRoot);
+        }
+
+        internal static IRefCounted<RootChanges> GetOrCreate(INotifyCollectionChanged source, PropertiesSettings settings, bool isRoot)
+        {
+            return GetOrCreate((object)source, settings, isRoot);
+        }
+
+        internal static IRefCounted<RootChanges> GetOrCreate(object source, PropertiesSettings settings, bool isRoot)
         {
             Debug.Assert(source != null, "Cannot track null");
-            Debug.Assert(source is INotifyPropertyChanged || source is INotifyCollectionChanged, "Must notify");
             if (isRoot)
             {
                 Track.Verify.IsTrackableType(source.GetType(), settings);
@@ -89,12 +97,12 @@
                 Track.Verify.IsTrackableValue(source, settings);
             }
 
-            return TrackerCache.GetOrAdd(source, settings, s => new ChangeNode(s, settings));
+            return TrackerCache.GetOrAdd(source, settings, s => new RootChanges(s, settings));
         }
 
-        private void OnTrackedCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void OnSourceCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            this.Change?.Invoke(this, e);
+            this.RawChange?.Invoke(this, e);
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
@@ -135,7 +143,7 @@
             }
         }
 
-        private void OnTrackedPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void OnSourcePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (string.IsNullOrEmpty(e.PropertyName))
             {
@@ -150,13 +158,13 @@
                 return;
             }
 
-            this.Change?.Invoke(this, e);
+            this.RawChange?.Invoke(this, e);
             this.PropertyChange?.Invoke(this, new PropertyChangeEventArgs(propertyInfo));
         }
 
         private void OnResetProperties(object sender, PropertyChangedEventArgs e)
         {
-            this.Change?.Invoke(this, e);
+            this.RawChange?.Invoke(this, e);
             var handler = this.PropertyChange;
             if (handler != null)
             {

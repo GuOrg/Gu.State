@@ -11,40 +11,51 @@
 
     internal sealed class ChangeTrackerNode : IDisposable, IInitialize<ChangeTrackerNode>
     {
-        private readonly IRefCounted<ChangeNode> refcountedNode;
-        private readonly IBorrowed<DisposingMap<IUnsubscriber<IRefCounted<ChangeTrackerNode>>>> children;
+        private readonly IRefCounted<RootChanges> refcountedRootChanges;
+        private readonly IBorrowed<ChildNodes> children;
 
         private ChangeTrackerNode(object source, PropertiesSettings settings, bool isRoot)
         {
-            this.refcountedNode = ChangeNode.GetOrCreate(source, settings, isRoot);
-            this.refcountedNode.Value.Change += this.OnTrackerChange;
-            this.children = DisposingMap<IUnsubscriber<IRefCounted<ChangeTrackerNode>>>.Borrow();
+            this.refcountedRootChanges = RootChanges.GetOrCreate(source, settings, isRoot);
+            var sourceChanges = this.refcountedRootChanges.Value;
+            this.children = ChildNodes.Borrow();
+            sourceChanges.PropertyChange += this.OnSourcePropertyChange;
+            if (Is.NotifyingCollection(source))
+            {
+                this.ItemType = this.SourceList.GetType()
+                                    .GetItemType();
+                sourceChanges.Add += this.OnSourceAdd;
+                sourceChanges.Remove += this.OnSourceRemove;
+                sourceChanges.Replace += this.OnSourceReplace;
+                sourceChanges.Move += this.OnSourceMove;
+                sourceChanges.Reset += this.OnSourceReset;
+            }
         }
 
-        public event EventHandler Changed;
+        public event EventHandler<TrackerChangedEventArgs<ChangeTrackerNode>> Changed;
 
-        public event EventHandler<ChangeTrackerNode> BubbleChange;
+        internal object Source => this.refcountedRootChanges.Value.Source;
 
-        private IReadOnlyCollection<PropertyInfo> TrackProperties => this.refcountedNode.Value.TrackProperties;
+        internal PropertiesSettings Settings => this.refcountedRootChanges.Value.Settings;
 
-        private IList SourceList => (IList)this.Source;
+        private IReadOnlyCollection<PropertyInfo> TrackProperties => this.refcountedRootChanges.Value.TrackProperties;
 
-        private object Source => this.refcountedNode.Value.Source;
+        internal IList SourceList => (IList)this.Source;
 
-        private DisposingMap<IUnsubscriber<IRefCounted<ChangeTrackerNode>>> Children => this.children.Value;
+        private Type ItemType { get; }
 
-        private PropertiesSettings Settings => this.refcountedNode.Value.Settings;
+        private ChildNodes Children => this.children.Value;
 
         public void Dispose()
         {
-            this.refcountedNode.Value.Change -= this.OnTrackerChange;
-            this.refcountedNode.Value.PropertyChange -= this.OnTrackedPropertyChange;
-            this.refcountedNode.Value.Add -= this.OnTrackedAdd;
-            this.refcountedNode.Value.Remove -= this.OnTrackedRemove;
-            this.refcountedNode.Value.Replace -= this.OnTrackedReplace;
-            this.refcountedNode.Value.Move -= this.OnTrackedMove;
-            this.refcountedNode.Value.Reset -= this.OnTrackedReset;
-            this.refcountedNode.Dispose();
+            var rootChanges = this.refcountedRootChanges.Value;
+            rootChanges.PropertyChange -= this.OnSourcePropertyChange;
+            rootChanges.Add -= this.OnSourceAdd;
+            rootChanges.Remove -= this.OnSourceRemove;
+            rootChanges.Replace -= this.OnSourceReplace;
+            rootChanges.Move -= this.OnSourceMove;
+            rootChanges.Reset -= this.OnSourceReset;
+            this.refcountedRootChanges.Dispose();
             this.children.Dispose();
         }
 
@@ -58,12 +69,6 @@
                 case ReferenceHandling.References:
                     break;
                 case ReferenceHandling.Structural:
-                    this.refcountedNode.Value.PropertyChange += this.OnTrackedPropertyChange;
-                    this.refcountedNode.Value.Add += this.OnTrackedAdd;
-                    this.refcountedNode.Value.Remove += this.OnTrackedRemove;
-                    this.refcountedNode.Value.Replace += this.OnTrackedReplace;
-                    this.refcountedNode.Value.Move += this.OnTrackedMove;
-                    this.refcountedNode.Value.Reset += this.OnTrackedReset;
                     foreach (var property in this.TrackProperties)
                     {
                         this.UpdatePropertyNode(property);
@@ -90,111 +95,157 @@
             return this;
         }
 
-        internal static IRefCounted<ChangeTrackerNode> GetOrCreate(object source, PropertiesSettings settings, bool isRoot)
+        internal static bool TryGetOrCreate(object source, PropertiesSettings settings, bool isRoot, out IRefCounted<ChangeTrackerNode> result)
+        {
+            var inpc = source as INotifyPropertyChanged;
+            if (inpc != null)
+            {
+                result = GetOrCreate(inpc, settings, isRoot);
+                return true;
+            }
+
+            var incc = source as INotifyCollectionChanged;
+            if (incc != null)
+            {
+                result = GetOrCreate(incc, settings, isRoot);
+                return true;
+            }
+
+            result = null;
+            return false;
+        }
+
+        internal static IRefCounted<ChangeTrackerNode> GetOrCreate(INotifyPropertyChanged source, PropertiesSettings settings, bool isRoot)
         {
             Debug.Assert(source != null, "Cannot track null");
-            Debug.Assert(source is INotifyPropertyChanged || source is INotifyCollectionChanged, "Must notify");
-            return TrackerCache.GetOrAdd(source, settings, s => new ChangeTrackerNode(s, settings, isRoot));
+            return TrackerCache.GetOrAdd((object)source, settings, s => new ChangeTrackerNode(s, settings, isRoot));
         }
 
-        private void OnTrackerChange(object sender, EventArgs e)
+        internal static IRefCounted<ChangeTrackerNode> GetOrCreate(INotifyCollectionChanged source, PropertiesSettings settings, bool isRoot)
         {
-            this.Changed?.Invoke(this, EventArgs.Empty);
-            this.BubbleChange?.Invoke(this, this);
+            Debug.Assert(source != null, "Cannot track null");
+            return TrackerCache.GetOrAdd((object)source, settings, s => new ChangeTrackerNode(s, settings, isRoot));
         }
 
-        private void OnBubbleChange(object sender, ChangeTrackerNode originalSource)
+        private void OnChildChanged(object sender, TrackerChangedEventArgs<ChangeTrackerNode> e)
         {
-            if (ReferenceEquals(this, originalSource))
+            if (e.Previous?.Contains(this) == true)
             {
                 return;
             }
 
-            this.Changed?.Invoke(this, EventArgs.Empty);
-            this.BubbleChange?.Invoke(this, originalSource);
+            this.Changed?.Invoke(this, e);
         }
 
-        private void OnTrackedPropertyChange(object sender, PropertyChangeEventArgs e)
+        private void OnSourcePropertyChange(object sender, PropertyChangeEventArgs e)
         {
-            if (this.TrackProperties.Contains(e.PropertyInfo) &&
-               (this.Settings.ReferenceHandling == ReferenceHandling.Structural))
-            {
-                this.UpdatePropertyNode(e.PropertyInfo);
-            }
+            this.UpdatePropertyNode(e.PropertyInfo);
+            this.Changed?.Invoke(this, RootChangeEventArgs.Create(this, e));
         }
 
-        private void OnTrackedAdd(object sender, AddEventArgs e)
+        private void OnSourceAdd(object sender, AddEventArgs e)
+        {
+            IUnsubscriber<IChildNode> childNode;
+            if (this.TryCreateChildNode(e.Index, out childNode))
+            {
+                this.Children.Insert(e.Index, childNode);
+            }
+
+            this.Changed?.Invoke(this, RootChangeEventArgs.Create(this, e));
+        }
+
+        private void OnSourceRemove(object sender, RemoveEventArgs e)
+        {
+            this.Children.Remove(e.Index);
+            this.Changed?.Invoke(this, RootChangeEventArgs.Create(this, e));
+        }
+
+        private void OnSourceReplace(object sender, ReplaceEventArgs e)
         {
             this.UpdateIndexNode(e.Index);
+            this.Changed?.Invoke(this, RootChangeEventArgs.Create(this, e));
         }
 
-        private void OnTrackedRemove(object sender, RemoveEventArgs e)
+        private void OnSourceMove(object sender, MoveEventArgs e)
         {
-            if (!this.Settings.IsImmutable(this.refcountedNode.Value.Source.GetType().GetItemType()))
+            this.Children.Move(e.FromIndex, e.ToIndex);
+            this.Changed?.Invoke(this, RootChangeEventArgs.Create(this, e));
+        }
+
+        private void OnSourceReset(object sender, ResetEventArgs e)
+        {
+            if (!Is.Trackable(this.ItemType))
             {
-                this.Children.Remove(e.Index);
+                this.Changed?.Invoke(this, RootChangeEventArgs.Create(this, e));
+                return;
             }
-        }
 
-        private void OnTrackedReplace(object sender, ReplaceEventArgs e)
-        {
-            this.UpdateIndexNode(e.Index);
-        }
-
-        private void OnTrackedMove(object sender, MoveEventArgs e)
-        {
-            if (!this.Settings.IsImmutable(this.refcountedNode.Value.Source.GetType().GetItemType()))
+            using (var borrow = ListPool<IUnsubscriber<IChildNode>>.Borrow())
             {
-                this.Children.Move(e.FromIndex, e.ToIndex);
-            }
-        }
-
-        private void OnTrackedReset(object sender, ResetEventArgs e)
-        {
-            using (var borrow = ListPool<IUnsubscriber<IRefCounted<ChangeTrackerNode>>>.Borrow())
-            {
-                foreach (var newItem in e.NewItems)
+                for (var i = 0; i < e.NewItems.Count; i++)
                 {
-                    borrow.Value.Add(this.CreateChild(newItem));
+                    IUnsubscriber<IChildNode> childNode;
+                    if (this.TryCreateChildNode(i, out childNode))
+                    {
+                        borrow.Value.Add(childNode);
+                    }
+                    else
+                    {
+                        borrow.Value.Add(null);
+                    }
                 }
 
                 this.Children.Reset(borrow.Value);
+                this.Changed?.Invoke(this, RootChangeEventArgs.Create(this, e));
             }
         }
 
         private void UpdatePropertyNode(PropertyInfo property)
         {
-            var value = property.GetValue(this.Source);
-            if (value != null)
+            if (this.Settings.IsIgnoringProperty(property) ||
+                !Is.Trackable(property.PropertyType))
             {
-                var child = this.CreateChild(value);
-                this.Children.SetValue(property, child);
+                return;
+            }
+
+            IChildNode propertyNode;
+            if (ChildNodes.TryCreate(this, property, out propertyNode))
+            {
+                propertyNode.Changed += this.OnChildChanged;
+                IUnsubscriber<IChildNode> childNode = propertyNode.UnsubscribeAndDispose(n => n.Changed -= this.OnChildChanged);
+                this.Children.SetValue(property, childNode);
             }
             else
             {
-                this.Children.SetValue(property, null);
+                this.Children.Remove(property);
             }
         }
 
         private void UpdateIndexNode(int index)
         {
-            var value = this.SourceList[index];
-            if (value != null && !this.Settings.IsImmutable(value.GetType()))
+            IUnsubscriber<IChildNode> childNode;
+            if (this.TryCreateChildNode(index, out childNode))
             {
-                var child = this.CreateChild(value);
-                this.Children.SetValue(index, child);
+                this.Children.Replace(index, childNode);
             }
             else
             {
-                this.Children.SetValue(index, null);
+                this.Children.Remove(index);
             }
         }
 
-        private IUnsubscriber<IRefCounted<ChangeTrackerNode>> CreateChild(object child)
+        private bool TryCreateChildNode(int index, out IUnsubscriber<IChildNode> result)
         {
-            var childNode = GetOrCreate(child, this.refcountedNode.Value.Settings, false);
-            childNode.Value.BubbleChange += this.OnBubbleChange;
-            return childNode.UnsubscribeAndDispose(x => x.Value.BubbleChange -= this.OnBubbleChange);
+            IChildNode indexNode;
+            if (ChildNodes.TryCreate(this, index, out indexNode))
+            {
+                indexNode.Changed += this.OnChildChanged;
+                result = indexNode.UnsubscribeAndDispose(n => n.Changed -= this.OnChildChanged);
+                return true;
+            }
+
+            result = null;
+            return false;
         }
     }
 }

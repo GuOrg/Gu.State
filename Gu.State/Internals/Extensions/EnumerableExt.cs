@@ -5,6 +5,29 @@
 
     internal static partial class EnumerableExt
     {
+        internal static bool IsIncreasing(this IEnumerable<int> source)
+        {
+            var previous = 0;
+            var first = true;
+            foreach (var element in source)
+            {
+                if (first)
+                {
+                    previous = element;
+                    first = false;
+                }
+
+                if (element <= previous)
+                {
+                    return false;
+                }
+
+                previous = element;
+            }
+
+            return true;
+        }
+
         // http://stackoverflow.com/a/969118/1069200
         internal static IEnumerable<T> SkipLast<T>(this IEnumerable<T> source)
         {

@@ -467,5 +467,48 @@
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+
+        public class WithSelf : INotifyPropertyChanged
+        {
+            private string name;
+
+            private WithSelf value;
+
+            public event PropertyChangedEventHandler PropertyChanged;
+
+            public string Name
+            {
+                get
+                {
+                    return this.name;
+                }
+                set
+                {
+                    if (value == this.name) return;
+                    this.name = value;
+                    this.OnPropertyChanged();
+                }
+            }
+
+            public WithSelf Value
+            {
+                get
+                {
+                    return this.value;
+                }
+                set
+                {
+                    if (Equals(value, this.value)) return;
+                    this.value = value;
+                    this.OnPropertyChanged();
+                }
+            }
+
+            [NotifyPropertyChangedInvocator]
+            protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+            {
+                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
     }
 }
