@@ -190,7 +190,7 @@
     <Compile Include="Track\RootChangeEventArgs\RemoveEventArgs.cs" />
     <Compile Include="Track\RootChangeEventArgs\ResetEventArgs.cs" />
     <Compile Include="Track\RootChangeEventArgs\PropertyChangeEventArgs.cs" />
-    <Compile Include="Contracts\IDirtyTracker{T}.cs" />
+    <Compile Include="Contracts\IDirtyTracker.cs" />
     <Compile Include="Track\Dirty\DirtyTracker.cs" />
     <Compile Include="Track\ChangeEventargs\GraphChangeEventArgs{T}.cs" />
     <Compile Include="Track\ChangeEventargs\RootChangeEventArgs.cs" />

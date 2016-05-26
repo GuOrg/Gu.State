@@ -6,7 +6,6 @@
     using System.Collections.Specialized;
     using System.ComponentModel;
     using System.Diagnostics;
-    using System.Linq;
     using System.Reflection;
 
     internal sealed class ChangeTrackerNode : IDisposable, IInitialize<ChangeTrackerNode>
@@ -38,9 +37,9 @@
 
         internal PropertiesSettings Settings => this.refcountedRootChanges.Value.Settings;
 
-        private IReadOnlyCollection<PropertyInfo> TrackProperties => this.refcountedRootChanges.Value.TrackProperties;
-
         internal IList SourceList => (IList)this.Source;
+
+        private IReadOnlyCollection<PropertyInfo> TrackProperties => this.refcountedRootChanges.Value.TrackProperties;
 
         private Type ItemType { get; }
 

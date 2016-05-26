@@ -376,7 +376,7 @@
             bool created;
             if (!builder.TryRefCount(out refCounted, out created))
             {
-                throw Throw.ShouldNeverGetHereException("AddLazy failed, try refcount failed");
+                throw Throw.ShouldNeverGetHereException("UpdateSubBuilder failed, try refcount failed");
             }
 
             this.KeyedSubBuilders.AddOrUpdate(key, refCounted);

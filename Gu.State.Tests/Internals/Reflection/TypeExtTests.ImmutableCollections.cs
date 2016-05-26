@@ -38,17 +38,6 @@
             {
                 Assert.AreEqual(expected, type.IsImmutableDictionary());
             }
-
-            [Test]
-            public void Fuu()
-            {
-                var a1 = ImmutableArray.Create(1, 2);
-                var a2 = ImmutableArray.Create(1, 2);
-                Console.WriteLine("a1 is IEquatable<ImmutableArray<int>>: {0}", a1 is IEquatable<ImmutableArray<int>>);
-                Console.WriteLine("a1 == a2: {0}", a1 == a2);
-                Console.WriteLine("object.Equals(a1, a2): {0}", object.Equals(a1, a2));
-                Console.WriteLine("a1.Equals(a2): {0}", a1.Equals(a2));
-            }
         }
     }
 }

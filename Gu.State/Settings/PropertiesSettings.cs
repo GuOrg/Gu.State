@@ -6,7 +6,7 @@
     using System.Diagnostics;
     using System.Reflection;
 
-    public class PropertiesSettings : MemberSettings<PropertyInfo>, IMemberSettings
+    public sealed class PropertiesSettings : MemberSettings<PropertyInfo>, IMemberSettings
     {
         private static readonly ConcurrentDictionary<BindingFlagsAndReferenceHandling, PropertiesSettings> Cache = new ConcurrentDictionary<BindingFlagsAndReferenceHandling, PropertiesSettings>();
 
