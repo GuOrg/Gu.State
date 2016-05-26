@@ -34,8 +34,11 @@
         {
         }
 
+        /// <summary>Gets a collection or ignored fields.</summary>
         public IEnumerable<FieldInfo> IgnoredFields => this.IgnoredMembers.Keys;
 
+        /// <summary> Create a builder for building a <see cref="FieldsSettings"/></summary>
+        /// <returns>A <see cref="FieldsSettingsBuilder"/></returns>
         public static FieldsSettingsBuilder Build()
         {
             return new FieldsSettingsBuilder();

@@ -56,13 +56,10 @@
                         .AppendSuggestImmutable(errors)
                         .AppendSuggestResizableCollection(errors)
                         .AppendSuggestDefaultCtor(errors)
-                        .AppendLine($"* Use {settings.GetType() .Name} and specify how copying is performed:")
-                        .AppendLine(
-                            $"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Structural)} means that a the entire graph is traversed and immutable property values are copied.")
-                        .AppendLine(
-                            $"    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.")
-                        .AppendLine(
-                            $"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.References)} means that references are copied.")
+                        .AppendLine($"* Use {settings.GetType().Name} and specify how copying is performed:")
+                        .AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Structural)} means that a the entire graph is traversed and immutable property values are copied.")
+                        .AppendLine($"    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.")
+                        .AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.References)} means that references are copied.")
                         .AppendSuggestExclude(errors);
 
             var message = errorBuilder.ToString();

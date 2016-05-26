@@ -35,10 +35,13 @@
         {
         }
 
+        /// <summary>Gets a collection or ignored properties.</summary>
         public IEnumerable<PropertyInfo> IgnoredProperties => this.IgnoredMembers.Keys;
 
         internal ConcurrentDictionary<Type, TypeErrors> TrackableErrors { get; } = new ConcurrentDictionary<Type, TypeErrors>();
 
+        /// <summary> Create a builder for building a <see cref="PropertiesSettings"/></summary>
+        /// <returns>A <see cref="PropertiesSettingsBuilder"/></returns>
         public static PropertiesSettingsBuilder Build()
         {
             return new PropertiesSettingsBuilder();
