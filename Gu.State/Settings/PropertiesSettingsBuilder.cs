@@ -8,6 +8,7 @@
 
     using Gu.State.Internals;
 
+    /// <summary>Builder for creating <see cref="PropertiesSettings"/>.</summary>
     public class PropertiesSettingsBuilder
     {
         private readonly HashSet<Type> ignoredTypes = new HashSet<Type>();
@@ -15,6 +16,12 @@
         private readonly Dictionary<Type, CastingComparer> comparers = new Dictionary<Type, CastingComparer>();
         private readonly Dictionary<Type, CustomCopy> copyers = new Dictionary<Type, CustomCopy>();
 
+        /// <summary>
+        /// Create the settings object.
+        /// </summary>
+        /// <param name="referenceHandling">How references are handled.</param>
+        /// <param name="bindingFlags">What bindingflags to use</param>
+        /// <returns>An instance of <see cref="PropertiesSettings"/></returns>
         public PropertiesSettings CreateSettings(
             ReferenceHandling referenceHandling = ReferenceHandling.Structural,
             BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
@@ -36,11 +43,40 @@
                 bindingFlags);
         }
 
+        /// <summary>Treat <typeparamref name="T"/> as immutable.</summary>
+        /// <typeparam name="T">The immutable type.</typeparam>
+        /// <returns>The builder instance for chaining.</returns>
+        public PropertiesSettingsBuilder AddImmutableType<T>()
+        {
+            return this.AddImmutableType(typeof(T));
+        }
+
+        /// <summary>Treat <paramref name="type"/> as immutable.</summary>
+        /// <param name="type">The immutable type.</param>
+        /// <returns>The builder instance for chaining.</returns>
+        public PropertiesSettingsBuilder AddImmutableType(Type type)
+        {
+            if (!this.ignoredTypes.Add(type))
+            {
+                var message = $"Already added type: {type.FullName}\r\n" +
+                              $"Nested Fields are not allowed";
+                throw new ArgumentException(message);
+            }
+
+            return this;
+        }
+
+        /// <summary>Ignore the type <typeparamref name="T"/> in the setting.</summary>
+        /// <typeparam name="T">The type to ignore.</typeparam>
+        /// <returns>The builder instance for chaining.</returns>
         public PropertiesSettingsBuilder IgnoreType<T>()
         {
             return this.IgnoreType(typeof(T));
         }
 
+        /// <summary>Ignore the type <paramref name="type"/> in the setting.</summary>
+        /// <param name="type">The type to ignore.</param>
+        /// <returns>The builder instance for chaining.</returns>
         public PropertiesSettingsBuilder IgnoreType(Type type)
         {
             if (!this.ignoredTypes.Add(type))
@@ -53,6 +89,9 @@
             return this;
         }
 
+        /// <summary>Ignore the property <paramref name="property"/> in the setting.</summary>
+        /// <param name="property">The property to ignore.</param>
+        /// <returns>The builder instance for chaining.</returns>
         public PropertiesSettingsBuilder IgnoreProperty(PropertyInfo property)
         {
             if (!this.ignoredProperties.Add(property))
@@ -65,6 +104,10 @@
             return this;
         }
 
+        /// <summary>Ignore the property named <paramref name="name"/> for type <typeparamref name="TSource"/> in the setting.</summary>
+        /// <typeparam name="TSource">The type with the property to ignore.</typeparam>
+        /// <param name="name">The name of property to ignore.</param>
+        /// <returns>The builder instance for chaining.</returns>
         public PropertiesSettingsBuilder IgnoreProperty<TSource>(string name)
         {
             var propertyInfo = typeof(TSource).GetProperty(name, Constants.DefaultFieldBindingFlags);
@@ -120,6 +163,9 @@
             return this;
         }
 
+        /// <summary>Ignore indexers for type <typeparamref name="T"/> in the setting.</summary>
+        /// <typeparam name="T">The type with for which indexers are ignored.</typeparam>
+        /// <returns>The builder instance for chaining.</returns>
         public PropertiesSettingsBuilder IgnoreIndexersFor<T>()
         {
             foreach (var indexer in typeof(T).GetProperties(Constants.DefaultFieldBindingFlags).Where(x => x.GetIndexParameters().Length > 0))
@@ -130,15 +176,16 @@
             return this;
         }
 
+        /// <summary>Add a custom comparer for type <typeparamref name="T"/> in the setting.</summary>
+        /// <typeparam name="T">The type.</typeparam>
+        /// <returns>The builder instance for chaining.</returns>
         public PropertiesSettingsBuilder AddComparer<T>(IEqualityComparer<T> comparer)
         {
             this.comparers[typeof(T)] = CastingComparer.Create(comparer);
             return this;
         }
 
-        /// <summary>
-        /// Custom copy implementation.
-        /// </summary>
+        /// <summary>Provide a custom copy implementation for <typeparamref name="T"/>.</summary>
         /// <typeparam name="T">The type to copy.</typeparam>
         /// <param name="copyMethod">
         /// This method gets passed the source value, target value and returns the updated target value or a new target value.
