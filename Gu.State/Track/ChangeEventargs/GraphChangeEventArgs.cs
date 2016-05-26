@@ -3,7 +3,7 @@ namespace Gu.State
     using System.Diagnostics;
     using System.Reflection;
 
-    public static class GraphChangeEventArgs
+    internal static class GraphChangeEventArgs
     {
         internal static PropertyGraphChangedEventArgs<T> Create<T>(T root, PropertyInfo property)
         {

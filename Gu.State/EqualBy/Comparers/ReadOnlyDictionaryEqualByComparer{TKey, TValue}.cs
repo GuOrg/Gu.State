@@ -4,7 +4,7 @@
     using System.Collections.Generic;
 
     /// <inheritdoc />
-    public class ReadOnlyDictionaryEqualByComparer<TKey, TValue> : EqualByComparer
+    internal class ReadOnlyDictionaryEqualByComparer<TKey, TValue> : EqualByComparer
     {
         public static readonly ReadOnlyDictionaryEqualByComparer<TKey, TValue> Default = new ReadOnlyDictionaryEqualByComparer<TKey, TValue>();
 

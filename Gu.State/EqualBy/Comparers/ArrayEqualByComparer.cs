@@ -3,7 +3,7 @@ namespace Gu.State
     using System;
 
     /// <inheritdoc />
-    public class ArrayEqualByComparer : EqualByComparer
+    internal class ArrayEqualByComparer : EqualByComparer
     {
         /// <summary>The default instance.</summary>
         public static readonly ArrayEqualByComparer Default = new ArrayEqualByComparer();

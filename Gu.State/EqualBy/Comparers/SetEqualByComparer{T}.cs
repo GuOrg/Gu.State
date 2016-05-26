@@ -5,7 +5,7 @@
     using System.Runtime.CompilerServices;
 
     /// <inheritdoc />
-    public class SetEqualByComparer<T> : EqualByComparer
+    internal class SetEqualByComparer<T> : EqualByComparer
     {
         /// <summary>The default instance.</summary>
         public static readonly SetEqualByComparer<T> Default = new SetEqualByComparer<T>();

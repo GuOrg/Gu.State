@@ -2,7 +2,7 @@
 {
     using System.Collections;
 
-    public class DictionaryCopyer : ICopyer
+    internal class DictionaryCopyer : ICopyer
     {
         public static readonly DictionaryCopyer Default = new DictionaryCopyer();
 

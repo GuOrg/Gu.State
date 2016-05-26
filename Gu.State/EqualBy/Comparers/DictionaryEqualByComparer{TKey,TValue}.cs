@@ -4,7 +4,7 @@ namespace Gu.State
     using System.Collections.Generic;
 
     /// <inheritdoc />
-    public class DictionaryEqualByComparer<TKey, TValue> : EqualByComparer
+    internal class DictionaryEqualByComparer<TKey, TValue> : EqualByComparer
     {
         public static readonly DictionaryEqualByComparer<TKey, TValue> Default = new DictionaryEqualByComparer<TKey, TValue>();
 

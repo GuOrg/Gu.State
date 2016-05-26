@@ -4,7 +4,7 @@
     using System.Collections.Generic;
 
     /// <inheritdoc />
-    public class EnumerableEqualByComparer<T> : EqualByComparer
+    internal class EnumerableEqualByComparer<T> : EqualByComparer
     {
         /// <summary>The default instance.</summary>
         public static readonly EnumerableEqualByComparer<T> Default = new EnumerableEqualByComparer<T>();

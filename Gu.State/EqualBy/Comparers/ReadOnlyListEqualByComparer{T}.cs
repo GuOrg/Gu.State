@@ -3,7 +3,7 @@ namespace Gu.State
     using System;
     using System.Collections.Generic;
 
-    public class ReadOnlyListEqualByComparer<T> : EqualByComparer
+    internal class ReadOnlyListEqualByComparer<T> : EqualByComparer
     {
         public static readonly ReadOnlyListEqualByComparer<T> Default = new ReadOnlyListEqualByComparer<T>();
 
