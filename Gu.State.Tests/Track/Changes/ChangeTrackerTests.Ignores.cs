@@ -32,7 +32,7 @@ namespace Gu.State.Tests
 
                     withIllegalObject.Value++;
                     Assert.AreEqual(1, tracker.Changes);
-                    CollectionAssert.AreEqual(new[] {"Changes"}, propertyChanges);
+                    CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
                     var expected = new[] { RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(withIllegalObject, tracker.Settings, false).Value, new PropertyChangeEventArgs(withIllegalObject.GetType().GetProperty(nameof(withIllegalObject.Value)))) };
                     CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
 
@@ -137,9 +137,9 @@ namespace Gu.State.Tests
             [Test]
             public void IgnoresType()
             {
-                var source = new WithIllegal();
+                var source = new With<ComplexType>();
                 var settings = PropertiesSettings.Build()
-                                                 .IgnoreType<IllegalType>()
+                                                 .IgnoreType<ComplexType>()
                                                  .CreateSettings(ReferenceHandling.Structural);
 
                 var propertyChanges = new List<string>();
@@ -152,35 +152,16 @@ namespace Gu.State.Tests
                     CollectionAssert.IsEmpty(propertyChanges);
                     CollectionAssert.IsEmpty(changes);
 
-                    source.Value++;
-                    Assert.AreEqual(0, tracker.Changes);
-                    CollectionAssert.IsEmpty(propertyChanges);
-                    CollectionAssert.IsEmpty(changes);
-                }
-            }
+                    source.Value = new ComplexType();
+                    Assert.AreEqual(1, tracker.Changes);
+                    CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
+                    var expected = new[] { RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(source, tracker.Settings, false).Value, new PropertyChangeEventArgs(source.GetProperty("Value"))) };
+                    CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
 
-            [Test]
-            public void IgnoresTypeProperty()
-            {
-                var source = new WithIllegal();
-                var settings = PropertiesSettings.Build()
-                                                 .IgnoreType<IllegalType>()
-                                                 .CreateSettings(ReferenceHandling.Structural);
-
-                var propertyChanges = new List<string>();
-                var changes = new List<EventArgs>();
-                using (var tracker = Track.Changes(source, settings))
-                {
-                    tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
-                    tracker.Changed += (_, e) => changes.Add(e);
-                    Assert.AreEqual(0, tracker.Changes);
-                    CollectionAssert.IsEmpty(propertyChanges);
-                    CollectionAssert.IsEmpty(changes);
-
-                    source.Value++;
-                    Assert.AreEqual(0, tracker.Changes);
-                    CollectionAssert.IsEmpty(propertyChanges);
-                    CollectionAssert.IsEmpty(changes);
+                    source.Value.Value++;
+                    Assert.AreEqual(1, tracker.Changes);
+                    CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
+                    CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
                 }
             }
         }
