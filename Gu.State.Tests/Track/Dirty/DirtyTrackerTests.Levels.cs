@@ -26,27 +26,23 @@
                     Assert.AreEqual(true, tracker.IsDirty);
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
-                    var expected = "WithComplexProperty ComplexType x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: null";
+                    var expected = "Level Next Next x: null y: Gu.State.Tests.DirtyTrackerTypes+Level";
                     var actual = tracker.Diff.ToString("", " ");
                     Assert.AreEqual(expected, actual);
 
-                    x.Next.Next = null;
+                    y.Next.Next = null;
                     Assert.AreEqual(false, tracker.IsDirty);
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
                     Assert.AreEqual(null, tracker.Diff);
 
                     x.Next = new Level();
-                    Assert.AreEqual(true, tracker.IsDirty);
-                    expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
+                    Assert.AreEqual(false, tracker.IsDirty);
                     CollectionAssert.AreEqual(expectedChanges, changes);
-                    expected = "WithComplexProperty ComplexType x: null y: Gu.State.Tests.DirtyTrackerTypes+ComplexType";
-                    actual = tracker.Diff.ToString("", " ");
-                    Assert.AreEqual(expected, actual);
+                    Assert.AreEqual(null, tracker.Diff);
 
                     y.Next = new Level();
                     Assert.AreEqual(false, tracker.IsDirty);
-                    expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
                     Assert.AreEqual(null, tracker.Diff);
 
@@ -54,7 +50,7 @@
                     Assert.AreEqual(true, tracker.IsDirty);
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
-                    expected = "WithComplexProperty ComplexType x: null y: Gu.State.Tests.DirtyTrackerTypes+ComplexType";
+                    expected = "Level Next Next x: Gu.State.Tests.DirtyTrackerTypes+Level y: null";
                     actual = tracker.Diff.ToString("", " ");
                     Assert.AreEqual(expected, actual);
 
@@ -68,7 +64,7 @@
                     Assert.AreEqual(true, tracker.IsDirty);
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
-                    expected = "WithComplexProperty ComplexType x: null y: Gu.State.Tests.DirtyTrackerTypes+ComplexType";
+                    expected = "Level Next Next Name x: a y: null";
                     actual = tracker.Diff.ToString("", " ");
                     Assert.AreEqual(expected, actual);
 
@@ -98,7 +94,7 @@
                     Assert.AreEqual(true, tracker.IsDirty);
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
-                    Assert.AreEqual("WithComplexProperty Name x: newName1 y: null", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("Level Name x: newName1 y: null", tracker.Diff.ToString("", " "));
 
                     y.Name = "newName1";
                     Assert.AreEqual(false, tracker.IsDirty);
@@ -110,7 +106,7 @@
                     Assert.AreEqual(true, tracker.IsDirty);
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
-                    Assert.AreEqual("WithComplexProperty ComplexType x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: null", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("Level Next Next Name x: b y: a", tracker.Diff.ToString("", " "));
 
                     y.Next.Next.Name = "b";
                     Assert.AreEqual(false, tracker.IsDirty);
