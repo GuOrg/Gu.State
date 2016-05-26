@@ -1,5 +1,7 @@
 namespace Gu.State
 {
+    /// <summary>The source of a change.</summary>
+    /// <typeparam name="T">The type of tracker.</typeparam>
     public class RootChangeEventArgs<T> : TrackerChangedEventArgs<T>
     {
         public RootChangeEventArgs(T node, IRootChangeEventArgs eventArgs)
@@ -8,6 +10,7 @@ namespace Gu.State
             this.EventArgs = eventArgs;
         }
 
+        /// <summary>The original change args.</summary>
         public IRootChangeEventArgs EventArgs { get; }
     }
 }

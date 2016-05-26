@@ -3,7 +3,7 @@ namespace Gu.State
     using System.Collections.Generic;
     using System.Reflection;
 
-    public class ListOfTCopyer : ICopyer
+    internal class ListOfTCopyer : ICopyer
     {
         public static readonly ListOfTCopyer Default = new ListOfTCopyer();
 

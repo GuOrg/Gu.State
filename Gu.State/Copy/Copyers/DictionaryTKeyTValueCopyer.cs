@@ -4,7 +4,7 @@
     using System.Diagnostics;
     using System.Reflection;
 
-    public class DictionaryTKeyTValueCopyer : ICopyer
+    internal class DictionaryTKeyTValueCopyer : ICopyer
     {
         public static readonly DictionaryTKeyTValueCopyer Default = new DictionaryTKeyTValueCopyer();
 

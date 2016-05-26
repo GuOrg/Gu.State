@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
 
-    public class ListEqualByComparer<T> : EqualByComparer
+    internal class ListEqualByComparer<T> : EqualByComparer
     {
         public static readonly ListEqualByComparer<T> Default = new ListEqualByComparer<T>();
 

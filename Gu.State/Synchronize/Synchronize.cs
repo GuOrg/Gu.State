@@ -4,6 +4,7 @@ namespace Gu.State
     using System.ComponentModel;
     using System.Reflection;
 
+    /// <summary>Exposing methods for keeping two items synchronized.</summary>
     public static partial class Synchronize
     {
         /// <summary>

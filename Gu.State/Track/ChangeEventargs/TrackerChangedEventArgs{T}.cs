@@ -4,6 +4,11 @@ namespace Gu.State
     using System.Diagnostics;
     using System.Reflection;
 
+    /// <summary>
+    /// This is raised as a change bubbles up an object graph.
+    /// Implemented as a linked list starting with the source of the change.
+    /// </summary>
+    /// <typeparam name="T">The type of tracker.</typeparam>
     public abstract class TrackerChangedEventArgs<T> : EventArgs
     {
         protected TrackerChangedEventArgs(
@@ -14,10 +19,13 @@ namespace Gu.State
             this.Previous = previous;
         }
 
+        /// <summary>Gets the previous node that triggered the change.</summary>
         public TrackerChangedEventArgs<T> Previous { get; }
 
+        /// <summary>Gets the current node.</summary>
         public T Node { get; }
 
+        /// <summary>Gets the root source of the change.</summary>
         public TrackerChangedEventArgs<T> Root => this.Previous != null
                                                       ? this.Previous.Root
                                                       : this;
