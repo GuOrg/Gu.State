@@ -26,6 +26,11 @@ namespace Gu.State
                         {
                             this.nodes.Add(childNode);
                         }
+                        else
+                        {
+                            this.nodes[index].Dispose();
+                            this.nodes[index] = childNode;
+                        }
                     }
                 }
             }

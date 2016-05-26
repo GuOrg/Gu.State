@@ -1,5 +1,7 @@
 namespace Gu.State.Tests
 {
+    using NUnit.Framework;
+
     public class RootChangeEventArgsEventArgsComparer<TNode> : EventArgsComparer<RootChangeEventArgs<TNode>>
     {
         public static readonly RootChangeEventArgsEventArgsComparer<TNode> Default = new RootChangeEventArgsEventArgsComparer<TNode>();
@@ -8,10 +10,10 @@ namespace Gu.State.Tests
         {
             if (!ReferenceEquals(expected.Node, actual.Node))
             {
-                return false;
+                throw new AssertionException($"Expected actual.Node to be same as expected.Node");
             }
 
-            if (expected.Previous != null && !EventArgsComparer.Default.Equals(expected.Previous, actual.Previous))
+            if (!EventArgsComparer.Default.Equals(expected.Previous, actual.Previous))
             {
                 return false;
             }
