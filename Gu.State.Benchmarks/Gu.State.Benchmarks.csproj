@@ -76,15 +76,6 @@
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
-        <Reference Include="Microsoft.Build">
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="Microsoft.Build.Framework">
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="Microsoft.Build.Utilities.v4.0">
-          <Paket>True</Paket>
-        </Reference>
         <Reference Include="System.Management">
           <Paket>True</Paket>
         </Reference>
@@ -100,15 +91,6 @@
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
-        <Reference Include="Microsoft.Build">
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="Microsoft.Build.Framework">
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="Microsoft.Build.Utilities.v12.0">
-          <Paket>True</Paket>
-        </Reference>
         <Reference Include="System.Management">
           <Paket>True</Paket>
         </Reference>
@@ -122,15 +104,6 @@
         <Reference Include="BenchmarkDotNet">
           <HintPath>..\packages\BenchmarkDotNet\lib\net46\BenchmarkDotNet.dll</HintPath>
           <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="Microsoft.Build">
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="Microsoft.Build.Framework">
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="Microsoft.Build.Utilities.Core">
           <Paket>True</Paket>
         </Reference>
         <Reference Include="System.Management">
