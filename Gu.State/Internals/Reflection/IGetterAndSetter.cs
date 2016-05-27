@@ -3,6 +3,7 @@
     using System;
     using System.Reflection;
 
+    /// <summary> </summary>
     public interface IGetterAndSetter
     {
         Type SourceType { get; }

@@ -1,6 +1,6 @@
 namespace Gu.State
 {
-    public struct Skip
+    internal struct Skip
     {
         public Skip(int i)
         {
