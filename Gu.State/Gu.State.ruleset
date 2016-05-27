@@ -2,12 +2,15 @@
 <RuleSet Name="Rules for Gu.State" Description="Code analysis rules for Gu.State.csproj." ToolsVersion="14.0">
   <Include Path="basiccorrectnessrules.ruleset" Action="Default" />
   <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
+    <Rule Id="CA1001" Action="Error" />
     <Rule Id="CA1032" Action="Warning" />
+    <Rule Id="CA1049" Action="Error" />
     <Rule Id="CA1054" Action="Warning" />
     <Rule Id="CA1055" Action="Warning" />
     <Rule Id="CA1056" Action="Warning" />
     <Rule Id="CA1057" Action="Warning" />
-    <Rule Id="CA1303" Action="Info" />
+    <Rule Id="CA1063" Action="Error" />
+    <Rule Id="CA1303" Action="None" />
     <Rule Id="CA1402" Action="Warning" />
     <Rule Id="CA1406" Action="Warning" />
     <Rule Id="CA1407" Action="Warning" />
@@ -30,7 +33,10 @@
     <Rule Id="CA2143" Action="Warning" />
     <Rule Id="CA2144" Action="Warning" />
     <Rule Id="CA2145" Action="Warning" />
+    <Rule Id="CA2202" Action="Error" />
     <Rule Id="CA2211" Action="Warning" />
+    <Rule Id="CA2213" Action="Error" />
+    <Rule Id="CA2215" Action="Error" />
     <Rule Id="CA2217" Action="Warning" />
     <Rule Id="CA2218" Action="Warning" />
     <Rule Id="CA2219" Action="Warning" />
@@ -41,8 +47,13 @@
     <Rule Id="CA2234" Action="Warning" />
     <Rule Id="CA2243" Action="Warning" />
   </Rules>
+  <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp" RuleNamespace="Microsoft.CodeAnalysis.CSharp">
+    <Rule Id="CS1573" Action="Info" />
+    <Rule Id="CS1591" Action="Info" />
+  </Rules>
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
     <Rule Id="SA1206" Action="Info" />
+    <Rule Id="SA1313" Action="Info" />
     <Rule Id="SA1401" Action="Info" />
     <Rule Id="SA1600" Action="None" />
     <Rule Id="SA1601" Action="Info" />

@@ -7,7 +7,10 @@
     using System.Diagnostics;
     using System.Reflection;
 
-    /// <summary>A configuration object with settings for how to copy and compare etc. instances using fields.</summary>
+    /// <summary>
+    /// A configuration object with settings for how to copy and compare etc. instances using fields.
+    /// The setting should be cached between calls for performance.
+    /// </summary>
     public sealed class FieldsSettings : MemberSettings<FieldInfo>, IMemberSettings
     {
         private static readonly ConcurrentDictionary<BindingFlagsAndReferenceHandling, FieldsSettings> Cache = new ConcurrentDictionary<BindingFlagsAndReferenceHandling, FieldsSettings>();

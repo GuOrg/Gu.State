@@ -1,4 +1,5 @@
-﻿namespace Gu.State.Tests.Settings
+﻿#pragma warning disable 649
+namespace Gu.State.Tests.Settings
 {
     using System;
     using System.Collections.Generic;

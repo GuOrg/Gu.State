@@ -6,7 +6,10 @@
     using System.Diagnostics;
     using System.Reflection;
 
-    /// <summary>A configuration object with settings for how to copy and compare etc. instances using properties.</summary>
+    /// <summary>
+    /// A configuration object with settings for how to copy and compare etc. instances using properties.
+    /// The setting should be cached between calls for performance.
+    /// </summary>
     public sealed class PropertiesSettings : MemberSettings<PropertyInfo>, IMemberSettings
     {
         private static readonly ConcurrentDictionary<BindingFlagsAndReferenceHandling, PropertiesSettings> Cache = new ConcurrentDictionary<BindingFlagsAndReferenceHandling, PropertiesSettings>();

@@ -5,17 +5,27 @@
 Library for managing state.
 
 ## Table of Contents
-- [1. EqualBy](#1-equalby)
-- [1.1. FieldValues](#11-fieldvalues)
-- [1.2. VerifyCanEqualByFieldValues](#12-verifycanequalbyfieldvalues)
-- [1.3. PropertyValues](#13-propertyvalues)
-- [1.4. VerifyCanEqualByPropertyValues](#14-verifycanequalbypropertyvalues)
-- [2. Copy](#2-copy)
-- [2.1. FieldValues](#21-fieldvalues)
-- [2.2. PropertyValues](#22-propertyvalues)
-- [3. DiffBy](#3-diffby)
-- [3.1. FieldValues](#31-fieldvalues)
-- [3.2. PropertyValues](#32-propertyvalues)
+  - [1. EqualBy](#1-equalby)
+    - [1.1. FieldValues](#11-fieldvalues)
+    - [1.2. VerifyCanEqualByFieldValues](#12-verifycanequalbyfieldvalues)
+    - [1.3. PropertyValues](#13-propertyvalues)
+    - [1.4. VerifyCanEqualByPropertyValues](#14-verifycanequalbypropertyvalues)
+  - [2. Copy](#2-copy)
+    - [2.1. FieldValues](#21-fieldvalues)
+    - [2.2. VerifyCanCopyFieldValues](#22-verifycancopyfieldvalues)
+    - [2.3. PropertyValues](#23-propertyvalues)
+    - [2.4. VerifyCanCopyPropertyValues](#24-verifycancopypropertyvalues)
+  - [3. DiffBy](#3-diffby)
+    - [3.1. FieldValues](#31-fieldvalues)
+    - [3.2. PropertyValues](#32-propertyvalues)
+  - [4. Track](#4-track)
+    - [4.1. Changes.](#41-changes)
+    - [4.2. IsDirty.](#42-isdirty)
+    - [Verify.](#verify)
+        - [PropertiesSettings.](#propertiessettings)
+  - [Synchronize](#synchronize)
+  - [FieldsSettings.](#fieldssettings)
+  - [PropertiesSettings.](#propertiessettings)
 
 ## 1. EqualBy
 Compares two instances.
@@ -31,7 +41,7 @@ EqualBy.FieldValues(x, y); // default is ReferenceHandling.Structural
 EqualBy.FieldValues(x, y, ReferenceHandling.Throw);  
 EqualBy.FieldValues(x, y, ReferenceHandling.Structural); 
 EqualBy.FieldValues(x, y, ReferenceHandling.References);
-EqualBy.FieldValues(x, y, settings);
+EqualBy.FieldValues(x, y, settings); // settings should be cached between calls for performance.
 ```
 
 - Ignores event fields
@@ -46,7 +56,7 @@ EqualBy.VerifyCanEqualByFieldValues<T>(); // default is ReferenceHandling.Struct
 EqualBy.VerifyCanEqualByFieldValues<T>(ReferenceHandling.Structural); 
 EqualBy.VerifyCanEqualByFieldValues<T>(ReferenceHandling.References);
 EqualBy.VerifyCanEqualByFieldValues<T>(ReferenceHandling.Throw); 
-EqualBy.VerifyCanEqualByFieldValues<T>(settings);
+EqualBy.VerifyCanEqualByFieldValues<T>(settings); // settings should be cached between calls for performance.
 ```
 
 ### 1.3. PropertyValues
@@ -55,7 +65,7 @@ EqualBy.PropertyValues(x, y);
 EqualBy.PropertyValues(x, y, ReferenceHandling.Structural); 
 EqualBy.PropertyValues(x, y, ReferenceHandling.References);
 EqualBy.PropertyValues(x, y, ReferenceHandling.Throw); 
-EqualBy.PropertyValues(x, y, settings);
+EqualBy.PropertyValues(x, y, settings); // settings should be cached between calls for performance.
 ```
 
 ### 1.4. VerifyCanEqualByPropertyValues
@@ -68,7 +78,7 @@ EqualBy.VerifyCanEqualByPropertyValues<T>();
 EqualBy.VerifyCanEqualByPropertyValues<T>(ReferenceHandling.Structural); 
 EqualBy.VerifyCanEqualByPropertyValues<T>(ReferenceHandling.References);
 EqualBy.VerifyCanEqualByPropertyValues<T>(ReferenceHandling.Throw); 
-EqualBy.VerifyCanEqualByPropertyValues<T>(settings);
+EqualBy.VerifyCanEqualByPropertyValues<T>(settings); // settings should be cached between calls for performance.
 ```
 
 ## 2. Copy
@@ -85,12 +95,38 @@ Copy.FieldValues(source, target, ReferenceHandling.References);
 Copy.FieldValues(source, target, ReferenceHandling.Throw); 
 ```
 
-### 2.2. PropertyValues
+### 2.2. VerifyCanCopyFieldValues
+
+Asserts that instances of type `<T>` can be copied using the `Copy.FieldValues` method.
+This can be useful in unit tests.
+Throws an exception with a message describing the problem(s) found and suggestions for fixes.
+```
+Copy.VerifyCanCopyFieldValues<T>(); // default is ReferenceHandling.Structural
+Copy.VerifyCanCopyFieldValues<T>(ReferenceHandling.Structural); 
+Copy.VerifyCanCopyFieldValues<T>(ReferenceHandling.References);
+Copy.VerifyCanCopyFieldValues<T>(ReferenceHandling.Throw); 
+Copy.VerifyCanCopyFieldValues<T>(settings); // settings should be cached between calls for performance.
+```
+
+### 2.3. PropertyValues
 ```
 Copy.PropertyValues(source, target);
 Copy.PropertyValues(source, target, ReferenceHandling.Structural); 
 Copy.PropertyValues(source, target, ReferenceHandling.References);
 Copy.PropertyValues(source, target, ReferenceHandling.Throw); 
+```
+
+### 2.4. VerifyCanCopyPropertyValues
+
+Asserts that instances of type `<T>` can be copied using the `Copy.PropertyValues` method.
+This can be useful in unit tests.
+Throws an exception with a message describing the problem(s) found and suggestions for fixes.
+```
+Copy.VerifyCanCopyPropertyValues<T>(); // default is ReferenceHandling.Structural
+Copy.VerifyCanCopyPropertyValues<T>(ReferenceHandling.Structural); 
+Copy.VerifyCanCopyPropertyValues<T>(ReferenceHandling.References);
+Copy.VerifyCanCopyPropertyValues<T>(ReferenceHandling.Throw); 
+Copy.VerifyCanCopyPropertyValues<T>(settings); // settings should be cached between calls for performance.
 ```
 
 ## 3. DiffBy
@@ -105,6 +141,7 @@ DiffBy.FieldValues(x, y);
 DiffBy.FieldValues(x, y, ReferenceHandling.Structural); 
 DiffBy.FieldValues(x, y, ReferenceHandling.References);
 DiffBy.FieldValues(x, y, ReferenceHandling.Throw); 
+DiffBy.FieldValues(x, y, settings); // settings should be cached between calls for performance.
 ```
 - Ignores event fields
 
@@ -114,6 +151,7 @@ DiffBy.PropertyValues(x, y);
 DiffBy.PropertyValues(x, y, ReferenceHandling.Structural); 
 DiffBy.PropertyValues(x, y, ReferenceHandling.References);
 DiffBy.PropertyValues(x, y, ReferenceHandling.Throw); 
+DiffBy.PropertyValues(x, y, settings); // settings should be cached between calls for performance.
 ```
 
 ## 4. Track
@@ -155,11 +193,17 @@ Track.VerifyCanTrackChanges<T>(ReferenceHandling.Structural);
 Use the verify methods in unit tests to assert that your types support tracking and that the correct settings are used.
 
 ##### PropertiesSettings.
-For more finegrained control there is an overload accepting a `PropertiesSettings`
+For more finegrained control an explicit `PropertiesSettings` can be provided.
+The settings instance should be cached between calls for performance.
 ```
-var settings = new PropertiesSettingsBuilder().IgnoreProperty<WithIllegal>(x => x.Illegal)
-                                              .CreateSettings(ReferenceHandling.Structural);
-using (var tracker = Track.Changes(withIllegalObject, settings))
+var settings = PropertiesSettings.Build()
+                                 .IgnoreProperty<Foo>(x => x.IgnoredProperty)
+                                 .IgnoreType<Bar>()
+                                 .AddImmutableType<Baz>()
+                                 .AddComparer(new CustomComparer())
+                                 .AddCopyer(new CustomCopyer())
+                                 .CreateSettings(ReferenceHandling.Structural);
+using (var tracker = Track.Changes(foo, settings))
 {
     ...
 }

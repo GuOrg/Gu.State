@@ -10,7 +10,7 @@ namespace Gu.State
             this.EventArgs = eventArgs;
         }
 
-        /// <summary>The original change args.</summary>
+        /// <summary>Gets the root change args.</summary>
         public IRootChangeEventArgs EventArgs { get; }
     }
 }

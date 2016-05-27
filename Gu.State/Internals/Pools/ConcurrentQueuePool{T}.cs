@@ -20,7 +20,10 @@ namespace Gu.State
         private static void Return(ConcurrentQueue<T> queue)
         {
             T temp;
-            while (queue.TryDequeue(out temp)) { }
+            while (queue.TryDequeue(out temp))
+            {
+            }
+
             Cache.Enqueue(queue);
         }
     }

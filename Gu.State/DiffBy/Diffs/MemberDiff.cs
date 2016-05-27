@@ -2,8 +2,12 @@ namespace Gu.State
 {
     using System.Reflection;
 
+    /// <summary>Base class for a member diff.</summary>
     public abstract class MemberDiff : SubDiff
     {
+        /// <summary>Initializes a new instance of the <see cref="MemberDiff"/> class.</summary>
+        /// <param name="memberInfo">The member.</param>
+        /// <param name="diff">The diff.</param>
         protected MemberDiff(MemberInfo memberInfo, ValueDiff diff)
             : base(diff)
         {
@@ -12,7 +16,7 @@ namespace Gu.State
 
         internal MemberInfo MemberInfo { get; }
 
-        public static MemberDiff Create(MemberInfo member, object xValue, object yValue)
+        internal static MemberDiff Create(MemberInfo member, object xValue, object yValue)
         {
             return Create(member, new ValueDiff(xValue, yValue));
         }

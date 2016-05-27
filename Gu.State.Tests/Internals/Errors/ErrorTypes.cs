@@ -1,4 +1,5 @@
-﻿namespace Gu.State.Tests.Internals.Errors
+﻿#pragma warning disable 67
+namespace Gu.State.Tests.Internals.Errors
 {
     using System.ComponentModel;
 
