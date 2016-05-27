@@ -4,6 +4,7 @@ namespace Gu.State
     using System.CodeDom.Compiler;
     using System.Collections.Generic;
 
+    /// <summary>Multidimensional array rank difference.</summary>
     public class RankDiff : SubDiff
     {
         /// <summary> Initializes a new instance of the <see cref="RankDiff"/> class.</summary>
@@ -15,10 +16,10 @@ namespace Gu.State
         }
 
         /// <summary>Gets the lengths in the dimensions for X.</summary>
-        public int[] XLengths { get; }
+        public IReadOnlyList<int> XLengths { get; }
 
         /// <summary>Gets the lengths in the dimensions for Y.</summary>
-        public int[] YLengths { get; }
+        public IReadOnlyList<int> YLengths { get; }
 
         /// <inheritdoc />
         public override string ToString()

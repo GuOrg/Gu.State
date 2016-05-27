@@ -3,6 +3,7 @@ namespace Gu.State
     using System;
     using System.ComponentModel;
 
+    /// <summary>A tracker that tracks the difference between tow instances.</summary>
     public interface IDirtyTracker : INotifyPropertyChanged, IDisposable
     {
         /// <summary>Gets the settings specifying how tracking and equality is performed.</summary>

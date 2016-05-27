@@ -65,6 +65,9 @@
             return Cache.GetOrAdd(key, x => new FieldsSettings(null, null, null, null, referenceHandling, bindingFlags));
         }
 
+        /// <summary>Gets if the <paramref name="fieldInfo"/> is ignored.</summary>
+        /// <param name="fieldInfo">The property to check.</param>
+        /// <returns>A value indicating if <paramref name="fieldInfo"/> is ignored.</returns>
         public bool IsIgnoringField(FieldInfo fieldInfo)
         {
             if (fieldInfo == null || fieldInfo.IsEventField() || typeof(IEnumerator).IsAssignableFrom(fieldInfo.DeclaringType))

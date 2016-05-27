@@ -1,6 +1,6 @@
 ﻿namespace Gu.State
 {
-    public struct Index
+    internal struct Index
     {
         public Index(int[] indices)
         {
