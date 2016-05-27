@@ -14,6 +14,7 @@
             this.Diffs = diffs ?? Empty;
         }
 
+        /// <summary>Gets a value indicating whether the diff is empty.</summary>
         public abstract bool IsEmpty { get; }
 
         /// <summary>Gets the diffs for properties and indexes.</summary>
