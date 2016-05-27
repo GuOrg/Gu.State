@@ -67,6 +67,9 @@
                 x => new PropertiesSettings(null, null, null, null, referenceHandling, bindingFlags));
         }
 
+        /// <summary>Gets if the <paramref name="propertyInfo"/> is ignored.</summary>
+        /// <param name="propertyInfo">The property to check.</param>
+        /// <returns>A value indicating if <paramref name="propertyInfo"/> is ignored.</returns>
         public bool IsIgnoringProperty(PropertyInfo propertyInfo)
         {
             if (propertyInfo == null)
@@ -82,6 +85,9 @@
             return this.IgnoredMembers.GetOrAdd(propertyInfo, this.GetIsIgnoring);
         }
 
+        /// <summary>Gets all instance <see cref="PropertyInfo"/> that matches <see cref="BindingFlags"/></summary>
+        /// <param name="type">The type to get properties for.</param>
+        /// <returns>The properties.</returns>
         public IEnumerable<PropertyInfo> GetProperties(Type type)
         {
             return type.GetProperties(this.BindingFlags);

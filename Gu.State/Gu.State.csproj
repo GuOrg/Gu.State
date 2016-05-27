@@ -174,10 +174,7 @@
     <Compile Include="Internals\MemberPath\ITypedNode.cs" />
     <Compile Include="Settings\FieldsSettingsBuilder.cs" />
     <Compile Include="Settings\FieldsSettings.cs" />
-    <Compile Include="Contracts\IBindingFlags.cs" />
-    <Compile Include="Contracts\IIgnoringDeclaredType.cs" />
     <Compile Include="Contracts\IMemberSettings.cs" />
-    <Compile Include="Contracts\IReferenceHandling.cs" />
     <Compile Include="Settings\MemberSettings{T}.cs" />
     <Compile Include="Settings\PropertiesSettingsBuilder.cs" />
     <Compile Include="Settings\Internals\MemberInfoComparer.cs" />

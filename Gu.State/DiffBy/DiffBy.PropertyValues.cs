@@ -3,6 +3,7 @@
     using System.Diagnostics;
     using System.Reflection;
 
+    /// <summary>Provides methods for comparing tow instances.</summary>
     public static partial class DiffBy
     {
         /// <summary>
