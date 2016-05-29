@@ -17,15 +17,18 @@ Library for managing state.
     - [2.4. VerifyCanCopyPropertyValues](#24-verifycancopypropertyvalues)
   - [3. DiffBy](#3-diffby)
     - [3.1. FieldValues](#31-fieldvalues)
+    - [3.4. VerifyCanDiffByFieldValues](#34-verifycandiffbyfieldvalues)
     - [3.2. PropertyValues](#32-propertyvalues)
+    - [3.4. VerifyCanDiffByPropertyValues](#34-verifycandiffbypropertyvalues)
   - [4. Track](#4-track)
     - [4.1. Changes.](#41-changes)
-    - [4.2. IsDirty.](#42-isdirty)
-    - [Verify.](#verify)
-        - [PropertiesSettings.](#propertiessettings)
-  - [Synchronize](#synchronize)
-  - [FieldsSettings.](#fieldssettings)
-  - [PropertiesSettings.](#propertiessettings)
+    - [4.2 Track.VerifyCanTrackChanges](#42-trackverifycantrackchanges)
+    - [4.3. IsDirty.](#43-isdirty)
+    - [4.4. Track.VerifyCanTrackIsDirty](#44-trackverifycantrackisdirty)
+  - [5. Synchronize](#5-synchronize)
+  - [6. Settings.](#6-settings)
+    - [6.1. PropertiesSettings.](#61-propertiessettings)
+    - [6.2. FieldsSettings.](#62-fieldssettings)
 
 ## 1. EqualBy
 Compares two instances.
@@ -130,7 +133,7 @@ Copy.VerifyCanCopyPropertyValues<T>(settings); // settings should be cached betw
 ```
 
 ## 3. DiffBy
-Compares two instances and returns a tree with the diff or null is they are equal.
+Compares two instances and returns a tree with the differences or an empty diff is they are equal.
 Types implementing `IEquatable` are compared using `object.Equals(x, y)`
 - Indexers are only supported for framework collection types.
 - Handles enumerables.
@@ -145,6 +148,19 @@ DiffBy.FieldValues(x, y, settings); // settings should be cached between calls f
 ```
 - Ignores event fields
 
+### 3.4. VerifyCanDiffByFieldValues
+
+Asserts that instances of type `<T>` can be diffed using the `DiffBy.FieldValues` method.
+This can be useful in unit tests.
+Throws an exception with a message describing the problem(s) found and suggestions for fixes.
+```
+DiffBy.VerifyCanDiffByFieldValues<T>(); // default is ReferenceHandling.Structural
+DiffBy.VerifyCanDiffByFieldValues<T>(ReferenceHandling.Structural); 
+DiffBy.VerifyCanDiffByFieldValues<T>(ReferenceHandling.References);
+DiffBy.VerifyCanDiffByFieldValues<T>(ReferenceHandling.Throw); 
+DiffBy.VerifyCanDiffByFieldValues<T>(settings); // settings should be cached between calls for performance.
+```
+
 ### 3.2. PropertyValues
 ```
 DiffBy.PropertyValues(x, y);
@@ -154,14 +170,27 @@ DiffBy.PropertyValues(x, y, ReferenceHandling.Throw);
 DiffBy.PropertyValues(x, y, settings); // settings should be cached between calls for performance.
 ```
 
+### 3.4. VerifyCanDiffByPropertyValues
+
+Asserts that instances of type `<T>` can be diffed using the `DiffBy.PropertyValues` method.
+This can be useful in unit tests.
+Throws an exception with a message describing the problem(s) found and suggestions for fixes.
+```
+DiffBy.VerifyCanDiffByPropertyValues<T>(); // default is ReferenceHandling.Structural
+DiffBy.VerifyCanDiffByPropertyValues<T>(ReferenceHandling.Structural); 
+DiffBy.VerifyCanDiffByPropertyValues<T>(ReferenceHandling.References);
+DiffBy.VerifyCanDiffByPropertyValues<T>(ReferenceHandling.Throw); 
+DiffBy.VerifyCanDiffByPropertyValues<T>(settings); // settings should be cached between calls for performance.
+```
+
 ## 4. Track
+    
+### 4.1. Changes.
 Tracks changes in a graph.
 For subproperties the following must hold:
 - Collections must implement INotifyCollectionChanged
 - Types that are not collections and not immutable must implement INotifyPropertyChanged.
 - Indexers are only supported for framework collection types.
-
-### 4.1. Changes.
 
 ```
 using (var tracker = Track.Changes(foo))
@@ -172,8 +201,25 @@ using (var tracker = Track.Changes(foo))
 }
 // no longer tracking after disposing.
 ```
+### 4.2 Track.VerifyCanTrackChanges
 
-### 4.2. IsDirty.
+Asserts that changes for instances of type `<T>` can be tracked using the `Track.Changes` method.
+This can be useful in unit tests.
+Throws an exception with a message describing the problem(s) found and suggestions for fixes.
+```
+Track.VerifyCanTrackChanges<T>(); // default is ReferenceHandling.Structural
+Track.VerifyCanTrackChanges<T>(ReferenceHandling.Structural); 
+Track.VerifyCanTrackChanges<T>(ReferenceHandling.References);
+Track.VerifyCanTrackChanges<T>(ReferenceHandling.Throw); 
+Track.VerifyCanTrackChanges<T>(settings); // settings should be cached between calls for performance.
+```
+
+### 4.3. IsDirty.
+Tracks the difference bwtween two instances.
+For subproperties the following must hold:
+- Collections must implement INotifyCollectionChanged
+- Types that are not collections and not immutable must implement INotifyPropertyChanged.
+- Indexers are only supported for framework collection types.
 
 ```
 using (var tracker = Track.IsDirty(x, y))
@@ -185,16 +231,38 @@ using (var tracker = Track.IsDirty(x, y))
 // no longer tracking after disposing.
 ```
 
-### Verify.
-```
-Track.VerifyCanTrackIsDirty<T>(ReferenceHandling.Structural);
-Track.VerifyCanTrackChanges<T>(ReferenceHandling.Structural);
-```
-Use the verify methods in unit tests to assert that your types support tracking and that the correct settings are used.
+### 4.4. Track.VerifyCanTrackIsDirty
 
-##### PropertiesSettings.
-For more finegrained control an explicit `PropertiesSettings` can be provided.
-The settings instance should be cached between calls for performance.
+Asserts that dirty can be tracked for instances of type `<T>` using the `Track.Changes` method.
+This can be useful in unit tests.
+Throws an exception with a message describing the problem(s) found and suggestions for fixes.
+```
+Track.VerifyCanTrackIsDirty<T>(); // default is ReferenceHandling.Structural
+Track.VerifyCanTrackIsDirty<T>(ReferenceHandling.Structural); 
+Track.VerifyCanTrackIsDirty<T>(ReferenceHandling.References);
+Track.VerifyCanTrackIsDirty<T>(ReferenceHandling.Throw); 
+Track.VerifyCanTrackIsDirty<T>(settings); // settings should be cached between calls for performance.
+```
+
+## 5. Synchronize
+Keeps the property values of target in sync with source.
+For subproperties the following must hold:
+- Collections must implement INotifyCollectionChanged
+- Types that are not collections and not immutable must implement INotifyPropertyChanged.
+- Indexers are only supported for framework collection types.
+```
+using (Synchronize.CreatePropertySynchronizer(source, target, referenceHandling: ReferenceHandling.Structural))
+{
+    ...
+}
+```
+
+## 6. Settings.
+For more finegrained control the above methods have an overload accepting a settings object.
+Cache the setting between calls for performance.
+
+### 6.1. PropertiesSettings.
+For convenience there is a builder exposed that can be used to create the setting.
 ```
 var settings = PropertiesSettings.Build()
                                  .IgnoreProperty<Foo>(x => x.IgnoredProperty)
@@ -208,23 +276,7 @@ using (var tracker = Track.Changes(foo, settings))
     ...
 }
 ```
-
-## Synchronize
-Keeps the property values of target in sync with source.
-For subproperties the following must hold:
-- Collections must implement INotifyCollectionChanged
-- Types that are not collections and not immutable must implement INotifyPropertyChanged.
-- Indexers are only supported for framework collection types.
-```
-using (Synchronize.CreatePropertySynchronizer(source, target, referenceHandling: ReferenceHandling.Structural))
-{
-    ...
-}
-```
-
-## FieldsSettings.
-For more finegrained control there is an overload accepting a `FieldsSettings`
+### 6.2. FieldsSettings.
+Same as PropertiesSettings but for methods operating on fields.
 
 
-## PropertiesSettings.
-For more finegrained control there is an overload accepting a `PropertiesSettings`
