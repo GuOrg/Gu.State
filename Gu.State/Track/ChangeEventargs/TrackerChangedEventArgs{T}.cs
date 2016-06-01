@@ -26,9 +26,9 @@ namespace Gu.State
         public T Node { get; }
 
         /// <summary>Gets the root source of the change.</summary>
-        public TrackerChangedEventArgs<T> Root => this.Previous != null
-                                                      ? this.Previous.Root
-                                                      : this;
+        public RootChangeEventArgs<T> Root => (RootChangeEventArgs<T>)(this.Previous != null
+                                                                        ? this.Previous.Root
+                                                                        : this);
 
         internal bool Contains(T node)
         {

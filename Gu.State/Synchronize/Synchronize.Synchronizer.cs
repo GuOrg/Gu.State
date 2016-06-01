@@ -11,7 +11,7 @@ namespace Gu.State
             private readonly IRefCounted<DirtyTrackerNode> dirtyTrackerNode;
             private readonly IBorrowed<ConcurrentQueue<DirtyTrackerNode>> borrowedQueue;
             private readonly object gate = new object();
-            private bool isProcessingQueue;
+            private DirtyTrackerNode processingNode;
 
             internal Synchronizer(INotifyPropertyChanged source, INotifyPropertyChanged target, PropertiesSettings settings)
             {
@@ -24,6 +24,8 @@ namespace Gu.State
 
             public PropertiesSettings Settings { get; }
 
+            public DirtyTrackerNode RootNode => this.dirtyTrackerNode.Value;
+
             public void Dispose()
             {
                 this.dirtyTrackerNode.Value.Changed -= this.OnDirtyTrackerNodeChanged;
@@ -34,6 +36,17 @@ namespace Gu.State
             private void OnDirtyTrackerNodeChanged(object sender, TrackerChangedEventArgs<DirtyTrackerNode> e)
             {
                 var root = e.Root;
+
+                // below is not perfect but catches simple cases of when target changes
+                if (this.processingNode == null &&
+                    ReferenceEquals(root.Node.Y, root.EventArgs.Source) && 
+                    !ReferenceEquals(root.Node.X, root.EventArgs.Source))
+                {
+                    var message = "Target cannot be modified when a synchronizer is applied to it\r\n" +
+                                  "The change would just trigger a dirty notification and the value would be updated with the value from source.";
+                    throw new InvalidOperationException(message);
+                }
+
                 if (!root.Node.IsDirty)
                 {
                     return;
@@ -46,29 +59,27 @@ namespace Gu.State
             {
                 var queue = this.borrowedQueue.Value;
                 queue.Enqueue(newNode);
-                if (this.isProcessingQueue)
+                if (this.processingNode != null)
                 {
                     return;
                 }
 
                 lock (this.gate)
                 {
-                    if (this.isProcessingQueue)
+                    if (this.processingNode != null)
                     {
                         return;
                     }
 
-                    this.isProcessingQueue = true;
-                    DirtyTrackerNode node;
-                    while (queue.TryDequeue(out node))
+                    while (queue.TryDequeue(out this.processingNode))
                     {
-                        if (node.IsDirty)
+                        if (this.processingNode.IsDirty)
                         {
-                            Copy.PropertyValues(node.X, node.Y, this.Settings);
+                            Copy.PropertyValues(this.processingNode.X, this.processingNode.Y, this.Settings);
                         }
                     }
 
-                    this.isProcessingQueue = false;
+                    this.processingNode = null;
                 }
             }
         }
