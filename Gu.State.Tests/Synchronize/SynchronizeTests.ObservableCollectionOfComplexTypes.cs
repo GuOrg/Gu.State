@@ -138,6 +138,48 @@ namespace Gu.State.Tests
 
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
+            public void AddThenUpdate(ReferenceHandling referenceHandling)
+            {
+                Assert.Fail();
+                var source = new ObservableCollection<ComplexType>();
+                var target = new ObservableCollection<ComplexType>();
+                using (Synchronize.PropertyValues(source, target, referenceHandling))
+                {
+                    source.Add(new ComplexType("a", 1));
+                    var expected = new[] { new ComplexType("a", 1) };
+                    CollectionAssert.AreEqual(expected, source, ComplexType.Comparer);
+                    CollectionAssert.AreEqual(expected, target, ComplexType.Comparer);
+
+                    source[0].Value++;
+                    expected = new[] { new ComplexType("a", 2) };
+                    CollectionAssert.AreEqual(expected, source, ComplexType.Comparer);
+                    CollectionAssert.AreEqual(expected, target, ComplexType.Comparer);
+                }
+            }
+
+            [TestCase(ReferenceHandling.Structural)]
+            [TestCase(ReferenceHandling.References)]
+            public void InsertThenUpdate(ReferenceHandling referenceHandling)
+            {
+                Assert.Fail();
+                var source = new ObservableCollection<ComplexType>();
+                var target = new ObservableCollection<ComplexType>();
+                using (Synchronize.PropertyValues(source, target, referenceHandling))
+                {
+                    source.Add(new ComplexType("a", 1));
+                    var expected = new[] { new ComplexType("a", 1) };
+                    CollectionAssert.AreEqual(expected, source, ComplexType.Comparer);
+                    CollectionAssert.AreEqual(expected, target, ComplexType.Comparer);
+
+                    source[0].Value++;
+                    expected = new[] { new ComplexType("a", 2) };
+                    CollectionAssert.AreEqual(expected, source, ComplexType.Comparer);
+                    CollectionAssert.AreEqual(expected, target, ComplexType.Comparer);
+                }
+            }
+
+            [TestCase(ReferenceHandling.Structural)]
+            [TestCase(ReferenceHandling.References)]
             public void Remove(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
