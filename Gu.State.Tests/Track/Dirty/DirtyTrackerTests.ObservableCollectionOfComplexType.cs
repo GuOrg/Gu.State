@@ -232,7 +232,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void RemoveStillDirty()
+            public void RemoveStillDirty1()
             {
                 var x = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
                 var y = new ObservableCollection<ComplexType> { new ComplexType("c", 3) };
@@ -248,6 +248,29 @@ namespace Gu.State.Tests
                     x.RemoveAt(1);
                     Assert.AreEqual(true, tracker.IsDirty);
                     Assert.AreEqual("ObservableCollection<ComplexType> [0] Name x: a y: c Value x: 1 y: 3", tracker.Diff.ToString("", " "));
+                    expectedChanges.AddRange(new[] { "Diff" });
+                    CollectionAssert.AreEqual(expectedChanges, changes);
+                }
+            }
+
+
+            [Test]
+            public void RemoveStillDirty2()
+            {
+                var x = new ObservableCollection<ComplexType> { new ComplexType("a", 0), new ComplexType("b", 0), new ComplexType("c", 0) };
+                var y = new ObservableCollection<ComplexType> { new ComplexType("d", 0), new ComplexType("e", 0) };
+                var changes = new List<string>();
+                var expectedChanges = new List<string>();
+                using (var tracker = Track.IsDirty(x, y, ReferenceHandling.Structural))
+                {
+                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    Assert.AreEqual(true, tracker.IsDirty);
+                    Assert.AreEqual("ObservableCollection<ComplexType> [0] Name x: a y: d [1] Name x: b y: e [2] x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: missing item", tracker.Diff.ToString("", " "));
+                    CollectionAssert.IsEmpty(changes);
+
+                    x.RemoveAt(0);
+                    Assert.AreEqual(true, tracker.IsDirty);
+                    Assert.AreEqual("ObservableCollection<ComplexType> [0] Name x: b y: d [1] Name x: c y: e", tracker.Diff.ToString("", " "));
                     expectedChanges.AddRange(new[] { "Diff" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
                 }

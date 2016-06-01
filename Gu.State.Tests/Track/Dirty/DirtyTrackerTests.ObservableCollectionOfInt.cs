@@ -168,7 +168,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void RemoveTheDifference()
+            public void RemoveTheDifference1()
             {
                 var x = new ObservableCollection<int> { 1, 2 };
                 var y = new ObservableCollection<int> { 1 };
@@ -190,7 +190,51 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void RemoveStillDirty()
+            public void RemoveTheDifference2()
+            {
+                var x = new ObservableCollection<int> { 1, 2, 3 };
+                var y = new ObservableCollection<int> { 1, 3 };
+                var changes = new List<string>();
+                var expectedChanges = new List<string>();
+                using (var tracker = Track.IsDirty(x, y, ReferenceHandling.Structural))
+                {
+                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    Assert.AreEqual(true, tracker.IsDirty);
+                    Assert.AreEqual("ObservableCollection<int> [1] x: 2 y: 3 [2] x: 3 y: missing item", tracker.Diff.ToString("", " "));
+                    CollectionAssert.IsEmpty(changes);
+
+                    x.RemoveAt(1);
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    Assert.AreEqual(null, tracker.Diff);
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
+                    CollectionAssert.AreEqual(expectedChanges, changes);
+                }
+            }
+
+            [Test]
+            public void Remove0StillDirty()
+            {
+                var x = new ObservableCollection<int> { 1, 2 };
+                var y = new ObservableCollection<int> { 3 };
+                var changes = new List<string>();
+                var expectedChanges = new List<string>();
+                using (var tracker = Track.IsDirty(x, y, ReferenceHandling.Structural))
+                {
+                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    Assert.AreEqual(true, tracker.IsDirty);
+                    Assert.AreEqual("ObservableCollection<int> [0] x: 1 y: 3 [1] x: 2 y: missing item", tracker.Diff.ToString("", " "));
+                    CollectionAssert.IsEmpty(changes);
+
+                    x.RemoveAt(0);
+                    Assert.AreEqual(true, tracker.IsDirty);
+                    Assert.AreEqual("ObservableCollection<int> [0] x: 2 y: 3", tracker.Diff.ToString("", " "));
+                    expectedChanges.AddRange(new[] { "Diff" });
+                    CollectionAssert.AreEqual(expectedChanges, changes);
+                }
+            }
+
+            [Test]
+            public void Remove1StillDirty()
             {
                 var x = new ObservableCollection<int> { 1, 2 };
                 var y = new ObservableCollection<int> { 3 };
