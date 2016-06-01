@@ -50,7 +50,6 @@ namespace Gu.State.Tests
                 }
             }
 
-
             [Test]
             public void InsertXAt0()
             {

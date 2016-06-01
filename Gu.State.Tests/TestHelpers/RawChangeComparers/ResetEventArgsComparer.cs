@@ -2,13 +2,20 @@ namespace Gu.State.Tests
 {
     using System.Collections;
 
+    using NUnit.Framework;
+
     public class ResetEventArgsComparer : EventArgsComparer<ResetEventArgs>
     {
         public static readonly ResetEventArgsComparer Default = new ResetEventArgsComparer();
 
         public override bool Equals(ResetEventArgs expected, ResetEventArgs actual)
         {
-            return Equals(expected.OldItems, actual.OldItems) && Equals(expected.NewItems, actual.NewItems);
+            if (!ReferenceEquals(expected.Source, actual.Source))
+            {
+                throw new AssertionException($"Expected source to be same.");
+            }
+
+            return true;
         }
 
         private static bool Equals(IList x, IList y)

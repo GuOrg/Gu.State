@@ -31,7 +31,7 @@
                     source.Value1++;
                     Assert.AreEqual(1, tracker.Changes);
                     CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
-                    var expected = new[] { RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(source, tracker.Settings, false).Value, new PropertyChangeEventArgs(source.GetType().GetProperty(nameof(source.Value1)))) };
+                    var expected = new[] { RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(source, tracker.Settings, false).Value, new PropertyChangeEventArgs(source, source.GetProperty(nameof(source.Value1)))) };
                     CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
                 }
 
@@ -67,7 +67,7 @@
                     Assert.AreEqual(1, tracker.Changes);
                     expectedPropertyChanges.AddRange(new[] { "Changes" });
                     CollectionAssert.AreEqual(expectedPropertyChanges, propertyChanges);
-                    var expected = new[] { RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(source, tracker.Settings, false).Value, new PropertyChangeEventArgs(source.GetType().GetProperty(nameof(source.Value1)))) };
+                    var expected = new[] { RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(source, tracker.Settings, false).Value, new PropertyChangeEventArgs(source, source.GetProperty(nameof(source.Value1)))) };
                     CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
                 }
 
