@@ -312,7 +312,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void MoveX()
+            public void MoveX1()
             {
                 var x = new ObservableCollection<int> { 1, 2 };
                 var y = new ObservableCollection<int> { 1, 2 };
@@ -332,6 +332,36 @@ namespace Gu.State.Tests
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
                     x.Move(0, 1);
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    Assert.AreEqual(null, tracker.Diff);
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
+                    CollectionAssert.AreEqual(expectedChanges, changes);
+                }
+            }
+
+            [Test]
+            public void MoveX2()
+            {
+                var x = new ObservableCollection<int> { 1, 2, 3, 4 };
+                var y = new ObservableCollection<int> { 1, 2, 3, 4 };
+                var changes = new List<string>();
+                var expectedChanges = new List<string>();
+                using (var tracker = Track.IsDirty(x, y, ReferenceHandling.Structural))
+                {
+                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    Assert.AreEqual(null, tracker.Diff);
+                    CollectionAssert.IsEmpty(changes);
+
+                    x.Move(0, 2);
+                    Assert.AreEqual(true, tracker.IsDirty);
+                    var expected = "ObservableCollection<int> [0] x: 2 y: 1 [1] x: 3 y: 2 [2] x: 1 y: 3";
+                    var actual = tracker.Diff.ToString("", " ");
+                    Assert.AreEqual(expected, actual);
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
+                    CollectionAssert.AreEqual(expectedChanges, changes);
+
+                    x.Move(2, 0);
                     Assert.AreEqual(false, tracker.IsDirty);
                     Assert.AreEqual(null, tracker.Diff);
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
