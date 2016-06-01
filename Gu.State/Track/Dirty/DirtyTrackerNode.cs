@@ -232,7 +232,7 @@
 
         private void OnTrackedRemove(object sender, RemoveEventArgs e)
         {
-            for (int i = e.Index; i < Math.Max(this.XList.Count, this.YList.Count) + 1; i++)
+            for (int i = e.Index; i <= Math.Max(this.XList.Count, this.YList.Count); i++)
             {
                 this.UpdateIndexChildNode(i);
                 this.UpdateIndexDiff(i);
@@ -250,10 +250,12 @@
 
         private void OnTrackedMove(object sender, MoveEventArgs e)
         {
-            this.UpdateIndexChildNode(e.FromIndex);
-            this.UpdateIndexDiff(e.FromIndex);
-            this.UpdateIndexChildNode(e.ToIndex);
-            this.UpdateIndexDiff(e.ToIndex);
+            for (int i = Math.Min(e.FromIndex, e.ToIndex); i <= Math.Max(e.FromIndex, e.ToIndex); i++)
+            {
+                this.UpdateIndexChildNode(i);
+                this.UpdateIndexDiff(i);
+            }
+
             this.TryRefreshAndNotify(e);
         }
 
