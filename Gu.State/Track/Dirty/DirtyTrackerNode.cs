@@ -232,8 +232,12 @@
 
         private void OnTrackedRemove(object sender, RemoveEventArgs e)
         {
-            this.UpdateIndexChildNode(e.Index);
-            this.UpdateIndexDiff(e.Index);
+            for (int i = e.Index; i < Math.Max(this.XList.Count, this.YList.Count) + 1; i++)
+            {
+                this.UpdateIndexChildNode(i);
+                this.UpdateIndexDiff(i);
+            }
+
             this.TryRefreshAndNotify(e);
         }
 
