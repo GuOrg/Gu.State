@@ -253,7 +253,6 @@ namespace Gu.State.Tests
                 }
             }
 
-
             [Test]
             public void RemoveStillDirty2()
             {

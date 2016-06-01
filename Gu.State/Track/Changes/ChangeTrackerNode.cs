@@ -181,7 +181,7 @@
 
             using (var borrow = ListPool<IUnsubscriber<IChildNode>>.Borrow())
             {
-                for (var i = 0; i < e.NewItems.Count; i++)
+                for (var i = 0; i < this.SourceList.Count; i++)
                 {
                     IUnsubscriber<IChildNode> childNode;
                     if (this.TryCreateChildNode(i, out childNode))

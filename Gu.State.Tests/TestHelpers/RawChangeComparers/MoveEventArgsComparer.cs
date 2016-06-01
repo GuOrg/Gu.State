@@ -8,6 +8,11 @@ namespace Gu.State.Tests
 
         public override bool Equals(MoveEventArgs expected, MoveEventArgs actual)
         {
+            if (!ReferenceEquals(expected.Source, actual.Source))
+            {
+                throw new AssertionException($"Expected source to be same.");
+            }
+
             if (expected.FromIndex != actual.FromIndex)
             {
                 throw new AssertionException($"Expected FromIndex to be {expected.FromIndex} but was {actual.FromIndex}");

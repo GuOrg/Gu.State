@@ -17,7 +17,7 @@ namespace Gu.State.Tests
             [Test]
             public void CreateAndDispose()
             {
-                var source = new With<ObservableCollection<ComplexType>> { Value = new ObservableCollection<ComplexType> {new ComplexType()} };
+                var source = new With<ObservableCollection<ComplexType>> { Value = new ObservableCollection<ComplexType> { new ComplexType() } };
                 var propertyChanges = new List<string>();
                 var changes = new List<EventArgs>();
                 var tracker = Track.Changes(source, ReferenceHandling.Structural);
@@ -60,7 +60,7 @@ namespace Gu.State.Tests
                     source.Value = new ObservableCollection<ComplexType> { new ComplexType() };
                     Assert.AreEqual(1, tracker.Changes);
                     CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
-                    expectedChanges.Add(RootChangeEventArgs.Create(sourceNode, new PropertyChangeEventArgs(source.GetProperty("Value"))));
+                    expectedChanges.Add(RootChangeEventArgs.Create(sourceNode, new PropertyChangeEventArgs(source, source.GetProperty("Value"))));
                     CollectionAssert.AreEqual(expectedChanges, changes, EventArgsComparer.Default);
 
                     source.Value[0].Value++;
@@ -80,7 +80,7 @@ namespace Gu.State.Tests
                                 RootChangeEventArgs.Create(
                                     ChangeTrackerNode.GetOrCreate(source.Value[0], tracker.Settings, false)
                                                      .Value,
-                                    new PropertyChangeEventArgs(source.Value[0].GetProperty("Value"))))));
+                                    new PropertyChangeEventArgs(source.Value[0], source.Value[0].GetProperty("Value"))))));
                     CollectionAssert.AreEqual(expectedChanges, changes, EventArgsComparer.Default);
 
                     observableCollection.Add(new ComplexType());
@@ -136,7 +136,7 @@ namespace Gu.State.Tests
                                     RootChangeEventArgs.Create(
                                         ChangeTrackerNode.GetOrCreate(source.Next.Levels[0], tracker.Settings, false)
                                                          .Value,
-                                        new PropertyChangeEventArgs(source.Next.Levels[0].GetProperty("Value")))))));
+                                        new PropertyChangeEventArgs(source.Next.Levels[0], source.Next.Levels[0].GetProperty("Value")))))));
                     CollectionAssert.AreEqual(expectedChanges, changes, EventArgsComparer.Default);
                 }
             }
@@ -174,7 +174,7 @@ namespace Gu.State.Tests
                                     tracker.Settings,
                                     false)
                                                  .Value,
-                                new AddEventArgs(0))));
+                                new AddEventArgs(source.Value, 0))));
                     CollectionAssert.AreEqual(expectedChanges, changes, EventArgsComparer.Default);
 
                     source.Value.Add(new ComplexType());
@@ -190,7 +190,7 @@ namespace Gu.State.Tests
                                     tracker.Settings,
                                     false)
                                                  .Value,
-                                new AddEventArgs(1))));
+                                new AddEventArgs(source.Value, 1))));
                     CollectionAssert.AreEqual(expectedChanges, changes, EventArgsComparer.Default);
 
                     source.Value[0].Value++;
@@ -210,7 +210,7 @@ namespace Gu.State.Tests
                                 RootChangeEventArgs.Create(
                                     ChangeTrackerNode.GetOrCreate(source.Value[0], tracker.Settings, false)
                                                      .Value,
-                                    new PropertyChangeEventArgs(source.Value[0].GetProperty("Value"))))));
+                                    new PropertyChangeEventArgs(source.Value[0], source.Value[0].GetProperty("Value"))))));
                     CollectionAssert.AreEqual(expectedChanges, changes, EventArgsComparer.Default);
 
                     source.Value[0].Value++;
@@ -230,7 +230,7 @@ namespace Gu.State.Tests
                                 RootChangeEventArgs.Create(
                                     ChangeTrackerNode.GetOrCreate(source.Value[0], tracker.Settings, false)
                                                      .Value,
-                                    new PropertyChangeEventArgs(source.Value[0].GetProperty("Value"))))));
+                                    new PropertyChangeEventArgs(source.Value[0], source.Value[0].GetProperty("Value"))))));
                     CollectionAssert.AreEqual(expectedChanges, changes, EventArgsComparer.Default);
 
                     source.Value[1].Value++;
@@ -252,7 +252,7 @@ namespace Gu.State.Tests
                                 RootChangeEventArgs.Create(
                                     ChangeTrackerNode.GetOrCreate(source.Value[1], tracker.Settings, false)
                                                      .Value,
-                                    new PropertyChangeEventArgs(source.Value[1].GetProperty("Value"))))));
+                                    new PropertyChangeEventArgs(source.Value[1], source.Value[1].GetProperty("Value"))))));
                     CollectionAssert.AreEqual(expectedChanges, changes, EventArgsComparer.Default);
                 }
             }
@@ -287,7 +287,7 @@ namespace Gu.State.Tests
                                     tracker.Settings,
                                     false)
                                                  .Value,
-                                new RemoveEventArgs(1))));
+                                new RemoveEventArgs(source.Value, 1))));
                     CollectionAssert.AreEqual(expectedChanges, changes, EventArgsComparer.Default);
 
                     var complexType = source.Value[0];
@@ -304,7 +304,7 @@ namespace Gu.State.Tests
                                     tracker.Settings,
                                     false)
                                                  .Value,
-                                new RemoveEventArgs(0))));
+                                new RemoveEventArgs(source.Value, 0))));
                     CollectionAssert.AreEqual(expectedChanges, changes, EventArgsComparer.Default);
 
                     complexType.Value++;
@@ -344,7 +344,7 @@ namespace Gu.State.Tests
                                     tracker.Settings,
                                     false)
                                                  .Value,
-                                new ResetEventArgs(null, null))));
+                                new ResetEventArgs(source.Value))));
                     CollectionAssert.AreEqual(expectedChanges, changes, EventArgsComparer.Default);
 
                     source.Value.Clear();
@@ -360,7 +360,7 @@ namespace Gu.State.Tests
                                     tracker.Settings,
                                     false)
                                                  .Value,
-                                new ResetEventArgs(null, null))));
+                                new ResetEventArgs(source.Value))));
                     CollectionAssert.AreEqual(expectedChanges, changes, EventArgsComparer.Default);
                 }
             }
@@ -399,7 +399,7 @@ namespace Gu.State.Tests
                                     tracker.Settings,
                                     false)
                                                  .Value,
-                                new ReplaceEventArgs(0))));
+                                new ReplaceEventArgs(source.Value, 0))));
 
                     source.Value[0].Value++;
                     Assert.AreEqual(2, tracker.Changes);
@@ -418,7 +418,7 @@ namespace Gu.State.Tests
                                 RootChangeEventArgs.Create(
                                     ChangeTrackerNode.GetOrCreate(source.Value[0], tracker.Settings, false)
                                                      .Value,
-                                    new PropertyChangeEventArgs(source.Value[0].GetProperty("Value"))))));
+                                    new PropertyChangeEventArgs(source.Value[0], source.Value[0].GetProperty("Value"))))));
                     CollectionAssert.AreEqual(expectedChanges, changes, EventArgsComparer.Default);
                 }
             }

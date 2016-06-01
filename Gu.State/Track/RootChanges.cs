@@ -1,6 +1,7 @@
 ﻿namespace Gu.State
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.ComponentModel;
@@ -108,33 +109,33 @@
                 case NotifyCollectionChangedAction.Add:
                     for (var i = 0; i < e.NewItems.Count; i++)
                     {
-                        this.Add?.Invoke(this, new AddEventArgs(e.NewStartingIndex + i));
+                        this.Add?.Invoke(this, new AddEventArgs((IList)sender, e.NewStartingIndex + i));
                     }
 
                     break;
                 case NotifyCollectionChangedAction.Remove:
                     for (var i = 0; i < e.OldItems.Count; i++)
                     {
-                        this.Remove?.Invoke(this, new RemoveEventArgs(e.OldStartingIndex + i));
+                        this.Remove?.Invoke(this, new RemoveEventArgs((IList)sender, e.OldStartingIndex + i));
                     }
 
                     break;
                 case NotifyCollectionChangedAction.Replace:
                     for (var i = 0; i < e.NewItems.Count; i++)
                     {
-                        this.Replace?.Invoke(this, new ReplaceEventArgs(e.NewStartingIndex + i));
+                        this.Replace?.Invoke(this, new ReplaceEventArgs((IList)sender, e.NewStartingIndex + i));
                     }
 
                     break;
                 case NotifyCollectionChangedAction.Move:
                     {
-                        this.Move?.Invoke(this, new MoveEventArgs(e.OldStartingIndex, e.NewStartingIndex));
+                        this.Move?.Invoke(this, new MoveEventArgs((IList)sender, e.OldStartingIndex, e.NewStartingIndex));
                     }
 
                     break;
                 case NotifyCollectionChangedAction.Reset:
                     {
-                        this.Reset?.Invoke(this, new ResetEventArgs(e.OldItems, e.NewItems));
+                        this.Reset?.Invoke(this, new ResetEventArgs((IList)sender));
                         break;
                     }
 
@@ -159,7 +160,7 @@
             }
 
             this.RawChange?.Invoke(this, e);
-            this.PropertyChange?.Invoke(this, new PropertyChangeEventArgs(propertyInfo));
+            this.PropertyChange?.Invoke(this, new PropertyChangeEventArgs(sender, propertyInfo));
         }
 
         private void OnResetProperties(object sender, PropertyChangedEventArgs e)
@@ -175,7 +176,7 @@
                         continue;
                     }
 
-                    handler.Invoke(this, new PropertyChangeEventArgs(propertyInfo));
+                    handler.Invoke(this, new PropertyChangeEventArgs(sender, propertyInfo));
                 }
             }
         }

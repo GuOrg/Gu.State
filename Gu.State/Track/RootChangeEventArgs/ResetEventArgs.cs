@@ -5,16 +5,16 @@ namespace Gu.State
     /// <summary>This is raised when a notifying collection signals reset.</summary>
     public struct ResetEventArgs : IRootChangeEventArgs
     {
-        private static readonly IList Empty = new object[0];
-
-        internal ResetEventArgs(IList oldItems, IList newItems)
+        internal ResetEventArgs(IList source)
         {
-            this.OldItems = oldItems ?? Empty;
-            this.NewItems = newItems ?? Empty;
+            this.Source = source;
         }
 
-        internal IList OldItems { get; }
 
-        internal IList NewItems { get; }
+        /// <summary>Gets the collection that changed.</summary>
+        public IList Source { get; private set; }
+
+        /// <inheritdoc />
+        object IRootChangeEventArgs.Source => this.Source;
     }
 }

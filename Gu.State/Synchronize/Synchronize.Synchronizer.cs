@@ -10,7 +10,6 @@ namespace Gu.State
         {
             private readonly IRefCounted<DirtyTrackerNode> dirtyTrackerNode;
             private readonly IBorrowed<ConcurrentQueue<DirtyTrackerNode>> borrowedQueue;
-            private readonly IUnsubscriber<IRefCounted<ChangeTrackerNode>> targetSubscription;
             private readonly object gate = new object();
             private bool isProcessingQueue;
 
@@ -19,9 +18,6 @@ namespace Gu.State
                 this.Settings = settings;
                 this.dirtyTrackerNode = DirtyTrackerNode.GetOrCreate(source, target, settings, true);
                 this.dirtyTrackerNode.Value.Changed += this.OnDirtyTrackerNodeChanged;
-                var targetTracker = ChangeTrackerNode.GetOrCreate(target, settings, true);
-                targetTracker.Value.Changed += this.OnTargetChanged;
-                this.targetSubscription = targetTracker.UnsubscribeAndDispose(x => x.Value.Changed -= this.OnTargetChanged);
                 this.borrowedQueue = ConcurrentQueuePool<DirtyTrackerNode>.Borrow();
                 this.AddToSyncQueue(this.dirtyTrackerNode.Value);
             }
@@ -33,7 +29,6 @@ namespace Gu.State
                 this.dirtyTrackerNode.Value.Changed -= this.OnDirtyTrackerNodeChanged;
                 this.dirtyTrackerNode.Dispose();
                 this.borrowedQueue.Dispose();
-                this.targetSubscription.Dispose();
             }
 
             private void OnDirtyTrackerNodeChanged(object sender, TrackerChangedEventArgs<DirtyTrackerNode> e)
@@ -75,21 +70,6 @@ namespace Gu.State
 
                     this.isProcessingQueue = false;
                 }
-            }
-
-            private void OnTargetChanged(object sender, EventArgs e)
-            {
-                // think we want to track and throw here.
-                // this is not perfect as some other change can trigger isProcessingQueue = true
-                // keeping it simple
-                if (this.isProcessingQueue)
-                {
-                    return;
-                }
-
-                var message = "Target cannot be modified when a synchronizer is applied to it\r\n" +
-                              "The change would just trigger a dirty notification and the value would be updated with the value from source.";
-                throw new InvalidOperationException(message);
             }
         }
     }
