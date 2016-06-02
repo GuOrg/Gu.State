@@ -11,11 +11,11 @@ namespace Gu.State
             private readonly ChangeTrackerNode parent;
             private readonly IRefCounted<ChangeTrackerNode> node;
 
-            internal PropertyNode(ChangeTrackerNode parent, IRefCounted<ChangeTrackerNode> node, PropertyInfo propertyInfo)
+            internal PropertyNode(ChangeTrackerNode parent, ChangeTrackerNode node, PropertyInfo propertyInfo)
             {
                 this.parent = parent;
                 this.PropertyInfo = propertyInfo;
-                this.node = node;
+                this.node = node.RefCount();
                 this.node.Value.Changed += this.OnNodeChanged;
             }
 

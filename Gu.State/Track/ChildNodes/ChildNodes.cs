@@ -30,19 +30,9 @@
             return new IndexNode(parent, node, index);
         }
 
-        internal static bool TryCreate(ChangeTrackerNode parent, PropertyInfo propertyInfo, out IChildNode result)
+        internal static IChildNode Create(ChangeTrackerNode parent, ChangeTrackerNode node, PropertyInfo propertyInfo)
         {
-            IRefCounted<ChangeTrackerNode> node;
-            var getter = parent.Settings.GetOrCreateGetterAndSetter(propertyInfo);
-            var value = getter.GetValue(parent.Source);
-            if (ChangeTrackerNode.TryGetOrCreate(value, parent.Settings, false, out node))
-            {
-                result = new PropertyNode(parent, node, propertyInfo);
-                return true;
-            }
-
-            result = null;
-            return false;
+            return new PropertyNode(parent, node, propertyInfo);
         }
 
         internal void SetValue(PropertyInfo property, IUnsubscriber<IChildNode> childNode)

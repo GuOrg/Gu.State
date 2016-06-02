@@ -207,12 +207,18 @@
                 return;
             }
 
-            IChildNode propertyNode;
-            if (ChildNodes.TryCreate(this, property, out propertyNode))
+            var getter = this.Settings.GetOrCreateGetterAndSetter(property);
+            var value = getter.GetValue(this.Source);
+            IRefCounted<ChangeTrackerNode> node;
+            if (TryGetOrCreate(value, this.Settings, false, out node))
             {
-                propertyNode.Changed += this.OnChildChanged;
-                IUnsubscriber<IChildNode> childNode = propertyNode.UnsubscribeAndDispose(n => n.Changed -= this.OnChildChanged);
-                this.Children.SetValue(property, childNode);
+                using (node)
+                {
+                    IChildNode propertyNode = ChildNodes.Create(this, node.Value, property);
+                    propertyNode.Changed += this.OnChildChanged;
+                    IUnsubscriber<IChildNode> childNode = propertyNode.UnsubscribeAndDispose(n => n.Changed -= this.OnChildChanged);
+                    this.Children.SetValue(property, childNode);
+                }
             }
             else
             {
@@ -243,7 +249,7 @@
             }
 
             IRefCounted<ChangeTrackerNode> node = null;
-            if (ChangeTrackerNode.TryGetOrCreate(value, this.Settings, false, out node))
+            if (TryGetOrCreate(value, this.Settings, false, out node))
             {
                 using (node)
                 {
