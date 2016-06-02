@@ -41,8 +41,8 @@ namespace Gu.State
                 {
                     // below is not perfect but catches simple cases of when target changes
                     if (this.processingNode == null &&
-                        ReferenceEquals(root.Node.Y, root.EventArgs.Source) &&
-                        !ReferenceEquals(root.Node.X, root.EventArgs.Source))
+                        !ReferenceEquals(root.Node.X, root.EventArgs.Source) &&
+                        ReferenceEquals(root.Node.Y, root.EventArgs.Source))
                     {
                         var message = "Target cannot be modified when a synchronizer is applied to it\r\n" +
                                       "The change would just trigger a dirty notification and the value would be updated with the value from source.";
