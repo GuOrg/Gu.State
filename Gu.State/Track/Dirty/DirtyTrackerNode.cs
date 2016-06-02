@@ -9,7 +9,7 @@
     using System.Linq;
     using System.Reflection;
 
-    internal sealed class DirtyTrackerNode : IDirtyTracker, IInitialize<DirtyTrackerNode>
+    internal sealed class DirtyTrackerNode : IDirtyTracker, IInitialize<DirtyTrackerNode>, ITrackerNode<DirtyTrackerNode>
     {
         private static readonly PropertyChangedEventArgs DiffPropertyChangedEventArgs = new PropertyChangedEventArgs(nameof(Diff));
         private static readonly PropertyChangedEventArgs IsDirtyPropertyChangedEventArgs = new PropertyChangedEventArgs(nameof(IsDirty));
@@ -17,7 +17,7 @@
         private readonly IRefCounted<ReferencePair> refCountedPair;
         private readonly IRefCounted<RootChanges> xNode;
         private readonly IRefCounted<RootChanges> yNode;
-        private readonly IBorrowed<DisposingMap<IUnsubscriber<IRefCounted<DirtyTrackerNode>>>> children;
+        private readonly IBorrowed<ChildNodes<DirtyTrackerNode>> children;
         private readonly IRefCounted<DiffBuilder> refcountedDiffBuilder;
 
         private bool isDirty;
@@ -31,7 +31,7 @@
             this.refCountedPair = refCountedPair;
             var x = refCountedPair.Value.X;
             var y = refCountedPair.Value.Y;
-            this.children = DisposingMap<IUnsubscriber<IRefCounted<DirtyTrackerNode>>>.Borrow();
+            this.children = ChildNodes<DirtyTrackerNode>.Borrow();
             this.xNode = RootChanges.GetOrCreate(x, settings, isRoot);
             this.yNode = RootChanges.GetOrCreate(y, settings, isRoot);
             this.xNode.Value.PropertyChange += this.OnTrackedPropertyChange;
@@ -65,7 +65,7 @@
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        internal event EventHandler<TrackerChangedEventArgs<DirtyTrackerNode>> Changed;
+        public event EventHandler<TrackerChangedEventArgs<DirtyTrackerNode>> Changed;
 
         public PropertiesSettings Settings => this.xNode.Value.Settings;
 
@@ -104,7 +104,7 @@
 
         private IReadOnlyCollection<PropertyInfo> TrackProperties => this.xNode.Value.TrackProperties;
 
-        private DisposingMap<IUnsubscriber<IRefCounted<DirtyTrackerNode>>> Children => this.children.Value;
+        private ChildNodes<DirtyTrackerNode> Children => this.children.Value;
 
         public void Dispose()
         {
@@ -204,13 +204,15 @@
                 var getter = this.Settings.GetOrCreateGetterAndSetter(propertyInfo);
                 var xValue = getter.GetValue(this.X);
                 var yValue = getter.GetValue(this.Y);
-                IRefCounted<DirtyTrackerNode> childNode;
-                if (this.TrCreateChild(xValue, yValue, out childNode))
+                IRefCounted<DirtyTrackerNode> node;
+                if (this.TrCreateChild(xValue, yValue, out node))
                 {
-                    EventHandler<TrackerChangedEventArgs<DirtyTrackerNode>> onChanged = (sender, args) => this.OnChildChanged(sender, args, propertyInfo);
-                    childNode.Value.Changed += onChanged;
-                    var child = childNode.UnsubscribeAndDispose(x => x.Value.Changed -= onChanged);
-                    this.Children.SetValue(propertyInfo, child);
+                    using (node)
+                    {
+                        var childNode = ChildNodes<DirtyTrackerNode>.CreateChildNode(this, node.Value, propertyInfo);
+                        childNode.Changed += this.OnChildNodeChanged;
+                        this.Children.SetValue(propertyInfo, childNode.UnsubscribeAndDispose(x => x.Changed -= this.OnChildNodeChanged));
+                    }
                 }
                 else
                 {
@@ -262,12 +264,21 @@
         private void OnTrackedReset(object sender, ResetEventArgs e)
         {
             this.Builder?.ClearIndexDiffs();
-            this.Children.ClearIndexTrackers();
-            var max = Math.Max(this.XList.Count, this.YList.Count);
-            for (var i = 0; i < max; i++)
+            using (var borrowed = ListPool<IUnsubscriber<IChildNode<DirtyTrackerNode>>>.Borrow())
             {
-                this.UpdateIndexChildNode(i);
-                this.UpdateIndexDiff(i);
+                var max = Math.Max(this.XList.Count, this.YList.Count);
+                for (var i = 0; i < max; i++)
+                {
+                    this.UpdateIndexDiff(i);
+
+                    var childNode = this.CreateChildNode(i);
+                    if (childNode != null)
+                    {
+                        borrowed.Value.Add(childNode);
+                    }
+                }
+
+                this.Children.Reset(borrowed.Value);
             }
 
             this.TryRefreshAndNotify(e);
@@ -275,26 +286,39 @@
 
         private void UpdateIndexChildNode(int index)
         {
+            var childNode = this.CreateChildNode(index);
+            if (childNode != null)
+            {
+                this.Children.Replace(index, childNode);
+            }
+            else
+            {
+                this.Children.Remove(index);
+            }
+        }
+
+        private IUnsubscriber<IChildNode<DirtyTrackerNode>> CreateChildNode(int index)
+        {
             if (!this.IsTrackingCollectionItems)
             {
-                return;
+                return null;
             }
 
             var xValue = this.XList.ElementAtOrMissing(index);
             var yValue = this.YList.ElementAtOrMissing(index);
 
-            IRefCounted<DirtyTrackerNode> childNode;
-            if (this.TrCreateChild(xValue, yValue, out childNode))
+            IRefCounted<DirtyTrackerNode> node;
+            if (this.TrCreateChild(xValue, yValue, out node))
             {
-                EventHandler<TrackerChangedEventArgs<DirtyTrackerNode>> onChanged = (sender, args) => this.OnChildChanged(sender, args, index);
-                childNode.Value.Changed += onChanged;
-                var child = childNode.UnsubscribeAndDispose(x => x.Value.Changed -= onChanged);
-                this.Children.SetValue(index, child);
+                using (node)
+                {
+                    var childNode = ChildNodes<DirtyTrackerNode>.CreateChildNode(this, node.Value, index);
+                    childNode.Changed += this.OnChildNodeChanged;
+                    return childNode.UnsubscribeAndDispose(x => x.Changed -= this.OnChildNodeChanged);
+                }
             }
-            else
-            {
-                this.Children.SetValue(index, null);
-            }
+
+            return null;
         }
 
         private void UpdateIndexDiff(int index)
@@ -324,37 +348,56 @@
         }
 
         // ReSharper disable once UnusedParameter.Local
-        private void OnChildChanged(object _, TrackerChangedEventArgs<DirtyTrackerNode> e, int index)
+        private void OnChildNodeChanged(object _, TrackerChangedEventArgs<DirtyTrackerNode> e)
         {
-            if (e.Contains(this) || this.Builder == null)
+            if (this.Builder == null)
             {
                 return;
             }
 
-            this.Builder.UpdateCollectionItemDiff(this.XList.ElementAtOrMissing(index), this.YList.ElementAtOrMissing(index), index, this.Settings);
-            this.Builder.Refresh();
-            this.PropertyChanged?.Invoke(this, DiffPropertyChangedEventArgs);
-            this.IsDirty = !this.Builder.IsEmpty;
-            this.Changed?.Invoke(this, e.With(this, index));
+            if (e.Previous?.Contains(this) == true)
+            {
+                return;
+            }
+
+            var propertyGraphChangedEventArgs = e as PropertyGraphChangedEventArgs<DirtyTrackerNode>;
+            if (propertyGraphChangedEventArgs != null)
+            {
+                this.OnChildNodeChanged(propertyGraphChangedEventArgs);
+                return;
+            }
+
+            var itemGraphChangedEventArgs = e as ItemGraphChangedEventArgs<DirtyTrackerNode>;
+            if (itemGraphChangedEventArgs != null)
+            {
+                this.OnChildNodeChanged(itemGraphChangedEventArgs);
+                return;
+            }
+
+            throw Throw.ExpectedParameterOfTypes<PropertyGraphChangedEventArgs<DirtyTrackerNode>, ItemGraphChangedEventArgs<DirtyTrackerNode>>("OnChildNodeChanged failed.");
         }
 
-        private void OnChildChanged(object _, TrackerChangedEventArgs<DirtyTrackerNode> e, PropertyInfo property)
+        private void OnChildNodeChanged(PropertyGraphChangedEventArgs<DirtyTrackerNode> e)
         {
-            if (e.Contains(this) || this.Builder == null)
+            if (this.Settings.IsIgnoringProperty(e.Property))
             {
                 return;
             }
 
-            if (this.Settings.IsIgnoringProperty(property))
-            {
-                return;
-            }
-
-            this.Builder.UpdateMemberDiff(this.X, this.Y, property, this.Settings);
+            this.Builder.UpdateMemberDiff(this.X, this.Y, e.Property, this.Settings);
             this.Builder.Refresh();
             this.PropertyChanged?.Invoke(this, DiffPropertyChangedEventArgs);
             this.IsDirty = !this.Builder.IsEmpty;
-            this.Changed?.Invoke(this, e.With(this, property));
+            this.Changed?.Invoke(this, e.With(this, e.Property));
+        }
+
+        private void OnChildNodeChanged(ItemGraphChangedEventArgs<DirtyTrackerNode> e)
+        {
+            this.Builder.UpdateCollectionItemDiff(this.XList.ElementAtOrMissing(e.Index), this.YList.ElementAtOrMissing(e.Index), e.Index, this.Settings);
+            this.Builder.Refresh();
+            this.PropertyChanged?.Invoke(this, DiffPropertyChangedEventArgs);
+            this.IsDirty = !this.Builder.IsEmpty;
+            this.Changed?.Invoke(this, e.With(this, e.Index));
         }
 
         private void TryRefreshAndNotify<T>(T e)

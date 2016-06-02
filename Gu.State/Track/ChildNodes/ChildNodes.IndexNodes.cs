@@ -4,11 +4,11 @@
     using System.Diagnostics;
     using System.Linq;
 
-    internal partial class ChildNodes
+    internal partial class ChildNodes<T>
     {
         private class IndexNodes
         {
-            private readonly List<IUnsubscriber<IChildNode>> nodes = new List<IUnsubscriber<IChildNode>>();
+            private readonly List<IUnsubscriber<IChildNode<T>>> nodes = new List<IUnsubscriber<IChildNode<T>>>();
 
             internal void Clear()
             {
@@ -16,13 +16,13 @@
                 {
                     for (var i = this.nodes.Count - 1; i >= 0; i--)
                     {
-                        this.nodes[0].Dispose();
+                        this.nodes[i].Dispose();
                         this.nodes.RemoveAt(i);
                     }
                 }
             }
 
-            internal void Insert(int index, IUnsubscriber<IChildNode> childNode)
+            internal void Insert(int index, IUnsubscriber<IChildNode<T>> childNode)
             {
                 if (childNode == null)
                 {
@@ -47,7 +47,7 @@
                 }
             }
 
-            internal void SetValue(int index, IUnsubscriber<IChildNode> childNode)
+            internal void SetValue(int index, IUnsubscriber<IChildNode<T>> childNode)
             {
                 if (childNode == null)
                 {
@@ -130,7 +130,7 @@
                 }
             }
 
-            internal void Reset(IReadOnlyList<IUnsubscriber<IChildNode>> newNodes)
+            internal void Reset(IReadOnlyList<IUnsubscriber<IChildNode<T>>> newNodes)
             {
                 Debug.Assert(newNodes.All(x => x.Value is IndexNode), "Must be index nodes only");
                 Debug.Assert(newNodes.Select(x => ((IndexNode)x.Value).Index).Distinct().Count() == newNodes.Count, "Must be disticnt nodes");
@@ -140,7 +140,10 @@
                     this.Clear();
                     foreach (var node in newNodes)
                     {
-                        this.nodes.Add(node);
+                        if (node != null)
+                        {
+                            this.nodes.Add(node);
+                        }
                     }
                 }
             }

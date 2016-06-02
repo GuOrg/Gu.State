@@ -8,16 +8,16 @@
     using System.Diagnostics;
     using System.Reflection;
 
-    internal sealed class ChangeTrackerNode : IDisposable, IInitialize<ChangeTrackerNode>
+    internal sealed class ChangeTrackerNode : IDisposable, IInitialize<ChangeTrackerNode>, ITrackerNode<ChangeTrackerNode>
     {
         private readonly IRefCounted<RootChanges> refcountedRootChanges;
-        private readonly IBorrowed<ChildNodes> children;
+        private readonly IBorrowed<ChildNodes<ChangeTrackerNode>> children;
 
         private ChangeTrackerNode(object source, PropertiesSettings settings, bool isRoot)
         {
             this.refcountedRootChanges = RootChanges.GetOrCreate(source, settings, isRoot);
             var sourceChanges = this.refcountedRootChanges.Value;
-            this.children = ChildNodes.Borrow();
+            this.children = ChildNodes<ChangeTrackerNode>.Borrow();
             sourceChanges.PropertyChange += this.OnSourcePropertyChange;
             if (Is.NotifyingCollection(source))
             {
@@ -43,7 +43,7 @@
 
         private Type ItemType { get; }
 
-        private ChildNodes Children => this.children.Value;
+        private ChildNodes<ChangeTrackerNode> Children => this.children.Value;
 
         public void Dispose()
         {
@@ -126,7 +126,7 @@
             return TrackerCache.GetOrAdd((object)source, settings, s => new ChangeTrackerNode(s, settings, isRoot));
         }
 
-        private void OnChildChanged(object sender, TrackerChangedEventArgs<ChangeTrackerNode> e)
+        private void OnChildNodeChanged(object sender, TrackerChangedEventArgs<ChangeTrackerNode> e)
         {
             if (e.Previous?.Contains(this) == true)
             {
@@ -144,7 +144,7 @@
 
         private void OnSourceAdd(object sender, AddEventArgs e)
         {
-            IUnsubscriber<IChildNode> childNode;
+            IUnsubscriber<IChildNode<ChangeTrackerNode>> childNode;
             if (this.TryCreateChildNode(e.Index, out childNode))
             {
                 this.Children.Insert(e.Index, childNode);
@@ -179,11 +179,11 @@
                 return;
             }
 
-            using (var borrow = ListPool<IUnsubscriber<IChildNode>>.Borrow())
+            using (var borrow = ListPool<IUnsubscriber<IChildNode<ChangeTrackerNode>>>.Borrow())
             {
                 for (var i = 0; i < this.SourceList.Count; i++)
                 {
-                    IUnsubscriber<IChildNode> childNode;
+                    IUnsubscriber<IChildNode<ChangeTrackerNode>> childNode;
                     if (this.TryCreateChildNode(i, out childNode))
                     {
                         borrow.Value.Add(childNode);
@@ -214,9 +214,9 @@
             {
                 using (node)
                 {
-                    IChildNode propertyNode = ChildNodes.Create(this, node.Value, property);
-                    propertyNode.Changed += this.OnChildChanged;
-                    IUnsubscriber<IChildNode> childNode = propertyNode.UnsubscribeAndDispose(n => n.Changed -= this.OnChildChanged);
+                    var propertyNode = ChildNodes<ChangeTrackerNode>.CreateChildNode(this, node.Value, property);
+                    propertyNode.Changed += this.OnChildNodeChanged;
+                    IUnsubscriber<IChildNode<ChangeTrackerNode>> childNode = propertyNode.UnsubscribeAndDispose(n => n.Changed -= this.OnChildNodeChanged);
                     this.Children.SetValue(property, childNode);
                 }
             }
@@ -228,7 +228,7 @@
 
         private void UpdateIndexNode(int index)
         {
-            IUnsubscriber<IChildNode> childNode;
+            IUnsubscriber<IChildNode<ChangeTrackerNode>> childNode;
             if (this.TryCreateChildNode(index, out childNode))
             {
                 this.Children.Replace(index, childNode);
@@ -239,7 +239,7 @@
             }
         }
 
-        private bool TryCreateChildNode(int index, out IUnsubscriber<IChildNode> result)
+        private bool TryCreateChildNode(int index, out IUnsubscriber<IChildNode<ChangeTrackerNode>> result)
         {
             var value = this.SourceList.ElementAtOrMissing(index);
             if (value == PaddedPairs.MissingItem)
@@ -248,14 +248,14 @@
                 return false;
             }
 
-            IRefCounted<ChangeTrackerNode> node = null;
+            IRefCounted<ChangeTrackerNode> node;
             if (TryGetOrCreate(value, this.Settings, false, out node))
             {
                 using (node)
                 {
-                    IChildNode indexNode = ChildNodes.Create(this, node.Value, index);
-                    indexNode.Changed += this.OnChildChanged;
-                    result = indexNode.UnsubscribeAndDispose(n => n.Changed -= this.OnChildChanged);
+                    var indexNode = ChildNodes<ChangeTrackerNode>.CreateChildNode(this, node.Value, index);
+                    indexNode.Changed += this.OnChildNodeChanged;
+                    result = indexNode.UnsubscribeAndDispose(n => n.Changed -= this.OnChildNodeChanged);
                     return true;
                 }
             }
