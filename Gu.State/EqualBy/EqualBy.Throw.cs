@@ -23,7 +23,7 @@
                 return nameof(PropertyValues);
             }
 
-            throw State.Throw.ExpectedParameterOfTypes<FieldsSettings, PropertiesSettings>("{T}");
+            throw Throw.ExpectedParameterOfTypes<FieldsSettings, PropertiesSettings>("{T}");
         }
 
         private static StringBuilder AppendSuggestReferenceHandling(

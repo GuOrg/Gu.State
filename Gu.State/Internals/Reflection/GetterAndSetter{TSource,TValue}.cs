@@ -85,6 +85,7 @@
         // http://stackoverflow.com/a/16222886/1069200
         private static Action<TSource, TValue> CreateSetterDelegate(FieldInfo field)
         {
+            //// ReSharper disable once PossibleNullReferenceException nope, not here
             var methodName = $"{field.ReflectedType.FullName}.set_{field.Name}";
             var setterMethod = new DynamicMethod(methodName, null, new[] { typeof(TSource), typeof(TValue) }, true);
             var ilGenerator = setterMethod.GetILGenerator();
@@ -98,6 +99,7 @@
         // http://stackoverflow.com/a/16222886/1069200
         private static Func<TSource, TValue> CreateGetterDelegate(FieldInfo field)
         {
+            //// ReSharper disable once PossibleNullReferenceException nope, not here
             var methodName = $"{field.ReflectedType.FullName}.get_{field.Name}";
             var getterMethod = new DynamicMethod(methodName, typeof(TValue), new[] { typeof(TSource) }, true);
             var ilGenerator = getterMethod.GetILGenerator();

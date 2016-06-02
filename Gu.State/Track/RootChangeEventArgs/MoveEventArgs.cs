@@ -13,7 +13,7 @@
         }
 
         /// <summary>Gets the collection that changed.</summary>
-        public IList Source { get; private set; }
+        public IList Source { get; }
 
         /// <inheritdoc />
         object IRootChangeEventArgs.Source => this.Source;

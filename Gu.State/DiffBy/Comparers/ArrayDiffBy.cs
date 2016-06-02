@@ -1,7 +1,6 @@
 ﻿namespace Gu.State
 {
     using System;
-    using System.Reflection;
 
     internal class ArrayDiffBy : IDiffBy
     {
@@ -26,15 +25,6 @@
             IMemberSettings settings)
         {
             this.AddDiffs(collectionBuilder, (Array)x, (Array)y, settings);
-        }
-
-        private static IDiffBy Create(Type type)
-        {
-            var itemType = type.GetItemType();
-            var comparer = (IDiffBy)typeof(ArrayDiffBy).MakeGenericType(itemType)
-                                                         .GetField(nameof(Default), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
-                                                         .GetValue(null);
-            return comparer;
         }
 
         private static bool TryGetRankDiff(Array x, Array y, out RankDiff rankDiff)

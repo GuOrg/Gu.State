@@ -28,6 +28,7 @@ namespace Gu.State
             var iDict = type.Name == IDictionaryName ? type : type.GetInterface(IDictionaryName);
             var keyType = iDict.GenericTypeArguments[0];
             var valueType = iDict.GenericTypeArguments[1];
+            //// ReSharper disable once PossibleNullReferenceException nope, not here
             var comparer = (EqualByComparer)typeof(DictionaryEqualByComparer<,>).MakeGenericType(keyType, valueType)
                                                                                 .GetField(nameof(DictionaryEqualByComparer<int, int>.Default), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
                                                                                 .GetValue(null);

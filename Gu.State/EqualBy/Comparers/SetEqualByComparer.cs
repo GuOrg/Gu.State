@@ -24,6 +24,7 @@ namespace Gu.State
         private static EqualByComparer Create(Type type)
         {
             var itemType = type.GetItemType();
+            //// ReSharper disable once PossibleNullReferenceException nope, not here
             var comparer = (EqualByComparer)typeof(SetEqualByComparer<>).MakeGenericType(itemType)
                                                                      .GetField(nameof(SetEqualByComparer<int>.Default), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
                                                                      .GetValue(null);

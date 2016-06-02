@@ -34,7 +34,7 @@
         {
             var itemType = source.GetType().GetItemType();
             var copyMethod = this.GetType()
-                                        .GetMethod(nameof(State.Copy), BindingFlags.NonPublic | BindingFlags.Static)
+                                        .GetMethod(nameof(SetOfTCopyer.Copy), BindingFlags.NonPublic | BindingFlags.Static)
                                         .MakeGenericMethod(itemType, typeof(TSettings));
             copyMethod.Invoke(null, new[] { source, target, settings, referencePairs });
         }

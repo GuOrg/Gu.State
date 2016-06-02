@@ -137,7 +137,6 @@
     <Compile Include="Track\ITrackerNode{T}.cs" />
     <Compile Include="Track\RootChangeEventArgs\IRootChangeEventArgs.cs" />
     <Compile Include="Track\RootChangeEventArgs\ReplaceEventArgs.cs" />
-    <Compile Include="Internals\Collections\DisposingMap{TValue}.cs" />
     <Compile Include="Internals\Collections\ReferenceComparer.cs" />
     <Compile Include="Internals\ReferencePair.cs" />
     <Compile Include="Internals\Disposer.cs" />

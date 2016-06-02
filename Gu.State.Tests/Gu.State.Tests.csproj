@@ -113,7 +113,6 @@
     <Compile Include="TestHelpers\EventArgsComparers\EventArgsComparer{T}.cs" />
     <Compile Include="TestHelpers\IgnoredTests.cs" />
     <Compile Include="Internals\ArrayExt.cs" />
-    <Compile Include="Internals\Collections\DisposingMapTests.cs" />
     <Compile Include="Internals\Pools\ReferenceSetPoolTests.cs" />
     <Compile Include="Internals\Errors\ErrorBuilderTests.WithReferenceLoop.cs" />
     <Compile Include="Internals\Errors\ErrorBuilderTests.CheckReferenceHandling.cs" />
@@ -254,6 +253,7 @@
   </ItemGroup>
   <Import Project="..\.paket\paket.targets" />
   <ItemGroup>
+    <Folder Include="Internals\Collections\" />
     <Folder Include="Sandbox\" />
   </ItemGroup>
   <Choose>

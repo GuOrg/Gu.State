@@ -21,6 +21,7 @@
             {
                 var constructor = type.GetConstructor(new[] { typeof(int) });
                 var parameters = new[] { type.GetProperty("Length").GetValue(sourceValue) };
+                //// ReSharper disable once PossibleNullReferenceException nope, never null here
                 var array = constructor.Invoke(parameters);
                 return array;
             }
@@ -156,6 +157,7 @@
 
             if (x == null)
             {
+                // ReSharper disable once ExpressionIsAlwaysNull R# not getting static analysis right here
                 result = x;
                 return true;
             }

@@ -12,9 +12,11 @@
 
         bool IEqualityComparer<object>.Equals(object x, object y)
         {
-            if (x is ReferencePair && y is ReferencePair)
+            var xPair = x as ReferencePair;
+            var yPair = y as ReferencePair;
+            if (xPair != null && yPair != null)
             {
-                return this.Equals((ReferencePair)x, (ReferencePair)y);
+                return this.Equals(xPair, (ReferencePair)y);
             }
 
             return ReferenceEquals(x, y);

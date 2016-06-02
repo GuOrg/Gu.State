@@ -33,10 +33,5 @@ namespace Gu.State
         {
             return this.type.GetHashCode();
         }
-
-        private bool Equals(RequiresReferenceHandling other)
-        {
-            return ReferenceEquals(this, other);
-        }
     }
 }

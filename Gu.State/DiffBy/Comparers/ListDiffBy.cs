@@ -24,6 +24,7 @@
         private static IDiffBy Create(Type type)
         {
             var itemType = type.GetItemType();
+            //// ReSharper disable once PossibleNullReferenceException nope, not here
             var comparer = (IDiffBy)typeof(ListDiffBy<>).MakeGenericType(itemType)
                                                                      .GetField(nameof(ListDiffBy<int>.Default), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
                                                                      .GetValue(null);
