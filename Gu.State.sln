@@ -19,6 +19,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".docs", ".docs", "{2ADA02F1-C4A8-4EA7-9BD8-5350DD9EAA55}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
+		.paket\Readme.paket.md = .paket\Readme.paket.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gu.State.Benchmarks", "Gu.State.Benchmarks\Gu.State.Benchmarks.csproj", "{DC912B58-CD7A-4BD9-A387-FD67AFD28097}"
