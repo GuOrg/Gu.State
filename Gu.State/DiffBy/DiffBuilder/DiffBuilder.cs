@@ -409,10 +409,17 @@
 
             private static int CompareIndex(IndexDiff x, IndexDiff y)
             {
-                var xIndex = x.Index as IComparable;
-                if (xIndex != null && y.Index is IComparable)
+                if (x.Index is int && y.Index is int)
                 {
-                    return xIndex.CompareTo(y.Index);
+                    return ((int)x.Index).CompareTo(y.Index);
+                }
+
+                if ((x.X == PaddedPairs.MissingItem || x.Y == PaddedPairs.MissingItem) &&
+                    (y.X == PaddedPairs.MissingItem || y.Y == PaddedPairs.MissingItem))
+                {
+                    var xv = (x.X == PaddedPairs.MissingItem ? 1 : 0) + (x.Y == PaddedPairs.MissingItem ? -1 : 0);
+                    var yv = (y.X == PaddedPairs.MissingItem ? 1 : 0) + (y.Y == PaddedPairs.MissingItem ? -1 : 0);
+                    return xv.CompareTo(yv);
                 }
 
                 return 0;

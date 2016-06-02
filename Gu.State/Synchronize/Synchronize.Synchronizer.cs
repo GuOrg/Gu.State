@@ -37,22 +37,25 @@ namespace Gu.State
             {
                 var root = e.Root;
 
-                // below is not perfect but catches simple cases of when target changes
-                if (this.processingNode == null &&
-                    ReferenceEquals(root.Node.Y, root.EventArgs.Source) && 
-                    !ReferenceEquals(root.Node.X, root.EventArgs.Source))
+                lock (this.gate)
                 {
-                    var message = "Target cannot be modified when a synchronizer is applied to it\r\n" +
-                                  "The change would just trigger a dirty notification and the value would be updated with the value from source.";
-                    throw new InvalidOperationException(message);
-                }
+                    // below is not perfect but catches simple cases of when target changes
+                    if (this.processingNode == null &&
+                        ReferenceEquals(root.Node.Y, root.EventArgs.Source) &&
+                        !ReferenceEquals(root.Node.X, root.EventArgs.Source))
+                    {
+                        var message = "Target cannot be modified when a synchronizer is applied to it\r\n" +
+                                      "The change would just trigger a dirty notification and the value would be updated with the value from source.";
+                        throw new InvalidOperationException(message);
+                    }
 
-                if (!root.Node.IsDirty)
-                {
-                    return;
-                }
+                    if (!root.Node.IsDirty)
+                    {
+                        return;
+                    }
 
-                this.AddToSyncQueue(root.Node);
+                    this.AddToSyncQueue(root.Node);
+                }
             }
 
             private void AddToSyncQueue(DirtyTrackerNode newNode)
@@ -64,23 +67,20 @@ namespace Gu.State
                     return;
                 }
 
-                lock (this.gate)
+                if (this.processingNode != null)
                 {
-                    if (this.processingNode != null)
-                    {
-                        return;
-                    }
-
-                    while (queue.TryDequeue(out this.processingNode))
-                    {
-                        if (this.processingNode.IsDirty)
-                        {
-                            Copy.PropertyValues(this.processingNode.X, this.processingNode.Y, this.Settings);
-                        }
-                    }
-
-                    this.processingNode = null;
+                    return;
                 }
+
+                while (queue.TryDequeue(out this.processingNode))
+                {
+                    if (this.processingNode.IsDirty)
+                    {
+                        Copy.PropertyValues(this.processingNode.X, this.processingNode.Y, this.Settings);
+                    }
+                }
+
+                this.processingNode = null;
             }
         }
     }
