@@ -25,24 +25,9 @@
             return Borrowed.Create(new ChildNodes(), Return);
         }
 
-        internal static bool TryCreate(ChangeTrackerNode parent, int index, out IChildNode result)
+        internal static IChildNode Create(ChangeTrackerNode parent, ChangeTrackerNode node, int index)
         {
-            IRefCounted<ChangeTrackerNode> node;
-            var value = parent.SourceList.ElementAtOrMissing(index);
-            if (value == PaddedPairs.MissingItem)
-            {
-                result = null;
-                return false;
-            }
-
-            if (ChangeTrackerNode.TryGetOrCreate(value, parent.Settings, false, out node))
-            {
-                result = new IndexNode(parent, node, index);
-                return true;
-            }
-
-            result = null;
-            return false;
+            return new IndexNode(parent, node, index);
         }
 
         internal static bool TryCreate(ChangeTrackerNode parent, PropertyInfo propertyInfo, out IChildNode result)
