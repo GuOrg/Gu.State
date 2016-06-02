@@ -235,12 +235,23 @@
 
         private bool TryCreateChildNode(int index, out IUnsubscriber<IChildNode> result)
         {
-            IChildNode indexNode;
-            if (ChildNodes.TryCreate(this, index, out indexNode))
+            var value = this.SourceList.ElementAtOrMissing(index);
+            if (value == PaddedPairs.MissingItem)
             {
-                indexNode.Changed += this.OnChildChanged;
-                result = indexNode.UnsubscribeAndDispose(n => n.Changed -= this.OnChildChanged);
-                return true;
+                result = null;
+                return false;
+            }
+
+            IRefCounted<ChangeTrackerNode> node = null;
+            if (ChangeTrackerNode.TryGetOrCreate(value, this.Settings, false, out node))
+            {
+                using (node)
+                {
+                    IChildNode indexNode = ChildNodes.Create(this, node.Value, index);
+                    indexNode.Changed += this.OnChildChanged;
+                    result = indexNode.UnsubscribeAndDispose(n => n.Changed -= this.OnChildChanged);
+                    return true;
+                }
             }
 
             result = null;

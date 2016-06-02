@@ -10,11 +10,11 @@
             private readonly ChangeTrackerNode parent;
             private readonly IRefCounted<ChangeTrackerNode> node;
 
-            internal IndexNode(ChangeTrackerNode parent, IRefCounted<ChangeTrackerNode> node, int index)
+            internal IndexNode(ChangeTrackerNode parent, ChangeTrackerNode node, int index)
             {
                 this.parent = parent;
                 this.Index = index;
-                this.node = node;
+                this.node = node.RefCount();
                 this.node.Value.Changed += this.OnNodeChanged;
             }
 

@@ -5,6 +5,19 @@
 
     internal static class RefCounted
     {
+        internal static IRefCounted<T> RefCount<T>(this T item)
+            where T : class, IDisposable
+        {
+            IRefCounted<T> result;
+            bool temp;
+            if (TryRefCount(item, out result, out temp))
+            {
+                return result;
+            }
+
+            throw Throw.ShouldNeverGetHereException($"RefCount failed for {item}");
+        }
+
         internal static bool TryRefCount<TValue>(
             this TValue value,
             out IRefCounted<TValue> refCounted)
@@ -18,11 +31,11 @@
             where TValue : class, IDisposable
         {
             int count;
-            refCounted = RefCount<TValue>.AddOrUpdate(value, out count, out created);
+            refCounted = RefCountedItem<TValue>.AddOrUpdate(value, out count, out created);
             return count > 0;
         }
 
-        private static class RefCount<TValue>
+        private static class RefCountedItem<TValue>
             where TValue : class, IDisposable
         {
             private static readonly ConditionalWeakTable<TValue, RefCounter> Items = new ConditionalWeakTable<TValue, RefCounter>();
