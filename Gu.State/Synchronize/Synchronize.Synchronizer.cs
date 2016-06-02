@@ -3,6 +3,7 @@ namespace Gu.State
     using System;
     using System.Collections.Concurrent;
     using System.ComponentModel;
+    using System.Linq;
 
     public static partial class Synchronize
     {
@@ -45,9 +46,13 @@ namespace Gu.State
                         !ReferenceEquals(root.Node.X, root.EventArgs.Source) &&
                         ReferenceEquals(root.Node.Y, root.EventArgs.Source))
                     {
-                        var message = "Target cannot be modified when a synchronizer is applied to it\r\n" +
-                                      "The change would just trigger a dirty notification and the value would be updated with the value from source.";
-                        throw new InvalidOperationException(message);
+                        if (this.RootNode.AllChildNodes()
+                                .All(x => !ReferenceEquals(x.X, root.EventArgs.Source)))
+                        {
+                            var message = "Target cannot be modified when a synchronizer is applied to it\r\n"
+                                          + "The change would just trigger a dirty notification and the value would be updated with the value from source.";
+                            throw new InvalidOperationException(message);
+                        }
                     }
 
                     if (!root.Node.IsDirty)

@@ -2,6 +2,7 @@
 {
     using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
 
     internal partial class ChildNodes<T>
@@ -34,6 +35,19 @@
         internal static IChildNode<T> CreateChildNode(T parent, T node, PropertyInfo propertyInfo)
         {
             return new PropertyNode(parent, node, propertyInfo);
+        }
+
+        internal IEnumerable<T> AllChildren()
+        {
+            foreach (var node in this.propertyNodes.TrackerNodes())
+            {
+                yield return node;
+            }
+
+            foreach (var node in this.indexNodes.TrackerNodes())
+            {
+                yield return node;
+            }
         }
 
         internal void SetValue(PropertyInfo property, IUnsubscriber<IChildNode<T>> childNode)

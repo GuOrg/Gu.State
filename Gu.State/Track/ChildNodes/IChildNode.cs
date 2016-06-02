@@ -6,5 +6,7 @@ namespace Gu.State
         where T : ITrackerNode<T>
     {
         event EventHandler<TrackerChangedEventArgs<T>> Changed;
+
+        T TrackerNode { get; }
     }
 }

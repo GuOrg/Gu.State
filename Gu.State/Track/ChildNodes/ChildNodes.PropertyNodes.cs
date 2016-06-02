@@ -1,5 +1,6 @@
 namespace Gu.State
 {
+    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Reflection;
@@ -50,13 +51,23 @@ namespace Gu.State
 
             internal void Clear()
             {
-                // lock not needed here, just muting the warning
                 lock (this.nodes)
                 {
                     for (var i = this.nodes.Count - 1; i >= 0; i--)
                     {
                         this.nodes[i].Dispose();
                         this.nodes.RemoveAt(i);
+                    }
+                }
+            }
+
+            internal IEnumerable<T> TrackerNodes()
+            {
+                lock (this.nodes)
+                {
+                    foreach (var unsubscriber in this.nodes)
+                    {
+                        yield return unsubscriber.Value.TrackerNode;
                     }
                 }
             }
