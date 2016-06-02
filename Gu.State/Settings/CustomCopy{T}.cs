@@ -18,7 +18,7 @@
 
         public T Copy(T source, T target)
         {
-            return this.copyValue((T)source, (T)target);
+            return this.copyValue(source, target);
         }
     }
 }

@@ -52,7 +52,8 @@
             var fixableTypes = errors.AllErrors.OfType<TypeErrors>()
                                      .Where(x => x.Type != errors.Type)
                                      .Select(x => x.Type)
-                                     .Distinct();
+                                     .Distinct()
+                                     .ToArray();
             if (!fixableTypes.Any())
             {
                 return errorBuilder;
@@ -92,7 +93,8 @@
             var types = errors.AllErrors.OfType<TypeErrors>()
                               .Where(e => e.Type != errors.Type)
                               .Select(x => x.Type)
-                              .Distinct();
+                              .Distinct()
+                              .ToArray();
 
             if (types.Any() || errors.AllErrors.OfType<IExcludableMember>().Any())
             {

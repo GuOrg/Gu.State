@@ -22,6 +22,7 @@
         {
             var setter = typeof(GetterAndSetter<,>).MakeGenericType(fieldInfo.DeclaringType, fieldInfo.FieldType);
             var constructorInfo = setter.GetConstructor(new[] { typeof(FieldInfo) });
+            //// ReSharper disable once PossibleNullReferenceException nope, not here
             return (IGetterAndSetter)constructorInfo.Invoke(new object[] { fieldInfo });
         }
 
@@ -29,6 +30,7 @@
         {
             var setter = typeof(GetterAndSetter<,>).MakeGenericType(propertyInfo.DeclaringType, propertyInfo.PropertyType);
             var constructorInfo = setter.GetConstructor(new[] { typeof(PropertyInfo) });
+            //// ReSharper disable once PossibleNullReferenceException nope, not here
             return (IGetterAndSetter)constructorInfo.Invoke(new object[] { propertyInfo });
         }
     }

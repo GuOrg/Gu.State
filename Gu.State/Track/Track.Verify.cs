@@ -138,7 +138,7 @@
         {
             internal static void IsTrackableValue(object value, PropertiesSettings settings)
             {
-                var errors = GetErrors(value.GetType(), settings, null);
+                var errors = GetErrors(value.GetType(), settings);
                 if (errors != null)
                 {
                     var typeErrors = new TypeErrors(null, errors);
@@ -148,7 +148,7 @@
 
             internal static void IsTrackableType(Type type, PropertiesSettings settings, string className = null, string methodName = null)
             {
-                var errors = GetErrors(type, settings, null);
+                var errors = GetErrors(type, settings);
                 if (errors != null)
                 {
                     Throw.IfHasErrors(errors, settings, className ?? typeof(Track).Name, methodName ?? nameof(Track.Changes));

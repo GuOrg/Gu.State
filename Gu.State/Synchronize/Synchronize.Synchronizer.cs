@@ -22,9 +22,9 @@ namespace Gu.State
                 this.AddToSyncQueue(this.dirtyTrackerNode.Value);
             }
 
-            public PropertiesSettings Settings { get; }
+            private DirtyTrackerNode RootNode => this.dirtyTrackerNode.Value;
 
-            public DirtyTrackerNode RootNode => this.dirtyTrackerNode.Value;
+            private PropertiesSettings Settings { get; }
 
             public void Dispose()
             {

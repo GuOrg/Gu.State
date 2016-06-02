@@ -28,9 +28,10 @@
             var iDict = type.Name == IReadOnlyDictionaryName ? type : type.GetInterface(IReadOnlyDictionaryName);
             var keyType = iDict.GenericTypeArguments[0];
             var valueType = iDict.GenericTypeArguments[1];
+            //// ReSharper disable once PossibleNullReferenceException nope, not here
             var comparer = (IDiffBy)typeof(ReadOnlyDictionaryDiffBy<,>).MakeGenericType(keyType, valueType)
-                                                                                .GetField(nameof(ReadOnlyDictionaryDiffBy<int, int>.Default), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
-                                                                                .GetValue(null);
+                                                                       .GetField(nameof(ReadOnlyDictionaryDiffBy<int, int>.Default), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
+                                                                       .GetValue(null);
             return comparer;
         }
     }

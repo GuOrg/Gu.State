@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    internal static partial class Set
+    internal static class Set
     {
         public static bool TryGetComparer<T>(ISet<T> source, out IEqualityComparer<T> comparer)
         {

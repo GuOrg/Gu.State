@@ -188,10 +188,6 @@
                     {
                         borrow.Value.Add(childNode);
                     }
-                    else
-                    {
-                        borrow.Value.Add(null);
-                    }
                 }
 
                 this.Children.Reset(borrow.Value);

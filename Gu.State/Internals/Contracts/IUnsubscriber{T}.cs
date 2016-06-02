@@ -1,7 +1,6 @@
 ﻿namespace Gu.State
 {
-    internal interface IUnsubscriber<out T> : IUnsubscriber
+    internal interface IUnsubscriber<out T> : IDisposer<T>, IUnsubscriber
     {
-        T Value { get; }
     }
 }
