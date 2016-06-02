@@ -12,6 +12,36 @@ namespace Gu.State.Tests
     {
         public class ObservableCollectionOfComplexType
         {
+            [TestCase(ReferenceHandling.Structural)]
+            [TestCase(ReferenceHandling.References)]
+            public void CreateAndDispose(ReferenceHandling referenceHandling)
+            {
+                var x = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
+                var y = new ObservableCollection<ComplexType>();
+                var changes = new List<string>();
+                using (var tracker = Track.IsDirty(x, y, referenceHandling))
+                {
+                    tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                    Assert.AreEqual(true, tracker.IsDirty);
+                    var expected = "ObservableCollection<ComplexType> [0] x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: missing item [1] x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: missing item";
+                    var actual = tracker.Diff.ToString(""," ");
+                    Assert.AreEqual(expected, actual);
+                    CollectionAssert.IsEmpty(changes);
+                }
+
+                x.Add(new ComplexType("c", 3));
+                CollectionAssert.IsEmpty(changes);
+
+                x[0].Value++;
+                CollectionAssert.IsEmpty(changes);
+
+                x[1].Value++;
+                CollectionAssert.IsEmpty(changes);
+
+                x[2].Value++;
+                CollectionAssert.IsEmpty(changes);
+            }
+
             [Test]
             public void AddSameToBoth()
             {

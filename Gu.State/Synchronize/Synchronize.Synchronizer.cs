@@ -31,6 +31,7 @@ namespace Gu.State
                 this.dirtyTrackerNode.Value.Changed -= this.OnDirtyTrackerNodeChanged;
                 this.dirtyTrackerNode.Dispose();
                 this.borrowedQueue.Dispose();
+                this.processingNode = null;
             }
 
             private void OnDirtyTrackerNodeChanged(object sender, TrackerChangedEventArgs<DirtyTrackerNode> e)

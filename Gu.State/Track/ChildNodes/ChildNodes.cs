@@ -4,9 +4,10 @@
     using System.Collections.Generic;
     using System.Reflection;
 
-    internal partial class ChildNodes
+    internal partial class ChildNodes<T>
+        where T : class, ITrackerNode<T>
     {
-        private static readonly ConcurrentQueue<ChildNodes> Cache = new ConcurrentQueue<ChildNodes>();
+        private static readonly ConcurrentQueue<ChildNodes<T>> Cache = new ConcurrentQueue<ChildNodes<T>>();
         private readonly PropertyNodes propertyNodes = new PropertyNodes();
         private readonly IndexNodes indexNodes = new IndexNodes();
 
@@ -14,28 +15,28 @@
         {
         }
 
-        public static IBorrowed<ChildNodes> Borrow()
+        public static IBorrowed<ChildNodes<T>> Borrow()
         {
-            ChildNodes childNodes;
+            ChildNodes<T> childNodes;
             if (Cache.TryDequeue(out childNodes))
             {
                 return Borrowed.Create(childNodes, Return);
             }
 
-            return Borrowed.Create(new ChildNodes(), Return);
+            return Borrowed.Create(new ChildNodes<T>(), Return);
         }
 
-        internal static IChildNode Create(ChangeTrackerNode parent, ChangeTrackerNode node, int index)
+        internal static IChildNode<T> CreateChildNode(T parent, T node, int index)
         {
             return new IndexNode(parent, node, index);
         }
 
-        internal static IChildNode Create(ChangeTrackerNode parent, ChangeTrackerNode node, PropertyInfo propertyInfo)
+        internal static IChildNode<T> CreateChildNode(T parent, T node, PropertyInfo propertyInfo)
         {
             return new PropertyNode(parent, node, propertyInfo);
         }
 
-        internal void SetValue(PropertyInfo property, IUnsubscriber<IChildNode> childNode)
+        internal void SetValue(PropertyInfo property, IUnsubscriber<IChildNode<T>> childNode)
         {
             this.propertyNodes.SetValue(property, childNode);
         }
@@ -45,12 +46,12 @@
             this.propertyNodes.Remove(property);
         }
 
-        internal void Insert(int index, IUnsubscriber<IChildNode> childNode)
+        internal void Insert(int index, IUnsubscriber<IChildNode<T>> childNode)
         {
             this.indexNodes.Insert(index, childNode);
         }
 
-        internal void Replace(int index, IUnsubscriber<IChildNode> childNode)
+        internal void Replace(int index, IUnsubscriber<IChildNode<T>> childNode)
         {
             this.indexNodes.SetValue(index, childNode);
         }
@@ -65,12 +66,12 @@
             this.indexNodes.Move(fromIndex, toIndex);
         }
 
-        internal void Reset(IReadOnlyList<IUnsubscriber<IChildNode>> newNodes)
+        internal void Reset(IReadOnlyList<IUnsubscriber<IChildNode<T>>> newNodes)
         {
             this.indexNodes.Reset(newNodes);
         }
 
-        private static void Return(ChildNodes nodes)
+        private static void Return(ChildNodes<T> nodes)
         {
             nodes.indexNodes.Clear();
             nodes.propertyNodes.Clear();

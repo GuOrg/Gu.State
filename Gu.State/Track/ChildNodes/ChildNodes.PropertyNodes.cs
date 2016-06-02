@@ -4,13 +4,13 @@ namespace Gu.State
     using System.Diagnostics;
     using System.Reflection;
 
-    internal partial class ChildNodes
+    internal partial class ChildNodes<T>
     {
         private class PropertyNodes
         {
-            private readonly List<IUnsubscriber<IChildNode>> nodes = new List<IUnsubscriber<IChildNode>>();
+            private readonly List<IUnsubscriber<IChildNode<T>>> nodes = new List<IUnsubscriber<IChildNode<T>>>();
 
-            internal void SetValue(PropertyInfo property, IUnsubscriber<IChildNode> childNode)
+            internal void SetValue(PropertyInfo property, IUnsubscriber<IChildNode<T>> childNode)
             {
                 if (childNode == null)
                 {
@@ -55,7 +55,7 @@ namespace Gu.State
                 {
                     for (var i = this.nodes.Count - 1; i >= 0; i--)
                     {
-                        this.nodes[0].Dispose();
+                        this.nodes[i].Dispose();
                         this.nodes.RemoveAt(i);
                     }
                 }

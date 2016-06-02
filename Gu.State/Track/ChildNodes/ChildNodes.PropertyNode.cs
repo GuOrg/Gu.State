@@ -3,15 +3,15 @@ namespace Gu.State
     using System;
     using System.Reflection;
 
-    internal partial class ChildNodes
+    internal partial class ChildNodes<T>
     {
-        private sealed class PropertyNode : IChildNode
+        private sealed class PropertyNode : IChildNode<T>
         {
             internal readonly PropertyInfo PropertyInfo;
-            private readonly ChangeTrackerNode parent;
-            private readonly IRefCounted<ChangeTrackerNode> node;
+            private readonly T parent;
+            private readonly IRefCounted<T> node;
 
-            internal PropertyNode(ChangeTrackerNode parent, ChangeTrackerNode node, PropertyInfo propertyInfo)
+            internal PropertyNode(T parent, T node, PropertyInfo propertyInfo)
             {
                 this.parent = parent;
                 this.PropertyInfo = propertyInfo;
@@ -19,7 +19,7 @@ namespace Gu.State
                 this.node.Value.Changed += this.OnNodeChanged;
             }
 
-            public event EventHandler<TrackerChangedEventArgs<ChangeTrackerNode>> Changed;
+            public event EventHandler<TrackerChangedEventArgs<T>> Changed;
 
             public void Dispose()
             {
@@ -27,7 +27,7 @@ namespace Gu.State
                 this.node.Dispose();
             }
 
-            private void OnNodeChanged(object sender, TrackerChangedEventArgs<ChangeTrackerNode> e)
+            private void OnNodeChanged(object sender, TrackerChangedEventArgs<T> e)
             {
                 this.Changed?.Invoke(this, e.With(this.parent, this.PropertyInfo));
             }

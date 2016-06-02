@@ -2,15 +2,15 @@
 {
     using System;
 
-    internal partial class ChildNodes
+    internal partial class ChildNodes<T>
     {
-        private sealed class IndexNode : IChildNode
+        private sealed class IndexNode : IChildNode<T>
         {
             internal int Index;
-            private readonly ChangeTrackerNode parent;
-            private readonly IRefCounted<ChangeTrackerNode> node;
+            private readonly T parent;
+            private readonly IRefCounted<T> node;
 
-            internal IndexNode(ChangeTrackerNode parent, ChangeTrackerNode node, int index)
+            internal IndexNode(T parent, T node, int index)
             {
                 this.parent = parent;
                 this.Index = index;
@@ -18,7 +18,7 @@
                 this.node.Value.Changed += this.OnNodeChanged;
             }
 
-            public event EventHandler<TrackerChangedEventArgs<ChangeTrackerNode>> Changed;
+            public event EventHandler<TrackerChangedEventArgs<T>> Changed;
 
             public void Dispose()
             {
@@ -26,7 +26,7 @@
                 this.node.Dispose();
             }
 
-            private void OnNodeChanged(object sender, TrackerChangedEventArgs<ChangeTrackerNode> e)
+            private void OnNodeChanged(object sender, TrackerChangedEventArgs<T> e)
             {
                 this.Changed?.Invoke(this, e.With(this.parent, this.Index));
             }

@@ -17,8 +17,7 @@ namespace Gu.State.Tests
             [Test]
             public void CreateAndDispose()
             {
-                var item = new ComplexType();
-                var source = new ObservableCollection<ComplexType> { item };
+                var source = new ObservableCollection<ComplexType> { new ComplexType() };
                 var propertyChanges = new List<string>();
                 var changes = new List<EventArgs>();
                 var tracker = Track.Changes(source, ReferenceHandling.Structural);
@@ -35,7 +34,12 @@ namespace Gu.State.Tests
                 CollectionAssert.IsEmpty(propertyChanges);
                 CollectionAssert.IsEmpty(changes);
 
-                item.Value++;
+                source[0].Value++;
+                Assert.AreEqual(0, tracker.Changes);
+                CollectionAssert.IsEmpty(propertyChanges);
+                CollectionAssert.IsEmpty(changes);
+
+                source[1].Value++;
                 Assert.AreEqual(0, tracker.Changes);
                 CollectionAssert.IsEmpty(propertyChanges);
                 CollectionAssert.IsEmpty(changes);
