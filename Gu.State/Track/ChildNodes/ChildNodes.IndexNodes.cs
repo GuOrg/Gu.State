@@ -148,6 +148,17 @@
                 }
             }
 
+            internal IEnumerable<T> TrackerNodes()
+            {
+                lock (this.nodes)
+                {
+                    foreach (var unsubscriber in this.nodes)
+                    {
+                        yield return unsubscriber.Value.TrackerNode;
+                    }
+                }
+            }
+
             private int IndexOf(int index)
             {
                 for (var i = 0; i < this.nodes.Count; i++)

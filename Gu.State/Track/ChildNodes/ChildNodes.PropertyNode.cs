@@ -21,6 +21,8 @@ namespace Gu.State
 
             public event EventHandler<TrackerChangedEventArgs<T>> Changed;
 
+            public T TrackerNode => this.node.Value;
+
             public void Dispose()
             {
                 this.node.Value.Changed -= this.OnNodeChanged;

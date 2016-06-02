@@ -162,6 +162,14 @@
                 pair => new DirtyTrackerNode(pair, settings, isRoot));
         }
 
+        internal IEnumerable<DirtyTrackerNode> AllChildNodes()
+        {
+            using (var borrow = ReferenceSetPool<DirtyTrackerNode>.Borrow())
+            {
+                return this.AllChildNodes(borrow.Value);
+            }
+        }
+
         private static bool IsTrackablePair(object x, object y, PropertiesSettings settings)
         {
             if (IsNullOrMissing(x) || IsNullOrMissing(y))
@@ -175,6 +183,23 @@
         private static bool IsNullOrMissing(object x)
         {
             return x == null || x == PaddedPairs.MissingItem;
+        }
+
+        private IEnumerable<DirtyTrackerNode> AllChildNodes(HashSet<DirtyTrackerNode> @checked)
+        {
+            foreach (var node in this.Children.AllChildren())
+            {
+                if (!@checked.Add(node))
+                {
+                    continue;
+                }
+
+                yield return node;
+                foreach (var child in node.AllChildNodes(@checked))
+                {
+                    yield return child;
+                }
+            }
         }
 
         private void OnTrackedPropertyChange(object sender, PropertyChangeEventArgs e)
