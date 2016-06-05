@@ -1,10 +1,13 @@
 NUGET
   remote: http://www.nuget.org/api/v2
   specs:
-    BenchmarkDotNet (0.9.6)
+    BenchmarkDotNet (0.9.7)
+    Castle.Core (3.3.3) - framework: >= net45
     JetBrains.Annotations (10.1.4)
       System.Runtime (>= 4.0) - framework: dnxcore50
-    Moq (4.5.3)
+    Microsoft.CodeAnalysis.Analyzers (1.1)
+    Moq (4.5.8)
+      Castle.Core (>= 3.3.3) - framework: >= net45
     NUnit (2.6.4)
     StyleCop.Analyzers (1.0)
     System.Collections (4.0.10) - framework: dnxcore50

@@ -1,6 +1,6 @@
 ﻿type project
 title Gu.State
-tags INotifyPropertyChanged, WPF
+tags Equals, Copy, Sync, Diff, Dirty
 projectUrl https://github.com/JohanLarsson/Gu.State
 licenseUrl http://opensource.org/licenses/MIT
 

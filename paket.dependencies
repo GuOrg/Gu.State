@@ -8,4 +8,4 @@ nuget BenchmarkDotNet
 nuget System.Collections.Immutable
 #nuget Desktop.Analyzers
 #nuget Microsoft.ApiDesignGuidelines.Analyzers
-#nuget Microsoft.CodeAnalysis.Analyzers
+nuget Microsoft.CodeAnalysis.Analyzers
