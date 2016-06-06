@@ -16,7 +16,7 @@
             [TestCase(ReferenceHandling.Structural)]
             public void CreateAndDispose(ReferenceHandling referenceHandling)
             {
-                var source = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
+                var source = new WithSimpleProperties { Value1 = 1, Time = DateTime.MinValue };
                 var propertyChanges = new List<string>();
                 var changes = new List<EventArgs>();
 
@@ -51,7 +51,7 @@
             [TestCase(ReferenceHandling.Structural)]
             public void CreateAndDisposeExplicitSetting(ReferenceHandling referenceHandling)
             {
-                var source = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
+                var source = new WithSimpleProperties { Value1 = 1, Time = DateTime.MinValue };
                 var propertyChanges = new List<string>();
                 var expectedPropertyChanges = new List<string>();
                 var changes = new List<EventArgs>();

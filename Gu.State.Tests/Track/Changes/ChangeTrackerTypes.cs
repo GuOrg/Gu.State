@@ -21,7 +21,7 @@
         public class WithSimpleProperties : INotifyPropertyChanged
         {
             private int value1;
-            private int value2;
+            private DateTime time;
 
             public event PropertyChangedEventHandler PropertyChanged;
 
@@ -40,17 +40,17 @@
                 }
             }
 
-            public int Value2
+            public DateTime Time
             {
-                get { return this.value2; }
+                get { return this.time; }
                 set
                 {
-                    if (value == this.value2)
+                    if (value == this.time)
                     {
                         return;
                     }
 
-                    this.value2 = value;
+                    this.time = value;
                     this.OnPropertyChanged();
                 }
             }
@@ -61,10 +61,10 @@
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
 
-            public void SetFields(int value, int excluded)
+            public void SetFields(int value, DateTime time)
             {
                 this.Value1 = value;
-                this.Value2 = excluded;
+                this.Time = time;
             }
         }
 
