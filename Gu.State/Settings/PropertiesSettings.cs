@@ -39,6 +39,13 @@
         {
         }
 
+        /// <summary>
+        /// Gets the default settings
+        /// - ReferenceHandling.Structural
+        /// - Bindingflags.Instance | BindingFlags.Public
+        /// </summary>
+        public static PropertiesSettings Default => GetOrCreate();
+
         /// <summary>Gets a collection or ignored properties.</summary>
         public IEnumerable<PropertyInfo> IgnoredProperties => this.IgnoredMembers.Keys;
 

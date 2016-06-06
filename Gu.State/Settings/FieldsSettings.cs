@@ -38,6 +38,13 @@
         {
         }
 
+        /// <summary>
+        /// Gets the default settings
+        /// - ReferenceHandling.Structural
+        /// - Bindingflags.Instance | BindingFlags.NonPublic | BindingFlags.Public
+        /// </summary>
+        public static FieldsSettings Default => GetOrCreate();
+
         /// <summary>Gets a collection or ignored fields.</summary>
         public IEnumerable<FieldInfo> IgnoredFields => this.IgnoredMembers.Keys;
 
