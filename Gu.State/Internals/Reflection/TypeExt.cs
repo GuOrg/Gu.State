@@ -18,6 +18,11 @@
             return iEnumerableOfT != null;
         }
 
+        internal static bool IsDelegate(this Type type)
+        {
+            return typeof(Delegate).IsAssignableFrom(type);
+        }
+
         internal static Type GetItemType(this Type type)
         {
             if (type.HasElementType)

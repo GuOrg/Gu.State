@@ -50,6 +50,10 @@
             {
                 result = true;
             }
+            else if (type.IsDelegate())
+            {
+                result = true;
+            }
             else if (type.IsImmutableList() ||
                      type.IsImmutableArray() ||
                      type.IsImmutableHashSet())
