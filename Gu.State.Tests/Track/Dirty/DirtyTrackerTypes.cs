@@ -126,47 +126,47 @@
 
         public class WithSimpleProperties : INotifyPropertyChanged
         {
-            private int value1;
-            private int value2;
+            private int value;
+            private DateTime time;
 
             public WithSimpleProperties()
             {
             }
 
-            public WithSimpleProperties(int value1, int value2)
+            public WithSimpleProperties(int value, DateTime time)
             {
-                this.value1 = value1;
-                this.value2 = value2;
+                this.value = value;
+                this.time = time;
             }
 
             public event PropertyChangedEventHandler PropertyChanged;
 
-            public int Value1
+            public int Value
             {
-                get { return this.value1; }
+                get { return this.value; }
                 set
                 {
-                    if (value == this.value1)
+                    if (value == this.value)
                     {
                         return;
                     }
 
-                    this.value1 = value;
+                    this.value = value;
                     this.OnPropertyChanged();
                 }
             }
 
-            public int Value2
+            public DateTime Time
             {
-                get { return this.value2; }
+                get { return this.time; }
                 set
                 {
-                    if (value == this.value2)
+                    if (value == this.time)
                     {
                         return;
                     }
 
-                    this.value2 = value;
+                    this.time = value;
                     this.OnPropertyChanged();
                 }
             }
@@ -177,10 +177,10 @@
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
 
-            public void SetFields(int value, int excluded)
+            public void SetFields(int value, DateTime time)
             {
-                this.Value1 = value;
-                this.Value2 = excluded;
+                this.Value = value;
+                this.Time = time;
             }
         }
 

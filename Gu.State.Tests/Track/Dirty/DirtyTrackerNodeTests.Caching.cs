@@ -1,6 +1,8 @@
 // ReSharper disable RedundantArgumentDefaultValue
 namespace Gu.State.Tests
 {
+    using System;
+
     using NUnit.Framework;
 
     using static DirtyTrackerTypes;
@@ -31,8 +33,8 @@ namespace Gu.State.Tests
             [Test]
             public void ReturnsDifferentForDifferentPairs()
             {
-                var x = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
-                var y = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
+                var x = new WithSimpleProperties { Value = 1, Time = DateTime.MinValue };
+                var y = new WithSimpleProperties { Value = 1, Time = DateTime.MinValue };
                 var settings = PropertiesSettings.GetOrCreate(ReferenceHandling.Structural);
                 var t1 = DirtyTrackerNode.GetOrCreate(x, y, settings, true);
                 var t2 = DirtyTrackerNode.GetOrCreate(y, x, settings, true);
@@ -42,8 +44,8 @@ namespace Gu.State.Tests
             [Test]
             public void ReturnsDifferentForDifferentSettings()
             {
-                var x = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
-                var y = new WithSimpleProperties { Value1 = 1, Value2 = 2 };
+                var x = new WithSimpleProperties { Value = 1, Time = DateTime.MinValue };
+                var y = new WithSimpleProperties { Value = 1, Time = DateTime.MinValue };
                 var t1 = DirtyTrackerNode.GetOrCreate(x, y, PropertiesSettings.GetOrCreate(ReferenceHandling.Structural), true);
                 var t2 = DirtyTrackerNode.GetOrCreate(x, y, PropertiesSettings.GetOrCreate(ReferenceHandling.References), true);
                 Assert.AreNotSame(t1, t2);
