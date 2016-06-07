@@ -88,7 +88,6 @@ namespace Gu.State.Tests
 #endif
             }
 
-
             [Test]
             public void DoesNotNotifyWhenMissingProperty()
             {
@@ -288,6 +287,34 @@ namespace Gu.State.Tests
                     CollectionAssert.AreEqual(expectedChanges, propertyChanges);
 
                     y.Value = Length.FromCentimetres(1);
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    Assert.AreEqual(null, tracker.Diff?.ToString("", " "));
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
+                    CollectionAssert.AreEqual(expectedChanges, propertyChanges);
+                }
+            }
+
+            [Test]
+            public void WithBool()
+            {
+                var x = new With<bool> { Value = true };
+                var y = new With<bool> { Value = true };
+                var propertyChanges = new List<string>();
+                var expectedChanges = new List<string>();
+                using (var tracker = Track.IsDirty(x, y))
+                {
+                    tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    Assert.AreEqual(null, tracker.Diff);
+                    CollectionAssert.IsEmpty(propertyChanges);
+
+                    x.Value = false;
+                    Assert.AreEqual(true, tracker.IsDirty);
+                    Assert.AreEqual("With<bool> Value x: false y: true", tracker.Diff.ToString("", " "));
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
+                    CollectionAssert.AreEqual(expectedChanges, propertyChanges);
+
+                    y.Value = false;
                     Assert.AreEqual(false, tracker.IsDirty);
                     Assert.AreEqual(null, tracker.Diff?.ToString("", " "));
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });

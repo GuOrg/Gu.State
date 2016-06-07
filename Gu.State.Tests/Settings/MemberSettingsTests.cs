@@ -11,8 +11,13 @@
 
     public class MemberSettingsTests
     {
+        [TestCase(typeof(string), true)]
+        [TestCase(typeof(bool), true)]
+        [TestCase(typeof(bool?), true)]
         [TestCase(typeof(int), true)]
         [TestCase(typeof(int?), true)]
+        [TestCase(typeof(decimal), true)]
+        [TestCase(typeof(decimal?), true)]
         [TestCase(typeof(TimeSpan), true)]
         [TestCase(typeof(TimeSpan?), true)]
         [TestCase(typeof(StringSplitOptions), true)]
@@ -60,8 +65,13 @@
             Assert.AreEqual(expected, isImmutable);
         }
 
+        [TestCase(typeof(string), true)]
+        [TestCase(typeof(bool), true)]
+        [TestCase(typeof(bool?), true)]
         [TestCase(typeof(int), true)]
         [TestCase(typeof(int?), true)]
+        [TestCase(typeof(decimal), true)]
+        [TestCase(typeof(decimal?), true)]
         [TestCase(typeof(TimeSpan), true)]
         [TestCase(typeof(TimeSpan?), true)]
         [TestCase(typeof(StringSplitOptions), true)]

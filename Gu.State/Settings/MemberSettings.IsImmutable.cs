@@ -46,6 +46,10 @@
                 var underlyingType = Nullable.GetUnderlyingType(type);
                 result = CheckIfIsImmutable(underlyingType, checkedTypes);
             }
+            else if (type == typeof(bool))
+            {
+                result = true;
+            }
             else if (type.IsEnum)
             {
                 result = true;

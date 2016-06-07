@@ -25,7 +25,7 @@ namespace Gu.State
         {
             var propChanged = typeof(INotifyPropertyChanged).Name;
             var line = type.Assembly == typeof(string).Assembly
-                           ? $"* Use a type that implements {propChanged} isntead of {type.PrettyName()}."
+                           ? $"* Use a type that implements {propChanged} instead of {type.PrettyName()}."
                            : $"* Implement {propChanged} for {type.PrettyName()} or use a type that does.";
             return errorBuilder.AppendLine(line);
         }

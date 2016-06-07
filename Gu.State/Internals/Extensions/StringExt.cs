@@ -17,6 +17,13 @@ namespace Gu.State
                 return ((DateTime)o).ToString("O", CultureInfo.InvariantCulture);
             }
 
+            if (o is bool)
+            {
+                return (bool)o
+                           ? "true"
+                           : "false";
+            }
+
             var formattable = o as IFormattable;
             if (formattable != null)
             {
