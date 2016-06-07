@@ -3,6 +3,8 @@
     using System;
     using System.Collections.Generic;
 
+    using Gu.Units;
+
     using NUnit.Framework;
 
     using static SettingsTypes;
@@ -15,9 +17,11 @@
         [TestCase(typeof(TimeSpan?), true)]
         [TestCase(typeof(StringSplitOptions), true)]
         [TestCase(typeof(StringSplitOptions?), true)]
+        [TestCase(typeof(Length), true)]
         [TestCase(typeof(Delegate), true)]
         [TestCase(typeof(Func<int>), true)]
         [TestCase(typeof(Action<int>), true)]
+        //[TestCase(typeof(IEnumerable<int>), true)]
         [TestCase(typeof(WithGetReadOnlyPropertySealed<int>), true)]
         [TestCase(typeof(WithGetReadOnlyPropertySealed<int?>), true)]
         [TestCase(typeof(WithGetReadOnlyPropertySealed<WithGetReadOnlyPropertySealed<int>>), true)]
@@ -36,6 +40,7 @@
         [TestCase(typeof(WithReadonlyField<WithGetReadOnlyProperty<int>>), false)]
         [TestCase(typeof(object), false)]
         [TestCase(typeof(int[]), false)]
+        [TestCase(typeof(List<int>), false)]
         [TestCase(typeof(WithGetPrivateSet), false)]
         [TestCase(typeof(WithGetPublicSet), false)]
         [TestCase(typeof(WithMutableField), false)]

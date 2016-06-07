@@ -41,7 +41,7 @@ namespace Gu.State
         {
             if (this.Diffs.Count == 0)
             {
-                return $"{this.MemberInfo.Name} x: {this.X ?? "null"} y: {this.Y ?? "null"}";
+                return $"{this.MemberInfo.Name} x: {this.X.ToInvariantOrNullString()} y: {this.Y.ToInvariantOrNullString()}";
             }
 
             using (var writer = new IndentedTextWriter(new StringWriter(), tabString) { NewLine = newLine })
@@ -66,7 +66,7 @@ namespace Gu.State
 
             if (this.Diffs.Count == 0)
             {
-                writer.Write($"{this.MemberInfo.Name} x: {this.X ?? "null"} y: {this.Y ?? "null"}");
+                writer.Write($"{this.MemberInfo.Name} x: {this.X.ToInvariantOrNullString()} y: {this.Y.ToInvariantOrNullString()}");
                 return writer;
             }
 

@@ -50,6 +50,10 @@
             {
                 result = true;
             }
+            else if (type.IsArray)
+            {
+                result = false;
+            }
             else if (type.IsDelegate())
             {
                 result = true;
@@ -85,8 +89,13 @@
             var propertyInfos = type.GetProperties(Constants.DefaultFieldBindingFlags);
             foreach (var propertyInfo in propertyInfos)
             {
-                if (!propertyInfo.IsGetReadOnly() || (propertyInfo.GetIndexParameters()
-                                                                  .Length > 0 && propertyInfo.SetMethod != null))
+                if (propertyInfo.GetIndexParameters()
+                                .Length == 0)
+                {
+                    continue;
+                }
+
+                if (propertyInfo.SetMethod != null)
                 {
                     return false;
                 }

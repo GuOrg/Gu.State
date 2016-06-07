@@ -11,6 +11,49 @@
 
     public static class DirtyTrackerTypes
     {
+        public class With<T> : INotifyPropertyChanged
+        {
+            private T value;
+
+            private string name;
+
+            public event PropertyChangedEventHandler PropertyChanged;
+
+            public T Value
+            {
+                get { return this.value; }
+                set
+                {
+                    if (Equals(value, this.value)) return;
+                    this.value = value;
+                    this.OnPropertyChanged();
+                }
+            }
+
+            public string Name
+            {
+                get
+                {
+                    return this.name;
+                }
+                set
+                {
+                    if (value == this.name)
+                    {
+                        return;
+                    }
+                    this.name = value;
+                    this.OnPropertyChanged();
+                }
+            }
+
+            [NotifyPropertyChangedInvocator]
+            protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+            {
+                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
         public class ComplexType : INotifyPropertyChanged
         {
             public static readonly TestComparer Comparer = new TestComparer();
@@ -312,7 +355,6 @@
 
             public T Value { get; }
         }
-
 
         public class Level : INotifyPropertyChanged
         {

@@ -2,6 +2,9 @@ namespace Gu.State.Tests
 {
     using System;
     using System.Collections.Generic;
+
+    using Gu.Units;
+
     using NUnit.Framework;
     using static DirtyTrackerTypes;
 
@@ -158,27 +161,27 @@ namespace Gu.State.Tests
                 {
                     tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("WithSimpleProperties Time x: 0001-01-01 00:00:00 y: 0001-01-01 00:00:01", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("WithSimpleProperties Time x: 0001-01-01T00:00:00.0000000 y: 0001-01-01T00:00:01.0000000", tracker.Diff.ToString("", " "));
                     CollectionAssert.IsEmpty(propertyChanges);
 
                     x.OnPropertyChanged(nameof(WithSimpleProperties.Value));
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("WithSimpleProperties Time x: 0001-01-01 00:00:00 y: 0001-01-01 00:00:01", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("WithSimpleProperties Time x: 0001-01-01T00:00:00.0000000 y: 0001-01-01T00:00:01.0000000", tracker.Diff.ToString("", " "));
                     CollectionAssert.IsEmpty(propertyChanges);
 
                     x.OnPropertyChanged(nameof(WithSimpleProperties.Time));
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("WithSimpleProperties Time x: 0001-01-01 00:00:00 y: 0001-01-01 00:00:01", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("WithSimpleProperties Time x: 0001-01-01T00:00:00.0000000 y: 0001-01-01T00:00:01.0000000", tracker.Diff.ToString("", " "));
                     CollectionAssert.IsEmpty(propertyChanges);
 
                     y.OnPropertyChanged(nameof(WithSimpleProperties.Value));
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("WithSimpleProperties Time x: 0001-01-01 00:00:00 y: 0001-01-01 00:00:01", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("WithSimpleProperties Time x: 0001-01-01T00:00:00.0000000 y: 0001-01-01T00:00:01.0000000", tracker.Diff.ToString("", " "));
                     CollectionAssert.IsEmpty(propertyChanges);
 
                     y.OnPropertyChanged(nameof(WithSimpleProperties.Time));
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("WithSimpleProperties Time x: 0001-01-01 00:00:00 y: 0001-01-01 00:00:01", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("WithSimpleProperties Time x: 0001-01-01T00:00:00.0000000 y: 0001-01-01T00:00:01.0000000", tracker.Diff.ToString("", " "));
                     CollectionAssert.IsEmpty(propertyChanges);
                 }
             }
@@ -195,18 +198,18 @@ namespace Gu.State.Tests
                 {
                     tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("WithSimpleProperties Time x: 0001-01-01 00:00:00 y: 0001-01-01 00:00:01 Value x: 1 y: 3", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("WithSimpleProperties Time x: 0001-01-01T00:00:00.0000000 y: 0001-01-01T00:00:01.0000000 Value x: 1 y: 3", tracker.Diff.ToString("", " "));
                     CollectionAssert.IsEmpty(propertyChanges);
 
                     x.Value = 5;
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("WithSimpleProperties Time x: 0001-01-01 00:00:00 y: 0001-01-01 00:00:01 Value x: 5 y: 3", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("WithSimpleProperties Time x: 0001-01-01T00:00:00.0000000 y: 0001-01-01T00:00:01.0000000 Value x: 5 y: 3", tracker.Diff.ToString("", " "));
                     expectedChanges.Add("Diff");
                     CollectionAssert.AreEqual(expectedChanges, propertyChanges);
 
                     x.Value = 3;
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("WithSimpleProperties Time x: 0001-01-01 00:00:00 y: 0001-01-01 00:00:01", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("WithSimpleProperties Time x: 0001-01-01T00:00:00.0000000 y: 0001-01-01T00:00:01.0000000", tracker.Diff.ToString("", " "));
                     expectedChanges.Add("Diff");
                     CollectionAssert.AreEqual(expectedChanges, propertyChanges);
 
@@ -218,7 +221,7 @@ namespace Gu.State.Tests
 
                     x.Time = DateTime.MinValue.AddSeconds(2);
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("WithSimpleProperties Time x: 0001-01-01 00:00:02 y: 0001-01-01 00:00:01", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("WithSimpleProperties Time x: 0001-01-01T00:00:02.0000000 y: 0001-01-01T00:00:01.0000000", tracker.Diff.ToString("", " "));
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, propertyChanges);
                 }
@@ -235,18 +238,18 @@ namespace Gu.State.Tests
                 {
                     tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("WithSimpleProperties Time x: 0001-01-01 00:00:00 y: 0001-01-01 00:00:01 Value x: 1 y: 3", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("WithSimpleProperties Time x: 0001-01-01T00:00:00.0000000 y: 0001-01-01T00:00:01.0000000 Value x: 1 y: 3", tracker.Diff.ToString("", " "));
                     CollectionAssert.IsEmpty(propertyChanges);
 
                     y.Value = 5;
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("WithSimpleProperties Time x: 0001-01-01 00:00:00 y: 0001-01-01 00:00:01 Value x: 1 y: 5", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("WithSimpleProperties Time x: 0001-01-01T00:00:00.0000000 y: 0001-01-01T00:00:01.0000000 Value x: 1 y: 5", tracker.Diff.ToString("", " "));
                     expectedChanges.Add("Diff");
                     CollectionAssert.AreEqual(expectedChanges, propertyChanges);
 
                     y.Value = 1;
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("WithSimpleProperties Time x: 0001-01-01 00:00:00 y: 0001-01-01 00:00:01", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("WithSimpleProperties Time x: 0001-01-01T00:00:00.0000000 y: 0001-01-01T00:00:01.0000000", tracker.Diff.ToString("", " "));
                     expectedChanges.Add("Diff");
                     CollectionAssert.AreEqual(expectedChanges, propertyChanges);
 
@@ -258,7 +261,35 @@ namespace Gu.State.Tests
 
                     y.Time = DateTime.MinValue.AddSeconds(2);
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("WithSimpleProperties Time x: 0001-01-01 00:00:00 y: 0001-01-01 00:00:02", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("WithSimpleProperties Time x: 0001-01-01T00:00:00.0000000 y: 0001-01-01T00:00:02.0000000", tracker.Diff.ToString("", " "));
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
+                    CollectionAssert.AreEqual(expectedChanges, propertyChanges);
+                }
+            }
+
+            [Test]
+            public void WithLength()
+            {
+                var x = new With<Length> { Value = Length.Zero};
+                var y = new With<Length> { Value = Length.Zero };
+                var propertyChanges = new List<string>();
+                var expectedChanges = new List<string>();
+                using (var tracker = Track.IsDirty(x, y))
+                {
+                    tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    Assert.AreEqual(null, tracker.Diff);
+                    CollectionAssert.IsEmpty(propertyChanges);
+
+                    x.Value = Length.FromCentimetres(1);
+                    Assert.AreEqual(true, tracker.IsDirty);
+                    Assert.AreEqual("With<Length> Value x: 0.01\u00A0m y: 0\u00A0m", tracker.Diff.ToString("", " "));
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
+                    CollectionAssert.AreEqual(expectedChanges, propertyChanges);
+
+                    y.Value = Length.FromCentimetres(1);
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    Assert.AreEqual(null, tracker.Diff?.ToString("", " "));
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, propertyChanges);
                 }
@@ -282,7 +313,7 @@ namespace Gu.State.Tests
                     x.SetFields(1, DateTime.MinValue.AddSeconds(1));
                     x.OnPropertyChanged(prop);
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("WithSimpleProperties Time x: 0001-01-01 00:00:01 y: 0001-01-01 00:00:00", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("WithSimpleProperties Time x: 0001-01-01T00:00:01.0000000 y: 0001-01-01T00:00:00.0000000", tracker.Diff.ToString("", " "));
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, propertyChanges);
                 }

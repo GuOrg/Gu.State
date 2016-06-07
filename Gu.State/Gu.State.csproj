@@ -45,6 +45,7 @@
     <Compile Include="EqualBy\Comparers\ReadOnlyDictionaryEqualByComparer{TKey,TValue}.cs" />
     <Compile Include="Internals\Borrowed.cs" />
     <Compile Include="Contracts\IChangeTracker.cs" />
+    <Compile Include="Internals\Extensions\StringExt.cs" />
     <Compile Include="Internals\Pools\DictionaryPool{TKey,TValue}.cs" />
     <Compile Include="Internals\Reflection\GetterAndSetter{TSource,TValue}.cs" />
     <Compile Include="Track\ChildNodes\ChildNodes.cs" />

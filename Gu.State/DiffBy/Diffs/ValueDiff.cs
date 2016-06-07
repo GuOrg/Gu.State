@@ -29,7 +29,7 @@
         /// <inheritdoc />
         public override string ToString()
         {
-            return $"x: {this.X ?? "null"} y: {this.Y ?? "null"} diffs: {this.Diffs.Count}";
+            return $"x: {this.X.ToInvariantOrNullString()} y: {this.Y.ToInvariantOrNullString()} diffs: {this.Diffs.Count}";
         }
 
         /// <inheritdoc />
@@ -37,7 +37,7 @@
         {
             if (this.Diffs.Count == 0)
             {
-                return $"{this.X.GetType().PrettyName()} x: {this.X ?? "null"} y: {this.Y ?? "null"}";
+                return $"{this.X.GetType().PrettyName()} x: {this.X.ToInvariantOrNullString()} y: {this.Y.ToInvariantOrNullString()}";
             }
 
             using (var writer = new IndentedTextWriter(new StringWriter(), tabString) { NewLine = newLine })

@@ -3,6 +3,7 @@ NUGET
   specs:
     BenchmarkDotNet (0.9.7)
     Castle.Core (3.3.3) - framework: >= net45
+    Gu.Units (0.7.5.1)
     JetBrains.Annotations (10.1.4)
       System.Runtime (>= 4.0) - framework: dnxcore50
     Microsoft.CodeAnalysis.Analyzers (1.1)
