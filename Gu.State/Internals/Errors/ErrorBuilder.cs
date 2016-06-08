@@ -168,7 +168,7 @@ namespace Gu.State
             Type type,
             MemberSettings settings,
             MemberPath memberPath,
-            Func<MemberSettings, MemberPath, TypeErrors> getPropertyErrors) 
+            Func<MemberSettings, MemberPath, TypeErrors> getPropertyErrors)
         {
             if (settings.ReferenceHandling == ReferenceHandling.References)
             {
