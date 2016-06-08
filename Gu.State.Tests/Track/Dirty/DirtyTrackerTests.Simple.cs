@@ -352,7 +352,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void WithExplicitImmutable()
+            public void WithExplicitImmutableAndComparer()
             {
                 var x = new With<IntCollection> { Value = new IntCollection(1) };
                 var y = new With<IntCollection> { Value = new IntCollection(1) };
@@ -360,6 +360,7 @@ namespace Gu.State.Tests
                 var expectedChanges = new List<string>();
                 var settings = PropertiesSettings.Build()
                                                  .AddImmutableType<IntCollection>()
+                                                 .AddComparer(IntCollection.Comparer)
                                                  .CreateSettings();
                 using (var tracker = Track.IsDirty(x, y, settings))
                 {
@@ -370,7 +371,9 @@ namespace Gu.State.Tests
 
                     x.Value = new IntCollection(2);
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("With<IntCollection> Value [0] x: 2 y: 1", tracker.Diff.ToString("", " "));
+                    var expected = "With<IntCollection> Value x: Gu.State.Tests.DirtyTrackerTypes+IntCollection y: Gu.State.Tests.DirtyTrackerTypes+IntCollection";
+                    var actual = tracker.Diff.ToString("", " ");
+                    Assert.AreEqual(expected, actual);
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, propertyChanges);
 
