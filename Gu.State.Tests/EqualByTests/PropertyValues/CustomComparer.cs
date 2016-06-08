@@ -6,9 +6,9 @@ namespace Gu.State.Tests.EqualByTests.PropertyValues
     {
         public override bool EqualMethod<T, TValue>(T x, T y, IEqualityComparer<TValue> comparer , ReferenceHandling referenceHandling = ReferenceHandling.Structural)
         {
-            var builder = PropertiesSettings.Build();
-            builder.AddComparer(comparer);
-            var settings = builder.CreateSettings(referenceHandling);
+            var settings = PropertiesSettings.Build()
+                                             .AddComparer(comparer)
+                                             .CreateSettings(referenceHandling);
             return EqualBy.PropertyValues(x, y, settings);
         }
     }

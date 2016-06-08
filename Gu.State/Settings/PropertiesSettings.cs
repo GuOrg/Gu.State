@@ -17,10 +17,9 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertiesSettings"/> class.
         /// </summary>
-        /// <param name="ignoredProperties">The properties provided here will be ignored when the intsance of <see cref="PropertiesSettings"/> is used</param>
-        /// <param name="ignoredTypes">
-        /// The types to ignore
-        /// </param>
+        /// <param name="ignoredProperties">The properties provided here will be ignored when the intsance of <see cref="PropertiesSettings"/> is used. Can be null.</param>
+        /// <param name="ignoredTypes">The types to ignore</param>
+        /// <param name="immutableTypes">A collection of types to treat as immutable. Can be null.</param>
         /// <param name="comparers">Custom comparers. Use this to get better performance or for custom equality for types.</param>
         /// <param name="copyers">Custom copyers.</param>
         /// <param name="bindingFlags">The binding flags to use when getting properties</param>
@@ -31,11 +30,12 @@
         public PropertiesSettings(
             IEnumerable<PropertyInfo> ignoredProperties,
             IEnumerable<Type> ignoredTypes,
+            IEnumerable<Type> immutableTypes,
             IReadOnlyDictionary<Type, CastingComparer> comparers,
             IReadOnlyDictionary<Type, CustomCopy> copyers,
             ReferenceHandling referenceHandling = ReferenceHandling.Structural,
             BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
-            : base(ignoredProperties, ignoredTypes, comparers, copyers, referenceHandling, bindingFlags)
+            : base(ignoredProperties, ignoredTypes, immutableTypes, comparers, copyers, referenceHandling, bindingFlags)
         {
         }
 
@@ -74,7 +74,7 @@
             var key = new BindingFlagsAndReferenceHandling(bindingFlags, referenceHandling);
             return Cache.GetOrAdd(
                 key,
-                x => new PropertiesSettings(null, null, null, null, referenceHandling, bindingFlags));
+                x => new PropertiesSettings(null, null, null, null, null, referenceHandling, bindingFlags));
         }
 
         /// <summary>Gets if the <paramref name="propertyInfo"/> is ignored.</summary>

@@ -55,5 +55,33 @@ namespace Gu.State.Tests.EqualByTests
             Assert.AreEqual(expected, result);
             comparerMock.Verify(c => c.Equals(It.IsAny<WithSimpleProperties>(), It.IsAny<WithSimpleProperties>()), Times.Once);
         }
+
+        [TestCase(ReferenceHandling.References)]
+        [TestCase(ReferenceHandling.Structural)]
+        public void WithIntCollectionWithExplicitComparer(ReferenceHandling referenceHandling)
+        {
+            var x = new With<IntCollection>(new IntCollection(1));
+            var y = new With<IntCollection>(new IntCollection(1));
+            var comparerMock = new Mock<IEqualityComparer<IntCollection>>(MockBehavior.Strict);
+            comparerMock.Setup(c => c.Equals(x.Value, y.Value))
+                        .Returns(true);
+            var result = this.EqualMethod(x, y, comparerMock.Object, ReferenceHandling.Structural);
+            Assert.AreEqual(true, result);
+            comparerMock.Verify(c => c.Equals(It.IsAny<IntCollection>(), It.IsAny<IntCollection>()), Times.Once);
+        }
+
+        [TestCase(ReferenceHandling.References)]
+        [TestCase(ReferenceHandling.Structural)]
+        public void IntCollectionWithExplicitComparer(ReferenceHandling referenceHandling)
+        {
+            var x = new IntCollection(1);
+            var y = new IntCollection(1);
+            var comparerMock = new Mock<IEqualityComparer<IntCollection>>(MockBehavior.Strict);
+            comparerMock.Setup(c => c.Equals(x, y))
+                        .Returns(true);
+            var result = this.EqualMethod(x, y, comparerMock.Object, ReferenceHandling.Structural);
+            Assert.AreEqual(true, result);
+            comparerMock.Verify(c => c.Equals(It.IsAny<IntCollection>(), It.IsAny<IntCollection>()), Times.Once);
+        }
     }
 }

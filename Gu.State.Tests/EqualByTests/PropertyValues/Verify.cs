@@ -4,7 +4,11 @@
 
     public class Verify : VerifyTests
     {
-        public override void VerifyMethod<T>(ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type excludedType = null)
+        public override void VerifyMethod<T>(
+            ReferenceHandling referenceHandling = ReferenceHandling.Structural,
+            string excludedMembers = null,
+            Type ignoredType = null,
+            Type immutableType = null)
         {
             var builder = PropertiesSettings.Build();
             if (excludedMembers != null)
@@ -12,9 +16,14 @@
                 builder.IgnoreProperty<T>(excludedMembers);
             }
 
-            if (excludedType != null)
+            if (ignoredType != null)
             {
-                builder.IgnoreType(excludedType);
+                builder.IgnoreType(ignoredType);
+            }
+
+            if (immutableType != null)
+            {
+                builder.AddImmutableType(immutableType);
             }
 
             var settings = builder.CreateSettings(referenceHandling);

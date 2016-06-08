@@ -10,7 +10,11 @@ namespace Gu.State.Tests.EqualByTests
 
     public abstract class VerifyTests
     {
-        public abstract void VerifyMethod<T>(ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type excludedType = null);
+        public abstract void VerifyMethod<T>(
+            ReferenceHandling referenceHandling = ReferenceHandling.Structural,
+            string excludedMembers = null,
+            Type ignoredType = null,
+            Type immutableType = null);
 
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.References)]

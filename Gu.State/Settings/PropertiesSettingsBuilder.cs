@@ -12,6 +12,7 @@
     public class PropertiesSettingsBuilder
     {
         private readonly HashSet<Type> ignoredTypes = new HashSet<Type>();
+        private readonly HashSet<Type> immutableTypes = new HashSet<Type>();
         private readonly HashSet<PropertyInfo> ignoredProperties = new HashSet<PropertyInfo>(MemberInfoComparer<PropertyInfo>.Default);
         private readonly Dictionary<Type, CastingComparer> comparers = new Dictionary<Type, CastingComparer>();
         private readonly Dictionary<Type, CustomCopy> copyers = new Dictionary<Type, CustomCopy>();
@@ -37,6 +38,7 @@
             return new PropertiesSettings(
                 this.ignoredProperties,
                 this.ignoredTypes,
+                this.immutableTypes,
                 this.comparers,
                 this.copyers,
                 referenceHandling,
@@ -56,7 +58,7 @@
         /// <returns>The builder instance for chaining.</returns>
         public PropertiesSettingsBuilder AddImmutableType(Type type)
         {
-            if (!this.ignoredTypes.Add(type))
+            if (!this.immutableTypes.Add(type))
             {
                 var message = $"Already added type: {type.FullName}\r\n" +
                               $"Nested Fields are not allowed";

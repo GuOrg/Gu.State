@@ -15,7 +15,8 @@ namespace Gu.State.Tests.DiffTests
             T y,
             ReferenceHandling referenceHandling = ReferenceHandling.Structural,
             string excludedMembers = null,
-            Type excludedType = null) where T : class;
+            Type ignoredType = null,
+            Type immutableType = null) where T : class;
 
         [TestCase("b", "b", "Empty")]
         [TestCase("b", "c", "WithSimpleProperties <member> x: b y: c")]
@@ -352,7 +353,7 @@ namespace Gu.State.Tests.DiffTests
                 x,
                 y,
                 ReferenceHandling.Structural,
-                excludedType: typeof(ComplexType));
+                ignoredType: typeof(ComplexType));
             Assert.AreEqual(expected, result.ToString("", " "));
         }
     }

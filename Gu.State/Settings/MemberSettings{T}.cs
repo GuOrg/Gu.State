@@ -12,6 +12,7 @@
     {
         private readonly IReadOnlyDictionary<Type, CastingComparer> comparers;
         private readonly IReadOnlyDictionary<Type, CustomCopy> copyers;
+        private readonly ImmutableSet<Type> immutableTypes;
         private readonly IgnoredTypes ignoredTypes;
         private readonly ConcurrentDictionary<T, bool> ignoredMembers = new ConcurrentDictionary<T, bool>();
 
@@ -20,6 +21,7 @@
         /// </summary>
         /// <param name="ignoredMembers">A collection of members to ignore. Can be null.</param>
         /// <param name="ignoredTypes">A collection of types to ignore. Can be null.</param>
+        /// <param name="immutableTypes">A collection of types to treat as immutable. Can be null.</param>
         /// <param name="comparers">A map of types with custom comparers. Can be null.</param>
         /// <param name="copyers">A map of custom copy implementations for types. Can be null.</param>
         /// <param name="referenceHandling">How reference values are handled.</param>
@@ -27,6 +29,7 @@
         protected MemberSettings(
             IEnumerable<T> ignoredMembers,
             IEnumerable<Type> ignoredTypes,
+            IEnumerable<Type> immutableTypes,
             IReadOnlyDictionary<Type, CastingComparer> comparers,
             IReadOnlyDictionary<Type, CustomCopy> copyers,
             ReferenceHandling referenceHandling,
@@ -45,6 +48,9 @@
             }
 
             this.ignoredTypes = IgnoredTypes.Create(ignoredTypes);
+            this.immutableTypes = immutableTypes != null
+                                      ? new ImmutableSet<Type>(immutableTypes)
+                                      : ImmutableSet<Type>.Empty;
         }
 
         /// <summary>Gets the bindingflags used for getting members.</summary>
@@ -81,7 +87,15 @@
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns>True if <paramref name="type"/> is immutable.</returns>
-        public bool IsImmutable(Type type) => IsImmutableCore(type);
+        public bool IsImmutable(Type type)
+        {
+            if (this.immutableTypes.Contains(type))
+            {
+                return true;
+            }
+
+            return IsImmutableCore(type);
+        }
 
         /// <summary>Gets if the <paramref name="declaringType"/> is ignored.</summary>
         /// <param name="declaringType">The type to check.</param>

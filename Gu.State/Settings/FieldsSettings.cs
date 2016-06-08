@@ -18,8 +18,9 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="FieldsSettings"/> class.
         /// </summary>
-        /// <param name="ignoredFields">The fields provided here will be ignored when the intsance of <see cref="FieldsSettings"/> is used</param>
+        /// <param name="ignoredFields">The fields provided here will be ignored when the intsance of <see cref="FieldsSettings"/> is used. Can be null.</param>
         /// <param name="ignoredTypes">The types to ignore</param>
+        /// <param name="immutableTypes">A collection of types to treat as immutable. Can be null.</param>
         /// <param name="comparers">Custom comparers. Use this to get better performance or for custom equality for types.</param>
         /// <param name="copyers">Custom copyers.</param>
         /// <param name="referenceHandling">
@@ -30,11 +31,12 @@
         public FieldsSettings(
             IEnumerable<FieldInfo> ignoredFields,
             IEnumerable<Type> ignoredTypes,
+            IEnumerable<Type> immutableTypes,
             IReadOnlyDictionary<Type, CastingComparer> comparers,
             IReadOnlyDictionary<Type, CustomCopy> copyers,
             ReferenceHandling referenceHandling = ReferenceHandling.Structural,
             BindingFlags bindingFlags = Constants.DefaultFieldBindingFlags)
-            : base(ignoredFields, ignoredTypes, comparers, copyers, referenceHandling, bindingFlags)
+            : base(ignoredFields, ignoredTypes, immutableTypes, comparers, copyers, referenceHandling, bindingFlags)
         {
         }
 
@@ -72,7 +74,7 @@
             BindingFlags bindingFlags = Constants.DefaultFieldBindingFlags)
         {
             var key = new BindingFlagsAndReferenceHandling(bindingFlags, referenceHandling);
-            return Cache.GetOrAdd(key, x => new FieldsSettings(null, null, null, null, referenceHandling, bindingFlags));
+            return Cache.GetOrAdd(key, x => new FieldsSettings(null, null, null, null, null, referenceHandling, bindingFlags));
         }
 
         /// <summary>Gets if the <paramref name="fieldInfo"/> is ignored.</summary>

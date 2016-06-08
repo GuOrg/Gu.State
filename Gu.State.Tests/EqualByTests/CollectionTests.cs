@@ -12,6 +12,16 @@
     {
         public abstract bool EqualByMethod<T>(T source, T target, ReferenceHandling referenceHandling) where T : class;
 
+        [TestCase(ReferenceHandling.References)]
+        [TestCase(ReferenceHandling.Structural)]
+        public void WithExplicitComparer(ReferenceHandling referenceHandling)
+        {
+            var x = new With<EquatableIntCollection>(new EquatableIntCollection(1));
+            var y = new With<EquatableIntCollection>(new EquatableIntCollection(1));
+            var result = this.EqualByMethod(x, y, referenceHandling);
+            Assert.AreEqual(true, result);
+        }
+
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.References)]
         [TestCase(ReferenceHandling.Structural)]

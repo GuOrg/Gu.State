@@ -5,7 +5,14 @@
 
     public class Classes : ClassesTests
     {
-        public override bool EqualMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type excludedType = null)
+        public new static IReadOnlyList<EqualByTestsShared.EqualsData> EqualsSource => EqualByTestsShared.EqualsSource;
+
+        public override bool EqualMethod<T>(
+            T x,
+            T y,
+            ReferenceHandling referenceHandling = ReferenceHandling.Structural,
+            string excludedMembers = null,
+            Type ignoredType = null)
         {
             var builder = FieldsSettings.Build();
             if (excludedMembers != null)
@@ -13,15 +20,13 @@
                 builder.AddIgnoredField<T>(excludedMembers);
             }
 
-            if (excludedType != null)
+            if (ignoredType != null)
             {
-                builder.AddImmutableType(excludedType);
+                builder.IgnoreType(ignoredType);
             }
 
             var settings = builder.CreateSettings(referenceHandling);
             return EqualBy.FieldValues(x, y, settings);
         }
-
-        public new static IReadOnlyList<EqualByTestsShared.EqualsData> EqualsSource => EqualByTestsShared.EqualsSource;
     }
 }

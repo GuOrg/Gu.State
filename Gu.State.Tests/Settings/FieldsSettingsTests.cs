@@ -18,7 +18,7 @@ namespace Gu.State.Tests.Settings
             var type = typeof(ComplexType);
             var nameField = type.GetField(nameof(ComplexType.Name));
             var valueField = type.GetField(nameof(ComplexType.Value));
-            var settings = new FieldsSettings(new[] { nameField }, null, null, null, ReferenceHandling.Throw, Constants.DefaultFieldBindingFlags);
+            var settings = new FieldsSettings(new[] { nameField }, null, null, null, null, ReferenceHandling.Throw, Constants.DefaultFieldBindingFlags);
             Assert.AreEqual(true, settings.IsIgnoringField(nameField));
             Assert.AreEqual(false, settings.IsIgnoringField(valueField));
         }
