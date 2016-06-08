@@ -112,7 +112,7 @@
 
         internal static void VerifyCanTrackIsDirty(Type type, PropertiesSettings settings, string className, string methodName)
         {
-            EqualBy.VerifyCanEqualByPropertyValues(type, settings, className, methodName);
+            EqualBy.Verify.CanEqualByMemberValues(type, settings, className, methodName);
             VerifyCanTrackChanges(type, settings, className, methodName);
         }
 

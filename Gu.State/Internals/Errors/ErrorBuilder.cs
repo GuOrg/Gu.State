@@ -135,8 +135,7 @@ namespace Gu.State
             return typeErrors;
         }
 
-        internal static TypeErrorsBuilder CheckIndexers<TSettings>(this TypeErrorsBuilder typeErrors, Type type, TSettings settings)
-            where TSettings : IMemberSettings
+        internal static TypeErrorsBuilder CheckIndexers(this TypeErrorsBuilder typeErrors, Type type, IMemberSettings settings)
         {
             var propertiesSettings = settings as PropertiesSettings;
             var propertyInfos = type.GetProperties(settings.BindingFlags);
@@ -164,6 +163,39 @@ namespace Gu.State
             return typeErrors;
         }
 
+        internal static TypeErrorsBuilder VerifyRecursive(
+            this TypeErrorsBuilder typeErrors,
+            Type type,
+            IMemberSettings settings,
+            MemberPath memberPath,
+            Func<IMemberSettings, MemberPath, TypeErrors> getPropertyErrors)
+        {
+            if (settings.ReferenceHandling == ReferenceHandling.References)
+            {
+                return typeErrors;
+            }
+
+            typeErrors = VerifyEnumerableRecursively(typeErrors, type, settings, memberPath, getPropertyErrors);
+
+            foreach (var member in settings.GetMembers(type))
+            {
+                if (settings.IsIgnoringMember(member))
+                {
+                    continue;
+                }
+
+                if (memberPath == null)
+                {
+                    memberPath = new MemberPath(type);
+                }
+
+                typeErrors = VerifyMemberRecursively(typeErrors, type, settings, memberPath, getPropertyErrors, member);
+            }
+
+            return typeErrors;
+        }
+
+        [Obsolete]
         internal static TypeErrorsBuilder VerifyRecursive(
             this TypeErrorsBuilder typeErrors,
             Type type,
@@ -202,6 +234,7 @@ namespace Gu.State
             return typeErrors;
         }
 
+        [Obsolete]
         internal static TypeErrorsBuilder VerifyRecursive(
             this TypeErrorsBuilder typeErrors,
             Type type,

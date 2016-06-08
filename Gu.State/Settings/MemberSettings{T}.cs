@@ -59,8 +59,6 @@
         /// <summary>Gets a value indicating how reference values are handled.</summary>
         public ReferenceHandling ReferenceHandling { get; }
 
-        internal ConcurrentDictionary<Type, TypeErrors> EqualByErrors { get; } = new ConcurrentDictionary<Type, TypeErrors>();
-
         internal ConcurrentDictionary<Type, TypeErrors> CopyErrors { get; } = new ConcurrentDictionary<Type, TypeErrors>();
 
         /// <summary>Gets a cache for ignored members.</summary>
