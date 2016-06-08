@@ -107,9 +107,13 @@ namespace Gu.State
             return typeErrors;
         }
 
-        internal static TypeErrorsBuilder CheckNotifies<TSettings>(this TypeErrorsBuilder typeErrors, Type type, TSettings settings)
-             where TSettings : IMemberSettings
+        internal static TypeErrorsBuilder CheckNotifies(this TypeErrorsBuilder typeErrors, Type type, IMemberSettings settings)
         {
+            if (settings.IsImmutable(type))
+            {
+                return typeErrors;
+            }
+
             if (typeof(IEnumerable).IsAssignableFrom(type))
             {
                 if (!typeof(INotifyCollectionChanged).IsAssignableFrom(type))
