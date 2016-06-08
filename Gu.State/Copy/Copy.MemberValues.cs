@@ -8,7 +8,7 @@
         internal static void Member<T>(
             T source,
             T target,
-            IMemberSettings settings,
+            MemberSettings settings,
             MemberInfo member)
                 where T : class
         {
@@ -25,7 +25,7 @@
             }
         }
 
-        private static void Members<T>(T source, T target, IMemberSettings settings, ReferencePairCollection referencePairs)
+        private static void Members<T>(T source, T target, MemberSettings settings, ReferencePairCollection referencePairs)
         {
             Debug.Assert(source != null, nameof(source));
             Debug.Assert(target != null, nameof(target));
@@ -64,7 +64,7 @@
         private static void Member<T>(
             T source,
             T target,
-            IMemberSettings settings,
+            MemberSettings settings,
             ReferencePairCollection referencePairs,
             MemberInfo member)
         {
@@ -80,7 +80,7 @@
         private static void Member<T>(
             T source,
             T target,
-            IMemberSettings settings,
+            MemberSettings settings,
             ReferencePairCollection referencePairs,
             IGetterAndSetter getterAndSetter)
         {

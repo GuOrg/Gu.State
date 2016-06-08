@@ -5,13 +5,14 @@
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Linq;
     using System.Reflection;
 
     /// <summary>
     /// A configuration object with settings for how to copy and compare etc. instances using fields.
     /// The setting should be cached between calls for performance.
     /// </summary>
-    public sealed class FieldsSettings : MemberSettings<FieldInfo>, IMemberSettings
+    public sealed class FieldsSettings : MemberSettings
     {
         private static readonly ConcurrentDictionary<BindingFlagsAndReferenceHandling, FieldsSettings> Cache = new ConcurrentDictionary<BindingFlagsAndReferenceHandling, FieldsSettings>();
 
@@ -47,8 +48,8 @@
         /// </summary>
         public static FieldsSettings Default => GetOrCreate();
 
-        /// <summary>Gets a collection or ignored fields.</summary>
-        public IEnumerable<FieldInfo> IgnoredFields => this.IgnoredMembers.Keys;
+        /// <summary>Gets a collection of ignored fields.</summary>
+        public IEnumerable<FieldInfo> IgnoredFields => this.IgnoredMembers.Keys.Cast<FieldInfo>();
 
         /// <summary> Create a builder for building a <see cref="FieldsSettings"/></summary>
         /// <returns>A <see cref="FieldsSettingsBuilder"/></returns>
@@ -95,21 +96,21 @@
             return this.IgnoredMembers.ContainsKey(fieldInfo);
         }
 
-        IEnumerable<MemberInfo> IMemberSettings.GetMembers(Type type)
+        public override IEnumerable<MemberInfo> GetMembers(Type type)
         {
             return type.GetFields(this.BindingFlags);
         }
 
-        bool IMemberSettings.IsIgnoringMember(MemberInfo member)
+        public override bool IsIgnoringMember(MemberInfo member)
         {
             Debug.Assert(member is FieldInfo, "member is FieldInfo");
-            return this.IsIgnoringField(member as FieldInfo);
+            return this.IsIgnoringField((FieldInfo)member);
         }
 
-        IGetterAndSetter IMemberSettings.GetOrCreateGetterAndSetter(MemberInfo member)
+        internal override IGetterAndSetter GetOrCreateGetterAndSetter(MemberInfo member)
         {
             Debug.Assert(member is FieldInfo, "member is FieldInfo");
-            return this.GetOrCreateGetterAndSetter(member as FieldInfo);
+            return this.GetOrCreateGetterAndSetter((FieldInfo)member);
         }
 
         private IGetterAndSetter GetOrCreateGetterAndSetter(FieldInfo propertyInfo)

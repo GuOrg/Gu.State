@@ -99,37 +99,40 @@
 
         internal static class Verify
         {
-            internal static void CanEqualByMemberValues<T>(T x, T y, IMemberSettings settings)
+            internal static void CanEqualByMemberValues<T>(T x, T y, MemberSettings settings)
             {
                 CanEqualByMemberValues(x, y, settings, typeof(EqualBy).Name, settings.EqualByMethodName());
             }
 
-            internal static void CanEqualByMemberValues<T>(T x, T y, IMemberSettings settings, string className, string methodName)
+            internal static void CanEqualByMemberValues<T>(T x, T y, MemberSettings settings, string className, string methodName)
             {
                 var type = x?.GetType() ?? y?.GetType() ?? typeof(T);
                 CanEqualByMemberValues(type, settings, className, methodName);
             }
 
-            internal static void CanEqualByMemberValues<T>(IMemberSettings settings, string className, string methodName)
+            internal static void CanEqualByMemberValues<T>(
+                MemberSettings settings,
+                string className,
+                string methodName)
             {
                 CanEqualByMemberValues(typeof(T), settings, className, methodName);
             }
 
-            internal static void CanEqualByMemberValues(Type type, IMemberSettings settings, string className, string methodName)
+            internal static void CanEqualByMemberValues(Type type, MemberSettings settings, string className, string methodName)
             {
                 GetOrCreateErrors(type, settings)
                     .ThrowIfHasErrors(settings, className, methodName);
             }
 
-            internal static TypeErrors GetOrCreateErrors(Type type, IMemberSettings settings, MemberPath path = null)
+            private static TypeErrors GetOrCreateErrors(Type type, MemberSettings settings, MemberPath path = null)
             {
-                return settings.EqualByErrors()
+                return settings.EqualByErrors
                                .GetOrAdd(
                                    type,
                                    t => CreateErrors(t, settings, path));
             }
 
-            private static TypeErrors CreateErrors(Type type, IMemberSettings settings, MemberPath path)
+            private static TypeErrors CreateErrors(Type type, MemberSettings settings, MemberPath path)
             {
                 CastingComparer temp;
                 if (settings.IsEquatable(type) || settings.TryGetComparer(type, out temp))
@@ -143,14 +146,14 @@
                 return errors;
             }
 
-            private static ErrorBuilder.TypeErrorsBuilder VerifyCore(IMemberSettings settings, Type type)
+            private static ErrorBuilder.TypeErrorsBuilder VerifyCore(MemberSettings settings, Type type)
             {
                 return ErrorBuilder.Start()
                                    .CheckRequiresReferenceHandling(type, settings, t => !settings.IsEquatable(t))
                                    .CheckIndexers(type, settings);
             }
 
-            private static TypeErrors GetNodeErrors(IMemberSettings settings, MemberPath path)
+            private static TypeErrors GetNodeErrors(MemberSettings settings, MemberPath path)
             {
                 if (settings.ReferenceHandling == ReferenceHandling.References)
                 {

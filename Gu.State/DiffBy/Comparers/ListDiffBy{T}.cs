@@ -15,17 +15,16 @@
             DiffBuilder collectionBuilder,
             object x,
             object y,
-            IMemberSettings settings)
+            MemberSettings settings)
         {
             this.AddDiffs(collectionBuilder, (IList<T>)x, (IList<T>)y, settings);
         }
 
-        private void AddDiffs<TSettings>(
+        private void AddDiffs(
             DiffBuilder collectionBuilder,
             IList<T> x,
             IList<T> y,
-            TSettings settings)
-                where TSettings : IMemberSettings
+            MemberSettings settings)
         {
             for (var i = 0; i < Math.Max(x.Count, y.Count); i++)
             {

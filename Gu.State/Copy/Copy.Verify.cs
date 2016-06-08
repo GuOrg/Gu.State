@@ -109,8 +109,7 @@
                   .ThrowIfHasErrors(settings, classname, methodName);
         }
 
-        private static ErrorBuilder.TypeErrorsBuilder CheckIsCopyableEnumerable<TSetting>(this ErrorBuilder.TypeErrorsBuilder typeErrors, Type type, TSetting settings)
-            where TSetting : IMemberSettings
+        private static ErrorBuilder.TypeErrorsBuilder CheckIsCopyableEnumerable(this ErrorBuilder.TypeErrorsBuilder typeErrors, Type type, MemberSettings settings)
         {
             if (!typeof(IEnumerable).IsAssignableFrom(type))
             {
@@ -139,7 +138,7 @@
 
         internal static class Verify
         {
-            internal static void CanCopyMemberValues<T>(T x, T y, IMemberSettings settings)
+            internal static void CanCopyMemberValues<T>(T x, T y, MemberSettings settings)
             {
                 var type = x?.GetType() ?? y?.GetType() ?? typeof(T);
                 var propertiesSettings = settings as PropertiesSettings;
@@ -162,8 +161,7 @@
                     "CanCopyMemberValues failed");
             }
 
-            internal static void CanCopyRoot<TSettings>(Type type, TSettings settings)
-                where TSettings : IMemberSettings
+            internal static void CanCopyRoot(Type type, MemberSettings settings)
             {
                 if (settings.IsImmutable(type))
                 {
@@ -190,7 +188,7 @@
                                                                    .Finnish());
             }
 
-            private static ErrorBuilder.TypeErrorsBuilder VerifyCore(IMemberSettings settings, Type type)
+            private static ErrorBuilder.TypeErrorsBuilder VerifyCore(MemberSettings settings, Type type)
             {
                 return ErrorBuilder.Start()
                                    .CheckRequiresReferenceHandling(type, settings, t => !settings.IsImmutable(t))

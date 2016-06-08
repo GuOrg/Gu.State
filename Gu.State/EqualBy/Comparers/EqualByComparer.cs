@@ -16,7 +16,7 @@
         public abstract bool Equals(
             object x,
             object y,
-            IMemberSettings settings,
+            MemberSettings settings,
             ReferencePairCollection referencePairs);
 
         /// <summary>Convenience method for checking equality if either or both <paramref name="x"/> and <paramref name="y"/> are null.</summary>

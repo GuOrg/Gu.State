@@ -16,7 +16,7 @@
         public override bool Equals(
             object x,
             object y,
-            IMemberSettings settings,
+            MemberSettings settings,
             ReferencePairCollection referencePairs)
         {
             bool result;
@@ -48,7 +48,7 @@
         internal static bool KeysAndValuesEquals(
             IReadOnlyDictionary<TKey, TValue> x,
             IReadOnlyDictionary<TKey, TValue> y,
-            IMemberSettings settings,
+            MemberSettings settings,
             ReferencePairCollection referencePairs)
         {
             foreach (var key in x.Keys)

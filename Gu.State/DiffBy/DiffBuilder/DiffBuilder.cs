@@ -12,7 +12,7 @@
         private static readonly object RankDiffKey = new object();
         private readonly IRefCounted<ReferencePair> refCountedPair;
 
-        private readonly IMemberSettings settings;
+        private readonly MemberSettings settings;
         private readonly IBorrowed<Dictionary<object, SubDiff>> borrowedDiffs;
         private readonly IBorrowed<Dictionary<object, IRefCounted<DiffBuilder>>> borrowedSubBuilders;
         private readonly List<SubDiff> diffs = new List<SubDiff>();
@@ -26,7 +26,7 @@
         private bool isCheckingHasMemberOrIndexDiff;
         private bool disposed;
 
-        private DiffBuilder(IRefCounted<ReferencePair> refCountedPair, IMemberSettings settings)
+        private DiffBuilder(IRefCounted<ReferencePair> refCountedPair, MemberSettings settings)
         {
             this.refCountedPair = refCountedPair;
             this.settings = settings;
@@ -75,12 +75,12 @@
             }
         }
 
-        internal static IRefCounted<DiffBuilder> GetOrCreate(object x, object y, IMemberSettings settings)
+        internal static IRefCounted<DiffBuilder> GetOrCreate(object x, object y, MemberSettings settings)
         {
             return TrackerCache.GetOrAdd(x, y, settings, pair => new DiffBuilder(pair, settings));
         }
 
-        internal static bool TryCreate(object x, object y, IMemberSettings settings, out IRefCounted<DiffBuilder> subDiffBuilder)
+        internal static bool TryCreate(object x, object y, MemberSettings settings, out IRefCounted<DiffBuilder> subDiffBuilder)
         {
             bool created;
             subDiffBuilder = TrackerCache.GetOrAdd(x, y, settings, pair => new DiffBuilder(pair, settings), out created);

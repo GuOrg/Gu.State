@@ -14,7 +14,7 @@
         public override bool Equals(
             object x,
             object y,
-            IMemberSettings settings,
+            MemberSettings settings,
             ReferencePairCollection referencePairs)
         {
             bool result;
@@ -46,7 +46,7 @@
         private static bool Equals(
             IList<T> x,
             IList<T> y,
-            IMemberSettings settings,
+            MemberSettings settings,
             ReferencePairCollection referencePairs)
         {
             for (var i = 0; i < x.Count; i++)

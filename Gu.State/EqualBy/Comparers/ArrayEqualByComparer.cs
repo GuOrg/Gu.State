@@ -28,7 +28,7 @@ namespace Gu.State
         public override bool Equals(
             object x,
             object y,
-            IMemberSettings settings,
+            MemberSettings settings,
             ReferencePairCollection referencePairs)
         {
             bool result;
@@ -43,7 +43,7 @@ namespace Gu.State
         private static bool Equals(
             Array x,
             Array y,
-            IMemberSettings settings,
+            MemberSettings settings,
             ReferencePairCollection referencePairs)
         {
             if (!Is.SameSize(x, y))

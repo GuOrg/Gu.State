@@ -16,12 +16,11 @@
                    type.Implements(typeof(ISet<>));
         }
 
-        private static void CollectionItems<TSettings>(
+        private static void CollectionItems(
             object source,
             object target,
-            TSettings settings,
+            MemberSettings settings,
             ReferencePairCollection referencePairs)
-             where TSettings : class, IMemberSettings
         {
             if (!Is.Enumerable(source, target))
             {

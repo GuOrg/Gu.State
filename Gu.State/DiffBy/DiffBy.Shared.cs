@@ -2,7 +2,7 @@
 {
     public static partial class DiffBy
     {
-        private static string DiffMethodName(this IMemberSettings settings)
+        private static string DiffMethodName(this MemberSettings settings)
         {
             if (settings is PropertiesSettings)
             {
@@ -17,8 +17,7 @@
             throw Throw.ExpectedParameterOfTypes<FieldsSettings, PropertiesSettings>("DiffMethodName failed.");
         }
 
-        private static bool TryGetValueDiff<TSettings>(object x, object y, TSettings settings, out ValueDiff diff)
-            where TSettings : IMemberSettings
+        private static bool TryGetValueDiff(object x, object y, MemberSettings settings, out ValueDiff diff)
         {
             bool result;
             if (EqualBy.TryGetValueEquals(x, y, settings, out result))

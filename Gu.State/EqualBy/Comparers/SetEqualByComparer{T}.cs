@@ -18,7 +18,7 @@
         public override bool Equals(
             object x,
             object y,
-            IMemberSettings settings,
+            MemberSettings settings,
             ReferencePairCollection referencePairs)
         {
             bool result;

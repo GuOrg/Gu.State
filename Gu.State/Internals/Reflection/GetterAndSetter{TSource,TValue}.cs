@@ -55,7 +55,7 @@
             return this.GetValue((TSource)source);
         }
 
-        public bool TryGetValueEquals(object x, object y, IMemberSettings settings, out bool equal, out object xv, out object yv)
+        public bool TryGetValueEquals(object x, object y, MemberSettings settings, out bool equal, out object xv, out object yv)
         {
             TValue xValue;
             TValue yValue;
@@ -65,7 +65,7 @@
             return result;
         }
 
-        public bool TryGetValueEquals(TSource x, TSource y, IMemberSettings settings, out bool equal, out TValue xv, out TValue yv)
+        public bool TryGetValueEquals(TSource x, TSource y, MemberSettings settings, out bool equal, out TValue xv, out TValue yv)
         {
             xv = this.GetValue(x);
             yv = this.GetValue(y);

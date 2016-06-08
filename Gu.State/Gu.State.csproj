@@ -45,11 +45,12 @@
     <Compile Include="EqualBy\Comparers\ReadOnlyDictionaryEqualByComparer{TKey,TValue}.cs" />
     <Compile Include="Internals\Borrowed.cs" />
     <Compile Include="Contracts\IChangeTracker.cs" />
+    <Compile Include="Internals\Collections\ImmutableSet.cs" />
     <Compile Include="Internals\Collections\ImmutableSet{T}.cs" />
-    <Compile Include="Internals\Errors\ErrorCache.cs" />
     <Compile Include="Internals\Extensions\StringExt.cs" />
     <Compile Include="Internals\Pools\DictionaryPool{TKey,TValue}.cs" />
     <Compile Include="Internals\Reflection\GetterAndSetter{TSource,TValue}.cs" />
+    <Compile Include="Settings\MemberSettings.cs" />
     <Compile Include="Track\ChildNodes\ChildNodes.cs" />
     <Compile Include="Internals\Contracts\IInitialize{T}.cs" />
     <Compile Include="Internals\CastingComparer.cs" />
@@ -177,8 +178,6 @@
     <Compile Include="Internals\MemberPath\ITypedNode.cs" />
     <Compile Include="Settings\FieldsSettingsBuilder.cs" />
     <Compile Include="Settings\FieldsSettings.cs" />
-    <Compile Include="Contracts\IMemberSettings.cs" />
-    <Compile Include="Settings\MemberSettings{T}.cs" />
     <Compile Include="Settings\PropertiesSettingsBuilder.cs" />
     <Compile Include="Settings\Internals\MemberInfoComparer.cs" />
     <Compile Include="Copy\Copy.Collection.cs" />

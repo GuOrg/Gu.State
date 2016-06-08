@@ -39,7 +39,7 @@ namespace Gu.State.Tests.Internals
 
         internal class Recursive : IDisposable
         {
-            public Recursive(IRefCounted<ReferencePair> pair, IMemberSettings settings)
+            public Recursive(IRefCounted<ReferencePair> pair, MemberSettings settings)
             {
                 this.Next = TrackerCache.GetOrAdd(pair.Value.X, pair.Value.Y, settings, x => new Recursive(x, settings));
             }

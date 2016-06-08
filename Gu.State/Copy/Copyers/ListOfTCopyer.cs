@@ -23,26 +23,24 @@ namespace Gu.State
             return false;
         }
 
-        public void Copy<TSettings>(
+        public void Copy(
             object source,
             object target,
-            TSettings settings,
+            MemberSettings settings,
             ReferencePairCollection referencePairs)
-            where TSettings : class, IMemberSettings
         {
             var itemType = source.GetType().GetItemType();
             var copyMethod = this.GetType()
                                         .GetMethod(nameof(Copy), BindingFlags.NonPublic | BindingFlags.Static)
-                                        .MakeGenericMethod(itemType, typeof(TSettings));
+                                        .MakeGenericMethod(itemType);
             copyMethod.Invoke(null, new[] { source, target, settings, referencePairs });
         }
 
-        private static void Copy<T, TSettings>(
+        private static void Copy<T>(
             IList<T> source,
             IList<T> target,
-            TSettings settings,
+            MemberSettings settings,
             ReferencePairCollection referencePairs)
-            where TSettings : class, IMemberSettings
         {
             if (Is.IsFixedSize(source, target) && source.Count != target.Count)
             {

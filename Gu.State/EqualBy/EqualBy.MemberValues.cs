@@ -9,7 +9,7 @@
     /// </summary>
     public static partial class EqualBy
     {
-        internal static bool MemberValues<T>(T x, T y, IMemberSettings settings)
+        internal static bool MemberValues<T>(T x, T y, MemberSettings settings)
         {
             bool result;
             if (TryGetValueEquals(x, y, settings, out result))
@@ -29,7 +29,7 @@
         internal static bool MemberValues<T>(
             T x,
             T y,
-            IMemberSettings settings,
+            MemberSettings settings,
             ReferencePairCollection referencePairs)
         {
             bool result;
@@ -83,7 +83,7 @@
             return true;
         }
 
-        internal static bool TryGetValueEquals<T>(T x, T y, IMemberSettings settings, out bool result)
+        internal static bool TryGetValueEquals<T>(T x, T y, MemberSettings settings, out bool result)
         {
             if (ReferenceEquals(x, y))
             {
@@ -125,7 +125,7 @@
             object x,
             object y,
             MemberInfo propertyInfo,
-            IMemberSettings settings,
+            MemberSettings settings,
             ReferencePairCollection referencePairs)
         {
             bool result;

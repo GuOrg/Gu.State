@@ -22,22 +22,20 @@
             return false;
         }
 
-        public void Copy<TSettings>(
+        public void Copy(
             object source,
             object target,
-            TSettings settings,
+            MemberSettings settings,
             ReferencePairCollection referencePairs)
-            where TSettings : class, IMemberSettings
         {
             Copy((IDictionary)source, (IDictionary)target, settings, referencePairs);
         }
 
-        internal static void Copy<TSettings>(
+        internal static void Copy(
             IDictionary source,
             IDictionary target,
-            TSettings settings,
+            MemberSettings settings,
             ReferencePairCollection referencePairs)
-            where TSettings : class, IMemberSettings
         {
             using (var toRemove = ListPool<object>.Borrow())
             {

@@ -22,7 +22,7 @@
             DiffBuilder collectionBuilder,
             object x,
             object y,
-            IMemberSettings settings)
+            MemberSettings settings)
         {
             this.AddDiffs(collectionBuilder, (Array)x, (Array)y, settings);
         }
@@ -53,7 +53,7 @@
             DiffBuilder collectionBuilder,
             Array x,
             Array y,
-            IMemberSettings settings)
+            MemberSettings settings)
         {
             RankDiff rankDiff;
             if (TryGetRankDiff(x, y, out rankDiff))

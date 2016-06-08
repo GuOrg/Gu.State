@@ -8,7 +8,7 @@
         internal static IRefCounted<TValue> GetOrAdd<TKey, TValue>(
             TKey x,
             TKey y,
-            IMemberSettings settings,
+            MemberSettings settings,
             ConditionalWeakTable<IRefCounted<ReferencePair>, TValue>.CreateValueCallback creator)
             where TKey : class
             where TValue : class, IDisposable
@@ -20,7 +20,7 @@
         internal static IRefCounted<TValue> GetOrAdd<TKey, TValue>(
             TKey x,
             TKey y,
-            IMemberSettings settings,
+            MemberSettings settings,
             ConditionalWeakTable<IRefCounted<ReferencePair>, TValue>.CreateValueCallback creator,
             out bool created)
             where TKey : class
@@ -38,7 +38,7 @@
 
         internal static IRefCounted<TValue> GetOrAdd<TKey, TValue>(
             TKey key,
-            IMemberSettings settings,
+            MemberSettings settings,
             ConditionalWeakTable<TKey, TValue>.CreateValueCallback creator)
             where TKey : class
             where TValue : class, IDisposable
@@ -49,7 +49,7 @@
 
         private static IRefCounted<TValue> GetOrAdd<TKey, TValue>(
             TKey key,
-            IMemberSettings settings,
+            MemberSettings settings,
             ConditionalWeakTable<TKey, TValue>.CreateValueCallback creator,
             out bool created)
             where TKey : class
@@ -85,7 +85,7 @@
             }
         }
 
-        private static TypeCache<TKey, TValue> GetOrCreateCache<TKey, TValue>(IMemberSettings settings)
+        private static TypeCache<TKey, TValue> GetOrCreateCache<TKey, TValue>(MemberSettings settings)
             where TKey : class
             where TValue : class, IDisposable
         {
@@ -96,7 +96,7 @@
             where TKey : class
             where TValue : class
         {
-            internal static readonly ConditionalWeakTable<IMemberSettings, TypeCache<TKey, TValue>> SettingsCaches = new ConditionalWeakTable<IMemberSettings, TypeCache<TKey, TValue>>();
+            internal static readonly ConditionalWeakTable<MemberSettings, TypeCache<TKey, TValue>> SettingsCaches = new ConditionalWeakTable<MemberSettings, TypeCache<TKey, TValue>>();
 
             internal readonly ConditionalWeakTable<TKey, TValue> Items = new ConditionalWeakTable<TKey, TValue>();
             internal readonly object Gate = new object();

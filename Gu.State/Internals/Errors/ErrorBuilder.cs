@@ -63,7 +63,7 @@ namespace Gu.State
         internal static TypeErrorsBuilder CheckRequiresReferenceHandling(
             this TypeErrorsBuilder typeErrors,
             Type type,
-            IMemberSettings settings,
+            MemberSettings settings,
             Func<Type, bool> requiresReferenceHandling)
         {
             if (settings.ReferenceHandling == ReferenceHandling.Throw)
@@ -106,7 +106,7 @@ namespace Gu.State
             return typeErrors;
         }
 
-        internal static TypeErrorsBuilder CheckNotifies(this TypeErrorsBuilder typeErrors, Type type, IMemberSettings settings)
+        internal static TypeErrorsBuilder CheckNotifies(this TypeErrorsBuilder typeErrors, Type type, MemberSettings settings)
         {
             if (settings.IsImmutable(type))
             {
@@ -135,7 +135,7 @@ namespace Gu.State
             return typeErrors;
         }
 
-        internal static TypeErrorsBuilder CheckIndexers(this TypeErrorsBuilder typeErrors, Type type, IMemberSettings settings)
+        internal static TypeErrorsBuilder CheckIndexers(this TypeErrorsBuilder typeErrors, Type type, MemberSettings settings)
         {
             var propertiesSettings = settings as PropertiesSettings;
             var propertyInfos = type.GetProperties(settings.BindingFlags);
@@ -166,9 +166,9 @@ namespace Gu.State
         internal static TypeErrorsBuilder VerifyRecursive(
             this TypeErrorsBuilder typeErrors,
             Type type,
-            IMemberSettings settings,
+            MemberSettings settings,
             MemberPath memberPath,
-            Func<IMemberSettings, MemberPath, TypeErrors> getPropertyErrors)
+            Func<MemberSettings, MemberPath, TypeErrors> getPropertyErrors) 
         {
             if (settings.ReferenceHandling == ReferenceHandling.References)
             {
@@ -203,35 +203,37 @@ namespace Gu.State
             MemberPath memberPath,
             Func<PropertiesSettings, MemberPath, TypeErrors> getPropertyErrors)
         {
-            if (settings.ReferenceHandling == ReferenceHandling.References)
-            {
-                return typeErrors;
-            }
+            throw new NotImplementedException("message");
+            
+            //if (settings.ReferenceHandling == ReferenceHandling.References)
+            //{
+            //    return typeErrors;
+            //}
 
-            typeErrors = VerifyEnumerableRecursively(typeErrors, type, settings, memberPath, getPropertyErrors);
+            //typeErrors = VerifyEnumerableRecursively(typeErrors, type, settings, memberPath, getPropertyErrors);
 
-            var propertyInfos = type.GetProperties(settings.BindingFlags);
-            foreach (var propertyInfo in propertyInfos)
-            {
-                if (propertyInfo.GetIndexParameters().Length > 0)
-                {
-                    continue;
-                }
+            //var propertyInfos = type.GetProperties(settings.BindingFlags);
+            //foreach (var propertyInfo in propertyInfos)
+            //{
+            //    if (propertyInfo.GetIndexParameters().Length > 0)
+            //    {
+            //        continue;
+            //    }
 
-                if (settings.IsIgnoringProperty(propertyInfo))
-                {
-                    continue;
-                }
+            //    if (settings.IsIgnoringProperty(propertyInfo))
+            //    {
+            //        continue;
+            //    }
 
-                if (memberPath == null)
-                {
-                    memberPath = new MemberPath(type);
-                }
+            //    if (memberPath == null)
+            //    {
+            //        memberPath = new MemberPath(type);
+            //    }
 
-                typeErrors = VerifyMemberRecursively(typeErrors, type, settings, memberPath, getPropertyErrors, propertyInfo);
-            }
+            //    typeErrors = VerifyMemberRecursively(typeErrors, type, settings, memberPath, getPropertyErrors, propertyInfo);
+            //}
 
-            return typeErrors;
+            //return typeErrors;
         }
 
         [Obsolete]
@@ -242,30 +244,31 @@ namespace Gu.State
             MemberPath memberPath,
             Func<FieldsSettings, MemberPath, TypeErrors> getFieldErrors)
         {
-            if (settings.ReferenceHandling == ReferenceHandling.References)
-            {
-                return typeErrors;
-            }
+            throw new NotImplementedException("message");
+            //if (settings.ReferenceHandling == ReferenceHandling.References)
+            //{
+            //    return typeErrors;
+            //}
 
-            typeErrors = VerifyEnumerableRecursively(typeErrors, type, settings, memberPath, getFieldErrors);
+            //typeErrors = VerifyEnumerableRecursively(typeErrors, type, settings, memberPath, getFieldErrors);
 
-            var fields = type.GetFields(settings.BindingFlags);
-            foreach (var fieldInfo in fields)
-            {
-                if (settings.IsIgnoringField(fieldInfo))
-                {
-                    continue;
-                }
+            //var fields = type.GetFields(settings.BindingFlags);
+            //foreach (var fieldInfo in fields)
+            //{
+            //    if (settings.IsIgnoringField(fieldInfo))
+            //    {
+            //        continue;
+            //    }
 
-                if (memberPath == null)
-                {
-                    memberPath = new MemberPath(type);
-                }
+            //    if (memberPath == null)
+            //    {
+            //        memberPath = new MemberPath(type);
+            //    }
 
-                typeErrors = VerifyMemberRecursively(typeErrors, type, settings, memberPath, getFieldErrors, fieldInfo);
-            }
+            //    typeErrors = VerifyMemberRecursively(typeErrors, type, settings, memberPath, getFieldErrors, fieldInfo);
+            //}
 
-            return typeErrors;
+            //return typeErrors;
         }
 
         internal static TypeErrorsBuilder CreateIfNull(this TypeErrorsBuilder errors, Type type)
@@ -273,13 +276,12 @@ namespace Gu.State
             return errors ?? new TypeErrorsBuilder(type);
         }
 
-        private static TypeErrorsBuilder VerifyEnumerableRecursively<TSettings>(
+        private static TypeErrorsBuilder VerifyEnumerableRecursively(
             TypeErrorsBuilder typeErrors,
             Type type,
-            TSettings settings,
+            MemberSettings settings,
             MemberPath memberPath,
-            Func<TSettings, MemberPath, TypeErrors> getErrorsRecursively)
-            where TSettings : class, IMemberSettings
+            Func<MemberSettings, MemberPath, TypeErrors> getErrorsRecursively)
         {
             if (typeof(IEnumerable).IsAssignableFrom(type))
             {
@@ -301,14 +303,13 @@ namespace Gu.State
             return typeErrors;
         }
 
-        private static TypeErrorsBuilder VerifyMemberRecursively<TSettings>(
+        private static TypeErrorsBuilder VerifyMemberRecursively(
             TypeErrorsBuilder typeErrors,
             Type type,
-            TSettings settings,
+            MemberSettings settings,
             MemberPath memberPath,
-            Func<TSettings, MemberPath, TypeErrors> getErrorsRecursively,
+            Func<MemberSettings, MemberPath, TypeErrors> getErrorsRecursively,
             MemberInfo memberInfo)
-            where TSettings : class, IMemberSettings
         {
             memberPath = memberPath.WithMember(memberInfo);
             if (memberPath.HasLoop())

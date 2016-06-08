@@ -187,8 +187,7 @@
         private static class Throw
         {
             // ReSharper disable once UnusedParameter.Local
-            internal static void IfHasErrors<TSetting>(TypeErrors errors, TSetting settings, string className, string methodName)
-                where TSetting : class, IMemberSettings
+            internal static void IfHasErrors(TypeErrors errors, MemberSettings settings, string className, string methodName)
             {
                 if (errors.HasErrors())
                 {
@@ -198,8 +197,7 @@
             }
 
             // ReSharper disable once UnusedParameter.Local
-            private static string GetErrorText<TSettings>(TypeErrors errors, TSettings settings, string className, string methodName)
-                where TSettings : class, IMemberSettings
+            private static string GetErrorText(TypeErrors errors, MemberSettings settings, string className, string methodName)
             {
                 var errorBuilder = new StringBuilder();
                 errorBuilder.AppendLine($"{className}.{methodName}(x, y) failed.")
@@ -209,7 +207,7 @@
                             .AppendSuggestImmutable(errors)
                             .AppendSuggestResizableCollection(errors)
                             .AppendSuggestDefaultCtor(errors)
-                            .AppendLine($"* Use {typeof(TSettings).Name} and specify how change tracking is performed:")
+                            .AppendLine($"* Use {settings?.GetType().Name} and specify how change tracking is performed:")
                             .AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Structural)} means that a the entire graph is tracked.")
                             .AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.References)} means that only the root level changes are tracked.")
                             .AppendSuggestExclude(errors);

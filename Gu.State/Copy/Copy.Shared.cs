@@ -8,8 +8,7 @@
     /// </summary>
     public static partial class Copy
     {
-        internal static object CreateInstance<TSettings>(object sourceValue, TSettings settings)
-            where TSettings : class, IMemberSettings
+        internal static object CreateInstance(object sourceValue, MemberSettings settings)
         {
             if (sourceValue == null)
             {
@@ -41,7 +40,7 @@
             }
         }
 
-        internal static void Sync<T>(T source, T target, IMemberSettings settings, ReferencePairCollection referencePairs)
+        internal static void Sync<T>(T source, T target, MemberSettings settings, ReferencePairCollection referencePairs)
         {
             Debug.Assert(source != null, nameof(source));
             Debug.Assert(target != null, nameof(target));
@@ -63,7 +62,7 @@
             Members(source, target, settings, referencePairs);
         }
 
-        internal static T CloneWithoutSync<T>(T sourceItem, T targetItem, IMemberSettings settings, out bool createdValue, out bool needsSync)
+        internal static T CloneWithoutSync<T>(T sourceItem, T targetItem, MemberSettings settings, out bool createdValue, out bool needsSync)
         {
             if (sourceItem == null || settings.ReferenceHandling == ReferenceHandling.References
                 || ReferenceEquals(sourceItem, targetItem))
@@ -112,7 +111,7 @@
             }
         }
 
-        internal static bool IsCopyValue(Type type, IMemberSettings settings)
+        internal static bool IsCopyValue(Type type, MemberSettings settings)
         {
             if (settings.IsImmutable(type) || settings.ReferenceHandling == ReferenceHandling.References)
             {
@@ -122,7 +121,7 @@
             return false;
         }
 
-        private static void Sync<T>(T source, T target, IMemberSettings settings)
+        private static void Sync<T>(T source, T target, MemberSettings settings)
             where T : class
         {
             ////T copy;
@@ -147,7 +146,7 @@
             }
         }
 
-        private static bool TryCopyValue<T>(T x, T y, IMemberSettings settings, out T result)
+        private static bool TryCopyValue<T>(T x, T y, MemberSettings settings, out T result)
         {
             if (ReferenceEquals(x, y))
             {
@@ -172,7 +171,7 @@
             return false;
         }
 
-        private static bool TryCustomCopy<T>(T source, T target, IMemberSettings settings, out T copy)
+        private static bool TryCustomCopy<T>(T source, T target, MemberSettings settings, out T copy)
         {
             CustomCopy copyer;
             if (settings.TryGetCopyer(source.GetType(), out copyer))
