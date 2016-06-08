@@ -117,17 +117,30 @@
 
             internal static void CanEqualByMemberValues(Type type, IMemberSettings settings, string className, string methodName)
             {
-                GetMemberErrors(type, settings)
+                GetOrCreateErrors(type, settings)
                     .ThrowIfHasErrors(settings, className, methodName);
             }
 
-            internal static TypeErrors GetMemberErrors(Type type, IMemberSettings settings, MemberPath path = null)
+            internal static TypeErrors GetOrCreateErrors(Type type, IMemberSettings settings, MemberPath path = null)
             {
-                return settings.EqualByErrors().GetOrAdd(
-                    type,
-                    t => VerifyCore(settings, t)
-                             .VerifyRecursive(t, settings, path, GetRecursiveMembersErrors)
-                             .Finnish());
+                return settings.EqualByErrors()
+                               .GetOrAdd(
+                                   type,
+                                   t => CreateErrors(t, settings, path));
+            }
+
+            private static TypeErrors CreateErrors(Type type, IMemberSettings settings, MemberPath path)
+            {
+                CastingComparer temp;
+                if (settings.IsEquatable(type) || settings.TryGetComparer(type, out temp))
+                {
+                    return null;
+                }
+
+                var errors = VerifyCore(settings, type)
+                    .VerifyRecursive(type, settings, path, GetNodeErrors)
+                    .Finnish();
+                return errors;
             }
 
             private static ErrorBuilder.TypeErrorsBuilder VerifyCore(IMemberSettings settings, Type type)
@@ -137,20 +150,15 @@
                                    .CheckIndexers(type, settings);
             }
 
-            private static TypeErrors GetRecursiveMembersErrors(IMemberSettings settings, MemberPath path)
+            private static TypeErrors GetNodeErrors(IMemberSettings settings, MemberPath path)
             {
-                var type = path.LastNodeType;
-                if (settings.IsEquatable(type))
-                {
-                    return null;
-                }
-
                 if (settings.ReferenceHandling == ReferenceHandling.References)
                 {
                     return null;
                 }
 
-                return GetMemberErrors(type, settings, path);
+                var type = path.LastNodeType;
+                return GetOrCreateErrors(type, settings, path);
             }
         }
     }
