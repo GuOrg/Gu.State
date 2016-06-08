@@ -30,7 +30,7 @@
             var x = new With<IntCollection>(new IntCollection(1));
             var y = new With<IntCollection>(new IntCollection(1));
             var result = this.EqualByMethod(x, y, ReferenceHandling.References);
-            Assert.AreEqual(true, result);
+            Assert.AreEqual(false, result);
         }
 
         [TestCase(ReferenceHandling.Throw)]

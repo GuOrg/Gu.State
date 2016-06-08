@@ -125,7 +125,7 @@
         {
             internal static void CanEqualByMemberValues<T>(T x, T y, IMemberSettings settings)
             {
-                CanEqualByMemberValues(x, y, settings, typeof(EqualBy).Name, settings is PropertiesSettings ? nameof(EqualBy.PropertyValues) : nameof(EqualBy.FieldValues));
+                CanEqualByMemberValues(x, y, settings, typeof(EqualBy).Name, settings.EqualByMethodName());
             }
 
             internal static void CanEqualByMemberValues<T>(T x, T y, IMemberSettings settings, string className, string methodName)

@@ -24,8 +24,8 @@ namespace Gu.State.Tests.EqualByTests
         [TestCase(ReferenceHandling.References)]
         public void WithSimpleHappyPath(ReferenceHandling referenceHandling)
         {
-            var x = new WithSimpleProperties(1, 2, "3", StringSplitOptions.RemoveEmptyEntries);
-            var y = new WithSimpleProperties(1, 2, "3", StringSplitOptions.RemoveEmptyEntries);
+            var x = new WithSimpleProperties();
+            var y = new WithSimpleProperties();
             foreach (var expected in new[] { true, false })
             {
                 var comparerMock = new Mock<IEqualityComparer<WithSimpleProperties>>(MockBehavior.Strict);
@@ -44,8 +44,8 @@ namespace Gu.State.Tests.EqualByTests
         [TestCase(ReferenceHandling.References)]
         public void WithWithSimpleHappyPath(ReferenceHandling referenceHandling)
         {
-            var x = new With<WithSimpleProperties>(new WithSimpleProperties(1, 2, "3", StringSplitOptions.RemoveEmptyEntries));
-            var y = new With<WithSimpleProperties>(new WithSimpleProperties(1, 2, "3", StringSplitOptions.RemoveEmptyEntries));
+            var x = new With<WithSimpleProperties>(new WithSimpleProperties());
+            var y = new With<WithSimpleProperties>(new WithSimpleProperties());
             foreach (var expected in new[] { true, false })
             {
                 var comparerMock = new Mock<IEqualityComparer<WithSimpleProperties>>(MockBehavior.Strict);
