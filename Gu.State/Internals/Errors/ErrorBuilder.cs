@@ -60,12 +60,11 @@ namespace Gu.State
             return new TypeErrors(null, new[] { first, other });
         }
 
-        internal static TypeErrorsBuilder CheckRequiresReferenceHandling<TSettings>(
+        internal static TypeErrorsBuilder CheckRequiresReferenceHandling(
             this TypeErrorsBuilder typeErrors,
             Type type,
-            TSettings settings,
+            IMemberSettings settings,
             Func<Type, bool> requiresReferenceHandling)
-            where TSettings : IMemberSettings
         {
             if (settings.ReferenceHandling == ReferenceHandling.Throw)
             {
