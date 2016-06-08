@@ -126,10 +126,7 @@
 
             private static TypeErrors GetOrCreateErrors(Type type, MemberSettings settings, MemberPath path = null)
             {
-                return settings.EqualByErrors
-                               .GetOrAdd(
-                                   type,
-                                   t => CreateErrors(t, settings, path));
+                return settings.EqualByErrors.GetOrAdd(type, t => CreateErrors(t, settings, path));
             }
 
             private static TypeErrors CreateErrors(Type type, MemberSettings settings, MemberPath path)

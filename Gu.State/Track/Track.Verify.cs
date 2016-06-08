@@ -107,7 +107,7 @@
 
         internal static void VerifyCanTrackChanges(Type type, PropertiesSettings settings, string className, string methodName)
         {
-            Verify.IsTrackableType(type, settings, className, methodName);
+            Verify.CanTrackType(type, settings, className, methodName);
         }
 
         internal static void VerifyCanTrackIsDirty(Type type, PropertiesSettings settings, string className, string methodName)
@@ -136,9 +136,9 @@
         /// </summary>
         internal static class Verify
         {
-            internal static void IsTrackableValue(object value, PropertiesSettings settings)
+            internal static void CanTrackValue(object value, PropertiesSettings settings)
             {
-                var errors = GetErrors(value.GetType(), settings);
+                var errors = GetOrCreateErrors(value.GetType(), settings);
                 if (errors != null)
                 {
                     var typeErrors = new TypeErrors(null, errors);
@@ -146,41 +146,45 @@
                 }
             }
 
-            internal static void IsTrackableType(Type type, PropertiesSettings settings, string className = null, string methodName = null)
+            internal static void CanTrackType(Type type, PropertiesSettings settings, string className = null, string methodName = null)
             {
-                var errors = GetErrors(type, settings);
+                var errors = GetOrCreateErrors(type, settings);
                 if (errors != null)
                 {
                     Throw.IfHasErrors(errors, settings, className ?? typeof(Track).Name, methodName ?? nameof(Track.Changes));
                 }
             }
 
-            private static TypeErrors GetErrors(Type type, PropertiesSettings settings, MemberPath path = null)
+            private static TypeErrors GetOrCreateErrors(Type type, MemberSettings settings, MemberPath path = null)
             {
-                return settings.TrackableErrors.GetOrAdd(
-                    type,
-                    t => ErrorBuilder.Start()
-                                     .CheckRequiresReferenceHandling(type, settings, x => !settings.IsImmutable(x))
-                                     .CheckIndexers(type, settings)
-                                     .CheckNotifies(type, settings)
-                                     .VerifyRecursive(t, settings, path, GetRecursiveErrors)
-                                     .Finnish());
+                return ((PropertiesSettings)settings).TrackableErrors.GetOrAdd(type, t => CreateErrors(t, settings, path));
             }
 
-            private static TypeErrors GetRecursiveErrors(PropertiesSettings settings, MemberPath path)
+            private static TypeErrors CreateErrors(Type type, MemberSettings settings, MemberPath path)
             {
-                var type = path.LastNodeType;
                 if (settings.IsImmutable(type))
                 {
                     return null;
                 }
 
+                var errors = ErrorBuilder.Start()
+                             .CheckRequiresReferenceHandling(type, settings, x => !settings.IsImmutable(x))
+                             .CheckIndexers(type, settings)
+                             .CheckNotifies(type, settings)
+                             .VerifyRecursive(type, settings, path, GetNodeErrors)
+                             .Finnish();
+                return errors;
+            }
+
+            private static TypeErrors GetNodeErrors(MemberSettings settings, MemberPath path)
+            {
                 if (settings.ReferenceHandling == ReferenceHandling.References)
                 {
                     return null;
                 }
 
-                return GetErrors(type, settings, path);
+                var type = path.LastNodeType;
+                return GetOrCreateErrors(type, settings, path);
             }
         }
 

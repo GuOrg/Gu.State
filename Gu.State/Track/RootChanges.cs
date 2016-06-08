@@ -91,11 +91,11 @@
             Debug.Assert(source != null, "Cannot track null");
             if (isRoot)
             {
-                Track.Verify.IsTrackableType(source.GetType(), settings);
+                Track.Verify.CanTrackType(source.GetType(), settings);
             }
             else
             {
-                Track.Verify.IsTrackableValue(source, settings);
+                Track.Verify.CanTrackValue(source, settings);
             }
 
             return TrackerCache.GetOrAdd(source, settings, s => new RootChanges(s, settings));
