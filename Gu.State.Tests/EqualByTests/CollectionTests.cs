@@ -4,6 +4,8 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
 
+    using Moq;
+
     using NUnit.Framework;
 
     using static EqualByTypes;
@@ -14,11 +16,20 @@
 
         [TestCase(ReferenceHandling.References)]
         [TestCase(ReferenceHandling.Structural)]
-        public void WithExplicitComparer(ReferenceHandling referenceHandling)
+        public void WithEquatableIntCollection(ReferenceHandling referenceHandling)
         {
             var x = new With<EquatableIntCollection>(new EquatableIntCollection(1));
             var y = new With<EquatableIntCollection>(new EquatableIntCollection(1));
             var result = this.EqualByMethod(x, y, referenceHandling);
+            Assert.AreEqual(true, result);
+        }
+
+        [Test]
+        public void WithIntCollectionReferences()
+        {
+            var x = new With<IntCollection>(new IntCollection(1));
+            var y = new With<IntCollection>(new IntCollection(1));
+            var result = this.EqualByMethod(x, y, ReferenceHandling.References);
             Assert.AreEqual(true, result);
         }
 

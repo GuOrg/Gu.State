@@ -4,7 +4,7 @@ namespace Gu.State.Tests.EqualByTests.PropertyValues
 
     public class CustomComparer : CustomComparerTests
     {
-        public override bool EqualMethod<T, TValue>(T x, T y, IEqualityComparer<TValue> comparer , ReferenceHandling referenceHandling = ReferenceHandling.Structural)
+        public override bool EqualByMethod<T, TValue>(T x, T y, IEqualityComparer<TValue> comparer , ReferenceHandling referenceHandling = ReferenceHandling.Structural)
         {
             var settings = PropertiesSettings.Build()
                                              .AddComparer(comparer)
