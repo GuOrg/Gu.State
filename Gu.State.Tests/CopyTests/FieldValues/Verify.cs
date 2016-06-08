@@ -1,6 +1,7 @@
 ﻿// ReSharper disable RedundantArgumentDefaultValue
 namespace Gu.State.Tests.CopyTests.FieldValues
 {
+    using System;
     using System.Reflection;
 
     using NUnit.Framework;
@@ -12,9 +13,30 @@ namespace Gu.State.Tests.CopyTests.FieldValues
             Copy.VerifyCanCopyFieldValues<T>();
         }
 
-        public override void VerifyMethod<T>(ReferenceHandling referenceHandling)
+        public override void VerifyMethod<T>(
+            ReferenceHandling referenceHandling,
+            string excludedMembers= null,
+            Type ignoredType = null,
+            Type immutableType = null)
         {
-            Copy.VerifyCanCopyFieldValues<T>(referenceHandling);
+            var builder = FieldsSettings.Build();
+            if (excludedMembers != null)
+            {
+                builder.AddIgnoredField<T>(excludedMembers);
+            }
+
+            if (ignoredType != null)
+            {
+                builder.AddImmutableType(ignoredType);
+            }
+
+            if (immutableType != null)
+            {
+                builder.AddImmutableType(immutableType);
+            }
+
+            var settings = builder.CreateSettings(referenceHandling);
+            Copy.VerifyCanCopyFieldValues<T>(settings);
         }
 
         [Test]

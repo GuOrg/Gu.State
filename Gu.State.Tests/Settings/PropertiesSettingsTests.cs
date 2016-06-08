@@ -18,7 +18,7 @@ namespace Gu.State.Tests.Settings
             var type = typeof(SettingsTypes.ComplexType);
             var nameProperty = type.GetProperty(nameof(SettingsTypes.ComplexType.Name));
             var valueProperty = type.GetProperty(nameof(SettingsTypes.ComplexType.Value));
-            var settings = new PropertiesSettings(new[] { nameProperty }, null, null, null, ReferenceHandling.Throw, Constants.DefaultPropertyBindingFlags);
+            var settings = new PropertiesSettings(new[] { nameProperty }, null, null, null, null, ReferenceHandling.Throw, Constants.DefaultPropertyBindingFlags);
             Assert.AreEqual(true, settings.IsIgnoringProperty(nameProperty));
             Assert.AreEqual(false, settings.IsIgnoringProperty(valueProperty));
         }
@@ -79,7 +79,7 @@ namespace Gu.State.Tests.Settings
             var type = typeof(SettingsTypes.ComplexType);
             var nameProperty = type.GetProperty(nameof(SettingsTypes.ComplexType.Name));
             var valueProperty = type.GetProperty(nameof(SettingsTypes.ComplexType.Value));
-            var settings = new PropertiesSettings(null, new[] { type }, null, null, ReferenceHandling.Throw, Constants.DefaultPropertyBindingFlags);
+            var settings = new PropertiesSettings(null, new[] { type }, null, null, null, ReferenceHandling.Throw, Constants.DefaultPropertyBindingFlags);
             Assert.AreEqual(true, settings.IsIgnoringProperty(nameProperty));
             Assert.AreEqual(true, settings.IsIgnoringProperty(valueProperty));
             Assert.AreEqual(false, settings.IsIgnoringProperty(typeof(SettingsTypes.Immutable).GetProperty(nameof(SettingsTypes.Immutable.Value))));
@@ -146,7 +146,7 @@ namespace Gu.State.Tests.Settings
 
         [TestCase(BindingFlags.Public, ReferenceHandling.Throw)]
         [TestCase(BindingFlags.Public, ReferenceHandling.Structural)]
-        public void Cache(BindingFlags bindingFlags, ReferenceHandling referenceHandling)
+        public void Caches(BindingFlags bindingFlags, ReferenceHandling referenceHandling)
         {
             var settings = PropertiesSettings.GetOrCreate(referenceHandling, bindingFlags);
             Assert.AreEqual(bindingFlags, settings.BindingFlags);

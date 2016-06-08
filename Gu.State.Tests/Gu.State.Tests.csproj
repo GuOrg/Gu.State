@@ -109,6 +109,7 @@
     <Compile Include="EqualByTests\PropertyValues\Sets.cs" />
     <Compile Include="EqualByTests\ReferenceLoopsTests.cs" />
     <Compile Include="EqualByTests\SetTests.cs" />
+    <Compile Include="Settings\FieldsSettingsBuilderTests.cs" />
     <Compile Include="TestHelpers\RawChangeComparers\AddEventArgsComparer.cs" />
     <Compile Include="TestHelpers\EventArgsComparers\EventArgsComparer.cs" />
     <Compile Include="TestHelpers\EventArgsComparers\EventArgsComparer{T}.cs" />

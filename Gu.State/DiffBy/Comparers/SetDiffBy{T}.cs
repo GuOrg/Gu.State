@@ -16,7 +16,7 @@
             DiffBuilder collectionBuilder,
             object x,
             object y,
-            IMemberSettings settings)
+            MemberSettings settings)
         {
             this.AddDiffs(collectionBuilder, (ISet<T>)x, (ISet<T>)y, settings);
         }
@@ -49,7 +49,7 @@
             DiffBuilder collectionBuilder,
             ISet<T> x,
             ISet<T> y,
-            IMemberSettings settings)
+            MemberSettings settings)
         {
             if (typeof(T).Implements<IEquatable<T>>())
             {

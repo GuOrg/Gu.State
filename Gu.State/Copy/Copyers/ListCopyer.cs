@@ -22,22 +22,20 @@ namespace Gu.State
             return false;
         }
 
-        public void Copy<TSettings>(
+        public void Copy(
             object source,
             object target,
-            TSettings settings,
+            MemberSettings settings,
             ReferencePairCollection referencePairs)
-            where TSettings : class, IMemberSettings
         {
             Copy((IList)source, (IList)target, settings, referencePairs);
         }
 
-        private static void Copy<TSettings>(
+        private static void Copy(
             IList source,
             IList target,
-            TSettings settings,
+            MemberSettings settings,
             ReferencePairCollection referencePairs)
-            where TSettings : class, IMemberSettings
         {
             if ((source.IsFixedSize || target.IsFixedSize) && source.Count != target.Count)
             {

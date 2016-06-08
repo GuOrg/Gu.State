@@ -14,7 +14,7 @@
             DiffBuilder collectionBuilder,
             object x,
             object y,
-            IMemberSettings settings)
+            MemberSettings settings)
         {
             this.AddDiffs(collectionBuilder, (IReadOnlyDictionary<TKey, TValue>)x, (IReadOnlyDictionary<TKey, TValue>)y, settings);
         }
@@ -23,7 +23,7 @@
             DiffBuilder collectionBuilder,
             IReadOnlyDictionary<TKey, TValue> x,
             IReadOnlyDictionary<TKey, TValue> y,
-            IMemberSettings settings)
+            MemberSettings settings)
         {
             using (var borrow = HashSetPool<TKey>.Borrow(EqualityComparer<TKey>.Default.Equals, EqualityComparer<TKey>.Default.GetHashCode))
             {

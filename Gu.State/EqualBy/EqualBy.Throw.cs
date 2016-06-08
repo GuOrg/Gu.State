@@ -11,7 +11,7 @@
             return errorBuilder.AppendLine($"{className}.{methodName}(x, y) failed.");
         }
 
-        private static string EqualByMethodName(this IMemberSettings settings)
+        private static string EqualByMethodName(this MemberSettings settings)
         {
             if (settings is FieldsSettings)
             {
@@ -29,7 +29,7 @@
         private static StringBuilder AppendSuggestReferenceHandling(
             this StringBuilder errorBuilder,
             TypeErrors errors,
-            IMemberSettings settings)
+            MemberSettings settings)
         {
             var references = $"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.References)} means that reference equality is used.";
             if (settings.ReferenceHandling == ReferenceHandling.Throw)
@@ -49,8 +49,7 @@
             return errorBuilder;
         }
 
-        // ReSharper disable once UnusedParameter.Local
-        private static void ThrowIfHasErrors(this TypeErrors errors, IMemberSettings settings, string className, string methodName)
+        private static void ThrowIfHasErrors(this TypeErrors errors, MemberSettings settings, string className, string methodName)
         {
             if (errors == null)
             {

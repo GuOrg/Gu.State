@@ -2,6 +2,7 @@ namespace Gu.State.Tests
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.Immutable;
 
     using Gu.Units;
 
@@ -269,7 +270,7 @@ namespace Gu.State.Tests
             [Test]
             public void WithLength()
             {
-                var x = new With<Length> { Value = Length.Zero};
+                var x = new With<Length> { Value = Length.Zero };
                 var y = new With<Length> { Value = Length.Zero };
                 var propertyChanges = new List<string>();
                 var expectedChanges = new List<string>();
@@ -315,6 +316,68 @@ namespace Gu.State.Tests
                     CollectionAssert.AreEqual(expectedChanges, propertyChanges);
 
                     y.Value = false;
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    Assert.AreEqual(null, tracker.Diff?.ToString("", " "));
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
+                    CollectionAssert.AreEqual(expectedChanges, propertyChanges);
+                }
+            }
+
+            [Test]
+            public void WithImmutableArrayOfInts()
+            {
+                var x = new With<ImmutableArray<int>> { Value = ImmutableArray<int>.Empty };
+                var y = new With<ImmutableArray<int>> { Value = ImmutableArray<int>.Empty };
+                var propertyChanges = new List<string>();
+                var expectedChanges = new List<string>();
+                using (var tracker = Track.IsDirty(x, y))
+                {
+                    tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    Assert.AreEqual(null, tracker.Diff);
+                    CollectionAssert.IsEmpty(propertyChanges);
+
+                    x.Value = ImmutableArray.Create(1);
+                    Assert.AreEqual(true, tracker.IsDirty);
+                    Assert.AreEqual("With<ImmutableArray<int>> Value [0] x: 1 y: missing item", tracker.Diff.ToString("", " "));
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
+                    CollectionAssert.AreEqual(expectedChanges, propertyChanges);
+
+                    y.Value = ImmutableArray.Create(1);
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    Assert.AreEqual(null, tracker.Diff?.ToString("", " "));
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
+                    CollectionAssert.AreEqual(expectedChanges, propertyChanges);
+                }
+            }
+
+            [Test]
+            public void WithExplicitImmutableAndComparer()
+            {
+                var x = new With<IntCollection> { Value = new IntCollection(1) };
+                var y = new With<IntCollection> { Value = new IntCollection(1) };
+                var propertyChanges = new List<string>();
+                var expectedChanges = new List<string>();
+                var settings = PropertiesSettings.Build()
+                                                 .AddImmutableType<IntCollection>()
+                                                 .AddComparer(IntCollection.Comparer)
+                                                 .CreateSettings();
+                using (var tracker = Track.IsDirty(x, y, settings))
+                {
+                    tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
+                    Assert.AreEqual(false, tracker.IsDirty);
+                    Assert.AreEqual(null, tracker.Diff);
+                    CollectionAssert.IsEmpty(propertyChanges);
+
+                    x.Value = new IntCollection(2);
+                    Assert.AreEqual(true, tracker.IsDirty);
+                    var expected = "With<IntCollection> Value x: Gu.State.Tests.DirtyTrackerTypes+IntCollection y: Gu.State.Tests.DirtyTrackerTypes+IntCollection";
+                    var actual = tracker.Diff.ToString("", " ");
+                    Assert.AreEqual(expected, actual);
+                    expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
+                    CollectionAssert.AreEqual(expectedChanges, propertyChanges);
+
+                    y.Value = new IntCollection(2);
                     Assert.AreEqual(false, tracker.IsDirty);
                     Assert.AreEqual(null, tracker.Diff?.ToString("", " "));
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });

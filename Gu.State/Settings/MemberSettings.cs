@@ -5,37 +5,37 @@
     using System.Collections.Generic;
     using System.Reflection;
 
-    /// <summary>Baseclass for member settings.</summary>
-    /// <typeparam name="T">The type, FieldInfo or PropertyInfo</typeparam>
-    public abstract class MemberSettings<T> : MemberSettings
-        where T : MemberInfo
+    public abstract partial class MemberSettings
     {
+        private readonly Lazy<ConcurrentDictionary<Type, TypeErrors>> equalByErrors = new Lazy<ConcurrentDictionary<Type, TypeErrors>>();
+        private readonly Lazy<ConcurrentDictionary<Type, TypeErrors>> copyErrors = new Lazy<ConcurrentDictionary<Type, TypeErrors>>();
+        private readonly ImmutableSet<Type> immutableTypes;
         private readonly IReadOnlyDictionary<Type, CastingComparer> comparers;
         private readonly IReadOnlyDictionary<Type, CustomCopy> copyers;
         private readonly IgnoredTypes ignoredTypes;
-        private readonly ConcurrentDictionary<T, bool> ignoredMembers = new ConcurrentDictionary<T, bool>();
+        private readonly ConcurrentDictionary<MemberInfo, bool> ignoredMembers = new ConcurrentDictionary<MemberInfo, bool>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MemberSettings{T}"/> class.
+        /// Initializes a new instance of the <see cref="MemberSettings"/> class.
         /// </summary>
         /// <param name="ignoredMembers">A collection of members to ignore. Can be null.</param>
         /// <param name="ignoredTypes">A collection of types to ignore. Can be null.</param>
+        /// <param name="immutableTypes">A collection of types to treat as immutable. Can be null.</param>
         /// <param name="comparers">A map of types with custom comparers. Can be null.</param>
         /// <param name="copyers">A map of custom copy implementations for types. Can be null.</param>
         /// <param name="referenceHandling">How reference values are handled.</param>
         /// <param name="bindingFlags">The bindingflags used for getting members.</param>
         protected MemberSettings(
-            IEnumerable<T> ignoredMembers,
+            IEnumerable<MemberInfo> ignoredMembers,
             IEnumerable<Type> ignoredTypes,
+            IEnumerable<Type> immutableTypes,
             IReadOnlyDictionary<Type, CastingComparer> comparers,
             IReadOnlyDictionary<Type, CustomCopy> copyers,
             ReferenceHandling referenceHandling,
-            BindingFlags bindingFlags)
+                        BindingFlags bindingFlags)
         {
-            this.comparers = comparers;
-            this.copyers = copyers;
-            this.BindingFlags = bindingFlags;
             this.ReferenceHandling = referenceHandling;
+            this.BindingFlags = bindingFlags;
             if (ignoredMembers != null)
             {
                 foreach (var ignoredMember in ignoredMembers)
@@ -45,6 +45,9 @@
             }
 
             this.ignoredTypes = IgnoredTypes.Create(ignoredTypes);
+            this.immutableTypes = ImmutableSet<Type>.Create(immutableTypes);
+            this.comparers = comparers;
+            this.copyers = copyers;
         }
 
         /// <summary>Gets the bindingflags used for getting members.</summary>
@@ -53,12 +56,12 @@
         /// <summary>Gets a value indicating how reference values are handled.</summary>
         public ReferenceHandling ReferenceHandling { get; }
 
-        internal ConcurrentDictionary<Type, TypeErrors> EqualByErrors { get; } = new ConcurrentDictionary<Type, TypeErrors>();
+        internal ConcurrentDictionary<Type, TypeErrors> EqualByErrors => this.equalByErrors.Value;
 
-        internal ConcurrentDictionary<Type, TypeErrors> CopyErrors { get; } = new ConcurrentDictionary<Type, TypeErrors>();
+        internal ConcurrentDictionary<Type, TypeErrors> CopyErrors => this.copyErrors.Value;
 
         /// <summary>Gets a cache for ignored members.</summary>
-        protected ConcurrentDictionary<T, bool> IgnoredMembers => this.ignoredMembers;
+        protected ConcurrentDictionary<MemberInfo, bool> IgnoredMembers => this.ignoredMembers;
 
         /// <summary>
         /// Check if <paramref name="type"/> is equatable.
@@ -81,7 +84,25 @@
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns>True if <paramref name="type"/> is immutable.</returns>
-        public bool IsImmutable(Type type) => IsImmutableCore(type);
+        public bool IsImmutable(Type type)
+        {
+            if (this.immutableTypes.Contains(type))
+            {
+                return true;
+            }
+
+            return IsImmutableCore(type);
+        }
+
+        /// <summary>Gets all instance members that matches <see cref="BindingFlags"/></summary>
+        /// <param name="type">The type to get members for.</param>
+        /// <returns>The members.</returns>
+        public abstract IEnumerable<MemberInfo> GetMembers(Type type);
+
+        /// <summary>Gets if the <paramref name="member"/> is ignored.</summary>
+        /// <param name="member">The member to check.</param>
+        /// <returns>A value indicating if <paramref name="member"/> is ignored.</returns>
+        public abstract bool IsIgnoringMember(MemberInfo member);
 
         /// <summary>Gets if the <paramref name="declaringType"/> is ignored.</summary>
         /// <param name="declaringType">The type to check.</param>
@@ -110,5 +131,10 @@
             copyer = null;
             return this.copyers?.TryGetValue(type, out copyer) == true;
         }
+
+        /// <summary>Get an <see cref="IGetterAndSetter"/> that is  used for getting ans setting values.</summary>
+        /// <param name="member">The member.</param>
+        /// <returns>A <see cref="IGetterAndSetter"/></returns>
+        internal abstract IGetterAndSetter GetOrCreateGetterAndSetter(MemberInfo member);
     }
 }

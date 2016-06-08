@@ -5,7 +5,7 @@
 
     public class Classes : ClassesTests
     {
-        public override bool EqualMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type excludedType = null)
+        public override bool EqualMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type ignoredType = null)
         {
             var builder = PropertiesSettings.Build();
             if (excludedMembers != null)
@@ -13,9 +13,9 @@
                 builder.IgnoreProperty<T>(excludedMembers);
             }
 
-            if (excludedType != null)
+            if (ignoredType != null)
             {
-                builder.IgnoreType(excludedType);
+                builder.IgnoreType(ignoredType);
             }
 
             var settings = builder.CreateSettings(referenceHandling);

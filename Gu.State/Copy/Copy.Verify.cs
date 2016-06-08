@@ -50,7 +50,8 @@
         /// <param name="settings">Contains configuration for how copy will be performed</param>
         public static void VerifyCanCopyPropertyValues(Type type, PropertiesSettings settings)
         {
-            VerifyCanCopyPropertyValues(type, settings, typeof(Copy).Name, nameof(VerifyCanCopyPropertyValues));
+            Verify.CanCopyRoot(type, settings);
+            Verify.CanCopyMemberValues(type, settings, typeof(Copy).Name, nameof(VerifyCanCopyPropertyValues));
         }
 
         /// <summary>
@@ -98,19 +99,17 @@
         public static void VerifyCanCopyFieldValues(Type type, FieldsSettings settings)
         {
             Verify.CanCopyRoot(type, settings);
-            Verify.GetFieldsErrors(type, settings)
-                  .ThrowIfHasErrors(settings, typeof(Copy).Name, nameof(VerifyCanCopyFieldValues));
+            Verify.CanCopyMemberValues(type, settings, typeof(Copy).Name, nameof(VerifyCanCopyFieldValues));
         }
 
         internal static void VerifyCanCopyPropertyValues(Type type, PropertiesSettings settings, string classname, string methodName)
         {
             Verify.CanCopyRoot(type, settings);
-            Verify.GetPropertiesErrors(type, settings)
+            Verify.GetOrCreateErrors(type, settings)
                   .ThrowIfHasErrors(settings, classname, methodName);
         }
 
-        private static ErrorBuilder.TypeErrorsBuilder CheckIsCopyableEnumerable<TSetting>(this ErrorBuilder.TypeErrorsBuilder typeErrors, Type type, TSetting settings)
-            where TSetting : IMemberSettings
+        private static ErrorBuilder.TypeErrorsBuilder CheckIsCopyableEnumerable(this ErrorBuilder.TypeErrorsBuilder typeErrors, Type type, MemberSettings settings)
         {
             if (!typeof(IEnumerable).IsAssignableFrom(type))
             {
@@ -139,31 +138,19 @@
 
         internal static class Verify
         {
-            internal static void CanCopyMemberValues<T>(T x, T y, IMemberSettings settings)
+            internal static void CanCopyMemberValues<T>(T x, T y, MemberSettings settings)
             {
                 var type = x?.GetType() ?? y?.GetType() ?? typeof(T);
-                var propertiesSettings = settings as PropertiesSettings;
-                if (propertiesSettings != null)
-                {
-                    GetPropertiesErrors(type, propertiesSettings)
-                        .ThrowIfHasErrors(propertiesSettings, typeof(Copy).Name, settings.CopyMethodName());
-                    return;
-                }
-
-                var fieldsSettings = settings as FieldsSettings;
-                if (fieldsSettings != null)
-                {
-                    GetFieldsErrors(type, fieldsSettings)
-                        .ThrowIfHasErrors(settings, typeof(Copy).Name, settings.CopyMethodName());
-                    return;
-                }
-
-                throw State.Throw.ExpectedParameterOfTypes<PropertiesSettings, FieldsSettings>(
-                    "CanCopyMemberValues failed");
+                CanCopyMemberValues(type, settings, typeof(Copy).Name, settings.CopyMethodName());
             }
 
-            internal static void CanCopyRoot<TSettings>(Type type, TSettings settings)
-                where TSettings : IMemberSettings
+            internal static void CanCopyMemberValues(Type type, MemberSettings settings, string className, string methodName)
+            {
+                GetOrCreateErrors(type, settings)
+                    .ThrowIfHasErrors(settings, className, methodName);
+            }
+
+            internal static void CanCopyRoot(Type type, MemberSettings settings)
             {
                 if (settings.IsImmutable(type))
                 {
@@ -176,21 +163,26 @@
                 }
             }
 
-            internal static TypeErrors GetPropertiesErrors(Type type, PropertiesSettings settings, MemberPath path = null)
+            internal static TypeErrors GetOrCreateErrors(Type type, MemberSettings settings, MemberPath path = null)
             {
-                return settings.CopyErrors.GetOrAdd(type, t => VerifyCore(settings, t)
-                                                                   .VerifyRecursive(t, settings, path, GetRecursivePropertiesErrors)
-                                                                   .Finnish());
+                return settings.CopyErrors.GetOrAdd(type, t => CreateErrors(t, settings, path));
             }
 
-            internal static TypeErrors GetFieldsErrors(Type type, FieldsSettings settings, MemberPath path = null)
+            private static TypeErrors CreateErrors(Type type, MemberSettings settings, MemberPath path)
             {
-                return settings.CopyErrors.GetOrAdd(type, t => VerifyCore(settings, t)
-                                                                   .VerifyRecursive(t, settings, path, GetRecursiveFieldsErrors)
-                                                                   .Finnish());
+                CustomCopy temp;
+                if (settings.IsImmutable(type) || settings.TryGetCopyer(type, out temp))
+                {
+                    return null;
+                }
+
+                var errors = VerifyCore(settings, type)
+                    .VerifyRecursive(type, settings, path, GetNodeErrors)
+                    .Finnish();
+                return errors;
             }
 
-            private static ErrorBuilder.TypeErrorsBuilder VerifyCore(IMemberSettings settings, Type type)
+            private static ErrorBuilder.TypeErrorsBuilder VerifyCore(MemberSettings settings, Type type)
             {
                 return ErrorBuilder.Start()
                                    .CheckRequiresReferenceHandling(type, settings, t => !settings.IsImmutable(t))
@@ -198,36 +190,15 @@
                                    .CheckIndexers(type, settings);
             }
 
-            private static TypeErrors GetRecursivePropertiesErrors(PropertiesSettings settings, MemberPath path)
+            private static TypeErrors GetNodeErrors(MemberSettings settings, MemberPath path)
             {
-                var type = path.LastNodeType;
-                if (settings.IsImmutable(type))
-                {
-                    return null;
-                }
-
                 if (settings.ReferenceHandling == ReferenceHandling.References)
                 {
                     return null;
                 }
 
-                return GetPropertiesErrors(type, settings, path);
-            }
-
-            private static TypeErrors GetRecursiveFieldsErrors(FieldsSettings settings, MemberPath path)
-            {
                 var type = path.LastNodeType;
-                if (settings.IsImmutable(type))
-                {
-                    return null;
-                }
-
-                if (settings.ReferenceHandling == ReferenceHandling.References)
-                {
-                    return null;
-                }
-
-                return GetFieldsErrors(type, settings, path);
+                return GetOrCreateErrors(type, settings, path);
             }
         }
     }

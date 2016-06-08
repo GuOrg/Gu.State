@@ -25,26 +25,24 @@
             return false;
         }
 
-        public void Copy<TSettings>(
+        public void Copy(
             object source,
             object target,
-            TSettings settings,
+            MemberSettings settings,
             ReferencePairCollection referencePairs)
-            where TSettings : class, IMemberSettings
         {
             var itemType = source.GetType().GetItemType();
             var copyMethod = this.GetType()
                                         .GetMethod(nameof(SetOfTCopyer.Copy), BindingFlags.NonPublic | BindingFlags.Static)
-                                        .MakeGenericMethod(itemType, typeof(TSettings));
+                                        .MakeGenericMethod(itemType);
             copyMethod.Invoke(null, new[] { source, target, settings, referencePairs });
         }
 
-        private static void Copy<T, TSettings>(
+        private static void Copy<T>(
             ISet<T> source,
             ISet<T> target,
-            TSettings settings,
+            MemberSettings settings,
             ReferencePairCollection referencePairs)
-            where TSettings : class, IMemberSettings
         {
             if (Is.IsFixedSize(source, target) && source.Count != target.Count)
             {
@@ -82,7 +80,7 @@
                         comparer = EqualityComparer<T>.Default;
                     }
 
-                    var copyIngComparer = new CopyIngComparer<T, TSettings>(comparer, settings, referencePairs);
+                    var copyIngComparer = new CopyingComparer<T>(comparer, settings, referencePairs);
                     using (var borrow = HashSetPool<T>.Borrow(copyIngComparer))
                     {
                         borrow.Value.UnionWith(source);
@@ -97,18 +95,17 @@
             }
         }
 
-        private class CopyIngComparer<T, TSettings> : IEqualityComparer<T>
-             where TSettings : class, IMemberSettings
+        private class CopyingComparer<T> : IEqualityComparer<T>
         {
             private readonly IEqualityComparer<T> inner;
-            private readonly TSettings settings;
+            private readonly MemberSettings settings;
             private readonly ReferencePairCollection referencePairs;
 
             private bool isCopying;
 
-            public CopyIngComparer(
+            public CopyingComparer(
                 IEqualityComparer<T> inner,
-                TSettings settings,
+                MemberSettings settings,
                 ReferencePairCollection referencePairs)
             {
                 this.inner = inner;

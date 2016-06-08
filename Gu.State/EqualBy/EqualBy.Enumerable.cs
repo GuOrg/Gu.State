@@ -2,12 +2,11 @@
 {
     public static partial class EqualBy
     {
-        private static bool EnumerableEquals<TSetting>(
+        private static bool EnumerableEquals(
             object x,
             object y,
-            TSetting settings,
+            MemberSettings settings,
             ReferencePairCollection referencePairs)
-            where TSetting : class, IMemberSettings
         {
             EqualByComparer comparer;
             if (ListEqualByComparer.TryGetOrCreate(x, y, out comparer) ||

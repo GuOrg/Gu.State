@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.Linq;
     using System.Runtime.CompilerServices;
 
     using JetBrains.Annotations;
@@ -292,6 +293,43 @@
             protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
             {
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        public class IntCollection : IReadOnlyList<int>
+        {
+            public static readonly IEqualityComparer<IntCollection> Comparer = new IntsEqualityComparer();
+
+            private readonly IReadOnlyList<int> ints;
+
+            public IntCollection(params int[] ints)
+            {
+                this.ints = ints;
+            }
+
+            public int Count => this.ints.Count;
+
+            public int this[int index] => this.ints[index];
+
+            public IEnumerator<int> GetEnumerator() => this.ints.GetEnumerator();
+
+            IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+
+            private sealed class IntsEqualityComparer : IEqualityComparer<IntCollection>
+            {
+                public bool Equals(IntCollection x, IntCollection y)
+                {
+                    if (ReferenceEquals(x, y)) return true;
+                    if (ReferenceEquals(x, null)) return false;
+                    if (ReferenceEquals(y, null)) return false;
+                    if (x.GetType() != y.GetType()) return false;
+                    return Enumerable.SequenceEqual(x.ints, y.ints);
+                }
+
+                public int GetHashCode(IntCollection obj)
+                {
+                    throw new NotImplementedException("message");
+                }
             }
         }
 

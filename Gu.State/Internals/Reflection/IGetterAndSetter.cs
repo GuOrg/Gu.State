@@ -4,7 +4,7 @@
     using System.Reflection;
 
     /// <summary>Provides functionlaity for getting and setting values for a member.</summary>
-    public interface IGetterAndSetter
+    internal interface IGetterAndSetter
     {
         /// <summary>Gets the declaring type of the member.</summary>
         Type SourceType { get; }
@@ -41,7 +41,7 @@
         /// <param name="xv">The x value fetched for the member.</param>
         /// <param name="yv">The y value fetched for the member.</param>
         /// <returns>True if equality could be determined for <paramref name="x"/> and <paramref name="y"/></returns>
-        bool TryGetValueEquals(object x, object y, IMemberSettings settings, out bool equal, out object xv, out object yv);
+        bool TryGetValueEquals(object x, object y, MemberSettings settings, out bool equal, out object xv, out object yv);
 
         void CopyValue(object source, object target);
     }

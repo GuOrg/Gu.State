@@ -15,7 +15,7 @@ namespace Gu.State.Tests.EqualByTests
             T y,
             ReferenceHandling referenceHandling = ReferenceHandling.Structural,
             string excludedMembers = null,
-            Type excludedType = null) where T : class;
+            Type ignoredType = null) where T : class;
 
         public static IReadOnlyList<EqualByTestsShared.EqualsData> EqualsSource => EqualByTestsShared.EqualsSource;
 
@@ -279,9 +279,9 @@ namespace Gu.State.Tests.EqualByTests
         [TestCase("b", false)]
         public void IgnoresType(string xv, bool expected)
         {
-            var x = new EqualByTypes.WithComplexProperty(xv, 1, new EqualByTypes.ComplexType("b", 2));
-            var y = new EqualByTypes.WithComplexProperty("a", 1, new EqualByTypes.ComplexType("c", 2));
-            var result = this.EqualMethod(x, y, ReferenceHandling.Structural, excludedType: typeof(EqualByTypes.ComplexType));
+            var x = new WithComplexProperty(xv, 1, new ComplexType("b", 2));
+            var y = new WithComplexProperty("a", 1, new ComplexType("c", 2));
+            var result = this.EqualMethod(x, y, ReferenceHandling.Structural, ignoredType: typeof(ComplexType));
             Assert.AreEqual(expected, result);
         }
     }

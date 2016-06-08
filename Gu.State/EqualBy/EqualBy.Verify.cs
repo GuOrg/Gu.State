@@ -48,7 +48,7 @@
         /// <param name="settings">The settings to use.</param>
         public static void VerifyCanEqualByPropertyValues(Type type, PropertiesSettings settings)
         {
-            VerifyCanEqualByPropertyValues(type, settings, typeof(EqualBy).Name, nameof(EqualBy.PropertyValues));
+            Verify.CanEqualByMemberValues(type, settings, typeof(EqualBy).Name, nameof(EqualBy.PropertyValues));
         }
 
         /// <summary>
@@ -94,138 +94,71 @@
         /// <param name="settings">The settings to use.</param>
         public static void VerifyCanEqualByFieldValues(Type type, FieldsSettings settings)
         {
-            VerifyCanEqualByFieldValues(type, settings, typeof(EqualBy).Name, nameof(EqualBy.FieldValues));
-        }
-
-        internal static void VerifyCanEqualByPropertyValues<T>(PropertiesSettings settings, string className, string methodName)
-        {
-            var type = typeof(T);
-            VerifyCanEqualByPropertyValues(type, settings, className, methodName);
-        }
-
-        internal static void VerifyCanEqualByPropertyValues(Type type, PropertiesSettings settings, string className, string methodName)
-        {
-            Verify.GetPropertiesErrors(type, settings)
-                  .ThrowIfHasErrors(settings, className, methodName);
-        }
-
-        internal static void VerifyCanEqualByFieldValues<T>(FieldsSettings settings, string className, string methodName)
-        {
-            var type = typeof(T);
-            VerifyCanEqualByFieldValues(type, settings, className, methodName);
-        }
-
-        internal static void VerifyCanEqualByFieldValues(Type type, FieldsSettings settings, string className, string methodName)
-        {
-            Verify.GetFieldsErrors(type, settings)
-                  .ThrowIfHasErrors(settings, className, methodName);
+            Verify.CanEqualByMemberValues(type, settings, typeof(EqualBy).Name, nameof(EqualBy.FieldValues));
         }
 
         internal static class Verify
         {
-            internal static void CanEqualByMemberValues<T>(T x, T y, IMemberSettings settings)
+            internal static void CanEqualByMemberValues<T>(T x, T y, MemberSettings settings)
             {
-                CanEqualByMemberValues(x, y, settings, typeof(EqualBy).Name, settings is PropertiesSettings ? nameof(EqualBy.PropertyValues) : nameof(EqualBy.FieldValues));
+                CanEqualByMemberValues(x, y, settings, typeof(EqualBy).Name, settings.EqualByMethodName());
             }
 
-            internal static void CanEqualByMemberValues<T>(T x, T y, IMemberSettings settings, string className, string methodName)
-            {
-                var propertiesSettings = settings as PropertiesSettings;
-                if (propertiesSettings != null)
-                {
-                    CanEqualByPropertyValues(x, y, propertiesSettings, className, methodName);
-                    return;
-                }
-
-                var fieldsSettings = settings as FieldsSettings;
-                if (fieldsSettings != null)
-                {
-                    CanEqualByFieldValues(x, y, fieldsSettings, className, methodName);
-                    return;
-                }
-
-                throw Throw.ExpectedParameterOfTypes<PropertiesSettings, FieldsSettings>("CanEqualByMemberValues failed.");
-            }
-
-            internal static void CanEqualByPropertyValues<T>(T x, T y, PropertiesSettings settings)
-            {
-                CanEqualByPropertyValues(x, y, settings, typeof(EqualBy).Name, nameof(EqualBy.PropertyValues));
-            }
-
-            internal static void CanEqualByPropertyValues<T>(T x, T y, PropertiesSettings settings, string className, string methodName)
+            internal static void CanEqualByMemberValues<T>(T x, T y, MemberSettings settings, string className, string methodName)
             {
                 var type = x?.GetType() ?? y?.GetType() ?? typeof(T);
-                GetPropertiesErrors(type, settings)
+                CanEqualByMemberValues(type, settings, className, methodName);
+            }
+
+            internal static void CanEqualByMemberValues<T>(
+                MemberSettings settings,
+                string className,
+                string methodName)
+            {
+                CanEqualByMemberValues(typeof(T), settings, className, methodName);
+            }
+
+            internal static void CanEqualByMemberValues(Type type, MemberSettings settings, string className, string methodName)
+            {
+                GetOrCreateErrors(type, settings)
                     .ThrowIfHasErrors(settings, className, methodName);
             }
 
-            internal static TypeErrors GetPropertiesErrors(Type type, PropertiesSettings settings, MemberPath path = null)
+            private static TypeErrors GetOrCreateErrors(Type type, MemberSettings settings, MemberPath path = null)
             {
-                return settings.EqualByErrors.GetOrAdd(
-                    type,
-                    t => VerifyCore(settings, t)
-                             .VerifyRecursive(t, settings, path, GetRecursivePropertiesErrors)
-                             .Finnish());
+                return settings.EqualByErrors.GetOrAdd(type, t => CreateErrors(t, settings, path));
             }
 
-            internal static void CanEqualByFieldValues<T>(T x, T y, FieldsSettings settings)
+            private static TypeErrors CreateErrors(Type type, MemberSettings settings, MemberPath path)
             {
-                CanEqualByFieldValues(x, y, settings, typeof(EqualBy).Name, nameof(EqualBy.FieldValues));
+                CastingComparer temp;
+                if (settings.IsEquatable(type) || settings.TryGetComparer(type, out temp))
+                {
+                    return null;
+                }
+
+                var errors = VerifyCore(settings, type)
+                    .VerifyRecursive(type, settings, path, GetNodeErrors)
+                    .Finnish();
+                return errors;
             }
 
-            internal static void CanEqualByFieldValues<T>(T x, T y, FieldsSettings settings, string className, string methodName)
-            {
-                var type = x?.GetType() ?? y?.GetType() ?? typeof(T);
-                GetFieldsErrors(type, settings)
-                    .ThrowIfHasErrors(settings, className, methodName);
-            }
-
-            internal static TypeErrors GetFieldsErrors(Type type, FieldsSettings settings, MemberPath path = null)
-            {
-                return settings.EqualByErrors.GetOrAdd(
-                    type,
-                    t => VerifyCore(settings, t)
-                             .VerifyRecursive(t, settings, path, GetRecursiveFieldsErrors)
-                             .Finnish());
-            }
-
-            private static ErrorBuilder.TypeErrorsBuilder VerifyCore(IMemberSettings settings, Type type)
+            private static ErrorBuilder.TypeErrorsBuilder VerifyCore(MemberSettings settings, Type type)
             {
                 return ErrorBuilder.Start()
                                    .CheckRequiresReferenceHandling(type, settings, t => !settings.IsEquatable(t))
                                    .CheckIndexers(type, settings);
             }
 
-            private static TypeErrors GetRecursivePropertiesErrors(PropertiesSettings settings, MemberPath path)
+            private static TypeErrors GetNodeErrors(MemberSettings settings, MemberPath path)
             {
-                var type = path.LastNodeType;
-                if (settings.IsEquatable(type))
-                {
-                    return null;
-                }
-
                 if (settings.ReferenceHandling == ReferenceHandling.References)
                 {
                     return null;
                 }
 
-                return GetPropertiesErrors(type, settings, path);
-            }
-
-            private static TypeErrors GetRecursiveFieldsErrors(FieldsSettings settings, MemberPath path)
-            {
                 var type = path.LastNodeType;
-                if (settings.IsEquatable(type))
-                {
-                    return null;
-                }
-
-                if (settings.ReferenceHandling == ReferenceHandling.References)
-                {
-                    return null;
-                }
-
-                return GetFieldsErrors(type, settings, path);
+                return GetOrCreateErrors(type, settings, path);
             }
         }
     }

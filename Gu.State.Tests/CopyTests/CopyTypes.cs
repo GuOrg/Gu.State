@@ -258,6 +258,24 @@
             public T Value { get; set; }
         }
 
+        public class IntCollection : IReadOnlyList<int>
+        {
+            private readonly IReadOnlyList<int> ints;
+
+            public IntCollection(params int[] ints)
+            {
+                this.ints = ints;
+            }
+
+            public int Count => this.ints.Count;
+
+            public int this[int index] => this.ints[index];
+
+            public IEnumerator<int> GetEnumerator() => this.ints.GetEnumerator();
+
+            IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+        }
+
         public class WithReadonlyField
         {
             public readonly int ReadonlyValue;

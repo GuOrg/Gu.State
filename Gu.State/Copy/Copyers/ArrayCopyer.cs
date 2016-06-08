@@ -23,22 +23,20 @@
             return false;
         }
 
-        public void Copy<TSettings>(
+        public void Copy(
             object source,
             object target,
-            TSettings settings,
+            MemberSettings settings,
             ReferencePairCollection referencePairs)
-            where TSettings : class, IMemberSettings
         {
             Copy((Array)source, (Array)target, settings, referencePairs);
         }
 
-        private static void Copy<TSettings>(
+        private static void Copy(
             Array sourceArray,
             Array targetArray,
-            TSettings settings,
+            MemberSettings settings,
             ReferencePairCollection referencePairs)
-            where TSettings : class, IMemberSettings
         {
             if (!Is.SameSize(sourceArray, targetArray))
             {
@@ -66,7 +64,7 @@
                 }
 
                 var copyMethod = typeof(ArrayCopyer).GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Static)
-                                                    .MakeGenericMethod(itemType, typeof(TSettings));
+                                                    .MakeGenericMethod(itemType);
                 copyMethod.Invoke(null, new object[] { sourceArray, targetArray, settings, referencePairs });
             }
             else
@@ -75,12 +73,11 @@
             }
         }
 
-        private static void Copy1DItems<T, TSettings>(
+        private static void Copy1DItems<T>(
             T[] sourceArray,
             T[] targetArray,
-            TSettings settings,
+            MemberSettings settings,
             ReferencePairCollection referencePairs)
-            where TSettings : class, IMemberSettings
         {
             var copyValues = State.Copy.IsCopyValue(
                         sourceArray.GetType().GetItemType(),
@@ -110,12 +107,11 @@
             }
         }
 
-        private static void Copy2DItems<T, TSettings>(
+        private static void Copy2DItems<T>(
             T[,] sourceArray,
             T[,] targetArray,
-            TSettings settings,
+            MemberSettings settings,
             ReferencePairCollection referencePairs)
-            where TSettings : class, IMemberSettings
         {
             var copyValues = State.Copy.IsCopyValue(
                         sourceArray.GetType().GetItemType(),
@@ -148,12 +144,11 @@
             }
         }
 
-        private static void Copy3DItems<T, TSettings>(
+        private static void Copy3DItems<T>(
             T[,,] sourceArray,
             T[,,] targetArray,
-            TSettings settings,
+            MemberSettings settings,
             ReferencePairCollection referencePairs)
-            where TSettings : class, IMemberSettings
         {
             var copyValues = State.Copy.IsCopyValue(
                         sourceArray.GetType().GetItemType(),
@@ -189,12 +184,11 @@
             }
         }
 
-        private static void CopyAnyDimension<TSettings>(
+        private static void CopyAnyDimension(
             Array sourceArray,
             Array targetArray,
-            TSettings settings,
+            MemberSettings settings,
             ReferencePairCollection referencePairs)
-            where TSettings : class, IMemberSettings
         {
             var copyValues = State.Copy.IsCopyValue(
                         sourceArray.GetType().GetItemType(),

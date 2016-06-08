@@ -4,6 +4,7 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Linq;
     using System.Runtime.CompilerServices;
 
     using JetBrains.Annotations;
@@ -17,7 +18,81 @@
                 this.Value = value;
             }
 
-            public T Value { get;  }
+            public T Value { get; }
+        }
+
+        public class IntCollection : IReadOnlyList<int>
+        {
+            public static readonly IEqualityComparer<IntCollection> Comparer = new IntsEqualityComparer();
+            private readonly IReadOnlyList<int> ints;
+
+            public IntCollection(params int[] ints)
+            {
+                this.ints = ints;
+            }
+
+            public int Count => this.ints.Count;
+
+            public int this[int index] => this.ints[index];
+
+            public IEnumerator<int> GetEnumerator() => this.ints.GetEnumerator();
+
+            IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+
+            private sealed class IntsEqualityComparer : IEqualityComparer<IntCollection>
+            {
+                public bool Equals(IntCollection x, IntCollection y)
+                {
+                    if (ReferenceEquals(x, y)) return true;
+                    if (ReferenceEquals(x, null)) return false;
+                    if (ReferenceEquals(y, null)) return false;
+                    if (x.GetType() != y.GetType()) return false;
+                    return Enumerable.SequenceEqual(x.ints, y.ints);
+                }
+
+                public int GetHashCode(IntCollection obj)
+                {
+                    throw new NotImplementedException("message");
+                }
+            }
+        }
+
+        public class EquatableIntCollection : IReadOnlyList<int>, IEquatable<EquatableIntCollection>
+        {
+            private readonly IReadOnlyList<int> ints;
+
+            public EquatableIntCollection(params int[] ints)
+            {
+                this.ints = ints;
+            }
+
+            public int Count => this.ints.Count;
+
+            public int this[int index] => this.ints[index];
+
+            public IEnumerator<int> GetEnumerator() => this.ints.GetEnumerator();
+
+            IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+
+            public bool Equals(EquatableIntCollection other)
+            {
+                if (ReferenceEquals(null, other)) return false;
+                if (ReferenceEquals(this, other)) return true;
+                return Enumerable.SequenceEqual(this.ints, other.ints);
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(this, obj)) return true;
+                if (obj.GetType() != this.GetType()) return false;
+                return Equals((EquatableIntCollection)obj);
+            }
+
+            public override int GetHashCode()
+            {
+                throw new NotImplementedException("message");
+            }
         }
 
         public class WithComplexValue

@@ -1,12 +1,20 @@
 ﻿namespace Gu.State.Tests.CopyTests.PropertyValues
 {
+    using System;
+
     using NUnit.Framework;
 
     using static CopyTypes;
 
     public class Classes : ClassesTests
     {
-        public override void CopyMethod<T>(T source, T target, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excluded = null)
+        public override void CopyMethod<T>(
+            T source,
+            T target,
+            ReferenceHandling referenceHandling = ReferenceHandling.Structural,
+            string excluded = null,
+            Type ignoredType = null,
+            Type immutableType = null)
         {
             var builder = PropertiesSettings.Build();
             if (excluded != null)
@@ -14,10 +22,15 @@
                 builder.IgnoreProperty<T>(excluded);
             }
 
-            //if (excludedType != null)
-            //{
-            //    builder.IgnoreType(excludedType);
-            //}
+            if (ignoredType != null)
+            {
+                builder.IgnoreType(ignoredType);
+            }
+
+            if (immutableType != null)
+            {
+                builder.AddImmutableType(immutableType);
+            }
 
             var settings = builder.CreateSettings(referenceHandling);
             Copy.PropertyValues(source, target, settings);

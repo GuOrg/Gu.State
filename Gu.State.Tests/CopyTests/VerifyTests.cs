@@ -11,7 +11,11 @@
     {
         public abstract void VerifyMethod<T>() where T : class;
 
-        public abstract void VerifyMethod<T>(ReferenceHandling referenceHandling) where T : class;
+        public abstract void VerifyMethod<T>(
+            ReferenceHandling referenceHandling,
+            string excludedMembers = null,
+            Type ignoredType = null,
+            Type immutableType = null) where T : class;
 
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.References)]
@@ -206,6 +210,13 @@
 
             Assert.DoesNotThrow(() => this.VerifyMethod<Parent>(ReferenceHandling.Structural));
             Assert.DoesNotThrow(() => this.VerifyMethod<Parent>(ReferenceHandling.References));
+        }
+
+        [TestCase(ReferenceHandling.References)]
+        [TestCase(ReferenceHandling.Structural)]
+        public void WithExplicitImmutable(ReferenceHandling referenceHandling)
+        {
+            this.VerifyMethod<With<IntCollection>>(referenceHandling, immutableType: typeof(IntCollection));
         }
     }
 }

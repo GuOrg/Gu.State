@@ -12,7 +12,7 @@
             return errorBuilder.AppendLine($"{className}.{methodName}(x, y) failed.");
         }
 
-        private static string CopyMethodName(this IMemberSettings settings)
+        private static string CopyMethodName(this MemberSettings settings)
         {
             if (settings is FieldsSettings)
             {
@@ -28,8 +28,7 @@
         }
 
         // ReSharper disable once UnusedParameter.Local
-        private static void ThrowIfHasErrors<TSetting>(this TypeErrors errors, TSetting settings, string className, string methodName)
-            where TSetting : class, IMemberSettings
+        private static void ThrowIfHasErrors(this TypeErrors errors, MemberSettings settings, string className, string methodName)
         {
             if (errors == null)
             {
@@ -46,8 +45,7 @@
         }
 
         // ReSharper disable once UnusedParameter.Local
-        private static string GetErrorText<TSettings>(this TypeErrors errors, TSettings settings, string className, string methodName)
-            where TSettings : class, IMemberSettings
+        private static string GetErrorText(this TypeErrors errors, MemberSettings settings, string className, string methodName)
         {
             var errorBuilder = new StringBuilder();
             errorBuilder.AppendCopyFailed(className, methodName)
@@ -72,7 +70,7 @@
             internal static void ReadonlyMemberDiffers(
                 SourceAndTargetValue sourceAndTargetValue,
                 MemberInfo member,
-                IMemberSettings settings)
+                MemberSettings settings)
             {
                 var error = new ReadonlyMemberDiffersError(sourceAndTargetValue, member);
                 var typeErrors = new TypeErrors(sourceAndTargetValue.Source?.GetType(), error);
@@ -85,7 +83,7 @@
             internal static Exception CannotCopyFixesSizeCollections(
                 IEnumerable source,
                 IEnumerable target,
-                IMemberSettings settings)
+                MemberSettings settings)
             {
                 var error = new CannotCopyFixedSizeCollectionsError(source, target);
                 var typeErrors = new TypeErrors(target.GetType(), error);
@@ -95,7 +93,7 @@
 
             internal static InvalidOperationException CreateCannotCreateInstanceException(
                 object sourceValue,
-                IMemberSettings settings,
+                MemberSettings settings,
                 Exception exception)
             {
                 var cannotCopyError = new CannotCreateInstanceError(sourceValue);

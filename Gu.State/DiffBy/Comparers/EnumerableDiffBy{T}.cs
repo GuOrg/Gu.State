@@ -14,7 +14,7 @@
             DiffBuilder collectionBuilder,
             object x,
             object y,
-            IMemberSettings settings)
+            MemberSettings settings)
         {
             this.AddDiffs(collectionBuilder, (IEnumerable<T>)x, (IEnumerable<T>)y, settings);
         }
@@ -23,7 +23,7 @@
             DiffBuilder collectionBuilder,
             IEnumerable<T> x,
             IEnumerable<T> y,
-            IMemberSettings settings)
+            MemberSettings settings)
         {
             var i = -1;
             foreach (var pair in new PaddedPairs(x, y))

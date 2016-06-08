@@ -14,17 +14,16 @@
             DiffBuilder collectionBuilder,
             object x,
             object y,
-            IMemberSettings settings)
+            MemberSettings settings)
         {
             this.AddDiffs(collectionBuilder, (IDictionary<TKey, TValue>)x, (IDictionary<TKey, TValue>)y, settings);
         }
 
-        private void AddDiffs<TSettings>(
+        private void AddDiffs(
             DiffBuilder collectionBuilder,
             IDictionary<TKey, TValue> x,
             IDictionary<TKey, TValue> y,
-            TSettings settings)
-                where TSettings : IMemberSettings
+            MemberSettings settings)
         {
             using (var borrow = HashSetPool<TKey>.Borrow(EqualityComparer<TKey>.Default.Equals, EqualityComparer<TKey>.Default.GetHashCode))
             {

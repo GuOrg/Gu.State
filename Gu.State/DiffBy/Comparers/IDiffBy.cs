@@ -6,6 +6,6 @@ namespace Gu.State
             DiffBuilder collectionBuilder,
             object x,
             object y,
-            IMemberSettings settings);
+            MemberSettings settings);
     }
 }

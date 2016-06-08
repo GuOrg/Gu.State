@@ -9,7 +9,13 @@ namespace Gu.State.Tests.CopyTests
 
     public abstract class ClassesTests
     {
-        public abstract void CopyMethod<T>(T source, T target, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excluded = null) where T : class;
+        public abstract void CopyMethod<T>(
+            T source,
+            T target,
+            ReferenceHandling referenceHandling = ReferenceHandling.Structural,
+            string excluded = null,
+            Type ignoredType = null,
+            Type immutableType = null) where T : class;
 
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.Structural)]
@@ -27,6 +33,22 @@ namespace Gu.State.Tests.CopyTests
             Assert.AreEqual("3", target.StringValue);
             Assert.AreEqual(StringSplitOptions.RemoveEmptyEntries, source.EnumValue);
             Assert.AreEqual(StringSplitOptions.RemoveEmptyEntries, target.EnumValue);
+        }
+
+        [Test]
+        public void WithExplitImmutable()
+        {
+            var source = new WithComplexProperty
+            {
+                Name = "a",
+                Value = 1,
+                ComplexType = new ComplexType { Name = "b", Value = 2 }
+            };
+            var target = new WithComplexProperty();
+            this.CopyMethod(source, target, ReferenceHandling.Structural, immutableType: typeof(ComplexType));
+            Assert.AreEqual(source.Name, target.Name);
+            Assert.AreEqual(source.Value, target.Value);
+            Assert.AreSame(source.ComplexType, target.ComplexType);
         }
 
         [Test]

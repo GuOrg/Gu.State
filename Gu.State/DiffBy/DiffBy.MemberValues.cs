@@ -10,7 +10,7 @@
            this DiffBuilder builder,
             T x,
             T y,
-            IMemberSettings settings)
+            MemberSettings settings)
         {
             EqualBy.Verify.CanEqualByMemberValues(x, y, settings, typeof(DiffBy).Name, settings.DiffMethodName());
             builder.TryAddCollectionDiffs(x, y, settings);
@@ -22,7 +22,7 @@
             object xSource,
             object ySource,
             MemberInfo member,
-            IMemberSettings settings)
+            MemberSettings settings)
         {
             if (settings.IsIgnoringMember(member))
             {
@@ -84,7 +84,7 @@
             object xItem,
             object yItem,
             object index,
-            IMemberSettings settings)
+            MemberSettings settings)
         {
             ValueDiff diff;
             if (TryGetValueDiff(xItem, yItem, settings, out diff))
@@ -124,7 +124,7 @@
             collectionBuilder.AddLazy(index, subDiffBuilder.Value);
         }
 
-        private static ValueDiff TryCreateValueDiff<T>(T x, T y, IMemberSettings settings)
+        private static ValueDiff TryCreateValueDiff<T>(T x, T y, MemberSettings settings)
         {
             Debug.Assert(x != null, "x == null");
             Debug.Assert(y != null, "y == null");
@@ -146,7 +146,7 @@
         private static void TryAddMemberDiffs(
             object x,
             object y,
-            IMemberSettings settings,
+            MemberSettings settings,
             DiffBuilder builder)
         {
             foreach (var member in settings.GetMembers(x.GetType()))
@@ -159,7 +159,7 @@
             this DiffBuilder collectionBuilder,
             object x,
             object y,
-            IMemberSettings settings)
+            MemberSettings settings)
         {
             if (!Is.Enumerable(x, y))
             {

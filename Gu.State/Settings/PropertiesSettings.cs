@@ -4,23 +4,23 @@
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Linq;
     using System.Reflection;
 
     /// <summary>
     /// A configuration object with settings for how to copy and compare etc. instances using properties.
     /// The setting should be cached between calls for performance.
     /// </summary>
-    public sealed class PropertiesSettings : MemberSettings<PropertyInfo>, IMemberSettings
+    public sealed class PropertiesSettings : MemberSettings
     {
         private static readonly ConcurrentDictionary<BindingFlagsAndReferenceHandling, PropertiesSettings> Cache = new ConcurrentDictionary<BindingFlagsAndReferenceHandling, PropertiesSettings>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertiesSettings"/> class.
         /// </summary>
-        /// <param name="ignoredProperties">The properties provided here will be ignored when the intsance of <see cref="PropertiesSettings"/> is used</param>
-        /// <param name="ignoredTypes">
-        /// The types to ignore
-        /// </param>
+        /// <param name="ignoredProperties">The properties provided here will be ignored when the intsance of <see cref="PropertiesSettings"/> is used. Can be null.</param>
+        /// <param name="ignoredTypes">The types to ignore</param>
+        /// <param name="immutableTypes">A collection of types to treat as immutable. Can be null.</param>
         /// <param name="comparers">Custom comparers. Use this to get better performance or for custom equality for types.</param>
         /// <param name="copyers">Custom copyers.</param>
         /// <param name="bindingFlags">The binding flags to use when getting properties</param>
@@ -31,11 +31,12 @@
         public PropertiesSettings(
             IEnumerable<PropertyInfo> ignoredProperties,
             IEnumerable<Type> ignoredTypes,
+            IEnumerable<Type> immutableTypes,
             IReadOnlyDictionary<Type, CastingComparer> comparers,
             IReadOnlyDictionary<Type, CustomCopy> copyers,
             ReferenceHandling referenceHandling = ReferenceHandling.Structural,
             BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
-            : base(ignoredProperties, ignoredTypes, comparers, copyers, referenceHandling, bindingFlags)
+            : base(ignoredProperties, ignoredTypes, immutableTypes, comparers, copyers, referenceHandling, bindingFlags)
         {
         }
 
@@ -47,7 +48,7 @@
         public static PropertiesSettings Default => GetOrCreate();
 
         /// <summary>Gets a collection or ignored properties.</summary>
-        public IEnumerable<PropertyInfo> IgnoredProperties => this.IgnoredMembers.Keys;
+        public IEnumerable<PropertyInfo> IgnoredProperties => this.IgnoredMembers.Keys.Cast<PropertyInfo>();
 
         internal ConcurrentDictionary<Type, TypeErrors> TrackableErrors { get; } = new ConcurrentDictionary<Type, TypeErrors>();
 
@@ -74,7 +75,7 @@
             var key = new BindingFlagsAndReferenceHandling(bindingFlags, referenceHandling);
             return Cache.GetOrAdd(
                 key,
-                x => new PropertiesSettings(null, null, null, null, referenceHandling, bindingFlags));
+                x => new PropertiesSettings(null, null, null, null, null, referenceHandling, bindingFlags));
         }
 
         /// <summary>Gets if the <paramref name="propertyInfo"/> is ignored.</summary>
@@ -103,15 +104,15 @@
             return type.GetProperties(this.BindingFlags);
         }
 
-        IEnumerable<MemberInfo> IMemberSettings.GetMembers(Type type) => this.GetProperties(type);
+        public override IEnumerable<MemberInfo> GetMembers(Type type) => this.GetProperties(type);
 
-        bool IMemberSettings.IsIgnoringMember(MemberInfo member)
+       public override bool IsIgnoringMember(MemberInfo member)
         {
             Debug.Assert(member is PropertyInfo, "member is PropertyInfo");
             return this.IsIgnoringProperty((PropertyInfo)member);
         }
 
-        IGetterAndSetter IMemberSettings.GetOrCreateGetterAndSetter(MemberInfo member)
+        internal override IGetterAndSetter GetOrCreateGetterAndSetter(MemberInfo member)
         {
             Debug.Assert(member is PropertyInfo, "member is PropertyInfo");
             return this.GetOrCreateGetterAndSetter((PropertyInfo)member);
@@ -122,7 +123,7 @@
             return GetterAndSetter.GetOrCreate(propertyInfo);
         }
 
-        private bool GetIsIgnoring(PropertyInfo propertyInfo)
+        private bool GetIsIgnoring(MemberInfo propertyInfo)
         {
             foreach (var kvp in this.IgnoredMembers)
             {

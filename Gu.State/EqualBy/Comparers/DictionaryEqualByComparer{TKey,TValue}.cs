@@ -16,7 +16,7 @@ namespace Gu.State
         public override bool Equals(
             object x,
             object y,
-            IMemberSettings settings,
+            MemberSettings settings,
             ReferencePairCollection referencePairs)
         {
             bool result;
@@ -48,7 +48,7 @@ namespace Gu.State
         private static bool KeysAndValuesEquals(
             IDictionary<TKey, TValue> x,
             IDictionary<TKey, TValue> y,
-            IMemberSettings settings,
+            MemberSettings settings,
             ReferencePairCollection referencePairs)
         {
             foreach (var key in x.Keys)
