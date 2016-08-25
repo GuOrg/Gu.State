@@ -177,6 +177,11 @@
                 return false;
             }
 
+            if (x.GetType() != y.GetType())
+            {
+                return false;
+            }
+
             return !settings.IsImmutable(x.GetType()) && !settings.IsImmutable(y.GetType());
         }
 

@@ -599,5 +599,20 @@
                 return this.HashValue;
             }
         }
+
+        public abstract class BaseClass
+        {
+            public double BaseValue { get; set; }
+        }
+
+        public class Derived1 : BaseClass
+        {
+            public double Derived1Value { get; set; }
+        }
+
+        public class Derived2 : BaseClass
+        {
+            public double Derived2Value { get; set; }
+        }
     }
 }

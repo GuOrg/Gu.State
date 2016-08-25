@@ -152,6 +152,44 @@ namespace Gu.State.Tests.DiffTests
             Assert.AreEqual(expected, result.ToString("", " "));
         }
 
+        [Test]
+        public void EqualWhenSameType()
+        {
+            var x = new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = 2 });
+            var y = new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = 2 });
+            var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
+            Assert.AreEqual(true, result.IsEmpty);
+            Assert.AreEqual("Empty", result.ToString("", " "));
+        }
+
+        [Test]
+        public void NotEqualWhenSameType()
+        {
+            var x = new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = 2 });
+            var y = new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = 3 });
+            var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
+            Assert.AreEqual(false, result.IsEmpty);
+            var expected = this is PropertyValues.Classes
+                               ? "With<BaseClass> Value Derived1Value x: 2 y: 3"
+                               : "With<BaseClass> <Value>k__BackingField <Derived1Value>k__BackingField x: 2 y: 3";
+            var actual = result.ToString("", " ");
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void NotEqualWhenDifferentTypes()
+        {
+            var x = new With<BaseClass>(new Derived1());
+            var y = new With<BaseClass>(new Derived2());
+            var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
+            Assert.AreEqual(false, result.IsEmpty);
+            var expected = this is PropertyValues.Classes
+                               ? "With<BaseClass> Value x: Gu.State.Tests.DiffTests.DiffTypes+Derived1 y: Gu.State.Tests.DiffTests.DiffTypes+Derived2"
+                               : "With<BaseClass> <Value>k__BackingField x: Gu.State.Tests.DiffTests.DiffTypes+Derived1 y: Gu.State.Tests.DiffTests.DiffTypes+Derived2";
+            var actual = result.ToString("", " ");
+            Assert.AreEqual(expected, actual);
+        }
+
         [TestCase(1, 1, null, "Empty")]
         [TestCase(1, 2, null, "WithReadonlyProperty<int> <member> x: 1 y: 2")]
         [TestCase(1, 1, ReferenceHandling.Throw, "Empty")]
