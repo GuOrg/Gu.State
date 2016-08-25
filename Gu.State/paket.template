@@ -1,6 +1,6 @@
 ﻿type project
 releasenotes
-  * BUGFIX: Track dirty with inheritance.
+  * BUGFIX: Copy & synchronize with inheritance.
 
 tags Equals, Copy, Sync, Diff, Dirty
 projectUrl https://github.com/JohanLarsson/Gu.State
