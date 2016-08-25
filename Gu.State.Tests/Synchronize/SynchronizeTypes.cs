@@ -778,7 +778,6 @@
             }
         }
 
-
         public abstract class BaseClass : INotifyPropertyChanged
         {
             private double baseDouble;

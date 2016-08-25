@@ -1,9 +1,10 @@
 ﻿namespace Gu.State.Benchmarks
 {
     using System;
+    using System.Collections.Generic;
     using BenchmarkDotNet.Attributes;
 
-    public class EqualBy
+    public class EqualByComplexType
     {
         private readonly ComplexType x = new ComplexType();
         private readonly ComplexType y = new ComplexType();
@@ -28,6 +29,12 @@
         }
 
         [Benchmark]
+        public bool Comparer()
+        {
+            return ComplexTypeComparer.Default.Equals(this.x, this.y);
+        }
+
+        [Benchmark]
         public bool EqualByPropertyValues()
         {
             return State.EqualBy.PropertyValues(this.x, this.y);
@@ -37,6 +44,31 @@
         public bool EqualByFieldValues()
         {
             return State.EqualBy.FieldValues(this.x, this.y);
+        }
+
+        private class ComplexTypeComparer : IEqualityComparer<ComplexType>
+        {
+            public static readonly ComplexTypeComparer Default = new ComplexTypeComparer();
+
+            public bool Equals(ComplexType x, ComplexType y)
+            {
+                if (x == null && y == null)
+                {
+                    return true;
+                }
+
+                if (x == null || y == null)
+                {
+                    return false;
+                }
+
+                return x.Value == y.Value && x.Name == y.Name;
+            }
+
+            public int GetHashCode(ComplexType obj)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

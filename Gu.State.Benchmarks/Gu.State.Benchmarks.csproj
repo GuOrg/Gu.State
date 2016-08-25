@@ -52,7 +52,7 @@
     <Compile Include="Benchmarks\CopyArray2D.cs" />
     <Compile Include="Benchmarks\CopyArray3D.cs" />
     <Compile Include="Benchmarks\CopyList.cs" />
-    <Compile Include="Benchmarks\EqualBy.cs" />
+    <Compile Include="Benchmarks\EqualByComplexType.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Types\With.cs" />
