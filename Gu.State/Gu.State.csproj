@@ -47,6 +47,7 @@
     <Compile Include="Contracts\IChangeTracker.cs" />
     <Compile Include="Internals\Collections\ImmutableSet.cs" />
     <Compile Include="Internals\Collections\ImmutableSet{T}.cs" />
+    <Compile Include="Internals\Errors\Errors\StructMustNotNotifyError.cs" />
     <Compile Include="Internals\Extensions\StringExt.cs" />
     <Compile Include="Internals\Pools\DictionaryPool{TKey,TValue}.cs" />
     <Compile Include="Internals\Reflection\GetterAndSetter{TSource,TValue}.cs" />

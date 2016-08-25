@@ -113,6 +113,18 @@ namespace Gu.State
                 return typeErrors;
             }
 
+            if (type.IsValueType)
+            {
+                if (typeof(INotifyCollectionChanged).IsAssignableFrom(type) ||
+                    typeof(INotifyPropertyChanged).IsAssignableFrom(type))
+                {
+                    return typeErrors.CreateIfNull(type)
+                                     .Add(StructMustNotNotifyError.GetOrCreate(type));
+                }
+
+                return typeErrors;
+            }
+
             if (typeof(IEnumerable).IsAssignableFrom(type))
             {
                 if (!typeof(INotifyCollectionChanged).IsAssignableFrom(type))

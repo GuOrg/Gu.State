@@ -12,6 +12,32 @@ namespace Gu.State.Tests
         public class Verify
         {
             [Test]
+            public void ThrowsWithNotifyingStruct()
+            {
+                var expected = "Track.VerifyCanTrackChanges(x, y) failed.\r\n" +
+                               "The type NotifyingStruct is a mutable struct that implements INotifyPropertyChanged.\r\n" +
+                               "  As it is a value type subscribing to changes does not make sense.\r\n" +
+                               "The property With<NotifyingStruct>.Value of type NotifyingStruct is not supported.\r\n" +
+                               "Solve the problem by any of:\r\n" +
+                               "* Make NotifyingStruct immutable or use an immutable type.\r\n" +
+                               "  - For immutable types the following must hold:\r\n" +
+                               "    - Must be a sealed class or a struct.\r\n" +
+                               "    - All fields and properties must be readonly.\r\n" +
+                               "    - All field and property types must be immutable.\r\n" +
+                               "    - All indexers must be readonly.\r\n" +
+                               "    - Event fields are ignored.\r\n" +
+                               "* Use PropertiesSettings and specify how change tracking is performed:\r\n" +
+                               "  - ReferenceHandling.Structural means that a the entire graph is tracked.\r\n" +
+                               "  - ReferenceHandling.References means that only the root level changes are tracked.\r\n" +
+                               "  - Exclude a combination of the following:\r\n" +
+                               "    - The property With<NotifyingStruct>.Value.\r\n" +
+                               "    - The type NotifyingStruct.\r\n";
+
+                var exception = Assert.Throws<NotSupportedException>(() => Track.VerifyCanTrackChanges<With<NotifyingStruct>>());
+                Assert.AreEqual(expected, exception.Message);
+            }
+
+            [Test]
             public void WithIllegal()
             {
                 var expected = "Track.VerifyCanTrackChanges(x, y) failed.\r\n" +
