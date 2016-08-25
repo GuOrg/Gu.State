@@ -56,16 +56,25 @@ namespace Gu.State.Tests.EqualByTests
         }
 
         [Test]
-        public void NotDirtyWhenSameType()
+        public void EqualWhenSameType()
         {
-            var x = new With<BaseClass>(new Derived1());
-            var y = new With<BaseClass>(new Derived1());
+            var x = new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = 2 });
+            var y = new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = 2 });
             var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
         }
 
         [Test]
-        public void DirtyWhenDifferentTypes()
+        public void NotEqualWhenSameType()
+        {
+            var x = new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = 2 });
+            var y = new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = 3 });
+            var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
+            Assert.AreEqual(false, result);
+        }
+
+        [Test]
+        public void NotEqualWhenDifferentTypes()
         {
             var x = new With<BaseClass>(new Derived1());
             var y = new With<BaseClass>(new Derived2());
