@@ -67,12 +67,12 @@
             return x is IEnumerable && y is IEnumerable;
         }
 
-        internal static bool IsFixedSize(IEnumerable x, IEnumerable y)
+        internal static bool FixedSize(IEnumerable x, IEnumerable y)
         {
-            return IsFixedSize(x) || IsFixedSize(y);
+            return FixedSize(x) || FixedSize(y);
         }
 
-        internal static bool IsFixedSize(object list)
+        internal static bool FixedSize(object list)
         {
             return (list as IList)?.IsReadOnly == true;
         }
@@ -80,6 +80,11 @@
         internal static bool Type<T>(object x, object y)
         {
             return x is T && y is T;
+        }
+
+        internal static bool SameType(object x, object y)
+        {
+            return x?.GetType() == y?.GetType();
         }
 
         internal static bool OpenGeneric(object x, object y, Type type)
