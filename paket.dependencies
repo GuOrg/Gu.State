@@ -6,6 +6,8 @@ nuget NUnit
 nuget StyleCop.Analyzers
 nuget BenchmarkDotNet
 nuget BenchmarkDotNet.Diagnostics.Windows
+nuget System.Reflection.Metadata = 1.2.0
+
 nuget System.Collections.Immutable
 nuget Gu.Units
 #nuget Desktop.Analyzers

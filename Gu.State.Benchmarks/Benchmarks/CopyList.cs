@@ -5,24 +5,30 @@
 
     using BenchmarkDotNet.Attributes;
 
-    public class CopyListBenchmarks
+    public class CopyList
     {
         private readonly List<int> source;
         private readonly List<int> target;
 
-        public CopyListBenchmarks()
+        public CopyList()
         {
             this.source = Enumerable.Range(0, 1000).ToList();
             this.target = Enumerable.Range(0, 1000).ToList();
         }
 
         [Benchmark(Baseline = true)]
-        public void Baseline()
+        public void ForLoop()
         {
             for (int i = 0; i < this.source.Count; i++)
             {
                 this.target[i] = this.source[i];
             }
+        }
+
+        [Benchmark]
+        public void CopyPropertyValues()
+        {
+            Copy.PropertyValues(this.source, this.target);
         }
 
         [Benchmark]

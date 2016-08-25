@@ -1,3 +1,4 @@
 JetBrains.Annotations
 BenchmarkDotNet
 BenchmarkDotNet.Diagnostics.Windows
+System.Reflection.Metadata
