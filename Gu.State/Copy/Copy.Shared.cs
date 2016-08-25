@@ -88,7 +88,7 @@
                     createdValue = true;
                     return sourceItem;
                 case ReferenceHandling.Structural:
-                    if (targetItem == null)
+                    if (targetItem == null || !Is.SameType(sourceItem, targetItem))
                     {
                         copy = (T)CreateInstance(sourceItem, settings);
                         createdValue = true;

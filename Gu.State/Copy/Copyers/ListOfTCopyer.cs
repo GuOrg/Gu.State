@@ -42,7 +42,7 @@ namespace Gu.State
             MemberSettings settings,
             ReferencePairCollection referencePairs)
         {
-            if (Is.IsFixedSize(source, target) && source.Count != target.Count)
+            if (Is.FixedSize(source, target) && source.Count != target.Count)
             {
                 throw State.Copy.Throw.CannotCopyFixesSizeCollections(source, target, settings);
             }

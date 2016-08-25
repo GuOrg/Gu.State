@@ -121,6 +121,36 @@ namespace Gu.State.Tests.CopyTests
         }
 
         [Test]
+        public void WithInheritanceWhenSameType()
+        {
+            var source = new With<BaseClass> { Value = new Derived1 { BaseValue = 1, Derived1Value = 2 } };
+            var target = new With<BaseClass>();
+            Copy.PropertyValues(source, target, ReferenceHandling.Structural);
+            Assert.IsInstanceOf<Derived1>(source.Value);
+            Assert.IsInstanceOf<Derived1>(target.Value);
+            Assert.AreEqual(1, source.Value.BaseValue);
+            Assert.AreEqual(1, target.Value.BaseValue);
+
+            Assert.AreEqual(2, ((Derived1)source.Value).Derived1Value);
+            Assert.AreEqual(2, ((Derived1)target.Value).Derived1Value);
+        }
+
+        [Test]
+        public void WithInheritanceWhenDifferentTypes()
+        {
+            var source = new With<BaseClass> { Value = new Derived1 { BaseValue = 1, Derived1Value = 2 } };
+            var target = new With<BaseClass> {Value = new Derived2()};
+            Copy.PropertyValues(source, target, ReferenceHandling.Structural);
+            Assert.IsInstanceOf<Derived1>(source.Value);
+            Assert.IsInstanceOf<Derived1>(target.Value);
+            Assert.AreEqual(1, source.Value.BaseValue);
+            Assert.AreEqual(1, target.Value.BaseValue);
+
+            Assert.AreEqual(2, ((Derived1)source.Value).Derived1Value);
+            Assert.AreEqual(2, ((Derived1)target.Value).Derived1Value);
+        }
+
+        [Test]
         public void WithReadonlyHappyPath()
         {
             var x = new WithReadonlyProperty<int>(1);
