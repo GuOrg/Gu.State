@@ -1,5 +1,7 @@
 ﻿type project
-title Gu.State
+releasenotes
+  * BUGFIX: Track dirty with inheritance.
+
 tags Equals, Copy, Sync, Diff, Dirty
 projectUrl https://github.com/JohanLarsson/Gu.State
 licenseUrl http://opensource.org/licenses/MIT

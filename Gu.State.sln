@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{7AC03612-FB5D-4ECD-BA49-4DF76BD9C0D7}"
 	ProjectSection(SolutionItems) = preProject
@@ -20,6 +20,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".docs", ".docs", "{2ADA02F1
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 		.paket\Readme.paket.md = .paket\Readme.paket.md
+		RELEASE_NOTES.md = RELEASE_NOTES.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gu.State.Benchmarks", "Gu.State.Benchmarks\Gu.State.Benchmarks.csproj", "{DC912B58-CD7A-4BD9-A387-FD67AFD28097}"

@@ -254,7 +254,6 @@
       <Name>Gu.State</Name>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="..\.paket\paket.targets" />
   <ItemGroup>
     <Folder Include="Internals\Collections\" />
     <Folder Include="Sandbox\" />
@@ -339,4 +338,5 @@
       </ItemGroup>
     </When>
   </Choose>
+  <Import Project="..\.paket\paket.targets" />
 </Project>
