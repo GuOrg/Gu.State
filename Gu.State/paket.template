@@ -1,6 +1,6 @@
 ﻿type project
 releasenotes
-  * BUGFIX: Copy & synchronize with inheritance.
+  * USABILITY: Throw exception with useful info when trying to track a notifying struct.
 
 tags Equals, Copy, Sync, Diff, Dirty
 projectUrl https://github.com/JohanLarsson/Gu.State
