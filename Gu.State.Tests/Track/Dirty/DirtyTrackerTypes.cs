@@ -634,5 +634,60 @@
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+
+        public abstract class BaseClass : INotifyPropertyChanged
+        {
+            private double baseDouble;
+            public event PropertyChangedEventHandler PropertyChanged;
+
+            public double BaseValue
+            {
+                get { return this.baseDouble; }
+                set
+                {
+                    if (value.Equals(this.baseDouble)) return;
+                    this.baseDouble = value;
+                    this.OnPropertyChanged();
+                }
+            }
+
+            [NotifyPropertyChangedInvocator]
+            protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+            {
+                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        public class Derived1 : BaseClass
+        {
+            private double derived1Value;
+
+            public double Derived1Value
+            {
+                get { return this.derived1Value; }
+                set
+                {
+                    if (value.Equals(this.derived1Value)) return;
+                    this.derived1Value = value;
+                    this.OnPropertyChanged();
+                }
+            }
+        }
+
+        public class Derived2 : BaseClass
+        {
+            private double derived2Value;
+
+            public double Derived2Value
+            {
+                get { return this.derived2Value; }
+                set
+                {
+                    if (value.Equals(this.derived2Value)) return;
+                    this.derived2Value = value;
+                    this.OnPropertyChanged();
+                }
+            }
+        }
     }
 }

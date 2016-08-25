@@ -56,6 +56,24 @@ namespace Gu.State.Tests.EqualByTests
         }
 
         [Test]
+        public void NotDirtyWhenSameType()
+        {
+            var x = new With<BaseClass>(new Derived1());
+            var y = new With<BaseClass>(new Derived1());
+            var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
+            Assert.AreEqual(true, result);
+        }
+
+        [Test]
+        public void DirtyWhenDifferentTypes()
+        {
+            var x = new With<BaseClass>(new Derived1());
+            var y = new With<BaseClass>(new Derived2());
+            var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
+            Assert.AreEqual(false, result);
+        }
+
+        [Test]
         public void WithComplexStructuralWhenNull()
         {
             var x = new WithComplexProperty { Name = "a", Value = 1 };
@@ -98,11 +116,11 @@ namespace Gu.State.Tests.EqualByTests
         public void WithComplexReferenceWhenSame()
         {
             var x = new WithComplexProperty
-                        {
-                            Name = "a",
-                            Value = 1,
-                            ComplexType = new ComplexType { Name = "b", Value = 2 }
-                        };
+            {
+                Name = "a",
+                Value = 1,
+                ComplexType = new ComplexType { Name = "b", Value = 2 }
+            };
             var y = new WithComplexProperty { Name = "a", Value = 1, ComplexType = x.ComplexType };
             var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
@@ -115,17 +133,17 @@ namespace Gu.State.Tests.EqualByTests
         public void WithComplexReferenceWhenNotSame()
         {
             var x = new WithComplexProperty
-                        {
-                            Name = "a",
-                            Value = 1,
-                            ComplexType = new ComplexType { Name = "b", Value = 2 }
-                        };
+            {
+                Name = "a",
+                Value = 1,
+                ComplexType = new ComplexType { Name = "b", Value = 2 }
+            };
             var y = new WithComplexProperty
-                        {
-                            Name = "a",
-                            Value = 1,
-                            ComplexType = new ComplexType { Name = "b", Value = 2 }
-                        };
+            {
+                Name = "a",
+                Value = 1,
+                ComplexType = new ComplexType { Name = "b", Value = 2 }
+            };
             var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
 
@@ -240,13 +258,13 @@ namespace Gu.State.Tests.EqualByTests
         {
             var source = new WithListProperty<ComplexType> { Items = { new ComplexType("a", 1) } };
             var target = new WithListProperty<ComplexType>
-                             {
-                                 Items =
+            {
+                Items =
                                      {
                                          new ComplexType("a", 1),
                                          new ComplexType("a", 1)
                                      }
-                             };
+            };
             var result = this.EqualMethod(source, target, ReferenceHandling.Structural);
             Assert.AreEqual(false, result);
         }
