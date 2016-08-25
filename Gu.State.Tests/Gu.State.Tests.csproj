@@ -183,6 +183,7 @@
     <Compile Include="Track\Dirty\DirtyTrackerTests.ReferenceLoops.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerTests.MemoryLeaks.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerTests.Throws.cs" />
+    <Compile Include="Track\Dirty\DirtyTrackerTests.WithInheritance.cs" />
     <Compile Include="Track\Dirty\DirtyTrackerTypes.cs" />
     <Compile Include="EqualByTests\ClassesTests.cs" />
     <Compile Include="EqualByTests\CollectionTests.cs" />
