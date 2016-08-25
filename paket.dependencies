@@ -2,9 +2,10 @@ source http://www.nuget.org/api/v2/
 
 nuget JetBrains.Annotations
 nuget Moq
-nuget NUnit 2.6.4
+nuget NUnit
 nuget StyleCop.Analyzers
 nuget BenchmarkDotNet
+nuget BenchmarkDotNet.Diagnostics.Windows
 nuget System.Collections.Immutable
 nuget Gu.Units
 #nuget Desktop.Analyzers
