@@ -14,6 +14,6 @@ Type=CopyArray3D  Mode=Throughput
 ```
              Method |     Median |    StdDev | Scaled | Scaled-SD | Gen 0 | Gen 1 | Gen 2 | Bytes Allocated/Op |
 ------------------- |----------- |---------- |------- |---------- |------ |------ |------ |------------------- |
-           Forloops | 18.7158 us | 0.2919 us |   1.00 |      0.00 |     - |     - |     - |               1,04 |
- CopyPropertyValues | 41.5591 us | 1.9952 us |   2.25 |      0.11 | 71.00 |     - |     - |             464,13 |
-    CopyFieldValues | 40.5945 us | 0.4682 us |   2.18 |      0.04 | 73.37 |     - |     - |             453,09 |
+           Forloops | 20.1044 us | 1.2283 us |   1.00 |      0.00 |     - |     - |     - |               0,75 |
+ CopyPropertyValues | 42.1029 us | 1.5257 us |   2.10 |      0.14 | 71.00 |     - |     - |             435,39 |
+    CopyFieldValues | 41.1301 us | 0.3105 us |   2.03 |      0.12 | 81.20 |     - |     - |             465,32 |

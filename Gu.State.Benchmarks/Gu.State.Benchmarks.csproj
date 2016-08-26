@@ -47,6 +47,7 @@
     <Content Include="_TraceEventProgrammersGuide.docx">
       <Paket>True</Paket>
     </Content>
+    <Compile Include="Benchmarks\CopyComplexType.cs" />
     <Compile Include="MemoryDiagnoserConfig.cs" />
     <Compile Include="Types\ComplexType.cs" />
     <Compile Include="Benchmarks\CopyArray2D.cs" />

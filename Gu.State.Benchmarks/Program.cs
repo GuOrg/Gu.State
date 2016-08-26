@@ -11,7 +11,7 @@
 
         public static void Main()
         {
-            foreach (var summary in RunAll())
+            foreach (var summary in RunSingle<CopyComplexType>())
             {
                 CopyResult(summary.Title);
             }

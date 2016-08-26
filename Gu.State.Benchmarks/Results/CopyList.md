@@ -14,6 +14,6 @@ Type=CopyList  Mode=Throughput
 ```
              Method |     Median |    StdDev | Scaled | Scaled-SD |  Gen 0 | Gen 1 | Gen 2 | Bytes Allocated/Op |
 ------------------- |----------- |---------- |------- |---------- |------- |------ |------ |------------------- |
-            ForLoop |  3.7193 us | 0.2381 us |   1.00 |      0.00 |      - |     - |     - |               0,25 |
- CopyPropertyValues | 36.8143 us | 2.0822 us |   9.96 |      0.77 | 106.00 |     - |     - |             662,93 |
-    CopyFieldValues | 36.4151 us | 1.2592 us |   9.76 |      0.62 | 115.47 |     - |     - |             714,35 |
+            ForLoop |  3.8179 us | 0.1557 us |   1.00 |      0.00 |      - |     - |     - |               0,21 |
+ CopyPropertyValues | 37.3312 us | 1.0582 us |   9.73 |      0.45 | 125.65 |     - |     - |             730,51 |
+    CopyFieldValues | 39.2657 us | 1.8825 us |  10.30 |      0.62 | 130.00 |     - |     - |             754,42 |
