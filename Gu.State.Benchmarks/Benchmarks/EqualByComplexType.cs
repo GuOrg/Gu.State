@@ -9,6 +9,8 @@
         private readonly ComplexType x = new ComplexType();
         private readonly ComplexType y = new ComplexType();
         private readonly Func<ComplexType, ComplexType, bool> compareFunc = (x, y) => x.Name == y.Name && x.Value == y.Value;
+        private readonly PropertiesSettings propertiesSettings = PropertiesSettings.Build().AddComparer(ComplexTypeComparer.Default).CreateSettings();
+        private readonly FieldsSettings fieldsSettings = FieldsSettings.Build().AddComparer(ComplexTypeComparer.Default).CreateSettings();
 
         [Benchmark(Baseline = true)]
         public bool this_x_Equals_this_y()
@@ -41,9 +43,21 @@
         }
 
         [Benchmark]
+        public bool EqualByPropertyValuesWithComparer()
+        {
+            return State.EqualBy.PropertyValues(this.x, this.y, this.propertiesSettings);
+        }
+
+        [Benchmark]
         public bool EqualByFieldValues()
         {
             return State.EqualBy.FieldValues(this.x, this.y);
+        }
+
+        [Benchmark]
+        public bool EqualByFieldValuesWIthComparer()
+        {
+            return State.EqualBy.FieldValues(this.x, this.y, this.fieldsSettings);
         }
 
         private class ComplexTypeComparer : IEqualityComparer<ComplexType>

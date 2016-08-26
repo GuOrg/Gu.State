@@ -7,11 +7,11 @@
 
     public class Program
     {
-        private static readonly string DesinationDirectory = System.IO.Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName, "Results");
+        private static readonly string DesinationDirectory = System.IO.Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName, "Benchmarks");
 
         public static void Main()
         {
-            foreach (var summary in RunSingle<CopyComplexType>())
+            foreach (var summary in RunSingle<EqualByComplexType>())
             {
                 CopyResult(summary.Title);
             }

@@ -61,10 +61,11 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="paket.references" />
-    <None Include="Results\CopyArray2D.md" />
-    <None Include="Results\CopyArray3D.md" />
-    <None Include="Results\CopyList.md" />
-    <None Include="Results\EqualBy.md" />
+    <None Include="Benchmarks\CopyArray2D.md" />
+    <None Include="Benchmarks\CopyArray3D.md" />
+    <None Include="Benchmarks\CopyComplexType.md" />
+    <None Include="Benchmarks\CopyList.md" />
+    <None Include="Benchmarks\EqualByComplexType.md" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Gu.State\Gu.State.csproj">
