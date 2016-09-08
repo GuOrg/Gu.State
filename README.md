@@ -41,7 +41,7 @@ Compares two instances.
 
 ### 1.1. FieldValues
 Compares x and y by field values.
-```
+```csharp
 EqualBy.FieldValues(x, y); // default is ReferenceHandling.Structural
 EqualBy.FieldValues(x, y, ReferenceHandling.Throw);  
 EqualBy.FieldValues(x, y, ReferenceHandling.Structural); 
@@ -56,7 +56,7 @@ EqualBy.FieldValues(x, y, settings); // settings should be cached between calls 
 Asserts that instances of type `<T>` can be compared using the `EqualBy.FieldValues` method.
 This can be useful in unit tests.
 Throws an exception with a message describing the problem(s) found and suggestions for fixes.
-```
+```csharp
 EqualBy.VerifyCanEqualByFieldValues<T>(); // default is ReferenceHandling.Structural
 EqualBy.VerifyCanEqualByFieldValues<T>(ReferenceHandling.Structural); 
 EqualBy.VerifyCanEqualByFieldValues<T>(ReferenceHandling.References);
@@ -65,7 +65,7 @@ EqualBy.VerifyCanEqualByFieldValues<T>(settings); // settings should be cached b
 ```
 
 ### 1.3. PropertyValues
-```
+```csharp
 EqualBy.PropertyValues(x, y);
 EqualBy.PropertyValues(x, y, ReferenceHandling.Structural); 
 EqualBy.PropertyValues(x, y, ReferenceHandling.References);
@@ -78,7 +78,7 @@ EqualBy.PropertyValues(x, y, settings); // settings should be cached between cal
 Asserts that instances of type `<T>` can be compared using the `EqualBy.PropertyValues` method.
 This can be useful in unit tests.
 Throws an exception with a message describing the problem(s) found and suggestions for fixes.
-```
+```csharp
 EqualBy.VerifyCanEqualByPropertyValues<T>();
 EqualBy.VerifyCanEqualByPropertyValues<T>(ReferenceHandling.Structural); 
 EqualBy.VerifyCanEqualByPropertyValues<T>(ReferenceHandling.References);
@@ -93,7 +93,7 @@ Immutable types are copied by value/reference.
 - Collections must implement `IList` or `IDictionary`
 
 ### 2.1. FieldValues
-```
+```csharp
 Copy.FieldValues(source, target);
 Copy.FieldValues(source, target, ReferenceHandling.Structural); 
 Copy.FieldValues(source, target, ReferenceHandling.References);
@@ -105,7 +105,7 @@ Copy.FieldValues(source, target, ReferenceHandling.Throw);
 Asserts that instances of type `<T>` can be copied using the `Copy.FieldValues` method.
 This can be useful in unit tests.
 Throws an exception with a message describing the problem(s) found and suggestions for fixes.
-```
+```csharp
 Copy.VerifyCanCopyFieldValues<T>(); // default is ReferenceHandling.Structural
 Copy.VerifyCanCopyFieldValues<T>(ReferenceHandling.Structural); 
 Copy.VerifyCanCopyFieldValues<T>(ReferenceHandling.References);
@@ -114,7 +114,7 @@ Copy.VerifyCanCopyFieldValues<T>(settings); // settings should be cached between
 ```
 
 ### 2.3. PropertyValues
-```
+```csharp
 Copy.PropertyValues(source, target);
 Copy.PropertyValues(source, target, ReferenceHandling.Structural); 
 Copy.PropertyValues(source, target, ReferenceHandling.References);
@@ -126,7 +126,7 @@ Copy.PropertyValues(source, target, ReferenceHandling.Throw);
 Asserts that instances of type `<T>` can be copied using the `Copy.PropertyValues` method.
 This can be useful in unit tests.
 Throws an exception with a message describing the problem(s) found and suggestions for fixes.
-```
+```csharp
 Copy.VerifyCanCopyPropertyValues<T>(); // default is ReferenceHandling.Structural
 Copy.VerifyCanCopyPropertyValues<T>(ReferenceHandling.Structural); 
 Copy.VerifyCanCopyPropertyValues<T>(ReferenceHandling.References);
@@ -141,7 +141,7 @@ Types implementing `IEquatable` are compared using `object.Equals(x, y)`
 - Handles enumerables.
 
 ### 3.1. FieldValues
-```
+```csharp
 DiffBy.FieldValues(x, y);
 DiffBy.FieldValues(x, y, ReferenceHandling.Structural); 
 DiffBy.FieldValues(x, y, ReferenceHandling.References);
@@ -155,7 +155,7 @@ DiffBy.FieldValues(x, y, settings); // settings should be cached between calls f
 Asserts that instances of type `<T>` can be diffed using the `DiffBy.FieldValues` method.
 This can be useful in unit tests.
 Throws an exception with a message describing the problem(s) found and suggestions for fixes.
-```
+```csharp
 DiffBy.VerifyCanDiffByFieldValues<T>(); // default is ReferenceHandling.Structural
 DiffBy.VerifyCanDiffByFieldValues<T>(ReferenceHandling.Structural); 
 DiffBy.VerifyCanDiffByFieldValues<T>(ReferenceHandling.References);
@@ -164,7 +164,7 @@ DiffBy.VerifyCanDiffByFieldValues<T>(settings); // settings should be cached bet
 ```
 
 ### 3.2. PropertyValues
-```
+```csharp
 DiffBy.PropertyValues(x, y);
 DiffBy.PropertyValues(x, y, ReferenceHandling.Structural); 
 DiffBy.PropertyValues(x, y, ReferenceHandling.References);
@@ -177,7 +177,7 @@ DiffBy.PropertyValues(x, y, settings); // settings should be cached between call
 Asserts that instances of type `<T>` can be diffed using the `DiffBy.PropertyValues` method.
 This can be useful in unit tests.
 Throws an exception with a message describing the problem(s) found and suggestions for fixes.
-```
+```csharp
 DiffBy.VerifyCanDiffByPropertyValues<T>(); // default is ReferenceHandling.Structural
 DiffBy.VerifyCanDiffByPropertyValues<T>(ReferenceHandling.Structural); 
 DiffBy.VerifyCanDiffByPropertyValues<T>(ReferenceHandling.References);
@@ -194,7 +194,7 @@ For subproperties the following must hold:
 - Types that are not collections and not immutable must implement INotifyPropertyChanged.
 - Indexers are only supported for framework collection types.
 
-```
+```csharp
 using (var tracker = Track.Changes(foo))
 {
     Assert.AreEqual(0, tracker.Changes);
@@ -208,7 +208,7 @@ using (var tracker = Track.Changes(foo))
 Asserts that changes for instances of type `<T>` can be tracked using the `Track.Changes` method.
 This can be useful in unit tests.
 Throws an exception with a message describing the problem(s) found and suggestions for fixes.
-```
+```csharp
 Track.VerifyCanTrackChanges<T>(); // default is ReferenceHandling.Structural
 Track.VerifyCanTrackChanges<T>(ReferenceHandling.Structural); 
 Track.VerifyCanTrackChanges<T>(ReferenceHandling.References);
@@ -223,7 +223,7 @@ For subproperties the following must hold:
 - Types that are not collections and not immutable must implement INotifyPropertyChanged.
 - Indexers are only supported for framework collection types.
 
-```
+```csharp
 using (var tracker = Track.IsDirty(x, y))
 {
     Assert.AreEqual(false, tracker.IsDirty);
@@ -238,7 +238,7 @@ using (var tracker = Track.IsDirty(x, y))
 Asserts that dirty can be tracked for instances of type `<T>` using the `Track.Changes` method.
 This can be useful in unit tests.
 Throws an exception with a message describing the problem(s) found and suggestions for fixes.
-```
+```csharp
 Track.VerifyCanTrackIsDirty<T>(); // default is ReferenceHandling.Structural
 Track.VerifyCanTrackIsDirty<T>(ReferenceHandling.Structural); 
 Track.VerifyCanTrackIsDirty<T>(ReferenceHandling.References);
@@ -252,7 +252,7 @@ For subproperties the following must hold:
 - Collections must implement INotifyCollectionChanged
 - Types that are not collections and not immutable must implement INotifyPropertyChanged.
 - Indexers are only supported for framework collection types.
-```
+```csharp
 using (Synchronize.CreatePropertySynchronizer(source, target, referenceHandling: ReferenceHandling.Structural))
 {
     ...
@@ -265,7 +265,7 @@ Cache the setting between calls for performance.
 
 ### 6.1. PropertiesSettings.
 For convenience there is a builder exposed that can be used to create the setting.
-```
+```csharp
 var settings = PropertiesSettings.Build()
                                  .IgnoreProperty<Foo>(x => x.IgnoredProperty)
                                  .IgnoreType<Bar>()
