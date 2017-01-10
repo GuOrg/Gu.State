@@ -1,16 +1,27 @@
 source http://www.nuget.org/api/v2/
 framework: auto-detect
 
-nuget JetBrains.Annotations
-nuget Moq
-nuget NUnit
-nuget StyleCop.Analyzers
-nuget BenchmarkDotNet
-nuget BenchmarkDotNet.Diagnostics.Windows
-nuget System.Reflection.Metadata = 1.2.0
+group Analyzers
+  source http://www.nuget.org/api/v2/
+  framework: auto-detect
+  nuget StyleCop.Analyzers
+  nuget Desktop.Analyzers
+  nuget Microsoft.ApiDesignGuidelines.Analyzers
+  nuget JetBrains.Annotations
 
-nuget System.Collections.Immutable
-nuget Gu.Units
-#nuget Desktop.Analyzers
-#nuget Microsoft.ApiDesignGuidelines.Analyzers
-nuget Microsoft.CodeAnalysis.Analyzers
+group Test
+  source http://www.nuget.org/api/v2/
+  framework: auto-detect
+  nuget Moq
+  nuget NUnit
+  nuget System.Collections.Immutable
+  nuget Gu.Units
+
+group Benchmarks
+  source http://www.nuget.org/api/v2/
+  framework: auto-detect
+  nuget BenchmarkDotNet
+  nuget BenchmarkDotNet.Diagnostics.Windows
+  nuget System.Reflection.Metadata = 1.2.0
+
+

@@ -2,10 +2,10 @@
 {
     using System.ComponentModel;
 
-    internal class DirtyTracker : IDirtyTracker
+    internal sealed class DirtyTracker : IDirtyTracker
     {
-        protected static readonly PropertyChangedEventArgs DiffPropertyChangedEventArgs = new PropertyChangedEventArgs(nameof(Diff));
-        protected static readonly PropertyChangedEventArgs IsDirtyPropertyChangedEventArgs = new PropertyChangedEventArgs(nameof(IsDirty));
+        private static readonly PropertyChangedEventArgs DiffPropertyChangedEventArgs = new PropertyChangedEventArgs(nameof(Diff));
+        private static readonly PropertyChangedEventArgs IsDirtyPropertyChangedEventArgs = new PropertyChangedEventArgs(nameof(IsDirty));
 
         private readonly IRefCounted<DirtyTrackerNode> node;
         private bool disposed;

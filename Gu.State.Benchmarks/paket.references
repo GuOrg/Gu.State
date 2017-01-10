@@ -1,4 +1,7 @@
-JetBrains.Annotations
-BenchmarkDotNet
-BenchmarkDotNet.Diagnostics.Windows
-System.Reflection.Metadata
+group Analyzers
+  JetBrains.Annotations
+
+group Benchmarks
+  BenchmarkDotNet
+  BenchmarkDotNet.Diagnostics.Windows
+  System.Reflection.Metadata

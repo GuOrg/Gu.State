@@ -1,3 +1,5 @@
-JetBrains.Annotations
-StyleCop.Analyzers
-Microsoft.CodeAnalysis.Analyzers
+group Analyzers
+  JetBrains.Annotations
+  StyleCop.Analyzers
+  Desktop.Analyzers
+  Microsoft.ApiDesignGuidelines.Analyzers

@@ -247,6 +247,26 @@
     <None Include="paket.template" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.2')">
+      <PropertyGroup>
+        <__paket__Microsoft_ApiDesignGuidelines_Analyzers_props>Microsoft.ApiDesignGuidelines.Analyzers</__paket__Microsoft_ApiDesignGuidelines_Analyzers_props>
+        <__paket__Microsoft_ApiDesignGuidelines_CSharp_Analyzers_props>Microsoft.ApiDesignGuidelines.CSharp.Analyzers</__paket__Microsoft_ApiDesignGuidelines_CSharp_Analyzers_props>
+        <__paket__Microsoft_ApiDesignGuidelines_VisualBasic_Analyzers_props>Microsoft.ApiDesignGuidelines.VisualBasic.Analyzers</__paket__Microsoft_ApiDesignGuidelines_VisualBasic_Analyzers_props>
+      </PropertyGroup>
+    </When>
+  </Choose>
+  <Import Project="..\packages\analyzers\Microsoft.ApiDesignGuidelines.Analyzers\build\$(__paket__Microsoft_ApiDesignGuidelines_VisualBasic_Analyzers_props).props" Condition="Exists('..\packages\analyzers\Microsoft.ApiDesignGuidelines.Analyzers\build\$(__paket__Microsoft_ApiDesignGuidelines_VisualBasic_Analyzers_props).props')" Label="Paket" />
+  <Import Project="..\packages\analyzers\Microsoft.ApiDesignGuidelines.Analyzers\build\$(__paket__Microsoft_ApiDesignGuidelines_CSharp_Analyzers_props).props" Condition="Exists('..\packages\analyzers\Microsoft.ApiDesignGuidelines.Analyzers\build\$(__paket__Microsoft_ApiDesignGuidelines_CSharp_Analyzers_props).props')" Label="Paket" />
+  <Import Project="..\packages\analyzers\Microsoft.ApiDesignGuidelines.Analyzers\build\$(__paket__Microsoft_ApiDesignGuidelines_Analyzers_props).props" Condition="Exists('..\packages\analyzers\Microsoft.ApiDesignGuidelines.Analyzers\build\$(__paket__Microsoft_ApiDesignGuidelines_Analyzers_props).props')" Label="Paket" />
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.2')">
+      <PropertyGroup>
+        <__paket__Desktop_Analyzers_Common_props>Desktop.Analyzers.Common</__paket__Desktop_Analyzers_Common_props>
+      </PropertyGroup>
+    </When>
+  </Choose>
+  <Import Project="..\packages\analyzers\Desktop.Analyzers\build\$(__paket__Desktop_Analyzers_Common_props).props" Condition="Exists('..\packages\analyzers\Desktop.Analyzers\build\$(__paket__Desktop_Analyzers_Common_props).props')" Label="Paket" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -255,11 +275,19 @@
   </Target>
   -->
   <Import Project="..\.paket\paket.targets" />
+  <ItemGroup>
+    <Analyzer Include="..\packages\analyzers\Desktop.Analyzers\analyzers\dotnet\cs\Desktop.Analyzers.dll">
+      <Paket>True</Paket>
+    </Analyzer>
+    <Analyzer Include="..\packages\analyzers\Desktop.Analyzers\analyzers\dotnet\cs\Desktop.CSharp.Analyzers.dll">
+      <Paket>True</Paket>
+    </Analyzer>
+  </ItemGroup>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.2')">
       <ItemGroup>
         <Reference Include="JetBrains.Annotations">
-          <HintPath>..\packages\JetBrains.Annotations\lib\net\JetBrains.Annotations.dll</HintPath>
+          <HintPath>..\packages\analyzers\JetBrains.Annotations\lib\net\JetBrains.Annotations.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -267,21 +295,24 @@
     </When>
   </Choose>
   <ItemGroup>
-    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll">
+    <Analyzer Include="..\packages\analyzers\Microsoft.ApiDesignGuidelines.Analyzers\analyzers\dotnet\cs\Analyzer.Utilities.dll">
       <Paket>True</Paket>
     </Analyzer>
-    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll">
+    <Analyzer Include="..\packages\analyzers\Microsoft.ApiDesignGuidelines.Analyzers\analyzers\dotnet\cs\Microsoft.ApiDesignGuidelines.Analyzers.dll">
+      <Paket>True</Paket>
+    </Analyzer>
+    <Analyzer Include="..\packages\analyzers\Microsoft.ApiDesignGuidelines.Analyzers\analyzers\dotnet\cs\Microsoft.ApiDesignGuidelines.CSharp.Analyzers.dll">
       <Paket>True</Paket>
     </Analyzer>
   </ItemGroup>
   <ItemGroup>
-    <Analyzer Include="..\packages\StyleCop.Analyzers\analyzers\dotnet\cs\Newtonsoft.Json.dll">
+    <Analyzer Include="..\packages\analyzers\StyleCop.Analyzers\analyzers\dotnet\cs\Newtonsoft.Json.dll">
       <Paket>True</Paket>
     </Analyzer>
-    <Analyzer Include="..\packages\StyleCop.Analyzers\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll">
+    <Analyzer Include="..\packages\analyzers\StyleCop.Analyzers\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll">
       <Paket>True</Paket>
     </Analyzer>
-    <Analyzer Include="..\packages\StyleCop.Analyzers\analyzers\dotnet\cs\StyleCop.Analyzers.dll">
+    <Analyzer Include="..\packages\analyzers\StyleCop.Analyzers\analyzers\dotnet\cs\StyleCop.Analyzers.dll">
       <Paket>True</Paket>
     </Analyzer>
   </ItemGroup>

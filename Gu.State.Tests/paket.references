@@ -1,5 +1,8 @@
-JetBrains.Annotations
-System.Collections.Immutable
-Gu.Units
-Moq
-NUnit
+group Analyzers
+   JetBrains.Annotations
+
+group Test
+  NUnit
+  Moq
+  System.Collections.Immutable
+  Gu.Units
