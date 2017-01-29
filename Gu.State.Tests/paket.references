@@ -1,5 +1,7 @@
 group Analyzers
-   JetBrains.Annotations
+  JetBrains.Annotations
+  Gu.Analyzers
+  WpfAnalyzers
 
 group Test
   NUnit

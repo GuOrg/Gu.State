@@ -511,7 +511,9 @@
             }
         }
 
+#pragma warning disable WPF1001 // Struct must not implement INotifyPropertyChanged
         public struct NotifyingStruct : INotifyPropertyChanged
+#pragma warning restore WPF1001 // Struct must not implement INotifyPropertyChanged
         {
             private int value;
             public event PropertyChangedEventHandler PropertyChanged;

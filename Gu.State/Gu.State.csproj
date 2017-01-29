@@ -250,18 +250,6 @@
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.2')">
       <PropertyGroup>
-        <__paket__Microsoft_ApiDesignGuidelines_Analyzers_props>Microsoft.ApiDesignGuidelines.Analyzers</__paket__Microsoft_ApiDesignGuidelines_Analyzers_props>
-        <__paket__Microsoft_ApiDesignGuidelines_CSharp_Analyzers_props>Microsoft.ApiDesignGuidelines.CSharp.Analyzers</__paket__Microsoft_ApiDesignGuidelines_CSharp_Analyzers_props>
-        <__paket__Microsoft_ApiDesignGuidelines_VisualBasic_Analyzers_props>Microsoft.ApiDesignGuidelines.VisualBasic.Analyzers</__paket__Microsoft_ApiDesignGuidelines_VisualBasic_Analyzers_props>
-      </PropertyGroup>
-    </When>
-  </Choose>
-  <Import Project="..\packages\analyzers\Microsoft.ApiDesignGuidelines.Analyzers\build\$(__paket__Microsoft_ApiDesignGuidelines_VisualBasic_Analyzers_props).props" Condition="Exists('..\packages\analyzers\Microsoft.ApiDesignGuidelines.Analyzers\build\$(__paket__Microsoft_ApiDesignGuidelines_VisualBasic_Analyzers_props).props')" Label="Paket" />
-  <Import Project="..\packages\analyzers\Microsoft.ApiDesignGuidelines.Analyzers\build\$(__paket__Microsoft_ApiDesignGuidelines_CSharp_Analyzers_props).props" Condition="Exists('..\packages\analyzers\Microsoft.ApiDesignGuidelines.Analyzers\build\$(__paket__Microsoft_ApiDesignGuidelines_CSharp_Analyzers_props).props')" Label="Paket" />
-  <Import Project="..\packages\analyzers\Microsoft.ApiDesignGuidelines.Analyzers\build\$(__paket__Microsoft_ApiDesignGuidelines_Analyzers_props).props" Condition="Exists('..\packages\analyzers\Microsoft.ApiDesignGuidelines.Analyzers\build\$(__paket__Microsoft_ApiDesignGuidelines_Analyzers_props).props')" Label="Paket" />
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.2')">
-      <PropertyGroup>
         <__paket__Desktop_Analyzers_Common_props>Desktop.Analyzers.Common</__paket__Desktop_Analyzers_Common_props>
       </PropertyGroup>
     </When>
@@ -283,6 +271,14 @@
       <Paket>True</Paket>
     </Analyzer>
   </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\analyzers\Gu.Analyzers\analyzers\dotnet\cs\Gu.Analyzers.Analyzers.dll">
+      <Paket>True</Paket>
+    </Analyzer>
+    <Analyzer Include="..\packages\analyzers\Gu.Analyzers\analyzers\dotnet\cs\Gu.Analyzers.CodeFixes.dll">
+      <Paket>True</Paket>
+    </Analyzer>
+  </ItemGroup>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.2')">
       <ItemGroup>
@@ -295,17 +291,6 @@
     </When>
   </Choose>
   <ItemGroup>
-    <Analyzer Include="..\packages\analyzers\Microsoft.ApiDesignGuidelines.Analyzers\analyzers\dotnet\cs\Analyzer.Utilities.dll">
-      <Paket>True</Paket>
-    </Analyzer>
-    <Analyzer Include="..\packages\analyzers\Microsoft.ApiDesignGuidelines.Analyzers\analyzers\dotnet\cs\Microsoft.ApiDesignGuidelines.Analyzers.dll">
-      <Paket>True</Paket>
-    </Analyzer>
-    <Analyzer Include="..\packages\analyzers\Microsoft.ApiDesignGuidelines.Analyzers\analyzers\dotnet\cs\Microsoft.ApiDesignGuidelines.CSharp.Analyzers.dll">
-      <Paket>True</Paket>
-    </Analyzer>
-  </ItemGroup>
-  <ItemGroup>
     <Analyzer Include="..\packages\analyzers\StyleCop.Analyzers\analyzers\dotnet\cs\Newtonsoft.Json.dll">
       <Paket>True</Paket>
     </Analyzer>
@@ -313,6 +298,14 @@
       <Paket>True</Paket>
     </Analyzer>
     <Analyzer Include="..\packages\analyzers\StyleCop.Analyzers\analyzers\dotnet\cs\StyleCop.Analyzers.dll">
+      <Paket>True</Paket>
+    </Analyzer>
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\analyzers\WpfAnalyzers\analyzers\dotnet\cs\WpfAnalyzers.Analyzers.dll">
+      <Paket>True</Paket>
+    </Analyzer>
+    <Analyzer Include="..\packages\analyzers\WpfAnalyzers\analyzers\dotnet\cs\WpfAnalyzers.CodeFixes.dll">
       <Paket>True</Paket>
     </Analyzer>
   </ItemGroup>

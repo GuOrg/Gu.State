@@ -1,5 +1,6 @@
 group Analyzers
-  JetBrains.Annotations
-  StyleCop.Analyzers
-  Desktop.Analyzers
-  Microsoft.ApiDesignGuidelines.Analyzers
+JetBrains.Annotations
+StyleCop.Analyzers
+Gu.Analyzers
+WpfAnalyzers
+Desktop.Analyzers
