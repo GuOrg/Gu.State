@@ -1,4 +1,7 @@
-﻿namespace Gu.State.Tests
+﻿// ReSharper disable All
+#pragma warning disable WPF1012 // Notify when property changes.
+#pragma warning disable WPF1011 // Implement INotifyPropertyChanged.
+namespace Gu.State.Tests
 {
     using System;
     using System.Collections;

@@ -1,4 +1,5 @@
-﻿namespace Gu.State.Tests
+﻿#pragma warning disable WPF1012 // Notify when property changes.
+namespace Gu.State.Tests
 {
     using System;
     using System.Collections;

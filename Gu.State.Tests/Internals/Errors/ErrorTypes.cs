@@ -1,4 +1,8 @@
-﻿#pragma warning disable 67
+﻿// ReSharper disable All
+// ReSharper disable All
+#pragma warning disable WPF1012 // Notify when property changes.
+#pragma warning disable WPF1011 // Implement INotifyPropertyChanged.
+#pragma warning disable 67
 namespace Gu.State.Tests.Internals.Errors
 {
     using System.ComponentModel;
@@ -14,7 +18,9 @@ namespace Gu.State.Tests.Internals.Errors
         {
             public event PropertyChangedEventHandler PropertyChanged;
 
+#pragma warning disable WPF1010 // Mutable public property should notify.
             public T Value { get; set; }
+#pragma warning restore WPF1010 // Mutable public property should notify.
         }
 
         public class WithSelfProp

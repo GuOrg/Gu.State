@@ -1,4 +1,6 @@
-﻿#pragma warning disable 649
+﻿// ReSharper disable All
+#pragma warning disable 649
+#pragma warning disable WPF1011 // Implement INotifyPropertyChanged.
 namespace Gu.State.Tests.Settings
 {
     using System;

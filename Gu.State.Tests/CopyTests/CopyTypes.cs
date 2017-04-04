@@ -1,4 +1,5 @@
-﻿namespace Gu.State.Tests.CopyTests
+﻿#pragma warning disable WPF1011 // Implement INotifyPropertyChanged.
+namespace Gu.State.Tests.CopyTests
 {
     using System;
     using System.Collections;

@@ -1,3 +1,4 @@
+#pragma warning disable WPF1014 // Don't raise PropertyChanged for missing property.
 namespace Gu.State.Tests
 {
     using System;
