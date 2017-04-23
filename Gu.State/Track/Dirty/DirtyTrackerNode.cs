@@ -234,8 +234,7 @@
                 var getter = this.Settings.GetOrCreateGetterAndSetter(propertyInfo);
                 var xValue = getter.GetValue(this.X);
                 var yValue = getter.GetValue(this.Y);
-                IRefCounted<DirtyTrackerNode> node;
-                if (this.TrCreateChild(xValue, yValue, out node))
+                if (this.TrCreateChild(xValue, yValue, out IRefCounted<DirtyTrackerNode> node))
                 {
                     using (node)
                     {
@@ -337,8 +336,7 @@
             var xValue = this.XList.ElementAtOrMissing(index);
             var yValue = this.YList.ElementAtOrMissing(index);
 
-            IRefCounted<DirtyTrackerNode> node;
-            if (this.TrCreateChild(xValue, yValue, out node))
+            if (this.TrCreateChild(xValue, yValue, out IRefCounted<DirtyTrackerNode> node))
             {
                 using (node)
                 {
@@ -390,15 +388,13 @@
                 return;
             }
 
-            var propertyGraphChangedEventArgs = e as PropertyGraphChangedEventArgs<DirtyTrackerNode>;
-            if (propertyGraphChangedEventArgs != null)
+            if (e is PropertyGraphChangedEventArgs<DirtyTrackerNode> propertyGraphChangedEventArgs)
             {
                 this.OnChildNodeChanged(propertyGraphChangedEventArgs);
                 return;
             }
 
-            var itemGraphChangedEventArgs = e as ItemGraphChangedEventArgs<DirtyTrackerNode>;
-            if (itemGraphChangedEventArgs != null)
+            if (e is ItemGraphChangedEventArgs<DirtyTrackerNode> itemGraphChangedEventArgs)
             {
                 this.OnChildNodeChanged(itemGraphChangedEventArgs);
                 return;

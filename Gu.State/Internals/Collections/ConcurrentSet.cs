@@ -34,8 +34,7 @@ namespace Gu.State
 
         public bool Remove(T item)
         {
-            int temp;
-            return this.inner.TryRemove(item, out temp);
+            return this.inner.TryRemove(item, out int temp);
         }
 
         public IEnumerator<T> GetEnumerator() => this.inner.Keys.GetEnumerator();

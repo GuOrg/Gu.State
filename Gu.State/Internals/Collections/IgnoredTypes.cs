@@ -55,8 +55,7 @@
                 return false;
             }
 
-            bool isIgnoring;
-            if (this.ignoredTypes.TryGetValue(type, out isIgnoring))
+            if (this.ignoredTypes.TryGetValue(type, out bool isIgnoring))
             {
                 return isIgnoring;
             }
@@ -83,8 +82,7 @@
         private bool IsIgnoredGeneric(Type type)
         {
             var genericDef = type.GetGenericTypeDefinition();
-            bool isIgnoring;
-            if (this.ignoredTypes.TryGetValue(genericDef, out isIgnoring))
+            if (this.ignoredTypes.TryGetValue(genericDef, out bool isIgnoring))
             {
                 this.ignoredTypes.TryAdd(type, isIgnoring);
                 return isIgnoring;

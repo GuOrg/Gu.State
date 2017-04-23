@@ -9,17 +9,17 @@
     /// <typeparam name="TValue">The value type.</typeparam>
     internal class GetterAndSetter<TSource, TValue> : IGetterAndSetter
     {
-        public readonly Action<TSource, TValue> Setter;
-        public readonly Func<TSource, TValue> Getter;
+        private readonly Action<TSource, TValue> setter;
+        private readonly Func<TSource, TValue> getter;
 
         public GetterAndSetter(PropertyInfo propertyInfo)
         {
             this.Member = propertyInfo;
             this.IsInitOnly = !propertyInfo.CanWrite;
-            this.Setter = propertyInfo.CanWrite
+            this.setter = propertyInfo.CanWrite
                               ? (Action<TSource, TValue>)propertyInfo.SetMethod.CreateDelegate(typeof(Action<TSource, TValue>))
                               : null;
-            this.Getter = propertyInfo.CanRead
+            this.getter = propertyInfo.CanRead
                               ? (Func<TSource, TValue>)propertyInfo.GetMethod.CreateDelegate(typeof(Func<TSource, TValue>))
                               : null;
         }
@@ -28,8 +28,8 @@
         {
             this.Member = fieldInfo;
             this.IsInitOnly = fieldInfo.IsInitOnly;
-            this.Setter = CreateSetterDelegate(fieldInfo);
-            this.Getter = CreateGetterDelegate(fieldInfo);
+            this.setter = CreateSetterDelegate(fieldInfo);
+            this.getter = CreateGetterDelegate(fieldInfo);
         }
 
         public Type SourceType => typeof(TSource);
@@ -47,7 +47,7 @@
 
         public void SetValue(TSource source, TValue value)
         {
-            this.Setter(source, value);
+            this.setter(source, value);
         }
 
         public object GetValue(object source)
@@ -57,9 +57,7 @@
 
         public bool TryGetValueEquals(object x, object y, MemberSettings settings, out bool equal, out object xv, out object yv)
         {
-            TValue xValue;
-            TValue yValue;
-            var result = this.TryGetValueEquals((TSource)x, (TSource)y, settings, out equal, out xValue, out yValue);
+            var result = this.TryGetValueEquals((TSource)x, (TSource)y, settings, out equal, out TValue xValue, out TValue yValue);
             xv = xValue;
             yv = yValue;
             return result;
@@ -79,7 +77,7 @@
 
         public TValue GetValue(TSource source)
         {
-            return this.Getter(source);
+            return this.getter(source);
         }
 
         // http://stackoverflow.com/a/16222886/1069200

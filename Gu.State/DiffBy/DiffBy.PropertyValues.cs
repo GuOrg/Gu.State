@@ -50,8 +50,7 @@
         internal static ValueDiff PropertyValuesOrNull<T>(T x, T y, PropertiesSettings settings)
         {
             Debug.Assert(settings != null, "settings == null");
-            ValueDiff diff;
-            if (TryGetValueDiff(x, y, settings, out diff))
+            if (TryGetValueDiff(x, y, settings, out ValueDiff diff))
             {
                 return diff;
             }

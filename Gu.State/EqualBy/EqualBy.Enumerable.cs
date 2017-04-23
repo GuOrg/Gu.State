@@ -8,14 +8,13 @@
             MemberSettings settings,
             ReferencePairCollection referencePairs)
         {
-            EqualByComparer comparer;
-            if (ListEqualByComparer.TryGetOrCreate(x, y, out comparer) ||
-                ReadOnlyListEqualByComparer.TryGetOrCreate(x, y, out comparer) ||
-                SetEqualByComparer.TryGetOrCreate(x, y, out comparer) ||
-                ArrayEqualByComparer.TryGetOrCreate(x, y, out comparer) ||
-                DictionaryEqualByComparer.TryGetOrCreate(x, y, out comparer) ||
-                ReadOnlyDictionaryEqualByComparer.TryGetOrCreate(x, y, out comparer) ||
-                EnumerableEqualByComparer.TryGetOrCreate(x, y, out comparer))
+            if (ListEqualByComparer.TryGetOrCreate(x, y, out EqualByComparer comparer) ||
+    ReadOnlyListEqualByComparer.TryGetOrCreate(x, y, out comparer) ||
+    SetEqualByComparer.TryGetOrCreate(x, y, out comparer) ||
+    ArrayEqualByComparer.TryGetOrCreate(x, y, out comparer) ||
+    DictionaryEqualByComparer.TryGetOrCreate(x, y, out comparer) ||
+    ReadOnlyDictionaryEqualByComparer.TryGetOrCreate(x, y, out comparer) ||
+    EnumerableEqualByComparer.TryGetOrCreate(x, y, out comparer))
             {
                 return comparer.Equals(x, y, settings, referencePairs);
             }

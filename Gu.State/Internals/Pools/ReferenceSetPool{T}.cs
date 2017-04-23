@@ -10,8 +10,7 @@
 
         internal static IBorrowed<HashSet<T>> Borrow()
         {
-            HashSet<T> set;
-            if (Pool.TryDequeue(out set))
+            if (Pool.TryDequeue(out HashSet<T> set))
             {
                 return Borrowed.Create(set, Return);
             }

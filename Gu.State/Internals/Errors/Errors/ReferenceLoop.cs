@@ -34,15 +34,13 @@ namespace Gu.State
 
         public StringBuilder AppendNotSupported(StringBuilder errorBuilder)
         {
-            var fieldInfo = this.Path.LastMember as FieldInfo;
-            if (fieldInfo != null)
+            if (this.Path.LastMember is FieldInfo fieldInfo)
             {
                 return errorBuilder.AppendLine($"The field {fieldInfo.DeclaringType.PrettyName()}.{fieldInfo.Name} of type {fieldInfo.FieldType.PrettyName()} is in a reference loop.")
                                    .AppendLine($"  - The loop is {this.Path.PathString()}...");
             }
 
-            var propertyInfo = this.Path.LastMember as PropertyInfo;
-            if (propertyInfo != null)
+            if (this.Path.LastMember is PropertyInfo propertyInfo)
             {
                 return errorBuilder.AppendLine($"The property {propertyInfo.DeclaringType.PrettyName()}.{propertyInfo.Name} of type {propertyInfo.PropertyType.PrettyName()} is in a reference loop.")
                                    .AppendLine($"  - The loop is {this.Path.PathString()}...");

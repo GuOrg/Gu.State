@@ -41,8 +41,7 @@
 
             internal static Disposer<HashSet<ValueDiff>> Borrow()
             {
-                HashSet<ValueDiff> set;
-                if (Pool.TryDequeue(out set))
+                if (Pool.TryDequeue(out HashSet<ValueDiff> set))
                 {
                     return new Disposer<HashSet<ValueDiff>>(set, Return);
                 }

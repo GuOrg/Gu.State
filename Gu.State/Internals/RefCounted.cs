@@ -8,9 +8,7 @@
         internal static IRefCounted<T> RefCount<T>(this T item)
             where T : class, IDisposable
         {
-            IRefCounted<T> result;
-            bool temp;
-            if (TryRefCount(item, out result, out temp))
+            if (TryRefCount(item, out IRefCounted<T> result, out bool temp))
             {
                 return result;
             }
@@ -23,15 +21,13 @@
             out IRefCounted<TValue> refCounted)
             where TValue : class, IDisposable
         {
-            bool created;
-            return TryRefCount(value, out refCounted, out created);
+            return TryRefCount(value, out refCounted, out bool created);
         }
 
         internal static bool TryRefCount<TValue>(this TValue value, out IRefCounted<TValue> refCounted, out bool created)
             where TValue : class, IDisposable
         {
-            int count;
-            refCounted = RefCountedItem<TValue>.AddOrUpdate(value, out count, out created);
+            refCounted = RefCountedItem<TValue>.AddOrUpdate(value, out int count, out created);
             return count > 0;
         }
 
@@ -81,10 +77,9 @@
                             throw new ObjectDisposedException($"Not allowed to get the value of a {this.GetType().PrettyName()} after it is disposed.");
                         }
 
-                        TValue value;
-                        return this.valueReference.TryGetTarget(out value)
-                                   ? value
-                                   : null;
+                        return this.valueReference.TryGetTarget(out TValue value)
+           ? value
+           : null;
                     }
                 }
 
@@ -105,8 +100,7 @@
                             return;
                         }
 
-                        TValue value;
-                        if (this.valueReference.TryGetTarget(out value))
+                        if (this.valueReference.TryGetTarget(out TValue value))
                         {
                             value.Dispose();
                         }

@@ -11,8 +11,7 @@
     {
         internal static bool MemberValues<T>(T x, T y, MemberSettings settings)
         {
-            bool result;
-            if (TryGetValueEquals(x, y, settings, out result))
+            if (TryGetValueEquals(x, y, settings, out bool result))
             {
                 return result;
             }
@@ -32,8 +31,7 @@
             MemberSettings settings,
             ReferencePairCollection referencePairs)
         {
-            bool result;
-            if (TryGetValueEquals(x, y, settings, out result))
+            if (TryGetValueEquals(x, y, settings, out bool result))
             {
                 return result;
             }
@@ -56,10 +54,7 @@
                 }
 
                 var getterAndSetter = settings.GetOrCreateGetterAndSetter(member);
-                bool equal;
-                object yv;
-                object xv;
-                if (getterAndSetter.TryGetValueEquals(x, y, settings, out equal, out xv, out yv))
+                if (getterAndSetter.TryGetValueEquals(x, y, settings, out bool equal, out object xv, out object yv))
                 {
                     if (!equal)
                     {
@@ -103,8 +98,7 @@
                 return true;
             }
 
-            CastingComparer comparer;
-            if (settings.TryGetComparer(x.GetType(), out comparer))
+            if (settings.TryGetComparer(x.GetType(), out CastingComparer comparer))
             {
                 result = comparer.Equals(x, y);
                 return true;
@@ -128,8 +122,7 @@
             MemberSettings settings,
             ReferencePairCollection referencePairs)
         {
-            bool result;
-            if (TryGetValueEquals(x, y, settings, out result))
+            if (TryGetValueEquals(x, y, settings, out bool result))
             {
                 return result;
             }

@@ -55,8 +55,7 @@
             Array y,
             MemberSettings settings)
         {
-            RankDiff rankDiff;
-            if (TryGetRankDiff(x, y, out rankDiff))
+            if (TryGetRankDiff(x, y, out RankDiff rankDiff))
             {
                 collectionBuilder.Add(rankDiff);
                 return;

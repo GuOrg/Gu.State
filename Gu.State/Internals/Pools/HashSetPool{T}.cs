@@ -19,8 +19,7 @@
             Debug.Assert(compare != null, "compare == null");
             Debug.Assert(getHashCode != null, "getHashCode == null");
 
-            HashSet<T> set;
-            if (Cache.TryDequeue(out set))
+            if (Cache.TryDequeue(out HashSet<T> set))
             {
                 ((WrappingComparer)set.Comparer).Compare = compare;
                 ((WrappingComparer)set.Comparer).HashCode = getHashCode;

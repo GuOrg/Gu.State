@@ -19,8 +19,7 @@
             MemberSettings settings,
             ReferencePairCollection referencePairs)
         {
-            bool result;
-            if (TryGetEitherNullEquals(x, y, out result))
+            if (TryGetEitherNullEquals(x, y, out bool result))
             {
                 return result;
             }
@@ -55,8 +54,7 @@
             {
                 var xv = x[key];
 
-                TValue yv;
-                if (!y.TryGetValue(key, out yv))
+                if (!y.TryGetValue(key, out TValue yv))
                 {
                     return false;
                 }
@@ -84,8 +82,7 @@
             {
                 var xv = x[key];
 
-                TValue yv;
-                if (!y.TryGetValue(key, out yv))
+                if (!y.TryGetValue(key, out TValue yv))
                 {
                     return false;
                 }

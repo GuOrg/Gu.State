@@ -54,8 +54,7 @@
                     allErrors.Add(error);
                 }
 
-                var we = error as IWithErrors;
-                if (we != null)
+                if (error is IWithErrors we)
                 {
                     if (withErrors == null)
                     {
@@ -141,10 +140,9 @@
 
             public bool Equals(Error x, Error y)
             {
-                bool equals;
-                if (TryEquals(x as TypeErrors, y as TypeErrors, out equals) ||
-                    TryEquals(x as MemberErrors, y as MemberErrors, out equals) ||
-                    TryEquals(x as UnsupportedIndexer, y as UnsupportedIndexer, out equals))
+                if (TryEquals(x as TypeErrors, y as TypeErrors, out bool equals) ||
+    TryEquals(x as MemberErrors, y as MemberErrors, out equals) ||
+    TryEquals(x as UnsupportedIndexer, y as UnsupportedIndexer, out equals))
                 {
                     return equals;
                 }

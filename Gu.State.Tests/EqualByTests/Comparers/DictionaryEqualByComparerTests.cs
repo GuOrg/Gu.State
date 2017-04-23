@@ -9,8 +9,7 @@
         public void GetOrCreate()
         {
             var dictionary = new Dictionary<string, int>();
-            EqualByComparer comparer;
-            Assert.IsTrue(DictionaryEqualByComparer.TryGetOrCreate(dictionary, dictionary, out comparer));
+            Assert.IsTrue(DictionaryEqualByComparer.TryGetOrCreate(dictionary, dictionary, out EqualByComparer comparer));
             Assert.IsInstanceOf<DictionaryEqualByComparer<string, int>>(comparer);
         }
     }

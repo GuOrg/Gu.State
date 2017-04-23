@@ -38,19 +38,18 @@ namespace Gu.State.Tests
                 throw new AssertionException($"Expected actual to be of type {expected.GetType().Name} but was: {actual.GetType().Name}");
             }
 
-            bool result;
-            if (TryCompare<PropertyChangeEventArgs>(expected,actual, PropertyChangedEventArgsComparer.Default.Equals, out result) ||
-                TryCompare<AddEventArgs>(expected, actual, AddEventArgsComparer.Default.Equals, out result) ||
-                TryCompare<RemoveEventArgs>(expected, actual, RemoveEventArgsComparer.Default.Equals, out result) ||
-                TryCompare<ReplaceEventArgs>(expected, actual, ReplaceEventArgsComparer.Default.Equals, out result) ||
-                TryCompare<MoveEventArgs>(expected, actual, MoveEventArgsComparer.Default.Equals, out result) ||
-                TryCompare<ResetEventArgs>(expected, actual, ResetEventArgsComparer.Default.Equals, out result) ||
-                TryCompare<RootChangeEventArgs<ChangeTrackerNode>>(expected, actual, RootChangeEventArgsEventArgsComparer<ChangeTrackerNode>.Default.Equals, out result) ||
-                TryCompare<RootChangeEventArgs<DirtyTrackerNode>>(expected, actual, RootChangeEventArgsEventArgsComparer<DirtyTrackerNode>.Default.Equals, out result) ||
-                TryCompare<PropertyGraphChangedEventArgs<ChangeTrackerNode>>(expected, actual, PropertyGraphChangedEventArgsComparer<ChangeTrackerNode>.Default.Equals, out result) ||
-                TryCompare<PropertyGraphChangedEventArgs<DirtyTrackerNode>>(expected, actual, PropertyGraphChangedEventArgsComparer<DirtyTrackerNode>.Default.Equals, out result) ||
-                TryCompare<ItemGraphChangedEventArgs<ChangeTrackerNode>>(expected, actual, ItemGraphChangedEventArgsComparer<ChangeTrackerNode>.Default.Equals, out result) ||
-                TryCompare<ItemGraphChangedEventArgs<DirtyTrackerNode>>(expected, actual, ItemGraphChangedEventArgsComparer<DirtyTrackerNode>.Default.Equals, out result))
+            if (TryCompare<PropertyChangeEventArgs>(expected, actual, PropertyChangedEventArgsComparer.Default.Equals, out bool result) ||
+    TryCompare<AddEventArgs>(expected, actual, AddEventArgsComparer.Default.Equals, out result) ||
+    TryCompare<RemoveEventArgs>(expected, actual, RemoveEventArgsComparer.Default.Equals, out result) ||
+    TryCompare<ReplaceEventArgs>(expected, actual, ReplaceEventArgsComparer.Default.Equals, out result) ||
+    TryCompare<MoveEventArgs>(expected, actual, MoveEventArgsComparer.Default.Equals, out result) ||
+    TryCompare<ResetEventArgs>(expected, actual, ResetEventArgsComparer.Default.Equals, out result) ||
+    TryCompare<RootChangeEventArgs<ChangeTrackerNode>>(expected, actual, RootChangeEventArgsEventArgsComparer<ChangeTrackerNode>.Default.Equals, out result) ||
+    TryCompare<RootChangeEventArgs<DirtyTrackerNode>>(expected, actual, RootChangeEventArgsEventArgsComparer<DirtyTrackerNode>.Default.Equals, out result) ||
+    TryCompare<PropertyGraphChangedEventArgs<ChangeTrackerNode>>(expected, actual, PropertyGraphChangedEventArgsComparer<ChangeTrackerNode>.Default.Equals, out result) ||
+    TryCompare<PropertyGraphChangedEventArgs<DirtyTrackerNode>>(expected, actual, PropertyGraphChangedEventArgsComparer<DirtyTrackerNode>.Default.Equals, out result) ||
+    TryCompare<ItemGraphChangedEventArgs<ChangeTrackerNode>>(expected, actual, ItemGraphChangedEventArgsComparer<ChangeTrackerNode>.Default.Equals, out result) ||
+    TryCompare<ItemGraphChangedEventArgs<DirtyTrackerNode>>(expected, actual, ItemGraphChangedEventArgsComparer<DirtyTrackerNode>.Default.Equals, out result))
             {
                 return result;
             }

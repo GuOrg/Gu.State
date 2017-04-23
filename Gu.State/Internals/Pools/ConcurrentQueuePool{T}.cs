@@ -8,8 +8,7 @@ namespace Gu.State
 
         internal static IBorrowed<ConcurrentQueue<T>> Borrow()
         {
-            ConcurrentQueue<T> queue;
-            if (Cache.TryDequeue(out queue))
+            if (Cache.TryDequeue(out ConcurrentQueue<T> queue))
             {
                 return Borrowed.Create(queue, Return);
             }
@@ -19,8 +18,7 @@ namespace Gu.State
 
         private static void Return(ConcurrentQueue<T> queue)
         {
-            T temp;
-            while (queue.TryDequeue(out temp))
+            while (queue.TryDequeue(out T temp))
             {
             }
 

@@ -8,8 +8,7 @@
         internal static void AddOrUpdate<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, TValue value)
             where TValue : IDisposable
         {
-            TValue old;
-            if (dictionary.TryGetValue(key, out old))
+            if (dictionary.TryGetValue(key, out TValue old))
             {
                 old?.Dispose();
             }
@@ -20,8 +19,7 @@
         internal static void Move<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey from, TKey to)
     where TValue : IDisposable
         {
-            TValue value;
-            if (dictionary.TryGetValue(from, out value))
+            if (dictionary.TryGetValue(from, out TValue value))
             {
                 dictionary.Remove(from);
                 dictionary[to] = value;
@@ -31,8 +29,7 @@
         internal static void TryRemoveAndDispose<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key)
             where TValue : IDisposable
         {
-            TValue old;
-            if (dictionary.TryGetValue(key, out old))
+            if (dictionary.TryGetValue(key, out TValue old))
             {
                 old?.Dispose();
             }

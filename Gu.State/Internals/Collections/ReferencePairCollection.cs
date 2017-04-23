@@ -13,8 +13,7 @@
 
         internal static IBorrowed<ReferencePairCollection> Borrow()
         {
-            ReferencePairCollection collection;
-            if (Cache.TryDequeue(out collection))
+            if (Cache.TryDequeue(out ReferencePairCollection collection))
             {
                 return new Disposer<ReferencePairCollection>(collection, Return);
             }

@@ -131,8 +131,7 @@
 
             private static TypeErrors CreateErrors(Type type, MemberSettings settings, MemberPath path)
             {
-                CastingComparer temp;
-                if (settings.IsEquatable(type) || settings.TryGetComparer(type, out temp))
+                if (settings.IsEquatable(type) || settings.TryGetComparer(type, out CastingComparer temp))
                 {
                     return null;
                 }

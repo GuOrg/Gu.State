@@ -50,16 +50,14 @@
             stringBuilder.Append(this.Root.Type.PrettyName());
             foreach (var pathItem in this.Path)
             {
-                var propertyItem = pathItem as IMemberItem;
-                if (propertyItem != null)
+                if (pathItem is IMemberItem propertyItem)
                 {
                     stringBuilder.Append('.')
                                  .Append(propertyItem.Member.Name);
                     continue;
                 }
 
-                var collectionItem = pathItem as CollectionItem;
-                if (collectionItem != null)
+                if (pathItem is CollectionItem collectionItem)
                 {
                     stringBuilder.Append("[")
                                  .Append(collectionItem.CollectionType.GetItemType().PrettyName())
@@ -67,8 +65,7 @@
                     continue;
                 }
 
-                var indexItem = pathItem as IndexItem;
-                if (indexItem != null)
+                if (pathItem is IndexItem indexItem)
                 {
                     stringBuilder.Append($"[{indexItem.Index}]");
                     continue;
@@ -87,15 +84,12 @@
                 return this;
             }
 
-            var fieldInfo = memberInfo as FieldInfo;
-            if (fieldInfo != null)
+            if (memberInfo is FieldInfo fieldInfo)
             {
                 return this.WithField(fieldInfo);
             }
 
-            var propertyInfo = memberInfo as PropertyInfo;
-
-            if (propertyInfo != null)
+            if (memberInfo is PropertyInfo propertyInfo)
             {
                 return this.WithProperty(propertyInfo);
             }

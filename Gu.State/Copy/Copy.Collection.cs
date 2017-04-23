@@ -33,13 +33,12 @@
                 throw State.Throw.ShouldNeverGetHereException("Should have been checked for throw before copy");
             }
 
-            ICopyer copyer;
-            if (ArrayCopyer.TryGetOrCreate(source, target, out copyer) ||
-                ListOfTCopyer.TryGetOrCreate(source, target, out copyer) ||
-                ListCopyer.TryGetOrCreate(source, target, out copyer) ||
-                DictionaryTKeyTValueCopyer.TryGetOrCreate(source, target, out copyer) ||
-                DictionaryCopyer.TryGetOrCreate(source, target, out copyer) ||
-                SetOfTCopyer.TryGetOrCreate(source, target, out copyer))
+            if (ArrayCopyer.TryGetOrCreate(source, target, out ICopyer copyer) ||
+    ListOfTCopyer.TryGetOrCreate(source, target, out copyer) ||
+    ListCopyer.TryGetOrCreate(source, target, out copyer) ||
+    DictionaryTKeyTValueCopyer.TryGetOrCreate(source, target, out copyer) ||
+    DictionaryCopyer.TryGetOrCreate(source, target, out copyer) ||
+    SetOfTCopyer.TryGetOrCreate(source, target, out copyer))
             {
                 copyer.Copy(source, target, settings, referencePairs);
                 return;

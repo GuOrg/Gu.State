@@ -12,14 +12,12 @@
 
         internal static StringBuilder AppendSuggestExcludeMember(this StringBuilder errorBuilder, MemberInfo member)
         {
-            var fieldInfo = member as FieldInfo;
-            if (fieldInfo != null)
+            if (member is FieldInfo fieldInfo)
             {
                 return errorBuilder.AppendLine($"    - The field {member.DeclaringType.PrettyName()}.{fieldInfo.Name}.");
             }
 
-            var propertyInfo = member as PropertyInfo;
-            if (propertyInfo != null)
+            if (member is PropertyInfo propertyInfo)
             {
                 if (propertyInfo.GetIndexParameters().Length > 0)
                 {
@@ -34,14 +32,12 @@
 
         internal static StringBuilder AppendNotSupportedMember(this StringBuilder errorBuilder, MemberInfo member)
         {
-            var fieldInfo = member as FieldInfo;
-            if (fieldInfo != null)
+            if (member is FieldInfo fieldInfo)
             {
                 return errorBuilder.AppendLine($"The field {fieldInfo.DeclaringType.PrettyName()}.{fieldInfo.Name} of type {fieldInfo.FieldType.PrettyName()} is not supported.");
             }
 
-            var propertyInfo = member as PropertyInfo;
-            if (propertyInfo != null)
+            if (member is PropertyInfo propertyInfo)
             {
                 if (propertyInfo.GetIndexParameters().Length > 0)
                 {

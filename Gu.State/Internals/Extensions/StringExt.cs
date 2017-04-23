@@ -24,8 +24,7 @@ namespace Gu.State
                            : "false";
             }
 
-            var formattable = o as IFormattable;
-            if (formattable != null)
+            if (o is IFormattable formattable)
             {
                 return formattable.ToString($"", CultureInfo.InvariantCulture);
             }

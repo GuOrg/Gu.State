@@ -50,8 +50,7 @@
 
         internal static void IsAssignableFrom(object x, Type type, string parameterName)
         {
-            var xType = x as Type;
-            if (xType != null)
+            if (x is Type xType)
             {
                 if (!type.IsAssignableFrom(xType))
                 {

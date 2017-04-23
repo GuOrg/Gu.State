@@ -22,14 +22,12 @@
                                        .Where(p => !this.Settings.IsIgnoringProperty(p))
                                        .Where(p => !settings.IsImmutable(p.PropertyType))
                                        .ToArray();
-            var inpc = source as INotifyPropertyChanged;
-            if (inpc != null)
+            if (source is INotifyPropertyChanged inpc)
             {
                 inpc.PropertyChanged += this.OnSourcePropertyChanged;
             }
 
-            var incc = source as INotifyCollectionChanged;
-            if (incc != null)
+            if (source is INotifyCollectionChanged incc)
             {
                 incc.CollectionChanged += this.OnSourceCollectionChanged;
             }
@@ -63,14 +61,12 @@
             }
 
             this.disposed = true;
-            var inpc = this.Source as INotifyPropertyChanged;
-            if (inpc != null)
+            if (this.Source is INotifyPropertyChanged inpc)
             {
                 inpc.PropertyChanged -= this.OnSourcePropertyChanged;
             }
 
-            var incc = this.Source as INotifyCollectionChanged;
-            if (incc != null)
+            if (this.Source is INotifyCollectionChanged incc)
             {
                 incc.CollectionChanged -= this.OnSourceCollectionChanged;
             }

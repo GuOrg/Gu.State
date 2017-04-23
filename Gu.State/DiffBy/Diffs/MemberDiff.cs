@@ -23,14 +23,12 @@ namespace Gu.State
 
         internal static MemberDiff Create(MemberInfo member, ValueDiff diff)
         {
-            var fieldInfo = member as FieldInfo;
-            if (fieldInfo != null)
+            if (member is FieldInfo fieldInfo)
             {
                 return new FieldDiff(fieldInfo, diff);
             }
 
-            var propertyInfo = member as PropertyInfo;
-            if (propertyInfo != null)
+            if (member is PropertyInfo propertyInfo)
             {
                 return new PropertyDiff(propertyInfo, diff);
             }

@@ -7,14 +7,12 @@ namespace Gu.State
     {
         internal static Type MemberType(this MemberInfo memberInfo)
         {
-            var fieldInfo = memberInfo as FieldInfo;
-            if (fieldInfo != null)
+            if (memberInfo is FieldInfo fieldInfo)
             {
                 return fieldInfo.FieldType;
             }
 
-            var propertyInfo = memberInfo as PropertyInfo;
-            if (propertyInfo != null)
+            if (memberInfo is PropertyInfo propertyInfo)
             {
                 return propertyInfo.PropertyType;
             }

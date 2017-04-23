@@ -10,8 +10,7 @@
         public void GetOrCreate()
         {
             var x = Enumerable.Repeat(1, 1);
-            EqualByComparer comparer;
-            Assert.IsTrue(EnumerableEqualByComparer.TryGetOrCreate(x, x, out comparer));
+            Assert.IsTrue(EnumerableEqualByComparer.TryGetOrCreate(x, x, out EqualByComparer comparer));
             Assert.IsInstanceOf<EnumerableEqualByComparer<int>>(comparer);
         }
 

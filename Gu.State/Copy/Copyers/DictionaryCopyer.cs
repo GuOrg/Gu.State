@@ -61,9 +61,7 @@
             {
                 var sv = source[key];
                 var tv = target.ElementAtOrDefault(key);
-                bool created;
-                bool needsSync;
-                var clone = State.Copy.CloneWithoutSync(sv, tv, settings, out created, out needsSync);
+                var clone = State.Copy.CloneWithoutSync(sv, tv, settings, out bool created, out bool needsSync);
                 if (created)
                 {
                     target[key] = clone;

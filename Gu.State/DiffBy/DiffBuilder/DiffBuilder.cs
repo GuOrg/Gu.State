@@ -82,8 +82,7 @@
 
         internal static bool TryCreate(object x, object y, MemberSettings settings, out IRefCounted<DiffBuilder> subDiffBuilder)
         {
-            bool created;
-            subDiffBuilder = TrackerCache.GetOrAdd(x, y, settings, pair => new DiffBuilder(pair, settings), out created);
+            subDiffBuilder = TrackerCache.GetOrAdd(x, y, settings, pair => new DiffBuilder(pair, settings), out bool created);
             return created;
         }
 
@@ -110,8 +109,7 @@
                     return true;
                 }
 
-                SubDiff old;
-                if (!this.KeyedDiffs.TryGetValue(member, out old))
+                if (!this.KeyedDiffs.TryGetValue(member, out SubDiff old))
                 {
                     this.Add(member, xValue, yValue);
                     return true;
@@ -123,10 +121,8 @@
                     return true;
                 }
 
-                bool xEqual;
-                bool yEqual;
-                if (EqualBy.TryGetValueEquals(xValue, old.X, this.settings, out xEqual) && xEqual &&
-                    EqualBy.TryGetValueEquals(yValue, old.Y, this.settings, out yEqual) && yEqual)
+                if (EqualBy.TryGetValueEquals(xValue, old.X, this.settings, out bool xEqual) && xEqual &&
+EqualBy.TryGetValueEquals(yValue, old.Y, this.settings, out bool yEqual) && yEqual)
                 {
                     return false;
                 }
@@ -178,8 +174,7 @@
                 {
                     foreach (var subDiff in this.KeyedDiffs)
                     {
-                        var indexDiff = subDiff.Value as IndexDiff;
-                        if (indexDiff != null)
+                        if (subDiff.Value is IndexDiff indexDiff)
                         {
                             borrowed.Value.Add(indexDiff.Index);
                         }
@@ -372,9 +367,7 @@
                 return;
             }
 
-            IRefCounted<DiffBuilder> refCounted;
-            bool created;
-            if (!builder.TryRefCount(out refCounted, out created))
+            if (!builder.TryRefCount(out IRefCounted<DiffBuilder> refCounted, out bool created))
             {
                 throw Throw.ShouldNeverGetHereException("UpdateSubBuilder failed, try refcount failed");
             }
@@ -392,8 +385,7 @@
 
             public int Compare(SubDiff x, SubDiff y)
             {
-                int result;
-                if (TryCompareType(x, y, out result))
+                if (TryCompareType(x, y, out int result))
                 {
                     return result;
                 }

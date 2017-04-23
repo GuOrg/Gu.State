@@ -35,8 +35,7 @@
 
         private static bool CheckIfIsImmutable(Type type, List<Type> checkedTypes)
         {
-            bool result;
-            if (ImmutableCheckedTypes.TryGetValue(type, out result))
+            if (ImmutableCheckedTypes.TryGetValue(type, out bool result))
             {
                 return result;
             }

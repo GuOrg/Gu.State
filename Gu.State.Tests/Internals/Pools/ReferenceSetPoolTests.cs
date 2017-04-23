@@ -24,8 +24,7 @@ namespace Gu.State.Tests.Internals.Collections
         {
             var value = (ConcurrentQueue<HashSet<object>>)typeof(ReferenceSetPool<object>).GetField("Pool", BindingFlags.Static | BindingFlags.NonPublic)
                                                         .GetValue(null);
-            HashSet<object> temp;
-            while (value.TryDequeue(out temp)) { }
+            while (value.TryDequeue(out HashSet<object> temp)) { }
             HashSet<object> set;
             using (var disposer = ReferenceSetPool<object>.Borrow())
             {

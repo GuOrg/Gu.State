@@ -6,8 +6,7 @@
     {
         public static bool TryGetComparer<T>(ISet<T> source, out IEqualityComparer<T> comparer)
         {
-            var hashSet = source as HashSet<T>;
-            if (hashSet != null)
+            if (source is HashSet<T> hashSet)
             {
                 comparer = hashSet.Comparer;
                 return true;
