@@ -10,8 +10,6 @@ namespace Gu.State.Tests.EqualByTests
     using System.Linq;
     using System.Runtime.CompilerServices;
 
-    using JetBrains.Annotations;
-
     public static class EqualByTypes
     {
         public class With<T>
@@ -376,7 +374,6 @@ namespace Gu.State.Tests.EqualByTests
 
             public int CalculatedValue => this.Value * this.factor;
 
-            [NotifyPropertyChangedInvocator]
             protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
             {
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -501,7 +498,6 @@ namespace Gu.State.Tests.EqualByTests
                 this.stringValue = stringValue;
             }
 
-            [NotifyPropertyChangedInvocator]
             public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
             {
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

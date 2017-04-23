@@ -7,8 +7,6 @@ namespace Gu.State.Tests.CopyTests
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
 
-    using JetBrains.Annotations;
-
     public static class CopyTypes
     {
         public class ComplexType
@@ -214,7 +212,6 @@ namespace Gu.State.Tests.CopyTests
 
             public int CalculatedValue => this.Value * this.factor;
 
-            [NotifyPropertyChangedInvocator]
             protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
             {
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

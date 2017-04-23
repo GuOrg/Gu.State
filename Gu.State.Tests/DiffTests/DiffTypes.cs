@@ -9,8 +9,6 @@ namespace Gu.State.Tests.DiffTests
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
 
-    using JetBrains.Annotations;
-
     public static class DiffTypes
     {
         public class With<T>
@@ -266,7 +264,6 @@ namespace Gu.State.Tests.DiffTests
 
             public int CalculatedValue => this.Value * this.factor;
 
-            [NotifyPropertyChangedInvocator]
             protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
             {
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -409,7 +406,6 @@ namespace Gu.State.Tests.DiffTests
                 this.stringValue = stringValue;
             }
 
-            [NotifyPropertyChangedInvocator]
             public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
             {
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

@@ -11,8 +11,6 @@ namespace Gu.State.Tests
     using System.Linq;
     using System.Runtime.CompilerServices;
 
-    using JetBrains.Annotations;
-
     public static class ChangeTrackerTypes
     {
         public interface IBaseClass
@@ -58,7 +56,6 @@ namespace Gu.State.Tests
                 }
             }
 
-            [NotifyPropertyChangedInvocator]
             public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
             {
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -109,7 +106,6 @@ namespace Gu.State.Tests
                 }
             }
 
-            [NotifyPropertyChangedInvocator]
             public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
             {
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -217,7 +213,6 @@ namespace Gu.State.Tests
                 }
             }
 
-            [NotifyPropertyChangedInvocator]
             protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
             {
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -264,7 +259,6 @@ namespace Gu.State.Tests
                 }
             }
 
-            [NotifyPropertyChangedInvocator]
             protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
             {
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -317,7 +311,6 @@ namespace Gu.State.Tests
                 }
             }
 
-            [NotifyPropertyChangedInvocator]
             protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
             {
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -347,7 +340,6 @@ namespace Gu.State.Tests
 
             IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
 
-            [NotifyPropertyChangedInvocator]
             protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
             {
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -411,7 +403,6 @@ namespace Gu.State.Tests
                 }
             }
 
-            [NotifyPropertyChangedInvocator]
             protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
             {
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -466,7 +457,6 @@ namespace Gu.State.Tests
                 }
             }
 
-            [NotifyPropertyChangedInvocator]
             protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
             {
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -509,7 +499,6 @@ namespace Gu.State.Tests
                 }
             }
 
-            [NotifyPropertyChangedInvocator]
             protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
             {
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -538,7 +527,6 @@ namespace Gu.State.Tests
                 }
             }
 
-            [NotifyPropertyChangedInvocator]
             private void OnPropertyChanged([CallerMemberName] string propertyName = null)
             {
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

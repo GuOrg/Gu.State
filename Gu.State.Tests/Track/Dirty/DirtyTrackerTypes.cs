@@ -11,8 +11,6 @@ namespace Gu.State.Tests
     using System.Linq;
     using System.Runtime.CompilerServices;
 
-    using JetBrains.Annotations;
-
     public static class DirtyTrackerTypes
     {
         public class With<T> : INotifyPropertyChanged
@@ -51,7 +49,6 @@ namespace Gu.State.Tests
                 }
             }
 
-            [NotifyPropertyChangedInvocator]
             protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
             {
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -110,7 +107,6 @@ namespace Gu.State.Tests
                 }
             }
 
-            [NotifyPropertyChangedInvocator]
             protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
             {
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -220,7 +216,6 @@ namespace Gu.State.Tests
                 }
             }
 
-            [NotifyPropertyChangedInvocator]
             public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
             {
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -294,7 +289,6 @@ namespace Gu.State.Tests
                 }
             }
 
-            [NotifyPropertyChangedInvocator]
             protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
             {
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -494,7 +488,6 @@ namespace Gu.State.Tests
                 }
             }
 
-            [NotifyPropertyChangedInvocator]
             protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
             {
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -563,7 +556,6 @@ namespace Gu.State.Tests
                 }
             }
 
-            [NotifyPropertyChangedInvocator]
             protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
             {
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -633,7 +625,6 @@ namespace Gu.State.Tests
 
             public ObservableCollection<int> Ints { get; } = new ObservableCollection<int>();
 
-            [NotifyPropertyChangedInvocator]
             public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
             {
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -656,7 +647,6 @@ namespace Gu.State.Tests
                 }
             }
 
-            [NotifyPropertyChangedInvocator]
             protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
             {
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
