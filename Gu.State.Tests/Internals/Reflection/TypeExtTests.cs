@@ -1,4 +1,4 @@
-﻿namespace Gu.State.Tests.Internals.Refelection
+﻿namespace Gu.State.Tests.Internals.Reflection
 {
     using System;
     using System.Collections;
