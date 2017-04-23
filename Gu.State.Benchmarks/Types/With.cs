@@ -15,10 +15,7 @@
 
         public string Name
         {
-            get
-            {
-                return this.name;
-            }
+            get => this.name;
             set
             {
                 if (value == this.name)
@@ -32,10 +29,7 @@
 
         public T Value
         {
-            get
-            {
-                return this.value;
-            }
+            get => this.value;
             set
             {
                 if (Equals(value, this.value))
@@ -49,10 +43,7 @@
 
         public ComplexType ComplexType
         {
-            get
-            {
-                return this.complexType;
-            }
+            get => this.complexType;
             set
             {
                 if (Equals(value, this.complexType))

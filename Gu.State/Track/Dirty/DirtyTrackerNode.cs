@@ -71,10 +71,7 @@
 
         public bool IsDirty
         {
-            get
-            {
-                return this.isDirty;
-            }
+            get => this.isDirty;
 
             private set
             {

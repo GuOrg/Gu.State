@@ -23,10 +23,7 @@ namespace Gu.State.Benchmarks
 
         public string Name
         {
-            get
-            {
-                return this.name;
-            }
+            get => this.name;
             set
             {
                 if (value == this.name) return;
@@ -37,10 +34,7 @@ namespace Gu.State.Benchmarks
 
         public int Value
         {
-            get
-            {
-                return this.value;
-            }
+            get => this.value;
             set
             {
                 if (value == this.value) return;

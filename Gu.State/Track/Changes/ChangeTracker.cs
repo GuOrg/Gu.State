@@ -15,6 +15,9 @@
 
         private int changes;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ChangeTracker"/> class.
+        /// </summary>
         public ChangeTracker(INotifyPropertyChanged source, PropertiesSettings settings)
         {
             Ensure.NotNull(source, nameof(source));
@@ -31,15 +34,13 @@
         /// <inheritdoc/>
         public event EventHandler Changed;
 
+        /// <inheritdoc/>
         public PropertiesSettings Settings { get; }
 
         /// <inheritdoc/>
         public int Changes
         {
-            get
-            {
-                return this.changes;
-            }
+            get => this.changes;
 
             private set
             {

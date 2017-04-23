@@ -20,7 +20,7 @@ namespace Gu.State.Tests
 
             public T Value
             {
-                get { return this.value; }
+                get => this.value;
                 set
                 {
                     if (Equals(value, this.value)) return;
@@ -31,10 +31,7 @@ namespace Gu.State.Tests
 
             public string Name
             {
-                get
-                {
-                    return this.name;
-                }
+                get => this.name;
                 set
                 {
                     if (value == this.name)
@@ -73,10 +70,7 @@ namespace Gu.State.Tests
 
             public string Name
             {
-                get
-                {
-                    return this.name;
-                }
+                get => this.name;
                 set
                 {
                     if (value == this.name)
@@ -90,10 +84,7 @@ namespace Gu.State.Tests
 
             public int Value
             {
-                get
-                {
-                    return this.value;
-                }
+                get => this.value;
                 set
                 {
                     if (value == this.value)
@@ -177,10 +168,7 @@ namespace Gu.State.Tests
 
             public string Name
             {
-                get
-                {
-                    return this.name;
-                }
+                get => this.name;
                 set
                 {
                     if (value == this.name)
@@ -194,10 +182,7 @@ namespace Gu.State.Tests
 
             public int Value
             {
-                get
-                {
-                    return this.value;
-                }
+                get => this.value;
                 set
                 {
                     if (value == this.value)
@@ -211,10 +196,7 @@ namespace Gu.State.Tests
 
             public ComplexType ComplexType
             {
-                get
-                {
-                    return this.complexType;
-                }
+                get => this.complexType;
                 set
                 {
                     if (Equals(value, this.complexType))
@@ -310,10 +292,7 @@ namespace Gu.State.Tests
 
             public string Name
             {
-                get
-                {
-                    return this.name;
-                }
+                get => this.name;
                 set
                 {
                     if (value == this.name)
@@ -327,10 +306,7 @@ namespace Gu.State.Tests
 
             public int Value
             {
-                get
-                {
-                    return this.value;
-                }
+                get => this.value;
                 set
                 {
                     if (value == this.value)
@@ -344,10 +320,7 @@ namespace Gu.State.Tests
 
             public WithGetReadOnlyPropertySealed<int> ImmutableValue
             {
-                get
-                {
-                    return this.immutableValue;
-                }
+                get => this.immutableValue;
                 set
                 {
                     if (Equals(value, this.immutableValue))
@@ -399,10 +372,7 @@ namespace Gu.State.Tests
 
             public string Name
             {
-                get
-                {
-                    return this.name;
-                }
+                get => this.name;
                 set
                 {
                     if (value == this.name)
@@ -416,10 +386,7 @@ namespace Gu.State.Tests
 
             public int Value
             {
-                get
-                {
-                    return this.value;
-                }
+                get => this.value;
                 set
                 {
                     if (value == this.value)
@@ -464,7 +431,7 @@ namespace Gu.State.Tests
 
             public int IntValue
             {
-                get { return this.intValue; }
+                get => this.intValue;
                 set
                 {
                     if (value == this.intValue) return;
@@ -475,7 +442,7 @@ namespace Gu.State.Tests
 
             public int? NullableIntValue
             {
-                get { return this.nullableIntValue; }
+                get => this.nullableIntValue;
                 set
                 {
                     if (value == this.nullableIntValue) return;
@@ -486,7 +453,7 @@ namespace Gu.State.Tests
 
             public string StringValue
             {
-                get { return this.stringValue; }
+                get => this.stringValue;
                 set
                 {
                     if (value == this.stringValue) return;
@@ -497,7 +464,7 @@ namespace Gu.State.Tests
 
             public StringSplitOptions EnumValue
             {
-                get { return this.enumValue; }
+                get => this.enumValue;
                 set
                 {
                     if (value == this.enumValue) return;
@@ -541,10 +508,7 @@ namespace Gu.State.Tests
 
             public string Name
             {
-                get
-                {
-                    return this.name;
-                }
+                get => this.name;
                 set
                 {
                     if (value == this.name)
@@ -558,10 +522,7 @@ namespace Gu.State.Tests
 
             public int Value
             {
-                get
-                {
-                    return this.value;
-                }
+                get => this.value;
                 set
                 {
                     if (value == this.value)
@@ -575,10 +536,7 @@ namespace Gu.State.Tests
 
             public ComplexType ComplexValue1
             {
-                get
-                {
-                    return this.complexValue1;
-                }
+                get => this.complexValue1;
                 set
                 {
                     if (Equals(value, this.complexValue1))
@@ -592,10 +550,7 @@ namespace Gu.State.Tests
 
             public ComplexType ComplexValue2
             {
-                get
-                {
-                    return this.complexValue2;
-                }
+                get => this.complexValue2;
                 set
                 {
                     if (Equals(value, this.complexValue2))
@@ -634,7 +589,7 @@ namespace Gu.State.Tests
 
             public int Value
             {
-                get { return this.value; }
+                get => this.value;
                 set
                 {
                     if (value == this.value) return;
@@ -668,10 +623,7 @@ namespace Gu.State.Tests
 
             public string Name
             {
-                get
-                {
-                    return this.name;
-                }
+                get => this.name;
                 set
                 {
                     if (value == this.name)
@@ -685,10 +637,7 @@ namespace Gu.State.Tests
 
             public Child Child
             {
-                get
-                {
-                    return this.child;
-                }
+                get => this.child;
                 set
                 {
                     if (Equals(value, this.child))
@@ -729,10 +678,7 @@ namespace Gu.State.Tests
 
             public string Name
             {
-                get
-                {
-                    return this.name;
-                }
+                get => this.name;
                 set
                 {
                     if (value == this.name)
@@ -746,10 +692,7 @@ namespace Gu.State.Tests
 
             public Parent Parent
             {
-                get
-                {
-                    return this.parent;
-                }
+                get => this.parent;
                 set
                 {
                     if (Equals(value, this.parent))
@@ -774,7 +717,7 @@ namespace Gu.State.Tests
 
             public double BaseValue
             {
-                get { return this.baseDouble; }
+                get => this.baseDouble;
                 set
                 {
                     if (value.Equals(this.baseDouble)) return;
@@ -795,7 +738,7 @@ namespace Gu.State.Tests
 
             public double Derived1Value
             {
-                get { return this.derived1Value; }
+                get => this.derived1Value;
                 set
                 {
                     if (value.Equals(this.derived1Value)) return;
@@ -811,7 +754,7 @@ namespace Gu.State.Tests
 
             public double Derived2Value
             {
-                get { return this.derived2Value; }
+                get => this.derived2Value;
                 set
                 {
                     if (value.Equals(this.derived2Value)) return;

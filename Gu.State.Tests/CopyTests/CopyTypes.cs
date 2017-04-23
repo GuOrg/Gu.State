@@ -200,7 +200,7 @@ namespace Gu.State.Tests.CopyTests
 
             public int Value
             {
-                get { return this.value; }
+                get => this.value;
                 set
                 {
                     if (value == this.value) return;
@@ -388,7 +388,7 @@ namespace Gu.State.Tests.CopyTests
 
             public int IntValue
             {
-                get { return this.intValue; }
+                get => this.intValue;
                 set
                 {
                     if (value == this.intValue) return;
@@ -399,7 +399,7 @@ namespace Gu.State.Tests.CopyTests
 
             public int? NullableIntValue
             {
-                get { return this.nullableIntValue; }
+                get => this.nullableIntValue;
                 set
                 {
                     if (value == this.nullableIntValue) return;
@@ -410,7 +410,7 @@ namespace Gu.State.Tests.CopyTests
 
             public string StringValue
             {
-                get { return this.stringValue; }
+                get => this.stringValue;
                 set
                 {
                     if (value == this.stringValue) return;
@@ -421,7 +421,7 @@ namespace Gu.State.Tests.CopyTests
 
             public StringSplitOptions EnumValue
             {
-                get { return this.enumValue; }
+                get => this.enumValue;
                 set
                 {
                     if (value == this.enumValue) return;
@@ -497,8 +497,8 @@ namespace Gu.State.Tests.CopyTests
 
             public int Value
             {
-                get { return this.value; }
-                set { this.value = value; }
+                get => this.value;
+                set => this.value = value;
             }
         }
 
@@ -526,7 +526,7 @@ namespace Gu.State.Tests.CopyTests
 
             public Child Child
             {
-                get { return this.child; }
+                get => this.child;
                 set
                 {
                     if (value != null)
