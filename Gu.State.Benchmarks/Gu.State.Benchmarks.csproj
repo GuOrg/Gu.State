@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Gu.State.Benchmarks</RootNamespace>
     <AssemblyName>Gu.State.Benchmarks</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -74,13 +75,6 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.2')">
-      <PropertyGroup>
-        <__paket__Microsoft_Diagnostics_Tracing_TraceEvent_targets>Microsoft.Diagnostics.Tracing.TraceEvent</__paket__Microsoft_Diagnostics_Tracing_TraceEvent_targets>
-      </PropertyGroup>
-    </When>
-  </Choose>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -90,7 +84,7 @@
   -->
   <Import Project="..\.paket\paket.targets" />
   <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.2')">
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v2.0' Or $(TargetFrameworkVersion) == 'v3.0' Or $(TargetFrameworkVersion) == 'v3.5' Or $(TargetFrameworkVersion) == 'v4.0' Or $(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1' Or $(TargetFrameworkVersion) == 'v4.6.2' Or $(TargetFrameworkVersion) == 'v4.6.3' Or $(TargetFrameworkVersion) == 'v4.7')">
       <ItemGroup>
         <Reference Include="JetBrains.Annotations">
           <HintPath>..\packages\analyzers\JetBrains.Annotations\lib\net\JetBrains.Annotations.dll</HintPath>
@@ -99,12 +93,77 @@
         </Reference>
       </ItemGroup>
     </When>
+    <When Condition="($(TargetFrameworkIdentifier) == 'WindowsPhoneApp') Or ($(TargetFrameworkIdentifier) == '.NETStandard' And ($(TargetFrameworkVersion) == 'v1.0' Or $(TargetFrameworkVersion) == 'v1.1' Or $(TargetFrameworkVersion) == 'v1.2' Or $(TargetFrameworkVersion) == 'v1.3' Or $(TargetFrameworkVersion) == 'v1.4' Or $(TargetFrameworkVersion) == 'v1.5' Or $(TargetFrameworkVersion) == 'v1.6' Or $(TargetFrameworkVersion) == 'v2.0')) Or ($(TargetFrameworkIdentifier) == '.NETCoreApp' And ($(TargetFrameworkVersion) == 'v1.0' Or $(TargetFrameworkVersion) == 'v1.1' Or $(TargetFrameworkVersion) == 'v2.0')) Or ($(TargetFrameworkIdentifier) == 'WindowsPhone' And ($(TargetFrameworkVersion) == 'v8.0' Or $(TargetFrameworkVersion) == 'v8.1')) Or ($(TargetFrameworkProfile) == 'Profile49') Or ($(TargetFrameworkProfile) == 'Profile84')">
+      <ItemGroup>
+        <Reference Include="JetBrains.Annotations">
+          <HintPath>..\packages\analyzers\JetBrains.Annotations\lib\netstandard1.0\JetBrains.Annotations.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+    <When Condition="($(TargetFrameworkIdentifier) == '.NETCore') Or ($(TargetFrameworkIdentifier) == 'Silverlight' And $(TargetFrameworkVersion) == 'v4.0') Or ($(TargetFrameworkIdentifier) == 'WindowsPhone' And ($(TargetFrameworkVersion) == 'v7.0' Or $(TargetFrameworkVersion) == 'v7.1')) Or ($(TargetFrameworkProfile) == 'Profile2') Or ($(TargetFrameworkProfile) == 'Profile3') Or ($(TargetFrameworkProfile) == 'Profile4') Or ($(TargetFrameworkProfile) == 'Profile5') Or ($(TargetFrameworkProfile) == 'Profile6') Or ($(TargetFrameworkProfile) == 'Profile7') Or ($(TargetFrameworkProfile) == 'Profile18') Or ($(TargetFrameworkProfile) == 'Profile23') Or ($(TargetFrameworkProfile) == 'Profile36') Or ($(TargetFrameworkProfile) == 'Profile41') Or ($(TargetFrameworkProfile) == 'Profile44') Or ($(TargetFrameworkProfile) == 'Profile46') Or ($(TargetFrameworkProfile) == 'Profile88') Or ($(TargetFrameworkProfile) == 'Profile95') Or ($(TargetFrameworkProfile) == 'Profile96') Or ($(TargetFrameworkProfile) == 'Profile104') Or ($(TargetFrameworkProfile) == 'Profile143') Or ($(TargetFrameworkProfile) == 'Profile154')">
+      <ItemGroup>
+        <Reference Include="JetBrains.Annotations">
+          <HintPath>..\packages\analyzers\JetBrains.Annotations\lib\portable-net4+sl4+wp7+netcore45\JetBrains.Annotations.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+    <When Condition="($(TargetFrameworkIdentifier) == 'Silverlight' And $(TargetFrameworkVersion) == 'v5.0') Or ($(TargetFrameworkIdentifier) == 'MonoAndroid') Or ($(TargetFrameworkIdentifier) == 'MonoTouch') Or ($(TargetFrameworkProfile) == 'Profile14') Or ($(TargetFrameworkProfile) == 'Profile19') Or ($(TargetFrameworkProfile) == 'Profile24') Or ($(TargetFrameworkProfile) == 'Profile31') Or ($(TargetFrameworkProfile) == 'Profile32') Or ($(TargetFrameworkProfile) == 'Profile37') Or ($(TargetFrameworkProfile) == 'Profile42') Or ($(TargetFrameworkProfile) == 'Profile47') Or ($(TargetFrameworkProfile) == 'Profile78') Or ($(TargetFrameworkProfile) == 'Profile92') Or ($(TargetFrameworkProfile) == 'Profile102') Or ($(TargetFrameworkProfile) == 'Profile111') Or ($(TargetFrameworkProfile) == 'Profile136') Or ($(TargetFrameworkProfile) == 'Profile147') Or ($(TargetFrameworkProfile) == 'Profile151') Or ($(TargetFrameworkProfile) == 'Profile157') Or ($(TargetFrameworkProfile) == 'Profile158') Or ($(TargetFrameworkProfile) == 'Profile225') Or ($(TargetFrameworkProfile) == 'Profile240') Or ($(TargetFrameworkProfile) == 'Profile255') Or ($(TargetFrameworkProfile) == 'Profile259') Or ($(TargetFrameworkProfile) == 'Profile328') Or ($(TargetFrameworkProfile) == 'Profile336') Or ($(TargetFrameworkProfile) == 'Profile344')">
+      <ItemGroup>
+        <Reference Include="JetBrains.Annotations">
+          <HintPath>..\packages\analyzers\JetBrains.Annotations\lib\portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\JetBrains.Annotations.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
   </Choose>
   <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.2')">
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETStandard' And ($(TargetFrameworkVersion) == 'v1.0' Or $(TargetFrameworkVersion) == 'v1.1')">
+      <ItemGroup>
+        <Reference Include="System.Runtime">
+          <HintPath>..\packages\analyzers\System.Runtime\ref\netstandard1.0\System.Runtime.dll</HintPath>
+          <Private>False</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETStandard' And $(TargetFrameworkVersion) == 'v1.2'">
+      <ItemGroup>
+        <Reference Include="System.Runtime">
+          <HintPath>..\packages\analyzers\System.Runtime\ref\netstandard1.2\System.Runtime.dll</HintPath>
+          <Private>False</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETStandard' And ($(TargetFrameworkVersion) == 'v1.3' Or $(TargetFrameworkVersion) == 'v1.4')">
+      <ItemGroup>
+        <Reference Include="System.Runtime">
+          <HintPath>..\packages\analyzers\System.Runtime\ref\netstandard1.3\System.Runtime.dll</HintPath>
+          <Private>False</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETStandard' And ($(TargetFrameworkVersion) == 'v1.5' Or $(TargetFrameworkVersion) == 'v1.6' Or $(TargetFrameworkVersion) == 'v2.0')">
+      <ItemGroup>
+        <Reference Include="System.Runtime">
+          <HintPath>..\packages\analyzers\System.Runtime\ref\netstandard1.5\System.Runtime.dll</HintPath>
+          <Private>False</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
         <Reference Include="BenchmarkDotNet">
-          <HintPath>..\packages\benchmarks\BenchmarkDotNet\lib\net45\BenchmarkDotNet.dll</HintPath>
+          <HintPath>..\packages\benchmarks\BenchmarkDotNet\lib\net46\BenchmarkDotNet.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -112,16 +171,10 @@
     </When>
   </Choose>
   <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.2')">
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
-        <Reference Include="System.Management">
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="System.Xml">
-          <Paket>True</Paket>
-        </Reference>
         <Reference Include="BenchmarkDotNet.Core">
-          <HintPath>..\packages\benchmarks\BenchmarkDotNet.Core\lib\net45\BenchmarkDotNet.Core.dll</HintPath>
+          <HintPath>..\packages\benchmarks\BenchmarkDotNet.Core\lib\net46\BenchmarkDotNet.Core.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -129,10 +182,10 @@
     </When>
   </Choose>
   <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.2')">
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
         <Reference Include="BenchmarkDotNet.Diagnostics.Windows">
-          <HintPath>..\packages\benchmarks\BenchmarkDotNet.Diagnostics.Windows\lib\net45\BenchmarkDotNet.Diagnostics.Windows.dll</HintPath>
+          <HintPath>..\packages\benchmarks\BenchmarkDotNet.Diagnostics.Windows\lib\net46\BenchmarkDotNet.Diagnostics.Windows.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -140,10 +193,10 @@
     </When>
   </Choose>
   <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.2')">
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
         <Reference Include="BenchmarkDotNet.Toolchains.Roslyn">
-          <HintPath>..\packages\benchmarks\BenchmarkDotNet.Toolchains.Roslyn\lib\net45\BenchmarkDotNet.Toolchains.Roslyn.dll</HintPath>
+          <HintPath>..\packages\benchmarks\BenchmarkDotNet.Toolchains.Roslyn\lib\net46\BenchmarkDotNet.Toolchains.Roslyn.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -159,10 +212,10 @@
     </Analyzer>
   </ItemGroup>
   <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.2')">
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
         <Reference Include="Microsoft.CodeAnalysis">
-          <HintPath>..\packages\benchmarks\Microsoft.CodeAnalysis.Common\lib\net45\Microsoft.CodeAnalysis.dll</HintPath>
+          <HintPath>..\packages\benchmarks\Microsoft.CodeAnalysis.Common\lib\netstandard1.3\Microsoft.CodeAnalysis.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -170,10 +223,10 @@
     </When>
   </Choose>
   <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.2')">
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
         <Reference Include="Microsoft.CodeAnalysis.CSharp">
-          <HintPath>..\packages\benchmarks\Microsoft.CodeAnalysis.CSharp\lib\net45\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
+          <HintPath>..\packages\benchmarks\Microsoft.CodeAnalysis.CSharp\lib\netstandard1.3\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -181,7 +234,7 @@
     </When>
   </Choose>
   <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.2')">
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
         <Reference Include="Microsoft.Diagnostics.Tracing.TraceEvent">
           <HintPath>..\packages\benchmarks\Microsoft.Diagnostics.Tracing.TraceEvent\lib\net40\Microsoft.Diagnostics.Tracing.TraceEvent.dll</HintPath>
@@ -192,7 +245,43 @@
     </When>
   </Choose>
   <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.2')">
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
+      <ItemGroup>
+        <Reference Include="Microsoft.DotNet.InternalAbstractions">
+          <HintPath>..\packages\benchmarks\Microsoft.DotNet.InternalAbstractions\lib\net451\Microsoft.DotNet.InternalAbstractions.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
+      <ItemGroup>
+        <Reference Include="Microsoft.DotNet.PlatformAbstractions">
+          <HintPath>..\packages\benchmarks\Microsoft.DotNet.PlatformAbstractions\lib\net451\Microsoft.DotNet.PlatformAbstractions.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
+      <ItemGroup>
+        <Reference Include="mscorlib">
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="System.AppContext">
+          <HintPath>..\packages\benchmarks\System.AppContext\lib\net46\System.AppContext.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
         <Reference Include="System.Collections.Immutable">
           <HintPath>..\packages\benchmarks\System.Collections.Immutable\lib\netstandard1.0\System.Collections.Immutable.dll</HintPath>
@@ -203,7 +292,73 @@
     </When>
   </Choose>
   <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.2')">
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
+      <ItemGroup>
+        <Reference Include="System.Console">
+          <HintPath>..\packages\benchmarks\System.Console\lib\net46\System.Console.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
+      <ItemGroup>
+        <Reference Include="System.Diagnostics.FileVersionInfo">
+          <HintPath>..\packages\benchmarks\System.Diagnostics.FileVersionInfo\lib\net46\System.Diagnostics.FileVersionInfo.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
+      <ItemGroup>
+        <Reference Include="System.Diagnostics.StackTrace">
+          <HintPath>..\packages\benchmarks\System.Diagnostics.StackTrace\lib\net46\System.Diagnostics.StackTrace.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
+      <ItemGroup>
+        <Reference Include="System.IO.Compression">
+          <HintPath>..\packages\benchmarks\System.IO.Compression\lib\net46\System.IO.Compression.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
+      <ItemGroup>
+        <Reference Include="System.IO.FileSystem">
+          <HintPath>..\packages\benchmarks\System.IO.FileSystem\lib\net46\System.IO.FileSystem.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
+      <ItemGroup>
+        <Reference Include="System.IO.FileSystem.Primitives">
+          <HintPath>..\packages\benchmarks\System.IO.FileSystem.Primitives\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
         <Reference Include="System.Reflection.Metadata">
           <HintPath>..\packages\benchmarks\System.Reflection.Metadata\lib\netstandard1.1\System.Reflection.Metadata.dll</HintPath>
@@ -214,7 +369,71 @@
     </When>
   </Choose>
   <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.2')">
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
+      <ItemGroup>
+        <Reference Include="System.Numerics">
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
+      <ItemGroup>
+        <Reference Include="System.Security.Cryptography.Algorithms">
+          <HintPath>..\packages\benchmarks\System.Security.Cryptography.Algorithms\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
+      <ItemGroup>
+        <Reference Include="System.Security.Cryptography.Encoding">
+          <HintPath>..\packages\benchmarks\System.Security.Cryptography.Encoding\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
+      <ItemGroup>
+        <Reference Include="System.Security.Cryptography.Primitives">
+          <HintPath>..\packages\benchmarks\System.Security.Cryptography.Primitives\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
+      <ItemGroup>
+        <Reference Include="System.Security.Cryptography.X509Certificates">
+          <HintPath>..\packages\benchmarks\System.Security.Cryptography.X509Certificates\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
+      <ItemGroup>
+        <Reference Include="System.Text.Encoding.CodePages">
+          <HintPath>..\packages\benchmarks\System.Text.Encoding.CodePages\lib\net46\System.Text.Encoding.CodePages.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
         <Reference Include="System.Threading.Tasks.Extensions">
           <HintPath>..\packages\benchmarks\System.Threading.Tasks.Extensions\lib\netstandard1.0\System.Threading.Tasks.Extensions.dll</HintPath>
@@ -224,5 +443,83 @@
       </ItemGroup>
     </When>
   </Choose>
-  <Import Project="..\packages\benchmarks\Microsoft.Diagnostics.Tracing.TraceEvent\build\$(__paket__Microsoft_Diagnostics_Tracing_TraceEvent_targets).targets" Condition="Exists('..\packages\benchmarks\Microsoft.Diagnostics.Tracing.TraceEvent\build\$(__paket__Microsoft_Diagnostics_Tracing_TraceEvent_targets).targets')" Label="Paket" />
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
+      <ItemGroup>
+        <Reference Include="System.Threading.Thread">
+          <HintPath>..\packages\benchmarks\System.Threading.Thread\lib\net46\System.Threading.Thread.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
+      <ItemGroup>
+        <Reference Include="System.ValueTuple">
+          <HintPath>..\packages\benchmarks\System.ValueTuple\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
+      <ItemGroup>
+        <Reference Include="System.Xml">
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="System.Xml.ReaderWriter">
+          <HintPath>..\packages\benchmarks\System.Xml.ReaderWriter\lib\net46\System.Xml.ReaderWriter.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
+      <ItemGroup>
+        <Reference Include="System.Xml.Linq">
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
+      <ItemGroup>
+        <Reference Include="System.Xml.XmlDocument">
+          <HintPath>..\packages\benchmarks\System.Xml.XmlDocument\lib\net46\System.Xml.XmlDocument.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
+      <ItemGroup>
+        <Reference Include="System.Xml.XPath">
+          <HintPath>..\packages\benchmarks\System.Xml.XPath\lib\net46\System.Xml.XPath.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
+      <ItemGroup>
+        <Reference Include="System.Xml.XPath.XDocument">
+          <HintPath>..\packages\benchmarks\System.Xml.XPath.XDocument\lib\net46\System.Xml.XPath.XDocument.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Import Project="..\packages\benchmarks\Microsoft.Diagnostics.Tracing.TraceEvent\build\Microsoft.Diagnostics.Tracing.TraceEvent.targets" Condition="Exists('..\packages\benchmarks\Microsoft.Diagnostics.Tracing.TraceEvent\build\Microsoft.Diagnostics.Tracing.TraceEvent.targets')" Label="Paket" />
 </Project>

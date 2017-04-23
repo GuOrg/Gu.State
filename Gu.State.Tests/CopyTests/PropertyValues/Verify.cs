@@ -1,7 +1,6 @@
 ﻿namespace Gu.State.Tests.CopyTests.PropertyValues
 {
     using System;
-    using System.Reflection;
 
     public class Verify : VerifyTests
     {

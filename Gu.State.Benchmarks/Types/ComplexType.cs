@@ -4,8 +4,6 @@ namespace Gu.State.Benchmarks
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
 
-    using JetBrains.Annotations;
-
     public class ComplexType : INotifyPropertyChanged
     {
         private string name;
@@ -92,7 +90,6 @@ namespace Gu.State.Benchmarks
         }
 
 
-        [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

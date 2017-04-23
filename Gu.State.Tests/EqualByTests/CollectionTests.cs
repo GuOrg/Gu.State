@@ -4,8 +4,6 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
 
-    using Moq;
-
     using NUnit.Framework;
 
     using static EqualByTypes;

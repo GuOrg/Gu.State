@@ -1,4 +1,5 @@
-﻿namespace Gu.State.Benchmarks
+﻿// ReSharper disable UnusedMember.Local
+namespace Gu.State.Benchmarks
 {
     using System.Collections.Generic;
     using System.IO;
@@ -7,7 +8,9 @@
 
     public class Program
     {
-        private static readonly string DesinationDirectory = System.IO.Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName, "Benchmarks");
+        // ReSharper disable PossibleNullReferenceException
+        private static readonly string DestinationDirectory = System.IO.Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName, "Benchmarks");
+        // ReSharper restore PossibleNullReferenceException
 
         public static void Main()
         {
@@ -36,17 +39,17 @@
 #if DEBUG
 #else
             var sourceFileName = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "BenchmarkDotNet.Artifacts", "results", name + "-report-github.md");
-            System.IO.Directory.CreateDirectory(DesinationDirectory);
-            var destinationFileName = System.IO.Path.Combine(DesinationDirectory, name + ".md");
+            System.IO.Directory.CreateDirectory(DestinationDirectory);
+            var destinationFileName = System.IO.Path.Combine(DestinationDirectory, name + ".md");
             File.Copy(sourceFileName, destinationFileName, true);
 #endif
         }
 
         private static void ClearAllResults()
         {
-            if (Directory.Exists(DesinationDirectory))
+            if (Directory.Exists(DestinationDirectory))
             {
-                foreach (var resultFile in Directory.EnumerateFiles(DesinationDirectory, "*.md"))
+                foreach (var resultFile in Directory.EnumerateFiles(DestinationDirectory, "*.md"))
                 {
                     File.Delete(resultFile);
                 }

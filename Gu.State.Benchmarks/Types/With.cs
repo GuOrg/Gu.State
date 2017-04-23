@@ -3,8 +3,6 @@
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
 
-    using JetBrains.Annotations;
-
     public class With<T> : INotifyPropertyChanged
     {
         private string name;
@@ -66,7 +64,6 @@
             }
         }
 
-        [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

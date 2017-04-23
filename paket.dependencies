@@ -1,9 +1,7 @@
 source http://www.nuget.org/api/v2/
-framework: auto-detect
 
 group Analyzers
   source http://www.nuget.org/api/v2/
-  framework: auto-detect
   nuget StyleCop.Analyzers
   nuget Gu.Analyzers
   nuget WpfAnalyzers
@@ -12,16 +10,16 @@ group Analyzers
 
 group Test
   source http://www.nuget.org/api/v2/
-  framework: auto-detect
+  framework: net452
   nuget Moq
   nuget NUnit
   nuget System.Collections.Immutable
   nuget Gu.Units
 
 group Benchmarks
+  redirects: on
   source http://www.nuget.org/api/v2/
-  framework: auto-detect
+  framework: net461
   nuget BenchmarkDotNet
   nuget BenchmarkDotNet.Diagnostics.Windows
-  nuget System.Reflection.Metadata = 1.2.0
 
