@@ -30,10 +30,10 @@ namespace Gu.State.Tests
                     source.Value.Value++;
                     Assert.AreEqual(1, tracker.Changes);
                     CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
-                    var rootChangeEventArgs = RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(source.Value, tracker.Settings, false).Value, new PropertyChangeEventArgs(source.Value, source.Value.GetProperty(nameof(source.Value.Value))));
+                    var rootChangeEventArgs = RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(source.Value, tracker.Settings, isRoot: false).Value, new PropertyChangeEventArgs(source.Value, source.Value.GetProperty(nameof(source.Value.Value))));
                     var expected = new[]
                                        {
-                                            new PropertyGraphChangedEventArgs<ChangeTrackerNode>(ChangeTrackerNode.GetOrCreate(source, tracker.Settings, false).Value, source.GetProperty(nameof(source.Value)), rootChangeEventArgs)
+                                            new PropertyGraphChangedEventArgs<ChangeTrackerNode>(ChangeTrackerNode.GetOrCreate(source, tracker.Settings, isRoot: false).Value, source.GetProperty(nameof(source.Value)), rootChangeEventArgs)
                                        };
                     CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
                 }
@@ -58,14 +58,14 @@ namespace Gu.State.Tests
                     source.Value = new ComplexType();
                     Assert.AreEqual(1, tracker.Changes);
                     CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
-                    expectedChanges.Add(RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(source, tracker.Settings, false).Value, new PropertyChangeEventArgs(source, source.GetProperty(nameof(source.Value)))));
+                    expectedChanges.Add(RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(source, tracker.Settings, isRoot: false).Value, new PropertyChangeEventArgs(source, source.GetProperty(nameof(source.Value)))));
                     CollectionAssert.AreEqual(expectedChanges, changes, EventArgsComparer.Default);
 
                     source.Value.Value++;
                     Assert.AreEqual(2, tracker.Changes);
                     CollectionAssert.AreEqual(new[] { "Changes", "Changes" }, propertyChanges);
-                    var rootChangeEventArgs = RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(source.Value, tracker.Settings, false).Value, new PropertyChangeEventArgs(source.Value, source.Value.GetProperty(nameof(source.Value.Value))));
-                    expectedChanges.Add(new PropertyGraphChangedEventArgs<ChangeTrackerNode>(ChangeTrackerNode.GetOrCreate(source, tracker.Settings, false).Value, source.GetProperty(nameof(source.Value)), rootChangeEventArgs));
+                    var rootChangeEventArgs = RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(source.Value, tracker.Settings, isRoot: false).Value, new PropertyChangeEventArgs(source.Value, source.Value.GetProperty(nameof(source.Value.Value))));
+                    expectedChanges.Add(new PropertyGraphChangedEventArgs<ChangeTrackerNode>(ChangeTrackerNode.GetOrCreate(source, tracker.Settings, isRoot: false).Value, source.GetProperty(nameof(source.Value)), rootChangeEventArgs));
                     CollectionAssert.AreEqual(expectedChanges, changes, EventArgsComparer.Default);
                 }
             }
@@ -89,7 +89,7 @@ namespace Gu.State.Tests
                     source.Value = null;
                     Assert.AreEqual(1, tracker.Changes);
                     CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
-                    var expected = new[] { RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(source, tracker.Settings, false).Value, new PropertyChangeEventArgs(source, source.GetProperty(nameof(source.Value)))) };
+                    var expected = new[] { RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(source, tracker.Settings, isRoot: false).Value, new PropertyChangeEventArgs(source, source.GetProperty(nameof(source.Value)))) };
                     CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
 
                     oldValue.Value++;

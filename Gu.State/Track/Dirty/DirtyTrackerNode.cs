@@ -373,7 +373,7 @@
                 return false;
             }
 
-            childNode = GetOrCreate(xValue, yValue, this.Settings, false);
+            childNode = GetOrCreate(xValue, yValue, this.Settings, isRoot: false);
             return true;
         }
 

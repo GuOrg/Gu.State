@@ -206,13 +206,13 @@
             var getter = this.Settings.GetOrCreateGetterAndSetter(property);
             var value = getter.GetValue(this.Source);
             IRefCounted<ChangeTrackerNode> node;
-            if (TryGetOrCreate(value, this.Settings, false, out node))
+            if (TryGetOrCreate(value, this.Settings, isRoot: false, result: out node))
             {
                 using (node)
                 {
                     var propertyNode = ChildNodes<ChangeTrackerNode>.CreateChildNode(this, node.Value, property);
                     propertyNode.Changed += this.OnChildNodeChanged;
-                    IUnsubscriber<IChildNode<ChangeTrackerNode>> childNode = propertyNode.UnsubscribeAndDispose(n => n.Changed -= this.OnChildNodeChanged);
+                    var childNode = propertyNode.UnsubscribeAndDispose(n => n.Changed -= this.OnChildNodeChanged);
                     this.Children.SetValue(property, childNode);
                 }
             }
@@ -245,7 +245,7 @@
             }
 
             IRefCounted<ChangeTrackerNode> node;
-            if (TryGetOrCreate(value, this.Settings, false, out node))
+            if (TryGetOrCreate(value, this.Settings, isRoot: false, result: out node))
             {
                 using (node)
                 {

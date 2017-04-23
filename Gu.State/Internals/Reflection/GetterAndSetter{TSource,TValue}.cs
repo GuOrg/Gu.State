@@ -87,7 +87,7 @@
         {
             //// ReSharper disable once PossibleNullReferenceException nope, not here
             var methodName = $"{field.ReflectedType.FullName}.set_{field.Name}";
-            var setterMethod = new DynamicMethod(methodName, null, new[] { typeof(TSource), typeof(TValue) }, true);
+            var setterMethod = new DynamicMethod(methodName, null, new[] { typeof(TSource), typeof(TValue) }, restrictedSkipVisibility: true);
             var ilGenerator = setterMethod.GetILGenerator();
             ilGenerator.Emit(OpCodes.Ldarg_0);
             ilGenerator.Emit(OpCodes.Ldarg_1);
@@ -101,7 +101,7 @@
         {
             //// ReSharper disable once PossibleNullReferenceException nope, not here
             var methodName = $"{field.ReflectedType.FullName}.get_{field.Name}";
-            var getterMethod = new DynamicMethod(methodName, typeof(TValue), new[] { typeof(TSource) }, true);
+            var getterMethod = new DynamicMethod(methodName, typeof(TValue), new[] { typeof(TSource) }, restrictedSkipVisibility: true);
             var ilGenerator = getterMethod.GetILGenerator();
             ilGenerator.Emit(OpCodes.Ldarg_0);
             ilGenerator.Emit(OpCodes.Ldfld, field);

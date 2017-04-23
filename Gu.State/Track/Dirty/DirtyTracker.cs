@@ -13,7 +13,7 @@
         internal DirtyTracker(INotifyPropertyChanged x, INotifyPropertyChanged y, PropertiesSettings settings)
         {
             this.Settings = settings;
-            this.node = DirtyTrackerNode.GetOrCreate(x, y, settings, true);
+            this.node = DirtyTrackerNode.GetOrCreate(x, y, settings, isRoot: true);
             this.node.Value.PropertyChanged += this.OnNodeChanged;
         }
 

@@ -48,7 +48,7 @@ namespace Gu.State.Tests
                 var expectedChanges = new List<EventArgs>();
                 using (var tracker = Track.Changes(source, ReferenceHandling.Structural))
                 {
-                    var sourceNode = ChangeTrackerNode.GetOrCreate(source, tracker.Settings, false)
+                    var sourceNode = ChangeTrackerNode.GetOrCreate(source, tracker.Settings, isRoot: false)
                                                       .Value;
                     tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
@@ -74,11 +74,11 @@ namespace Gu.State.Tests
                                 ChangeTrackerNode.GetOrCreate(
                                     (INotifyCollectionChanged)source.Value,
                                     tracker.Settings,
-                                    false)
+                                    isRoot: false)
                                                  .Value,
                                 0,
                                 RootChangeEventArgs.Create(
-                                    ChangeTrackerNode.GetOrCreate(source.Value[0], tracker.Settings, false)
+                                    ChangeTrackerNode.GetOrCreate(source.Value[0], tracker.Settings, isRoot: false)
                                                      .Value,
                                     new PropertyChangeEventArgs(source.Value[0], source.Value[0].GetProperty("Value"))))));
                     CollectionAssert.AreEqual(expectedChanges, changes, EventArgsComparer.Default);
@@ -107,7 +107,7 @@ namespace Gu.State.Tests
                 var expectedChanges = new List<EventArgs>();
                 using (var tracker = Track.Changes(source, ReferenceHandling.Structural))
                 {
-                    var sourceNode = ChangeTrackerNode.GetOrCreate(source, tracker.Settings, false)
+                    var sourceNode = ChangeTrackerNode.GetOrCreate(source, tracker.Settings, isRoot: false)
                                                       .Value;
                     tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
@@ -123,18 +123,18 @@ namespace Gu.State.Tests
                             sourceNode,
                             source.GetProperty("Next"),
                             new PropertyGraphChangedEventArgs<ChangeTrackerNode>(
-                                ChangeTrackerNode.GetOrCreate(source.Next, tracker.Settings, false)
+                                ChangeTrackerNode.GetOrCreate(source.Next, tracker.Settings, isRoot: false)
                                                  .Value,
                                 source.GetProperty("Levels"),
                                 new ItemGraphChangedEventArgs<ChangeTrackerNode>(
                                     ChangeTrackerNode.GetOrCreate(
                                         (INotifyCollectionChanged)source.Next.Levels,
                                         tracker.Settings,
-                                        false)
+                                        isRoot: false)
                                                      .Value,
                                     0,
                                     RootChangeEventArgs.Create(
-                                        ChangeTrackerNode.GetOrCreate(source.Next.Levels[0], tracker.Settings, false)
+                                        ChangeTrackerNode.GetOrCreate(source.Next.Levels[0], tracker.Settings, isRoot: false)
                                                          .Value,
                                         new PropertyChangeEventArgs(source.Next.Levels[0], source.Next.Levels[0].GetProperty("Value")))))));
                     CollectionAssert.AreEqual(expectedChanges, changes, EventArgsComparer.Default);
@@ -153,7 +153,7 @@ namespace Gu.State.Tests
                 var expectedChanges = new List<EventArgs>();
                 using (var tracker = Track.Changes(source, ReferenceHandling.Structural))
                 {
-                    var sourceNode = ChangeTrackerNode.GetOrCreate(source, tracker.Settings, false)
+                    var sourceNode = ChangeTrackerNode.GetOrCreate(source, tracker.Settings, isRoot: false)
                                                       .Value;
                     tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
@@ -172,7 +172,7 @@ namespace Gu.State.Tests
                                 ChangeTrackerNode.GetOrCreate(
                                     (INotifyCollectionChanged)source.Value,
                                     tracker.Settings,
-                                    false)
+                                    isRoot: false)
                                                  .Value,
                                 new AddEventArgs(source.Value, 0))));
                     CollectionAssert.AreEqual(expectedChanges, changes, EventArgsComparer.Default);
@@ -188,7 +188,7 @@ namespace Gu.State.Tests
                                 ChangeTrackerNode.GetOrCreate(
                                     (INotifyCollectionChanged)source.Value,
                                     tracker.Settings,
-                                    false)
+                                    isRoot: false)
                                                  .Value,
                                 new AddEventArgs(source.Value, 1))));
                     CollectionAssert.AreEqual(expectedChanges, changes, EventArgsComparer.Default);
@@ -204,11 +204,11 @@ namespace Gu.State.Tests
                                 ChangeTrackerNode.GetOrCreate(
                                     (INotifyCollectionChanged)source.Value,
                                     tracker.Settings,
-                                    false)
+                                    isRoot: false)
                                                  .Value,
                                 0,
                                 RootChangeEventArgs.Create(
-                                    ChangeTrackerNode.GetOrCreate(source.Value[0], tracker.Settings, false)
+                                    ChangeTrackerNode.GetOrCreate(source.Value[0], tracker.Settings, isRoot: false)
                                                      .Value,
                                     new PropertyChangeEventArgs(source.Value[0], source.Value[0].GetProperty("Value"))))));
                     CollectionAssert.AreEqual(expectedChanges, changes, EventArgsComparer.Default);
@@ -224,11 +224,11 @@ namespace Gu.State.Tests
                                 ChangeTrackerNode.GetOrCreate(
                                     (INotifyCollectionChanged)source.Value,
                                     tracker.Settings,
-                                    false)
+                                    isRoot: false)
                                                  .Value,
                                 0,
                                 RootChangeEventArgs.Create(
-                                    ChangeTrackerNode.GetOrCreate(source.Value[0], tracker.Settings, false)
+                                    ChangeTrackerNode.GetOrCreate(source.Value[0], tracker.Settings, isRoot: false)
                                                      .Value,
                                     new PropertyChangeEventArgs(source.Value[0], source.Value[0].GetProperty("Value"))))));
                     CollectionAssert.AreEqual(expectedChanges, changes, EventArgsComparer.Default);
@@ -246,11 +246,11 @@ namespace Gu.State.Tests
                                 ChangeTrackerNode.GetOrCreate(
                                     (INotifyCollectionChanged)source.Value,
                                     tracker.Settings,
-                                    false)
+                                    isRoot: false)
                                                  .Value,
                                 1,
                                 RootChangeEventArgs.Create(
-                                    ChangeTrackerNode.GetOrCreate(source.Value[1], tracker.Settings, false)
+                                    ChangeTrackerNode.GetOrCreate(source.Value[1], tracker.Settings, isRoot: false)
                                                      .Value,
                                     new PropertyChangeEventArgs(source.Value[1], source.Value[1].GetProperty("Value"))))));
                     CollectionAssert.AreEqual(expectedChanges, changes, EventArgsComparer.Default);
@@ -266,7 +266,7 @@ namespace Gu.State.Tests
                 var expectedChanges = new List<EventArgs>();
                 using (var tracker = Track.Changes(source, ReferenceHandling.Structural))
                 {
-                    var sourceNode = ChangeTrackerNode.GetOrCreate(source, tracker.Settings, false)
+                    var sourceNode = ChangeTrackerNode.GetOrCreate(source, tracker.Settings, isRoot: false)
                                                       .Value;
                     tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
@@ -285,7 +285,7 @@ namespace Gu.State.Tests
                                 ChangeTrackerNode.GetOrCreate(
                                     (INotifyCollectionChanged)source.Value,
                                     tracker.Settings,
-                                    false)
+                                    isRoot: false)
                                                  .Value,
                                 new RemoveEventArgs(source.Value, 1))));
                     CollectionAssert.AreEqual(expectedChanges, changes, EventArgsComparer.Default);
@@ -302,7 +302,7 @@ namespace Gu.State.Tests
                                 ChangeTrackerNode.GetOrCreate(
                                     (INotifyCollectionChanged)source.Value,
                                     tracker.Settings,
-                                    false)
+                                    isRoot: false)
                                                  .Value,
                                 new RemoveEventArgs(source.Value, 0))));
                     CollectionAssert.AreEqual(expectedChanges, changes, EventArgsComparer.Default);
@@ -323,7 +323,7 @@ namespace Gu.State.Tests
                 var expectedChanges = new List<EventArgs>();
                 using (var tracker = Track.Changes(source, ReferenceHandling.Structural))
                 {
-                    var sourceNode = ChangeTrackerNode.GetOrCreate(source, tracker.Settings, false)
+                    var sourceNode = ChangeTrackerNode.GetOrCreate(source, tracker.Settings, isRoot: false)
                                                       .Value;
                     tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
@@ -342,7 +342,7 @@ namespace Gu.State.Tests
                                 ChangeTrackerNode.GetOrCreate(
                                     (INotifyCollectionChanged)source.Value,
                                     tracker.Settings,
-                                    false)
+                                    isRoot: false)
                                                  .Value,
                                 new ResetEventArgs(source.Value))));
                     CollectionAssert.AreEqual(expectedChanges, changes, EventArgsComparer.Default);
@@ -358,7 +358,7 @@ namespace Gu.State.Tests
                                 ChangeTrackerNode.GetOrCreate(
                                     (INotifyCollectionChanged)source.Value,
                                     tracker.Settings,
-                                    false)
+                                    isRoot: false)
                                                  .Value,
                                 new ResetEventArgs(source.Value))));
                     CollectionAssert.AreEqual(expectedChanges, changes, EventArgsComparer.Default);
@@ -378,7 +378,7 @@ namespace Gu.State.Tests
                 var expectedChanges = new List<EventArgs>();
                 using (var tracker = Track.Changes(source, ReferenceHandling.Structural))
                 {
-                    var sourceNode = ChangeTrackerNode.GetOrCreate(source, tracker.Settings, false)
+                    var sourceNode = ChangeTrackerNode.GetOrCreate(source, tracker.Settings, isRoot: false)
                                                       .Value;
                     tracker.PropertyChanged += (_, e) => propertyChanges.Add(e.PropertyName);
                     tracker.Changed += (_, e) => changes.Add(e);
@@ -397,7 +397,7 @@ namespace Gu.State.Tests
                                 ChangeTrackerNode.GetOrCreate(
                                     (INotifyCollectionChanged)source.Value,
                                     tracker.Settings,
-                                    false)
+                                    isRoot: false)
                                                  .Value,
                                 new ReplaceEventArgs(source.Value, 0))));
 
@@ -412,11 +412,11 @@ namespace Gu.State.Tests
                                 ChangeTrackerNode.GetOrCreate(
                                     (INotifyCollectionChanged)source.Value,
                                     tracker.Settings,
-                                    false)
+                                    isRoot: false)
                                                  .Value,
                                 0,
                                 RootChangeEventArgs.Create(
-                                    ChangeTrackerNode.GetOrCreate(source.Value[0], tracker.Settings, false)
+                                    ChangeTrackerNode.GetOrCreate(source.Value[0], tracker.Settings, isRoot: false)
                                                      .Value,
                                     new PropertyChangeEventArgs(source.Value[0], source.Value[0].GetProperty("Value"))))));
                     CollectionAssert.AreEqual(expectedChanges, changes, EventArgsComparer.Default);

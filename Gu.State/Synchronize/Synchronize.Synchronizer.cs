@@ -17,7 +17,7 @@ namespace Gu.State
             internal Synchronizer(INotifyPropertyChanged source, INotifyPropertyChanged target, PropertiesSettings settings)
             {
                 this.Settings = settings;
-                this.dirtyTrackerNode = DirtyTrackerNode.GetOrCreate(source, target, settings, true);
+                this.dirtyTrackerNode = DirtyTrackerNode.GetOrCreate(source, target, settings, isRoot: true);
                 this.dirtyTrackerNode.Value.Changed += this.OnDirtyTrackerNodeChanged;
                 this.borrowedQueue = ConcurrentQueuePool<DirtyTrackerNode>.Borrow();
                 this.AddToSyncQueue(this.dirtyTrackerNode.Value);

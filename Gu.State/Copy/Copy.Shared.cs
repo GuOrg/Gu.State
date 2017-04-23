@@ -32,7 +32,7 @@
 
             try
             {
-                return Activator.CreateInstance(type, true);
+                return Activator.CreateInstance(type, nonPublic: true);
             }
             catch (Exception e)
             {

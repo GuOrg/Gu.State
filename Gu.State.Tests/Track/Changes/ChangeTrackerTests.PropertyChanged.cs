@@ -32,7 +32,7 @@ namespace Gu.State.Tests
                     source.Value = new Immutable();
                     Assert.AreEqual(1, tracker.Changes);
                     CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
-                    var node = ChangeTrackerNode.GetOrCreate(source, tracker.Settings, false).Value;
+                    var node = ChangeTrackerNode.GetOrCreate(source, tracker.Settings, isRoot: false).Value;
                     var expected = new[] { RootChangeEventArgs.Create(node, new PropertyChangeEventArgs(source, source.GetProperty(nameof(source.Value)))) };
                     CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
                 }
