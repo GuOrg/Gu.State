@@ -434,11 +434,12 @@ namespace Gu.State.Tests.CopyTests
             }
             public void SetFields(int intValue, string stringValue)
             {
+#pragma warning disable WPF1012 // Notify when property changes.
                 this.intValue = intValue;
                 this.stringValue = stringValue;
+#pragma warning restore WPF1012 // Notify when property changes.
             }
 
-            [NotifyPropertyChangedInvocator]
             public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
             {
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

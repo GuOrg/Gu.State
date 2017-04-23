@@ -331,7 +331,9 @@ namespace Gu.State.Tests
 
         public class IllegalSubType : ComplexType
         {
+#pragma warning disable WPF1010 // Mutable public property should notify.
             public IllegalType Illegal { get; set; }
+#pragma warning restore WPF1010 // Mutable public property should notify.
         }
 
         public class IllegalEnumerable : INotifyPropertyChanged, IEnumerable<int>
