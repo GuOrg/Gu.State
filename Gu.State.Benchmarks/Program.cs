@@ -1,6 +1,7 @@
 ﻿// ReSharper disable UnusedMember.Local
 namespace Gu.State.Benchmarks
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using BenchmarkDotNet.Reports;
@@ -8,9 +9,9 @@ namespace Gu.State.Benchmarks
 
     public class Program
     {
-        // ReSharper disable PossibleNullReferenceException
-        private static readonly string DestinationDirectory = System.IO.Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName, "Benchmarks");
-        // ReSharper restore PossibleNullReferenceException
+        private static readonly string ProjectDirectory = Directory.GetCurrentDirectory();
+
+        private static string ArtifactsDirectory { get; } = Path.Combine(ProjectDirectory, "BenchmarkDotNet.Artifacts", "results");
 
         public static void Main()
         {
@@ -22,7 +23,6 @@ namespace Gu.State.Benchmarks
 
         private static IEnumerable<Summary> RunAll()
         {
-            ClearAllResults();
             var switcher = new BenchmarkSwitcher(typeof(Program).Assembly);
             var summaries = switcher.Run(new[] { "*" });
             return summaries;
@@ -36,23 +36,13 @@ namespace Gu.State.Benchmarks
 
         private static void CopyResult(string name)
         {
-#if DEBUG
-#else
-            var sourceFileName = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "BenchmarkDotNet.Artifacts", "results", name + "-report-github.md");
-            System.IO.Directory.CreateDirectory(DestinationDirectory);
-            var destinationFileName = System.IO.Path.Combine(DestinationDirectory, name + ".md");
-            File.Copy(sourceFileName, destinationFileName, true);
-#endif
-        }
-
-        private static void ClearAllResults()
-        {
-            if (Directory.Exists(DestinationDirectory))
+            Console.WriteLine($"DestinationDirectory: {ProjectDirectory}");
+            if (Directory.Exists(ProjectDirectory))
             {
-                foreach (var resultFile in Directory.EnumerateFiles(DestinationDirectory, "*.md"))
-                {
-                    File.Delete(resultFile);
-                }
+                var sourceFileName = Path.Combine(ArtifactsDirectory, name + "-report-github.md");
+                var destinationFileName = Path.Combine(ProjectDirectory, name + ".md");
+                Console.WriteLine($"Copy: {sourceFileName} -> {destinationFileName}");
+                File.Copy(sourceFileName, destinationFileName, overwrite: true);
             }
         }
     }

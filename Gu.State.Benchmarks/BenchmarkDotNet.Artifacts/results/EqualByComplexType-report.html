@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>EqualByComplexType</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet=v0.10.9, OS=Windows 7 SP1 (6.1.7601)
+Processor=Intel Xeon CPU E5-2637 v4 3.50GHzIntel Xeon CPU E5-2637 v4 3.50GHz, ProcessorCount=16
+Frequency=3410087 Hz, Resolution=293.2477 ns, Timer=TSC
+  [Host]     : .NET Framework 4.7 (CLR 4.0.30319.42000), 64bit RyuJIT-v4.7.2114.0
+  DefaultJob : .NET Framework 4.7 (CLR 4.0.30319.42000), 64bit RyuJIT-v4.7.2114.0
+</code></pre>
+<pre><code></code></pre>
+
+<table>
+<thead><tr><th>                     Method</th><th>  Mean</th><th>Error</th><th>StdDev</th><th>Scaled</th><th>ScaledSD</th><th>Gen 0</th><th>Gen 1</th><th>Allocated</th>
+</tr>
+</thead><tbody><tr><td>       this_x_Equals_this_y</td><td>13.784 ns</td><td>0.4357 ns</td><td>1.2710 ns</td><td>1.00</td><td>0.00</td><td>-</td><td>-</td><td>0 B</td>
+</tr><tr><td>               ObjectEquals</td><td>14.146 ns</td><td>0.4332 ns</td><td>1.2705 ns</td><td>1.03</td><td>0.13</td><td>-</td><td>-</td><td>0 B</td>
+</tr><tr><td>                       Func</td><td>3.303 ns</td><td>0.1280 ns</td><td>0.3754 ns</td><td>0.24</td><td>0.04</td><td>-</td><td>-</td><td>0 B</td>
+</tr><tr><td>                   Comparer</td><td>9.167 ns</td><td>0.2635 ns</td><td>0.7768 ns</td><td>0.67</td><td>0.08</td><td>-</td><td>-</td><td>0 B</td>
+</tr><tr><td>      EqualByPropertyValues</td><td>5,712.234 ns</td><td>128.9200 ns</td><td>376.0656 ns</td><td>417.91</td><td>47.07</td><td>0.3281</td><td>0.0153</td><td>2079 B</td>
+</tr><tr><td>EqualByPropertyValuesWithComparer</td><td>62.376 ns</td><td>1.5309 ns</td><td>4.4657 ns</td><td>4.56</td><td>0.53</td><td>-</td><td>-</td><td>0 B</td>
+</tr><tr><td>         EqualByFieldValues</td><td>5,752.254 ns</td><td>133.8304 ns</td><td>394.6019 ns</td><td>420.84</td><td>48.09</td><td>0.3052</td><td>0.0153</td><td>1958 B</td>
+</tr><tr><td>EqualByFieldValuesWIthComparer</td><td>60.518 ns</td><td>1.4175 ns</td><td>4.1574 ns</td><td>4.43</td><td>0.51</td><td>-</td><td>-</td><td>0 B</td>
+</tr></tbody></table>
+</body>
+</html>

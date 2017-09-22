@@ -1,6 +1,8 @@
+storage: none
 source http://www.nuget.org/api/v2/
 
 group Analyzers
+  storage: none
   source http://www.nuget.org/api/v2/
   nuget StyleCop.Analyzers
   nuget Gu.Analyzers
@@ -9,17 +11,15 @@ group Analyzers
   nuget JetBrains.Annotations
 
 group Test
+  storage: none
   source http://www.nuget.org/api/v2/
-  framework: net452
   nuget Moq
   nuget NUnit
   nuget System.Collections.Immutable
   nuget Gu.Units
 
 group Benchmarks
-  redirects: on
+  storage: none
   source http://www.nuget.org/api/v2/
-  framework: net461
-  nuget BenchmarkDotNet
   nuget BenchmarkDotNet.Diagnostics.Windows
 
