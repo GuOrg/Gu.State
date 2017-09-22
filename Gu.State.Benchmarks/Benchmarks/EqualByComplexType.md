@@ -1,20 +1,20 @@
 ``` ini
 
-BenchmarkDotNet=v0.10.4, OS=Windows 10.0.14393
-Processor=Intel Core i7-3667U CPU 2.00GHz (Ivy Bridge), ProcessorCount=4
-Frequency=2435873 Hz, Resolution=410.5304 ns, Timer=TSC
-  [Host]     : Clr 4.0.30319.42000, 32bit LegacyJIT-v4.6.1637.0
-  DefaultJob : Clr 4.0.30319.42000, 32bit LegacyJIT-v4.6.1637.0
+BenchmarkDotNet=v0.10.9, OS=Windows 7 SP1 (6.1.7601)
+Processor=Intel Xeon CPU E5-2637 v4 3.50GHzIntel Xeon CPU E5-2637 v4 3.50GHz, ProcessorCount=16
+Frequency=3410107 Hz, Resolution=293.2459 ns, Timer=TSC
+  [Host]     : .NET Framework 4.7 (CLR 4.0.30319.42000), 64bit RyuJIT-v4.7.2114.0
+  DefaultJob : .NET Framework 4.7 (CLR 4.0.30319.42000), 64bit RyuJIT-v4.7.2114.0
 
 
 ```
- |                            Method |          Mean |      Error |     StdDev | Scaled | ScaledSD |  Gen 0 | Allocated |
- |---------------------------------- |--------------:|-----------:|-----------:|-------:|---------:|-------:|----------:|
- |              this_x_Equals_this_y |    14.9570 ns |  0.3473 ns |  0.8453 ns |   1.00 |     0.00 |      - |      0 kB |
- |                      ObjectEquals |    17.8380 ns |  0.4971 ns |  1.4501 ns |   1.20 |     0.12 |      - |      0 kB |
- |                              Func |     4.6834 ns |  0.1469 ns |  0.3947 ns |   0.31 |     0.03 |      - |      0 kB |
- |                          Comparer |    12.0413 ns |  0.0587 ns |  0.0549 ns |   0.81 |     0.04 |      - |      0 kB |
- |             EqualByPropertyValues | 4,771.8490 ns | 55.2336 ns | 51.6656 ns | 320.00 |    17.49 | 0.3596 |   1.02 kB |
- | EqualByPropertyValuesWithComparer |    81.6122 ns |  0.8697 ns |  0.8135 ns |   5.47 |     0.30 |      - |      0 kB |
- |                EqualByFieldValues | 4,849.9549 ns | 74.6506 ns | 69.8282 ns | 325.24 |    18.03 | 0.3489 |   0.96 kB |
- |    EqualByFieldValuesWIthComparer |    81.3233 ns |  0.5104 ns |  0.4774 ns |   5.45 |     0.29 |      - |      0 kB |
+ |                            Method |         Mean |       Error |      StdDev | Scaled | ScaledSD |  Gen 0 |  Gen 1 | Allocated |
+ |---------------------------------- |-------------:|------------:|------------:|-------:|---------:|-------:|-------:|----------:|
+ |              this_x_Equals_this_y |    12.895 ns |   0.2949 ns |   0.7870 ns |   1.00 |     0.00 |      - |      - |       0 B |
+ |                      ObjectEquals |    13.756 ns |   0.3842 ns |   1.1268 ns |   1.07 |     0.11 |      - |      - |       0 B |
+ |                              Func |     3.243 ns |   0.1095 ns |   0.3195 ns |   0.25 |     0.03 |      - |      - |       0 B |
+ |                          Comparer |    10.005 ns |   0.4070 ns |   1.1677 ns |   0.78 |     0.10 |      - |      - |       0 B |
+ |             EqualByPropertyValues | 7,046.775 ns | 296.7671 ns | 865.6835 ns | 548.44 |    74.47 | 0.3281 | 0.0153 |    2079 B |
+ | EqualByPropertyValuesWithComparer |    61.290 ns |   1.2633 ns |   3.4154 ns |   4.77 |     0.39 |      - |      - |       0 B |
+ |                EqualByFieldValues | 7,536.336 ns |  11.4995 ns |   8.3149 ns | 586.54 |    34.44 | 0.3052 | 0.0153 |    1958 B |
+ |    EqualByFieldValuesWithComparer |    60.269 ns |   1.2436 ns |   3.1878 ns |   4.69 |     0.37 |      - |      - |       0 B |

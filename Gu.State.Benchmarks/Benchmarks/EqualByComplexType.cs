@@ -56,7 +56,7 @@ namespace Gu.State.Benchmarks
         }
 
         [Benchmark]
-        public bool EqualByFieldValuesWIthComparer()
+        public bool EqualByFieldValuesWithComparer()
         {
             return State.EqualBy.FieldValues(this.x, this.y, this.fieldsSettings);
         }
