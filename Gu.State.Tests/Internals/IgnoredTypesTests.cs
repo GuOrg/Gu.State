@@ -15,35 +15,35 @@
         [TestCase(typeof(Dictionary<int, int>))]
         public void IgnoresCollectionTypes(Type type)
         {
-            var ignoredTypes = IgnoredTypes.Create(null);
-            Assert.AreEqual(true, ignoredTypes.IsIgnoringType(type));
+            var ignoredTypes = KnownTypes.Create(null);
+            Assert.AreEqual(true, ignoredTypes.IsKnownType(type));
         }
 
         [Test]
         public void IgnoresSimple()
         {
             var ignoredType = typeof(IgnoredType);
-            var ignoredTypes = IgnoredTypes.Create(new[] { ignoredType });
-            Assert.AreEqual(true, ignoredTypes.IsIgnoringType(ignoredType));
-            Assert.AreEqual(false, ignoredTypes.IsIgnoringType(typeof(IgnoredGenericType<int>)));
+            var ignoredTypes = KnownTypes.Create(new[] { ignoredType });
+            Assert.AreEqual(true, ignoredTypes.IsKnownType(ignoredType));
+            Assert.AreEqual(false, ignoredTypes.IsKnownType(typeof(IgnoredGenericType<int>)));
         }
 
         [Test]
         public void IgnoresGeneric()
         {
             var ignoredType = typeof(IgnoredGenericType<int>);
-            var ignoredTypes = IgnoredTypes.Create(new[] { ignoredType });
-            Assert.AreEqual(true, ignoredTypes.IsIgnoringType(ignoredType));
-            Assert.AreEqual(false, ignoredTypes.IsIgnoringType(typeof(IgnoredGenericType<double>)));
+            var ignoredTypes = KnownTypes.Create(new[] { ignoredType });
+            Assert.AreEqual(true, ignoredTypes.IsKnownType(ignoredType));
+            Assert.AreEqual(false, ignoredTypes.IsKnownType(typeof(IgnoredGenericType<double>)));
         }
 
         [Test]
         public void IgnoresOpenGeneric()
         {
             var ignoredType = typeof(IgnoredGenericType<>);
-            var ignoredTypes = IgnoredTypes.Create(new[] { ignoredType });
-            Assert.AreEqual(true, ignoredTypes.IsIgnoringType(ignoredType));
-            Assert.AreEqual(true, ignoredTypes.IsIgnoringType(typeof(IgnoredGenericType<double>)));
+            var ignoredTypes = KnownTypes.Create(new[] { ignoredType });
+            Assert.AreEqual(true, ignoredTypes.IsKnownType(ignoredType));
+            Assert.AreEqual(true, ignoredTypes.IsKnownType(typeof(IgnoredGenericType<double>)));
         }
 
         class IgnoredType

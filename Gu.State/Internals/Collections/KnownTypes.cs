@@ -6,9 +6,9 @@
     using System.Collections.ObjectModel;
     using System.Linq;
 
-    internal class IgnoredTypes
+    internal class KnownTypes
     {
-        private static readonly IReadOnlyList<Type> DefaultIgnoredTypes = new[]
+        private static readonly IReadOnlyList<Type> DefaultKnownTypes = new[]
                                                                               {
                                                                                   typeof(List<>),
                                                                                   typeof(Array),
@@ -18,78 +18,74 @@
                                                                                   typeof(HashSet<>)
                                                                               };
 
-        private static readonly IgnoredTypes Default = new IgnoredTypes(null);
+        private static readonly KnownTypes Default = new KnownTypes(null);
 
-        private readonly ConcurrentDictionary<Type, bool> ignoredTypes = new ConcurrentDictionary<Type, bool>();
+        private readonly ConcurrentDictionary<Type, bool> knownTypes = new ConcurrentDictionary<Type, bool>();
 
-        private IgnoredTypes(IEnumerable<Type> ignoredTypes)
+        private KnownTypes(IEnumerable<Type> ignoredTypes)
         {
             if (ignoredTypes != null)
             {
                 foreach (var ignoredType in ignoredTypes)
                 {
-                    this.ignoredTypes[ignoredType] = true;
+                    this.knownTypes[ignoredType] = true;
                 }
             }
 
-            foreach (var ignoredType in DefaultIgnoredTypes)
+            foreach (var ignoredType in DefaultKnownTypes)
             {
-                this.ignoredTypes[ignoredType] = true;
+                this.knownTypes[ignoredType] = true;
             }
         }
 
-        public static IgnoredTypes Create(IEnumerable<Type> ignoredTypes)
+        public static KnownTypes Create(IEnumerable<Type> ignoredTypes)
         {
             if (ignoredTypes == null || !ignoredTypes.Any())
             {
                 return Default;
             }
 
-            return new IgnoredTypes(ignoredTypes);
+            return new KnownTypes(ignoredTypes);
         }
 
-        public bool IsIgnoringType(Type type)
+        public bool IsKnownType(Type type)
         {
             if (type == null)
             {
                 return false;
             }
 
-            if (this.ignoredTypes.TryGetValue(type, out var isIgnoring))
+            if (this.knownTypes.TryGetValue(type, out var isIgnoring))
             {
                 return isIgnoring;
             }
 
             if (type.IsArray ||
-                type.IsIReadOnlyList() ||
-                type.IsImmutableList() ||
-                type.IsImmutableArray() ||
-                type.IsImmutableHashSet() ||
-                type.IsImmutableDictionary())
+                type.IsInSystemCollections())
             {
-                this.ignoredTypes.TryAdd(type, true);
+                this.knownTypes.TryAdd(type, true);
                 return true;
             }
 
             if (!type.IsGenericType)
             {
-                this.ignoredTypes.TryAdd(type, false);
+                this.knownTypes.TryAdd(type, false);
                 return false;
             }
 
-            return this.IsIgnoredGeneric(type);
+            return this.IsKnownGeneric(type);
         }
 
-        private bool IsIgnoredGeneric(Type type)
+        private bool IsKnownGeneric(Type type)
         {
             var genericDef = type.GetGenericTypeDefinition();
-            if (this.ignoredTypes.TryGetValue(genericDef, out var isIgnoring))
+            if (this.knownTypes.TryGetValue(genericDef, out var isIgnoring))
             {
-                this.ignoredTypes.TryAdd(type, isIgnoring);
+                this.knownTypes.TryAdd(type, isIgnoring);
                 return isIgnoring;
             }
 
-            this.ignoredTypes.TryAdd(type, false);
+            this.knownTypes.TryAdd(type, false);
             return false;
         }
     }

@@ -4,29 +4,9 @@
 
     internal static partial class TypeExt
     {
-        internal static bool IsIReadOnlyList(this Type type)
+        internal static bool IsInSystemCollections(this Type type)
         {
-            return type.FullName.StartsWith("System.Collections.Generic.IReadOnlyList`1");
-        }
-
-        internal static bool IsImmutableList(this Type type)
-        {
-            return type.FullName.StartsWith("System.Collections.Immutable.ImmutableList`1");
-        }
-
-        internal static bool IsImmutableArray(this Type type)
-        {
-            return type.FullName.StartsWith("System.Collections.Immutable.ImmutableArray`1");
-        }
-
-        internal static bool IsImmutableHashSet(this Type type)
-        {
-            return type.FullName.StartsWith("System.Collections.Immutable.ImmutableHashSet`1");
-        }
-
-        internal static bool IsImmutableDictionary(this Type type)
-        {
-            return type.FullName.StartsWith("System.Collections.Immutable.ImmutableDictionary`2");
+            return type.FullName.StartsWith("System.Collections");
         }
     }
 }

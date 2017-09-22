@@ -12,7 +12,7 @@
         private readonly ImmutableSet<Type> immutableTypes;
         private readonly IReadOnlyDictionary<Type, CastingComparer> comparers;
         private readonly IReadOnlyDictionary<Type, CustomCopy> copyers;
-        private readonly IgnoredTypes ignoredTypes;
+        private readonly KnownTypes knownTypes;
         private readonly ConcurrentDictionary<MemberInfo, bool> ignoredMembers = new ConcurrentDictionary<MemberInfo, bool>();
 
         /// <summary>
@@ -44,7 +44,7 @@
                 }
             }
 
-            this.ignoredTypes = IgnoredTypes.Create(ignoredTypes);
+            this.knownTypes = KnownTypes.Create(ignoredTypes);
             this.immutableTypes = ImmutableSet<Type>.Create(immutableTypes);
             this.comparers = comparers;
             this.copyers = copyers;
@@ -109,7 +109,7 @@
         /// <returns>A value indicating if <paramref name="declaringType"/> is ignored.</returns>
         public bool IsIgnoringDeclaringType(Type declaringType)
         {
-            return this.ignoredTypes.IsIgnoringType(declaringType);
+            return this.knownTypes.IsKnownType(declaringType);
         }
 
         /// <summary>Try get a custom comparer for <paramref name="type"/></summary>
