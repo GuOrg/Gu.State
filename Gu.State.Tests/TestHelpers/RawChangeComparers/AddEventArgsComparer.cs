@@ -12,6 +12,7 @@ namespace Gu.State.Tests
             {
                 throw new AssertionException($"Expected source to be same.");
             }
+
             if (expected.Index != actual.Index)
             {
                 throw new AssertionException($"Expected index to be {expected.Index} but was {actual.Index}");

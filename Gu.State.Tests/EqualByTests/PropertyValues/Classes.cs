@@ -22,6 +22,6 @@
             return EqualBy.PropertyValues(x, y, settings);
         }
 
-        public new static IReadOnlyList<EqualByTestsShared.EqualsData> EqualsSource => EqualByTestsShared.EqualsSource;
+        public static new IReadOnlyList<EqualByTestsShared.EqualsData> EqualsSource => EqualByTestsShared.EqualsSource;
     }
 }

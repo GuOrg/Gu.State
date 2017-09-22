@@ -54,10 +54,10 @@ namespace Gu.State.Tests
                     "    - Must be a sealed class or a struct.\r\n" +
                     "    - All fields and properties must be readonly.\r\n" +
                     "    - All field and property types must be immutable.\r\n" +
-                    "    - All indexers must be readonly.\r\n" + 
-                    "    - Event fields are ignored.\r\n" + 
+                    "    - All indexers must be readonly.\r\n" +
+                    "    - Event fields are ignored.\r\n" +
                     "* Use PropertiesSettings and specify how change tracking is performed:\r\n" +
-                    "  - ReferenceHandling.Structural means that a the entire graph is tracked.\r\n" + 
+                    "  - ReferenceHandling.Structural means that a the entire graph is tracked.\r\n" +
                     "  - ReferenceHandling.References means that only the root level changes are tracked.\r\n" +
                     "  - Exclude a combination of the following:\r\n" +
                     "    - The property With<ComplexType>.Value.\r\n" +

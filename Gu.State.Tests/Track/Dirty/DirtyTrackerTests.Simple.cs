@@ -41,7 +41,7 @@ namespace Gu.State.Tests
                 x.Value++;
                 CollectionAssert.AreEqual(expectedChanges, propertyChanges);
 
-#if (!DEBUG) // debug build keeps instances alive longer for nicer debugging experience
+#if !DEBUG // debug build keeps instances alive longer for nicer debugging experience
                 var wrx = new System.WeakReference(x);
                 var wry = new System.WeakReference(y);
                 x = null;
@@ -79,7 +79,7 @@ namespace Gu.State.Tests
                 x.Value++;
                 CollectionAssert.AreEqual(expectedChanges, propertyChanges);
 
-#if (!DEBUG) // debug build keeps instances alive longer for nicer debugging experience
+#if !DEBUG // debug build keeps instances alive longer for nicer debugging experience
                 var wrx = new System.WeakReference(x);
                 var wry = new System.WeakReference(y);
                 x = null;

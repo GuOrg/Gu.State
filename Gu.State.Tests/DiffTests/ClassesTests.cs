@@ -16,7 +16,8 @@ namespace Gu.State.Tests.DiffTests
             ReferenceHandling referenceHandling = ReferenceHandling.Structural,
             string excludedMembers = null,
             Type ignoredType = null,
-            Type immutableType = null) where T : class;
+            Type immutableType = null)
+            where T : class;
 
         [TestCase("b", "b", "Empty")]
         [TestCase("b", "c", "WithSimpleProperties <member> x: b y: c")]

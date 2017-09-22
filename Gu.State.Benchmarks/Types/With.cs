@@ -22,6 +22,7 @@
                 {
                     return;
                 }
+
                 this.name = value;
                 this.OnPropertyChanged();
             }
@@ -36,6 +37,7 @@
                 {
                     return;
                 }
+
                 this.value = value;
                 this.OnPropertyChanged();
             }
@@ -50,6 +52,7 @@
                 {
                     return;
                 }
+
                 this.complexType = value;
                 this.OnPropertyChanged();
             }

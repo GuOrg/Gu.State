@@ -10,7 +10,8 @@
 
     public abstract class CollectionTests
     {
-        public abstract bool EqualByMethod<T>(T source, T target, ReferenceHandling referenceHandling) where T : class;
+        public abstract bool EqualByMethod<T>(T source, T target, ReferenceHandling referenceHandling)
+            where T : class;
 
         [TestCase(ReferenceHandling.References)]
         [TestCase(ReferenceHandling.Structural)]

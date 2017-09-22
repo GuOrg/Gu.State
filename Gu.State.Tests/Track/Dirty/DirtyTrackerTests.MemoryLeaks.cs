@@ -13,7 +13,7 @@
             [SetUp]
             public void SetUp()
             {
-#if (DEBUG)
+#if DEBUG
                 Assert.Inconclusive("debug build keeps instances alive longer for nicer debugging experience");
 #endif
             }

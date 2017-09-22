@@ -10,7 +10,8 @@ namespace Gu.State.Tests.DiffTests
 
     public abstract class ReferenceLoopsTests
     {
-        public abstract Diff DiffMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type excludedType = null) where T : class;
+        public abstract Diff DiffMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type excludedType = null)
+            where T : class;
 
         [Test]
         public void ParentChildCreateWhenParentDirtyLoop()

@@ -8,7 +8,8 @@
 
     public abstract class SetTests
     {
-        public abstract bool EqualByMethod<T>(T source, T target, ReferenceHandling referenceHandling) where T : class;
+        public abstract bool EqualByMethod<T>(T source, T target, ReferenceHandling referenceHandling)
+            where T : class;
 
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.Structural)]

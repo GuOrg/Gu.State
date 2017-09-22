@@ -38,7 +38,7 @@
                 source.Value1++;
                 Assert.AreEqual(1, propertyChanges.Count);
                 Assert.AreEqual(1, changes.Count);
-#if (!DEBUG) // debug build keeps instances alive longer for nicer debugging experience
+#if !DEBUG // debug build keeps instances alive longer for nicer debugging experience
                 var wrx = new System.WeakReference(source);
                 source = null;
                 System.GC.Collect();
@@ -74,7 +74,7 @@
                 source.Value1++;
                 CollectionAssert.AreEqual(expectedPropertyChanges, propertyChanges);
 
-#if (!DEBUG) // debug build keeps instances alive longer for nicer debugging experience
+#if !DEBUG // debug build keeps instances alive longer for nicer debugging experience
                 var wrx = new System.WeakReference(source);
                 source = null;
                 System.GC.Collect();

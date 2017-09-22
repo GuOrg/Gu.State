@@ -83,7 +83,7 @@ namespace Gu.State.Tests.EqualByTests
         {
             var x = new IntCollection(1);
             var y = new IntCollection(1);
-            foreach (var expected in new[] {true, false})
+            foreach (var expected in new[] { true, false })
             {
                 var comparerMock = new Mock<IEqualityComparer<IntCollection>>(MockBehavior.Strict);
                 comparerMock.Setup(c => c.Equals(x, y))

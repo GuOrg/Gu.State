@@ -22,9 +22,13 @@ namespace Gu.State.Tests.Internals.Collections
         [Test]
         public void BorrowTwiceReturnsSame()
         {
-            var value = (ConcurrentQueue<HashSet<object>>)typeof(ReferenceSetPool<object>).GetField("Pool", BindingFlags.Static | BindingFlags.NonPublic)
-                                                        .GetValue(null);
-            while (value.TryDequeue(out HashSet<object> temp)) { }
+            var value = (ConcurrentQueue<HashSet<object>>)typeof(ReferenceSetPool<object>)
+                .GetField("Pool", BindingFlags.Static | BindingFlags.NonPublic)
+                .GetValue(null);
+            while (value.TryDequeue(out _))
+            {
+            }
+
             HashSet<object> set;
             using (var disposer = ReferenceSetPool<object>.Borrow())
             {

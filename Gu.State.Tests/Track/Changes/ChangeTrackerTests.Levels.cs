@@ -236,7 +236,6 @@ namespace Gu.State.Tests
                                     new PropertyChangeEventArgs(level, level.GetProperty("Next"))))));
                     CollectionAssert.AreEqual(expectedChanges, changes, EventArgsComparer.Default);
 
-
                     level.Next.Value++;
                     Assert.AreEqual(3, tracker.Changes);
                     CollectionAssert.AreEqual(new[] { "Changes", "Changes", "Changes" }, propertyChanges);

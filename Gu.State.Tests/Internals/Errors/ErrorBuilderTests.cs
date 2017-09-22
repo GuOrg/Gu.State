@@ -87,7 +87,7 @@
                                      .Add(referenceLoop)
                                      .Finnish();
             var typeMustNotifyError = TypeMustNotifyError.GetOrCreate(parentType);
-            var typeErrors = new TypeErrors( parentType, typeMustNotifyError);
+            var typeErrors = new TypeErrors(parentType, typeMustNotifyError);
             var memberErrors = new MemberErrors(path, typeErrors);
             var notifyErrors = ErrorBuilder.Start()
                                            .CreateIfNull(rootType)

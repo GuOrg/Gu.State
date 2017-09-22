@@ -6,7 +6,8 @@
 
     public abstract class DictionaryTests
     {
-        public abstract Diff DiffMethod<T>(T source, T target, ReferenceHandling referenceHandling) where T : class;
+        public abstract Diff DiffMethod<T>(T source, T target, ReferenceHandling referenceHandling)
+            where T : class;
 
         [TestCase(1, "one", "Empty")]
         [TestCase(2, "one", "Dictionary<int, string> [1] x: missing item y: one [2] x: one y: missing item")]

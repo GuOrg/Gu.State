@@ -26,7 +26,11 @@ namespace Gu.State.Benchmarks
             get => this.name;
             set
             {
-                if (value == this.name) return;
+                if (value == this.name)
+                {
+                    return;
+                }
+
                 this.name = value;
                 this.OnPropertyChanged();
             }
@@ -37,7 +41,11 @@ namespace Gu.State.Benchmarks
             get => this.value;
             set
             {
-                if (value == this.value) return;
+                if (value == this.value)
+                {
+                    return;
+                }
+
                 this.value = value;
                 this.OnPropertyChanged();
             }
@@ -59,14 +67,17 @@ namespace Gu.State.Benchmarks
             {
                 return false;
             }
+
             if (ReferenceEquals(this, obj))
             {
                 return true;
             }
+
             if (obj.GetType() != this.GetType())
             {
                 return false;
             }
+
             return this.Equals((ComplexType)obj);
         }
 

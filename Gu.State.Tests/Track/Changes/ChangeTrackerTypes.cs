@@ -16,6 +16,7 @@ namespace Gu.State.Tests
         public interface IBaseClass
         {
             int Value { get; set; }
+
             int Excluded { get; set; }
         }
 
@@ -28,7 +29,11 @@ namespace Gu.State.Tests
 
             public int Value1
             {
-                get { return this.value1; }
+                get
+                {
+                    return this.value1;
+                }
+
                 set
                 {
                     if (value == this.value1)
@@ -43,7 +48,11 @@ namespace Gu.State.Tests
 
             public DateTime Time
             {
-                get { return this.time; }
+                get
+                {
+                    return this.time;
+                }
+
                 set
                 {
                     if (value == this.time)
@@ -72,6 +81,7 @@ namespace Gu.State.Tests
         {
             private int value;
             private int excluded;
+
             public event PropertyChangedEventHandler PropertyChanged;
 
             public ComplexType()
@@ -86,10 +96,18 @@ namespace Gu.State.Tests
 
             public int Value
             {
-                get { return this.value; }
+                get
+                {
+                    return this.value;
+                }
+
                 set
                 {
-                    if (value == this.value) return;
+                    if (value == this.value)
+                    {
+                        return;
+                    }
+
                     this.value = value;
                     this.OnPropertyChanged();
                 }
@@ -97,10 +115,18 @@ namespace Gu.State.Tests
 
             public int Excluded
             {
-                get { return this.excluded; }
+                get
+                {
+                    return this.excluded;
+                }
+
                 set
                 {
-                    if (value == this.excluded) return;
+                    if (value == this.excluded)
+                    {
+                        return;
+                    }
+
                     this.excluded = value;
                     this.OnPropertyChanged();
                 }
@@ -131,13 +157,18 @@ namespace Gu.State.Tests
 
             public int Value
             {
-                get { return this.value; }
+                get
+                {
+                    return this.value;
+                }
+
                 set
                 {
                     if (value == this.value)
                     {
                         return;
                     }
+
                     this.value = value;
                     this.OnPropertyChanged();
                 }
@@ -145,13 +176,18 @@ namespace Gu.State.Tests
 
             public string Name
             {
-                get { return this.name; }
+                get
+                {
+                    return this.name;
+                }
+
                 set
                 {
                     if (value == this.name)
                     {
                         return;
                     }
+
                     this.name = value;
                     this.OnPropertyChanged();
                 }
@@ -159,13 +195,18 @@ namespace Gu.State.Tests
 
             public StringComparison Comparison
             {
-                get { return this.comparison; }
+                get
+                {
+                    return this.comparison;
+                }
+
                 set
                 {
                     if (value == this.comparison)
                     {
                         return;
                     }
+
                     this.comparison = value;
                     this.OnPropertyChanged();
                 }
@@ -173,13 +214,18 @@ namespace Gu.State.Tests
 
             public Level Next
             {
-                get { return this.next; }
+                get
+                {
+                    return this.next;
+                }
+
                 set
                 {
                     if (Equals(value, this.next))
                     {
                         return;
                     }
+
                     this.next = value;
                     this.OnPropertyChanged();
                 }
@@ -187,13 +233,18 @@ namespace Gu.State.Tests
 
             public ObservableCollection<int> Ints
             {
-                get { return this.ints; }
+                get
+                {
+                    return this.ints;
+                }
+
                 set
                 {
                     if (Equals(value, this.ints))
                     {
                         return;
                     }
+
                     this.ints = value;
                     this.OnPropertyChanged();
                 }
@@ -201,13 +252,18 @@ namespace Gu.State.Tests
 
             public ObservableCollection<Level> Levels
             {
-                get { return this.levels; }
+                get
+                {
+                    return this.levels;
+                }
+
                 set
                 {
                     if (Equals(value, this.levels))
                     {
                         return;
                     }
+
                     this.levels = value;
                     this.OnPropertyChanged();
                 }
@@ -233,10 +289,18 @@ namespace Gu.State.Tests
 
             public T Value
             {
-                get { return this.value; }
+                get
+                {
+                    return this.value;
+                }
+
                 set
                 {
-                    if (Equals(value, this.value)) return;
+                    if (Equals(value, this.value))
+                    {
+                        return;
+                    }
+
                     this.value = value;
                     this.OnPropertyChanged();
                 }
@@ -248,12 +312,14 @@ namespace Gu.State.Tests
                 {
                     return this.name;
                 }
+
                 set
                 {
                     if (value == this.name)
                     {
                         return;
                     }
+
                     this.name = value;
                     this.OnPropertyChanged();
                 }
@@ -287,14 +353,23 @@ namespace Gu.State.Tests
         {
             private int value;
             private IllegalType illegal;
+
             public event PropertyChangedEventHandler PropertyChanged;
 
             public int Value
             {
-                get { return this.value; }
+                get
+                {
+                    return this.value;
+                }
+
                 set
                 {
-                    if (value == this.value) return;
+                    if (value == this.value)
+                    {
+                        return;
+                    }
+
                     this.value = value;
                     this.OnPropertyChanged();
                 }
@@ -302,10 +377,18 @@ namespace Gu.State.Tests
 
             public IllegalType Illegal
             {
-                get { return this.illegal; }
+                get
+                {
+                    return this.illegal;
+                }
+
                 set
                 {
-                    if (Equals(value, this.illegal)) return;
+                    if (Equals(value, this.illegal))
+                    {
+                        return;
+                    }
+
                     this.illegal = value;
                     this.OnPropertyChanged();
                 }
@@ -375,12 +458,14 @@ namespace Gu.State.Tests
                 {
                     return this.name;
                 }
+
                 set
                 {
                     if (value == this.name)
                     {
                         return;
                     }
+
                     this.name = value;
                     this.OnPropertyChanged();
                 }
@@ -392,12 +477,14 @@ namespace Gu.State.Tests
                 {
                     return this.child;
                 }
+
                 set
                 {
                     if (Equals(value, this.child))
                     {
                         return;
                     }
+
                     this.child = value;
                     this.OnPropertyChanged();
                 }
@@ -428,12 +515,14 @@ namespace Gu.State.Tests
                 {
                     return this.name;
                 }
+
                 set
                 {
                     if (value == this.name)
                     {
                         return;
                     }
+
                     this.name = value;
                     this.OnPropertyChanged();
                 }
@@ -445,6 +534,7 @@ namespace Gu.State.Tests
                 {
                     return this.parent;
                 }
+
                 set
                 {
                     if (Equals(value, this.parent))
@@ -477,9 +567,14 @@ namespace Gu.State.Tests
                 {
                     return this.name;
                 }
+
                 set
                 {
-                    if (value == this.name) return;
+                    if (value == this.name)
+                    {
+                        return;
+                    }
+
                     this.name = value;
                     this.OnPropertyChanged();
                 }
@@ -491,9 +586,14 @@ namespace Gu.State.Tests
                 {
                     return this.value;
                 }
+
                 set
                 {
-                    if (Equals(value, this.value)) return;
+                    if (Equals(value, this.value))
+                    {
+                        return;
+                    }
+
                     this.value = value;
                     this.OnPropertyChanged();
                 }
@@ -510,11 +610,16 @@ namespace Gu.State.Tests
 #pragma warning restore WPF1001 // Struct must not implement INotifyPropertyChanged
         {
             private int value;
+
             public event PropertyChangedEventHandler PropertyChanged;
 
             public int Value
             {
-                get { return this.value; }
+                get
+                {
+                    return this.value;
+                }
+
                 set
                 {
                     if (value == this.value)

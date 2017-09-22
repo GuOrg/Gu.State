@@ -44,10 +44,26 @@ namespace Gu.State.Tests.EqualByTests
             {
                 public bool Equals(IntCollection x, IntCollection y)
                 {
-                    if (ReferenceEquals(x, y)) return true;
-                    if (ReferenceEquals(x, null)) return false;
-                    if (ReferenceEquals(y, null)) return false;
-                    if (x.GetType() != y.GetType()) return false;
+                    if (ReferenceEquals(x, y))
+                    {
+                        return true;
+                    }
+
+                    if (ReferenceEquals(x, null))
+                    {
+                        return false;
+                    }
+
+                    if (ReferenceEquals(y, null))
+                    {
+                        return false;
+                    }
+
+                    if (x.GetType() != y.GetType())
+                    {
+                        return false;
+                    }
+
                     return Enumerable.SequenceEqual(x.ints, y.ints);
                 }
 
@@ -77,16 +93,36 @@ namespace Gu.State.Tests.EqualByTests
 
             public bool Equals(EquatableIntCollection other)
             {
-                if (ReferenceEquals(null, other)) return false;
-                if (ReferenceEquals(this, other)) return true;
+                if (ReferenceEquals(null, other))
+                {
+                    return false;
+                }
+
+                if (ReferenceEquals(this, other))
+                {
+                    return true;
+                }
+
                 return Enumerable.SequenceEqual(this.ints, other.ints);
             }
 
             public override bool Equals(object obj)
             {
-                if (ReferenceEquals(null, obj)) return false;
-                if (ReferenceEquals(this, obj)) return true;
-                if (obj.GetType() != this.GetType()) return false;
+                if (ReferenceEquals(null, obj))
+                {
+                    return false;
+                }
+
+                if (ReferenceEquals(this, obj))
+                {
+                    return true;
+                }
+
+                if (obj.GetType() != this.GetType())
+                {
+                    return false;
+                }
+
                 return Equals((EquatableIntCollection)obj);
             }
 
@@ -204,18 +240,22 @@ namespace Gu.State.Tests.EqualByTests
                     {
                         return true;
                     }
+
                     if (ReferenceEquals(x, null))
                     {
                         return false;
                     }
+
                     if (ReferenceEquals(y, null))
                     {
                         return false;
                     }
+
                     if (x.GetType() != y.GetType())
                     {
                         return false;
                     }
+
                     return string.Equals(x.Name, y.Name) && x.Value == y.Value;
                 }
 
@@ -248,14 +288,17 @@ namespace Gu.State.Tests.EqualByTests
                     {
                         return true;
                     }
+
                     if (ReferenceEquals(x, null))
                     {
                         return false;
                     }
+
                     if (ReferenceEquals(y, null))
                     {
                         return false;
                     }
+
                     if (x.GetType() != y.GetType())
                     {
                         return false;
@@ -296,10 +339,12 @@ namespace Gu.State.Tests.EqualByTests
                 {
                     return false;
                 }
+
                 if (ReferenceEquals(this, other))
                 {
                     return true;
                 }
+
                 return this.Value == other.Value;
             }
 
@@ -309,10 +354,12 @@ namespace Gu.State.Tests.EqualByTests
                 {
                     return false;
                 }
+
                 if (ReferenceEquals(this, obj))
                 {
                     return true;
                 }
+
                 return obj is Immutable && this.Equals((Immutable)obj);
             }
 
@@ -362,10 +409,18 @@ namespace Gu.State.Tests.EqualByTests
 
             public int Value
             {
-                get { return this.value; }
+                get
+                {
+                    return this.value;
+                }
+
                 set
                 {
-                    if (value == this.value) return;
+                    if (value == this.value)
+                    {
+                        return;
+                    }
+
                     this.value = value;
                     this.OnPropertyChanged();
                     this.OnPropertyChanged(nameof(this.CalculatedValue));
@@ -451,10 +506,18 @@ namespace Gu.State.Tests.EqualByTests
 
             public int IntValue
             {
-                get { return this.intValue; }
+                get
+                {
+                    return this.intValue;
+                }
+
                 set
                 {
-                    if (value == this.intValue) return;
+                    if (value == this.intValue)
+                    {
+                        return;
+                    }
+
                     this.intValue = value;
                     this.OnPropertyChanged();
                 }
@@ -462,10 +525,18 @@ namespace Gu.State.Tests.EqualByTests
 
             public int? NullableIntValue
             {
-                get { return this.nullableIntValue; }
+                get
+                {
+                    return this.nullableIntValue;
+                }
+
                 set
                 {
-                    if (value == this.nullableIntValue) return;
+                    if (value == this.nullableIntValue)
+                    {
+                        return;
+                    }
+
                     this.nullableIntValue = value;
                     this.OnPropertyChanged();
                 }
@@ -473,10 +544,18 @@ namespace Gu.State.Tests.EqualByTests
 
             public string StringValue
             {
-                get { return this.stringValue; }
+                get
+                {
+                    return this.stringValue;
+                }
+
                 set
                 {
-                    if (value == this.stringValue) return;
+                    if (value == this.stringValue)
+                    {
+                        return;
+                    }
+
                     this.stringValue = value;
                     this.OnPropertyChanged();
                 }
@@ -484,14 +563,23 @@ namespace Gu.State.Tests.EqualByTests
 
             public StringSplitOptions EnumValue
             {
-                get { return this.enumValue; }
+                get
+                {
+                    return this.enumValue;
+                }
+
                 set
                 {
-                    if (value == this.enumValue) return;
+                    if (value == this.enumValue)
+                    {
+                        return;
+                    }
+
                     this.enumValue = value;
                     this.OnPropertyChanged();
                 }
             }
+
             public void SetFields(int intValue, string stringValue)
             {
                 this.intValue = intValue;
@@ -511,18 +599,22 @@ namespace Gu.State.Tests.EqualByTests
                     {
                         return true;
                     }
+
                     if (ReferenceEquals(x, null))
                     {
                         return false;
                     }
+
                     if (ReferenceEquals(y, null))
                     {
                         return false;
                     }
+
                     if (x.GetType() != y.GetType())
                     {
                         return false;
                     }
+
                     return x.IntValue == y.IntValue && x.NullableIntValue == y.NullableIntValue && string.Equals(x.StringValue, y.StringValue) && x.EnumValue == y.EnumValue;
                 }
 

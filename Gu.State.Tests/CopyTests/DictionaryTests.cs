@@ -6,8 +6,8 @@ namespace Gu.State.Tests.CopyTests
 
     public abstract class DictionaryTests
     {
-        public abstract void CopyMethod<T>(T source, T target, ReferenceHandling referenceHandling) where T : class;
-
+        public abstract void CopyMethod<T>(T source, T target, ReferenceHandling referenceHandling)
+            where T : class;
 
         [Test]
         public void DictionaryToSameLength()

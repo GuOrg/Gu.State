@@ -2,7 +2,6 @@
 {
     using System;
 
-
     public class Throws : ThrowsTests
     {
         public override Diff DiffMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type excludedType = null)

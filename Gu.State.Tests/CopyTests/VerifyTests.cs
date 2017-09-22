@@ -9,13 +9,15 @@
 
     public abstract class VerifyTests
     {
-        public abstract void VerifyMethod<T>() where T : class;
+        public abstract void VerifyMethod<T>()
+            where T : class;
 
         public abstract void VerifyMethod<T>(
             ReferenceHandling referenceHandling,
             string excludedMembers = null,
             Type ignoredType = null,
-            Type immutableType = null) where T : class;
+            Type immutableType = null)
+            where T : class;
 
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.References)]

@@ -1,4 +1,5 @@
 ﻿#pragma warning disable WPF1011 // Implement INotifyPropertyChanged.
+#pragma warning disable SA1401 // Fields must be private
 namespace Gu.State.Tests.CopyTests
 {
     using System;
@@ -9,11 +10,16 @@ namespace Gu.State.Tests.CopyTests
 
     public static class CopyTypes
     {
+        public struct Struct
+        {
+            public int Value { get; set; }
+        }
+
         public class ComplexType
         {
             public static readonly TestComparer Comparer = new TestComparer();
 
-            public static readonly IEqualityComparer<ComplexType> NameComparer;
+            public static readonly IEqualityComparer<ComplexType> ByNameComparer;
 
             public ComplexType()
             {
@@ -37,19 +43,23 @@ namespace Gu.State.Tests.CopyTests
                     {
                         return true;
                     }
+
                     if (ReferenceEquals(x, null))
                     {
                         return false;
                     }
+
                     if (ReferenceEquals(y, null))
                     {
                         return false;
                     }
+
                     if (x.GetType() != y.GetType())
                     {
                         return false;
                     }
-                    return String.Equals(x.Name, y.Name) && x.Value == y.Value;
+
+                    return string.Equals(x.Name, y.Name) && x.Value == y.Value;
                 }
 
                 public int GetHashCode(ComplexType obj)
@@ -73,7 +83,7 @@ namespace Gu.State.Tests.CopyTests
                 }
             }
 
-            private sealed class nameComparer : IEqualityComparer<ComplexType>
+            private sealed class NameComparer : IEqualityComparer<ComplexType>
             {
                 public bool Equals(ComplexType x, ComplexType y)
                 {
@@ -81,14 +91,17 @@ namespace Gu.State.Tests.CopyTests
                     {
                         return true;
                     }
+
                     if (ReferenceEquals(x, null))
                     {
                         return false;
                     }
+
                     if (ReferenceEquals(y, null))
                     {
                         return false;
                     }
+
                     if (x.GetType() != y.GetType())
                     {
                         return false;
@@ -102,11 +115,6 @@ namespace Gu.State.Tests.CopyTests
                     return obj?.Name.GetHashCode() ?? 0;
                 }
             }
-        }
-
-        public struct Struct
-        {
-            public int Value { get; set; }
         }
 
         public sealed class Immutable : IEquatable<Immutable>
@@ -134,10 +142,12 @@ namespace Gu.State.Tests.CopyTests
                 {
                     return false;
                 }
+
                 if (ReferenceEquals(this, other))
                 {
                     return true;
                 }
+
                 return this.Value == other.Value;
             }
 
@@ -147,10 +157,12 @@ namespace Gu.State.Tests.CopyTests
                 {
                     return false;
                 }
+
                 if (ReferenceEquals(this, obj))
                 {
                     return true;
                 }
+
                 return obj is Immutable && this.Equals((Immutable)obj);
             }
 
@@ -203,7 +215,11 @@ namespace Gu.State.Tests.CopyTests
                 get => this.value;
                 set
                 {
-                    if (value == this.value) return;
+                    if (value == this.value)
+                    {
+                        return;
+                    }
+
                     this.value = value;
                     this.OnPropertyChanged();
                     this.OnPropertyChanged(nameof(this.CalculatedValue));
@@ -300,6 +316,11 @@ namespace Gu.State.Tests.CopyTests
         {
             internal static readonly TestComparer Comparer = new TestComparer();
 
+            internal int IntValue;
+            internal int? NullableIntValue;
+            internal string StringValue;
+            internal StringSplitOptions EnumValue;
+
             public WithSimpleFields()
             {
             }
@@ -312,11 +333,6 @@ namespace Gu.State.Tests.CopyTests
                 this.EnumValue = enumValue;
             }
 
-            internal int IntValue;
-            internal int? NullableIntValue;
-            internal string StringValue;
-            internal StringSplitOptions EnumValue;
-
             internal sealed class TestComparer : IEqualityComparer<WithSimpleFields>, IComparer
             {
                 public bool Equals(WithSimpleFields x, WithSimpleFields y)
@@ -325,19 +341,23 @@ namespace Gu.State.Tests.CopyTests
                     {
                         return true;
                     }
+
                     if (ReferenceEquals(x, null))
                     {
                         return false;
                     }
+
                     if (ReferenceEquals(y, null))
                     {
                         return false;
                     }
+
                     if (x.GetType() != y.GetType())
                     {
                         return false;
                     }
-                    return x.IntValue == y.IntValue && x.NullableIntValue == y.NullableIntValue && String.Equals(x.StringValue, y.StringValue) && x.EnumValue == y.EnumValue;
+
+                    return x.IntValue == y.IntValue && x.NullableIntValue == y.NullableIntValue && string.Equals(x.StringValue, y.StringValue) && x.EnumValue == y.EnumValue;
                 }
 
                 public int GetHashCode(WithSimpleFields obj)
@@ -391,7 +411,11 @@ namespace Gu.State.Tests.CopyTests
                 get => this.intValue;
                 set
                 {
-                    if (value == this.intValue) return;
+                    if (value == this.intValue)
+                    {
+                        return;
+                    }
+
                     this.intValue = value;
                     this.OnPropertyChanged();
                 }
@@ -402,7 +426,11 @@ namespace Gu.State.Tests.CopyTests
                 get => this.nullableIntValue;
                 set
                 {
-                    if (value == this.nullableIntValue) return;
+                    if (value == this.nullableIntValue)
+                    {
+                        return;
+                    }
+
                     this.nullableIntValue = value;
                     this.OnPropertyChanged();
                 }
@@ -413,7 +441,11 @@ namespace Gu.State.Tests.CopyTests
                 get => this.stringValue;
                 set
                 {
-                    if (value == this.stringValue) return;
+                    if (value == this.stringValue)
+                    {
+                        return;
+                    }
+
                     this.stringValue = value;
                     this.OnPropertyChanged();
                 }
@@ -424,11 +456,16 @@ namespace Gu.State.Tests.CopyTests
                 get => this.enumValue;
                 set
                 {
-                    if (value == this.enumValue) return;
+                    if (value == this.enumValue)
+                    {
+                        return;
+                    }
+
                     this.enumValue = value;
                     this.OnPropertyChanged();
                 }
             }
+
             public void SetFields(int intValue, string stringValue)
             {
 #pragma warning disable WPF1012 // Notify when property changes.
@@ -450,19 +487,23 @@ namespace Gu.State.Tests.CopyTests
                     {
                         return true;
                     }
+
                     if (ReferenceEquals(x, null))
                     {
                         return false;
                     }
+
                     if (ReferenceEquals(y, null))
                     {
                         return false;
                     }
+
                     if (x.GetType() != y.GetType())
                     {
                         return false;
                     }
-                    return x.IntValue == y.IntValue && x.NullableIntValue == y.NullableIntValue && String.Equals(x.StringValue, y.StringValue) && x.EnumValue == y.EnumValue;
+
+                    return x.IntValue == y.IntValue && x.NullableIntValue == y.NullableIntValue && string.Equals(x.StringValue, y.StringValue) && x.EnumValue == y.EnumValue;
                 }
 
                 public int GetHashCode(WithSimpleProperties obj)
@@ -533,6 +574,7 @@ namespace Gu.State.Tests.CopyTests
                     {
                         value.Parent = this;
                     }
+
                     this.child = value;
                 }
             }

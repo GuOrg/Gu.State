@@ -27,14 +27,17 @@ namespace Gu.State.Tests.Internals
             Assert.AreEqual(0, pair.Count);
         }
 
-        [Test, Explicit("Just to confirm that it does not work")]
+        [Test]
+        [Explicit("Just to confirm that it does not work")]
         public void GetRecursive()
         {
             var x = new object();
             var y = new object();
             var settings = PropertiesSettings.GetOrCreate();
-            var rec = TrackerCache.GetOrAdd(x, y, settings, p => new Recursive(p, settings));
-            Assert.AreSame(rec, rec.Value.Next);
+            using (var rec = TrackerCache.GetOrAdd(x, y, settings, p => new Recursive(p, settings)))
+            {
+                Assert.AreSame(rec, rec.Value.Next);
+            }
         }
 
         internal class Recursive : IDisposable

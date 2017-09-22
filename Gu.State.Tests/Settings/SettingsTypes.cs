@@ -40,10 +40,12 @@ namespace Gu.State.Tests.Settings
                 {
                     return false;
                 }
+
                 if (ReferenceEquals(this, other))
                 {
                     return true;
                 }
+
                 return EqualityComparer<T>.Default.Equals(this.Value, other.Value);
             }
 
@@ -53,10 +55,12 @@ namespace Gu.State.Tests.Settings
                 {
                     return false;
                 }
+
                 if (ReferenceEquals(this, obj))
                 {
                     return true;
                 }
+
                 return obj is WithGetReadOnlyPropertySealed<T> && this.Equals((WithGetReadOnlyPropertySealed<T>)obj);
             }
 
@@ -74,6 +78,7 @@ namespace Gu.State.Tests.Settings
         public class WithImmutableImplementingMutableInterfaceExplicit : IMutableInterface
         {
             public readonly int ImmutableValue;
+
             int IMutableInterface.MutableValue { get; set; }
         }
 
@@ -120,6 +125,7 @@ namespace Gu.State.Tests.Settings
         public interface IComplexType
         {
             string Name { get; set; }
+
             int Value { get; set; }
         }
 
@@ -151,6 +157,7 @@ namespace Gu.State.Tests.Settings
                 {
                     return this.doubleValue;
                 }
+
                 set
                 {
                     this.doubleValue = value;
@@ -180,10 +187,12 @@ namespace Gu.State.Tests.Settings
                 {
                     return false;
                 }
+
                 if (ReferenceEquals(this, other))
                 {
                     return true;
                 }
+
                 return this.Value == other.Value;
             }
 
@@ -193,10 +202,12 @@ namespace Gu.State.Tests.Settings
                 {
                     return false;
                 }
+
                 if (ReferenceEquals(this, obj))
                 {
                     return true;
                 }
+
                 return obj is Immutable && this.Equals((Immutable)obj);
             }
 
@@ -222,14 +233,14 @@ namespace Gu.State.Tests.Settings
 
         public class WithIndexerType
         {
+            public string Name { get; set; }
+
             // ReSharper disable once UnusedParameter.Global
             public int this[int index]
             {
                 get { return 0; }
                 set { }
             }
-
-            public string Name { get; set; }
         }
     }
 }

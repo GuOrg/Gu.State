@@ -88,13 +88,13 @@ namespace Gu.State.Tests.Internals.Refelection.EmitSandbox
                 var getter = (Func<ComplexType, int>)accessor.GetMethod($"get_{field.Name}")
                                                              .CreateDelegate(typeof(Func<ComplexType, int>));
             }
+
             Console.WriteLine($"CreateDelegates {stopwatch.Elapsed}");
             //var complexType = new ComplexType();
             //setter(complexType, 1);
             //Assert.AreEqual(1, complexType.value);
             //Console.WriteLine($"CachedAssembly {stopwatch.Elapsed}");
         }
-
 
         [Test]
         public void CtorFieldInfo()

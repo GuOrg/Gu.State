@@ -46,11 +46,11 @@
             Assert.AreEqual(true, ignoredTypes.IsKnownType(typeof(IgnoredGenericType<double>)));
         }
 
-        class IgnoredType
+        private class IgnoredType
         {
         }
 
-        class IgnoredGenericType<T>
+        private class IgnoredGenericType<T>
         {
         }
     }

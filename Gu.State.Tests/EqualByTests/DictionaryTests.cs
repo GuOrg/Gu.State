@@ -8,7 +8,8 @@ namespace Gu.State.Tests.EqualByTests
 
     public abstract class DictionaryTests
     {
-        public abstract bool EqualByMethod<T>(T source, T target, ReferenceHandling referenceHandling) where T : class;
+        public abstract bool EqualByMethod<T>(T source, T target, ReferenceHandling referenceHandling)
+            where T : class;
 
         [TestCase(1, "one", true)]
         [TestCase(2, "one", false)]

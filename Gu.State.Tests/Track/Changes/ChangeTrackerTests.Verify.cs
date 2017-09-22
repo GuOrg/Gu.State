@@ -59,7 +59,6 @@ namespace Gu.State.Tests
                                "    - The property WithIllegal.Illegal.\r\n" +
                                "    - The type IllegalType.\r\n";
 
-
                 var exception = Assert.Throws<NotSupportedException>(() => Track.VerifyCanTrackChanges<WithIllegal>());
                 Assert.AreEqual(expected, exception.Message);
             }

@@ -4,7 +4,6 @@
 
     public class Throws : ThrowsTests
     {
-
         public override bool EqualByMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type excludedType = null)
         {
             var builder = FieldsSettings.Build();

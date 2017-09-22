@@ -20,6 +20,7 @@
             {
                 throw new ArgumentOutOfRangeException($"The type: {item.GetType().Name} does not have a property named: {propertyName}");
             }
+
             return propertyInfo;
         }
 

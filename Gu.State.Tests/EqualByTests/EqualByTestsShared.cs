@@ -16,8 +16,8 @@
                 target: new EqualByTypes.WithSimpleValues(1, null, "3", StringSplitOptions.RemoveEmptyEntries),
                 @equals: true),
             new EqualsData(
-                source: new EqualByTypes.With<IReadOnlyList<int>>(new[]{ 1, 2, 3 }),
-                target: new EqualByTypes.With<IReadOnlyList<int>>(new[]{ 1, 2, 3 }),
+                source: new EqualByTypes.With<IReadOnlyList<int>>(new[] { 1, 2, 3 }),
+                target: new EqualByTypes.With<IReadOnlyList<int>>(new[] { 1, 2, 3 }),
                 @equals: true),
             new EqualsData(
                 source: new EqualByTypes.WithSimpleValues(1, 2, "3", StringSplitOptions.RemoveEmptyEntries),

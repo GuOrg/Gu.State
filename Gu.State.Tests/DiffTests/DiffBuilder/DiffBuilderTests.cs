@@ -13,14 +13,20 @@ namespace Gu.State.Tests.DiffTests
             var x = new ComplexType();
             var y = new ComplexType();
             var structuralSettings = PropertiesSettings.GetOrCreate(ReferenceHandling.Structural);
-            var t1 = DiffBuilder.GetOrCreate(x, y, structuralSettings);
-            var t2 = DiffBuilder.GetOrCreate(x, y, structuralSettings);
-            Assert.AreSame(t1, t2);
-            t1.Dispose();
-            t2.Dispose();
+            using (var t1 = DiffBuilder.GetOrCreate(x, y, structuralSettings))
+            {
+                using (var t2 = DiffBuilder.GetOrCreate(x, y, structuralSettings))
+                {
+                    Assert.AreSame(t1, t2);
+                    t1.Dispose();
+                    t2.Dispose();
+                }
 
-            var t4 = DiffBuilder.GetOrCreate(x, y, structuralSettings);
-            Assert.AreNotSame(t1, t4);
+                using (var t4 = DiffBuilder.GetOrCreate(x, y, structuralSettings))
+                {
+                    Assert.AreNotSame(t1, t4);
+                }
+            }
         }
 
         [Test]

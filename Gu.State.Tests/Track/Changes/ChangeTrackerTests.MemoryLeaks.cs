@@ -14,7 +14,7 @@ namespace Gu.State.Tests
             [SetUp]
             public void SetUp()
             {
-#if (DEBUG) // debug build keeps instances alive longer for nicer debugging experience
+#if DEBUG // debug build keeps instances alive longer for nicer debugging experience
                 Assert.Inconclusive();
 #endif
             }

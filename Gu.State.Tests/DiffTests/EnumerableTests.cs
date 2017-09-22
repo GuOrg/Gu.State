@@ -6,7 +6,8 @@ namespace Gu.State.Tests.DiffTests
 
     public abstract class EnumerableTests
     {
-        public abstract Diff DiffMethod<T>(T source, T target, ReferenceHandling referenceHandling) where T : class;
+        public abstract Diff DiffMethod<T>(T source, T target, ReferenceHandling referenceHandling)
+            where T : class;
 
         [TestCase("1, 2, 3", "1, 2, 3", "Empty")]
         [TestCase("1, 2, 3", "1, 2", "WhereSelectArrayIterator<string, int> [Skip(2)] x: 3 y: missing item")]

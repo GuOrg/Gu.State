@@ -15,7 +15,8 @@ namespace Gu.State.Tests.CopyTests
             ReferenceHandling referenceHandling = ReferenceHandling.Structural,
             string excluded = null,
             Type ignoredType = null,
-            Type immutableType = null) where T : class;
+            Type immutableType = null)
+            where T : class;
 
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.Structural)]
@@ -139,7 +140,7 @@ namespace Gu.State.Tests.CopyTests
         public void WithInheritanceWhenDifferentTypes()
         {
             var source = new With<BaseClass> { Value = new Derived1 { BaseValue = 1, Derived1Value = 2 } };
-            var target = new With<BaseClass> {Value = new Derived2()};
+            var target = new With<BaseClass> { Value = new Derived2() };
             Copy.PropertyValues(source, target, ReferenceHandling.Structural);
             Assert.IsInstanceOf<Derived1>(source.Value);
             Assert.IsInstanceOf<Derived1>(target.Value);
@@ -188,6 +189,7 @@ namespace Gu.State.Tests.CopyTests
             {
                 this.CopyMethod(source, target, referenceHandling.Value);
             }
+
             Assert.AreEqual(1, source.Value.Value);
             Assert.AreEqual(1, target.Value.Value);
             Assert.AreSame(source.Value, target.Value);
@@ -222,6 +224,7 @@ namespace Gu.State.Tests.CopyTests
             {
                 Assert.AreSame(source.Array, target.Array);
             }
+
             CollectionAssert.AreEqual(new[] { 1, 2 }, source.Array);
             CollectionAssert.AreEqual(new[] { 1, 2 }, target.Array);
         }

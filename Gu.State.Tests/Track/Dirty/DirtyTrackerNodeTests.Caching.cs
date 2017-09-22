@@ -36,9 +36,13 @@ namespace Gu.State.Tests
                 var x = new WithSimpleProperties { Value = 1, Time = DateTime.MinValue };
                 var y = new WithSimpleProperties { Value = 1, Time = DateTime.MinValue };
                 var settings = PropertiesSettings.GetOrCreate(ReferenceHandling.Structural);
-                var t1 = DirtyTrackerNode.GetOrCreate(x, y, settings, isRoot: true);
-                var t2 = DirtyTrackerNode.GetOrCreate(y, x, settings, isRoot: true);
-                Assert.AreNotSame(t1, t2);
+                using (var t1 = DirtyTrackerNode.GetOrCreate(x, y, settings, isRoot: true))
+                {
+                    using (var t2 = DirtyTrackerNode.GetOrCreate(y, x, settings, isRoot: true))
+                    {
+                        Assert.AreNotSame(t1, t2);
+                    }
+                }
             }
 
             [Test]
@@ -46,9 +50,13 @@ namespace Gu.State.Tests
             {
                 var x = new WithSimpleProperties { Value = 1, Time = DateTime.MinValue };
                 var y = new WithSimpleProperties { Value = 1, Time = DateTime.MinValue };
-                var t1 = DirtyTrackerNode.GetOrCreate(x, y, PropertiesSettings.GetOrCreate(ReferenceHandling.Structural), isRoot: true);
-                var t2 = DirtyTrackerNode.GetOrCreate(x, y, PropertiesSettings.GetOrCreate(ReferenceHandling.References), isRoot: true);
-                Assert.AreNotSame(t1, t2);
+                using (var t1 = DirtyTrackerNode.GetOrCreate(x, y, PropertiesSettings.GetOrCreate(ReferenceHandling.Structural), isRoot: true))
+                {
+                    using (var t2 = DirtyTrackerNode.GetOrCreate(x, y, PropertiesSettings.GetOrCreate(ReferenceHandling.References), isRoot: true))
+                    {
+                        Assert.AreNotSame(t1, t2);
+                    }
+                }
             }
         }
     }

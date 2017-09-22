@@ -1,7 +1,8 @@
 ﻿namespace Gu.State.Tests
 {
-    using NUnit.Framework;
     using System.Collections.Generic;
+
+    using NUnit.Framework;
     using static DirtyTrackerTypes;
 
     public partial class DirtyTrackerTests

@@ -10,7 +10,8 @@
 
     public abstract class CollectionTests
     {
-        public abstract Diff DiffMethod<T>(T source, T target, ReferenceHandling referenceHandling) where T : class;
+        public abstract Diff DiffMethod<T>(T source, T target, ReferenceHandling referenceHandling)
+            where T : class;
 
         [Test]
         public void ListOfIntsToEmpty()

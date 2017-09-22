@@ -55,7 +55,6 @@ namespace Gu.State.Tests
                 Assert.AreEqual(null, source.Child);
                 Assert.AreEqual(null, target.Child);
             }
-
         }
     }
 }

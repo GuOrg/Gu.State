@@ -25,7 +25,7 @@
                     Assert.AreEqual(2, ((Derived1)source.Value).Derived1Value);
                     Assert.AreEqual(2, ((Derived1)target.Value).Derived1Value);
 
-                    source.Value = new Derived2 {BaseValue = 1, Derived2Value = 2};
+                    source.Value = new Derived2 { BaseValue = 1, Derived2Value = 2 };
                     Assert.AreEqual(null, source.Name);
                     Assert.AreEqual(null, target.Name);
                     Assert.IsInstanceOf<Derived2>(source.Value);

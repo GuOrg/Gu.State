@@ -23,7 +23,11 @@ namespace Gu.State.Tests
                 get => this.value;
                 set
                 {
-                    if (Equals(value, this.value)) return;
+                    if (Equals(value, this.value))
+                    {
+                        return;
+                    }
+
                     this.value = value;
                     this.OnPropertyChanged();
                 }
@@ -38,6 +42,7 @@ namespace Gu.State.Tests
                     {
                         return;
                     }
+
                     this.name = value;
                     this.OnPropertyChanged();
                 }
@@ -77,6 +82,7 @@ namespace Gu.State.Tests
                     {
                         return;
                     }
+
                     this.name = value;
                     this.OnPropertyChanged();
                 }
@@ -91,6 +97,7 @@ namespace Gu.State.Tests
                     {
                         return;
                     }
+
                     this.value = value;
                     this.OnPropertyChanged();
                 }
@@ -109,18 +116,22 @@ namespace Gu.State.Tests
                     {
                         return true;
                     }
+
                     if (ReferenceEquals(x, null))
                     {
                         return false;
                     }
+
                     if (ReferenceEquals(y, null))
                     {
                         return false;
                     }
+
                     if (x.GetType() != y.GetType())
                     {
                         return false;
                     }
+
                     return string.Equals(x.name, y.name) && x.value == y.value;
                 }
 
@@ -175,6 +186,7 @@ namespace Gu.State.Tests
                     {
                         return;
                     }
+
                     this.name = value;
                     this.OnPropertyChanged();
                 }
@@ -189,6 +201,7 @@ namespace Gu.State.Tests
                     {
                         return;
                     }
+
                     this.value = value;
                     this.OnPropertyChanged();
                 }
@@ -203,6 +216,7 @@ namespace Gu.State.Tests
                     {
                         return;
                     }
+
                     this.complexType = value;
                     this.OnPropertyChanged();
                 }
@@ -246,10 +260,12 @@ namespace Gu.State.Tests
                 {
                     return false;
                 }
+
                 if (ReferenceEquals(this, other))
                 {
                     return true;
                 }
+
                 return EqualityComparer<T>.Default.Equals(this.Value, other.Value);
             }
 
@@ -259,10 +275,12 @@ namespace Gu.State.Tests
                 {
                     return false;
                 }
+
                 if (ReferenceEquals(this, obj))
                 {
                     return true;
                 }
+
                 return obj is WithGetReadOnlyPropertySealed<T> && this.Equals((WithGetReadOnlyPropertySealed<T>)obj);
             }
 
@@ -299,6 +317,7 @@ namespace Gu.State.Tests
                     {
                         return;
                     }
+
                     this.name = value;
                     this.OnPropertyChanged();
                 }
@@ -313,6 +332,7 @@ namespace Gu.State.Tests
                     {
                         return;
                     }
+
                     this.value = value;
                     this.OnPropertyChanged();
                 }
@@ -327,6 +347,7 @@ namespace Gu.State.Tests
                     {
                         return;
                     }
+
                     this.immutableValue = value;
                     this.OnPropertyChanged();
                 }
@@ -379,6 +400,7 @@ namespace Gu.State.Tests
                     {
                         return;
                     }
+
                     this.name = value;
                     this.OnPropertyChanged();
                 }
@@ -393,6 +415,7 @@ namespace Gu.State.Tests
                     {
                         return;
                     }
+
                     this.value = value;
                     this.OnPropertyChanged();
                 }
@@ -434,7 +457,11 @@ namespace Gu.State.Tests
                 get => this.intValue;
                 set
                 {
-                    if (value == this.intValue) return;
+                    if (value == this.intValue)
+                    {
+                        return;
+                    }
+
                     this.intValue = value;
                     this.OnPropertyChanged();
                 }
@@ -445,7 +472,11 @@ namespace Gu.State.Tests
                 get => this.nullableIntValue;
                 set
                 {
-                    if (value == this.nullableIntValue) return;
+                    if (value == this.nullableIntValue)
+                    {
+                        return;
+                    }
+
                     this.nullableIntValue = value;
                     this.OnPropertyChanged();
                 }
@@ -456,7 +487,11 @@ namespace Gu.State.Tests
                 get => this.stringValue;
                 set
                 {
-                    if (value == this.stringValue) return;
+                    if (value == this.stringValue)
+                    {
+                        return;
+                    }
+
                     this.stringValue = value;
                     this.OnPropertyChanged();
                 }
@@ -467,11 +502,16 @@ namespace Gu.State.Tests
                 get => this.enumValue;
                 set
                 {
-                    if (value == this.enumValue) return;
+                    if (value == this.enumValue)
+                    {
+                        return;
+                    }
+
                     this.enumValue = value;
                     this.OnPropertyChanged();
                 }
             }
+
             public void SetFields(int intValue, string stringValue)
             {
                 this.intValue = intValue;
@@ -515,6 +555,7 @@ namespace Gu.State.Tests
                     {
                         return;
                     }
+
                     this.name = value;
                     this.OnPropertyChanged();
                 }
@@ -529,6 +570,7 @@ namespace Gu.State.Tests
                     {
                         return;
                     }
+
                     this.value = value;
                     this.OnPropertyChanged();
                 }
@@ -543,6 +585,7 @@ namespace Gu.State.Tests
                     {
                         return;
                     }
+
                     this.complexValue1 = value;
                     this.OnPropertyChanged();
                 }
@@ -557,6 +600,7 @@ namespace Gu.State.Tests
                     {
                         return;
                     }
+
                     this.complexValue2 = value;
                     this.OnPropertyChanged();
                 }
@@ -592,7 +636,11 @@ namespace Gu.State.Tests
                 get => this.value;
                 set
                 {
-                    if (value == this.value) return;
+                    if (value == this.value)
+                    {
+                        return;
+                    }
+
                     this.value = value;
                     this.OnPropertyChanged();
                     this.OnPropertyChanged(nameof(this.CalculatedValue));
@@ -630,6 +678,7 @@ namespace Gu.State.Tests
                     {
                         return;
                     }
+
                     this.name = value;
                     this.OnPropertyChanged();
                 }
@@ -644,11 +693,13 @@ namespace Gu.State.Tests
                     {
                         return;
                     }
+
                     this.child = value;
                     if (this.child != null)
                     {
                         this.child.Parent = this;
                     }
+
                     this.OnPropertyChanged();
                 }
             }
@@ -685,6 +736,7 @@ namespace Gu.State.Tests
                     {
                         return;
                     }
+
                     this.name = value;
                     this.OnPropertyChanged();
                 }
@@ -699,6 +751,7 @@ namespace Gu.State.Tests
                     {
                         return;
                     }
+
                     this.parent = value;
                     this.OnPropertyChanged();
                 }
@@ -713,6 +766,7 @@ namespace Gu.State.Tests
         public abstract class BaseClass : INotifyPropertyChanged
         {
             private double baseDouble;
+
             public event PropertyChangedEventHandler PropertyChanged;
 
             public double BaseValue
@@ -720,7 +774,11 @@ namespace Gu.State.Tests
                 get => this.baseDouble;
                 set
                 {
-                    if (value.Equals(this.baseDouble)) return;
+                    if (value.Equals(this.baseDouble))
+                    {
+                        return;
+                    }
+
                     this.baseDouble = value;
                     this.OnPropertyChanged();
                 }
@@ -741,7 +799,11 @@ namespace Gu.State.Tests
                 get => this.derived1Value;
                 set
                 {
-                    if (value.Equals(this.derived1Value)) return;
+                    if (value.Equals(this.derived1Value))
+                    {
+                        return;
+                    }
+
                     this.derived1Value = value;
                     this.OnPropertyChanged();
                 }
@@ -757,7 +819,11 @@ namespace Gu.State.Tests
                 get => this.derived2Value;
                 set
                 {
-                    if (value.Equals(this.derived2Value)) return;
+                    if (value.Equals(this.derived2Value))
+                    {
+                        return;
+                    }
+
                     this.derived2Value = value;
                     this.OnPropertyChanged();
                 }

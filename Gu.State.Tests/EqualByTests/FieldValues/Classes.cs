@@ -5,7 +5,7 @@
 
     public class Classes : ClassesTests
     {
-        public new static IReadOnlyList<EqualByTestsShared.EqualsData> EqualsSource => EqualByTestsShared.EqualsSource;
+        public static new IReadOnlyList<EqualByTestsShared.EqualsData> EqualsSource => EqualByTestsShared.EqualsSource;
 
         public override bool EqualMethod<T>(
             T x,

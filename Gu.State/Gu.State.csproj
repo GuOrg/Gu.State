@@ -5,6 +5,7 @@
     <NeutralLanguage>en-US</NeutralLanguage>
     <CodeAnalysisRuleSet>Gu.State.ruleset</CodeAnalysisRuleSet>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Gu.State.xml</DocumentationFile>
   </PropertyGroup>
   <Import Project="..\.paket\Paket.Restore.targets" />
 </Project>

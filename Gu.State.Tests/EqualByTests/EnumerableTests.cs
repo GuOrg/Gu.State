@@ -6,7 +6,8 @@ namespace Gu.State.Tests.EqualByTests
 
     public abstract class EnumerableTests
     {
-        public abstract bool EqualByMethod<T>(T source, T target, ReferenceHandling referenceHandling) where T : class;
+        public abstract bool EqualByMethod<T>(T source, T target, ReferenceHandling referenceHandling)
+            where T : class;
 
         [TestCase("1, 2, 3", "1, 2, 3", true)]
         [TestCase("1, 2, 3", "1, 2", false)]
