@@ -14,9 +14,9 @@ licenseUrl http://opensource.org/licenses/MIT
 releasenotes
   * USABILITY: Throw exception with useful info when trying to track a notifying struct.
 files
-  ../Gu.State/bin/Release/netstandard2.0/Gu.State.dll ==> netstandard2.0
-  ../Gu.State/bin/Release/netstandard2.0/Gu.State.xml ==> netstandard2.0
-  ../Gu.State/bin/Release/netstandard2.0/Gu.State.pdb ==> netstandard2.0
+#  ../Gu.State/bin/Release/netstandard2.0/Gu.State.dll ==> netstandard2.0
+#  ../Gu.State/bin/Release/netstandard2.0/Gu.State.xml ==> netstandard2.0
+#  ../Gu.State/bin/Release/netstandard2.0/Gu.State.pdb ==> netstandard2.0
   ../Gu.State/bin/Release/net45/Gu.State.dll ==> net45
   ../Gu.State/bin/Release/net45/Gu.State.xml ==> net45
   ../Gu.State/bin/Release/net45/Gu.State.pdb ==> net45
