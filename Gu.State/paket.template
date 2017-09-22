@@ -1,10 +1,25 @@
-﻿type project
-releasenotes
-  * USABILITY: Throw exception with useful info when trying to track a notifying struct.
+﻿type file
+version 0.1.0.2-dev
+title Gu.State
+id Gu.State
+authors Johan Larsson
+owners Johan Larsson
+copyright Copyright Johan Larsson 2017
+description Helper for managing state.
 
 tags Equals, Copy, Sync, Diff, Dirty
 projectUrl https://github.com/JohanLarsson/Gu.State
 licenseUrl http://opensource.org/licenses/MIT
+
+releasenotes
+  * USABILITY: Throw exception with useful info when trying to track a notifying struct.
+files
+  ../Gu.State/bin/Release/netstandard2.0/Gu.State.dll ==> netstandard2.0
+  ../Gu.State/bin/Release/netstandard2.0/Gu.State.xml ==> netstandard2.0
+  ../Gu.State/bin/Release/netstandard2.0/Gu.State.pdb ==> netstandard2.0
+  ../Gu.State/bin/Release/net45/Gu.State.dll ==> net45
+  ../Gu.State/bin/Release/net45/Gu.State.xml ==> net45
+  ../Gu.State/bin/Release/net45/Gu.State.pdb ==> net45
 
 excludeddependencies
   JetBrains.Annotations
