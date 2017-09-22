@@ -61,9 +61,7 @@
             {
                 result = true;
             }
-            else if (type.IsImmutableList() ||
-                     type.IsImmutableArray() ||
-                     type.IsImmutableHashSet())
+            else if (type.IsInSystemCollectionsImmutable())
             {
                 var itemType = type.GetItemType();
                 result = CheckIfIsImmutable(itemType, checkedTypes);

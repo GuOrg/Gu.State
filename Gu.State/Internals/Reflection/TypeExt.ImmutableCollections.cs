@@ -8,5 +8,10 @@
         {
             return type.FullName.StartsWith("System.Collections");
         }
+
+        internal static bool IsInSystemCollectionsImmutable(this Type type)
+        {
+            return type.FullName.StartsWith("System.Collections.Immutable");
+        }
     }
 }

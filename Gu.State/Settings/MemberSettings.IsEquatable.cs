@@ -51,7 +51,7 @@
             {
                 result = true;
             }
-            else if (type.IsImmutableArray())
+            else if (type.IsInSystemCollectionsImmutable())
             {
                 // special casing ImmutableArray due to weird equality
                 // Implements IEquatable<ImmutableArray> but Equals does not compare elements.
