@@ -174,7 +174,7 @@ namespace Gu.State.Tests.CopyTests
                      "* Use FieldsSettings and specify how copying is performed:\r\n" +
                      "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
                      "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
-                     "  - ReferenceHandling.References means that references are copied.\r\n" 
+                     "  - ReferenceHandling.References means that references are copied.\r\n"
 
                    : "Copy.PropertyValues(x, y) failed.\r\n" +
                      "Activator.CreateInstance failed for type WithoutDefaultCtor.\r\n" +

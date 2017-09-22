@@ -85,15 +85,16 @@ namespace Gu.State.Tests.Internals.Refelection.EmitSandbox
             {
                 var setter = (Action<ComplexType, int>)accessor.GetMethod($"set_{field.Name}")
                                                                .CreateDelegate(typeof(Action<ComplexType, int>));
+                var complexType = new ComplexType();
+                setter(complexType, 1);
+                Assert.AreEqual(1, complexType.value);
+                Console.WriteLine($"CachedAssembly {stopwatch.Elapsed}");
+
                 var getter = (Func<ComplexType, int>)accessor.GetMethod($"get_{field.Name}")
                                                              .CreateDelegate(typeof(Func<ComplexType, int>));
             }
 
             Console.WriteLine($"CreateDelegates {stopwatch.Elapsed}");
-            //var complexType = new ComplexType();
-            //setter(complexType, 1);
-            //Assert.AreEqual(1, complexType.value);
-            //Console.WriteLine($"CachedAssembly {stopwatch.Elapsed}");
         }
 
         [Test]
@@ -103,10 +104,10 @@ namespace Gu.State.Tests.Internals.Refelection.EmitSandbox
             foreach (var field in type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
             {
                 var getterAndSetter = new GetterAndSetter<ComplexType, int>(field);
-                //var complexType = new ComplexType();
-                //getterAndSetter.SetValue(complexType, 1);
-                //Assert.AreEqual(1, complexType.Value);
-                //Assert.AreEqual(1, getterAndSetter.GetValue(complexType));
+                var complexType = new ComplexType();
+                getterAndSetter.SetValue(complexType, 1);
+                Assert.AreEqual(1, complexType.Value);
+                Assert.AreEqual(1, getterAndSetter.GetValue(complexType));
             }
         }
     }

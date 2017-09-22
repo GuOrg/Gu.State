@@ -1,4 +1,5 @@
-﻿namespace Gu.State.Benchmarks
+﻿#pragma warning disable SA1300 // Element must begin with upper-case letter
+namespace Gu.State.Benchmarks
 {
     using System;
     using System.Collections.Generic;

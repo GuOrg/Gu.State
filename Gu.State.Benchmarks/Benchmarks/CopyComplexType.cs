@@ -15,7 +15,6 @@
             return this.target;
         }
 
-
         [Benchmark]
         public ComplexType CopyPropertyValues()
         {

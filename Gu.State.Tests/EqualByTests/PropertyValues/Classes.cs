@@ -5,6 +5,8 @@
 
     public class Classes : ClassesTests
     {
+        public static new IReadOnlyList<EqualByTestsShared.EqualsData> EqualsSource => EqualByTestsShared.EqualsSource;
+
         public override bool EqualMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type ignoredType = null)
         {
             var builder = PropertiesSettings.Build();
@@ -21,7 +23,5 @@
             var settings = builder.CreateSettings(referenceHandling);
             return EqualBy.PropertyValues(x, y, settings);
         }
-
-        public static new IReadOnlyList<EqualByTestsShared.EqualsData> EqualsSource => EqualByTestsShared.EqualsSource;
     }
 }

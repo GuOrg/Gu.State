@@ -123,7 +123,7 @@ namespace Gu.State.Tests.EqualByTests
                     return false;
                 }
 
-                return Equals((EquatableIntCollection)obj);
+                return this.Equals((EquatableIntCollection)obj);
             }
 
             public override int GetHashCode()
@@ -216,7 +216,7 @@ namespace Gu.State.Tests.EqualByTests
         {
             public static readonly TestComparer Comparer = new TestComparer();
 
-            public static readonly IEqualityComparer<ComplexType> NameComparer = new nameComparer();
+            public static readonly IEqualityComparer<ComplexType> ByNameComparer = new NameComparer();
 
             public ComplexType()
             {
@@ -280,7 +280,7 @@ namespace Gu.State.Tests.EqualByTests
                 }
             }
 
-            private sealed class nameComparer : IEqualityComparer<ComplexType>
+            private sealed class NameComparer : IEqualityComparer<ComplexType>
             {
                 public bool Equals(ComplexType x, ComplexType y)
                 {

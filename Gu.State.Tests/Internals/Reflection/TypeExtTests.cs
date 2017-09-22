@@ -36,7 +36,6 @@
         [TestCase(typeof(HashSet<int>), typeof(ISet<>), typeof(int), true)]
         [TestCase(typeof(HashSet<int>), typeof(IEnumerable<>), typeof(int), true)]
         [TestCase(typeof(HashSet<int>), typeof(ISet<>), typeof(string), false)]
-        //[TestCase(typeof(HashSet<int>), typeof(IEnumerable), typeof(string), false)]
         public void Implements(Type type, Type interfaceType, Type parameterType, bool expected)
         {
             var actual = type.Implements(interfaceType, parameterType);

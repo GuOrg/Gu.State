@@ -1,4 +1,5 @@
-﻿#pragma warning disable WPF1011 // Implement INotifyPropertyChanged.
+﻿// ReSharper disable UnusedMember.Local
+#pragma warning disable WPF1011 // Implement INotifyPropertyChanged.
 #pragma warning disable SA1401 // Fields must be private
 namespace Gu.State.Tests.CopyTests
 {
@@ -19,7 +20,7 @@ namespace Gu.State.Tests.CopyTests
         {
             public static readonly TestComparer Comparer = new TestComparer();
 
-            public static readonly IEqualityComparer<ComplexType> ByNameComparer;
+            public static readonly IEqualityComparer<ComplexType> ByNameComparer = new NameComparer();
 
             public ComplexType()
             {
@@ -92,12 +93,7 @@ namespace Gu.State.Tests.CopyTests
                         return true;
                     }
 
-                    if (ReferenceEquals(x, null))
-                    {
-                        return false;
-                    }
-
-                    if (ReferenceEquals(y, null))
+                    if (x == null || y == null)
                     {
                         return false;
                     }
@@ -112,7 +108,7 @@ namespace Gu.State.Tests.CopyTests
 
                 public int GetHashCode(ComplexType obj)
                 {
-                    return obj?.Name.GetHashCode() ?? 0;
+                    return obj.Name.GetHashCode();
                 }
             }
         }
@@ -582,13 +578,13 @@ namespace Gu.State.Tests.CopyTests
 
         public class Child
         {
-            private Child()
-            {
-            }
-
             public Child(string name)
             {
                 this.Name = name;
+            }
+
+            private Child()
+            {
             }
 
             public string Name { get; set; }

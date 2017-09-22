@@ -21,13 +21,17 @@ namespace Gu.State.Tests
                 var t2 = DirtyTrackerNode.GetOrCreate(x, y, settings, isRoot: true);
                 Assert.AreSame(t1, t2);
                 t1.Dispose();
-                var t3 = DirtyTrackerNode.GetOrCreate(x, y, settings, isRoot: true);
-                Assert.AreSame(t1, t3);
-                t2.Dispose();
-                t3.Dispose();
+                using (var t3 = DirtyTrackerNode.GetOrCreate(x, y, settings, isRoot: true))
+                {
+                    Assert.AreSame(t1, t3);
+                    t2.Dispose();
+                    t3.Dispose();
 
-                var t4 = DirtyTrackerNode.GetOrCreate(x, y, settings, isRoot: true);
-                Assert.AreNotSame(t1, t4);
+                    using (var t4 = DirtyTrackerNode.GetOrCreate(x, y, settings, isRoot: true))
+                    {
+                        Assert.AreNotSame(t1, t4);
+                    }
+                }
             }
 
             [Test]

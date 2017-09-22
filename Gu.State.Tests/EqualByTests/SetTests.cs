@@ -55,8 +55,8 @@
         [TestCase(ReferenceHandling.Structural)]
         public void ComplexWhenEqual(ReferenceHandling referenceHandling)
         {
-            var x = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 1) };
-            var y = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 1) };
+            var x = new HashSet<ComplexType>(ComplexType.ByNameComparer) { new ComplexType("a", 1) };
+            var y = new HashSet<ComplexType>(ComplexType.ByNameComparer) { new ComplexType("a", 1) };
             var result = this.EqualByMethod(x, y, referenceHandling);
             Assert.AreEqual(true, result);
 
@@ -68,8 +68,8 @@
         [TestCase(ReferenceHandling.References)]
         public void ComplexWhenNotEqual(ReferenceHandling referenceHandling)
         {
-            var x = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 1) };
-            var y = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 2) };
+            var x = new HashSet<ComplexType>(ComplexType.ByNameComparer) { new ComplexType("a", 1) };
+            var y = new HashSet<ComplexType>(ComplexType.ByNameComparer) { new ComplexType("a", 2) };
             var result = this.EqualByMethod(x, y, referenceHandling);
             Assert.AreEqual(false, result);
 

@@ -5,7 +5,7 @@
 
     public class EqualByTestsShared
     {
-        public static IReadOnlyList<EqualsData> EqualsSource = new List<EqualsData>
+        public static readonly IReadOnlyList<EqualsData> EqualsSource = new List<EqualsData>
         {
             new EqualsData(
                 source: new EqualByTypes.WithSimpleValues(1, 2, "3", StringSplitOptions.RemoveEmptyEntries),

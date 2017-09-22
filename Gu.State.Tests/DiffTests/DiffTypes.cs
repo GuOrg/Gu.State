@@ -103,7 +103,7 @@ namespace Gu.State.Tests.DiffTests
 
         public class ComplexType
         {
-            public static readonly IEqualityComparer<ComplexType> NameComparer = new nameComparer();
+            public static readonly IEqualityComparer<ComplexType> ByNameComparer = new NameComparer();
 
             private string name;
             private int value;
@@ -130,7 +130,7 @@ namespace Gu.State.Tests.DiffTests
                 set { this.value = value; }
             }
 
-            private sealed class nameComparer : IEqualityComparer<ComplexType>
+            private sealed class NameComparer : IEqualityComparer<ComplexType>
             {
                 public bool Equals(ComplexType x, ComplexType y)
                 {

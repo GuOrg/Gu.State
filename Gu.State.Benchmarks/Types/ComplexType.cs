@@ -9,8 +9,6 @@ namespace Gu.State.Benchmarks
         private string name;
         private int value;
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
         public ComplexType()
         {
         }
@@ -20,6 +18,8 @@ namespace Gu.State.Benchmarks
             this.name = name;
             this.value = value;
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public string Name
         {
@@ -93,7 +93,6 @@ namespace Gu.State.Benchmarks
         {
             return string.Equals(this.Name, other.Name) && this.Value == other.Value;
         }
-
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

@@ -106,7 +106,7 @@ namespace Gu.State.Tests.EqualByTests
                                  "    - The property WithProperty<WithIndexerType>.Value.\r\n" +
                                  "    - The indexer property WithIndexerType.Item.\r\n" +
                                  "    - The type WithIndexerType.\r\n";
-            ;
+
             var source = new WithProperty<WithIndexerType>();
             var target = new WithProperty<WithIndexerType>();
 

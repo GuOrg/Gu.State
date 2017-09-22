@@ -64,8 +64,8 @@ namespace Gu.State.Tests.CopyTests
         [TestCase(ReferenceHandling.Structural)]
         public void HashSetOfComplexWhenNotEqual(ReferenceHandling referenceHandling)
         {
-            var source = new HashSet<ComplexType>(ComplexType.ByNameComparer) { new ComplexType("a", 1) };
-            var target = new HashSet<ComplexType>(ComplexType.ByNameComparer) { new ComplexType("a", 2) };
+            var source = new HashSet<ComplexType>(ComplexType.Comparer) { new ComplexType("a", 1) };
+            var target = new HashSet<ComplexType>(ComplexType.Comparer) { new ComplexType("a", 2) };
             this.CopyMethod(source, target, referenceHandling);
             var expected = new[] { new ComplexType("a", 1) };
             CollectionAssert.AreEqual(expected, source, ComplexType.Comparer);
@@ -76,8 +76,8 @@ namespace Gu.State.Tests.CopyTests
         public void HashSetOfComplexWhenNotEqualReferences()
         {
             var sv = new ComplexType("a", 1);
-            var source = new HashSet<ComplexType>(ComplexType.ByNameComparer) { sv };
-            var target = new HashSet<ComplexType>(ComplexType.ByNameComparer) { new ComplexType("a", 2) };
+            var source = new HashSet<ComplexType>(ComplexType.Comparer) { sv };
+            var target = new HashSet<ComplexType>(ComplexType.Comparer) { new ComplexType("a", 2) };
             this.CopyMethod(source, target, ReferenceHandling.References);
             var expected = new[] { sv };
             CollectionAssert.AreEqual(expected, source);

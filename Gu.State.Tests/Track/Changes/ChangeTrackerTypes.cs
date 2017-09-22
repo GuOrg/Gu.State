@@ -1,6 +1,7 @@
 ﻿// ReSharper disable All
 #pragma warning disable WPF1012 // Notify when property changes.
 #pragma warning disable WPF1011 // Implement INotifyPropertyChanged.
+#pragma warning disable SA1401 // Fields must be private
 namespace Gu.State.Tests
 {
     using System;
@@ -18,6 +19,39 @@ namespace Gu.State.Tests
             int Value { get; set; }
 
             int Excluded { get; set; }
+        }
+
+#pragma warning disable WPF1001 // Struct must not implement INotifyPropertyChanged
+        public struct NotifyingStruct : INotifyPropertyChanged
+#pragma warning restore WPF1001 // Struct must not implement INotifyPropertyChanged
+        {
+            private int value;
+
+            public event PropertyChangedEventHandler PropertyChanged;
+
+            public int Value
+            {
+                get
+                {
+                    return this.value;
+                }
+
+                set
+                {
+                    if (value == this.value)
+                    {
+                        return;
+                    }
+
+                    this.value = value;
+                    this.OnPropertyChanged();
+                }
+            }
+
+            private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+            {
+                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
 
         public class WithSimpleProperties : INotifyPropertyChanged
@@ -82,8 +116,6 @@ namespace Gu.State.Tests
             private int value;
             private int excluded;
 
-            public event PropertyChangedEventHandler PropertyChanged;
-
             public ComplexType()
             {
             }
@@ -93,6 +125,8 @@ namespace Gu.State.Tests
                 this.value = value;
                 this.excluded = excluded;
             }
+
+            public event PropertyChangedEventHandler PropertyChanged;
 
             public int Value
             {
@@ -600,39 +634,6 @@ namespace Gu.State.Tests
             }
 
             protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-            {
-                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-
-#pragma warning disable WPF1001 // Struct must not implement INotifyPropertyChanged
-        public struct NotifyingStruct : INotifyPropertyChanged
-#pragma warning restore WPF1001 // Struct must not implement INotifyPropertyChanged
-        {
-            private int value;
-
-            public event PropertyChangedEventHandler PropertyChanged;
-
-            public int Value
-            {
-                get
-                {
-                    return this.value;
-                }
-
-                set
-                {
-                    if (value == this.value)
-                    {
-                        return;
-                    }
-
-                    this.value = value;
-                    this.OnPropertyChanged();
-                }
-            }
-
-            private void OnPropertyChanged([CallerMemberName] string propertyName = null)
             {
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }

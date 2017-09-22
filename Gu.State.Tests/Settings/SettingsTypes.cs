@@ -3,6 +3,7 @@
 #pragma warning disable WPF1011 // Implement INotifyPropertyChanged.
 #pragma warning disable SA1307 // Accessible fields must begin with upper-case letter
 #pragma warning disable SA1401 // Fields must be private
+#pragma warning disable SA1304 // Non-private readonly fields must begin with upper-case letter
 namespace Gu.State.Tests.Settings
 {
     using System;
@@ -10,9 +11,21 @@ namespace Gu.State.Tests.Settings
 
     public static class SettingsTypes
     {
+        public interface IComplexType
+        {
+            string Name { get; set; }
+
+            int Value { get; set; }
+        }
+
         private interface IMutableInterface
         {
             int MutableValue { get; set; }
+        }
+
+        public struct WithGetReadOnlyPropertyStruct<T>
+        {
+            public T Value { get; }
         }
 
         public class WithGetPrivateSet
@@ -70,11 +83,6 @@ namespace Gu.State.Tests.Settings
             }
         }
 
-        public struct WithGetReadOnlyPropertyStruct<T>
-        {
-            public T Value { get; }
-        }
-
         public class WithImmutableImplementingMutableInterfaceExplicit : IMutableInterface
         {
             public readonly int ImmutableValue;
@@ -120,13 +128,6 @@ namespace Gu.State.Tests.Settings
         public sealed class WithSelfPropSealed
         {
             public WithSelfPropSealed Value { get; }
-        }
-
-        public interface IComplexType
-        {
-            string Name { get; set; }
-
-            int Value { get; set; }
         }
 
         public class ComplexType : IComplexType

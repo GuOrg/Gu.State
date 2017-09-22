@@ -49,7 +49,9 @@ namespace Gu.State.Tests.Internals
 
             public IRefCounted<Recursive> Next { get; }
 
-            public void Dispose() { }
+            public void Dispose()
+            {
+            }
         }
     }
 }

@@ -61,8 +61,8 @@ namespace Gu.State.Tests.DiffTests
         [TestCase(ReferenceHandling.Structural)]
         public void HashSetOfComplexWhenEqual(ReferenceHandling referenceHandling)
         {
-            var x = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 1) };
-            var y = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 1) };
+            var x = new HashSet<ComplexType>(ComplexType.ByNameComparer) { new ComplexType("a", 1) };
+            var y = new HashSet<ComplexType>(ComplexType.ByNameComparer) { new ComplexType("a", 1) };
             var result = this.DiffMethod(x, y, referenceHandling);
             Assert.AreEqual(true, result.IsEmpty);
             Assert.AreEqual("Empty", result.ToString());
@@ -75,8 +75,8 @@ namespace Gu.State.Tests.DiffTests
         [TestCase(ReferenceHandling.Structural)]
         public void HashSetOfComplexWhenNotEqual(ReferenceHandling referenceHandling)
         {
-            var x = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 1) };
-            var y = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 2) };
+            var x = new HashSet<ComplexType>(ComplexType.ByNameComparer) { new ComplexType("a", 1) };
+            var y = new HashSet<ComplexType>(ComplexType.ByNameComparer) { new ComplexType("a", 2) };
             var expected = "HashSet<ComplexType> [Gu.State.Tests.DiffTests.DiffTypes+ComplexType] x: Gu.State.Tests.DiffTests.DiffTypes+ComplexType y: missing item [Gu.State.Tests.DiffTests.DiffTypes+ComplexType] x: missing item y: Gu.State.Tests.DiffTests.DiffTypes+ComplexType";
 
             var result = this.DiffMethod(x, y, referenceHandling);
@@ -93,8 +93,8 @@ namespace Gu.State.Tests.DiffTests
         [Test]
         public void HashSetOfComplexWhenNotEqualReferences()
         {
-            var x = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 1) };
-            var y = new HashSet<ComplexType>(ComplexType.NameComparer) { new ComplexType("a", 2) };
+            var x = new HashSet<ComplexType>(ComplexType.ByNameComparer) { new ComplexType("a", 1) };
+            var y = new HashSet<ComplexType>(ComplexType.ByNameComparer) { new ComplexType("a", 2) };
             var expected = "HashSet<ComplexType> [Gu.State.Tests.DiffTests.DiffTypes+ComplexType] x: Gu.State.Tests.DiffTests.DiffTypes+ComplexType y: missing item [Gu.State.Tests.DiffTests.DiffTypes+ComplexType] x: missing item y: Gu.State.Tests.DiffTests.DiffTypes+ComplexType";
 
             var result = this.DiffMethod(x, y, ReferenceHandling.References);

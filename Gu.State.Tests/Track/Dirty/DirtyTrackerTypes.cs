@@ -13,6 +13,16 @@ namespace Gu.State.Tests
 
     public static class DirtyTrackerTypes
     {
+        public struct WithGetReadOnlyPropertyStruct<T>
+        {
+            public WithGetReadOnlyPropertyStruct(T value)
+            {
+                this.Value = value;
+            }
+
+            public T Value { get; }
+        }
+
         public class With<T> : INotifyPropertyChanged
         {
             private T value;
@@ -433,16 +443,6 @@ namespace Gu.State.Tests
             {
                 return EqualityComparer<T>.Default.GetHashCode(this.Value);
             }
-        }
-
-        public struct WithGetReadOnlyPropertyStruct<T>
-        {
-            public WithGetReadOnlyPropertyStruct(T value)
-            {
-                this.Value = value;
-            }
-
-            public T Value { get; }
         }
 
         public class Level : INotifyPropertyChanged

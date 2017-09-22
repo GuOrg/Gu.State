@@ -57,18 +57,6 @@ namespace Gu.State.Tests
             throw new NotImplementedException("Handle: " + expected.GetType().Name);
         }
 
-        private static bool TryCompare<T>(object x, object y, Func<T, T, bool> compare, out bool result)
-        {
-            if (Is.Type<T>(x, y))
-            {
-                result = compare((T)x, (T)y);
-                return true;
-            }
-
-            result = false;
-            return false;
-        }
-
         int IEqualityComparer<object>.GetHashCode(object obj)
         {
             throw new NotImplementedException();
@@ -90,6 +78,18 @@ namespace Gu.State.Tests
             }
 
             return -1;
+        }
+
+        private static bool TryCompare<T>(object x, object y, Func<T, T, bool> compare, out bool result)
+        {
+            if (Is.Type<T>(x, y))
+            {
+                result = compare((T)x, (T)y);
+                return true;
+            }
+
+            result = false;
+            return false;
         }
     }
 }
