@@ -23,7 +23,7 @@
                       .Select(int.Parse)
                       .ToArray();
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(expected, result.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString(string.Empty, " "));
         }
 
         [TestCase(ReferenceHandling.Throw)]
@@ -67,7 +67,7 @@
             var y = new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } };
             y[i1, i2] = yValue;
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(expected, result.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString(string.Empty, " "));
         }
 
         [TestCase(ReferenceHandling.Throw)]
@@ -79,11 +79,11 @@
             var y = new int[3, 2];
             var result = this.DiffMethod(x, y, referenceHandling);
             Assert.AreEqual(false, result.IsEmpty);
-            Assert.AreEqual("int[,] x: [2,3] y: [3,2]", result.ToString("", " "));
+            Assert.AreEqual("int[,] x: [2,3] y: [3,2]", result.ToString(string.Empty, " "));
 
             result = this.DiffMethod(y, x, referenceHandling);
             Assert.AreEqual(false, result.IsEmpty);
-            Assert.AreEqual("int[,] x: [3,2] y: [2,3]", result.ToString("", " "));
+            Assert.AreEqual("int[,] x: [3,2] y: [2,3]", result.ToString(string.Empty, " "));
         }
 
         [TestCase(ReferenceHandling.Structural)]

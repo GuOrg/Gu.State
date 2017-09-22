@@ -29,7 +29,7 @@
                     Assert.AreEqual(true, tracker.IsDirty);
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
-                    Assert.AreEqual("WithImmutableProperty Name x: newName1 y: null", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("WithImmutableProperty Name x: newName1 y: null", tracker.Diff.ToString(string.Empty, " "));
 
                     y.Name = "newName1";
                     Assert.AreEqual(false, tracker.IsDirty);
@@ -41,7 +41,7 @@
                     Assert.AreEqual(true, tracker.IsDirty);
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
-                    Assert.AreEqual("WithImmutableProperty ImmutableValue x: Gu.State.Tests.DirtyTrackerTypes+WithGetReadOnlyPropertySealed`1[System.Int32] y: null", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("WithImmutableProperty ImmutableValue x: Gu.State.Tests.DirtyTrackerTypes+WithGetReadOnlyPropertySealed`1[System.Int32] y: null", tracker.Diff.ToString(string.Empty, " "));
 
                     y.ImmutableValue = new WithGetReadOnlyPropertySealed<int>(1);
                     Assert.AreEqual(false, tracker.IsDirty);
@@ -53,7 +53,7 @@
                     Assert.AreEqual(true, tracker.IsDirty);
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
-                    Assert.AreEqual("WithImmutableProperty ImmutableValue x: Gu.State.Tests.DirtyTrackerTypes+WithGetReadOnlyPropertySealed`1[System.Int32] y: Gu.State.Tests.DirtyTrackerTypes+WithGetReadOnlyPropertySealed`1[System.Int32]", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("WithImmutableProperty ImmutableValue x: Gu.State.Tests.DirtyTrackerTypes+WithGetReadOnlyPropertySealed`1[System.Int32] y: Gu.State.Tests.DirtyTrackerTypes+WithGetReadOnlyPropertySealed`1[System.Int32]", tracker.Diff.ToString(string.Empty, " "));
                 }
             }
         }

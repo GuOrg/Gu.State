@@ -27,7 +27,7 @@
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
                     var expected = "Level Next Next x: null y: Gu.State.Tests.DirtyTrackerTypes+Level";
-                    var actual = tracker.Diff.ToString("", " ");
+                    var actual = tracker.Diff.ToString(string.Empty, " ");
                     Assert.AreEqual(expected, actual);
 
                     y.Next.Next = null;
@@ -51,7 +51,7 @@
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
                     expected = "Level Next Next x: Gu.State.Tests.DirtyTrackerTypes+Level y: null";
-                    actual = tracker.Diff.ToString("", " ");
+                    actual = tracker.Diff.ToString(string.Empty, " ");
                     Assert.AreEqual(expected, actual);
 
                     y.Next.Next = new Level();
@@ -65,7 +65,7 @@
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
                     expected = "Level Next Next Name x: a y: null";
-                    actual = tracker.Diff.ToString("", " ");
+                    actual = tracker.Diff.ToString(string.Empty, " ");
                     Assert.AreEqual(expected, actual);
 
                     y.Next.Next.Name = "a";
@@ -94,7 +94,7 @@
                     Assert.AreEqual(true, tracker.IsDirty);
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
-                    Assert.AreEqual("Level Name x: newName1 y: null", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("Level Name x: newName1 y: null", tracker.Diff.ToString(string.Empty, " "));
 
                     y.Name = "newName1";
                     Assert.AreEqual(false, tracker.IsDirty);
@@ -106,7 +106,7 @@
                     Assert.AreEqual(true, tracker.IsDirty);
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
-                    Assert.AreEqual("Level Next Next Name x: b y: a", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("Level Next Next Name x: b y: a", tracker.Diff.ToString(string.Empty, " "));
 
                     y.Next.Next.Name = "b";
                     Assert.AreEqual(false, tracker.IsDirty);

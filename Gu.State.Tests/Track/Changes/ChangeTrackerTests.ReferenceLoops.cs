@@ -143,7 +143,7 @@ namespace Gu.State.Tests
             [Test]
             public void ParentNameChanges()
             {
-                var parent = new Parent { Child = new Child("") };
+                var parent = new Parent { Child = new Child(string.Empty) };
                 parent.Child.Parent = parent;
                 var propertyChanges = new List<string>();
                 var changes = new List<EventArgs>();
@@ -168,7 +168,7 @@ namespace Gu.State.Tests
             [Test]
             public void ChildNameChanges()
             {
-                var parent = new Parent { Child = new Child("") };
+                var parent = new Parent { Child = new Child(string.Empty) };
                 parent.Child.Parent = parent;
                 var propertyChanges = new List<string>();
                 var changes = new List<EventArgs>();

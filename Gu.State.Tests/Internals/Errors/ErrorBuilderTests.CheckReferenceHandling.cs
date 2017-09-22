@@ -40,13 +40,13 @@
                     var stringBuilder = new StringBuilder();
                     var message = stringBuilder.AppendNotSupported(errors)
                                                .ToString();
-                    var expectedMessage = "";
+                    var expectedMessage = string.Empty;
                     Assert.AreEqual(expectedMessage, message);
 
                     stringBuilder = new StringBuilder();
                     message = stringBuilder.AppendSuggestExclude(errors)
                                            .ToString();
-                    expectedMessage = "";
+                    expectedMessage = string.Empty;
                     Assert.AreEqual(expectedMessage, message);
                 }
                 else

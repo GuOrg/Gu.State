@@ -35,11 +35,11 @@ namespace Gu.State.Tests.DiffTests
             var y = new HashSet<int> { 1, 2, 40 };
             var result = this.DiffMethod(x, y, referenceHandling);
             Assert.AreEqual(false, result.IsEmpty);
-            Assert.AreEqual("HashSet<int> [30] x: 30 y: missing item [40] x: missing item y: 40", result.ToString("", " "));
+            Assert.AreEqual("HashSet<int> [30] x: 30 y: missing item [40] x: missing item y: 40", result.ToString(string.Empty, " "));
 
             result = this.DiffMethod(y, x, referenceHandling);
             Assert.AreEqual(false, result.IsEmpty);
-            Assert.AreEqual("HashSet<int> [30] x: missing item y: 30 [40] x: 40 y: missing item", result.ToString("", " "));
+            Assert.AreEqual("HashSet<int> [30] x: missing item y: 30 [40] x: 40 y: missing item", result.ToString(string.Empty, " "));
         }
 
         [TestCase(ReferenceHandling.Throw)]
@@ -51,11 +51,11 @@ namespace Gu.State.Tests.DiffTests
             var y = new HashSet<int> { 1, 2, 3 };
             var result = this.DiffMethod(x, y, referenceHandling);
             Assert.AreEqual(false, result.IsEmpty);
-            Assert.AreEqual("HashSet<int> [40] x: 40 y: missing item", result.ToString("", " "));
+            Assert.AreEqual("HashSet<int> [40] x: 40 y: missing item", result.ToString(string.Empty, " "));
 
             result = this.DiffMethod(y, x, referenceHandling);
             Assert.AreEqual(false, result.IsEmpty);
-            Assert.AreEqual("HashSet<int> [40] x: missing item y: 40", result.ToString("", " "));
+            Assert.AreEqual("HashSet<int> [40] x: missing item y: 40", result.ToString(string.Empty, " "));
         }
 
         [TestCase(ReferenceHandling.Structural)]
@@ -81,11 +81,11 @@ namespace Gu.State.Tests.DiffTests
 
             var result = this.DiffMethod(x, y, referenceHandling);
             Assert.AreEqual(false, result.IsEmpty);
-            var actual = result.ToString("", " ");
+            var actual = result.ToString(string.Empty, " ");
             StringAssert.AreEqualIgnoringCase(expected, actual);
 
             result = this.DiffMethod(y, x, referenceHandling);
-            actual = result.ToString("", " ");
+            actual = result.ToString(string.Empty, " ");
             Assert.AreEqual(false, result.IsEmpty);
             StringAssert.AreEqualIgnoringCase(expected, actual);
         }
@@ -98,13 +98,13 @@ namespace Gu.State.Tests.DiffTests
             var expected = "HashSet<ComplexType> [Gu.State.Tests.DiffTests.DiffTypes+ComplexType] x: Gu.State.Tests.DiffTests.DiffTypes+ComplexType y: missing item [Gu.State.Tests.DiffTests.DiffTypes+ComplexType] x: missing item y: Gu.State.Tests.DiffTests.DiffTypes+ComplexType";
 
             var result = this.DiffMethod(x, y, ReferenceHandling.References);
-            var actual = result.ToString("", " ");
+            var actual = result.ToString(string.Empty, " ");
             Assert.AreEqual(false, result.IsEmpty);
             Assert.AreEqual(expected, actual);
 
             result = this.DiffMethod(y, x, ReferenceHandling.References);
             Assert.AreEqual(false, result.IsEmpty);
-            actual = result.ToString("", " ");
+            actual = result.ToString(string.Empty, " ");
             Assert.AreEqual(expected, actual);
         }
 
@@ -135,12 +135,12 @@ namespace Gu.State.Tests.DiffTests
 
             var result = this.DiffMethod(x, y, referenceHandling);
             Assert.AreEqual(false, result.IsEmpty);
-            var actual = result.ToString("", " ");
+            var actual = result.ToString(string.Empty, " ");
             StringAssert.AreEqualIgnoringCase(expected, actual);
 
             result = this.DiffMethod(y, x, referenceHandling);
             Assert.AreEqual(false, result.IsEmpty);
-            actual = result.ToString("", " ");
+            actual = result.ToString(string.Empty, " ");
             StringAssert.AreEqualIgnoringCase(expected, actual);
         }
 
@@ -154,12 +154,12 @@ namespace Gu.State.Tests.DiffTests
 
             var result = this.DiffMethod(x, y, ReferenceHandling.References);
             Assert.AreEqual(false, result.IsEmpty);
-            var actual = result.ToString("", " ");
+            var actual = result.ToString(string.Empty, " ");
             Assert.AreEqual(expected, actual);
 
             result = this.DiffMethod(y, x, ReferenceHandling.References);
             Assert.AreEqual(false, result.IsEmpty);
-            actual = result.ToString("", " ");
+            actual = result.ToString(string.Empty, " ");
             Assert.AreEqual(expected, actual);
         }
 

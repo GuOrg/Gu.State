@@ -11,7 +11,7 @@
         public void PropertyDiff(string x, string y, string expected)
         {
             var diff = new PropertyDiff(typeof(WithSimpleProperties).GetProperty(nameof(WithSimpleProperties.StringValue)), x, y);
-            Assert.AreEqual(expected, diff.ToString("", " "));
+            Assert.AreEqual(expected, diff.ToString(string.Empty, " "));
         }
 
         [Test]

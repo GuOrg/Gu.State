@@ -16,7 +16,7 @@
             var x = new Dictionary<int, string> { { key, value } };
             var y = new Dictionary<int, string> { { 1, "one" } };
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            var actual = result.ToString("", " ");
+            var actual = result.ToString(string.Empty, " ");
             Assert.AreEqual(expected, actual);
         }
 
@@ -29,12 +29,12 @@
             var y = new Dictionary<DiffTypes.HashCollisionType, string> { { k1, "1" }, { k2, "2" } };
             Assert.AreEqual(2, x.Count);
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            var actual = result.ToString("", " ");
+            var actual = result.ToString(string.Empty, " ");
             Assert.AreEqual("Empty", actual);
 
             y = new Dictionary<DiffTypes.HashCollisionType, string> { { k2, "2" }, { k1, "1" } };
             result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            actual = result.ToString("", " ");
+            actual = result.ToString(string.Empty, " ");
             Assert.AreEqual("Empty", actual);
         }
 
@@ -49,7 +49,7 @@
             var x = new Dictionary<int, DiffTypes.ComplexType> { { key, new DiffTypes.ComplexType(value, 1) } };
             var y = new Dictionary<int, DiffTypes.ComplexType> { { 1, new DiffTypes.ComplexType("one", 1) } };
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            var actual = result.ToString("", " ");
+            var actual = result.ToString(string.Empty, " ");
             Assert.AreEqual(expected, actual);
         }
 
@@ -60,11 +60,11 @@
             var y = new Dictionary<int, string>();
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
             var expected = "Dictionary<int, string> [1] x: one y: missing item";
-            Assert.AreEqual(expected, result.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString(string.Empty, " "));
 
             result = this.DiffMethod(y, x, ReferenceHandling.Structural);
             expected = "Dictionary<int, string> [1] x: missing item y: one";
-            Assert.AreEqual(expected, result.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString(string.Empty, " "));
         }
 
         [Test]
@@ -74,12 +74,12 @@
             var y = new Dictionary<int, string> { { 1, "one" }, { 2, "two" } };
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
             var expected = "Dictionary<int, string> [2] x: missing item y: two";
-            var actual = result.ToString("", " ");
+            var actual = result.ToString(string.Empty, " ");
             Assert.AreEqual(expected, actual);
 
             result = this.DiffMethod(y, x, ReferenceHandling.Structural);
             expected = "Dictionary<int, string> [2] x: two y: missing item";
-            actual = result.ToString("", " ");
+            actual = result.ToString(string.Empty, " ");
             Assert.AreEqual(expected, actual);
         }
 
@@ -93,8 +93,8 @@
             builder.Add(2, "two");
             var x = builder.ToImmutable();
             var y = builder.ToImmutable();
-            Assert.AreEqual("Empty", this.DiffMethod(x, y, referenceHandling).ToString("", " "));
-            Assert.AreEqual("Empty", this.DiffMethod(y, x, referenceHandling).ToString("", " "));
+            Assert.AreEqual("Empty", this.DiffMethod(x, y, referenceHandling).ToString(string.Empty, " "));
+            Assert.AreEqual("Empty", this.DiffMethod(y, x, referenceHandling).ToString(string.Empty, " "));
         }
     }
 }

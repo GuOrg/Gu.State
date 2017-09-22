@@ -24,7 +24,7 @@ namespace Gu.State.Tests
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(true, tracker.IsDirty);
                     var expected = "ObservableCollection<ComplexType> [0] x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: missing item [1] x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: missing item";
-                    var actual = tracker.Diff.ToString("", " ");
+                    var actual = tracker.Diff.ToString(string.Empty, " ");
                     Assert.AreEqual(expected, actual);
                     CollectionAssert.IsEmpty(changes);
                 }
@@ -58,7 +58,7 @@ namespace Gu.State.Tests
 
                     x.Add(new ComplexType("a", 1));
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("ObservableCollection<ComplexType> [0] x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: missing item", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("ObservableCollection<ComplexType> [0] x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: missing item", tracker.Diff.ToString(string.Empty, " "));
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
@@ -70,7 +70,7 @@ namespace Gu.State.Tests
 
                     x[0].Value++;
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("ObservableCollection<ComplexType> [0] Value x: 2 y: 1", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("ObservableCollection<ComplexType> [0] Value x: 2 y: 1", tracker.Diff.ToString(string.Empty, " "));
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
@@ -103,7 +103,7 @@ namespace Gu.State.Tests
 
                     x[0].Value++;
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("ObservableCollection<ComplexType> [0] Value x: 2 y: 1", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("ObservableCollection<ComplexType> [0] Value x: 2 y: 1", tracker.Diff.ToString(string.Empty, " "));
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
@@ -131,19 +131,19 @@ namespace Gu.State.Tests
 
                     x.Add(new ComplexType("a", 1));
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("ObservableCollection<ComplexType> [0] x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: missing item", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("ObservableCollection<ComplexType> [0] x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: missing item", tracker.Diff.ToString(string.Empty, " "));
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
                     y.Add(new ComplexType("b", 2));
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("ObservableCollection<ComplexType> [0] Name x: a y: b Value x: 1 y: 2", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("ObservableCollection<ComplexType> [0] Name x: a y: b Value x: 1 y: 2", tracker.Diff.ToString(string.Empty, " "));
                     expectedChanges.Add("Diff");
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
                     x[0].Name = "b";
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("ObservableCollection<ComplexType> [0] Value x: 1 y: 2", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("ObservableCollection<ComplexType> [0] Value x: 1 y: 2", tracker.Diff.ToString(string.Empty, " "));
                     expectedChanges.Add("Diff");
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
@@ -174,7 +174,7 @@ namespace Gu.State.Tests
                     x.Insert(index, new ComplexType());
                     Assert.AreEqual(true, tracker.IsDirty);
                     var expected = "ObservableCollection<ComplexType> [3] x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: missing item";
-                    var actual = tracker.Diff.ToString("", " ");
+                    var actual = tracker.Diff.ToString(string.Empty, " ");
                     Assert.AreEqual(expected, actual);
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
@@ -200,7 +200,7 @@ namespace Gu.State.Tests
                     y.Insert(index, new ComplexType());
                     Assert.AreEqual(true, tracker.IsDirty);
                     var expected = "ObservableCollection<ComplexType> [3] x: missing item y: Gu.State.Tests.DirtyTrackerTypes+ComplexType";
-                    var actual = tracker.Diff.ToString("", " ");
+                    var actual = tracker.Diff.ToString(string.Empty, " ");
                     Assert.AreEqual(expected, actual);
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
@@ -227,7 +227,7 @@ namespace Gu.State.Tests
 
                     x[index].Value++;
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual($"ObservableCollection<ComplexType> [{index}] Value x: 1 y: 0", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual($"ObservableCollection<ComplexType> [{index}] Value x: 1 y: 0", tracker.Diff.ToString(string.Empty, " "));
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
@@ -250,7 +250,7 @@ namespace Gu.State.Tests
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("ObservableCollection<ComplexType> [1] x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: missing item", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("ObservableCollection<ComplexType> [1] x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: missing item", tracker.Diff.ToString(string.Empty, " "));
                     CollectionAssert.IsEmpty(changes);
 
                     x.RemoveAt(1);
@@ -272,12 +272,12 @@ namespace Gu.State.Tests
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("ObservableCollection<ComplexType> [0] Name x: a y: c Value x: 1 y: 3 [1] x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: missing item", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("ObservableCollection<ComplexType> [0] Name x: a y: c Value x: 1 y: 3 [1] x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: missing item", tracker.Diff.ToString(string.Empty, " "));
                     CollectionAssert.IsEmpty(changes);
 
                     x.RemoveAt(1);
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("ObservableCollection<ComplexType> [0] Name x: a y: c Value x: 1 y: 3", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("ObservableCollection<ComplexType> [0] Name x: a y: c Value x: 1 y: 3", tracker.Diff.ToString(string.Empty, " "));
                     expectedChanges.AddRange(new[] { "Diff" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
                 }
@@ -294,12 +294,12 @@ namespace Gu.State.Tests
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("ObservableCollection<ComplexType> [0] Name x: a y: d [1] Name x: b y: e [2] x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: missing item", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("ObservableCollection<ComplexType> [0] Name x: a y: d [1] Name x: b y: e [2] x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: missing item", tracker.Diff.ToString(string.Empty, " "));
                     CollectionAssert.IsEmpty(changes);
 
                     x.RemoveAt(0);
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("ObservableCollection<ComplexType> [0] Name x: b y: d [1] Name x: c y: e", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("ObservableCollection<ComplexType> [0] Name x: b y: d [1] Name x: c y: e", tracker.Diff.ToString(string.Empty, " "));
                     expectedChanges.AddRange(new[] { "Diff" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
                 }
@@ -321,7 +321,7 @@ namespace Gu.State.Tests
 
                     x.Clear();
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("ObservableCollection<ComplexType> [0] x: missing item y: Gu.State.Tests.DirtyTrackerTypes+ComplexType [1] x: missing item y: Gu.State.Tests.DirtyTrackerTypes+ComplexType", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("ObservableCollection<ComplexType> [0] x: missing item y: Gu.State.Tests.DirtyTrackerTypes+ComplexType [1] x: missing item y: Gu.State.Tests.DirtyTrackerTypes+ComplexType", tracker.Diff.ToString(string.Empty, " "));
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
@@ -345,14 +345,14 @@ namespace Gu.State.Tests
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(true, tracker.IsDirty);
                     var expected = "ObservableCollection<ComplexType> [0] Name x: a y: c Value x: 1 y: 2 [1] Name x: b y: d Value x: 2 y: 4 [2] x: missing item y: Gu.State.Tests.DirtyTrackerTypes+ComplexType";
-                    var actual = tracker.Diff.ToString("", " ");
+                    var actual = tracker.Diff.ToString(string.Empty, " ");
                     Assert.AreEqual(expected, actual);
                     CollectionAssert.IsEmpty(changes);
 
                     x.Clear();
                     Assert.AreEqual(true, tracker.IsDirty);
                     expected = "ObservableCollection<ComplexType> [0] x: missing item y: Gu.State.Tests.DirtyTrackerTypes+ComplexType [1] x: missing item y: Gu.State.Tests.DirtyTrackerTypes+ComplexType [2] x: missing item y: Gu.State.Tests.DirtyTrackerTypes+ComplexType";
-                    Assert.AreEqual(expected, tracker.Diff.ToString("", " "));
+                    Assert.AreEqual(expected, tracker.Diff.ToString(string.Empty, " "));
                     expectedChanges.Add("Diff");
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
@@ -380,7 +380,7 @@ namespace Gu.State.Tests
 
                     x.Move(0, 1);
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("ObservableCollection<ComplexType> [0] Name x: b y: a Value x: 2 y: 1 [1] Name x: a y: b Value x: 1 y: 2", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("ObservableCollection<ComplexType> [0] Name x: b y: a Value x: 2 y: 1 [1] Name x: a y: b Value x: 1 y: 2", tracker.Diff.ToString(string.Empty, " "));
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
@@ -408,7 +408,7 @@ namespace Gu.State.Tests
 
                     x.Move(0, 1);
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("ObservableCollection<ComplexType> [0] Name x: b y: a Value x: 2 y: 1 [1] Name x: a y: b Value x: 1 y: 2", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("ObservableCollection<ComplexType> [0] Name x: b y: a Value x: 2 y: 1 [1] Name x: a y: b Value x: 1 y: 2", tracker.Diff.ToString(string.Empty, " "));
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
@@ -438,7 +438,7 @@ namespace Gu.State.Tests
 
                     x[0].Value++;
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("ObservableCollection<ComplexType> [0] Value x: 3 y: 2", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("ObservableCollection<ComplexType> [0] Value x: 3 y: 2", tracker.Diff.ToString(string.Empty, " "));
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
@@ -466,7 +466,7 @@ namespace Gu.State.Tests
 
                     x[0] = new ComplexType("c", 3);
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("ObservableCollection<ComplexType> [0] Name x: c y: a Value x: 3 y: 1", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("ObservableCollection<ComplexType> [0] Name x: c y: a Value x: 3 y: 1", tracker.Diff.ToString(string.Empty, " "));
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
@@ -497,7 +497,7 @@ namespace Gu.State.Tests
 
                     x[index].Value++;
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual($"ObservableCollection<ComplexType> [{index}] Value x: 4 y: 3", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual($"ObservableCollection<ComplexType> [{index}] Value x: 4 y: 3", tracker.Diff.ToString(string.Empty, " "));
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
@@ -525,7 +525,7 @@ namespace Gu.State.Tests
 
                     x.Add(new ComplexType("a", 1));
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("ObservableCollection<ComplexType> [0] x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: missing item", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("ObservableCollection<ComplexType> [0] x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: missing item", tracker.Diff.ToString(string.Empty, " "));
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
@@ -537,7 +537,7 @@ namespace Gu.State.Tests
 
                     x[0].Value++;
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("ObservableCollection<ComplexType> [0] Value x: 2 y: 1", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("ObservableCollection<ComplexType> [0] Value x: 2 y: 1", tracker.Diff.ToString(string.Empty, " "));
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
@@ -578,7 +578,7 @@ namespace Gu.State.Tests
                     item.Value++;
                     Assert.AreEqual(true, tracker.IsDirty);
                     var expected = "ObservableCollection<ComplexType> [0] Value x: 2 y: 1 [1] Value x: 2 y: 1";
-                    var actual = tracker.Diff.ToString("", " ");
+                    var actual = tracker.Diff.ToString(string.Empty, " ");
                     Assert.AreEqual(expected, actual);
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty", "Diff" }); // not sure how we want this
                     CollectionAssert.AreEqual(expectedChanges, changes);

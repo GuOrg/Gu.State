@@ -30,16 +30,16 @@ namespace Gu.State.Tests.DiffTests
             var x = new WithSimpleProperties(1, 2, xn, StringSplitOptions.RemoveEmptyEntries);
             var y = new WithSimpleProperties(1, 2, yn, StringSplitOptions.RemoveEmptyEntries);
             var result = this.DiffMethod(x, y);
-            Assert.AreEqual(expected, result.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString(string.Empty, " "));
 
             result = this.DiffMethod(x, y, ReferenceHandling.Throw);
-            Assert.AreEqual(expected, result.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString(string.Empty, " "));
 
             result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(expected, result.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString(string.Empty, " "));
 
             result = this.DiffMethod(x, y, ReferenceHandling.References);
-            Assert.AreEqual(expected, result.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString(string.Empty, " "));
         }
 
         [TestCase("b", "b", "Empty")]
@@ -56,7 +56,7 @@ namespace Gu.State.Tests.DiffTests
             var y = new WithComplexProperty("a", 1) { ComplexType = new ComplexType { Name = yn, Value = 2 } };
 
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(expected, result.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString(string.Empty, " "));
         }
 
         [Test]
@@ -85,11 +85,11 @@ namespace Gu.State.Tests.DiffTests
             this.DiffMethod(x, y, ReferenceHandling.Structural);
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(false, result.IsEmpty);
-            Assert.AreEqual(expected, result.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString(string.Empty, " "));
 
             result = this.DiffMethod(x, y, ReferenceHandling.References);
             Assert.AreEqual(false, result.IsEmpty);
-            Assert.AreEqual(expected, result.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString(string.Empty, " "));
         }
 
         [Test]
@@ -103,11 +103,11 @@ namespace Gu.State.Tests.DiffTests
             this.DiffMethod(x, y, ReferenceHandling.Structural);
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(false, result.IsEmpty);
-            Assert.AreEqual(expected, result.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString(string.Empty, " "));
 
             result = this.DiffMethod(x, y, ReferenceHandling.References);
             Assert.AreEqual(false, result.IsEmpty);
-            Assert.AreEqual(expected, result.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString(string.Empty, " "));
         }
 
         [TestCase(ReferenceHandling.Structural)]
@@ -149,7 +149,7 @@ namespace Gu.State.Tests.DiffTests
             };
             var result = this.DiffMethod(x, y, referenceHandling);
             Assert.AreEqual(expected == "Empty", result.IsEmpty);
-            Assert.AreEqual(expected, result.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString(string.Empty, " "));
         }
 
         [Test]
@@ -159,7 +159,7 @@ namespace Gu.State.Tests.DiffTests
             var y = new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = 2 });
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result.IsEmpty);
-            Assert.AreEqual("Empty", result.ToString("", " "));
+            Assert.AreEqual("Empty", result.ToString(string.Empty, " "));
         }
 
         [Test]
@@ -172,7 +172,7 @@ namespace Gu.State.Tests.DiffTests
             var expected = this is PropertyValues.Classes
                                ? "With<BaseClass> Value Derived1Value x: 2 y: 3"
                                : "With<BaseClass> <Value>k__BackingField <Derived1Value>k__BackingField x: 2 y: 3";
-            var actual = result.ToString("", " ");
+            var actual = result.ToString(string.Empty, " ");
             Assert.AreEqual(expected, actual);
         }
 
@@ -186,7 +186,7 @@ namespace Gu.State.Tests.DiffTests
             var expected = this is PropertyValues.Classes
                                ? "With<BaseClass> Value x: Gu.State.Tests.DiffTests.DiffTypes+Derived1 y: Gu.State.Tests.DiffTests.DiffTypes+Derived2"
                                : "With<BaseClass> <Value>k__BackingField x: Gu.State.Tests.DiffTests.DiffTypes+Derived1 y: Gu.State.Tests.DiffTests.DiffTypes+Derived2";
-            var actual = result.ToString("", " ");
+            var actual = result.ToString(string.Empty, " ");
             Assert.AreEqual(expected, actual);
         }
 
@@ -207,12 +207,12 @@ namespace Gu.State.Tests.DiffTests
             if (referenceHandling == null)
             {
                 var result = this.DiffMethod(x, y);
-                Assert.AreEqual(expected, result.ToString("", " "));
+                Assert.AreEqual(expected, result.ToString(string.Empty, " "));
             }
             else
             {
                 var result = this.DiffMethod(x, y, referenceHandling.Value);
-                Assert.AreEqual(expected, result.ToString("", " "));
+                Assert.AreEqual(expected, result.ToString(string.Empty, " "));
             }
         }
 
@@ -233,7 +233,7 @@ namespace Gu.State.Tests.DiffTests
             var x = new WithReadonlyProperty<ComplexType>(new ComplexType(xv, 1));
             var y = new WithReadonlyProperty<ComplexType>(new ComplexType(yv, 1));
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(expected, result.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString(string.Empty, " "));
         }
 
         [Test]
@@ -247,7 +247,7 @@ namespace Gu.State.Tests.DiffTests
 
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(false, result.IsEmpty);
-            Assert.AreEqual(expected, result.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString(string.Empty, " "));
         }
 
         [TestCase(ReferenceHandling.Structural)]
@@ -277,7 +277,7 @@ namespace Gu.State.Tests.DiffTests
             var expected = this is FieldValues.Classes
                                ? "WithListProperty<int> <Items>k__BackingField x: System.Collections.Generic.List`1[System.Int32] y: System.Collections.Generic.List`1[System.Int32]"
                                : "WithListProperty<int> Items x: System.Collections.Generic.List`1[System.Int32] y: System.Collections.Generic.List`1[System.Int32]";
-            Assert.AreEqual(expected, result.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString(string.Empty, " "));
         }
 
         [Test]
@@ -289,7 +289,7 @@ namespace Gu.State.Tests.DiffTests
             var expected = this is FieldValues.Classes
                                ? "WithListProperty<int> <Items>k__BackingField x: System.Collections.Generic.List`1[System.Int32] y: null"
                                : "WithListProperty<int> Items x: System.Collections.Generic.List`1[System.Int32] y: null";
-            Assert.AreEqual(expected, result.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString(string.Empty, " "));
         }
 
         [TestCase(ReferenceHandling.Structural)]
@@ -303,7 +303,7 @@ namespace Gu.State.Tests.DiffTests
             var expected = this is FieldValues.Classes
                                ? "WithArrayProperty <Array>k__BackingField x: System.Int32[] y: null"
                                : "WithArrayProperty Array x: System.Int32[] y: null";
-            Assert.AreEqual(expected, result.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString(string.Empty, " "));
         }
 
         [Test]
@@ -315,7 +315,7 @@ namespace Gu.State.Tests.DiffTests
             var expected = this is FieldValues.Classes
                                ? "WithListProperty<int> <Items>k__BackingField [3] x: missing item y: 4"
                                : "WithListProperty<int> Items [3] x: missing item y: 4";
-            Assert.AreEqual(expected, result.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString(string.Empty, " "));
         }
 
         [Test]
@@ -344,7 +344,7 @@ namespace Gu.State.Tests.DiffTests
             var expected = this is FieldValues.Classes
                                ? "WithListProperty<ComplexType> <Items>k__BackingField [1] x: missing item y: Gu.State.Tests.DiffTests.DiffTypes+ComplexType"
                                : "WithListProperty<ComplexType> Items [1] x: missing item y: Gu.State.Tests.DiffTests.DiffTypes+ComplexType";
-            Assert.AreEqual(expected, result.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString(string.Empty, " "));
         }
 
         [TestCase(1, 1, null, "Empty")]
@@ -367,12 +367,12 @@ namespace Gu.State.Tests.DiffTests
             if (referenceHandling == null)
             {
                 var result = this.DiffMethod(x, y, excludedMembers: excluded);
-                Assert.AreEqual(expected, result.ToString("", " "));
+                Assert.AreEqual(expected, result.ToString(string.Empty, " "));
             }
             else
             {
                 var result = this.DiffMethod(x, y, referenceHandling.Value, excluded);
-                Assert.AreEqual(expected, result.ToString("", " "));
+                Assert.AreEqual(expected, result.ToString(string.Empty, " "));
             }
         }
 
@@ -392,7 +392,7 @@ namespace Gu.State.Tests.DiffTests
                 y,
                 ReferenceHandling.Structural,
                 ignoredType: typeof(ComplexType));
-            Assert.AreEqual(expected, result.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString(string.Empty, " "));
         }
     }
 }

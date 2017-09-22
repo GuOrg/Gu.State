@@ -19,11 +19,11 @@
             var y = new List<int>();
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
             var expected = "List<int> [0] x: 1 y: missing item [1] x: 2 y: missing item [2] x: 3 y: missing item";
-            Assert.AreEqual(expected, result.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString(string.Empty, " "));
 
             result = this.DiffMethod(y, x, ReferenceHandling.Structural);
             expected = "List<int> [0] x: missing item y: 1 [1] x: missing item y: 2 [2] x: missing item y: 3";
-            Assert.AreEqual(expected, result.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString(string.Empty, " "));
         }
 
         [Test]
@@ -47,11 +47,11 @@
             var y = new List<int> { 1, 2, 3, 4 };
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
             var expected = "List<int> [3] x: missing item y: 4";
-            Assert.AreEqual(expected, result.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString(string.Empty, " "));
 
             result = this.DiffMethod(y, x, ReferenceHandling.Structural);
             expected = "List<int> [3] x: 4 y: missing item";
-            Assert.AreEqual(expected, result.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString(string.Empty, " "));
         }
 
         [Test]
@@ -93,7 +93,7 @@
 
             result = this.DiffMethod(x, y, ReferenceHandling.References);
             var expected = "List<ComplexType> [0] x: Gu.State.Tests.DiffTests.DiffTypes+ComplexType y: Gu.State.Tests.DiffTests.DiffTypes+ComplexType [1] x: Gu.State.Tests.DiffTests.DiffTypes+ComplexType y: Gu.State.Tests.DiffTests.DiffTypes+ComplexType";
-            Assert.AreEqual(expected, result.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString(string.Empty, " "));
 
             result = this.DiffMethod(y, x, ReferenceHandling.Structural);
             Assert.AreEqual(true, result.IsEmpty);
@@ -126,12 +126,12 @@
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
             var expected =
                 "ObservableCollection<int> [0] x: 1 y: missing item [1] x: 2 y: missing item [2] x: 3 y: missing item";
-            Assert.AreEqual(expected, result.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString(string.Empty, " "));
 
             result = this.DiffMethod(y, x, ReferenceHandling.Structural);
             expected =
                 "ObservableCollection<int> [0] x: missing item y: 1 [1] x: missing item y: 2 [2] x: missing item y: 3";
-            Assert.AreEqual(expected, result.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString(string.Empty, " "));
         }
 
         [Test]
@@ -142,12 +142,12 @@
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(false, result.IsEmpty);
             var expected = "ObservableCollection<int> [3] x: missing item y: 4";
-            Assert.AreEqual(expected, result.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString(string.Empty, " "));
 
             result = this.DiffMethod(y, x, ReferenceHandling.Structural);
             Assert.AreEqual(false, result.IsEmpty);
             expected = "ObservableCollection<int> [3] x: 4 y: missing item";
-            Assert.AreEqual(expected, result.ToString("", " "));
+            Assert.AreEqual(expected, result.ToString(string.Empty, " "));
         }
 
         [Test]

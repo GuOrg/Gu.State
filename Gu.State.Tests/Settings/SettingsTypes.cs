@@ -1,6 +1,8 @@
 ﻿// ReSharper disable All
 #pragma warning disable 649
 #pragma warning disable WPF1011 // Implement INotifyPropertyChanged.
+#pragma warning disable SA1307 // Accessible fields must begin with upper-case letter
+#pragma warning disable SA1401 // Fields must be private
 namespace Gu.State.Tests.Settings
 {
     using System;

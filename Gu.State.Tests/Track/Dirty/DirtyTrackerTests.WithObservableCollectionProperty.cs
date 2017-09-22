@@ -31,7 +31,7 @@ namespace Gu.State.Tests
 
                     x.Complexes.Add(new ComplexType("a", 1));
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("WithObservableCollectionProperties Complexes [0] x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: missing item", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("WithObservableCollectionProperties Complexes [0] x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: missing item", tracker.Diff.ToString(string.Empty, " "));
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
@@ -43,7 +43,7 @@ namespace Gu.State.Tests
 
                     x.Complexes[0].Value++;
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("WithObservableCollectionProperties Complexes [0] Value x: 2 y: 1", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("WithObservableCollectionProperties Complexes [0] Value x: 2 y: 1", tracker.Diff.ToString(string.Empty, " "));
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
@@ -71,19 +71,19 @@ namespace Gu.State.Tests
 
                     x.Complexes.Add(new ComplexType("a", 1));
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("WithObservableCollectionProperties Complexes [0] x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: missing item", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("WithObservableCollectionProperties Complexes [0] x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: missing item", tracker.Diff.ToString(string.Empty, " "));
                     expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
                     y.Complexes.Add(new ComplexType("b", 2));
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("WithObservableCollectionProperties Complexes [0] Name x: a y: b Value x: 1 y: 2", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("WithObservableCollectionProperties Complexes [0] Name x: a y: b Value x: 1 y: 2", tracker.Diff.ToString(string.Empty, " "));
                     expectedChanges.Add("Diff");
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
                     x.Complexes[0].Name = "b";
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("WithObservableCollectionProperties Complexes [0] Value x: 1 y: 2", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("WithObservableCollectionProperties Complexes [0] Value x: 1 y: 2", tracker.Diff.ToString(string.Empty, " "));
                     expectedChanges.Add("Diff");
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
@@ -106,7 +106,7 @@ namespace Gu.State.Tests
                 {
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("WithObservableCollectionProperties Complexes [1] x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: missing item", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("WithObservableCollectionProperties Complexes [1] x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: missing item", tracker.Diff.ToString(string.Empty, " "));
                     CollectionAssert.IsEmpty(changes);
 
                     x.Complexes.RemoveAt(1);
@@ -129,13 +129,13 @@ namespace Gu.State.Tests
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(true, tracker.IsDirty);
                     var expected = "WithObservableCollectionProperties Complexes [0] Name x: a y: c Value x: 1 y: 3 [1] x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: missing item";
-                    var actual = tracker.Diff.ToString("", " ");
+                    var actual = tracker.Diff.ToString(string.Empty, " ");
                     CollectionAssert.AreEqual(expected, actual);
                     CollectionAssert.IsEmpty(changes);
 
                     x.Complexes.RemoveAt(1);
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("WithObservableCollectionProperties Complexes [0] Name x: a y: c Value x: 1 y: 3", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("WithObservableCollectionProperties Complexes [0] Name x: a y: c Value x: 1 y: 3", tracker.Diff.ToString(string.Empty, " "));
                     expectedChanges.AddRange(new[] { "Diff" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
                 }
@@ -158,7 +158,7 @@ namespace Gu.State.Tests
                     x.Complexes.Clear();
                     Assert.AreEqual(true, tracker.IsDirty);
                     var expected = "WithObservableCollectionProperties Complexes [0] x: missing item y: Gu.State.Tests.DirtyTrackerTypes+ComplexType [1] x: missing item y: Gu.State.Tests.DirtyTrackerTypes+ComplexType";
-                    Assert.AreEqual(expected, tracker.Diff.ToString("", " "));
+                    Assert.AreEqual(expected, tracker.Diff.ToString(string.Empty, " "));
                     expectedChanges.AddRange(new[] {  "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
@@ -182,14 +182,14 @@ namespace Gu.State.Tests
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(true, tracker.IsDirty);
                     var expected = "WithObservableCollectionProperties Complexes [0] Name x: a y: c Value x: 1 y: 2 [1] Name x: b y: d Value x: 2 y: 4 [2] x: missing item y: Gu.State.Tests.DirtyTrackerTypes+ComplexType";
-                    var actual = tracker.Diff.ToString("", " ");
+                    var actual = tracker.Diff.ToString(string.Empty, " ");
                     CollectionAssert.AreEqual(expected, actual);
                     CollectionAssert.IsEmpty(changes);
 
                     x.Complexes.Clear();
                     Assert.AreEqual(true, tracker.IsDirty);
                     expected = "WithObservableCollectionProperties Complexes [0] x: missing item y: Gu.State.Tests.DirtyTrackerTypes+ComplexType [1] x: missing item y: Gu.State.Tests.DirtyTrackerTypes+ComplexType [2] x: missing item y: Gu.State.Tests.DirtyTrackerTypes+ComplexType";
-                    actual = tracker.Diff.ToString("", " ");
+                    actual = tracker.Diff.ToString(string.Empty, " ");
                     Assert.AreEqual(expected, actual);
                     expectedChanges.AddRange(new[] { "Diff" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
@@ -219,7 +219,7 @@ namespace Gu.State.Tests
                     x.Complexes.Move(0, 1);
                     Assert.AreEqual(true, tracker.IsDirty);
                     var expected = "WithObservableCollectionProperties Complexes [0] Name x: b y: a Value x: 2 y: 1 [1] Name x: a y: b Value x: 1 y: 2";
-                    var actual = tracker.Diff.ToString("", " ");
+                    var actual = tracker.Diff.ToString(string.Empty, " ");
                     Assert.AreEqual(expected, actual);
                     expectedChanges.AddRange(new[] {  "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
@@ -248,7 +248,7 @@ namespace Gu.State.Tests
 
                     x.Complexes.Move(0, 1);
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("WithObservableCollectionProperties Complexes [0] Name x: b y: a Value x: 2 y: 1 [1] Name x: a y: b Value x: 1 y: 2", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("WithObservableCollectionProperties Complexes [0] Name x: b y: a Value x: 2 y: 1 [1] Name x: a y: b Value x: 1 y: 2", tracker.Diff.ToString(string.Empty, " "));
                     expectedChanges.AddRange(new[] {  "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
@@ -276,7 +276,7 @@ namespace Gu.State.Tests
 
                     x.Complexes[0] = new ComplexType("c", 3);
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("WithObservableCollectionProperties Complexes [0] Name x: c y: a Value x: 3 y: 1", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("WithObservableCollectionProperties Complexes [0] Name x: c y: a Value x: 3 y: 1", tracker.Diff.ToString(string.Empty, " "));
                     expectedChanges.AddRange(new[] {  "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
@@ -304,7 +304,7 @@ namespace Gu.State.Tests
 
                     x.Complexes.Add(new ComplexType("a", 1));
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("WithObservableCollectionProperties Complexes [0] x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: missing item", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("WithObservableCollectionProperties Complexes [0] x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: missing item", tracker.Diff.ToString(string.Empty, " "));
                     expectedChanges.AddRange(new[] {  "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 
@@ -316,7 +316,7 @@ namespace Gu.State.Tests
 
                     x.Complexes[0].Value++;
                     Assert.AreEqual(true, tracker.IsDirty);
-                    Assert.AreEqual("WithObservableCollectionProperties Complexes [0] Value x: 2 y: 1", tracker.Diff.ToString("", " "));
+                    Assert.AreEqual("WithObservableCollectionProperties Complexes [0] Value x: 2 y: 1", tracker.Diff.ToString(string.Empty, " "));
                     expectedChanges.AddRange(new[] {  "Diff", "IsDirty" });
                     CollectionAssert.AreEqual(expectedChanges, changes);
 

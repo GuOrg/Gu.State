@@ -158,7 +158,7 @@ namespace Gu.State.Tests.DiffTests
             expected = this is FieldValues.Throws
                            ? "Parent <Child>k__BackingField x: Gu.State.Tests.DiffTests.DiffTypes+Child y: Gu.State.Tests.DiffTests.DiffTypes+Child"
                            : "Parent Child x: Gu.State.Tests.DiffTests.DiffTypes+Child y: Gu.State.Tests.DiffTests.DiffTypes+Child";
-            Assert.AreEqual(expected, this.DiffMethod(x, y, ReferenceHandling.References).ToString("", " "));
+            Assert.AreEqual(expected, this.DiffMethod(x, y, ReferenceHandling.References).ToString(string.Empty, " "));
 
             Assert.DoesNotThrow(() => this.DiffMethod(x, y, ReferenceHandling.Structural));
             Assert.DoesNotThrow(() => this.DiffMethod(x, y, ReferenceHandling.References));
