@@ -10,14 +10,15 @@ namespace Gu.State.Tests.EqualByTests
 
     public abstract class ClassesTests
     {
+        public static IReadOnlyList<EqualByTestsShared.EqualsData> EqualsSource => EqualByTestsShared.EqualsSource;
+
         public abstract bool EqualMethod<T>(
             T x,
             T y,
             ReferenceHandling referenceHandling = ReferenceHandling.Structural,
             string excludedMembers = null,
-            Type ignoredType = null) where T : class;
-
-        public static IReadOnlyList<EqualByTestsShared.EqualsData> EqualsSource => EqualByTestsShared.EqualsSource;
+            Type ignoredType = null)
+            where T : class;
 
         [TestCaseSource(nameof(EqualsSource))]
         public void PropertyValuesHappyPath(EqualByTestsShared.EqualsData data)

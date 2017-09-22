@@ -190,7 +190,7 @@ namespace Gu.State.Tests
                     source[2].Value++;
                     Assert.AreEqual(4, tracker.Changes);
                     CollectionAssert.AreEqual(new[] { "Changes", "Changes", "Changes", "Changes" }, propertyChanges);
-                    expectedChanges.Add(new ItemGraphChangedEventArgs<ChangeTrackerNode>(sourceNode, 2, RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(source[2], tracker.Settings, isRoot: false).Value, new PropertyChangeEventArgs(source[2],source[2].GetProperty("Value")))));
+                    expectedChanges.Add(new ItemGraphChangedEventArgs<ChangeTrackerNode>(sourceNode, 2, RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(source[2], tracker.Settings, isRoot: false).Value, new PropertyChangeEventArgs(source[2], source[2].GetProperty("Value")))));
                     CollectionAssert.AreEqual(expectedChanges, changes, EventArgsComparer.Default);
                 }
             }

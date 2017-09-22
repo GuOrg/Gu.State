@@ -10,11 +10,6 @@
                 builder.AddIgnoredField<T>(excluded);
             }
 
-            //if (excludedType != null)
-            //{
-            //    builder.IgnoreType(excludedType);
-            //}
-
             var settings = builder.CreateSettings(referenceHandling);
             Copy.FieldValues(source, target, settings);
         }

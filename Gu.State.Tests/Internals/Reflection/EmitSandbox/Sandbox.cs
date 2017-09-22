@@ -62,7 +62,7 @@ namespace Gu.State.Tests.Internals.Refelection.EmitSandbox
             var stopwatch = Stopwatch.StartNew();
             var type = typeof(ComplexType);
             var typeBuilder = this.moduleBuilder.DefineType($"Gu.State.Emit.{type.Name}", TypeAttributes.Public | TypeAttributes.Class | TypeAttributes.Abstract | TypeAttributes.Sealed);
-            foreach (var field in type.GetFields(BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance))
+            foreach (var field in type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
             {
                 var setMethod = typeBuilder.DefineMethod($"set_{field.Name}", MethodAttributes.Public | MethodAttributes.Static, null, new[] { field.DeclaringType, field.FieldType });
                 var ilGenerator = setMethod.GetILGenerator();

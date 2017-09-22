@@ -14,11 +14,6 @@
                 builder.IgnoreProperty<T>(excluded);
             }
 
-            //if (excludedType != null)
-            //{
-            //    builder.IgnoreType(excludedType);
-            //}
-
             var settings = builder.CreateSettings(referenceHandling);
             Copy.PropertyValues(source, target, settings);
         }

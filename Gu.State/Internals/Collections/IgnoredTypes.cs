@@ -55,12 +55,13 @@
                 return false;
             }
 
-            if (this.ignoredTypes.TryGetValue(type, out bool isIgnoring))
+            if (this.ignoredTypes.TryGetValue(type, out var isIgnoring))
             {
                 return isIgnoring;
             }
 
             if (type.IsArray ||
+                type.IsIReadOnlyList() ||
                 type.IsImmutableList() ||
                 type.IsImmutableArray() ||
                 type.IsImmutableHashSet() ||
@@ -82,7 +83,7 @@
         private bool IsIgnoredGeneric(Type type)
         {
             var genericDef = type.GetGenericTypeDefinition();
-            if (this.ignoredTypes.TryGetValue(genericDef, out bool isIgnoring))
+            if (this.ignoredTypes.TryGetValue(genericDef, out var isIgnoring))
             {
                 this.ignoredTypes.TryAdd(type, isIgnoring);
                 return isIgnoring;

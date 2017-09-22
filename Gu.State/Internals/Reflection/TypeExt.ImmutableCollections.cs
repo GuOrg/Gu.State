@@ -4,6 +4,11 @@
 
     internal static partial class TypeExt
     {
+        internal static bool IsIReadOnlyList(this Type type)
+        {
+            return type.FullName.StartsWith("System.Collections.Generic.IReadOnlyList`1");
+        }
+
         internal static bool IsImmutableList(this Type type)
         {
             return type.FullName.StartsWith("System.Collections.Immutable.ImmutableList`1");

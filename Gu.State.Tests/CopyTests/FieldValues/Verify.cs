@@ -15,7 +15,7 @@ namespace Gu.State.Tests.CopyTests.FieldValues
 
         public override void VerifyMethod<T>(
             ReferenceHandling referenceHandling,
-            string excludedMembers= null,
+            string excludedMembers = null,
             Type ignoredType = null,
             Type immutableType = null)
         {

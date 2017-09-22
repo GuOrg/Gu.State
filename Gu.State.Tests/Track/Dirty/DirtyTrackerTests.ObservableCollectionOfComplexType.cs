@@ -24,7 +24,7 @@ namespace Gu.State.Tests
                     tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                     Assert.AreEqual(true, tracker.IsDirty);
                     var expected = "ObservableCollection<ComplexType> [0] x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: missing item [1] x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: missing item";
-                    var actual = tracker.Diff.ToString(""," ");
+                    var actual = tracker.Diff.ToString("", " ");
                     Assert.AreEqual(expected, actual);
                     CollectionAssert.IsEmpty(changes);
                 }

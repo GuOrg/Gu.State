@@ -7,27 +7,38 @@
     {
         public static IReadOnlyList<EqualsData> EqualsSource = new List<EqualsData>
         {
-            new EqualsData(source: new EqualByTypes.WithSimpleValues(1, 2, "3", StringSplitOptions.RemoveEmptyEntries),
-                           target: new EqualByTypes.WithSimpleValues(1, 2, "3", StringSplitOptions.RemoveEmptyEntries),
-                           @equals: true),
-            new EqualsData(source: new EqualByTypes.WithSimpleValues(1, null, "3", StringSplitOptions.RemoveEmptyEntries),
-                           target: new EqualByTypes.WithSimpleValues(1, null, "3", StringSplitOptions.RemoveEmptyEntries),
-                           @equals: true),
-            new EqualsData(source: new EqualByTypes.WithSimpleValues(1, 2, "3", StringSplitOptions.RemoveEmptyEntries),
-                           target: new EqualByTypes.WithSimpleValues(5, 2, "3", StringSplitOptions.RemoveEmptyEntries),
-                           @equals: false),
-            new EqualsData(source: new EqualByTypes.WithSimpleValues(1, 2, "3", StringSplitOptions.RemoveEmptyEntries),
-                           target: new EqualByTypes.WithSimpleValues(1, 5, "3", StringSplitOptions.RemoveEmptyEntries),
-                           @equals: false),
-            new EqualsData(source: new EqualByTypes.WithSimpleValues(1, 2, "3", StringSplitOptions.RemoveEmptyEntries),
-                           target: new EqualByTypes.WithSimpleValues(1, null, "3", StringSplitOptions.RemoveEmptyEntries),
-                           @equals: false),
-            new EqualsData(source: new EqualByTypes.WithSimpleValues(1, 2, "3", StringSplitOptions.RemoveEmptyEntries),
-                           target: new EqualByTypes.WithSimpleValues(1, 2, "5", StringSplitOptions.RemoveEmptyEntries),
-                           @equals: false),
-            new EqualsData(source: new EqualByTypes.WithSimpleValues(1, 2, "3", StringSplitOptions.RemoveEmptyEntries),
-                           target: new EqualByTypes.WithSimpleValues(1, 2, "3", StringSplitOptions.None),
-                           @equals: false),
+            new EqualsData(
+                source: new EqualByTypes.WithSimpleValues(1, 2, "3", StringSplitOptions.RemoveEmptyEntries),
+                target: new EqualByTypes.WithSimpleValues(1, 2, "3", StringSplitOptions.RemoveEmptyEntries),
+                @equals: true),
+            new EqualsData(
+                source: new EqualByTypes.WithSimpleValues(1, null, "3", StringSplitOptions.RemoveEmptyEntries),
+                target: new EqualByTypes.WithSimpleValues(1, null, "3", StringSplitOptions.RemoveEmptyEntries),
+                @equals: true),
+            new EqualsData(
+                source: new EqualByTypes.With<IReadOnlyList<int>>(new[]{ 1, 2, 3 }),
+                target: new EqualByTypes.With<IReadOnlyList<int>>(new[]{ 1, 2, 3 }),
+                @equals: true),
+            new EqualsData(
+                source: new EqualByTypes.WithSimpleValues(1, 2, "3", StringSplitOptions.RemoveEmptyEntries),
+                target: new EqualByTypes.WithSimpleValues(5, 2, "3", StringSplitOptions.RemoveEmptyEntries),
+                @equals: false),
+            new EqualsData(
+                source: new EqualByTypes.WithSimpleValues(1, 2, "3", StringSplitOptions.RemoveEmptyEntries),
+                target: new EqualByTypes.WithSimpleValues(1, 5, "3", StringSplitOptions.RemoveEmptyEntries),
+                @equals: false),
+            new EqualsData(
+                source: new EqualByTypes.WithSimpleValues(1, 2, "3", StringSplitOptions.RemoveEmptyEntries),
+                target: new EqualByTypes.WithSimpleValues(1, null, "3", StringSplitOptions.RemoveEmptyEntries),
+                @equals: false),
+            new EqualsData(
+                source: new EqualByTypes.WithSimpleValues(1, 2, "3", StringSplitOptions.RemoveEmptyEntries),
+                target: new EqualByTypes.WithSimpleValues(1, 2, "5", StringSplitOptions.RemoveEmptyEntries),
+                @equals: false),
+            new EqualsData(
+                source: new EqualByTypes.WithSimpleValues(1, 2, "3", StringSplitOptions.RemoveEmptyEntries),
+                target: new EqualByTypes.WithSimpleValues(1, 2, "3", StringSplitOptions.None),
+                @equals: false),
         };
 
         public class EqualsData
@@ -47,7 +58,7 @@
 
             public override string ToString()
             {
-                return $"Source: {this.Source}, Target: {this.Target}, Equals: {this.Equals}";
+                return $"Type: {this.Source?.GetType().PrettyName() ?? "null"} Source: {this.Source}, Target: {this.Target}, Equals: {this.Equals}";
             }
         }
     }

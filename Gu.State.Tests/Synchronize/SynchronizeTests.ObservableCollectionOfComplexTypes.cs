@@ -100,7 +100,7 @@ namespace Gu.State.Tests
                 CollectionAssert.AreEqual(expectedTargets, target, ComplexType.Comparer);
 
                 target[0].Value++;
-                target.Add(new ComplexType("c",4));
+                target.Add(new ComplexType("c", 4));
                 expectedTargets = new[] { new ComplexType("a", 4), new ComplexType("b", 2), new ComplexType("a", 3), new ComplexType("c", 4) };
                 CollectionAssert.AreEqual(expectedTargets, target, ComplexType.Comparer);
             }
