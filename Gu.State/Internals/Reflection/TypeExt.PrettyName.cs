@@ -53,7 +53,7 @@
                 return $"{elementType.PrettyName()}[{new string(',', type.GetArrayRank() - 1)}]";
             }
 
-            if (Aliases.TryGetValue(type, out string alias))
+            if (Aliases.TryGetValue(type, out var alias))
             {
                 return alias;
             }
@@ -69,7 +69,7 @@
 
         internal static string FullPrettyName(this Type type)
         {
-            if (Aliases.TryGetValue(type, out string alias))
+            if (Aliases.TryGetValue(type, out var alias))
             {
                 return alias;
             }

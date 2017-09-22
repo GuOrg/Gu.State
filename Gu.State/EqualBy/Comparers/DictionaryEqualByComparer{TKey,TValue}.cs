@@ -19,7 +19,7 @@ namespace Gu.State
             MemberSettings settings,
             ReferencePairCollection referencePairs)
         {
-            if (TryGetEitherNullEquals(x, y, out bool result))
+            if (TryGetEitherNullEquals(x, y, out var result))
             {
                 return result;
             }
@@ -54,7 +54,7 @@ namespace Gu.State
             {
                 var xv = x[key];
 
-                if (!y.TryGetValue(key, out TValue yv))
+                if (!y.TryGetValue(key, out var yv))
                 {
                     return false;
                 }
@@ -82,7 +82,7 @@ namespace Gu.State
             {
                 var xv = x[key];
 
-                if (!y.TryGetValue(key, out TValue yv))
+                if (!y.TryGetValue(key, out var yv))
                 {
                     return false;
                 }

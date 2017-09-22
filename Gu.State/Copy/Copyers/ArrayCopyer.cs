@@ -92,7 +92,7 @@
 
                 var sv = sourceArray[i];
                 var tv = targetArray[i];
-                var clone = State.Copy.CloneWithoutSync(sv, tv, settings, out bool created, out bool needsSync);
+                var clone = State.Copy.CloneWithoutSync(sv, tv, settings, out var created, out var needsSync);
                 if (created)
                 {
                     targetArray[i] = clone;
@@ -126,7 +126,7 @@
 
                     var sv = sourceArray[i, j];
                     var tv = targetArray[i, j];
-                    var clone = State.Copy.CloneWithoutSync(sv, tv, settings, out bool created, out bool needsSync);
+                    var clone = State.Copy.CloneWithoutSync(sv, tv, settings, out var created, out var needsSync);
                     if (created)
                     {
                         targetArray[i, j] = clone;
@@ -163,7 +163,7 @@
 
                         var sv = sourceArray[i, j, k];
                         var tv = targetArray[i, j, k];
-                        var clone = State.Copy.CloneWithoutSync(sv, tv, settings, out bool created, out bool needsSync);
+                        var clone = State.Copy.CloneWithoutSync(sv, tv, settings, out var created, out var needsSync);
                         if (created)
                         {
                             targetArray[i, j, k] = clone;
@@ -197,7 +197,7 @@
 
                 var sv = sourceArray.GetValue(index);
                 var tv = targetArray.GetValue(index);
-                var clone = State.Copy.CloneWithoutSync(sv, tv, settings, out bool created, out bool needsSync);
+                var clone = State.Copy.CloneWithoutSync(sv, tv, settings, out var created, out var needsSync);
                 if (created)
                 {
                     targetArray.SetValue(clone, index);

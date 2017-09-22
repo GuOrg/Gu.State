@@ -34,7 +34,7 @@
                 return false;
             }
 
-            if (EquatableCheckedTypes.TryGetValue(type, out bool result))
+            if (EquatableCheckedTypes.TryGetValue(type, out var result))
             {
                 return result;
             }

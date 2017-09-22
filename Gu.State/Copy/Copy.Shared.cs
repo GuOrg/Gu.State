@@ -52,7 +52,7 @@
                 return;
             }
 
-            if (TryCustomCopy(source, target, settings, out T copy))
+            if (TryCustomCopy(source, target, settings, out var copy))
             {
                 return;
             }
@@ -71,7 +71,7 @@
                 return sourceItem;
             }
 
-            if (TryCopyValue(sourceItem, targetItem, settings, out T copy) ||
+            if (TryCopyValue(sourceItem, targetItem, settings, out var copy) ||
     TryCustomCopy(sourceItem, targetItem, settings, out copy))
             {
                 needsSync = false;
@@ -171,7 +171,7 @@
 
         private static bool TryCustomCopy<T>(T source, T target, MemberSettings settings, out T copy)
         {
-            if (settings.TryGetCopyer(source.GetType(), out CustomCopy copyer))
+            if (settings.TryGetCopyer(source.GetType(), out var copyer))
             {
                 copy = (T)copyer.Copy(source, target);
                 return true;

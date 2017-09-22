@@ -17,7 +17,7 @@
 
         public static IBorrowed<ChildNodes<T>> Borrow()
         {
-            if (Cache.TryDequeue(out ChildNodes<T> childNodes))
+            if (Cache.TryDequeue(out var childNodes))
             {
                 return Borrowed.Create(childNodes, Return);
             }

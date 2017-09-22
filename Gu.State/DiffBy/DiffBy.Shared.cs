@@ -19,7 +19,7 @@
 
         private static bool TryGetValueDiff(object x, object y, MemberSettings settings, out ValueDiff diff)
         {
-            if (EqualBy.TryGetValueEquals(x, y, settings, out bool result))
+            if (EqualBy.TryGetValueEquals(x, y, settings, out var result))
             {
                 diff = result
                            ? null

@@ -8,7 +8,7 @@ namespace Gu.State
 
         internal static IBorrowed<ConcurrentDictionary<TKey, TValue>> Borrow()
         {
-            if (Cache.TryDequeue(out ConcurrentDictionary<TKey, TValue> dictionary))
+            if (Cache.TryDequeue(out var dictionary))
             {
                 return Borrowed.Create(dictionary, Return);
             }

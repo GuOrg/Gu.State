@@ -8,7 +8,7 @@
         internal static IRefCounted<T> RefCount<T>(this T item)
             where T : class, IDisposable
         {
-            if (TryRefCount(item, out IRefCounted<T> result, out bool temp))
+            if (TryRefCount(item, out var result, out var temp))
             {
                 return result;
             }
@@ -21,13 +21,13 @@
             out IRefCounted<TValue> refCounted)
             where TValue : class, IDisposable
         {
-            return TryRefCount(value, out refCounted, out bool created);
+            return TryRefCount(value, out refCounted, out var created);
         }
 
         internal static bool TryRefCount<TValue>(this TValue value, out IRefCounted<TValue> refCounted, out bool created)
             where TValue : class, IDisposable
         {
-            refCounted = RefCountedItem<TValue>.AddOrUpdate(value, out int count, out created);
+            refCounted = RefCountedItem<TValue>.AddOrUpdate(value, out var count, out created);
             return count > 0;
         }
 
@@ -77,7 +77,7 @@
                             throw new ObjectDisposedException($"Not allowed to get the value of a {this.GetType().PrettyName()} after it is disposed.");
                         }
 
-                        return this.valueReference.TryGetTarget(out TValue value)
+                        return this.valueReference.TryGetTarget(out var value)
            ? value
            : null;
                     }
@@ -100,7 +100,7 @@
                             return;
                         }
 
-                        if (this.valueReference.TryGetTarget(out TValue value))
+                        if (this.valueReference.TryGetTarget(out var value))
                         {
                             value.Dispose();
                         }

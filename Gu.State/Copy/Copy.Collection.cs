@@ -33,7 +33,7 @@
                 throw State.Throw.ShouldNeverGetHereException("Should have been checked for throw before copy");
             }
 
-            if (ArrayCopyer.TryGetOrCreate(source, target, out ICopyer copyer) ||
+            if (ArrayCopyer.TryGetOrCreate(source, target, out var copyer) ||
     ListOfTCopyer.TryGetOrCreate(source, target, out copyer) ||
     ListCopyer.TryGetOrCreate(source, target, out copyer) ||
     DictionaryTKeyTValueCopyer.TryGetOrCreate(source, target, out copyer) ||

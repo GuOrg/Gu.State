@@ -30,7 +30,7 @@ namespace Gu.State
                 return;
             }
 
-            Cache.TryRemove(this, out ReferencePair temp);
+            Cache.TryRemove(this, out var temp);
         }
 
         public object X
@@ -67,7 +67,7 @@ namespace Gu.State
             where T : class
         {
             var key = new ReferencePair(x, y);
-            if (!Cache.GetOrAdd(key, p => p).TryRefCount(out IRefCounted<ReferencePair> refcounted))
+            if (!Cache.GetOrAdd(key, p => p).TryRefCount(out var refcounted))
             {
                 if (!Cache.TryAdd(key, key))
                 {
@@ -142,7 +142,7 @@ namespace Gu.State
                 }
 
                 GC.SuppressFinalize(this);
-                Cache.TryRemove(this, out ReferencePair temp);
+                Cache.TryRemove(this, out var temp);
                 this.disposed = true;
             }
         }

@@ -55,7 +55,7 @@ namespace Gu.State
 
                 var sv = source[i];
                 var tv = target.ElementAtOrDefault(i);
-                var clone = State.Copy.CloneWithoutSync(sv, tv, settings, out bool created, out bool needsSync);
+                var clone = State.Copy.CloneWithoutSync(sv, tv, settings, out var created, out var needsSync);
                 if (created)
                 {
                     target.SetElementAt(i, clone);

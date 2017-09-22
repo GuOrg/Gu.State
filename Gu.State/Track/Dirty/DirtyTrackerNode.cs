@@ -231,7 +231,7 @@
                 var getter = this.Settings.GetOrCreateGetterAndSetter(propertyInfo);
                 var xValue = getter.GetValue(this.X);
                 var yValue = getter.GetValue(this.Y);
-                if (this.TrCreateChild(xValue, yValue, out IRefCounted<DirtyTrackerNode> node))
+                if (this.TrCreateChild(xValue, yValue, out var node))
                 {
                     using (node)
                     {
@@ -249,7 +249,7 @@
 
         private void OnTrackedAdd(object sender, AddEventArgs e)
         {
-            for (int i = e.Index; i < Math.Max(this.XList.Count, this.YList.Count); i++)
+            for (var i = e.Index; i < Math.Max(this.XList.Count, this.YList.Count); i++)
             {
                 this.UpdateIndexChildNode(i);
                 this.UpdateIndexDiff(i);
@@ -260,7 +260,7 @@
 
         private void OnTrackedRemove(object sender, RemoveEventArgs e)
         {
-            for (int i = e.Index; i <= Math.Max(this.XList.Count, this.YList.Count); i++)
+            for (var i = e.Index; i <= Math.Max(this.XList.Count, this.YList.Count); i++)
             {
                 this.UpdateIndexChildNode(i);
                 this.UpdateIndexDiff(i);
@@ -278,7 +278,7 @@
 
         private void OnTrackedMove(object sender, MoveEventArgs e)
         {
-            for (int i = Math.Min(e.FromIndex, e.ToIndex); i <= Math.Max(e.FromIndex, e.ToIndex); i++)
+            for (var i = Math.Min(e.FromIndex, e.ToIndex); i <= Math.Max(e.FromIndex, e.ToIndex); i++)
             {
                 this.UpdateIndexChildNode(i);
                 this.UpdateIndexDiff(i);
@@ -333,7 +333,7 @@
             var xValue = this.XList.ElementAtOrMissing(index);
             var yValue = this.YList.ElementAtOrMissing(index);
 
-            if (this.TrCreateChild(xValue, yValue, out IRefCounted<DirtyTrackerNode> node))
+            if (this.TrCreateChild(xValue, yValue, out var node))
             {
                 using (node)
                 {

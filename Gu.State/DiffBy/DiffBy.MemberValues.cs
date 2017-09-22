@@ -30,7 +30,7 @@
             }
 
             var getterAndSetter = settings.GetOrCreateGetterAndSetter(member);
-            if (getterAndSetter.TryGetValueEquals(xSource, ySource, settings, out bool equal, out object xValue, out object yValue))
+            if (getterAndSetter.TryGetValueEquals(xSource, ySource, settings, out var equal, out var xValue, out var yValue))
             {
                 if (equal)
                 {
@@ -83,7 +83,7 @@
             object index,
             MemberSettings settings)
         {
-            if (TryGetValueDiff(xItem, yItem, settings, out ValueDiff diff))
+            if (TryGetValueDiff(xItem, yItem, settings, out var diff))
             {
                 if (diff != null)
                 {
@@ -111,7 +111,7 @@
                 return;
             }
 
-            if (DiffBuilder.TryCreate(xItem, yItem, settings, out IRefCounted<DiffBuilder> subDiffBuilder))
+            if (DiffBuilder.TryCreate(xItem, yItem, settings, out var subDiffBuilder))
             {
                 subDiffBuilder.Value.UpdateDiffs(xItem, yItem, settings);
             }
@@ -125,7 +125,7 @@
             Debug.Assert(y != null, "y == null");
             Debug.Assert(settings != null, "settings == null");
 
-            if (TryGetValueDiff(x, y, settings, out ValueDiff diff))
+            if (TryGetValueDiff(x, y, settings, out var diff))
             {
                 return diff;
             }
@@ -160,7 +160,7 @@
                 return;
             }
 
-            if (ListDiffBy.TryGetOrCreate(x, y, out IDiffBy comparer) ||
+            if (ListDiffBy.TryGetOrCreate(x, y, out var comparer) ||
     ReadonlyListDiffBy.TryGetOrCreate(x, y, out comparer) ||
     ArrayDiffBy.TryGetOrCreate(x, y, out comparer) ||
     DictionaryDiffBy.TryGetOrCreate(x, y, out comparer) ||

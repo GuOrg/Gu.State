@@ -13,7 +13,7 @@
             where TKey : class
             where TValue : class, IDisposable
         {
-            return GetOrAdd(x, y, settings, creator, out bool temp);
+            return GetOrAdd(x, y, settings, creator, out var temp);
         }
 
         internal static IRefCounted<TValue> GetOrAdd<TKey, TValue>(
@@ -42,7 +42,7 @@
             where TKey : class
             where TValue : class, IDisposable
         {
-            return GetOrAdd(key, settings, creator, out bool temp);
+            return GetOrAdd(key, settings, creator, out var temp);
         }
 
         private static IRefCounted<TValue> GetOrAdd<TKey, TValue>(
@@ -57,7 +57,7 @@
             lock (cache.Gate)
             {
                 var value = cache.GetOrAdd(key, creator);
-                if (value.TryRefCount(out IRefCounted<TValue> refCounted, out created))
+                if (value.TryRefCount(out var refCounted, out created))
                 {
                     if (created)
                     {

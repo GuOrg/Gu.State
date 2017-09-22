@@ -142,7 +142,7 @@
 
         private void OnSourceAdd(object sender, AddEventArgs e)
         {
-            if (this.TryCreateChildNode(e.Index, out IUnsubscriber<IChildNode<ChangeTrackerNode>> childNode))
+            if (this.TryCreateChildNode(e.Index, out var childNode))
             {
                 this.Children.Insert(e.Index, childNode);
             }
@@ -180,7 +180,7 @@
             {
                 for (var i = 0; i < this.SourceList.Count; i++)
                 {
-                    if (this.TryCreateChildNode(i, out IUnsubscriber<IChildNode<ChangeTrackerNode>> childNode))
+                    if (this.TryCreateChildNode(i, out var childNode))
                     {
                         borrow.Value.Add(childNode);
                     }
@@ -201,7 +201,7 @@
 
             var getter = this.Settings.GetOrCreateGetterAndSetter(property);
             var value = getter.GetValue(this.Source);
-            if (TryGetOrCreate(value, this.Settings, isRoot: false, result: out IRefCounted<ChangeTrackerNode> node))
+            if (TryGetOrCreate(value, this.Settings, isRoot: false, result: out var node))
             {
                 using (node)
                 {
@@ -219,7 +219,7 @@
 
         private void UpdateIndexNode(int index)
         {
-            if (this.TryCreateChildNode(index, out IUnsubscriber<IChildNode<ChangeTrackerNode>> childNode))
+            if (this.TryCreateChildNode(index, out var childNode))
             {
                 this.Children.Replace(index, childNode);
             }
@@ -238,7 +238,7 @@
                 return false;
             }
 
-            if (TryGetOrCreate(value, this.Settings, isRoot: false, result: out IRefCounted<ChangeTrackerNode> node))
+            if (TryGetOrCreate(value, this.Settings, isRoot: false, result: out var node))
             {
                 using (node)
                 {

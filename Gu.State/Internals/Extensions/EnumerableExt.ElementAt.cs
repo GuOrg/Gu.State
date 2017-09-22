@@ -77,7 +77,7 @@
 
         internal static object ElementAtOrMissing<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key)
         {
-            if (dictionary.TryGetValue(key, out TValue value))
+            if (dictionary.TryGetValue(key, out var value))
             {
                 return value;
             }
@@ -87,7 +87,7 @@
 
         internal static object ElementAtOrMissing<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> dictionary, TKey key)
         {
-            if (dictionary.TryGetValue(key, out TValue value))
+            if (dictionary.TryGetValue(key, out var value))
             {
                 return value;
             }

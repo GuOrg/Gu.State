@@ -8,7 +8,7 @@
             MemberSettings settings,
             ReferencePairCollection referencePairs)
         {
-            if (ListEqualByComparer.TryGetOrCreate(x, y, out EqualByComparer comparer) ||
+            if (ListEqualByComparer.TryGetOrCreate(x, y, out var comparer) ||
     ReadOnlyListEqualByComparer.TryGetOrCreate(x, y, out comparer) ||
     SetEqualByComparer.TryGetOrCreate(x, y, out comparer) ||
     ArrayEqualByComparer.TryGetOrCreate(x, y, out comparer) ||

@@ -9,7 +9,7 @@ namespace Gu.State
 
         internal static IBorrowed<List<T>> Borrow()
         {
-            if (Cache.TryDequeue(out List<T> list))
+            if (Cache.TryDequeue(out var list))
             {
                 return Borrowed.Create(list, Return);
             }

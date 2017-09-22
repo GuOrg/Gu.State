@@ -103,7 +103,7 @@
                 return;
             }
 
-            var clone = CloneWithoutSync(sv, tv, settings, out bool created, out bool needsSync);
+            var clone = CloneWithoutSync(sv, tv, settings, out var created, out var needsSync);
             if (created)
             {
                 getterAndSetter.SetValue(target, clone);

@@ -82,7 +82,7 @@
 
         internal static bool TryCreate(object x, object y, MemberSettings settings, out IRefCounted<DiffBuilder> subDiffBuilder)
         {
-            subDiffBuilder = TrackerCache.GetOrAdd(x, y, settings, pair => new DiffBuilder(pair, settings), out bool created);
+            subDiffBuilder = TrackerCache.GetOrAdd(x, y, settings, pair => new DiffBuilder(pair, settings), out var created);
             return created;
         }
 
@@ -109,7 +109,7 @@
                     return true;
                 }
 
-                if (!this.KeyedDiffs.TryGetValue(member, out SubDiff old))
+                if (!this.KeyedDiffs.TryGetValue(member, out var old))
                 {
                     this.Add(member, xValue, yValue);
                     return true;
@@ -121,8 +121,8 @@
                     return true;
                 }
 
-                if (EqualBy.TryGetValueEquals(xValue, old.X, this.settings, out bool xEqual) && xEqual &&
-EqualBy.TryGetValueEquals(yValue, old.Y, this.settings, out bool yEqual) && yEqual)
+                if (EqualBy.TryGetValueEquals(xValue, old.X, this.settings, out var xEqual) && xEqual &&
+EqualBy.TryGetValueEquals(yValue, old.Y, this.settings, out var yEqual) && yEqual)
                 {
                     return false;
                 }
@@ -367,7 +367,7 @@ EqualBy.TryGetValueEquals(yValue, old.Y, this.settings, out bool yEqual) && yEqu
                 return;
             }
 
-            if (!builder.TryRefCount(out IRefCounted<DiffBuilder> refCounted, out bool created))
+            if (!builder.TryRefCount(out var refCounted, out var created))
             {
                 throw Throw.ShouldNeverGetHereException("UpdateSubBuilder failed, try refcount failed");
             }
@@ -385,7 +385,7 @@ EqualBy.TryGetValueEquals(yValue, old.Y, this.settings, out bool yEqual) && yEqu
 
             public int Compare(SubDiff x, SubDiff y)
             {
-                if (TryCompareType(x, y, out int result))
+                if (TryCompareType(x, y, out var result))
                 {
                     return result;
                 }

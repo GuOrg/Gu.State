@@ -140,7 +140,7 @@
 
             public bool Equals(Error x, Error y)
             {
-                if (TryEquals(x as TypeErrors, y as TypeErrors, out bool equals) ||
+                if (TryEquals(x as TypeErrors, y as TypeErrors, out var equals) ||
     TryEquals(x as MemberErrors, y as MemberErrors, out equals) ||
     TryEquals(x as UnsupportedIndexer, y as UnsupportedIndexer, out equals))
                 {

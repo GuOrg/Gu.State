@@ -70,8 +70,8 @@
             foreach (var key in source.Keys)
             {
                 var sv = source[key];
-                target.TryGetValue(key, out TValue tv);
-                var clone = State.Copy.CloneWithoutSync(sv, tv, settings, out bool created, out bool needsSync);
+                target.TryGetValue(key, out var tv);
+                var clone = State.Copy.CloneWithoutSync(sv, tv, settings, out var created, out var needsSync);
                 if (created)
                 {
                     target[key] = clone;

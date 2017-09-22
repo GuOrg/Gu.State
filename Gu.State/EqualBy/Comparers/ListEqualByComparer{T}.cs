@@ -17,7 +17,7 @@
             MemberSettings settings,
             ReferencePairCollection referencePairs)
         {
-            if (TryGetEitherNullEquals(x, y, out bool result))
+            if (TryGetEitherNullEquals(x, y, out var result))
             {
                 return result;
             }

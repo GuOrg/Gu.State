@@ -9,7 +9,7 @@
 
         internal static IBorrowed<Dictionary<TKey, TValue>> Borrow()
         {
-            if (Cache.TryDequeue(out Dictionary<TKey, TValue> dictionary))
+            if (Cache.TryDequeue(out var dictionary))
             {
                 return Borrowed.Create(dictionary, Return);
             }

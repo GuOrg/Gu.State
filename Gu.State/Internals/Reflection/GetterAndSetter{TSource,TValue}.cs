@@ -57,7 +57,7 @@
 
         public bool TryGetValueEquals(object x, object y, MemberSettings settings, out bool equal, out object xv, out object yv)
         {
-            var result = this.TryGetValueEquals((TSource)x, (TSource)y, settings, out equal, out TValue xValue, out TValue yValue);
+            var result = this.TryGetValueEquals((TSource)x, (TSource)y, settings, out equal, out var xValue, out var yValue);
             xv = xValue;
             yv = yValue;
             return result;
