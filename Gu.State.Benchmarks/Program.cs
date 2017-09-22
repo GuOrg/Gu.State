@@ -15,7 +15,7 @@ namespace Gu.State.Benchmarks
 
         public static void Main()
         {
-            foreach (var summary in RunSingle<EqualByComplexType>())
+            foreach (var summary in RunAll())
             {
                 CopyResult(summary.Title);
             }
@@ -40,7 +40,7 @@ namespace Gu.State.Benchmarks
             if (Directory.Exists(ProjectDirectory))
             {
                 var sourceFileName = Path.Combine(ArtifactsDirectory, name + "-report-github.md");
-                var destinationFileName = Path.Combine(ProjectDirectory, name + ".md");
+                var destinationFileName = Path.Combine(ProjectDirectory, "Benchmarks", name + ".md");
                 Console.WriteLine($"Copy: {sourceFileName} -> {destinationFileName}");
                 File.Copy(sourceFileName, destinationFileName, overwrite: true);
             }
