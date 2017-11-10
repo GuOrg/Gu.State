@@ -1,3 +1,6 @@
+#### 0.2.1
+* USABILITY: Sign
+
 #### 0.2.0.3
 * USABILITY: Throw exception with useful info when trying to track a notifying struct.
 
