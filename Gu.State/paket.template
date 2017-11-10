@@ -1,5 +1,5 @@
 ﻿type file
-version 0.2.1.0
+version 0.2.1.1
 title Gu.State
 id Gu.State
 authors Johan Larsson
@@ -15,9 +15,9 @@ releasenotes
   USABILITY: Sign
 
 files
-  /bin/Release/net45/Gu.State.dll ==> net45
-  /bin/Release/net45/Gu.State.xml ==> net45
-  /bin/Release/net45/Gu.State.pdb ==> net45
+  bin/Release/net45/Gu.State.dll ==> lib/net45
+  bin/Release/net45/Gu.State.xml ==> lib/net45
+  bin/Release/net45/Gu.State.pdb ==> lib/net45
 
 excludedgroups
   Analyzers
