@@ -6,6 +6,8 @@
     <CodeAnalysisRuleSet>Gu.State.ruleset</CodeAnalysisRuleSet>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Gu.State.xml</DocumentationFile>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\Gu.State.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <Import Project="..\.paket\Paket.Restore.targets" />
 </Project>

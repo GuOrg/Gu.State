@@ -5,6 +5,8 @@
     <CodeAnalysisRuleSet>Gu.State.Tests.ruleset</CodeAnalysisRuleSet>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\Gu.State.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Gu.State\Gu.State.csproj" />
