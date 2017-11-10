@@ -3,5 +3,5 @@ group Analyzers
   StyleCop.Analyzers
   IDisposableAnalyzers
   Gu.Analyzers
-  WpfAnalyzers
+  PropertyChangedAnalyzers
   Desktop.Analyzers
