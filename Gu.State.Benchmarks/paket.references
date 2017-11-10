@@ -1,6 +1,5 @@
 group Analyzers
   IDisposableAnalyzers
-  JetBrains.Annotations
 
 group Benchmarks
   BenchmarkDotNet
