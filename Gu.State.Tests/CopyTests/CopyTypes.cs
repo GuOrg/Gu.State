@@ -1,5 +1,5 @@
 ﻿// ReSharper disable UnusedMember.Local
-#pragma warning disable WPF1011 // Implement INotifyPropertyChanged.
+#pragma warning disable INPC001 // Implement INotifyPropertyChanged.
 #pragma warning disable SA1401 // Fields must be private
 namespace Gu.State.Tests.CopyTests
 {
@@ -464,10 +464,10 @@ namespace Gu.State.Tests.CopyTests
 
             public void SetFields(int intValue, string stringValue)
             {
-#pragma warning disable WPF1012 // Notify when property changes.
+#pragma warning disable INPC003 // Notify when property changes.
                 this.intValue = intValue;
                 this.stringValue = stringValue;
-#pragma warning restore WPF1012 // Notify when property changes.
+#pragma warning restore INPC003 // Notify when property changes.
             }
 
             public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

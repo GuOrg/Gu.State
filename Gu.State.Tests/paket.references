@@ -3,7 +3,7 @@ group Analyzers
   StyleCop.Analyzers
   IDisposableAnalyzers
   Gu.Analyzers
-  WpfAnalyzers
+  PropertyChangedAnalyzers
 
 group Test
   NUnit

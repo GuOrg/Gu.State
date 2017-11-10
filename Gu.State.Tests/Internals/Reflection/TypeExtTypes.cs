@@ -1,6 +1,6 @@
 ﻿// ReSharper disable All
-#pragma warning disable WPF1012 // Notify when property changes.
-#pragma warning disable WPF1011 // Implement INotifyPropertyChanged.
+#pragma warning disable INPC003 // Notify when property changes.
+#pragma warning disable INPC001 // Implement INotifyPropertyChanged.
 #pragma warning disable SA1307 // Accessible fields must begin with upper-case letter
 #pragma warning disable SA1401 // Fields must be private
 namespace Gu.State.Tests.Internals.Reflection

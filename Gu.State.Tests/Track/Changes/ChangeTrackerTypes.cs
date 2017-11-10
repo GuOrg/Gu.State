@@ -1,6 +1,6 @@
 ﻿// ReSharper disable All
-#pragma warning disable WPF1012 // Notify when property changes.
-#pragma warning disable WPF1011 // Implement INotifyPropertyChanged.
+#pragma warning disable INPC003 // Notify when property changes.
+#pragma warning disable INPC001 // Implement INotifyPropertyChanged.
 #pragma warning disable SA1401 // Fields must be private
 namespace Gu.State.Tests
 {
@@ -21,9 +21,9 @@ namespace Gu.State.Tests
             int Excluded { get; set; }
         }
 
-#pragma warning disable WPF1001 // Struct must not implement INotifyPropertyChanged
+#pragma warning disable INPC008 // Struct must not implement INotifyPropertyChanged
         public struct NotifyingStruct : INotifyPropertyChanged
-#pragma warning restore WPF1001 // Struct must not implement INotifyPropertyChanged
+#pragma warning restore INPC008 // Struct must not implement INotifyPropertyChanged
         {
             private int value;
 
@@ -471,13 +471,13 @@ namespace Gu.State.Tests
 
             public Parent(string name, Child child)
             {
-                this.Name = name;
+                this.name = name;
                 if (child != null)
                 {
                     child.Parent = this;
                 }
 
-                this.Child = child;
+                this.child = child;
             }
 
             public Parent()
@@ -538,7 +538,7 @@ namespace Gu.State.Tests
 
             public Child(string name)
             {
-                this.Name = name;
+                this.name = name;
             }
 
             public event PropertyChangedEventHandler PropertyChanged;

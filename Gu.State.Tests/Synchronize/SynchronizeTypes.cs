@@ -1,4 +1,4 @@
-﻿#pragma warning disable WPF1012 // Notify when property changes.
+﻿#pragma warning disable INPC003 // Notify when property changes.
 namespace Gu.State.Tests
 {
     using System;
@@ -67,8 +67,8 @@ namespace Gu.State.Tests
 
             public ComplexType(string name, int value)
             {
-                this.Name = name;
-                this.Value = value;
+                this.name = name;
+                this.value = value;
             }
 
             public event PropertyChangedEventHandler PropertyChanged;
@@ -171,8 +171,8 @@ namespace Gu.State.Tests
 
             public WithComplexProperty(string name, int value)
             {
-                this.Name = name;
-                this.Value = value;
+                this.name = name;
+                this.value = value;
             }
 
             public event PropertyChangedEventHandler PropertyChanged;
@@ -302,8 +302,8 @@ namespace Gu.State.Tests
 
             public WithImmutableProperty(string name, int value)
             {
-                this.Name = name;
-                this.Value = value;
+                this.name = name;
+                this.value = value;
             }
 
             public event PropertyChangedEventHandler PropertyChanged;
@@ -377,8 +377,8 @@ namespace Gu.State.Tests
 
             public WithObservableCollectionProperties(string name, int value)
             {
-                this.Name = name;
-                this.Value = value;
+                this.name = name;
+                this.value = value;
             }
 
             public WithObservableCollectionProperties(params ComplexType[] complexTypes)
@@ -540,8 +540,8 @@ namespace Gu.State.Tests
 
             public WithTwoComplexProperties(string name, int value)
             {
-                this.Name = name;
-                this.Value = value;
+                this.name = name;
+                this.value = value;
             }
 
             public event PropertyChangedEventHandler PropertyChanged;
@@ -663,7 +663,7 @@ namespace Gu.State.Tests
 
             public Parent(string name, Child child)
             {
-                this.Name = name;
+                this.name = name;
                 this.Child = child;
             }
 
@@ -722,7 +722,7 @@ namespace Gu.State.Tests
 
             public Child(string name)
             {
-                this.Name = name;
+                this.name = name;
             }
 
             public event PropertyChangedEventHandler PropertyChanged;

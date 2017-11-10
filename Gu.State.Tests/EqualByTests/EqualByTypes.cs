@@ -1,6 +1,6 @@
 ﻿// ReSharper disable All
-#pragma warning disable WPF1012 // Notify when property changes.
-#pragma warning disable WPF1011 // Implement INotifyPropertyChanged.
+#pragma warning disable INPC003 // Notify when property changes.
+#pragma warning disable INPC001 // Implement INotifyPropertyChanged.
 namespace Gu.State.Tests.EqualByTests
 {
     using System;
@@ -144,8 +144,8 @@ namespace Gu.State.Tests.EqualByTests
 
             public WithComplexValue(string name, int value)
             {
-                this.Name = name;
-                this.Value = value;
+                this.name = name;
+                this.value = value;
             }
 
             public string Name
@@ -176,10 +176,10 @@ namespace Gu.State.Tests.EqualByTests
 
             public WithSimpleValues(int intValue, int? nullableIntValue, string stringValue, StringSplitOptions enumValue)
             {
-                this.IntValue = intValue;
-                this.NullableIntValue = nullableIntValue;
-                this.StringValue = stringValue;
-                this.EnumValue = enumValue;
+                this.intValue = intValue;
+                this.nullableIntValue = nullableIntValue;
+                this.stringValue = stringValue;
+                this.enumValue = enumValue;
             }
 
             public int IntValue
