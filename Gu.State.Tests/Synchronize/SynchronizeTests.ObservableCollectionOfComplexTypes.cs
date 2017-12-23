@@ -357,19 +357,6 @@ namespace Gu.State.Tests
                     source.Clear();
                     Assert.AreEqual(0, source.Count);
                     Assert.AreEqual(0, target.Count);
-
-                    //target.RemoveAt(0);
-                    //Assert.AreEqual(2, source.Count);
-                    //Assert.AreEqual(1, target.Count);
-                    //Assert.AreEqual("a", source[0].Name);
-                    //Assert.AreEqual("changed", target[0].Name);
-                    //Assert.AreEqual(1, source[0].Value);
-                    //Assert.AreEqual(3, target[0].Value);
-
-                    //Assert.AreEqual("changed", source[1].Name);
-                    //Assert.AreEqual(3, source[1].Value);
-
-                    //Assert.Inconclusive("Not sure how to handle the situation where target changes. Maybe throw but not very elegant");
                 }
             }
         }

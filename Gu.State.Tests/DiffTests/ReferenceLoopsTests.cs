@@ -89,10 +89,6 @@ namespace Gu.State.Tests.DiffTests
                                ? "Parent <Child>k__BackingField x: null y: Gu.State.Tests.DiffTests.DiffTypes+Child"
                                : "Parent Child x: null y: Gu.State.Tests.DiffTests.DiffTypes+Child";
             Assert.AreEqual(expected, result.ToString(string.Empty, " "));
-
-            //result = this.EqualMethod(y, x, ReferenceHandling.Structural);
-            //Assert.AreEqual(false, result);
-
             result = this.DiffMethod(x, y, ReferenceHandling.References);
             Assert.AreEqual(false, result.IsEmpty);
             Assert.AreEqual(expected, result.ToString(string.Empty, " "));
