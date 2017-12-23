@@ -25,16 +25,16 @@ namespace Gu.State.Tests.DiffTests
         [TestCase(0, 0, 0, 0, "Empty")]
         [TestCase(0, 1, 0, 1, "Empty")]
         [TestCase(1, 1, 1, 1, "Empty")]
-        [TestCase(0, 2, 0, 1, "<RepeatIterator>d__112<int> [Skip(1)] x: 0 y: missing item")]
-        [TestCase(0, 1, 0, 2, "<RepeatIterator>d__112<int> [Skip(1)] x: missing item y: 0")]
-        [TestCase(1, 1, 0, 1, "<RepeatIterator>d__112<int> [Skip(0)] x: 1 y: 0")]
-        [TestCase(0, 1, 1, 1, "<RepeatIterator>d__112<int> [Skip(0)] x: 0 y: 1")]
+        [TestCase(0, 2, 0, 1, "<RepeatIterator>d__11\\d<int> \\[Skip\\(1\\)\\] x: 0 y: missing item")]
+        [TestCase(0, 1, 0, 2, "<RepeatIterator>d__11\\d<int> \\[Skip\\(1\\)\\] x: missing item y: 0")]
+        [TestCase(1, 1, 0, 1, "<RepeatIterator>d__11\\d<int> \\[Skip\\(0\\)\\] x: 1 y: 0")]
+        [TestCase(0, 1, 1, 1, "<RepeatIterator>d__11\\d<int> \\[Skip\\(0\\)\\] x: 0 y: 1")]
         public void EnumarebleRepeatStructural(int startX, int countX, int startY, int countY, string expected)
         {
             var x = Enumerable.Repeat(startX, countX);
             var y = Enumerable.Repeat(startY, countY);
             var diff = this.DiffMethod(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(expected, diff.ToString(string.Empty, " "));
+            StringAssert.IsMatch(expected, diff.ToString(string.Empty, " "));
         }
 
         [Test]
