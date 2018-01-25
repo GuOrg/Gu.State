@@ -192,6 +192,16 @@ namespace Gu.State.Tests.EqualByTests
             Assert.AreEqual(expected, result);
         }
 
+        [TestCase("f062db24-d4b8-452a-904c-ba2d23663e92", "f062db24-d4b8-452a-904c-ba2d23663e92", true)]
+        [TestCase("f062db24-d4b8-452a-904c-ba2d23663e92", "f062db24-d4b8-452a-904c-ba2d23663e91", false)]
+        public void WithReadonlyGuid(string xv, string yv, bool expected)
+        {
+            var x = new WithReadonlyProperty<Guid>(Guid.Parse(xv));
+            var y = new WithReadonlyProperty<Guid>(Guid.Parse(yv));
+            var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
+            Assert.AreEqual(expected, result);
+        }
+
         [Test]
         public void WithListOfIntsToEmpty()
         {
