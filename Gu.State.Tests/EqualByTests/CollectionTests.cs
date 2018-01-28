@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-
+    using System.Drawing;
     using NUnit.Framework;
 
     using static EqualByTypes;
@@ -109,6 +109,32 @@
 
             result = this.EqualByMethod(y, x, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
+        }
+
+        [Test]
+        public void ListOfPoints()
+        {
+            var x = new List<Point> { new Point(1, 2), new Point(1, 2) };
+            var y = new List<Point> { new Point(1, 2), new Point(1, 2) };
+
+            var result = this.EqualByMethod(x, y, ReferenceHandling.Structural);
+            Assert.AreEqual(true, result);
+
+            result = this.EqualByMethod(x, y, ReferenceHandling.References);
+            Assert.AreEqual(true, result);
+        }
+
+        [Test]
+        public void WithListOfPoints()
+        {
+            var x = new With<List<Point>>(new List<Point> { new Point(1, 2), new Point(1, 2) });
+            var y = new With<List<Point>>(new List<Point> { new Point(1, 2), new Point(1, 2) });
+
+            var result = this.EqualByMethod(x, y, ReferenceHandling.Structural);
+            Assert.AreEqual(true, result);
+
+            result = this.EqualByMethod(x, y, ReferenceHandling.References);
+            Assert.AreEqual(false, result);
         }
 
         [Test]

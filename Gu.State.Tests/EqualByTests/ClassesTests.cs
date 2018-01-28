@@ -83,6 +83,16 @@ namespace Gu.State.Tests.EqualByTests
             Assert.AreEqual(false, result);
         }
 
+        [TestCase(1, 1, true)]
+        [TestCase(1, 2, false)]
+        public void WithInt(int xi, int yi, bool expected)
+        {
+            var x = new With<int>(xi);
+            var y = new With<int>(yi);
+            Assert.AreEqual(expected, this.EqualMethod(x, y, ReferenceHandling.Structural));
+            Assert.AreEqual(expected, this.EqualMethod(x, y, ReferenceHandling.References));
+        }
+
         [Test]
         public void WithComplexStructuralWhenNull()
         {
