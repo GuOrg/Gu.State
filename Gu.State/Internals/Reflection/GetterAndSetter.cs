@@ -28,10 +28,20 @@
 
         private static IGetterAndSetter Create(PropertyInfo propertyInfo)
         {
-            var setter = typeof(GetterAndSetter<,>).MakeGenericType(propertyInfo.DeclaringType, propertyInfo.PropertyType);
-            var constructorInfo = setter.GetConstructor(new[] { typeof(PropertyInfo) });
-            //// ReSharper disable once PossibleNullReferenceException nope, not here
-            return (IGetterAndSetter)constructorInfo.Invoke(new object[] { propertyInfo });
+            if (propertyInfo.DeclaringType.IsValueType)
+            {
+                var setter = typeof(StructGetterAndSetter<,>).MakeGenericType(propertyInfo.DeclaringType, propertyInfo.PropertyType);
+                var constructorInfo = setter.GetConstructor(new[] { typeof(PropertyInfo) });
+                //// ReSharper disable once PossibleNullReferenceException nope, not here
+                return (IGetterAndSetter)constructorInfo.Invoke(new object[] { propertyInfo });
+            }
+            else
+            {
+                var setter = typeof(GetterAndSetter<,>).MakeGenericType(propertyInfo.DeclaringType, propertyInfo.PropertyType);
+                var constructorInfo = setter.GetConstructor(new[] { typeof(PropertyInfo) });
+                //// ReSharper disable once PossibleNullReferenceException nope, not here
+                return (IGetterAndSetter)constructorInfo.Invoke(new object[] { propertyInfo });
+            }
         }
     }
 }
