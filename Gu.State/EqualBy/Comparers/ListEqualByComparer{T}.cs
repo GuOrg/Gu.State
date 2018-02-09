@@ -29,8 +29,9 @@
                 return false;
             }
 
-            var isEquatable = settings.IsEquatable(x.GetType().GetItemType());
-            if (settings.ReferenceHandling == ReferenceHandling.References)
+            var isEquatable = settings.IsEquatable(typeof(T));
+            if (!typeof(T).IsValueType &&
+                settings.ReferenceHandling == ReferenceHandling.References)
             {
                 return isEquatable
                            ? ItemsEquals(xl, yl, EqualityComparer<T>.Default.Equals)
