@@ -1,4 +1,3 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net461</TargetFrameworks>
@@ -7,15 +6,6 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="TraceEvent.ReadMe.txt">
-      <Paket>True</Paket>
-    </Content>
-    <Content Include="TraceEvent.ReleaseNotes.txt">
-      <Paket>True</Paket>
-    </Content>
-    <Content Include="_TraceEventProgrammersGuide.docx">
-      <Paket>True</Paket>
-    </Content>
     <ProjectReference Include="..\Gu.State\Gu.State.csproj" />
   </ItemGroup>
   <Import Project="..\.paket\Paket.Restore.targets" />
