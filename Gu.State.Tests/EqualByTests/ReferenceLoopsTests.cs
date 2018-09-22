@@ -13,12 +13,12 @@ namespace Gu.State.Tests.EqualByTests
         public abstract bool EqualMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type excludedType = null)
             where T : class;
 
-        [TestCase("p", "c", true)]
-        [TestCase("", "c", false)]
-        [TestCase("p", "", false)]
+        [TestCase("parent", "child", true)]
+        [TestCase("", "child", false)]
+        [TestCase("parent", "", false)]
         public void ParentChild(string p, string c, bool expected)
         {
-            var x = new Parent("p", new Child("c"));
+            var x = new Parent("parent", new Child("child"));
             Assert.AreSame(x, x.Child.Parent);
 
             var y = new Parent(p, new Child(c));
@@ -34,8 +34,8 @@ namespace Gu.State.Tests.EqualByTests
         [TestCase(ReferenceHandling.References)]
         public void ParentChildWhenTargetChildIsNull(ReferenceHandling referenceHandling)
         {
-            var x = new Parent("p", new Child("c"));
-            var y = new Parent("p", null);
+            var x = new Parent("parent", new Child("child"));
+            var y = new Parent("parent", null);
             var result = this.EqualMethod(x, y, referenceHandling);
             Assert.AreEqual(false, result);
 
@@ -47,8 +47,8 @@ namespace Gu.State.Tests.EqualByTests
         [TestCase(ReferenceHandling.References)]
         public void ParentChildWhenSourceChildIsNull(ReferenceHandling referenceHandling)
         {
-            var x = new Parent("p", null);
-            var y = new Parent("p", new Child("c"));
+            var x = new Parent("parent", null);
+            var y = new Parent("parent", new Child("child"));
             var result = this.EqualMethod(x, y, referenceHandling);
             Assert.AreEqual(false, result);
 

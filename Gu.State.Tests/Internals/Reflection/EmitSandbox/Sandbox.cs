@@ -33,7 +33,7 @@ namespace Gu.State.Tests.Internals.Refelection.EmitSandbox
             var asmBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
             var moduleBuilder = asmBuilder.DefineDynamicModule("FieldAccessors");
             var typeBuilder = moduleBuilder.DefineType($"{assemblyName.Name}.{type.Name}", TypeAttributes.Public | TypeAttributes.Class | TypeAttributes.Abstract | TypeAttributes.Sealed);
-            var field = type.GetField(nameof(ComplexType.value), BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            var field = type.GetField(nameof(ComplexType.value), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             var setMethod = typeBuilder.DefineMethod($"set_{field.Name}", MethodAttributes.Public | MethodAttributes.Static, null, new[] { field.DeclaringType, field.FieldType });
             var ilGenerator = setMethod.GetILGenerator();
             ilGenerator.Emit(OpCodes.Ldarg_0);

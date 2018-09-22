@@ -5,7 +5,7 @@ namespace Gu.State
     internal sealed class RequiresReferenceHandling : Error, IFixWithImmutable
     {
         public static readonly RequiresReferenceHandling Enumerable = new RequiresReferenceHandling(typeof(IEnumerable).Name);
-        public static readonly RequiresReferenceHandling ComplexType = new RequiresReferenceHandling("ComplexType");
+        public static readonly RequiresReferenceHandling ComplexType = new RequiresReferenceHandling(nameof(ComplexType));
 
         private readonly string type;
 

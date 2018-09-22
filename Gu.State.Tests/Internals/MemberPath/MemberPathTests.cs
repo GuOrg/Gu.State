@@ -5,8 +5,8 @@
 
     public class MemberPathTests
     {
-        private static readonly PropertyInfo ChildProperty = typeof(MemberPathTypes.Parent).GetProperty(nameof(MemberPathTypes.Parent.Child));
-        private static readonly PropertyInfo ParentProperty = typeof(MemberPathTypes.Child).GetProperty(nameof(MemberPathTypes.Child.Parent));
+        private static readonly PropertyInfo ChildProperty = typeof(MemberPathTypes.Parent).GetProperty(nameof(MemberPathTypes.Parent.Child), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+        private static readonly PropertyInfo ParentProperty = typeof(MemberPathTypes.Child).GetProperty(nameof(MemberPathTypes.Child.Parent), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
         [Test]
         public void PathString()
@@ -43,9 +43,9 @@
         public void WithLoop()
         {
             var rootType = typeof(MemberPathTypes.With<MemberPathTypes.Parent>);
-            var valueProperty = rootType.GetProperty(nameof(MemberPathTypes.With<MemberPathTypes.Parent>.Value));
-            var childProperty = typeof(MemberPathTypes.Parent).GetProperty(nameof(MemberPathTypes.Parent.Child));
-            var parentProperty = typeof(MemberPathTypes.Child).GetProperty(nameof(MemberPathTypes.Child.Parent));
+            var valueProperty = rootType.GetProperty(nameof(MemberPathTypes.With<MemberPathTypes.Parent>.Value), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var childProperty = typeof(MemberPathTypes.Parent).GetProperty(nameof(MemberPathTypes.Parent.Child), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var parentProperty = typeof(MemberPathTypes.Child).GetProperty(nameof(MemberPathTypes.Child.Parent), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             var path = new MemberPath(rootType)
                             .WithProperty(valueProperty)
                             .WithProperty(childProperty)

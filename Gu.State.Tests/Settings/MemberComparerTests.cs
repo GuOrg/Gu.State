@@ -11,7 +11,7 @@ namespace Gu.State.Tests.Settings
         [Test]
         public void CompareSame()
         {
-            var nameProperty = typeof(SettingsTypes.ComplexType).GetProperty(nameof(SettingsTypes.ComplexType.Name));
+            var nameProperty = typeof(SettingsTypes.ComplexType).GetProperty(nameof(SettingsTypes.ComplexType.Name), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
             var comparer = MemberInfoComparer<PropertyInfo>.Default;
             Assert.AreEqual(true, comparer.Equals(nameProperty, nameProperty));
@@ -21,8 +21,8 @@ namespace Gu.State.Tests.Settings
         [Test]
         public void CompareDerived()
         {
-            var complexNameProperty = typeof(SettingsTypes.ComplexType).GetProperty(nameof(SettingsTypes.ComplexType.Name));
-            var derivedNameProperty = typeof(SettingsTypes.Derived).GetProperty(nameof(SettingsTypes.Derived.Name));
+            var complexNameProperty = typeof(SettingsTypes.ComplexType).GetProperty(nameof(SettingsTypes.ComplexType.Name), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var derivedNameProperty = typeof(SettingsTypes.Derived).GetProperty(nameof(SettingsTypes.Derived.Name), BindingFlags.Public | BindingFlags.Instance);
 
             var comparer = MemberInfoComparer<PropertyInfo>.Default;
             Assert.AreEqual(true, comparer.Equals(complexNameProperty, derivedNameProperty));
@@ -32,8 +32,8 @@ namespace Gu.State.Tests.Settings
         [Test]
         public void CompareDifferent()
         {
-            var complexNameProperty = typeof(SettingsTypes.ComplexType).GetProperty(nameof(SettingsTypes.ComplexType.Name));
-            var complexValueProperty = typeof(SettingsTypes.ComplexType).GetProperty(nameof(SettingsTypes.ComplexType.Value));
+            var complexNameProperty = typeof(SettingsTypes.ComplexType).GetProperty(nameof(SettingsTypes.ComplexType.Name), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var complexValueProperty = typeof(SettingsTypes.ComplexType).GetProperty(nameof(SettingsTypes.ComplexType.Value), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
             var comparer = MemberInfoComparer<PropertyInfo>.Default;
             Assert.AreEqual(false, comparer.Equals(complexNameProperty, complexValueProperty));

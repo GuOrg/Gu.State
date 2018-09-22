@@ -3,7 +3,7 @@ namespace Gu.State.Tests
 {
     using System;
     using System.Collections.Generic;
-
+    using System.Reflection;
     using NUnit.Framework;
 
     using static ChangeTrackerTypes;
@@ -186,7 +186,7 @@ namespace Gu.State.Tests
                     Assert.AreEqual(1, tracker.Changes);
                     CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
                     var rootChangeEventArgs = RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(parent.Child, tracker.Settings, isRoot: false).Value, new PropertyChangeEventArgs(parent.Child, parent.Child.GetProperty(nameof(Child.Name))));
-                    var expected = new[] { new PropertyGraphChangedEventArgs<ChangeTrackerNode>(ChangeTrackerNode.GetOrCreate(parent, tracker.Settings, isRoot: false).Value, parent.GetType().GetProperty("Child"), rootChangeEventArgs) };
+                    var expected = new[] { new PropertyGraphChangedEventArgs<ChangeTrackerNode>(ChangeTrackerNode.GetOrCreate(parent, tracker.Settings, isRoot: false).Value, parent.GetType().GetProperty(nameof(Parent.Child), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly), rootChangeEventArgs) };
                     CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
                 }
             }

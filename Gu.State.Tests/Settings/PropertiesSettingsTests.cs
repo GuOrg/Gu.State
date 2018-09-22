@@ -16,8 +16,8 @@ namespace Gu.State.Tests.Settings
         public void IgnoresPropertyCtor()
         {
             var type = typeof(SettingsTypes.ComplexType);
-            var nameProperty = type.GetProperty(nameof(SettingsTypes.ComplexType.Name));
-            var valueProperty = type.GetProperty(nameof(SettingsTypes.ComplexType.Value));
+            var nameProperty = type.GetProperty(nameof(SettingsTypes.ComplexType.Name), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var valueProperty = type.GetProperty(nameof(SettingsTypes.ComplexType.Value), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             var settings = new PropertiesSettings(new[] { nameProperty }, null, null, null, null, ReferenceHandling.Throw, Constants.DefaultPropertyBindingFlags);
             Assert.AreEqual(true, settings.IsIgnoringProperty(nameProperty));
             Assert.AreEqual(false, settings.IsIgnoringProperty(valueProperty));
@@ -27,8 +27,8 @@ namespace Gu.State.Tests.Settings
         public void IgnoresPropertyBuilder()
         {
             var type = typeof(SettingsTypes.ComplexType);
-            var nameProperty = type.GetProperty(nameof(SettingsTypes.ComplexType.Name));
-            var valueProperty = type.GetProperty(nameof(SettingsTypes.ComplexType.Value));
+            var nameProperty = type.GetProperty(nameof(SettingsTypes.ComplexType.Name), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var valueProperty = type.GetProperty(nameof(SettingsTypes.ComplexType.Value), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             var settings = PropertiesSettings.Build()
                                              .IgnoreProperty(nameProperty)
                                              .CreateSettings();
@@ -40,7 +40,7 @@ namespace Gu.State.Tests.Settings
         public void IgnoresIndexer()
         {
             var type = typeof(SettingsTypes.WithIndexerType);
-            var nameProperty = type.GetProperty(nameof(SettingsTypes.WithIndexerType.Name));
+            var nameProperty = type.GetProperty(nameof(SettingsTypes.WithIndexerType.Name), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             var indexerProperty = type.GetProperties().Single(x => x.GetIndexParameters().Length > 0);
             var settings = PropertiesSettings.Build()
                                              .IgnoreIndexersFor<SettingsTypes.WithIndexerType>()
@@ -55,12 +55,12 @@ namespace Gu.State.Tests.Settings
             var settings = PropertiesSettings.Build()
                                              .IgnoreProperty<SettingsTypes.ComplexType>(x => x.Name)
                                              .CreateSettings();
-            var nameProperty = typeof(SettingsTypes.ComplexType).GetProperty(nameof(SettingsTypes.ComplexType.Name));
+            var nameProperty = typeof(SettingsTypes.ComplexType).GetProperty(nameof(SettingsTypes.ComplexType.Name), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             Assert.AreEqual(true, settings.IsIgnoringProperty(nameProperty));
 
-            nameProperty = typeof(SettingsTypes.Derived).GetProperty(nameof(SettingsTypes.Derived.Name));
+            nameProperty = typeof(SettingsTypes.Derived).GetProperty(nameof(SettingsTypes.Derived.Name), BindingFlags.Public | BindingFlags.Instance);
             Assert.AreEqual(true, settings.IsIgnoringProperty(nameProperty));
-            Assert.AreEqual(false, settings.IsIgnoringProperty(typeof(SettingsTypes.Derived).GetProperty(nameof(SettingsTypes.Derived.Value))));
+            Assert.AreEqual(false, settings.IsIgnoringProperty(typeof(SettingsTypes.Derived).GetProperty(nameof(SettingsTypes.Derived.Value), BindingFlags.Public | BindingFlags.Instance)));
         }
 
         [Test]
@@ -69,34 +69,34 @@ namespace Gu.State.Tests.Settings
             var settings = PropertiesSettings.Build()
                                  .IgnoreProperty<SettingsTypes.IComplexType>(x => x.Name)
                                  .CreateSettings();
-            Assert.AreEqual(true, settings.IsIgnoringProperty(typeof(SettingsTypes.ComplexType).GetProperty(nameof(SettingsTypes.ComplexType.Name))));
-            Assert.AreEqual(true, settings.IsIgnoringProperty(typeof(SettingsTypes.IComplexType).GetProperty(nameof(SettingsTypes.ComplexType.Name))));
+            Assert.AreEqual(true, settings.IsIgnoringProperty(typeof(SettingsTypes.ComplexType).GetProperty(nameof(SettingsTypes.ComplexType.Name), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)));
+            Assert.AreEqual(true, settings.IsIgnoringProperty(typeof(SettingsTypes.IComplexType).GetProperty(nameof(SettingsTypes.ComplexType.Name), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)));
         }
 
         [Test]
         public void IgnoresTypeCtor()
         {
             var type = typeof(SettingsTypes.ComplexType);
-            var nameProperty = type.GetProperty(nameof(SettingsTypes.ComplexType.Name));
-            var valueProperty = type.GetProperty(nameof(SettingsTypes.ComplexType.Value));
+            var nameProperty = type.GetProperty(nameof(SettingsTypes.ComplexType.Name), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var valueProperty = type.GetProperty(nameof(SettingsTypes.ComplexType.Value), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             var settings = new PropertiesSettings(null, new[] { type }, null, null, null, ReferenceHandling.Throw, Constants.DefaultPropertyBindingFlags);
             Assert.AreEqual(true, settings.IsIgnoringProperty(nameProperty));
             Assert.AreEqual(true, settings.IsIgnoringProperty(valueProperty));
-            Assert.AreEqual(false, settings.IsIgnoringProperty(typeof(SettingsTypes.Immutable).GetProperty(nameof(SettingsTypes.Immutable.Value))));
+            Assert.AreEqual(false, settings.IsIgnoringProperty(typeof(SettingsTypes.Immutable).GetProperty(nameof(SettingsTypes.Immutable.Value), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)));
         }
 
         [Test]
         public void IgnoresTypeBuilder()
         {
             var type = typeof(SettingsTypes.ComplexType);
-            var nameProperty = type.GetProperty(nameof(SettingsTypes.ComplexType.Name));
-            var valueProperty = type.GetProperty(nameof(SettingsTypes.ComplexType.Value));
+            var nameProperty = type.GetProperty(nameof(SettingsTypes.ComplexType.Name), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var valueProperty = type.GetProperty(nameof(SettingsTypes.ComplexType.Value), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             var settings = PropertiesSettings.Build()
                                              .IgnoreType(type)
                                              .CreateSettings();
             Assert.AreEqual(true, settings.IsIgnoringProperty(nameProperty));
             Assert.AreEqual(true, settings.IsIgnoringProperty(valueProperty));
-            Assert.AreEqual(false, settings.IsIgnoringProperty(typeof(SettingsTypes.Immutable).GetProperty(nameof(SettingsTypes.Immutable.Value))));
+            Assert.AreEqual(false, settings.IsIgnoringProperty(typeof(SettingsTypes.Immutable).GetProperty(nameof(SettingsTypes.Immutable.Value), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)));
         }
 
         [Test]
@@ -105,11 +105,11 @@ namespace Gu.State.Tests.Settings
             var settings = PropertiesSettings.Build()
                                              .IgnoreType<SettingsTypes.ComplexType>()
                                              .CreateSettings();
-            Assert.AreEqual(true, settings.IsIgnoringProperty(typeof(SettingsTypes.ComplexType).GetProperty(nameof(SettingsTypes.ComplexType.Name))));
-            Assert.AreEqual(true, settings.IsIgnoringProperty(typeof(SettingsTypes.ComplexType).GetProperty(nameof(SettingsTypes.ComplexType.Value))));
-            Assert.AreEqual(true, settings.IsIgnoringProperty(typeof(SettingsTypes.Derived).GetProperty(nameof(SettingsTypes.Derived.Name))));
-            Assert.AreEqual(true, settings.IsIgnoringProperty(typeof(SettingsTypes.Derived).GetProperty(nameof(SettingsTypes.Derived.Value))));
-            Assert.AreEqual(false, settings.IsIgnoringProperty(typeof(SettingsTypes.Derived).GetProperty(nameof(SettingsTypes.Derived.DoubleValue))));
+            Assert.AreEqual(true, settings.IsIgnoringProperty(typeof(SettingsTypes.ComplexType).GetProperty(nameof(SettingsTypes.ComplexType.Name), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)));
+            Assert.AreEqual(true, settings.IsIgnoringProperty(typeof(SettingsTypes.ComplexType).GetProperty(nameof(SettingsTypes.ComplexType.Value), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)));
+            Assert.AreEqual(true, settings.IsIgnoringProperty(typeof(SettingsTypes.Derived).GetProperty(nameof(SettingsTypes.Derived.Name), BindingFlags.Public | BindingFlags.Instance)));
+            Assert.AreEqual(true, settings.IsIgnoringProperty(typeof(SettingsTypes.Derived).GetProperty(nameof(SettingsTypes.Derived.Value), BindingFlags.Public | BindingFlags.Instance)));
+            Assert.AreEqual(false, settings.IsIgnoringProperty(typeof(SettingsTypes.Derived).GetProperty(nameof(SettingsTypes.Derived.DoubleValue), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)));
         }
 
         [Test]

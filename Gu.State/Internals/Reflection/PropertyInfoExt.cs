@@ -14,7 +14,7 @@
             }
 
             var getMethod = propertyInfo.GetMethod;
-            return Attribute.GetCustomAttribute(getMethod, typeof(CompilerGeneratedAttribute)) == null;
+            return !Attribute.IsDefined(getMethod, typeof(CompilerGeneratedAttribute));
         }
 
         internal static bool IsGetReadOnly(this PropertyInfo propertyInfo)
@@ -25,7 +25,7 @@
             }
 
             var getMethod = propertyInfo.GetMethod;
-            return Attribute.GetCustomAttribute(getMethod, typeof(CompilerGeneratedAttribute)) != null;
+            return Attribute.IsDefined(getMethod, typeof(CompilerGeneratedAttribute));
         }
     }
 }

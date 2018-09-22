@@ -1,5 +1,6 @@
 ﻿namespace Gu.State.Tests.Internals.Errors
 {
+    using System.Reflection;
     using System.Text;
     using NUnit.Framework;
 
@@ -11,9 +12,9 @@
             public void WhenError()
             {
                 var rootType = typeof(ErrorTypes.With<ErrorTypes.Parent>);
-                var valueProperty = rootType.GetProperty(nameof(ErrorTypes.With<ErrorTypes.Parent>.Value));
-                var childProperty = typeof(ErrorTypes.Parent).GetProperty(nameof(ErrorTypes.Parent.Child));
-                var parentProperty = typeof(ErrorTypes.Child).GetProperty(nameof(ErrorTypes.Child.Parent));
+                var valueProperty = rootType.GetProperty(nameof(ErrorTypes.With<ErrorTypes.Parent>.Value), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+                var childProperty = typeof(ErrorTypes.Parent).GetProperty(nameof(ErrorTypes.Parent.Child), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+                var parentProperty = typeof(ErrorTypes.Child).GetProperty(nameof(ErrorTypes.Child.Parent), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
                 var path = new MemberPath(rootType)
                                 .WithProperty(valueProperty)
                                 .WithProperty(childProperty)
