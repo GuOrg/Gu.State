@@ -4,11 +4,13 @@ source http://www.nuget.org/api/v2/
 group Analyzers
   storage: none
   source http://www.nuget.org/api/v2/
-  nuget StyleCop.Analyzers
+  nuget AsyncUsageAnalyzers
   nuget Gu.Analyzers
   nuget IDisposableAnalyzers
-  nuget Desktop.Analyzers
+  nuget Microsoft.CodeAnalysis.FxCopAnalyzers
   nuget PropertyChangedAnalyzers
+  nuget ReflectionAnalyzers
+  nuget StyleCop.Analyzers
   nuget JetBrains.Annotations
 
 group Test

@@ -1,7 +1,9 @@
 group Analyzers
-  JetBrains.Annotations
-  StyleCop.Analyzers
-  IDisposableAnalyzers
+  AsyncUsageAnalyzers
   Gu.Analyzers
+  IDisposableAnalyzers
+  Microsoft.CodeAnalysis.FxCopAnalyzers
   PropertyChangedAnalyzers
-  Desktop.Analyzers
+  ReflectionAnalyzers
+  StyleCop.Analyzers
+  JetBrains.Annotations
