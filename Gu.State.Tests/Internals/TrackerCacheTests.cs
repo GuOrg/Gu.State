@@ -40,7 +40,7 @@ namespace Gu.State.Tests.Internals
             }
         }
 
-        internal class Recursive : IDisposable
+        internal sealed class Recursive : IDisposable
         {
             public Recursive(IRefCounted<ReferencePair> pair, MemberSettings settings)
             {

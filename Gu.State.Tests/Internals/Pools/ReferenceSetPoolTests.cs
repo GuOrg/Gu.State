@@ -23,7 +23,7 @@ namespace Gu.State.Tests.Internals.Collections
         public void BorrowTwiceReturnsSame()
         {
             var value = (ConcurrentQueue<HashSet<object>>)typeof(ReferenceSetPool<object>)
-                .GetField("Pool", BindingFlags.Static | BindingFlags.NonPublic)
+                .GetField("Pool", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)
                 .GetValue(null);
             while (value.TryDequeue(out _))
             {

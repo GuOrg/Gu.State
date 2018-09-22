@@ -17,11 +17,11 @@ namespace Gu.State.Tests.DiffTests
         [Test]
         public void ParentChildCreateWhenParentDirtyLoop()
         {
-            var x = new Parent("p1", new Child("c"));
+            var x = new Parent("p1", new Child("child"));
             Assert.AreSame(x, x.Child.Parent);
             Assert.AreSame(x.Child, x.Child.Parent.Child);
 
-            var y = new Parent("p2", new Child("c"));
+            var y = new Parent("p2", new Child("child"));
             Assert.AreSame(y, y.Child.Parent);
             Assert.AreSame(y.Child, y.Child.Parent.Child);
 
@@ -35,15 +35,15 @@ namespace Gu.State.Tests.DiffTests
             Assert.AreEqual(expected, actual);
         }
 
-        [TestCase("p", "c", "Empty")]
-        [TestCase("", "c", "Parent <member1> <member3> ... <member2> x: p y: ")]
-        [TestCase("p", "", "Parent <member1> <member2> x: c y:  <member3> ...")]
+        [TestCase("parent", "child", "Empty")]
+        [TestCase("", "child", "Parent <member1> <member3> ... <member2> x: parent y: ")]
+        [TestCase("parent", "", "Parent <member1> <member2> x: child y:  <member3> ...")]
         public void ParentChild(string p, string c, string expected)
         {
             expected = expected?.Replace("<member1>", this is FieldValues.ReferenceLoops ? "<Child>k__BackingField" : "Child")
                                 .Replace("<member2>", this is FieldValues.ReferenceLoops ? "<Name>k__BackingField" : "Name")
                                 .Replace("<member3>", this is FieldValues.ReferenceLoops ? "<Parent>k__BackingField" : "Parent");
-            var x = new Parent("p", new Child("c"));
+            var x = new Parent("parent", new Child("child"));
             Assert.AreSame(x, x.Child.Parent);
             Assert.AreSame(x.Child, x.Child.Parent.Child);
 
@@ -63,8 +63,8 @@ namespace Gu.State.Tests.DiffTests
         [Test]
         public void ParentChildWhenTargetChildIsNull()
         {
-            var x = new Parent("p", new Child("c"));
-            var y = new Parent("p", null);
+            var x = new Parent("parent", new Child("child"));
+            var y = new Parent("parent", null);
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
             var expected = this is FieldValues.ReferenceLoops
                                ? "Parent <Child>k__BackingField x: Gu.State.Tests.DiffTests.DiffTypes+Child y: null"
@@ -82,8 +82,8 @@ namespace Gu.State.Tests.DiffTests
         [Test]
         public void ParentChildWhenSourceChildIsNull()
         {
-            var x = new Parent("p", null);
-            var y = new Parent("p", new Child("c"));
+            var x = new Parent("parent", null);
+            var y = new Parent("parent", new Child("child"));
             var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
             var expected = this is FieldValues.ReferenceLoops
                                ? "Parent <Child>k__BackingField x: null y: Gu.State.Tests.DiffTests.DiffTypes+Child"

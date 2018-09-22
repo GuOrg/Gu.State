@@ -31,9 +31,9 @@ namespace Gu.State.Tests.Settings
             var settings = FieldsSettings.Build()
                                          .AddIgnoredField<ComplexType>(nameof(ComplexType.Name))
                                          .CreateSettings();
-            var nameField = type.GetField(nameof(ComplexType.Name), Constants.DefaultFieldBindingFlags);
+            var nameField = type.GetField(nameof(ComplexType.Name), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             Assert.AreEqual(true, settings.IsIgnoringField(nameField));
-            var valueField = type.GetField(nameof(ComplexType.Value), Constants.DefaultFieldBindingFlags);
+            var valueField = type.GetField(nameof(ComplexType.Value), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             Assert.AreEqual(false, settings.IsIgnoringField(valueField));
         }
 

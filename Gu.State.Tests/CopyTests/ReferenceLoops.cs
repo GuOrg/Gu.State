@@ -13,28 +13,28 @@ namespace Gu.State.Tests.CopyTests
         public abstract void CopyMethod<T>(T source, T target, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excluded = null)
             where T : class;
 
-        [TestCase("p", "c", true)]
-        [TestCase("", "c", false)]
-        [TestCase("p", "", false)]
+        [TestCase("parent", "child", true)]
+        [TestCase("", "child", false)]
+        [TestCase("parent", "", false)]
         public void ParentChild(string p, string c, bool expected)
         {
-            var source = new Parent("p", new Child("c"));
+            var source = new Parent("parent", new Child("child"));
             var target = new Parent(p, new Child(c));
             this.CopyMethod(source, target, ReferenceHandling.Structural);
-            Assert.AreEqual("p", source.Name);
-            Assert.AreEqual("p", target.Name);
-            Assert.AreEqual("c", source.Child.Name);
-            Assert.AreEqual("c", target.Child.Name);
+            Assert.AreEqual("parent", source.Name);
+            Assert.AreEqual("parent", target.Name);
+            Assert.AreEqual("child", source.Child.Name);
+            Assert.AreEqual("child", target.Child.Name);
         }
 
         [Test]
         public void ParentChildWhenSourceChildIsNull()
         {
-            var source = new Parent("p", null);
-            var target = new Parent(null, new Child("c"));
+            var source = new Parent("parent", null);
+            var target = new Parent(null, new Child("child"));
             this.CopyMethod(source, target, ReferenceHandling.Structural);
-            Assert.AreEqual("p", source.Name);
-            Assert.AreEqual("p", target.Name);
+            Assert.AreEqual("parent", source.Name);
+            Assert.AreEqual("parent", target.Name);
             Assert.AreEqual(null, source.Child);
             Assert.AreEqual(null, target.Child);
         }
@@ -47,13 +47,13 @@ namespace Gu.State.Tests.CopyTests
                 Assert.Inconclusive("Not supporting this");
             }
 
-            var source = new Parent("p", new Child("c"));
+            var source = new Parent("parent", new Child("child"));
             var target = new Parent(null, null);
             this.CopyMethod(source, target, ReferenceHandling.Structural);
-            Assert.AreEqual("p", source.Name);
-            Assert.AreEqual("p", target.Name);
-            Assert.AreEqual("c", source.Child.Name);
-            Assert.AreEqual("c", target.Child.Name);
+            Assert.AreEqual("parent", source.Name);
+            Assert.AreEqual("parent", target.Name);
+            Assert.AreEqual("child", source.Child.Name);
+            Assert.AreEqual("child", target.Child.Name);
         }
 
         [Test]
