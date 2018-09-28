@@ -3,7 +3,7 @@ namespace Gu.State.Tests
 {
     using System;
     using System.Collections.Generic;
-
+    using System.Reflection;
     using NUnit.Framework;
 
     using static ChangeTrackerTypes;
@@ -16,7 +16,7 @@ namespace Gu.State.Tests
             public void IgnoresProperty()
             {
                 var withIllegalObject = new WithIllegal();
-                var propertyInfo = typeof(WithIllegal).GetProperty(nameof(WithIllegal.Illegal));
+                var propertyInfo = typeof(WithIllegal).GetProperty(nameof(WithIllegal.Illegal), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
                 var settings = new PropertiesSettingsBuilder().IgnoreProperty(propertyInfo)
                                                               .CreateSettings(ReferenceHandling.Structural);
 

@@ -31,7 +31,7 @@ namespace Gu.State
         {
             var itemType = source.GetType().GetItemType();
             var copyMethod = this.GetType()
-                                        .GetMethod(nameof(Copy), BindingFlags.NonPublic | BindingFlags.Static)
+                                        .GetMethod(nameof(Copy), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)
                                         .MakeGenericMethod(itemType);
             copyMethod.Invoke(null, new[] { source, target, settings, referencePairs });
         }

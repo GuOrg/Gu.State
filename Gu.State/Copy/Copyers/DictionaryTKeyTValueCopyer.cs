@@ -36,7 +36,7 @@
             Debug.Assert(genericArguments.Length == 2, "genericArguments.Length != 2");
 
             var copyMethod = this.GetType()
-                                 .GetMethod(nameof(State.Copy), BindingFlags.NonPublic | BindingFlags.Static)
+                                 .GetMethod(nameof(this.Copy), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)
                                  .MakeGenericMethod(genericArguments[0], genericArguments[1]);
             copyMethod.Invoke(null, new[] { source, target, settings, referencePairs });
         }

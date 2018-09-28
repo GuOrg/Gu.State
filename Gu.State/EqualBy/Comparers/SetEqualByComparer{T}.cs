@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Reflection;
     using System.Runtime.CompilerServices;
 
     /// <inheritdoc />
@@ -50,7 +51,7 @@
                 return this.ItemsEquals(xs, ys, (xi, yi) => ReferenceEquals(xi, yi), xi => RuntimeHelpers.GetHashCode(xi));
             }
 
-            var hashCodeMethod = typeof(T).GetMethod(nameof(this.GetHashCode), new Type[0]);
+            var hashCodeMethod = typeof(T).GetMethod(nameof(this.GetHashCode), BindingFlags.Public | BindingFlags.Instance, null, Type.EmptyTypes, null);
             if (hashCodeMethod.DeclaringType == typeof(object))
             {
                 return this.ItemsEquals(xs, ys, (xi, yi) => EqualBy.MemberValues(xi, yi, settings, referencePairs), _ => 0);

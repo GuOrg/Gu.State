@@ -9,23 +9,23 @@ NUGET
     IDisposableAnalyzers (2.0.3.3)
     JetBrains.Annotations (2018.2.1)
       System.Runtime (>= 4.1) - restriction: && (< net10) (>= netstandard1.0) (< netstandard2.0)
-    Microsoft.CodeAnalysis.FxCopAnalyzers (2.6.1)
-      Microsoft.CodeQuality.Analyzers (>= 2.6.1)
-      Microsoft.NetCore.Analyzers (>= 2.6.1)
-      Microsoft.NetFramework.Analyzers (>= 2.6.1)
-      Text.Analyzers (>= 2.6.1)
-    Microsoft.CodeQuality.Analyzers (2.6.1)
-    Microsoft.NetCore.Analyzers (2.6.1)
+    Microsoft.CodeAnalysis.FxCopAnalyzers (2.6.2)
+      Microsoft.CodeQuality.Analyzers (2.6.2)
+      Microsoft.NetCore.Analyzers (2.6.2)
+      Microsoft.NetFramework.Analyzers (2.6.2)
+      Text.Analyzers (2.6.2)
+    Microsoft.CodeQuality.Analyzers (2.6.2)
+    Microsoft.NetCore.Analyzers (2.6.2)
     Microsoft.NETCore.Platforms (2.1.1) - restriction: || (&& (< monoandroid) (< monotouch) (< net10) (>= netstandard1.5) (< netstandard2.0) (< win8) (< wpa81) (< xamarinmac) (< xamarintvos) (< xamarinwatchos)) (&& (< monoandroid) (< net10) (>= netstandard1.0) (< netstandard1.2) (< win8) (< wp8)) (&& (< monoandroid) (< net10) (>= netstandard1.2) (< netstandard1.3) (< win8) (< wpa81)) (&& (< monoandroid) (< net10) (>= netstandard1.3) (< netstandard1.5) (< win8) (< wpa81)) (&& (< net10) (>= netstandard1.0) (< portable-net45+win8+wp8+wpa81))
     Microsoft.NETCore.Targets (2.1) - restriction: || (&& (< monoandroid) (< monotouch) (< net10) (>= netstandard1.5) (< netstandard2.0) (< win8) (< wpa81) (< xamarinmac) (< xamarintvos) (< xamarinwatchos)) (&& (< monoandroid) (< net10) (>= netstandard1.0) (< netstandard1.2) (< win8) (< wp8)) (&& (< monoandroid) (< net10) (>= netstandard1.2) (< netstandard1.3) (< win8) (< wpa81)) (&& (< monoandroid) (< net10) (>= netstandard1.3) (< netstandard1.5) (< win8) (< wpa81)) (&& (< net10) (>= netstandard1.0) (< portable-net45+win8+wp8+wpa81))
-    Microsoft.NetFramework.Analyzers (2.6.1)
+    Microsoft.NetFramework.Analyzers (2.6.2)
     PropertyChangedAnalyzers (2.6)
-    ReflectionAnalyzers (0.1.6-dev)
+    ReflectionAnalyzers (0.1.8-dev)
     StyleCop.Analyzers (1.0.2)
     System.Runtime (4.3) - restriction: && (< net10) (>= netstandard1.0) (< netstandard2.0)
       Microsoft.NETCore.Platforms (>= 1.1) - restriction: || (&& (< monoandroid) (< monotouch) (< net45) (>= netstandard1.5) (< win8) (< wpa81) (< xamarinios) (< xamarinmac) (< xamarintvos) (< xamarinwatchos)) (&& (< monoandroid) (< net45) (>= netstandard1.0) (< netstandard1.2) (< win8) (< wp8)) (&& (< monoandroid) (< net45) (>= netstandard1.2) (< netstandard1.3) (< win8) (< wpa81)) (&& (< monoandroid) (< net45) (>= netstandard1.3) (< netstandard1.5) (< win8) (< wpa81)) (< portable-net45+win8+wp8+wpa81)
       Microsoft.NETCore.Targets (>= 1.1) - restriction: || (&& (< monoandroid) (< monotouch) (< net45) (>= netstandard1.5) (< win8) (< wpa81) (< xamarinios) (< xamarinmac) (< xamarintvos) (< xamarinwatchos)) (&& (< monoandroid) (< net45) (>= netstandard1.0) (< netstandard1.2) (< win8) (< wp8)) (&& (< monoandroid) (< net45) (>= netstandard1.2) (< netstandard1.3) (< win8) (< wpa81)) (&& (< monoandroid) (< net45) (>= netstandard1.3) (< netstandard1.5) (< win8) (< wpa81)) (< portable-net45+win8+wp8+wpa81)
-    Text.Analyzers (2.6.1)
+    Text.Analyzers (2.6.2)
 
 GROUP Benchmarks
 STORAGE: NONE
@@ -64,7 +64,7 @@ NUGET
       System.Resources.ResourceManager (>= 4.0.1-rc2-24027) - restriction: >= netstandard1.5
       System.Runtime (>= 4.1.0-rc2-24027) - restriction: >= netstandard1.5
       System.Runtime.Extensions (>= 4.1.0-rc2-24027) - restriction: >= netstandard1.5
-    Microsoft.CodeAnalysis.Analyzers (2.6.1) - restriction: || (>= net46) (>= netstandard2.0)
+    Microsoft.CodeAnalysis.Analyzers (2.6.2) - restriction: || (>= net46) (>= netstandard2.0)
     Microsoft.CodeAnalysis.Common (2.9) - restriction: || (>= net46) (>= netstandard2.0)
       Microsoft.CodeAnalysis.Analyzers (>= 2.6.1) - restriction: >= netstandard1.3
       System.AppContext (>= 4.3) - restriction: >= netstandard1.3
