@@ -66,11 +66,11 @@ namespace Gu.State.Tests.Settings
         public void IgnoresIteratorFields()
         {
             var enumaberbles = new object[]
-                                   {
-                                       Enumerable.Repeat(1, 0),
-                                       new[] { 1 }.Where(x => x > 1),
-                                       new[] { 1 }.Select(x => x)
-                                   };
+            {
+                Enumerable.Repeat(1, 0),
+                new[] { 1 }.Where(x => x > 1),
+                new[] { 1 }.Select(x => x),
+            };
             foreach (var enumerable in enumaberbles)
             {
                 var type = enumerable.GetType();

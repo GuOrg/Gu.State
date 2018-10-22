@@ -2,7 +2,6 @@
 namespace Gu.State.Tests
 {
     using System.Collections.Generic;
-    using System.Reflection;
 
     using NUnit.Framework;
 
@@ -12,8 +11,6 @@ namespace Gu.State.Tests
     {
         public class WithObservableCollectionProperty
         {
-            private static readonly PropertyInfo ComplexesProperty = typeof(WithObservableCollectionProperties).GetProperty(nameof(WithObservableCollectionProperties.Complexes), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
-
             [Test]
             public void AddSameToBoth()
             {

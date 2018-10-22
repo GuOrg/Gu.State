@@ -40,7 +40,7 @@ namespace Gu.State.Tests
                     expected = new[]
                                    {
                                        RootChangeEventArgs.Create(node, new AddEventArgs(source, 0)),
-                                       RootChangeEventArgs.Create(node, new AddEventArgs(source, 1))
+                                       RootChangeEventArgs.Create(node, new AddEventArgs(source, 1)),
                                    };
                     CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
 
@@ -85,7 +85,7 @@ namespace Gu.State.Tests
                     expected = new[]
                                    {
                                        RootChangeEventArgs.Create(node, new AddEventArgs(source, 0)),
-                                       RootChangeEventArgs.Create(node, new AddEventArgs(source, 1))
+                                       RootChangeEventArgs.Create(node, new AddEventArgs(source, 1)),
                                    };
                     CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
                 }
@@ -120,7 +120,7 @@ namespace Gu.State.Tests
                     expected = new[]
                                    {
                                        RootChangeEventArgs.Create(node, new RemoveEventArgs(source, 1)),
-                                       RootChangeEventArgs.Create(node, new RemoveEventArgs(source, 0))
+                                       RootChangeEventArgs.Create(node, new RemoveEventArgs(source, 0)),
                                    };
                     CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
                 }
@@ -155,7 +155,7 @@ namespace Gu.State.Tests
                     expected = new[]
                                    {
                                        RootChangeEventArgs.Create(node, new ResetEventArgs(source)),
-                                       RootChangeEventArgs.Create(node, new ResetEventArgs(source))
+                                       RootChangeEventArgs.Create(node, new ResetEventArgs(source)),
                                    };
                     CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
                 }

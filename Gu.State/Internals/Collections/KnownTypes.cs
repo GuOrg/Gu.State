@@ -15,7 +15,7 @@
                                                                                   typeof(Dictionary<,>),
                                                                                   typeof(ObservableCollection<>),
                                                                                   typeof(Collection<>),
-                                                                                  typeof(HashSet<>)
+                                                                                  typeof(HashSet<>),
                                                                               };
 
         private static readonly KnownTypes Default = new KnownTypes(null);

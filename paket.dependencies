@@ -9,8 +9,8 @@ group Analyzers
   nuget IDisposableAnalyzers
   nuget Microsoft.CodeAnalysis.FxCopAnalyzers
   nuget PropertyChangedAnalyzers
-  nuget ReflectionAnalyzers
-  nuget StyleCop.Analyzers
+  nuget ReflectionAnalyzers prerelease
+  nuget StyleCop.Analyzers prerelease
   nuget JetBrains.Annotations
 
 group Test

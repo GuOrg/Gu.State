@@ -21,7 +21,7 @@
                     IntValue = 1,
                     NullableIntValue = 2,
                     StringValue = "3",
-                    EnumValue = StringSplitOptions.RemoveEmptyEntries
+                    EnumValue = StringSplitOptions.RemoveEmptyEntries,
                 };
                 var target = new WithSimpleProperties { IntValue = 3, NullableIntValue = 4 };
                 using (Synchronize.PropertyValues(source, target, referenceHandling))

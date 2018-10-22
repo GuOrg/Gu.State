@@ -32,9 +32,12 @@ namespace Gu.State.Tests
                     CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
                     var rootChangeEventArgs = RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(source.Value, tracker.Settings, isRoot: false).Value, new PropertyChangeEventArgs(source.Value, source.Value.GetProperty(nameof(source.Value.Value))));
                     var expected = new[]
-                                       {
-                                            new PropertyGraphChangedEventArgs<ChangeTrackerNode>(ChangeTrackerNode.GetOrCreate(source, tracker.Settings, isRoot: false).Value, source.GetProperty(nameof(source.Value)), rootChangeEventArgs)
-                                       };
+                    {
+                        new PropertyGraphChangedEventArgs<ChangeTrackerNode>(
+                            ChangeTrackerNode.GetOrCreate(source, tracker.Settings, isRoot: false).Value,
+                            source.GetProperty(nameof(source.Value)),
+                            rootChangeEventArgs),
+                    };
                     CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
                 }
             }

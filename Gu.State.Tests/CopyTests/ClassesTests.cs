@@ -43,7 +43,7 @@ namespace Gu.State.Tests.CopyTests
             {
                 Name = "a",
                 Value = 1,
-                ComplexType = new ComplexType { Name = "b", Value = 2 }
+                ComplexType = new ComplexType { Name = "b", Value = 2 },
             };
             var target = new WithComplexProperty();
             this.CopyMethod(source, target, ReferenceHandling.Structural, immutableType: typeof(ComplexType));
@@ -59,7 +59,7 @@ namespace Gu.State.Tests.CopyTests
             {
                 Name = "a",
                 Value = 1,
-                ComplexType = new ComplexType { Name = "b", Value = 2 }
+                ComplexType = new ComplexType { Name = "b", Value = 2 },
             };
             var target = new WithComplexProperty();
             this.CopyMethod(source, target, ReferenceHandling.Structural);
@@ -88,7 +88,7 @@ namespace Gu.State.Tests.CopyTests
             {
                 Name = "a",
                 Value = 1,
-                ComplexType = new ComplexType { Name = "b", Value = 2 }
+                ComplexType = new ComplexType { Name = "b", Value = 2 },
             };
             var target = new WithComplexProperty();
             this.CopyMethod(source, target, ReferenceHandling.References);

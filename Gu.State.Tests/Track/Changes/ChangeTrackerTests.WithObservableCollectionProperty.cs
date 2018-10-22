@@ -95,12 +95,10 @@ namespace Gu.State.Tests
             {
                 var source = new Level
                 {
-                    Next =
-                                         new Level
-                                         {
-                                             Levels =
-                                                     new ObservableCollection<Level>(new[] { new Level(), })
-                                         }
+                    Next = new Level
+                    {
+                        Levels = new ObservableCollection<Level>(new[] { new Level() }),
+                    },
                 };
                 var propertyChanges = new List<string>();
                 var changes = new List<EventArgs>();
@@ -146,7 +144,7 @@ namespace Gu.State.Tests
             {
                 var source = new With<ObservableCollection<ComplexType>>
                 {
-                    Value = new ObservableCollection<ComplexType>()
+                    Value = new ObservableCollection<ComplexType>(),
                 };
                 var propertyChanges = new List<string>();
                 var changes = new List<EventArgs>();
@@ -370,7 +368,7 @@ namespace Gu.State.Tests
             {
                 var source = new With<ObservableCollection<ComplexType>>
                 {
-                    Value = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType() }
+                    Value = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType() },
                 };
 
                 var propertyChanges = new List<string>();

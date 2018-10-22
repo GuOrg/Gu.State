@@ -74,21 +74,21 @@
         public void ListOfWithSimples()
         {
             var x = new List<WithSimpleProperties>
-                        {
-                            new WithSimpleProperties(
-                                1,
-                                2,
-                                "a",
-                                StringSplitOptions.RemoveEmptyEntries)
-                        };
+            {
+                new WithSimpleProperties(
+                    1,
+                    2,
+                    "a",
+                    StringSplitOptions.RemoveEmptyEntries),
+            };
             var y = new List<WithSimpleProperties>
-                        {
-                            new WithSimpleProperties(
-                                1,
-                                2,
-                                "a",
-                                StringSplitOptions.RemoveEmptyEntries)
-                        };
+            {
+                new WithSimpleProperties(
+                    1,
+                    2,
+                    "a",
+                    StringSplitOptions.RemoveEmptyEntries),
+            };
             var result = this.EqualByMethod(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
 

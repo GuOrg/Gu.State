@@ -17,14 +17,14 @@
         {
             var array = new[,] { { 1, 2, 3 }, { 4, 5, 6 } };
             var expected = new[]
-                               {
-                                   new[] { 0, 0 },
-                                   new[] { 0, 1 },
-                                   new[] { 0, 2 },
-                                   new[] { 1, 0 },
-                                   new[] { 1, 1 },
-                                   new[] { 1, 2 }
-                               };
+            {
+                new[] { 0, 0 },
+                new[] { 0, 1 },
+                new[] { 0, 2 },
+                new[] { 1, 0 },
+                new[] { 1, 1 },
+                new[] { 1, 2 },
+            };
             CollectionAssert.AreEqual(expected, array.Indices());
             var arrayEnumerator = array.GetEnumerator();
             var indexEnumerator = expected.GetEnumerator();

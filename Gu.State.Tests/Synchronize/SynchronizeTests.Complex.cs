@@ -220,11 +220,11 @@ namespace Gu.State.Tests
             {
                 var source = new WithComplexProperty("a", 1)
                 {
-                    ComplexType = new ComplexType("b", 2)
+                    ComplexType = new ComplexType("b", 2),
                 };
                 var target = new WithComplexProperty("c", 3)
                 {
-                    ComplexType = new ComplexType("d", 4)
+                    ComplexType = new ComplexType("d", 4),
                 };
 
                 using (Synchronize.PropertyValues(source, target, ReferenceHandling.Structural))
@@ -313,11 +313,11 @@ namespace Gu.State.Tests
             {
                 var source = new WithComplexProperty("a", 1)
                 {
-                    ComplexType = new ComplexType("b", 2)
+                    ComplexType = new ComplexType("b", 2),
                 };
                 var target = new WithComplexProperty("c", 3)
                 {
-                    ComplexType = new ComplexType("d", 4)
+                    ComplexType = new ComplexType("d", 4),
                 };
                 var settings = PropertiesSettings.Build()
                                                  .IgnoreProperty<WithComplexProperty>(nameof(WithComplexProperty.Name))
@@ -419,11 +419,11 @@ namespace Gu.State.Tests
             {
                 var source = new WithComplexProperty("a", 1)
                 {
-                    ComplexType = new ComplexType("b", 2)
+                    ComplexType = new ComplexType("b", 2),
                 };
                 var target = new WithComplexProperty("c", 3)
                 {
-                    ComplexType = new ComplexType("d", 4)
+                    ComplexType = new ComplexType("d", 4),
                 };
                 using (Synchronize.PropertyValues(source, target, ReferenceHandling.Structural))
                 {
@@ -462,11 +462,11 @@ namespace Gu.State.Tests
             {
                 var source = new WithComplexProperty("a", 1)
                 {
-                    ComplexType = new ComplexType("b", 2)
+                    ComplexType = new ComplexType("b", 2),
                 };
                 var target = new WithComplexProperty("c", 3)
                 {
-                    ComplexType = new ComplexType("d", 4)
+                    ComplexType = new ComplexType("d", 4),
                 };
 
                 using (Synchronize.PropertyValues(source, target, ReferenceHandling.Structural))

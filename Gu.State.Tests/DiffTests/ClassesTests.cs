@@ -119,7 +119,7 @@ namespace Gu.State.Tests.DiffTests
             {
                 Name = "a",
                 Value = 1,
-                ComplexType = new ComplexType { Name = "b", Value = 2 }
+                ComplexType = new ComplexType { Name = "b", Value = 2 },
             };
             var y = new WithComplexProperty { Name = "a", Value = 1, ComplexType = x.ComplexType };
             var result = this.DiffMethod(x, y, referenceHandling);
@@ -140,13 +140,13 @@ namespace Gu.State.Tests.DiffTests
             {
                 Name = "a",
                 Value = 1,
-                ComplexType = new ComplexType { Name = "b", Value = 2 }
+                ComplexType = new ComplexType { Name = "b", Value = 2 },
             };
             var y = new WithComplexProperty
             {
                 Name = "a",
                 Value = 1,
-                ComplexType = new ComplexType { Name = "b", Value = 2 }
+                ComplexType = new ComplexType { Name = "b", Value = 2 },
             };
             var result = this.DiffMethod(x, y, referenceHandling);
             Assert.AreEqual(expected == "Empty", result.IsEmpty);
@@ -336,10 +336,10 @@ namespace Gu.State.Tests.DiffTests
             var target = new WithListProperty<ComplexType>
             {
                 Items =
-                                     {
-                                         new ComplexType("a", 1),
-                                         new ComplexType("a", 1)
-                                     }
+                {
+                    new ComplexType("a", 1),
+                    new ComplexType("a", 1)
+                },
             };
             var result = this.DiffMethod(source, target, ReferenceHandling.Structural);
             var expected = this is FieldValues.Classes

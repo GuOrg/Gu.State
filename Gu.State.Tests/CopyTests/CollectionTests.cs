@@ -51,13 +51,13 @@
         public void ListOfWithSimplesToEmpty()
         {
             var source = new List<WithSimpleProperties>
-                             {
-                                 new WithSimpleProperties(
-                                     1,
-                                     2,
-                                     "a",
-                                     StringSplitOptions.RemoveEmptyEntries)
-                             };
+            {
+                new WithSimpleProperties(
+                    1,
+                    2,
+                    "a",
+                    StringSplitOptions.RemoveEmptyEntries),
+            };
             var target = new List<WithSimpleProperties>();
             this.CopyMethod(source, target, ReferenceHandling.Structural);
             var expected = new[] { new WithSimpleProperties(1, 2, "a", StringSplitOptions.RemoveEmptyEntries) };

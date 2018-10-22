@@ -72,7 +72,7 @@ namespace Gu.State.Tests
                     expected = new[]
                                    {
                                        RootChangeEventArgs.Create(node, new AddEventArgs(source, 0)),
-                                       RootChangeEventArgs.Create(node, new AddEventArgs(source, 1))
+                                       RootChangeEventArgs.Create(node, new AddEventArgs(source, 1)),
                                    };
                     CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
                 }
@@ -222,7 +222,7 @@ namespace Gu.State.Tests
                     expected = new[]
                                    {
                                        RootChangeEventArgs.Create(node, new RemoveEventArgs(source, 1)),
-                                       RootChangeEventArgs.Create(node, new RemoveEventArgs(source, 0))
+                                       RootChangeEventArgs.Create(node, new RemoveEventArgs(source, 0)),
                                    };
                     CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
                 }
@@ -330,7 +330,7 @@ namespace Gu.State.Tests
                     expected = new[]
                                    {
                                        RootChangeEventArgs.Create(node, new ResetEventArgs(source)),
-                                       RootChangeEventArgs.Create(node, new ResetEventArgs(source))
+                                       RootChangeEventArgs.Create(node, new ResetEventArgs(source)),
                                    };
                     CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
                 }
@@ -541,7 +541,7 @@ namespace Gu.State.Tests
                                          .Value;
                     var expected = new[]
                                        {
-                                           new ItemGraphChangedEventArgs<ChangeTrackerNode>(sourceNode, 0, RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(source[0], tracker.Settings, isRoot: false).Value, new PropertyChangeEventArgs(source[0], source[0].GetProperty("Value"))))
+                                           new ItemGraphChangedEventArgs<ChangeTrackerNode>(sourceNode, 0, RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(source[0], tracker.Settings, isRoot: false).Value, new PropertyChangeEventArgs(source[0], source[0].GetProperty("Value")))),
                                        };
                     CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
                 }
@@ -570,7 +570,7 @@ namespace Gu.State.Tests
                     var expected = new[]
                                        {
                                            new ItemGraphChangedEventArgs<ChangeTrackerNode>(sourceNode, 0, RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(source[0], tracker.Settings, isRoot: false).Value, new PropertyChangeEventArgs(source[0], source[0].GetProperty("Value")))),
-                                           new ItemGraphChangedEventArgs<ChangeTrackerNode>(sourceNode, 1, RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(source[1], tracker.Settings, isRoot: false).Value, new PropertyChangeEventArgs(source[1], source[1].GetProperty("Value"))))
+                                           new ItemGraphChangedEventArgs<ChangeTrackerNode>(sourceNode, 1, RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(source[1], tracker.Settings, isRoot: false).Value, new PropertyChangeEventArgs(source[1], source[1].GetProperty("Value")))),
                                        };
                     CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
                 }
