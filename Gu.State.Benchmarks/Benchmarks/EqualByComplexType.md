@@ -1,20 +1,20 @@
 ``` ini
 
-BenchmarkDotNet=v0.10.9, OS=Windows 7 SP1 (6.1.7601)
-Processor=Intel Xeon CPU E5-2637 v4 3.50GHzIntel Xeon CPU E5-2637 v4 3.50GHz, ProcessorCount=16
-Frequency=3410107 Hz, Resolution=293.2459 ns, Timer=TSC
-  [Host]     : .NET Framework 4.7 (CLR 4.0.30319.42000), 64bit RyuJIT-v4.7.2114.0
-  DefaultJob : .NET Framework 4.7 (CLR 4.0.30319.42000), 64bit RyuJIT-v4.7.2114.0
+BenchmarkDotNet=v0.11.1, OS=Windows 10.0.17134.228 (1803/April2018Update/Redstone4)
+Intel Xeon CPU E5-2637 v4 3.50GHz (Max: 3.49GHz), 2 CPU, 16 logical and 8 physical cores
+Frequency=3410070 Hz, Resolution=293.2491 ns, Timer=TSC
+  [Host]     : .NET Framework 4.7.2 (CLR 4.0.30319.42000), 64bit RyuJIT-v4.7.3132.0
+  DefaultJob : .NET Framework 4.7.2 (CLR 4.0.30319.42000), 64bit RyuJIT-v4.7.3132.0
 
 
 ```
- |                            Method |         Mean |       Error |      StdDev | Scaled | ScaledSD |  Gen 0 |  Gen 1 | Allocated |
- |---------------------------------- |-------------:|------------:|------------:|-------:|---------:|-------:|-------:|----------:|
- |              this_x_Equals_this_y |    12.895 ns |   0.2949 ns |   0.7870 ns |   1.00 |     0.00 |      - |      - |       0 B |
- |                      ObjectEquals |    13.756 ns |   0.3842 ns |   1.1268 ns |   1.07 |     0.11 |      - |      - |       0 B |
- |                              Func |     3.243 ns |   0.1095 ns |   0.3195 ns |   0.25 |     0.03 |      - |      - |       0 B |
- |                          Comparer |    10.005 ns |   0.4070 ns |   1.1677 ns |   0.78 |     0.10 |      - |      - |       0 B |
- |             EqualByPropertyValues | 7,046.775 ns | 296.7671 ns | 865.6835 ns | 548.44 |    74.47 | 0.3281 | 0.0153 |    2079 B |
- | EqualByPropertyValuesWithComparer |    61.290 ns |   1.2633 ns |   3.4154 ns |   4.77 |     0.39 |      - |      - |       0 B |
- |                EqualByFieldValues | 7,536.336 ns |  11.4995 ns |   8.3149 ns | 586.54 |    34.44 | 0.3052 | 0.0153 |    1958 B |
- |    EqualByFieldValuesWithComparer |    60.269 ns |   1.2436 ns |   3.1878 ns |   4.69 |     0.37 |      - |      - |       0 B |
+|                            Method |         Mean |      Error |      StdDev |       Median | Scaled | ScaledSD |  Gen 0 |  Gen 1 |  Gen 2 | Allocated |
+|---------------------------------- |-------------:|-----------:|------------:|-------------:|-------:|---------:|-------:|-------:|-------:|----------:|
+|              this_x_Equals_this_y |    12.060 ns |  0.2667 ns |   0.2619 ns |    11.928 ns |   1.00 |     0.00 |      - |      - |      - |       0 B |
+|                      ObjectEquals |    12.643 ns |  0.0706 ns |   0.0552 ns |    12.616 ns |   1.05 |     0.02 |      - |      - |      - |       0 B |
+|                              Func |     2.831 ns |  0.0888 ns |   0.0741 ns |     2.804 ns |   0.23 |     0.01 |      - |      - |      - |       0 B |
+|                          Comparer |     8.493 ns |  0.2031 ns |   0.2641 ns |     8.329 ns |   0.70 |     0.03 |      - |      - |      - |       0 B |
+|             EqualByPropertyValues | 3,446.281 ns | 50.6514 ns |  47.3794 ns | 3,444.916 ns | 285.89 |     7.03 | 0.2899 | 0.0229 | 0.0038 |    1862 B |
+| EqualByPropertyValuesWithComparer |    52.719 ns |  1.0787 ns |   1.1989 ns |    53.187 ns |   4.37 |     0.13 |      - |      - |      - |       0 B |
+|                EqualByFieldValues | 3,613.586 ns | 71.6888 ns | 170.3760 ns | 3,484.960 ns | 299.76 |    15.34 | 0.2670 | 0.0076 |      - |    1740 B |
+|    EqualByFieldValuesWithComparer |    51.192 ns |  0.3647 ns |   0.3046 ns |    51.302 ns |   4.25 |     0.09 |      - |      - |      - |       0 B |

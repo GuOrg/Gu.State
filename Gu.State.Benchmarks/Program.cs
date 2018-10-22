@@ -4,45 +4,39 @@ namespace Gu.State.Benchmarks
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using BenchmarkDotNet.Reports;
     using BenchmarkDotNet.Running;
 
-    public class Program
+    public static class Program
     {
-        private static readonly string ProjectDirectory = Directory.GetCurrentDirectory();
-
-        private static string ArtifactsDirectory { get; } = Path.Combine(ProjectDirectory, "BenchmarkDotNet.Artifacts", "results");
-
         public static void Main()
         {
-            foreach (var summary in RunAll())
+            foreach (var summary in RunSingle<EqualByComplexType>())
             {
-                CopyResult(summary.Title);
+                CopyResult(summary);
             }
         }
 
-        private static IEnumerable<Summary> RunAll()
-        {
-            var switcher = new BenchmarkSwitcher(typeof(Program).Assembly);
-            var summaries = switcher.Run(new[] { "*" });
-            return summaries;
-        }
+        private static IEnumerable<Summary> RunAll() => new BenchmarkSwitcher(typeof(Program).Assembly).RunAll();
 
-        private static IEnumerable<Summary> RunSingle<T>()
-        {
-            var summaries = new[] { BenchmarkRunner.Run<T>() };
-            return summaries;
-        }
+        private static IEnumerable<Summary> RunSingle<T>() => new[] { BenchmarkRunner.Run<T>() };
 
-        private static void CopyResult(string name)
+        private static void CopyResult(Summary summary)
         {
-            Console.WriteLine($"DestinationDirectory: {ProjectDirectory}");
-            if (Directory.Exists(ProjectDirectory))
+            var sourceFileName = Directory.EnumerateFiles(summary.ResultsDirectoryPath, $"*{summary.Title}-report-github.md")
+                                          .Single();
+            var destinationFileName = Path.ChangeExtension(FindCsFile(), ".md");
+            Console.WriteLine($"Copy: {sourceFileName} -> {destinationFileName}");
+            File.Copy(sourceFileName, destinationFileName, overwrite: true);
+
+            string FindCsFile()
             {
-                var sourceFileName = Path.Combine(ArtifactsDirectory, name + "-report-github.md");
-                var destinationFileName = Path.Combine(ProjectDirectory, "Benchmarks", name + ".md");
-                Console.WriteLine($"Copy: {sourceFileName} -> {destinationFileName}");
-                File.Copy(sourceFileName, destinationFileName, overwrite: true);
+                return Directory.EnumerateFiles(
+                                    AppDomain.CurrentDomain.BaseDirectory.Split(new[] { "\\bin\\" }, StringSplitOptions.RemoveEmptyEntries).First(),
+                                    $"{summary.Title.Split('.').Last()}.cs",
+                                    SearchOption.AllDirectories)
+                                .Single();
             }
         }
     }
