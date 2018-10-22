@@ -87,8 +87,8 @@ namespace Gu.State.Tests
 
             public ComplexType(string name, int value)
             {
-                this.Name = name;
-                this.Value = value;
+                this.name = name;
+                this.value = value;
             }
 
             public event PropertyChangedEventHandler PropertyChanged;
@@ -660,8 +660,8 @@ namespace Gu.State.Tests
 
             public WithObservableCollectionProperties(string name, int value)
             {
-                this.Name = name;
-                this.Value = value;
+                this.name = name;
+                this.value = value;
             }
 
             public WithObservableCollectionProperties(params ComplexType[] complexTypes)

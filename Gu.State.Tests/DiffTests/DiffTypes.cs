@@ -33,8 +33,8 @@ namespace Gu.State.Tests.DiffTests
 
             public WithComplexValue(string name, int value)
             {
-                this.Name = name;
-                this.Value = value;
+                this.name = name;
+                this.value = value;
             }
 
             public string Name
@@ -65,10 +65,10 @@ namespace Gu.State.Tests.DiffTests
 
             public WithSimpleValues(int intValue, int? nullableIntValue, string stringValue, StringSplitOptions enumValue)
             {
-                this.IntValue = intValue;
-                this.NullableIntValue = nullableIntValue;
-                this.StringValue = stringValue;
-                this.EnumValue = enumValue;
+                this.intValue = intValue;
+                this.nullableIntValue = nullableIntValue;
+                this.stringValue = stringValue;
+                this.enumValue = enumValue;
             }
 
             public int IntValue
@@ -114,8 +114,8 @@ namespace Gu.State.Tests.DiffTests
 
             public ComplexType(string name, int value)
             {
-                this.Name = name;
-                this.Value = value;
+                this.name = name;
+                this.value = value;
             }
 
             public string Name
@@ -299,15 +299,15 @@ namespace Gu.State.Tests.DiffTests
 
             public WithComplexProperty(string name, int value)
             {
-                this.Name = name;
-                this.Value = value;
+                this.name = name;
+                this.value = value;
             }
 
             public WithComplexProperty(string name, int value, ComplexType complexType)
             {
-                this.Name = name;
-                this.Value = value;
-                this.ComplexType = complexType;
+                this.name = name;
+                this.value = value;
+                this.complexType = complexType;
             }
 
             public string Name

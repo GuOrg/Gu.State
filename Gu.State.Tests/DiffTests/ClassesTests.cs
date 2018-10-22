@@ -338,7 +338,7 @@ namespace Gu.State.Tests.DiffTests
                 Items =
                 {
                     new ComplexType("a", 1),
-                    new ComplexType("a", 1)
+                    new ComplexType("a", 1),
                 },
             };
             var result = this.DiffMethod(source, target, ReferenceHandling.Structural);
