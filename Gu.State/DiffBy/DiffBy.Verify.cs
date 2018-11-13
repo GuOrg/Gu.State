@@ -10,11 +10,11 @@
         /// Read the exception message for detailed instructions about what is wrong.
         /// Use this to fail fast or in unit tests.
         /// </summary>
-        /// <typeparam name="T">The type to get ignore fields for settings for</typeparam>
+        /// <typeparam name="T">The type to get ignore fields for settings for.</typeparam>
         /// <param name="referenceHandling">
         /// If Structural is used a deep equality check is performed.
         /// </param>
-        /// <param name="bindingFlags">The binding flags to use when getting fields</param>
+        /// <param name="bindingFlags">The binding flags to use when getting fields.</param>
         public static void VerifyCanDiffByFieldValues<T>(
             ReferenceHandling referenceHandling = ReferenceHandling.Structural,
             BindingFlags bindingFlags = Constants.DefaultFieldBindingFlags)
@@ -42,11 +42,11 @@
         /// Read the exception message for detailed instructions about what is wrong.
         /// Use this to fail fast or in unit tests.
         /// </summary>
-        /// <typeparam name="T">The type to get ignore properties for settings for</typeparam>
+        /// <typeparam name="T">The type to get ignore properties for settings for.</typeparam>
         /// <param name="referenceHandling">
         /// If Structural is used a deep equality check is performed.
         /// </param>
-        /// <param name="bindingFlags">The binding flags to use when getting properties</param>
+        /// <param name="bindingFlags">The binding flags to use when getting properties.</param>
         public static void VerifyCanDiffByPropertyValues<T>(
             ReferenceHandling referenceHandling = ReferenceHandling.Structural,
             BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)

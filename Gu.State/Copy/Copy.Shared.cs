@@ -4,7 +4,7 @@
     using System.Diagnostics;
 
     /// <summary>
-    /// Defines methods for copying values from one instance to another
+    /// Defines methods for copying values from one instance to another.
     /// </summary>
     public static partial class Copy
     {

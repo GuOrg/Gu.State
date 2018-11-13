@@ -9,8 +9,8 @@ namespace Gu.State
     {
         /// <summary> Initializes a new instance of the <see cref="IndexDiff"/> class.</summary>
         /// <param name="index">The index or key.</param>
-        /// <param name="xValue">The x value of the <paramref name="index"/></param>
-        /// <param name="yValue">The y value of the <paramref name="index"/></param>
+        /// <param name="xValue">The x value of the <paramref name="index"/>.</param>
+        /// <param name="yValue">The y value of the <paramref name="index"/>.</param>
         public IndexDiff(object index, object xValue, object yValue)
             : this(index, new ValueDiff(xValue, yValue))
         {
@@ -18,7 +18,7 @@ namespace Gu.State
 
         /// <summary> Initializes a new instance of the <see cref="IndexDiff"/> class.</summary>
         /// <param name="index">The property.</param>
-        /// <param name="valueDiff">The <see cref="ValueDiff"/> for the <paramref name="index"/></param>
+        /// <param name="valueDiff">The <see cref="ValueDiff"/> for the <paramref name="index"/>.</param>
         public IndexDiff(object index, ValueDiff valueDiff)
              : base(valueDiff)
         {

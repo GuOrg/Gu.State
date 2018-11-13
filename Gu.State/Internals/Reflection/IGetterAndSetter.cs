@@ -15,7 +15,7 @@
         /// <summary>
         /// Gets a value indicating whether the member is init only.
         /// For a field this means private readonly...
-        /// For a property this means public int Value { get; }
+        /// For a property this means public int Value { get; }.
         /// </summary>
         bool IsInitOnly { get; }
 
@@ -40,7 +40,7 @@
         /// <param name="equal">True if <paramref name="x"/> and <paramref name="y"/> are equal.</param>
         /// <param name="xv">The x value fetched for the member.</param>
         /// <param name="yv">The y value fetched for the member.</param>
-        /// <returns>True if equality could be determined for <paramref name="x"/> and <paramref name="y"/></returns>
+        /// <returns>True if equality could be determined for <paramref name="x"/> and <paramref name="y"/>.</returns>
         bool TryGetValueEquals(object x, object y, MemberSettings settings, out bool equal, out object xv, out object yv);
 
         void CopyValue(object source, object target);

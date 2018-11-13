@@ -21,8 +21,8 @@
         /// Create the settings object.
         /// </summary>
         /// <param name="referenceHandling">How references are handled.</param>
-        /// <param name="bindingFlags">What bindingflags to use</param>
-        /// <returns>An instance of <see cref="PropertiesSettings"/></returns>
+        /// <param name="bindingFlags">What bindingflags to use.</param>
+        /// <returns>An instance of <see cref="PropertiesSettings"/>.</returns>
         public PropertiesSettings CreateSettings(
             ReferenceHandling referenceHandling = ReferenceHandling.Structural,
             BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
@@ -124,10 +124,10 @@
         }
 
         /// <summary>
-        /// Sample: AddExplicitProperty{<typeparamref name="TSource"/>}(x => x.Bar)
+        /// Sample: AddExplicitProperty{<typeparamref name="TSource"/>}(x => x.Bar).
         /// </summary>
-        /// <typeparam name="TSource">The type of the parameter in the lambda</typeparam>
-        /// <param name="property">Sample x => x.SomeProperty</param>
+        /// <typeparam name="TSource">The type of the parameter in the lambda.</typeparam>
+        /// <param name="property">Sample x => x.SomeProperty.</param>
         /// <returns>Returns self for chaining.</returns>
         public PropertiesSettingsBuilder IgnoreProperty<TSource>(Expression<Func<TSource, object>> property)
         {

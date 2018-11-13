@@ -6,11 +6,11 @@ namespace Gu.State
     public abstract class CastingComparer
     {
         /// <summary>
-        /// Create a <see cref="CastingComparer"/> for <paramref name="comparer"/>
+        /// Create a <see cref="CastingComparer"/> for <paramref name="comparer"/>.
         /// </summary>
         /// <typeparam name="T">The type.</typeparam>
         /// <param name="comparer">The comparer.</param>
-        /// <returns>A wrapper for <paramref name="comparer"/></returns>
+        /// <returns>A wrapper for <paramref name="comparer"/>.</returns>
         public static CastingComparer Create<T>(IEqualityComparer<T> comparer)
         {
             return new CastingComparer<T>(comparer);

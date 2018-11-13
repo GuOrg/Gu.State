@@ -24,7 +24,7 @@
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DirtyTrackerNode"/> class.
-        /// A call to Initialize is needed after the ctor due to that we need to fetch child nodes and the graph can contain self
+        /// A call to Initialize is needed after the ctor due to that we need to fetch child nodes and the graph can contain self.
         /// </summary>
         private DirtyTrackerNode(IRefCounted<ReferencePair> refCountedPair, PropertiesSettings settings, bool isRoot)
         {

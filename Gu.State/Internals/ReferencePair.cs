@@ -159,9 +159,7 @@ namespace Gu.State
         {
             if (this.disposed)
             {
-                throw new ObjectDisposedException(
-                    this.GetType()
-                        .FullName);
+                throw new ObjectDisposedException(typeof(ReferencePair).FullName);
             }
         }
     }

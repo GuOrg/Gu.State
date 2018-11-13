@@ -12,8 +12,8 @@ namespace Gu.State
     {
         /// <summary> Initializes a new instance of the <see cref="MemberDiff{T}"/> class.</summary>
         /// <param name="memberInfo">The member.</param>
-        /// <param name="xValue">The x value of the <paramref name="memberInfo"/></param>
-        /// <param name="yValue">The y value of the <paramref name="memberInfo"/></param>
+        /// <param name="xValue">The x value of the <paramref name="memberInfo"/>.</param>
+        /// <param name="yValue">The y value of the <paramref name="memberInfo"/>.</param>
         protected MemberDiff(TMember memberInfo, object xValue, object yValue)
             : this(memberInfo, new ValueDiff(xValue, yValue))
         {
@@ -21,7 +21,7 @@ namespace Gu.State
 
         /// <summary> Initializes a new instance of the <see cref="MemberDiff{T}"/> class.</summary>
         /// <param name="memberInfo">The member.</param>
-        /// <param name="diff">The <see cref="ValueDiff"/> for the <paramref name="memberInfo"/></param>
+        /// <param name="diff">The <see cref="ValueDiff"/> for the <paramref name="memberInfo"/>.</param>
         protected MemberDiff(TMember memberInfo, ValueDiff diff)
             : base(memberInfo, diff)
         {

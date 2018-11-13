@@ -4,7 +4,7 @@
     public abstract class EqualByComparer
     {
         /// <summary>
-        /// Compare <paramref name="x"/> with <paramref name="y"/>
+        /// Compare <paramref name="x"/> with <paramref name="y"/>.
         /// </summary>
         /// <param name="x">The x value.</param>
         /// <param name="y">The y value.</param>

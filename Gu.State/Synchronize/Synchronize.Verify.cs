@@ -11,12 +11,12 @@
         /// Read the exception message for detailed instructions about what is wrong.
         /// Use this to fail fast or in unit tests.
         /// </summary>
-        /// <typeparam name="T">The type to verify that synchronization is possible for</typeparam>
+        /// <typeparam name="T">The type to verify that synchronization is possible for.</typeparam>
         /// <param name="referenceHandling">
         /// If Structural is used property values for sub properties are copied for the entire graph.
-        /// Activator.CreateInstance is sued to new up references so a default constructor is required, can be private
+        /// Activator.CreateInstance is sued to new up references so a default constructor is required, can be private.
         /// </param>
-        /// <param name="bindingFlags">The binding flags to use when getting properties</param>
+        /// <param name="bindingFlags">The binding flags to use when getting properties.</param>
         public static void VerifyCanSynchronize<T>(
             ReferenceHandling referenceHandling = ReferenceHandling.Structural,
             BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
@@ -31,8 +31,8 @@
         /// Read the exception message for detailed instructions about what is wrong.
         /// Use this to fail fast or in unit tests.
         /// </summary>
-        /// <typeparam name="T">The type to check</typeparam>
-        /// <param name="settings">Contains configuration for how synchronization will be performed</param>
+        /// <typeparam name="T">The type to check.</typeparam>
+        /// <param name="settings">Contains configuration for how synchronization will be performed.</param>
         public static void VerifyCanSynchronize<T>(PropertiesSettings settings)
         {
             VerifyCanSynchronize(typeof(T), settings);
@@ -44,8 +44,8 @@
         /// Read the exception message for detailed instructions about what is wrong.
         /// Use this to fail fast or in unit tests.
         /// </summary>
-        /// <param name="type">The type to check</param>
-        /// <param name="settings">Contains configuration for how synchronization will be performed</param>
+        /// <param name="type">The type to check.</param>
+        /// <param name="settings">Contains configuration for how synchronization will be performed.</param>
         public static void VerifyCanSynchronize(Type type, PropertiesSettings settings)
         {
             VerifyCanSynchronize(type, settings, typeof(Synchronize).Name, nameof(VerifyCanSynchronize));

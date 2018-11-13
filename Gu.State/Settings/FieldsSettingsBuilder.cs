@@ -19,8 +19,8 @@
         /// Create the settings object.
         /// </summary>
         /// <param name="referenceHandling">How references are handled.</param>
-        /// <param name="bindingFlags">What bindingflags to use</param>
-        /// <returns>An instance of <see cref="FieldsSettings"/></returns>
+        /// <param name="bindingFlags">What bindingflags to use.</param>
+        /// <returns>An instance of <see cref="FieldsSettings"/>.</returns>
         public FieldsSettings CreateSettings(
             ReferenceHandling referenceHandling = ReferenceHandling.Structural,
             BindingFlags bindingFlags = Constants.DefaultFieldBindingFlags)

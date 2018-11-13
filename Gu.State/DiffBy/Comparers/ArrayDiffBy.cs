@@ -24,7 +24,7 @@
             object y,
             MemberSettings settings)
         {
-            this.AddDiffs(collectionBuilder, (Array)x, (Array)y, settings);
+            AddDiffs(collectionBuilder, (Array)x, (Array)y, settings);
         }
 
         private static bool TryGetRankDiff(Array x, Array y, out RankDiff rankDiff)
@@ -49,7 +49,7 @@
             return false;
         }
 
-        private void AddDiffs(
+        private static void AddDiffs(
             DiffBuilder collectionBuilder,
             Array x,
             Array y,

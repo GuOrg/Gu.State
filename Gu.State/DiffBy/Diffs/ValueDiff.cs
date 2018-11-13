@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.IO;
 
-    /// <summary>A value difference X != Y </summary>
+    /// <summary>A value difference X != Y. </summary>
     public class ValueDiff : Diff
     {
         /// <summary>Initializes a new instance of the <see cref="ValueDiff"/> class.</summary>

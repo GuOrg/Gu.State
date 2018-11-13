@@ -17,10 +17,10 @@
             object y,
             MemberSettings settings)
         {
-            this.AddDiffs(collectionBuilder, (IList<T>)x, (IList<T>)y, settings);
+            AddDiffs(collectionBuilder, (IList<T>)x, (IList<T>)y, settings);
         }
 
-        private void AddDiffs(
+        private static void AddDiffs(
             DiffBuilder collectionBuilder,
             IList<T> x,
             IList<T> y,

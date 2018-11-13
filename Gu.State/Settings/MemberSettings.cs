@@ -94,7 +94,7 @@
             return IsImmutableCore(type);
         }
 
-        /// <summary>Gets all instance members that matches <see cref="BindingFlags"/></summary>
+        /// <summary>Gets all instance members that matches <see cref="BindingFlags"/>.</summary>
         /// <param name="type">The type to get members for.</param>
         /// <returns>The members.</returns>
         public abstract IEnumerable<MemberInfo> GetMembers(Type type);
@@ -112,20 +112,20 @@
             return this.knownTypes.IsKnownType(declaringType);
         }
 
-        /// <summary>Try get a custom comparer for <paramref name="type"/></summary>
+        /// <summary>Try get a custom comparer for <paramref name="type"/>.</summary>
         /// <param name="type">The type.</param>
         /// <param name="comparer">The comparer.</param>
-        /// <returns>True if a custom comparer is provided for <paramref name="type"/></returns>
+        /// <returns>True if a custom comparer is provided for <paramref name="type"/>.</returns>
         public bool TryGetComparer(Type type, out CastingComparer comparer)
         {
             comparer = null;
             return this.comparers?.TryGetValue(type, out comparer) == true;
         }
 
-        /// <summary>Try get a custom copyer for <paramref name="type"/></summary>
+        /// <summary>Try get a custom copyer for <paramref name="type"/>.</summary>
         /// <param name="type">The type.</param>
         /// <param name="copyer">The copyer.</param>
-        /// <returns>True if a custom copyer is provided for <paramref name="type"/></returns>
+        /// <returns>True if a custom copyer is provided for <paramref name="type"/>.</returns>
         public bool TryGetCopyer(Type type, out CustomCopy copyer)
         {
             copyer = null;
@@ -134,7 +134,7 @@
 
         /// <summary>Get an <see cref="IGetterAndSetter"/> that is  used for getting ans setting values.</summary>
         /// <param name="member">The member.</param>
-        /// <returns>A <see cref="IGetterAndSetter"/></returns>
+        /// <returns>A <see cref="IGetterAndSetter"/>.</returns>
         internal abstract IGetterAndSetter GetOrCreateGetterAndSetter(MemberInfo member);
     }
 }

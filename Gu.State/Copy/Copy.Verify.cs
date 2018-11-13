@@ -12,12 +12,12 @@
         /// Read the exception message for detailed instructions about what is wrong.
         /// Use this to fail fast or in unit tests.
         /// </summary>
-        /// <typeparam name="T">The type to get ignore properties for settings for</typeparam>
+        /// <typeparam name="T">The type to get ignore properties for settings for.</typeparam>
         /// <param name="referenceHandling">
         /// If Structural is used property values for sub properties are copied for the entire graph.
-        /// Activator.CreateInstance is used to new up references so a default constructor is required, can be private
+        /// Activator.CreateInstance is used to new up references so a default constructor is required, can be private.
         /// </param>
-        /// <param name="bindingFlags">The binding flags to use when getting properties</param>
+        /// <param name="bindingFlags">The binding flags to use when getting properties.</param>
         public static void VerifyCanCopyPropertyValues<T>(
             ReferenceHandling referenceHandling = ReferenceHandling.Structural,
             BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
@@ -32,8 +32,8 @@
         /// Read the exception message for detailed instructions about what is wrong.
         /// Use this to fail fast or in unit tests.
         /// </summary>
-        /// <typeparam name="T">The type to check</typeparam>
-        /// <param name="settings">Contains configuration for how copy will be performed</param>
+        /// <typeparam name="T">The type to check.</typeparam>
+        /// <param name="settings">Contains configuration for how copy will be performed.</param>
         public static void VerifyCanCopyPropertyValues<T>(PropertiesSettings settings)
         {
             var type = typeof(T);
@@ -46,8 +46,8 @@
         /// Read the exception message for detailed instructions about what is wrong.
         /// Use this to fail fast or in unit tests.
         /// </summary>
-        /// <param name="type">The type to check</param>
-        /// <param name="settings">Contains configuration for how copy will be performed</param>
+        /// <param name="type">The type to check.</param>
+        /// <param name="settings">Contains configuration for how copy will be performed.</param>
         public static void VerifyCanCopyPropertyValues(Type type, PropertiesSettings settings)
         {
             Verify.CanCopyRoot(type, settings);
@@ -60,12 +60,12 @@
         /// Read the exception message for detailed instructions about what is wrong.
         /// Use this to fail fast or in unit tests.
         /// </summary>
-        /// <typeparam name="T">The type to get ignore fields for settings for</typeparam>
+        /// <typeparam name="T">The type to get ignore fields for settings for.</typeparam>
         /// <param name="referenceHandling">
         /// If Structural is used property values for sub properties are copied for the entire graph.
-        /// Activator.CreateInstance is sued to new up references so a default constructor is required, can be private
+        /// Activator.CreateInstance is sued to new up references so a default constructor is required, can be private.
         /// </param>
-        /// <param name="bindingFlags">The binding flags to use when getting fields</param>
+        /// <param name="bindingFlags">The binding flags to use when getting fields.</param>
         public static void VerifyCanCopyFieldValues<T>(
             ReferenceHandling referenceHandling = ReferenceHandling.Structural,
             BindingFlags bindingFlags = Constants.DefaultFieldBindingFlags)
@@ -80,8 +80,8 @@
         /// Read the exception message for detailed instructions about what is wrong.
         /// Use this to fail fast or in unit tests.
         /// </summary>
-        /// <typeparam name="T">The type to get ignore fields for settings for</typeparam>
-        /// <param name="settings">Contains configuration for how copy is performed</param>
+        /// <typeparam name="T">The type to get ignore fields for settings for.</typeparam>
+        /// <param name="settings">Contains configuration for how copy is performed.</param>
         public static void VerifyCanCopyFieldValues<T>(FieldsSettings settings)
         {
             var type = typeof(T);
@@ -94,8 +94,8 @@
         /// Read the exception message for detailed instructions about what is wrong.
         /// Use this to fail fast or in unit tests.
         /// </summary>
-        /// <param name="type">The type to get ignore fields for settings for</param>
-        /// <param name="settings">Contains configuration for how copy is performed</param>
+        /// <param name="type">The type to get ignore fields for settings for.</param>
+        /// <param name="settings">Contains configuration for how copy is performed.</param>
         public static void VerifyCanCopyFieldValues(Type type, FieldsSettings settings)
         {
             Verify.CanCopyRoot(type, settings);

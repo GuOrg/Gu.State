@@ -5,7 +5,7 @@
     using System.Reflection;
 
     /// <summary>
-    /// Defines methods for comparing two instances
+    /// Defines methods for comparing two instances.
     /// </summary>
     public static partial class EqualBy
     {

@@ -14,14 +14,14 @@
         /// Read the exception message for detailed instructions about what is wrong.
         /// Use this to fail fast or in unit tests.
         /// </summary>
-        /// <typeparam name="T">The type to get ignore properties for settings for</typeparam>
+        /// <typeparam name="T">The type to get ignore properties for settings for.</typeparam>
         /// <param name="referenceHandling">
         /// If Structural is used property values for sub properties are copied for the entire graph.
-        /// Activator.CreateInstance is sued to new up references so a default constructor is required, can be private
+        /// Activator.CreateInstance is sued to new up references so a default constructor is required, can be private.
         /// </param>
         /// <param name="bindingFlags">
         /// The binding flags to use when getting properties
-        /// Default is BindingFlags.Instance | BindingFlags.Public
+        /// Default is BindingFlags.Instance | BindingFlags.Public.
         /// </param>
         public static void VerifyCanTrackIsDirty<T>(
             ReferenceHandling referenceHandling = ReferenceHandling.Structural,
@@ -38,8 +38,8 @@
         /// Read the exception message for detailed instructions about what is wrong.
         /// Use this to fail fast or in unit tests.
         /// </summary>
-        /// <typeparam name="T">The type to track</typeparam>
-        /// <param name="settings">Contains configuration for how tracking is performed</param>
+        /// <typeparam name="T">The type to track.</typeparam>
+        /// <param name="settings">Contains configuration for how tracking is performed.</param>
         public static void VerifyCanTrackIsDirty<T>(PropertiesSettings settings)
             where T : class, INotifyPropertyChanged
         {
@@ -52,8 +52,8 @@
         /// Read the exception message for detailed instructions about what is wrong.
         /// Use this to fail fast or in unit tests.
         /// </summary>
-        /// <param name="type">The type to track</param>
-        /// <param name="settings">Contains configuration for how tracking is performed</param>
+        /// <param name="type">The type to track.</param>
+        /// <param name="settings">Contains configuration for how tracking is performed.</param>
         public static void VerifyCanTrackIsDirty(Type type, PropertiesSettings settings)
         {
             VerifyCanTrackIsDirty(type, settings, typeof(Track).Name, nameof(VerifyCanTrackIsDirty));
@@ -65,12 +65,12 @@
         /// Read the exception message for detailed instructions about what is wrong.
         /// Use this to fail fast or in unit tests.
         /// </summary>
-        /// <typeparam name="T">The type to check</typeparam>
+        /// <typeparam name="T">The type to check.</typeparam>
         /// <param name="referenceHandling">
         /// If Structural is used property values for sub properties are copied for the entire graph.
-        /// Activator.CreateInstance is used to new up references so a default constructor is required, can be private
+        /// Activator.CreateInstance is used to new up references so a default constructor is required, can be private.
         /// </param>
-        /// <param name="bindingFlags">The binding flags to use when getting properties</param>
+        /// <param name="bindingFlags">The binding flags to use when getting properties.</param>
         public static void VerifyCanTrackChanges<T>(
             ReferenceHandling referenceHandling = ReferenceHandling.Structural,
             BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
@@ -85,8 +85,8 @@
         /// Read the exception message for detailed instructions about what is wrong.
         /// Use this to fail fast or in unit tests.
         /// </summary>
-        /// <typeparam name="T">The type to check</typeparam>
-        /// <param name="settings">Contains configuration for how tracking will be performed</param>
+        /// <typeparam name="T">The type to check.</typeparam>
+        /// <param name="settings">Contains configuration for how tracking will be performed.</param>
         public static void VerifyCanTrackChanges<T>(PropertiesSettings settings)
         {
             VerifyCanTrackChanges(typeof(T), settings);
@@ -98,8 +98,8 @@
         /// Read the exception message for detailed instructions about what is wrong.
         /// Use this to fail fast or in unit tests.
         /// </summary>
-        /// <param name="type">The type to check</param>
-        /// <param name="settings">Contains configuration for how tracking will be performed</param>
+        /// <param name="type">The type to check.</param>
+        /// <param name="settings">Contains configuration for how tracking will be performed.</param>
         public static void VerifyCanTrackChanges(Type type, PropertiesSettings settings)
         {
             VerifyCanTrackChanges(type, settings, typeof(Track).Name, nameof(VerifyCanTrackChanges));

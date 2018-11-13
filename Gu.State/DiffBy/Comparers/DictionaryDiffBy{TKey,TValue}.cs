@@ -16,10 +16,10 @@
             object y,
             MemberSettings settings)
         {
-            this.AddDiffs(collectionBuilder, (IDictionary<TKey, TValue>)x, (IDictionary<TKey, TValue>)y, settings);
+            AddDiffs(collectionBuilder, (IDictionary<TKey, TValue>)x, (IDictionary<TKey, TValue>)y, settings);
         }
 
-        private void AddDiffs(
+        private static void AddDiffs(
             DiffBuilder collectionBuilder,
             IDictionary<TKey, TValue> x,
             IDictionary<TKey, TValue> y,

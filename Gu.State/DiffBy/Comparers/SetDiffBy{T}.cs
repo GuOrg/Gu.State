@@ -18,7 +18,7 @@
             object y,
             MemberSettings settings)
         {
-            this.AddDiffs(collectionBuilder, (ISet<T>)x, (ISet<T>)y, settings);
+            AddDiffs(collectionBuilder, (ISet<T>)x, (ISet<T>)y, settings);
         }
 
         private static void AddItemDiffs(DiffBuilder collectionBuilder, ISet<T> x, ISet<T> y, HashSet<T> borrow)
@@ -45,7 +45,7 @@
         }
 
         // ReSharper disable once UnusedParameter.Local
-        private void AddDiffs(
+        private static void AddDiffs(
             DiffBuilder collectionBuilder,
             ISet<T> x,
             ISet<T> y,

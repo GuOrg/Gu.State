@@ -6,12 +6,12 @@
     {
         internal static bool IsInSystemCollections(this Type type)
         {
-            return type.FullName.StartsWith("System.Collections");
+            return type.FullName.StartsWith("System.Collections", StringComparison.OrdinalIgnoreCase);
         }
 
         internal static bool IsInSystemCollectionsImmutable(this Type type)
         {
-            return type.FullName.StartsWith("System.Collections.Immutable");
+            return type.FullName.StartsWith("System.Collections.Immutable", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

@@ -21,10 +21,10 @@
         public IReadOnlyCollection<SubDiff> Diffs { get; }
 
         /// <summary>
-        /// Creates a report for all diffs
+        /// Creates a report for all diffs.
         /// </summary>
         /// <param name="tabString">The string to use for indentation.</param>
-        /// <param name="newLine">The newline ex: <see cref="System.Environment.NewLine"/></param>
+        /// <param name="newLine">The newline ex: <see cref="System.Environment.NewLine"/>.</param>
         /// <returns>A report with all diffs.</returns>
         public abstract string ToString(string tabString, string newLine);
 
