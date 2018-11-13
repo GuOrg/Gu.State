@@ -1,0 +1,228 @@
+﻿Gu.State.AddEventArgs
+Gu.State.AddEventArgs.Index.get -> int
+Gu.State.AddEventArgs.Source.get -> System.Collections.IList
+Gu.State.CastingComparer
+Gu.State.CastingComparer.CastingComparer() -> void
+Gu.State.ChangeTracker
+Gu.State.ChangeTracker.ChangeTracker(System.ComponentModel.INotifyPropertyChanged source, Gu.State.PropertiesSettings settings) -> void
+Gu.State.ChangeTracker.Changed -> System.EventHandler
+Gu.State.ChangeTracker.Changes.get -> int
+Gu.State.ChangeTracker.Dispose() -> void
+Gu.State.ChangeTracker.PropertyChanged -> System.ComponentModel.PropertyChangedEventHandler
+Gu.State.ChangeTracker.Settings.get -> Gu.State.PropertiesSettings
+Gu.State.Copy
+Gu.State.CustomCopy
+Gu.State.CustomCopy.CustomCopy() -> void
+Gu.State.CustomCopy<T>
+Gu.State.CustomCopy<T>.Copy(T source, T target) -> T
+Gu.State.CustomCopy<T>.CustomCopy(System.Func<T, T, T> copyValue) -> void
+Gu.State.Diff
+Gu.State.Diff.Diffs.get -> System.Collections.Generic.IReadOnlyCollection<Gu.State.SubDiff>
+Gu.State.DiffBy
+Gu.State.EmptyDiff
+Gu.State.EmptyDiff.EmptyDiff(object xValue, object yValue) -> void
+Gu.State.EqualBy
+Gu.State.EqualByComparer
+Gu.State.EqualByComparer.EqualByComparer() -> void
+Gu.State.FieldDiff
+Gu.State.FieldDiff.FieldDiff(System.Reflection.FieldInfo fieldInfo, Gu.State.ValueDiff diff) -> void
+Gu.State.FieldDiff.FieldDiff(System.Reflection.FieldInfo fieldInfo, object xValue, object yValue) -> void
+Gu.State.FieldDiff.FieldInfo.get -> System.Reflection.FieldInfo
+Gu.State.FieldsSettings
+Gu.State.FieldsSettings.FieldsSettings(System.Collections.Generic.IEnumerable<System.Reflection.FieldInfo> ignoredFields, System.Collections.Generic.IEnumerable<System.Type> ignoredTypes, System.Collections.Generic.IEnumerable<System.Type> immutableTypes, System.Collections.Generic.IReadOnlyDictionary<System.Type, Gu.State.CastingComparer> comparers, System.Collections.Generic.IReadOnlyDictionary<System.Type, Gu.State.CustomCopy> copyers, Gu.State.ReferenceHandling referenceHandling = Gu.State.ReferenceHandling.Structural, System.Reflection.BindingFlags bindingFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic) -> void
+Gu.State.FieldsSettings.IgnoredFields.get -> System.Collections.Generic.IEnumerable<System.Reflection.FieldInfo>
+Gu.State.FieldsSettings.IsIgnoringField(System.Reflection.FieldInfo fieldInfo) -> bool
+Gu.State.FieldsSettingsBuilder
+Gu.State.FieldsSettingsBuilder.AddComparer<T>(System.Collections.Generic.IEqualityComparer<T> comparer) -> Gu.State.FieldsSettingsBuilder
+Gu.State.FieldsSettingsBuilder.AddCustomCopy<T>(System.Func<T, T, T> copyMethod) -> Gu.State.FieldsSettingsBuilder
+Gu.State.FieldsSettingsBuilder.AddIgnoredField(System.Reflection.FieldInfo fieldInfo) -> Gu.State.FieldsSettingsBuilder
+Gu.State.FieldsSettingsBuilder.AddIgnoredField<TSource>(string name) -> Gu.State.FieldsSettingsBuilder
+Gu.State.FieldsSettingsBuilder.AddImmutableType(System.Type type) -> Gu.State.FieldsSettingsBuilder
+Gu.State.FieldsSettingsBuilder.AddImmutableType<T>() -> Gu.State.FieldsSettingsBuilder
+Gu.State.FieldsSettingsBuilder.CreateSettings(Gu.State.ReferenceHandling referenceHandling = Gu.State.ReferenceHandling.Structural, System.Reflection.BindingFlags bindingFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic) -> Gu.State.FieldsSettings
+Gu.State.FieldsSettingsBuilder.FieldsSettingsBuilder() -> void
+Gu.State.FieldsSettingsBuilder.IgnoreType(System.Type type) -> Gu.State.FieldsSettingsBuilder
+Gu.State.FieldsSettingsBuilder.IgnoreType<T>() -> Gu.State.FieldsSettingsBuilder
+Gu.State.GraphChangeEventArgs<T>
+Gu.State.GraphChangeEventArgs<T>.GraphChangeEventArgs(T node, Gu.State.TrackerChangedEventArgs<T> previous = null) -> void
+Gu.State.IChangeTracker
+Gu.State.IChangeTracker.Changed -> System.EventHandler
+Gu.State.IChangeTracker.Changes.get -> int
+Gu.State.IChangeTracker.Settings.get -> Gu.State.PropertiesSettings
+Gu.State.ICopyer
+Gu.State.ICopyer.Copy(object source, object target, Gu.State.MemberSettings settings, Gu.State.ReferencePairCollection referencePairs) -> void
+Gu.State.IDirtyTracker
+Gu.State.IDirtyTracker.Diff.get -> Gu.State.ValueDiff
+Gu.State.IDirtyTracker.IsDirty.get -> bool
+Gu.State.IDirtyTracker.Settings.get -> Gu.State.PropertiesSettings
+Gu.State.IRootChangeEventArgs
+Gu.State.IRootChangeEventArgs.Source.get -> object
+Gu.State.IndexDiff
+Gu.State.IndexDiff.Index.get -> object
+Gu.State.IndexDiff.IndexDiff(object index, Gu.State.ValueDiff valueDiff) -> void
+Gu.State.IndexDiff.IndexDiff(object index, object xValue, object yValue) -> void
+Gu.State.ItemGraphChangedEventArgs<T>
+Gu.State.ItemGraphChangedEventArgs<T>.Index.get -> int
+Gu.State.MemberDiff
+Gu.State.MemberDiff.MemberDiff(System.Reflection.MemberInfo memberInfo, Gu.State.ValueDiff diff) -> void
+Gu.State.MemberDiff<TMember>
+Gu.State.MemberDiff<TMember>.MemberDiff(TMember memberInfo, Gu.State.ValueDiff diff) -> void
+Gu.State.MemberDiff<TMember>.MemberDiff(TMember memberInfo, object xValue, object yValue) -> void
+Gu.State.MemberDiff<TMember>.MemberInfo.get -> TMember
+Gu.State.MemberSettings
+Gu.State.MemberSettings.BindingFlags.get -> System.Reflection.BindingFlags
+Gu.State.MemberSettings.IgnoredMembers.get -> System.Collections.Concurrent.ConcurrentDictionary<System.Reflection.MemberInfo, bool>
+Gu.State.MemberSettings.IsEquatable(System.Type type) -> bool
+Gu.State.MemberSettings.IsIgnoringDeclaringType(System.Type declaringType) -> bool
+Gu.State.MemberSettings.IsImmutable(System.Type type) -> bool
+Gu.State.MemberSettings.MemberSettings(System.Collections.Generic.IEnumerable<System.Reflection.MemberInfo> ignoredMembers, System.Collections.Generic.IEnumerable<System.Type> ignoredTypes, System.Collections.Generic.IEnumerable<System.Type> immutableTypes, System.Collections.Generic.IReadOnlyDictionary<System.Type, Gu.State.CastingComparer> comparers, System.Collections.Generic.IReadOnlyDictionary<System.Type, Gu.State.CustomCopy> copyers, Gu.State.ReferenceHandling referenceHandling, System.Reflection.BindingFlags bindingFlags) -> void
+Gu.State.MemberSettings.ReferenceHandling.get -> Gu.State.ReferenceHandling
+Gu.State.MemberSettings.TryGetComparer(System.Type type, out Gu.State.CastingComparer comparer) -> bool
+Gu.State.MemberSettings.TryGetCopyer(System.Type type, out Gu.State.CustomCopy copyer) -> bool
+Gu.State.MoveEventArgs
+Gu.State.MoveEventArgs.FromIndex.get -> int
+Gu.State.MoveEventArgs.Source.get -> System.Collections.IList
+Gu.State.MoveEventArgs.ToIndex.get -> int
+Gu.State.PropertiesSettings
+Gu.State.PropertiesSettings.GetProperties(System.Type type) -> System.Collections.Generic.IEnumerable<System.Reflection.PropertyInfo>
+Gu.State.PropertiesSettings.IgnoredProperties.get -> System.Collections.Generic.IEnumerable<System.Reflection.PropertyInfo>
+Gu.State.PropertiesSettings.IsIgnoringProperty(System.Reflection.PropertyInfo propertyInfo) -> bool
+Gu.State.PropertiesSettings.PropertiesSettings(System.Collections.Generic.IEnumerable<System.Reflection.PropertyInfo> ignoredProperties, System.Collections.Generic.IEnumerable<System.Type> ignoredTypes, System.Collections.Generic.IEnumerable<System.Type> immutableTypes, System.Collections.Generic.IReadOnlyDictionary<System.Type, Gu.State.CastingComparer> comparers, System.Collections.Generic.IReadOnlyDictionary<System.Type, Gu.State.CustomCopy> copyers, Gu.State.ReferenceHandling referenceHandling = Gu.State.ReferenceHandling.Structural, System.Reflection.BindingFlags bindingFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public) -> void
+Gu.State.PropertiesSettingsBuilder
+Gu.State.PropertiesSettingsBuilder.AddComparer<T>(System.Collections.Generic.IEqualityComparer<T> comparer) -> Gu.State.PropertiesSettingsBuilder
+Gu.State.PropertiesSettingsBuilder.AddCustomCopy<T>(System.Func<T, T, T> copyMethod) -> Gu.State.PropertiesSettingsBuilder
+Gu.State.PropertiesSettingsBuilder.AddImmutableType(System.Type type) -> Gu.State.PropertiesSettingsBuilder
+Gu.State.PropertiesSettingsBuilder.AddImmutableType<T>() -> Gu.State.PropertiesSettingsBuilder
+Gu.State.PropertiesSettingsBuilder.CreateSettings(Gu.State.ReferenceHandling referenceHandling = Gu.State.ReferenceHandling.Structural, System.Reflection.BindingFlags bindingFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public) -> Gu.State.PropertiesSettings
+Gu.State.PropertiesSettingsBuilder.IgnoreIndexersFor<T>() -> Gu.State.PropertiesSettingsBuilder
+Gu.State.PropertiesSettingsBuilder.IgnoreProperty(System.Reflection.PropertyInfo property) -> Gu.State.PropertiesSettingsBuilder
+Gu.State.PropertiesSettingsBuilder.IgnoreProperty<TSource>(System.Linq.Expressions.Expression<System.Func<TSource, object>> property) -> Gu.State.PropertiesSettingsBuilder
+Gu.State.PropertiesSettingsBuilder.IgnoreProperty<TSource>(string name) -> Gu.State.PropertiesSettingsBuilder
+Gu.State.PropertiesSettingsBuilder.IgnoreType(System.Type type) -> Gu.State.PropertiesSettingsBuilder
+Gu.State.PropertiesSettingsBuilder.IgnoreType<T>() -> Gu.State.PropertiesSettingsBuilder
+Gu.State.PropertiesSettingsBuilder.PropertiesSettingsBuilder() -> void
+Gu.State.PropertyChangeEventArgs
+Gu.State.PropertyChangeEventArgs.PropertyChangeEventArgs(object source, System.Reflection.PropertyInfo propertyInfo) -> void
+Gu.State.PropertyChangeEventArgs.PropertyInfo.get -> System.Reflection.PropertyInfo
+Gu.State.PropertyChangeEventArgs.Source.get -> object
+Gu.State.PropertyDiff
+Gu.State.PropertyDiff.PropertyDiff(System.Reflection.PropertyInfo propertyInfo, Gu.State.ValueDiff diff) -> void
+Gu.State.PropertyDiff.PropertyDiff(System.Reflection.PropertyInfo propertyInfo, object xValue, object yValue) -> void
+Gu.State.PropertyDiff.PropertyInfo.get -> System.Reflection.PropertyInfo
+Gu.State.PropertyGraphChangedEventArgs<T>
+Gu.State.PropertyGraphChangedEventArgs<T>.Property.get -> System.Reflection.PropertyInfo
+Gu.State.RankDiff
+Gu.State.RankDiff.RankDiff(System.Array x, System.Array y) -> void
+Gu.State.RankDiff.XLengths.get -> System.Collections.Generic.IReadOnlyList<int>
+Gu.State.RankDiff.YLengths.get -> System.Collections.Generic.IReadOnlyList<int>
+Gu.State.ReferenceHandling
+Gu.State.ReferenceHandling.References = 1 -> Gu.State.ReferenceHandling
+Gu.State.ReferenceHandling.Structural = 2 -> Gu.State.ReferenceHandling
+Gu.State.ReferenceHandling.Throw = 0 -> Gu.State.ReferenceHandling
+Gu.State.ReferencePairCollection
+Gu.State.RemoveEventArgs
+Gu.State.RemoveEventArgs.Index.get -> int
+Gu.State.RemoveEventArgs.Source.get -> System.Collections.IList
+Gu.State.ReplaceEventArgs
+Gu.State.ReplaceEventArgs.Index.get -> int
+Gu.State.ReplaceEventArgs.Source.get -> System.Collections.IList
+Gu.State.ResetEventArgs
+Gu.State.ResetEventArgs.Source.get -> System.Collections.IList
+Gu.State.RootChangeEventArgs<T>
+Gu.State.RootChangeEventArgs<T>.EventArgs.get -> Gu.State.IRootChangeEventArgs
+Gu.State.RootChangeEventArgs<T>.RootChangeEventArgs(T node, Gu.State.IRootChangeEventArgs eventArgs) -> void
+Gu.State.SubDiff
+Gu.State.SubDiff.SubDiff(Gu.State.ValueDiff valueDiff) -> void
+Gu.State.SubDiff.X.get -> object
+Gu.State.SubDiff.Y.get -> object
+Gu.State.Synchronize
+Gu.State.Track
+Gu.State.TrackerChangedEventArgs<T>
+Gu.State.TrackerChangedEventArgs<T>.Node.get -> T
+Gu.State.TrackerChangedEventArgs<T>.Previous.get -> Gu.State.TrackerChangedEventArgs<T>
+Gu.State.TrackerChangedEventArgs<T>.Root.get -> Gu.State.RootChangeEventArgs<T>
+Gu.State.TrackerChangedEventArgs<T>.TrackerChangedEventArgs(T node, Gu.State.TrackerChangedEventArgs<T> previous = null) -> void
+Gu.State.ValueDiff
+Gu.State.ValueDiff.ValueDiff(object xValue, object yValue, System.Collections.Generic.IReadOnlyCollection<Gu.State.SubDiff> diffs = null) -> void
+Gu.State.ValueDiff.X.get -> object
+Gu.State.ValueDiff.Y.get -> object
+abstract Gu.State.CastingComparer.Equals(object x, object y) -> bool
+abstract Gu.State.CastingComparer.GetHashCode(object obj) -> int
+abstract Gu.State.CustomCopy.Copy(object source, object target) -> object
+abstract Gu.State.Diff.IsEmpty.get -> bool
+abstract Gu.State.Diff.ToString(string tabString, string newLine) -> string
+abstract Gu.State.EqualByComparer.Equals(object x, object y, Gu.State.MemberSettings settings, Gu.State.ReferencePairCollection referencePairs) -> bool
+abstract Gu.State.MemberSettings.GetMembers(System.Type type) -> System.Collections.Generic.IEnumerable<System.Reflection.MemberInfo>
+abstract Gu.State.MemberSettings.IsIgnoringMember(System.Reflection.MemberInfo member) -> bool
+override Gu.State.CustomCopy<T>.Copy(object source, object target) -> object
+override Gu.State.EmptyDiff.IsEmpty.get -> bool
+override Gu.State.EmptyDiff.ToString() -> string
+override Gu.State.EmptyDiff.ToString(string tabString, string newLine) -> string
+override Gu.State.FieldsSettings.GetMembers(System.Type type) -> System.Collections.Generic.IEnumerable<System.Reflection.MemberInfo>
+override Gu.State.FieldsSettings.IsIgnoringMember(System.Reflection.MemberInfo member) -> bool
+override Gu.State.IndexDiff.ToString() -> string
+override Gu.State.IndexDiff.ToString(string tabString, string newLine) -> string
+override Gu.State.MemberDiff<TMember>.ToString() -> string
+override Gu.State.MemberDiff<TMember>.ToString(string tabString, string newLine) -> string
+override Gu.State.PropertiesSettings.GetMembers(System.Type type) -> System.Collections.Generic.IEnumerable<System.Reflection.MemberInfo>
+override Gu.State.PropertiesSettings.IsIgnoringMember(System.Reflection.MemberInfo member) -> bool
+override Gu.State.RankDiff.ToString() -> string
+override Gu.State.RankDiff.ToString(string tabString, string newLine) -> string
+override Gu.State.SubDiff.IsEmpty.get -> bool
+override Gu.State.ValueDiff.IsEmpty.get -> bool
+override Gu.State.ValueDiff.ToString() -> string
+override Gu.State.ValueDiff.ToString(string tabString, string newLine) -> string
+static Gu.State.CastingComparer.Create<T>(System.Collections.Generic.IEqualityComparer<T> comparer) -> Gu.State.CastingComparer
+static Gu.State.Copy.FieldValues<T>(T source, T target, Gu.State.FieldsSettings settings) -> void
+static Gu.State.Copy.FieldValues<T>(T source, T target, Gu.State.ReferenceHandling referenceHandling = Gu.State.ReferenceHandling.Structural, System.Reflection.BindingFlags bindingFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic) -> void
+static Gu.State.Copy.PropertyValues<T>(T source, T target, Gu.State.PropertiesSettings settings) -> void
+static Gu.State.Copy.PropertyValues<T>(T source, T target, Gu.State.ReferenceHandling referenceHandling = Gu.State.ReferenceHandling.Structural, System.Reflection.BindingFlags bindingFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public) -> void
+static Gu.State.Copy.VerifyCanCopyFieldValues(System.Type type, Gu.State.FieldsSettings settings) -> void
+static Gu.State.Copy.VerifyCanCopyFieldValues<T>(Gu.State.FieldsSettings settings) -> void
+static Gu.State.Copy.VerifyCanCopyFieldValues<T>(Gu.State.ReferenceHandling referenceHandling = Gu.State.ReferenceHandling.Structural, System.Reflection.BindingFlags bindingFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic) -> void
+static Gu.State.Copy.VerifyCanCopyPropertyValues(System.Type type, Gu.State.PropertiesSettings settings) -> void
+static Gu.State.Copy.VerifyCanCopyPropertyValues<T>(Gu.State.PropertiesSettings settings) -> void
+static Gu.State.Copy.VerifyCanCopyPropertyValues<T>(Gu.State.ReferenceHandling referenceHandling = Gu.State.ReferenceHandling.Structural, System.Reflection.BindingFlags bindingFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public) -> void
+static Gu.State.CustomCopy.Create<T>(System.Func<T, T, T> copyMethod) -> Gu.State.CustomCopy
+static Gu.State.DiffBy.FieldValues<T>(T x, T y, Gu.State.FieldsSettings settings) -> Gu.State.Diff
+static Gu.State.DiffBy.FieldValues<T>(T x, T y, Gu.State.ReferenceHandling referenceHandling = Gu.State.ReferenceHandling.Structural, System.Reflection.BindingFlags bindingFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic) -> Gu.State.Diff
+static Gu.State.DiffBy.PropertyValues<T>(T x, T y, Gu.State.PropertiesSettings settings) -> Gu.State.ValueDiff
+static Gu.State.DiffBy.PropertyValues<T>(T x, T y, Gu.State.ReferenceHandling referenceHandling = Gu.State.ReferenceHandling.Structural, System.Reflection.BindingFlags bindingFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public) -> Gu.State.Diff
+static Gu.State.DiffBy.VerifyCanDiffByFieldValues<T>(Gu.State.FieldsSettings settings) -> void
+static Gu.State.DiffBy.VerifyCanDiffByFieldValues<T>(Gu.State.ReferenceHandling referenceHandling = Gu.State.ReferenceHandling.Structural, System.Reflection.BindingFlags bindingFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic) -> void
+static Gu.State.DiffBy.VerifyCanDiffByPropertyValues<T>(Gu.State.PropertiesSettings settings) -> void
+static Gu.State.DiffBy.VerifyCanDiffByPropertyValues<T>(Gu.State.ReferenceHandling referenceHandling = Gu.State.ReferenceHandling.Structural, System.Reflection.BindingFlags bindingFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public) -> void
+static Gu.State.EqualBy.FieldValues<T>(T x, T y, Gu.State.FieldsSettings settings) -> bool
+static Gu.State.EqualBy.FieldValues<T>(T x, T y, Gu.State.ReferenceHandling referenceHandling = Gu.State.ReferenceHandling.Structural, System.Reflection.BindingFlags bindingFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic) -> bool
+static Gu.State.EqualBy.PropertyValues<T>(T x, T y, Gu.State.PropertiesSettings settings) -> bool
+static Gu.State.EqualBy.PropertyValues<T>(T x, T y, Gu.State.ReferenceHandling referenceHandling = Gu.State.ReferenceHandling.Structural, System.Reflection.BindingFlags bindingFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public) -> bool
+static Gu.State.EqualBy.VerifyCanEqualByFieldValues(System.Type type, Gu.State.FieldsSettings settings) -> void
+static Gu.State.EqualBy.VerifyCanEqualByFieldValues<T>(Gu.State.FieldsSettings settings) -> void
+static Gu.State.EqualBy.VerifyCanEqualByFieldValues<T>(Gu.State.ReferenceHandling referenceHandling = Gu.State.ReferenceHandling.Structural, System.Reflection.BindingFlags bindingFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic) -> void
+static Gu.State.EqualBy.VerifyCanEqualByPropertyValues(System.Type type, Gu.State.PropertiesSettings settings) -> void
+static Gu.State.EqualBy.VerifyCanEqualByPropertyValues<T>(Gu.State.PropertiesSettings settings) -> void
+static Gu.State.EqualBy.VerifyCanEqualByPropertyValues<T>(Gu.State.ReferenceHandling referenceHandling = Gu.State.ReferenceHandling.Structural, System.Reflection.BindingFlags bindingFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public) -> void
+static Gu.State.EqualByComparer.TryGetEitherNullEquals(object x, object y, out bool result) -> bool
+static Gu.State.FieldsSettings.Build() -> Gu.State.FieldsSettingsBuilder
+static Gu.State.FieldsSettings.Default.get -> Gu.State.FieldsSettings
+static Gu.State.FieldsSettings.GetOrCreate(Gu.State.ReferenceHandling referenceHandling = Gu.State.ReferenceHandling.Structural, System.Reflection.BindingFlags bindingFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic) -> Gu.State.FieldsSettings
+static Gu.State.MemberSettings.IsEquatableCore(System.Type type) -> bool
+static Gu.State.MemberSettings.IsImmutableCore(System.Type type) -> bool
+static Gu.State.PropertiesSettings.Build() -> Gu.State.PropertiesSettingsBuilder
+static Gu.State.PropertiesSettings.Default.get -> Gu.State.PropertiesSettings
+static Gu.State.PropertiesSettings.GetOrCreate(Gu.State.ReferenceHandling referenceHandling = Gu.State.ReferenceHandling.Structural, System.Reflection.BindingFlags bindingFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public) -> Gu.State.PropertiesSettings
+static Gu.State.Synchronize.PropertyValues<T>(T source, T target, Gu.State.PropertiesSettings settings) -> System.IDisposable
+static Gu.State.Synchronize.PropertyValues<T>(T source, T target, Gu.State.ReferenceHandling referenceHandling = Gu.State.ReferenceHandling.Structural, System.Reflection.BindingFlags bindingFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public) -> System.IDisposable
+static Gu.State.Synchronize.VerifyCanSynchronize(System.Type type, Gu.State.PropertiesSettings settings) -> void
+static Gu.State.Synchronize.VerifyCanSynchronize<T>(Gu.State.PropertiesSettings settings) -> void
+static Gu.State.Synchronize.VerifyCanSynchronize<T>(Gu.State.ReferenceHandling referenceHandling = Gu.State.ReferenceHandling.Structural, System.Reflection.BindingFlags bindingFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public) -> void
+static Gu.State.Track.Changes(System.ComponentModel.INotifyPropertyChanged source, Gu.State.PropertiesSettings settings) -> Gu.State.IChangeTracker
+static Gu.State.Track.Changes(System.ComponentModel.INotifyPropertyChanged source, Gu.State.ReferenceHandling referenceHandling = Gu.State.ReferenceHandling.Structural, System.Reflection.BindingFlags bindingFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public) -> Gu.State.IChangeTracker
+static Gu.State.Track.IsDirty<T>(T x, T y, Gu.State.PropertiesSettings settings) -> Gu.State.IDirtyTracker
+static Gu.State.Track.IsDirty<T>(T x, T y, Gu.State.ReferenceHandling referenceHandling = Gu.State.ReferenceHandling.Structural, System.Reflection.BindingFlags bindingFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public) -> Gu.State.IDirtyTracker
+static Gu.State.Track.VerifyCanTrackChanges(System.Type type, Gu.State.PropertiesSettings settings) -> void
+static Gu.State.Track.VerifyCanTrackChanges<T>(Gu.State.PropertiesSettings settings) -> void
+static Gu.State.Track.VerifyCanTrackChanges<T>(Gu.State.ReferenceHandling referenceHandling = Gu.State.ReferenceHandling.Structural, System.Reflection.BindingFlags bindingFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public) -> void
+static Gu.State.Track.VerifyCanTrackIsDirty(System.Type type, Gu.State.PropertiesSettings settings) -> void
+static Gu.State.Track.VerifyCanTrackIsDirty<T>(Gu.State.PropertiesSettings settings) -> void
+static Gu.State.Track.VerifyCanTrackIsDirty<T>(Gu.State.ReferenceHandling referenceHandling = Gu.State.ReferenceHandling.Structural, System.Reflection.BindingFlags bindingFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public) -> void
