@@ -37,7 +37,7 @@
                 case MemberTypes.All:
                     throw Throw.ExpectedParameterOfTypes<PropertyInfo, FieldInfo>(nameof(this.Member));
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new InvalidOperationException($"Unhandled member type {this.Member.MemberType}");
             }
 
             errorBuilder.AppendLine($" - Source value {this.GetType(this.SourceAndTargetValue.SourceValue)}: {this.GetValue(this.SourceAndTargetValue.SourceValue)}.")

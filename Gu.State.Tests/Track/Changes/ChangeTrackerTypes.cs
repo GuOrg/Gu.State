@@ -31,10 +31,7 @@ namespace Gu.State.Tests
 
             public int Value
             {
-                get
-                {
-                    return this.value;
-                }
+                get => this.value;
 
                 set
                 {
@@ -63,10 +60,7 @@ namespace Gu.State.Tests
 
             public int Value1
             {
-                get
-                {
-                    return this.value1;
-                }
+                get => this.value1;
 
                 set
                 {
@@ -82,10 +76,7 @@ namespace Gu.State.Tests
 
             public DateTime Time
             {
-                get
-                {
-                    return this.time;
-                }
+                get => this.time;
 
                 set
                 {
@@ -130,10 +121,7 @@ namespace Gu.State.Tests
 
             public int Value
             {
-                get
-                {
-                    return this.value;
-                }
+                get => this.value;
 
                 set
                 {
@@ -149,10 +137,7 @@ namespace Gu.State.Tests
 
             public int Excluded
             {
-                get
-                {
-                    return this.excluded;
-                }
+                get => this.excluded;
 
                 set
                 {
@@ -191,10 +176,7 @@ namespace Gu.State.Tests
 
             public int Value
             {
-                get
-                {
-                    return this.value;
-                }
+                get => this.value;
 
                 set
                 {
@@ -210,10 +192,7 @@ namespace Gu.State.Tests
 
             public string Name
             {
-                get
-                {
-                    return this.name;
-                }
+                get => this.name;
 
                 set
                 {
@@ -229,10 +208,7 @@ namespace Gu.State.Tests
 
             public StringComparison Comparison
             {
-                get
-                {
-                    return this.comparison;
-                }
+                get => this.comparison;
 
                 set
                 {
@@ -248,10 +224,7 @@ namespace Gu.State.Tests
 
             public Level Next
             {
-                get
-                {
-                    return this.next;
-                }
+                get => this.next;
 
                 set
                 {
@@ -267,10 +240,7 @@ namespace Gu.State.Tests
 
             public ObservableCollection<int> Ints
             {
-                get
-                {
-                    return this.ints;
-                }
+                get => this.ints;
 
                 set
                 {
@@ -286,10 +256,7 @@ namespace Gu.State.Tests
 
             public ObservableCollection<Level> Levels
             {
-                get
-                {
-                    return this.levels;
-                }
+                get => this.levels;
 
                 set
                 {
@@ -323,10 +290,7 @@ namespace Gu.State.Tests
 
             public T Value
             {
-                get
-                {
-                    return this.value;
-                }
+                get => this.value;
 
                 set
                 {
@@ -342,10 +306,7 @@ namespace Gu.State.Tests
 
             public string Name
             {
-                get
-                {
-                    return this.name;
-                }
+                get => this.name;
 
                 set
                 {
@@ -392,10 +353,7 @@ namespace Gu.State.Tests
 
             public int Value
             {
-                get
-                {
-                    return this.value;
-                }
+                get => this.value;
 
                 set
                 {
@@ -411,10 +369,7 @@ namespace Gu.State.Tests
 
             public IllegalType Illegal
             {
-                get
-                {
-                    return this.illegal;
-                }
+                get => this.illegal;
 
                 set
                 {
@@ -488,10 +443,7 @@ namespace Gu.State.Tests
 
             public string Name
             {
-                get
-                {
-                    return this.name;
-                }
+                get => this.name;
 
                 set
                 {
@@ -507,10 +459,7 @@ namespace Gu.State.Tests
 
             public Child Child
             {
-                get
-                {
-                    return this.child;
-                }
+                get => this.child;
 
                 set
                 {
@@ -545,10 +494,7 @@ namespace Gu.State.Tests
 
             public string Name
             {
-                get
-                {
-                    return this.name;
-                }
+                get => this.name;
 
                 set
                 {
@@ -564,10 +510,7 @@ namespace Gu.State.Tests
 
             public Parent Parent
             {
-                get
-                {
-                    return this.parent;
-                }
+                get => this.parent;
 
                 set
                 {
@@ -597,10 +540,7 @@ namespace Gu.State.Tests
 
             public string Name
             {
-                get
-                {
-                    return this.name;
-                }
+                get => this.name;
 
                 set
                 {
@@ -616,10 +556,7 @@ namespace Gu.State.Tests
 
             public WithSelf Value
             {
-                get
-                {
-                    return this.value;
-                }
+                get => this.value;
 
                 set
                 {

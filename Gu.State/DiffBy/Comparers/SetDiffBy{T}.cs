@@ -79,7 +79,7 @@
                     }
 
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(settings), settings.ReferenceHandling, "Unknown ReferenceHandling");
             }
         }
     }
