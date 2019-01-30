@@ -39,20 +39,20 @@ namespace Gu.State.Tests.DiffTests
 
             public string Name
             {
-                get { return this.name; }
-                set { this.name = value; }
+                get => this.name;
+                set => this.name = value;
             }
 
             public int Value
             {
-                get { return this.value; }
-                set { this.value = value; }
+                get => this.value;
+                set => this.value = value;
             }
 
             public ComplexType ComplexValue
             {
-                get { return this.complexValue; }
-                set { this.complexValue = value; }
+                get => this.complexValue;
+                set => this.complexValue = value;
             }
         }
 
@@ -73,26 +73,26 @@ namespace Gu.State.Tests.DiffTests
 
             public int IntValue
             {
-                get { return this.intValue; }
-                set { this.intValue = value; }
+                get => this.intValue;
+                set => this.intValue = value;
             }
 
             public int? NullableIntValue
             {
-                get { return this.nullableIntValue; }
-                set { this.nullableIntValue = value; }
+                get => this.nullableIntValue;
+                set => this.nullableIntValue = value;
             }
 
             public string StringValue
             {
-                get { return this.stringValue; }
-                set { this.stringValue = value; }
+                get => this.stringValue;
+                set => this.stringValue = value;
             }
 
             public StringSplitOptions EnumValue
             {
-                get { return this.enumValue; }
-                set { this.enumValue = value; }
+                get => this.enumValue;
+                set => this.enumValue = value;
             }
 
             public override string ToString()
@@ -120,14 +120,14 @@ namespace Gu.State.Tests.DiffTests
 
             public string Name
             {
-                get { return this.name; }
-                set { this.name = value; }
+                get => this.name;
+                set => this.name = value;
             }
 
             public int Value
             {
-                get { return this.value; }
-                set { this.value = value; }
+                get => this.value;
+                set => this.value = value;
             }
 
             private sealed class NameComparer : IEqualityComparer<ComplexType>
@@ -259,10 +259,7 @@ namespace Gu.State.Tests.DiffTests
 
             public int Value
             {
-                get
-                {
-                    return this.value;
-                }
+                get => this.value;
 
                 set
                 {
@@ -312,20 +309,20 @@ namespace Gu.State.Tests.DiffTests
 
             public string Name
             {
-                get { return this.name; }
-                set { this.name = value; }
+                get => this.name;
+                set => this.name = value;
             }
 
             public int Value
             {
-                get { return this.value; }
-                set { this.value = value; }
+                get => this.value;
+                set => this.value = value;
             }
 
             public ComplexType ComplexType
             {
-                get { return this.complexType; }
-                set { this.complexType = value; }
+                get => this.complexType;
+                set => this.complexType = value;
             }
         }
 
@@ -374,10 +371,7 @@ namespace Gu.State.Tests.DiffTests
 
             public int IntValue
             {
-                get
-                {
-                    return this.intValue;
-                }
+                get => this.intValue;
 
                 set
                 {
@@ -393,10 +387,7 @@ namespace Gu.State.Tests.DiffTests
 
             public int? NullableIntValue
             {
-                get
-                {
-                    return this.nullableIntValue;
-                }
+                get => this.nullableIntValue;
 
                 set
                 {
@@ -412,10 +403,7 @@ namespace Gu.State.Tests.DiffTests
 
             public string StringValue
             {
-                get
-                {
-                    return this.stringValue;
-                }
+                get => this.stringValue;
 
                 set
                 {
@@ -431,10 +419,7 @@ namespace Gu.State.Tests.DiffTests
 
             public StringSplitOptions EnumValue
             {
-                get
-                {
-                    return this.enumValue;
-                }
+                get => this.enumValue;
 
                 set
                 {
@@ -555,8 +540,8 @@ namespace Gu.State.Tests.DiffTests
 
             public int Value
             {
-                get { return this.value; }
-                set { this.value = value; }
+                get => this.value;
+                set => this.value = value;
             }
 
             public override int GetHashCode()
