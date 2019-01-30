@@ -765,21 +765,21 @@ namespace Gu.State.Tests
 
         public abstract class BaseClass : INotifyPropertyChanged
         {
-            private double baseDouble;
+            private double baseValue;
 
             public event PropertyChangedEventHandler PropertyChanged;
 
             public double BaseValue
             {
-                get => this.baseDouble;
+                get => this.baseValue;
                 set
                 {
-                    if (value.Equals(this.baseDouble))
+                    if (value.Equals(this.baseValue))
                     {
                         return;
                     }
 
-                    this.baseDouble = value;
+                    this.baseValue = value;
                     this.OnPropertyChanged();
                 }
             }
