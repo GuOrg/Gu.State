@@ -10,6 +10,7 @@ group Analyzers
 
 group Test
   NUnit
+  NUnit3TestAdapter
   Moq
   System.Collections.Immutable
   Gu.Units
