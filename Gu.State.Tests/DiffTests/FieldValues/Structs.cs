@@ -1,10 +1,10 @@
-﻿namespace Gu.State.Tests.DiffTests.PropertyValues
+﻿namespace Gu.State.Tests.DiffTests.FieldValues
 {
     using System;
 
-    public class Classes : ClassesTests
+    public class Structs : StructsTests
     {
-        public override Diff DiffBy<T>(
+        public override Diff DiffMethod<T>(
             T x,
             T y,
             ReferenceHandling referenceHandling = ReferenceHandling.Structural,
@@ -12,10 +12,10 @@
             Type ignoredType = null,
             Type immutableType = null)
         {
-            var builder = PropertiesSettings.Build();
+            var builder = FieldsSettings.Build();
             if (excludedMembers != null)
             {
-                builder.IgnoreProperty<T>(excludedMembers);
+                builder.AddIgnoredField<T>(excludedMembers);
             }
 
             if (ignoredType != null)
@@ -29,7 +29,7 @@
             }
 
             var settings = builder.CreateSettings(referenceHandling);
-            return State.DiffBy.PropertyValues(x, y, settings);
+            return DiffBy.FieldValues(x, y, settings);
         }
     }
 }

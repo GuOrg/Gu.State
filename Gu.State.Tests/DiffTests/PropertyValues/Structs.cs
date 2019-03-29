@@ -2,9 +2,9 @@
 {
     using System;
 
-    public class Classes : ClassesTests
+    public class Structs : StructsTests
     {
-        public override Diff DiffBy<T>(
+        public override Diff DiffMethod<T>(
             T x,
             T y,
             ReferenceHandling referenceHandling = ReferenceHandling.Structural,
@@ -29,7 +29,7 @@
             }
 
             var settings = builder.CreateSettings(referenceHandling);
-            return State.DiffBy.PropertyValues(x, y, settings);
+            return DiffBy.PropertyValues(x, y, settings);
         }
     }
 }
