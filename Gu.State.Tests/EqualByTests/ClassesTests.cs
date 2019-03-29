@@ -12,7 +12,7 @@ namespace Gu.State.Tests.EqualByTests
     {
         public static IReadOnlyList<EqualByTestsShared.EqualsData> EqualsSource => EqualByTestsShared.EqualsSource;
 
-        public abstract bool EqualMethod<T>(
+        public abstract bool EqualBy<T>(
             T x,
             T y,
             ReferenceHandling referenceHandling = ReferenceHandling.Structural,
@@ -23,7 +23,7 @@ namespace Gu.State.Tests.EqualByTests
         [TestCaseSource(nameof(EqualsSource))]
         public void PropertyValuesHappyPath(EqualByTestsShared.EqualsData data)
         {
-            Assert.AreEqual(data.Equals, this.EqualMethod(data.Source, data.Target));
+            Assert.AreEqual(data.Equals, this.EqualBy(data.Source, data.Target));
         }
 
         [TestCase("b", "b", true)]
@@ -32,16 +32,16 @@ namespace Gu.State.Tests.EqualByTests
         {
             var x = new WithSimpleProperties(1, 2, xn, StringSplitOptions.RemoveEmptyEntries);
             var y = new WithSimpleProperties(1, 2, yn, StringSplitOptions.RemoveEmptyEntries);
-            var result = this.EqualMethod(x, y);
+            var result = this.EqualBy(x, y);
             Assert.AreEqual(expected, result);
 
-            result = this.EqualMethod(x, y, ReferenceHandling.Throw);
+            result = this.EqualBy(x, y, ReferenceHandling.Throw);
             Assert.AreEqual(expected, result);
 
-            result = this.EqualMethod(x, y, ReferenceHandling.Structural);
+            result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(expected, result);
 
-            result = this.EqualMethod(x, y, ReferenceHandling.References);
+            result = this.EqualBy(x, y, ReferenceHandling.References);
             Assert.AreEqual(expected, result);
         }
 
@@ -52,7 +52,7 @@ namespace Gu.State.Tests.EqualByTests
             var x = new WithComplexProperty("a", 1) { ComplexType = new ComplexType { Name = xn, Value = 2 } };
 
             var y = new WithComplexProperty("a", 1) { ComplexType = new ComplexType { Name = yn, Value = 2 } };
-            var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
+            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(expected, result);
         }
 
@@ -61,7 +61,7 @@ namespace Gu.State.Tests.EqualByTests
         {
             var x = new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = 2 });
             var y = new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = 2 });
-            var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
+            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
         }
 
@@ -70,7 +70,7 @@ namespace Gu.State.Tests.EqualByTests
         {
             var x = new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = 2 });
             var y = new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = 3 });
-            var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
+            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(false, result);
         }
 
@@ -79,7 +79,7 @@ namespace Gu.State.Tests.EqualByTests
         {
             var x = new With<BaseClass>(new Derived1());
             var y = new With<BaseClass>(new Derived2());
-            var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
+            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(false, result);
         }
 
@@ -89,8 +89,8 @@ namespace Gu.State.Tests.EqualByTests
         {
             var x = new With<int>(xi);
             var y = new With<int>(yi);
-            Assert.AreEqual(expected, this.EqualMethod(x, y, ReferenceHandling.Structural));
-            Assert.AreEqual(expected, this.EqualMethod(x, y, ReferenceHandling.References));
+            Assert.AreEqual(expected, this.EqualBy(x, y, ReferenceHandling.Structural));
+            Assert.AreEqual(expected, this.EqualBy(x, y, ReferenceHandling.References));
         }
 
         [Test]
@@ -98,11 +98,10 @@ namespace Gu.State.Tests.EqualByTests
         {
             var x = new WithComplexProperty { Name = "a", Value = 1 };
             var y = new WithComplexProperty { Name = "a", Value = 1 };
-            this.EqualMethod(x, y, ReferenceHandling.Structural);
-            var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
+            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
 
-            result = this.EqualMethod(x, y, ReferenceHandling.References);
+            result = this.EqualBy(x, y, ReferenceHandling.References);
             Assert.AreEqual(true, result);
         }
 
@@ -111,11 +110,10 @@ namespace Gu.State.Tests.EqualByTests
         {
             var x = new WithComplexProperty { Name = "a", Value = 1, ComplexType = new ComplexType("b", 1) };
             var y = new WithComplexProperty { Name = "a", Value = 1 };
-            this.EqualMethod(x, y, ReferenceHandling.Structural);
-            var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
+            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(false, result);
 
-            result = this.EqualMethod(x, y, ReferenceHandling.References);
+            result = this.EqualBy(x, y, ReferenceHandling.References);
             Assert.AreEqual(false, result);
         }
 
@@ -124,11 +122,10 @@ namespace Gu.State.Tests.EqualByTests
         {
             var x = new WithComplexProperty { Name = "a", Value = 1 };
             var y = new WithComplexProperty { Name = "a", Value = 1, ComplexType = new ComplexType("b", 1) };
-            this.EqualMethod(x, y, ReferenceHandling.Structural);
-            var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
+            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(false, result);
 
-            result = this.EqualMethod(x, y, ReferenceHandling.References);
+            result = this.EqualBy(x, y, ReferenceHandling.References);
             Assert.AreEqual(false, result);
         }
 
@@ -142,10 +139,10 @@ namespace Gu.State.Tests.EqualByTests
                 ComplexType = new ComplexType { Name = "b", Value = 2 },
             };
             var y = new WithComplexProperty { Name = "a", Value = 1, ComplexType = x.ComplexType };
-            var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
+            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
 
-            result = this.EqualMethod(x, y, ReferenceHandling.References);
+            result = this.EqualBy(x, y, ReferenceHandling.References);
             Assert.AreEqual(true, result);
         }
 
@@ -164,10 +161,10 @@ namespace Gu.State.Tests.EqualByTests
                 Value = 1,
                 ComplexType = new ComplexType { Name = "b", Value = 2 },
             };
-            var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
+            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
 
-            result = this.EqualMethod(x, y, ReferenceHandling.References);
+            result = this.EqualBy(x, y, ReferenceHandling.References);
             Assert.AreEqual(false, result);
         }
 
@@ -182,12 +179,12 @@ namespace Gu.State.Tests.EqualByTests
             var y = new WithReadonlyProperty<int>(yv);
             if (referenceHandling == null)
             {
-                var result = this.EqualMethod(x, y);
+                var result = this.EqualBy(x, y);
                 Assert.AreEqual(expected, result);
             }
             else
             {
-                var result = this.EqualMethod(x, y, referenceHandling.Value);
+                var result = this.EqualBy(x, y, referenceHandling.Value);
                 Assert.AreEqual(expected, result);
             }
         }
@@ -198,7 +195,7 @@ namespace Gu.State.Tests.EqualByTests
         {
             var x = new WithReadonlyProperty<ComplexType>(new ComplexType(xv, 1));
             var y = new WithReadonlyProperty<ComplexType>(new ComplexType(yv, 1));
-            var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
+            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(expected, result);
         }
 
@@ -208,7 +205,7 @@ namespace Gu.State.Tests.EqualByTests
         {
             var x = new WithReadonlyProperty<Guid>(Guid.Parse(xv));
             var y = new WithReadonlyProperty<Guid>(Guid.Parse(yv));
-            var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
+            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(expected, result);
         }
 
@@ -217,7 +214,7 @@ namespace Gu.State.Tests.EqualByTests
         {
             var x = new WithListProperty<int> { Items = { 1, 2, 3 } };
             var y = new WithListProperty<int>();
-            var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
+            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(false, result);
         }
 
@@ -226,10 +223,10 @@ namespace Gu.State.Tests.EqualByTests
         {
             var x = new WithListProperty<int> { Items = null };
             var y = new WithListProperty<int> { Items = null };
-            var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
+            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
 
-            result = this.EqualMethod(x, y, ReferenceHandling.References);
+            result = this.EqualBy(x, y, ReferenceHandling.References);
             Assert.AreEqual(true, result);
         }
 
@@ -238,10 +235,10 @@ namespace Gu.State.Tests.EqualByTests
         {
             var x = new WithListProperty<int> { Items = new List<int>() };
             var y = new WithListProperty<int> { Items = new List<int>() };
-            var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
+            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
 
-            result = this.EqualMethod(x, y, ReferenceHandling.References);
+            result = this.EqualBy(x, y, ReferenceHandling.References);
             Assert.AreEqual(false, result);
         }
 
@@ -250,7 +247,7 @@ namespace Gu.State.Tests.EqualByTests
         {
             var x = new WithListProperty<int> { Items = { 1, 2, 3 } };
             var y = new WithListProperty<int> { Items = null };
-            var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
+            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(false, result);
         }
 
@@ -261,7 +258,7 @@ namespace Gu.State.Tests.EqualByTests
             var x = new WithArrayProperty("a", 1, new[] { 1, 2 });
             var y = new WithArrayProperty("a", 1, null);
 
-            var result = this.EqualMethod(x, y, referenceHandling);
+            var result = this.EqualBy(x, y, referenceHandling);
             Assert.AreEqual(false, result);
         }
 
@@ -270,7 +267,7 @@ namespace Gu.State.Tests.EqualByTests
         {
             var x = new WithListProperty<int> { Items = { 1, 2, 3 } };
             var y = new WithListProperty<int> { Items = { 1, 2, 3, 4 } };
-            var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
+            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(false, result);
         }
 
@@ -279,7 +276,7 @@ namespace Gu.State.Tests.EqualByTests
         {
             var x = new WithListProperty<ComplexType> { Items = { new ComplexType("a", 1) } };
             var y = new WithListProperty<ComplexType> { Items = { new ComplexType("a", 1) } };
-            var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
+            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
         }
 
@@ -295,7 +292,7 @@ namespace Gu.State.Tests.EqualByTests
                     new ComplexType("a", 1),
                 },
             };
-            var result = this.EqualMethod(source, target, ReferenceHandling.Structural);
+            var result = this.EqualBy(source, target, ReferenceHandling.Structural);
             Assert.AreEqual(false, result);
         }
 
@@ -313,12 +310,12 @@ namespace Gu.State.Tests.EqualByTests
                                : nameof(WithSimpleProperties.NullableIntValue);
             if (referenceHandling == null)
             {
-                var result = this.EqualMethod(x, y, excludedMembers: excluded);
+                var result = this.EqualBy(x, y, excludedMembers: excluded);
                 Assert.AreEqual(expected, result);
             }
             else
             {
-                var result = this.EqualMethod(x, y, referenceHandling.Value, excluded);
+                var result = this.EqualBy(x, y, referenceHandling.Value, excluded);
                 Assert.AreEqual(expected, result);
             }
         }
@@ -329,7 +326,7 @@ namespace Gu.State.Tests.EqualByTests
         {
             var x = new WithComplexProperty(xv, 1, new ComplexType("b", 2));
             var y = new WithComplexProperty("a", 1, new ComplexType("c", 2));
-            var result = this.EqualMethod(x, y, ReferenceHandling.Structural, ignoredType: typeof(ComplexType));
+            var result = this.EqualBy(x, y, ReferenceHandling.Structural, ignoredType: typeof(ComplexType));
             Assert.AreEqual(expected, result);
         }
     }

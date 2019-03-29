@@ -7,7 +7,7 @@
     {
         public static new IReadOnlyList<EqualByTestsShared.EqualsData> EqualsSource => EqualByTestsShared.EqualsSource;
 
-        public override bool EqualMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type ignoredType = null)
+        public override bool EqualBy<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type ignoredType = null)
         {
             var builder = PropertiesSettings.Build();
             if (excludedMembers != null)
@@ -21,7 +21,7 @@
             }
 
             var settings = builder.CreateSettings(referenceHandling);
-            return EqualBy.PropertyValues(x, y, settings);
+            return State.EqualBy.PropertyValues(x, y, settings);
         }
     }
 }

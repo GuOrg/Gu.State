@@ -5,7 +5,7 @@
 
     public class Structs : StructsTests
     {
-        public override bool EqualMethod<T>(
+        public override bool EqualBy<T>(
             T x,
             T y,
             ReferenceHandling referenceHandling = ReferenceHandling.Structural,
@@ -24,7 +24,7 @@
             }
 
             var settings = builder.CreateSettings(referenceHandling);
-            return EqualBy.FieldValues(x, y, settings);
+            return State.EqualBy.FieldValues(x, y, settings);
         }
     }
 }

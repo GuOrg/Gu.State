@@ -9,7 +9,7 @@ namespace Gu.State.Tests.EqualByTests
 
     public abstract class ThrowsTests
     {
-        public abstract bool EqualByMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type excludedType = null);
+        public abstract bool EqualBy<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type excludedType = null);
 
         [Test]
         public void ComplexValueThrowsWithoutReferenceHandling()
@@ -40,13 +40,13 @@ namespace Gu.State.Tests.EqualByTests
                                  "    - The type ComplexType.\r\n";
             var x = new WithComplexProperty();
             var y = new WithComplexProperty();
-            var exception = Assert.Throws<NotSupportedException>(() => this.EqualByMethod(x, y, ReferenceHandling.Throw));
+            var exception = Assert.Throws<NotSupportedException>(() => this.EqualBy(x, y, ReferenceHandling.Throw));
             Assert.AreEqual(expected, exception.Message);
 
-            Assert.DoesNotThrow(() => this.EqualByMethod(new ComplexType(), new ComplexType()));
-            Assert.DoesNotThrow(() => this.EqualByMethod(x, y));
-            Assert.DoesNotThrow(() => this.EqualByMethod(x, y, ReferenceHandling.Structural));
-            Assert.DoesNotThrow(() => this.EqualByMethod(x, y, ReferenceHandling.References));
+            Assert.DoesNotThrow(() => this.EqualBy(new ComplexType(), new ComplexType()));
+            Assert.DoesNotThrow(() => this.EqualBy(x, y));
+            Assert.DoesNotThrow(() => this.EqualBy(x, y, ReferenceHandling.Structural));
+            Assert.DoesNotThrow(() => this.EqualBy(x, y, ReferenceHandling.References));
         }
 
         [Test]
@@ -73,7 +73,7 @@ namespace Gu.State.Tests.EqualByTests
             var source = new WithIndexerType();
             var target = new WithIndexerType();
 
-            var exception = Assert.Throws<NotSupportedException>(() => this.EqualByMethod(source, target, ReferenceHandling.Structural));
+            var exception = Assert.Throws<NotSupportedException>(() => this.EqualBy(source, target, ReferenceHandling.Structural));
             Assert.AreEqual(expected, exception.Message);
         }
 
@@ -110,7 +110,7 @@ namespace Gu.State.Tests.EqualByTests
             var source = new WithProperty<WithIndexerType>();
             var target = new WithProperty<WithIndexerType>();
 
-            var exception = Assert.Throws<NotSupportedException>(() => this.EqualByMethod(source, target, ReferenceHandling.Structural));
+            var exception = Assert.Throws<NotSupportedException>(() => this.EqualBy(source, target, ReferenceHandling.Structural));
             Assert.AreEqual(expected, exception.Message);
         }
 
@@ -152,11 +152,11 @@ namespace Gu.State.Tests.EqualByTests
 
             var x = new Parent("p", new Child("c"));
             var y = new Parent("p", new Child("c"));
-            var exception = Assert.Throws<NotSupportedException>(() => this.EqualByMethod(x, y, ReferenceHandling.Throw));
+            var exception = Assert.Throws<NotSupportedException>(() => this.EqualBy(x, y, ReferenceHandling.Throw));
             Assert.AreEqual(expected, exception.Message);
 
-            Assert.AreEqual(true, this.EqualByMethod(x, y, ReferenceHandling.Structural));
-            Assert.AreEqual(false, this.EqualByMethod(x, y, ReferenceHandling.References));
+            Assert.AreEqual(true, this.EqualBy(x, y, ReferenceHandling.Structural));
+            Assert.AreEqual(false, this.EqualBy(x, y, ReferenceHandling.References));
         }
     }
 }

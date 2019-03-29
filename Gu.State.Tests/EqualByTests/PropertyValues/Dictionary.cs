@@ -2,9 +2,9 @@ namespace Gu.State.Tests.EqualByTests.PropertyValues
 {
     public class Dictionary : DictionaryTests
     {
-        public override bool EqualByMethod<T>(T x, T y, ReferenceHandling referenceHandling)
+        public override bool EqualBy<T>(T x, T y, ReferenceHandling referenceHandling)
         {
-            return EqualBy.PropertyValues(x, y, referenceHandling);
+            return State.EqualBy.PropertyValues(x, y, referenceHandling);
         }
     }
 }

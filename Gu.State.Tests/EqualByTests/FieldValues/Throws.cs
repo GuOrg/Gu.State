@@ -4,7 +4,7 @@
 
     public class Throws : ThrowsTests
     {
-        public override bool EqualByMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type excludedType = null)
+        public override bool EqualBy<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type excludedType = null)
         {
             var builder = FieldsSettings.Build();
             if (excludedMembers != null)
@@ -18,7 +18,7 @@
             }
 
             var settings = builder.CreateSettings(referenceHandling);
-            return EqualBy.FieldValues(x, y, settings);
+            return State.EqualBy.FieldValues(x, y, settings);
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Gu.State.Tests.EqualByTests
 
     public abstract class CustomComparerTests
     {
-        public abstract bool EqualByMethod<T, TValue>(
+        public abstract bool EqualBy<T, TValue>(
             T x,
             T y,
             IEqualityComparer<TValue> comparer,
@@ -30,7 +30,7 @@ namespace Gu.State.Tests.EqualByTests
                 var comparerMock = new Mock<IEqualityComparer<WithSimpleProperties>>(MockBehavior.Strict);
                 comparerMock.Setup(c => c.Equals(x, y))
                             .Returns(expected);
-                var result = this.EqualByMethod(x, y, comparerMock.Object, referenceHandling);
+                var result = this.EqualBy(x, y, comparerMock.Object, referenceHandling);
                 Assert.AreEqual(expected, result);
                 comparerMock.Verify(
                     c => c.Equals(It.IsAny<WithSimpleProperties>(), It.IsAny<WithSimpleProperties>()),
@@ -50,7 +50,7 @@ namespace Gu.State.Tests.EqualByTests
                 var comparerMock = new Mock<IEqualityComparer<WithSimpleProperties>>(MockBehavior.Strict);
                 comparerMock.Setup(c => c.Equals(x.Value, y.Value))
                             .Returns(expected);
-                var result = this.EqualByMethod(x, y, comparerMock.Object, referenceHandling);
+                var result = this.EqualBy(x, y, comparerMock.Object, referenceHandling);
                 Assert.AreEqual(expected, result);
                 comparerMock.Verify(
                     c => c.Equals(It.IsAny<WithSimpleProperties>(), It.IsAny<WithSimpleProperties>()),
@@ -70,7 +70,7 @@ namespace Gu.State.Tests.EqualByTests
                 var comparerMock = new Mock<IEqualityComparer<IntCollection>>(MockBehavior.Strict);
                 comparerMock.Setup(c => c.Equals(x.Value, y.Value))
                             .Returns(expected);
-                var result = this.EqualByMethod(x, y, comparerMock.Object, referenceHandling);
+                var result = this.EqualBy(x, y, comparerMock.Object, referenceHandling);
                 Assert.AreEqual(expected, result);
                 comparerMock.Verify(c => c.Equals(It.IsAny<IntCollection>(), It.IsAny<IntCollection>()), Times.Once);
             }
@@ -88,7 +88,7 @@ namespace Gu.State.Tests.EqualByTests
                 var comparerMock = new Mock<IEqualityComparer<IntCollection>>(MockBehavior.Strict);
                 comparerMock.Setup(c => c.Equals(x, y))
                             .Returns(expected);
-                var result = this.EqualByMethod(x, y, comparerMock.Object, referenceHandling);
+                var result = this.EqualBy(x, y, comparerMock.Object, referenceHandling);
                 Assert.AreEqual(expected, result);
                 comparerMock.Verify(c => c.Equals(It.IsAny<IntCollection>(), It.IsAny<IntCollection>()), Times.Once);
             }

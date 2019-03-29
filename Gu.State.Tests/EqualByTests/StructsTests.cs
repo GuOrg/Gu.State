@@ -10,7 +10,7 @@
 
     public abstract class StructsTests
     {
-        public abstract bool EqualMethod<T>(
+        public abstract bool EqualBy<T>(
             T x,
             T y,
             ReferenceHandling referenceHandling = ReferenceHandling.Structural,
@@ -25,7 +25,7 @@
         {
             var x = new With<Point>(Parse(xs));
             var y = new With<Point>(Parse(xs));
-            var result = this.EqualMethod(x, y);
+            var result = this.EqualBy(x, y);
             Assert.AreEqual(true, result);
 
             Point Parse(string text)
@@ -47,7 +47,7 @@
         {
             var x = new With<Point?>(Parse(xs));
             var y = new With<Point?>(Parse(xs));
-            var result = this.EqualMethod(x, y);
+            var result = this.EqualBy(x, y);
             Assert.AreEqual(true, result);
 
             Point? Parse(string text)

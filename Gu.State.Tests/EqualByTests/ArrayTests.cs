@@ -6,7 +6,7 @@ namespace Gu.State.Tests.EqualByTests
 
     public abstract class ArrayTests
     {
-        public abstract bool EqualByMethod<T>(T source, T target, ReferenceHandling referenceHandling);
+        public abstract bool EqualBy<T>(T source, T target, ReferenceHandling referenceHandling);
 
         [TestCase("1, 2, 3", "1, 2, 3", true)]
         [TestCase("1, 2, 3", "1, 2", false)]
@@ -20,7 +20,7 @@ namespace Gu.State.Tests.EqualByTests
             var y = ys.Split(',')
                       .Select(int.Parse)
                       .ToArray();
-            Assert.AreEqual(expected, this.EqualByMethod(x, y, ReferenceHandling.Structural));
+            Assert.AreEqual(expected, this.EqualBy(x, y, ReferenceHandling.Structural));
         }
 
         [TestCase(ReferenceHandling.Throw)]
@@ -30,10 +30,10 @@ namespace Gu.State.Tests.EqualByTests
         {
             var x = new[] { 1, 2, 3 };
             var y = new[] { 1, 2, 3 };
-            var result = this.EqualByMethod(x, y, referenceHandling);
+            var result = this.EqualBy(x, y, referenceHandling);
             Assert.AreEqual(true, result);
 
-            result = this.EqualByMethod(y, x, referenceHandling);
+            result = this.EqualBy(y, x, referenceHandling);
             Assert.AreEqual(true, result);
         }
 
@@ -43,10 +43,10 @@ namespace Gu.State.Tests.EqualByTests
         {
             var x = new[] { new[] { 1, 2, 3 }, new[] { 4, 5 } };
             var y = new[] { new[] { 1, 2, 3 }, new[] { 4, value } };
-            var result = this.EqualByMethod(x, y, ReferenceHandling.Structural);
+            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(expected, result);
 
-            result = this.EqualByMethod(y, x, ReferenceHandling.Structural);
+            result = this.EqualBy(y, x, ReferenceHandling.Structural);
             Assert.AreEqual(expected, result);
         }
 
@@ -58,10 +58,10 @@ namespace Gu.State.Tests.EqualByTests
             var x = new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } };
             var y = new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } };
             y[i1, i2] = yValue;
-            var result = this.EqualByMethod(x, y, ReferenceHandling.Structural);
+            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(expected, result);
 
-            result = this.EqualByMethod(y, x, ReferenceHandling.Structural);
+            result = this.EqualBy(y, x, ReferenceHandling.Structural);
             Assert.AreEqual(expected, result);
         }
 
@@ -72,8 +72,8 @@ namespace Gu.State.Tests.EqualByTests
         {
             var x = new[] { new EqualByTypes.Immutable(1), new EqualByTypes.Immutable(2), new EqualByTypes.Immutable(3) };
             var y = new[] { new EqualByTypes.Immutable(4), new EqualByTypes.Immutable(5), new EqualByTypes.Immutable(6) };
-            Assert.AreEqual(false, this.EqualByMethod(x, y, referenceHandling));
-            Assert.AreEqual(false, this.EqualByMethod(y, x, referenceHandling));
+            Assert.AreEqual(false, this.EqualBy(x, y, referenceHandling));
+            Assert.AreEqual(false, this.EqualBy(y, x, referenceHandling));
         }
 
         [TestCase(ReferenceHandling.Throw)]
@@ -83,8 +83,8 @@ namespace Gu.State.Tests.EqualByTests
         {
             var x = new[] { new EqualByTypes.Immutable(1), new EqualByTypes.Immutable(2), new EqualByTypes.Immutable(3) };
             var y = new[] { new EqualByTypes.Immutable(1), new EqualByTypes.Immutable(2), new EqualByTypes.Immutable(3) };
-            Assert.AreEqual(true, this.EqualByMethod(x, y, referenceHandling));
-            Assert.AreEqual(true, this.EqualByMethod(y, x, referenceHandling));
+            Assert.AreEqual(true, this.EqualBy(x, y, referenceHandling));
+            Assert.AreEqual(true, this.EqualBy(y, x, referenceHandling));
         }
 
         [TestCase(ReferenceHandling.Throw)]
@@ -94,8 +94,8 @@ namespace Gu.State.Tests.EqualByTests
         {
             var x = System.Collections.Immutable.ImmutableArray.Create(1, 2, 3);
             var y = System.Collections.Immutable.ImmutableArray.Create(1, 2, 3);
-            Assert.AreEqual(true, this.EqualByMethod(x, y, referenceHandling));
-            Assert.AreEqual(true, this.EqualByMethod(y, x, referenceHandling));
+            Assert.AreEqual(true, this.EqualBy(x, y, referenceHandling));
+            Assert.AreEqual(true, this.EqualBy(y, x, referenceHandling));
         }
     }
 }

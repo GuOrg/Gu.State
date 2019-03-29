@@ -10,7 +10,7 @@
 
     public abstract class CollectionTests
     {
-        public abstract bool EqualByMethod<T>(T source, T target, ReferenceHandling referenceHandling)
+        public abstract bool EqualBy<T>(T source, T target, ReferenceHandling referenceHandling)
             where T : class;
 
         [TestCase(ReferenceHandling.References)]
@@ -19,7 +19,7 @@
         {
             var x = new With<EquatableIntCollection>(new EquatableIntCollection(1));
             var y = new With<EquatableIntCollection>(new EquatableIntCollection(1));
-            var result = this.EqualByMethod(x, y, referenceHandling);
+            var result = this.EqualBy(x, y, referenceHandling);
             Assert.AreEqual(true, result);
         }
 
@@ -28,7 +28,7 @@
         {
             var x = new With<IntCollection>(new IntCollection(1));
             var y = new With<IntCollection>(new IntCollection(1));
-            var result = this.EqualByMethod(x, y, ReferenceHandling.References);
+            var result = this.EqualBy(x, y, ReferenceHandling.References);
             Assert.AreEqual(false, result);
         }
 
@@ -39,10 +39,10 @@
         {
             var x = new List<int> { 1, 2, 3 };
             var y = new List<int>();
-            var result = this.EqualByMethod(x, y, referenceHandling);
+            var result = this.EqualBy(x, y, referenceHandling);
             Assert.AreEqual(false, result);
 
-            result = this.EqualByMethod(y, x, referenceHandling);
+            result = this.EqualBy(y, x, referenceHandling);
             Assert.AreEqual(false, result);
         }
 
@@ -51,10 +51,10 @@
         {
             var x = new List<int>();
             var y = new List<int>();
-            var result = this.EqualByMethod(x, y, ReferenceHandling.Structural);
+            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
 
-            result = this.EqualByMethod(y, x, ReferenceHandling.Structural);
+            result = this.EqualBy(y, x, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
         }
 
@@ -63,10 +63,10 @@
         {
             var x = new List<int> { 1, 2, 3 };
             var y = new List<int> { 1, 2, 3, 4 };
-            var result = this.EqualByMethod(x, y, ReferenceHandling.Structural);
+            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(false, result);
 
-            result = this.EqualByMethod(y, x, ReferenceHandling.Structural);
+            result = this.EqualBy(y, x, ReferenceHandling.Structural);
             Assert.AreEqual(false, result);
         }
 
@@ -89,10 +89,10 @@
                     "a",
                     StringSplitOptions.RemoveEmptyEntries),
             };
-            var result = this.EqualByMethod(x, y, ReferenceHandling.Structural);
+            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
 
-            result = this.EqualByMethod(y, x, ReferenceHandling.Structural);
+            result = this.EqualBy(y, x, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
         }
 
@@ -101,13 +101,13 @@
         {
             var x = new List<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) };
             var y = new List<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) };
-            var result = this.EqualByMethod(x, y, ReferenceHandling.Structural);
+            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
 
-            result = this.EqualByMethod(x, y, ReferenceHandling.References);
+            result = this.EqualBy(x, y, ReferenceHandling.References);
             Assert.AreEqual(false, result);
 
-            result = this.EqualByMethod(y, x, ReferenceHandling.Structural);
+            result = this.EqualBy(y, x, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
         }
 
@@ -117,10 +117,10 @@
             var x = new List<Point> { new Point(1, 2), new Point(1, 2) };
             var y = new List<Point> { new Point(1, 2), new Point(1, 2) };
 
-            var result = this.EqualByMethod(x, y, ReferenceHandling.Structural);
+            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
 
-            result = this.EqualByMethod(x, y, ReferenceHandling.References);
+            result = this.EqualBy(x, y, ReferenceHandling.References);
             Assert.AreEqual(true, result);
         }
 
@@ -130,10 +130,10 @@
             var x = new With<List<Point>>(new List<Point> { new Point(1, 2), new Point(1, 2) });
             var y = new With<List<Point>>(new List<Point> { new Point(1, 2), new Point(1, 2) });
 
-            var result = this.EqualByMethod(x, y, ReferenceHandling.Structural);
+            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
 
-            result = this.EqualByMethod(x, y, ReferenceHandling.References);
+            result = this.EqualBy(x, y, ReferenceHandling.References);
             Assert.AreEqual(false, result);
         }
 
@@ -142,13 +142,13 @@
         {
             var x = new List<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) };
             var y = new List<ComplexType>(x);
-            var result = this.EqualByMethod(x, y, ReferenceHandling.Structural);
+            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
 
-            result = this.EqualByMethod(x, y, ReferenceHandling.References);
+            result = this.EqualBy(x, y, ReferenceHandling.References);
             Assert.AreEqual(true, result);
 
-            result = this.EqualByMethod(y, x, ReferenceHandling.Structural);
+            result = this.EqualBy(y, x, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
         }
 
@@ -157,10 +157,10 @@
         {
             var x = new ObservableCollection<int> { 1, 2, 3 };
             var y = new ObservableCollection<int>();
-            var result = this.EqualByMethod(x, y, ReferenceHandling.Structural);
+            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(false, result);
 
-            result = this.EqualByMethod(y, x, ReferenceHandling.Structural);
+            result = this.EqualBy(y, x, ReferenceHandling.Structural);
             Assert.AreEqual(false, result);
         }
 
@@ -169,10 +169,10 @@
         {
             var x = new ObservableCollection<int> { 1, 2, 3 };
             var y = new ObservableCollection<int> { 1, 2, 3, 4 };
-            var result = this.EqualByMethod(x, y, ReferenceHandling.Structural);
+            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(false, result);
 
-            result = this.EqualByMethod(y, x, ReferenceHandling.Structural);
+            result = this.EqualBy(y, x, ReferenceHandling.Structural);
             Assert.AreEqual(false, result);
         }
 
@@ -181,10 +181,10 @@
         {
             var x = new ObservableCollection<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) };
             var y = new ObservableCollection<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) };
-            var result = this.EqualByMethod(x, y, ReferenceHandling.Structural);
+            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
 
-            result = this.EqualByMethod(y, x, ReferenceHandling.Structural);
+            result = this.EqualBy(y, x, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
         }
 
@@ -195,8 +195,8 @@
         {
             var x = System.Collections.Immutable.ImmutableList.Create(1, 2, 3);
             var y = System.Collections.Immutable.ImmutableList.Create(1, 2, 3);
-            Assert.AreEqual(true, this.EqualByMethod(x, y, referenceHandling));
-            Assert.AreEqual(true, this.EqualByMethod(y, x, referenceHandling));
+            Assert.AreEqual(true, this.EqualBy(x, y, referenceHandling));
+            Assert.AreEqual(true, this.EqualBy(y, x, referenceHandling));
         }
     }
 }

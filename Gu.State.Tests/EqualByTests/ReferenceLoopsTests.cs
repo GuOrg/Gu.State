@@ -10,7 +10,7 @@ namespace Gu.State.Tests.EqualByTests
 
     public abstract class ReferenceLoopsTests
     {
-        public abstract bool EqualMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type excludedType = null)
+        public abstract bool EqualBy<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type excludedType = null)
             where T : class;
 
         [TestCase("parent", "child", true)]
@@ -23,10 +23,10 @@ namespace Gu.State.Tests.EqualByTests
 
             var y = new Parent(p, new Child(c));
             Assert.AreSame(y, y.Child.Parent);
-            var result = this.EqualMethod(x, y, ReferenceHandling.Structural);
+            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(expected, result);
 
-            result = this.EqualMethod(y, x, ReferenceHandling.Structural);
+            result = this.EqualBy(y, x, ReferenceHandling.Structural);
             Assert.AreEqual(expected, result);
         }
 
@@ -36,10 +36,10 @@ namespace Gu.State.Tests.EqualByTests
         {
             var x = new Parent("parent", new Child("child"));
             var y = new Parent("parent", null);
-            var result = this.EqualMethod(x, y, referenceHandling);
+            var result = this.EqualBy(x, y, referenceHandling);
             Assert.AreEqual(false, result);
 
-            result = this.EqualMethod(y, x, referenceHandling);
+            result = this.EqualBy(y, x, referenceHandling);
             Assert.AreEqual(false, result);
         }
 
@@ -49,10 +49,10 @@ namespace Gu.State.Tests.EqualByTests
         {
             var x = new Parent("parent", null);
             var y = new Parent("parent", new Child("child"));
-            var result = this.EqualMethod(x, y, referenceHandling);
+            var result = this.EqualBy(x, y, referenceHandling);
             Assert.AreEqual(false, result);
 
-            result = this.EqualMethod(y, x, referenceHandling);
+            result = this.EqualBy(y, x, referenceHandling);
             Assert.AreEqual(false, result);
         }
     }
