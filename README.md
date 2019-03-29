@@ -2,7 +2,6 @@
 [![NuGet](https://img.shields.io/nuget/v/Gu.State.svg)](https://www.nuget.org/packages/Gu.State/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
 [![Build status](https://ci.appveyor.com/api/projects/status/thxx3efi2p90byja/branch/master?svg=true)](https://ci.appveyor.com/project/GuOrg/gu-state/branch/master)
-[![Build status](https://ci.appveyor.com/api/projects/status/thxx3efi2p90byja/branch/master?svg=true)](https://ci.appveyor.com/project/JohanLarsson/gu-state/branch/master)
 
 Library for managing state.
 
