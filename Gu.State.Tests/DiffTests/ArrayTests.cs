@@ -8,7 +8,7 @@
 
     public abstract class ArrayTests
     {
-        public abstract Diff DiffMethod<T>(T source, T target, ReferenceHandling referenceHandling);
+        public abstract Diff DiffBy<T>(T source, T target, ReferenceHandling referenceHandling);
 
         [TestCase("1, 2, 3", "1, 2, 3", "Empty")]
         [TestCase("1, 2, 3", "1, 2", "int[] [2] x: 3 y: missing item")]
@@ -22,7 +22,7 @@
             var y = ys.Split(',')
                       .Select(int.Parse)
                       .ToArray();
-            var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
+            var result = this.DiffBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(expected, result.ToString(string.Empty, " "));
         }
 
@@ -33,11 +33,11 @@
         {
             var x = new[] { 1, 2, 3 };
             var y = new[] { 1, 2, 3 };
-            var result = this.DiffMethod(x, y, referenceHandling);
+            var result = this.DiffBy(x, y, referenceHandling);
             Assert.AreEqual(true, result.IsEmpty);
             Assert.AreEqual("Empty", result.ToString());
 
-            result = this.DiffMethod(y, x, referenceHandling);
+            result = this.DiffBy(y, x, referenceHandling);
             Assert.AreEqual(true, result.IsEmpty);
             Assert.AreEqual("Empty", result.ToString());
         }
@@ -49,11 +49,11 @@
         {
             var x = System.Collections.Immutable.ImmutableArray.Create(1, 2, 3);
             var y = System.Collections.Immutable.ImmutableArray.Create(1, 2, 3);
-            var result = this.DiffMethod(x, y, referenceHandling);
+            var result = this.DiffBy(x, y, referenceHandling);
             Assert.AreEqual(true, result.IsEmpty);
             Assert.AreEqual("Empty", result.ToString());
 
-            result = this.DiffMethod(y, x, referenceHandling);
+            result = this.DiffBy(y, x, referenceHandling);
             Assert.AreEqual(true, result.IsEmpty);
             Assert.AreEqual("Empty", result.ToString());
         }
@@ -66,7 +66,7 @@
             var x = new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } };
             var y = new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } };
             y[i1, i2] = yValue;
-            var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
+            var result = this.DiffBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(expected, result.ToString(string.Empty, " "));
         }
 
@@ -77,11 +77,11 @@
         {
             var x = new int[2, 3];
             var y = new int[3, 2];
-            var result = this.DiffMethod(x, y, referenceHandling);
+            var result = this.DiffBy(x, y, referenceHandling);
             Assert.AreEqual(false, result.IsEmpty);
             Assert.AreEqual("int[,] x: [2,3] y: [3,2]", result.ToString(string.Empty, " "));
 
-            result = this.DiffMethod(y, x, referenceHandling);
+            result = this.DiffBy(y, x, referenceHandling);
             Assert.AreEqual(false, result.IsEmpty);
             Assert.AreEqual("int[,] x: [3,2] y: [2,3]", result.ToString(string.Empty, " "));
         }
@@ -92,7 +92,7 @@
         {
             var source = new[] { new Immutable(1), new Immutable(2), new Immutable(3) };
             var target = new[] { new Immutable(1), new Immutable(2), new Immutable(3) };
-            var result = this.DiffMethod(source, target, referenceHandling);
+            var result = this.DiffBy(source, target, referenceHandling);
             Assert.AreEqual(true, result.IsEmpty);
             Assert.AreEqual("Empty", result.ToString());
         }

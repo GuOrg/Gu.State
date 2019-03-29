@@ -11,7 +11,7 @@ namespace Gu.State.Tests.DiffTests
 
     public abstract class ReferenceLoopsTests
     {
-        public abstract Diff DiffMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type excludedType = null)
+        public abstract Diff DiffBy<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type excludedType = null)
             where T : class;
 
         [Test]
@@ -28,7 +28,7 @@ namespace Gu.State.Tests.DiffTests
             var expected = this is FieldValues.ReferenceLoops
                                ? "Parent <Child>k__BackingField <Parent>k__BackingField ... <Name>k__BackingField x: p1 y: p2"
                                : "Parent Child Parent ... Name x: p1 y: p2";
-            var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
+            var result = this.DiffBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(false, result.IsEmpty);
             Assert.AreSame(result, result.Diffs.Single(d => d.X == x.Child).Diffs.Single().ValueDiff);
             var actual = result.ToString(string.Empty, " ");
@@ -51,11 +51,11 @@ namespace Gu.State.Tests.DiffTests
             Assert.AreSame(y, y.Child.Parent);
             Assert.AreSame(y.Child, y.Child.Parent.Child);
 
-            var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
+            var result = this.DiffBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(expected == "Empty", result.IsEmpty);
             Assert.AreEqual(expected, result.ToString(string.Empty, " "));
 
-            result = this.DiffMethod(x, y, ReferenceHandling.Structural);
+            result = this.DiffBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(expected == "Empty", result.IsEmpty);
             Assert.AreEqual(expected, result.ToString(string.Empty, " "));
         }
@@ -65,7 +65,7 @@ namespace Gu.State.Tests.DiffTests
         {
             var x = new Parent("parent", new Child("child"));
             var y = new Parent("parent", null);
-            var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
+            var result = this.DiffBy(x, y, ReferenceHandling.Structural);
             var expected = this is FieldValues.ReferenceLoops
                                ? "Parent <Child>k__BackingField x: Gu.State.Tests.DiffTests.DiffTypes+Child y: null"
                                : "Parent Child x: Gu.State.Tests.DiffTests.DiffTypes+Child y: null";
@@ -74,7 +74,7 @@ namespace Gu.State.Tests.DiffTests
             //result = this.EqualBy(y, x, ReferenceHandling.Structural);
             //Assert.AreEqual(false, result);
 
-            result = this.DiffMethod(x, y, ReferenceHandling.References);
+            result = this.DiffBy(x, y, ReferenceHandling.References);
             Assert.AreEqual(false, result.IsEmpty);
             Assert.AreEqual(expected, result.ToString(string.Empty, " "));
         }
@@ -84,12 +84,12 @@ namespace Gu.State.Tests.DiffTests
         {
             var x = new Parent("parent", null);
             var y = new Parent("parent", new Child("child"));
-            var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
+            var result = this.DiffBy(x, y, ReferenceHandling.Structural);
             var expected = this is FieldValues.ReferenceLoops
                                ? "Parent <Child>k__BackingField x: null y: Gu.State.Tests.DiffTests.DiffTypes+Child"
                                : "Parent Child x: null y: Gu.State.Tests.DiffTests.DiffTypes+Child";
             Assert.AreEqual(expected, result.ToString(string.Empty, " "));
-            result = this.DiffMethod(x, y, ReferenceHandling.References);
+            result = this.DiffBy(x, y, ReferenceHandling.References);
             Assert.AreEqual(false, result.IsEmpty);
             Assert.AreEqual(expected, result.ToString(string.Empty, " "));
         }

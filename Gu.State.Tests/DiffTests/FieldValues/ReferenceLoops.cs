@@ -4,7 +4,7 @@
 
     public class ReferenceLoops : ReferenceLoopsTests
     {
-        public override Diff DiffMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type excludedType = null)
+        public override Diff DiffBy<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type excludedType = null)
         {
             var builder = FieldsSettings.Build();
             if (excludedMembers != null)
@@ -18,7 +18,7 @@
             }
 
             var settings = builder.CreateSettings(referenceHandling);
-            return DiffBy.FieldValues(x, y, settings);
+            return State.DiffBy.FieldValues(x, y, settings);
         }
     }
 }

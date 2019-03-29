@@ -9,7 +9,7 @@ namespace Gu.State.Tests.DiffTests
 
     public abstract class ThrowsTests
     {
-        public abstract Diff DiffMethod<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type excludedType = null);
+        public abstract Diff DiffBy<T>(T x, T y, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excludedMembers = null, Type excludedType = null);
 
         [Test]
         public void ComplexValueThrowsWithoutReferenceHandling()
@@ -40,12 +40,12 @@ namespace Gu.State.Tests.DiffTests
                                  "    - The type ComplexType.\r\n";
             var x = new WithComplexProperty();
             var y = new WithComplexProperty();
-            var exception = Assert.Throws<NotSupportedException>(() => this.DiffMethod<WithComplexProperty>(x, y, ReferenceHandling.Throw));
+            var exception = Assert.Throws<NotSupportedException>(() => this.DiffBy<WithComplexProperty>(x, y, ReferenceHandling.Throw));
             Assert.AreEqual(expected, exception.Message);
 
-            Assert.DoesNotThrow(() => this.DiffMethod<WithComplexProperty>(x, y, ReferenceHandling.Structural));
-            Assert.DoesNotThrow(() => this.DiffMethod<WithComplexProperty>(x, y, ReferenceHandling.References));
-            Assert.DoesNotThrow(() => this.DiffMethod<ComplexType>(new ComplexType(), new ComplexType()));
+            Assert.DoesNotThrow(() => this.DiffBy<WithComplexProperty>(x, y, ReferenceHandling.Structural));
+            Assert.DoesNotThrow(() => this.DiffBy<WithComplexProperty>(x, y, ReferenceHandling.References));
+            Assert.DoesNotThrow(() => this.DiffBy<ComplexType>(new ComplexType(), new ComplexType()));
         }
 
         [Test]
@@ -72,7 +72,7 @@ namespace Gu.State.Tests.DiffTests
             var source = new WithIndexerType();
             var target = new WithIndexerType();
 
-            var exception = Assert.Throws<NotSupportedException>(() => this.DiffMethod(source, target, ReferenceHandling.Structural));
+            var exception = Assert.Throws<NotSupportedException>(() => this.DiffBy(source, target, ReferenceHandling.Structural));
             Assert.AreEqual(expected, exception.Message);
         }
 
@@ -109,7 +109,7 @@ namespace Gu.State.Tests.DiffTests
             var source = new WithProperty<WithIndexerType>();
             var target = new WithProperty<WithIndexerType>();
 
-            var exception = Assert.Throws<NotSupportedException>(() => this.DiffMethod(source, target, ReferenceHandling.Structural));
+            var exception = Assert.Throws<NotSupportedException>(() => this.DiffBy(source, target, ReferenceHandling.Structural));
             Assert.AreEqual(expected, exception.Message);
         }
 
@@ -151,17 +151,17 @@ namespace Gu.State.Tests.DiffTests
 
             var x = new Parent("p", new Child("c"));
             var y = new Parent("p", new Child("c"));
-            var exception = Assert.Throws<NotSupportedException>(() => this.DiffMethod(x, y, ReferenceHandling.Throw));
+            var exception = Assert.Throws<NotSupportedException>(() => this.DiffBy(x, y, ReferenceHandling.Throw));
             Assert.AreEqual(expected, exception.Message);
 
-            Assert.AreEqual("Empty", this.DiffMethod(x, y, ReferenceHandling.Structural).ToString());
+            Assert.AreEqual("Empty", this.DiffBy(x, y, ReferenceHandling.Structural).ToString());
             expected = this is FieldValues.Throws
                            ? "Parent <Child>k__BackingField x: Gu.State.Tests.DiffTests.DiffTypes+Child y: Gu.State.Tests.DiffTests.DiffTypes+Child"
                            : "Parent Child x: Gu.State.Tests.DiffTests.DiffTypes+Child y: Gu.State.Tests.DiffTests.DiffTypes+Child";
-            Assert.AreEqual(expected, this.DiffMethod(x, y, ReferenceHandling.References).ToString(string.Empty, " "));
+            Assert.AreEqual(expected, this.DiffBy(x, y, ReferenceHandling.References).ToString(string.Empty, " "));
 
-            Assert.DoesNotThrow(() => this.DiffMethod(x, y, ReferenceHandling.Structural));
-            Assert.DoesNotThrow(() => this.DiffMethod(x, y, ReferenceHandling.References));
+            Assert.DoesNotThrow(() => this.DiffBy(x, y, ReferenceHandling.Structural));
+            Assert.DoesNotThrow(() => this.DiffBy(x, y, ReferenceHandling.References));
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Gu.State.Tests.DiffTests
 
     public abstract class StructsTests
     {
-        public abstract Diff DiffMethod<T>(
+        public abstract Diff DiffBy<T>(
             T x,
             T y,
             ReferenceHandling referenceHandling = ReferenceHandling.Structural,
@@ -23,11 +23,11 @@ namespace Gu.State.Tests.DiffTests
         {
             var x = new With<Point?>(null);
             var y = new With<Point?>(null);
-            var result = this.DiffMethod(x, y, ReferenceHandling.Structural);
+            var result = this.DiffBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result.IsEmpty);
             Assert.AreEqual("Empty", result.ToString());
 
-            result = this.DiffMethod(x, y, ReferenceHandling.References);
+            result = this.DiffBy(x, y, ReferenceHandling.References);
             Assert.AreEqual(true, result.IsEmpty);
             Assert.AreEqual("Empty", result.ToString());
         }

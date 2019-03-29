@@ -6,7 +6,7 @@ namespace Gu.State.Tests.DiffTests
 
     public abstract class EnumerableTests
     {
-        public abstract Diff DiffMethod<T>(T source, T target, ReferenceHandling referenceHandling)
+        public abstract Diff DiffBy<T>(T source, T target, ReferenceHandling referenceHandling)
             where T : class;
 
         [TestCase("1, 2, 3", "1, 2, 3", "Empty")]
@@ -17,7 +17,7 @@ namespace Gu.State.Tests.DiffTests
         {
             var x = xs.Split(',').Select(int.Parse);
             var y = ys.Split(',').Select(int.Parse);
-            var diff = this.DiffMethod(x, y, ReferenceHandling.Structural);
+            var diff = this.DiffBy(x, y, ReferenceHandling.Structural);
             var actual = diff.ToString(string.Empty, " ");
             Assert.AreEqual(expected, actual);
         }
@@ -33,7 +33,7 @@ namespace Gu.State.Tests.DiffTests
         {
             var x = Enumerable.Repeat(startX, countX);
             var y = Enumerable.Repeat(startY, countY);
-            var diff = this.DiffMethod(x, y, ReferenceHandling.Structural);
+            var diff = this.DiffBy(x, y, ReferenceHandling.Structural);
             StringAssert.IsMatch(expected, diff.ToString(string.Empty, " "));
         }
 
@@ -42,19 +42,19 @@ namespace Gu.State.Tests.DiffTests
         {
             var x = new object[] { 1, null }.Select(z => z);
             var y = new object[] { 1, null }.Select(z => z);
-            var diff = this.DiffMethod(x, y, ReferenceHandling.Structural);
+            var diff = this.DiffBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual("Empty", diff.ToString());
 
             x = new object[] { 1 }.Select(z => z);
             y = new object[] { 1, null }.Select(z => z);
-            diff = this.DiffMethod(x, y, ReferenceHandling.Structural);
+            diff = this.DiffBy(x, y, ReferenceHandling.Structural);
             var expected = "WhereSelectArrayIterator<Object, Object> [Skip(1)] x: missing item y: null";
             var actual = diff.ToString(string.Empty, " ");
             Assert.AreEqual(expected, actual);
 
             x = new object[] { 1, null }.Select(z => z);
             y = new object[] { 1 }.Select(z => z);
-            diff = this.DiffMethod(x, y, ReferenceHandling.Structural);
+            diff = this.DiffBy(x, y, ReferenceHandling.Structural);
             expected = "WhereSelectArrayIterator<Object, Object> [Skip(1)] x: null y: missing item";
             actual = diff.ToString(string.Empty, " ");
             Assert.AreEqual(expected, actual);
