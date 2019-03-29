@@ -46,6 +46,10 @@
 
             switch (settings.ReferenceHandling)
             {
+                case ReferenceHandling.References when xValue?.GetType().IsValueType == true &&
+                                                       yValue?.GetType().IsValueType == true:
+                    goto case ReferenceHandling.Structural;
+
                 case ReferenceHandling.References:
                     if (ReferenceEquals(xValue, yValue))
                     {
@@ -58,8 +62,7 @@
 
                     return;
                 case ReferenceHandling.Structural:
-                    IRefCounted<DiffBuilder> subDiffBuilder;
-                    if (DiffBuilder.TryCreate(xValue, yValue, settings, out subDiffBuilder))
+                    if (DiffBuilder.TryCreate(xValue, yValue, settings, out var subDiffBuilder))
                     {
                         subDiffBuilder.Value.UpdateDiffs(xValue, yValue, settings);
                     }
@@ -161,12 +164,12 @@
             }
 
             if (ListDiffBy.TryGetOrCreate(x, y, out var comparer) ||
-    ReadonlyListDiffBy.TryGetOrCreate(x, y, out comparer) ||
-    ArrayDiffBy.TryGetOrCreate(x, y, out comparer) ||
-    DictionaryDiffBy.TryGetOrCreate(x, y, out comparer) ||
-    ReadOnlyDictionaryDiffBy.TryGetOrCreate(x, y, out comparer) ||
-    SetDiffBy.TryGetOrCreate(x, y, out comparer) ||
-    EnumerableDiffBy.TryGetOrCreate(x, y, out comparer))
+                ReadonlyListDiffBy.TryGetOrCreate(x, y, out comparer) ||
+                ArrayDiffBy.TryGetOrCreate(x, y, out comparer) ||
+                DictionaryDiffBy.TryGetOrCreate(x, y, out comparer) ||
+                ReadOnlyDictionaryDiffBy.TryGetOrCreate(x, y, out comparer) ||
+                SetDiffBy.TryGetOrCreate(x, y, out comparer) ||
+                EnumerableDiffBy.TryGetOrCreate(x, y, out comparer))
             {
                 comparer.AddDiffs(collectionBuilder, x, y, settings);
                 return;
