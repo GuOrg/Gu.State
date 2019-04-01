@@ -12,18 +12,6 @@ namespace Gu.State
         {
         }
 
-        public static bool TryGetOrCreate(object x, object y, out EqualByComparer comparer)
-        {
-            if (x is Array && y is Array)
-            {
-                comparer = Default;
-                return true;
-            }
-
-            comparer = null;
-            return false;
-        }
-
         /// <inheritdoc />
         public override bool Equals(
             object x,
@@ -37,6 +25,18 @@ namespace Gu.State
             }
 
             return Equals((Array)x, (Array)y, settings, referencePairs);
+        }
+
+        internal static bool TryGet(Type type, MemberSettings settings, out EqualByComparer comparer)
+        {
+            if (type.IsArray)
+            {
+                comparer = Default;
+                return true;
+            }
+
+            comparer = null;
+            return false;
         }
 
         private static bool Equals(

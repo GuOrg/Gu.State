@@ -46,6 +46,17 @@ namespace Gu.State.Tests.EqualByTests
         [TestCase(ReferenceHandling.Structural)]
         public void ImmutableListOfIntsWhenEqual(ReferenceHandling referenceHandling)
         {
+            var x = System.Collections.Immutable.ImmutableList.Create(1, 2, 3);
+            var y = System.Collections.Immutable.ImmutableList.Create(1, 2, 3);
+            Assert.AreEqual(true, this.EqualBy(x, y, referenceHandling));
+            Assert.AreEqual(true, this.EqualBy(y, x, referenceHandling));
+        }
+
+        [TestCase(ReferenceHandling.Throw)]
+        [TestCase(ReferenceHandling.References)]
+        [TestCase(ReferenceHandling.Structural)]
+        public void ImmutableArrayOfIntsWhenEqual(ReferenceHandling referenceHandling)
+        {
             var x = System.Collections.Immutable.ImmutableArray.Create(1, 2, 3);
             var y = System.Collections.Immutable.ImmutableArray.Create(1, 2, 3);
             Assert.AreEqual(true, this.EqualBy(x, y, referenceHandling));

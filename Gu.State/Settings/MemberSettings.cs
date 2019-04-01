@@ -3,6 +3,8 @@
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
     using System.Reflection;
 
     public abstract partial class MemberSettings
@@ -10,6 +12,7 @@
         private readonly Lazy<ConcurrentDictionary<Type, TypeErrors>> equalByErrors = new Lazy<ConcurrentDictionary<Type, TypeErrors>>();
         private readonly Lazy<ConcurrentDictionary<Type, TypeErrors>> copyErrors = new Lazy<ConcurrentDictionary<Type, TypeErrors>>();
         private readonly ImmutableSet<Type> immutableTypes;
+        private readonly ConcurrentDictionary<Type, EqualByComparer> equalByComparers = new ConcurrentDictionary<Type, EqualByComparer>();
         private readonly IReadOnlyDictionary<Type, CastingComparer> comparers;
         private readonly IReadOnlyDictionary<Type, CustomCopy> copyers;
         private readonly KnownTypes knownTypes;
@@ -131,9 +134,37 @@
             return this.copyers?.TryGetValue(type, out copyer) == true;
         }
 
+        internal IEnumerable<MemberInfo> GetEffectiveMembers(Type type)
+        {
+            return this.GetMembers(type).Where(x => !this.IsIgnoringMember(x));
+        }
+
         /// <summary>Get an <see cref="IGetterAndSetter"/> that is  used for getting ans setting values.</summary>
         /// <param name="member">The member.</param>
         /// <returns>A <see cref="IGetterAndSetter"/>.</returns>
         internal abstract IGetterAndSetter GetOrCreateGetterAndSetter(MemberInfo member);
+
+        internal EqualByComparer GetEqualByComparer(Type type)
+        {
+            Debug.Assert(type != null, "type != null");
+            return this.equalByComparers.GetOrAdd(type, t => Create());
+
+            EqualByComparer Create()
+            {
+                if (EquatableEqualByComparer.TryGet(type, this, out var comparer) ||
+                    SetEqualByComparer.TryGet(type, this, out comparer) ||
+                    ReadOnlyListEqualByComparer.TryGet(type, this, out comparer) ||
+                    ArrayEqualByComparer.TryGet(type, this, out comparer) ||
+                    //DictionaryEqualByComparer.TryGet(type, this, out comparer) ||
+                    //ReadOnlyDictionaryEqualByComparer.TryGet(type, this, out comparer) ||
+                    //EnumerableEqualByComparer.TryGet(type, this, out comparer) ||
+                    ComplexTypeEqualByComparer.TryGet(type, this, out comparer))
+                {
+                    return comparer;
+                }
+
+                throw Throw.ShouldNeverGetHereException($"Could not find an EqualByComparer<{type.PrettyName()}>");
+            }
+        }
     }
 }

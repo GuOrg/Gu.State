@@ -26,13 +26,19 @@
         /// <returns>True if any of <paramref name="x"/> and <paramref name="y"/> is null.</returns>
         protected static bool TryGetEitherNullEquals(object x, object y, out bool result)
         {
-            if (x is null && y is null)
+            if (ReferenceEquals(x, y))
             {
                 result = true;
                 return true;
             }
 
             if (x is null || y is null)
+            {
+                result = false;
+                return true;
+            }
+
+            if (x.GetType() != y.GetType())
             {
                 result = false;
                 return true;
