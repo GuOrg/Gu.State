@@ -30,6 +30,10 @@ namespace Gu.State.Tests.EqualByTests
             new TestCaseData(new With<int?>(1), new With<int?>(1)),
             new TestCaseData(new With<int?>(null), new With<int?>(null)),
 
+            new TestCaseData(new With<StringComparison>(StringComparison.Ordinal), new With<StringComparison>(StringComparison.Ordinal)),
+            new TestCaseData(new With<StringComparison?>(StringComparison.Ordinal), new With<StringComparison?>(StringComparison.Ordinal)),
+            new TestCaseData(new With<StringComparison?>(null), new With<StringComparison?>(null)),
+
             new TestCaseData(new With<Guid>(Guid.Parse("f062db24-d4b8-452a-904c-ba2d23663e92")), new With<Guid>(Guid.Parse("f062db24-d4b8-452a-904c-ba2d23663e92"))),
 
             new TestCaseData(new WithSimpleValues(1, 2, "3", StringSplitOptions.RemoveEmptyEntries), new WithSimpleValues(1, 2, "3", StringSplitOptions.RemoveEmptyEntries)),
@@ -101,6 +105,16 @@ namespace Gu.State.Tests.EqualByTests
             new TestCaseData(
                 new With<int>(1),
                 (With<int>)null),
+
+            new TestCaseData(
+                new With<StringComparison>(StringComparison.Ordinal),
+                new With<StringComparison>(StringComparison.OrdinalIgnoreCase)),
+            new TestCaseData(
+                new With<StringComparison?>(StringComparison.Ordinal),
+                new With<StringComparison?>(StringComparison.OrdinalIgnoreCase)),
+            new TestCaseData(
+                new With<StringComparison?>(StringComparison.Ordinal),
+                new With<StringComparison?>(null)),
 
             new TestCaseData(
                 new With<Guid>(Guid.Parse("f062db24-d4b8-452a-904c-ba2d23663e92")),
