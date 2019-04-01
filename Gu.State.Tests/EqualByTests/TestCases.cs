@@ -4,6 +4,7 @@
 namespace Gu.State.Tests.EqualByTests
 {
     using System;
+    using System.Drawing;
     using NUnit.Framework;
 
     using static EqualByTypes;
@@ -16,6 +17,9 @@ namespace Gu.State.Tests.EqualByTests
             new TestCaseData(1, 1),
             new TestCaseData((int?)null, (int?)null),
             new TestCaseData((int?)1, (int?)1),
+
+            new TestCaseData(new Point(1, 2), new Point(1, 2)),
+            new TestCaseData((Point?)new Point(1, 2), (Point?)new Point(1, 2)),
 
             new TestCaseData(new With<int>(1), new With<int>(1)),
             new TestCaseData(new With<int?>(1), new With<int?>(1)),
@@ -85,6 +89,12 @@ namespace Gu.State.Tests.EqualByTests
             new TestCaseData(1, 2),
             new TestCaseData((int?)null, (int?)1),
             new TestCaseData((int?)null, (int?)1),
+
+            new TestCaseData(new Point(1, 2), new Point(1, -2)),
+            new TestCaseData(new Point(1, 2), new Point(-1, 2)),
+            new TestCaseData((Point?)new Point(1, 2), (Point?)new Point(1, -2)),
+            new TestCaseData((Point?)new Point(1, 2), (Point?)new Point(-1, 2)),
+            new TestCaseData((Point?)new Point(1, 2), (Point?)null),
 
             new TestCaseData(
                 new With<int>(1),
