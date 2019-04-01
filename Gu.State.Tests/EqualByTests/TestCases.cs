@@ -1,5 +1,6 @@
 ﻿// ReSharper disable RedundantArgumentDefaultValue
 #pragma warning disable CA1825 // Avoid zero-length array allocations.
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 namespace Gu.State.Tests.EqualByTests
 {
     using System;
@@ -26,6 +27,8 @@ namespace Gu.State.Tests.EqualByTests
             new TestCaseData((int[])null, (int[])null),
             new TestCaseData(new int[0], new int[0]),
             new TestCaseData(new[] { 1, 2, 3 }, new[] { 1, 2, 3 }),
+
+            new TestCaseData(new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }, new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }),
 
             //new TestCaseData(
             //    new With<int[]>(null),
@@ -95,9 +98,13 @@ namespace Gu.State.Tests.EqualByTests
             new TestCaseData((int[])null, new int[0]),
             new TestCaseData((int[])null, new[] { 1, 2, 3 }),
             new TestCaseData(new int[0], new[] { 1, 2, 3 }),
+            new TestCaseData(new[] { 1, 2, 3 }, new[] { 1, 2 }),
             new TestCaseData(new[] { 1, 2, 3 }, new[] { 1, 2, -1 }),
             new TestCaseData(new[] { 1, 2, 3 }, new[] { -1, 2, 3 }),
 
+            new TestCaseData(new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }, new[,] { { -1, 2 }, { 3, 4 }, { 5, 6 } }),
+            new TestCaseData(new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }, new[,] { { 1, 2 }, { -3, 4 }, { 5, 6 } }),
+            new TestCaseData(new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }, new[,] { { 1, 2 }, { 3, 4 }, { 5, -6 } }),
             //new TestCaseData(
             //    new With<int[]>(new[] { 1, 2, 3 }),
             //    new With<int[]>(new[] { 1, 2, 4 })),
