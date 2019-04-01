@@ -20,25 +20,6 @@ namespace Gu.State.Tests.EqualByTests
 
         [TestCase("b", "b", true)]
         [TestCase("b", "c", false)]
-        public void WithSimpleHappyPath(string xn, string yn, bool expected)
-        {
-            var x = new WithSimpleProperties(1, 2, xn, StringSplitOptions.RemoveEmptyEntries);
-            var y = new WithSimpleProperties(1, 2, yn, StringSplitOptions.RemoveEmptyEntries);
-            var result = this.EqualBy(x, y);
-            Assert.AreEqual(expected, result);
-
-            result = this.EqualBy(x, y, ReferenceHandling.Throw);
-            Assert.AreEqual(expected, result);
-
-            result = this.EqualBy(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(expected, result);
-
-            result = this.EqualBy(x, y, ReferenceHandling.References);
-            Assert.AreEqual(expected, result);
-        }
-
-        [TestCase("b", "b", true)]
-        [TestCase("b", "c", false)]
         public void WithComplexStructural(string xn, string yn, bool expected)
         {
             var x = new WithComplexProperty("a", 1) { ComplexType = new ComplexType { Name = xn, Value = 2 } };
@@ -73,16 +54,6 @@ namespace Gu.State.Tests.EqualByTests
             var y = new With<BaseClass>(new Derived2());
             var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(false, result);
-        }
-
-        [TestCase(1, 1, true)]
-        [TestCase(1, 2, false)]
-        public void WithInt(int xi, int yi, bool expected)
-        {
-            var x = new With<int>(xi);
-            var y = new With<int>(yi);
-            Assert.AreEqual(expected, this.EqualBy(x, y, ReferenceHandling.Structural));
-            Assert.AreEqual(expected, this.EqualBy(x, y, ReferenceHandling.References));
         }
 
         [Test]

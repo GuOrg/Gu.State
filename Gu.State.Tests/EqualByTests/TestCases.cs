@@ -17,9 +17,17 @@ namespace Gu.State.Tests.EqualByTests
             new TestCaseData((int?)null, (int?)null),
             new TestCaseData((int?)1, (int?)1),
 
+            new TestCaseData(new With<int>(1), new With<int>(1)),
+            new TestCaseData(new With<int?>(1), new With<int?>(1)),
+            new TestCaseData(new With<int?>(null), new With<int?>(null)),
+
             new TestCaseData(new WithSimpleValues(1, 2, "3", StringSplitOptions.RemoveEmptyEntries), new WithSimpleValues(1, 2, "3", StringSplitOptions.RemoveEmptyEntries)),
             new TestCaseData(new WithSimpleValues(1, 2, null, StringSplitOptions.RemoveEmptyEntries), new WithSimpleValues(1, 2, null, StringSplitOptions.RemoveEmptyEntries)),
             new TestCaseData(new WithSimpleValues(1, null, "3", StringSplitOptions.RemoveEmptyEntries), new WithSimpleValues(1, null, "3", StringSplitOptions.RemoveEmptyEntries)),
+
+            new TestCaseData(new WithSimpleProperties(1, 2, "3", StringSplitOptions.RemoveEmptyEntries), new WithSimpleProperties(1, 2, "3", StringSplitOptions.RemoveEmptyEntries)),
+            new TestCaseData(new WithSimpleProperties(1, 2, null, StringSplitOptions.RemoveEmptyEntries), new WithSimpleProperties(1, 2, null, StringSplitOptions.RemoveEmptyEntries)),
+            new TestCaseData(new WithSimpleProperties(1, null, "3", StringSplitOptions.RemoveEmptyEntries), new WithSimpleProperties(1, null, "3", StringSplitOptions.RemoveEmptyEntries)),
 
             new TestCaseData((int[])null, (int[])null),
             new TestCaseData(new int[0], new int[0]),
@@ -77,6 +85,19 @@ namespace Gu.State.Tests.EqualByTests
             new TestCaseData((int?)null, (int?)1),
 
             new TestCaseData(
+                new With<int>(1),
+                new With<int>(2)),
+            new TestCaseData(
+                new With<int?>(1),
+                new With<int?>(2)),
+            new TestCaseData(
+                new With<int?>(1),
+                new With<int?>(null)),
+            new TestCaseData(
+                new With<int>(1),
+                (With<int>)null),
+
+            new TestCaseData(
                 new WithSimpleValues(1, 2, "3", StringSplitOptions.RemoveEmptyEntries),
                 new WithSimpleValues(5, 2, "3", StringSplitOptions.RemoveEmptyEntries)),
             new TestCaseData(
@@ -95,6 +116,25 @@ namespace Gu.State.Tests.EqualByTests
                 new WithSimpleValues(1, 2, "3", StringSplitOptions.RemoveEmptyEntries),
                 new WithSimpleValues(1, 2, "3", StringSplitOptions.None)),
 
+            new TestCaseData(
+                new WithSimpleProperties(1, 2, "3", StringSplitOptions.RemoveEmptyEntries),
+                new WithSimpleProperties(5, 2, "3", StringSplitOptions.RemoveEmptyEntries)),
+            new TestCaseData(
+                new WithSimpleProperties(1, 2, "3", StringSplitOptions.RemoveEmptyEntries),
+                new WithSimpleProperties(1, 5, "3", StringSplitOptions.RemoveEmptyEntries)),
+            new TestCaseData(
+                new WithSimpleProperties(1, 2, "3", StringSplitOptions.RemoveEmptyEntries),
+                new WithSimpleProperties(1, null, "3", StringSplitOptions.RemoveEmptyEntries)),
+            new TestCaseData(
+                new WithSimpleProperties(1, 2, "3", StringSplitOptions.RemoveEmptyEntries),
+                new WithSimpleProperties(1, 5, null, StringSplitOptions.RemoveEmptyEntries)),
+            new TestCaseData(
+                new WithSimpleProperties(1, 2, "3", StringSplitOptions.RemoveEmptyEntries),
+                new WithSimpleProperties(1, 2, "5", StringSplitOptions.RemoveEmptyEntries)),
+            new TestCaseData(
+                new WithSimpleProperties(1, 2, "3", StringSplitOptions.RemoveEmptyEntries),
+                new WithSimpleProperties(1, 2, "3", StringSplitOptions.None)),
+
             new TestCaseData((int[])null, new int[0]),
             new TestCaseData((int[])null, new[] { 1, 2, 3 }),
             new TestCaseData(new int[0], new[] { 1, 2, 3 }),
@@ -105,6 +145,7 @@ namespace Gu.State.Tests.EqualByTests
             new TestCaseData(new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }, new[,] { { -1, 2 }, { 3, 4 }, { 5, 6 } }),
             new TestCaseData(new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }, new[,] { { 1, 2 }, { -3, 4 }, { 5, 6 } }),
             new TestCaseData(new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }, new[,] { { 1, 2 }, { 3, 4 }, { 5, -6 } }),
+
             //new TestCaseData(
             //    new With<int[]>(new[] { 1, 2, 3 }),
             //    new With<int[]>(new[] { 1, 2, 4 })),
