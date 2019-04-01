@@ -11,6 +11,11 @@ namespace Gu.State.Tests.EqualByTests
     {
         public static readonly TestCaseData[] WhenEqual =
         {
+            new TestCaseData(null, null),
+            new TestCaseData(1, 1),
+            new TestCaseData((int?)null, (int?)null),
+            new TestCaseData((int?)1, (int?)1),
+
             new TestCaseData(
                 new WithSimpleValues(1, 2, "3", StringSplitOptions.RemoveEmptyEntries),
                 new WithSimpleValues(1, 2, "3", StringSplitOptions.RemoveEmptyEntries)),
@@ -61,6 +66,11 @@ namespace Gu.State.Tests.EqualByTests
 
         public static readonly TestCaseData[] WhenNotEqual =
         {
+            new TestCaseData(null, 1),
+            new TestCaseData(1, 2),
+            new TestCaseData((int?)null, (int?)1),
+            new TestCaseData((int?)null, (int?)1),
+
             new TestCaseData(
                 new WithSimpleValues(1, 2, "3", StringSplitOptions.RemoveEmptyEntries),
                 new WithSimpleValues(5, 2, "3", StringSplitOptions.RemoveEmptyEntries)),
