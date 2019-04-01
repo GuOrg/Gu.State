@@ -13,7 +13,7 @@
             var builder = PropertiesSettings.Build();
             if (excludedMembers != null)
             {
-                builder.IgnoreProperty<T>(excludedMembers);
+                _ = builder.IgnoreProperty<T>(excludedMembers);
             }
 
             if (ignoredType != null)
@@ -23,7 +23,7 @@
 
             if (immutableType != null)
             {
-                builder.AddImmutableType(immutableType);
+                _ = builder.AddImmutableType(immutableType);
             }
 
             var settings = builder.CreateSettings(referenceHandling);

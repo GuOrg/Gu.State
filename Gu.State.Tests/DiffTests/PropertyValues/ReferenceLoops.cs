@@ -9,12 +9,12 @@ namespace Gu.State.Tests.DiffTests.PropertyValues
             var builder = PropertiesSettings.Build();
             if (excludedMembers != null)
             {
-                builder.IgnoreProperty<T>(excludedMembers);
+                _ = builder.IgnoreProperty<T>(excludedMembers);
             }
 
             if (excludedType != null)
             {
-                builder.IgnoreType(excludedType);
+                _ = builder.IgnoreType(excludedType);
             }
 
             var settings = builder.CreateSettings(referenceHandling);

@@ -19,17 +19,17 @@
             var builder = FieldsSettings.Build();
             if (excluded != null)
             {
-                builder.AddIgnoredField<T>(excluded);
+                _ = builder.AddIgnoredField<T>(excluded);
             }
 
             if (ignoredType != null)
             {
-                builder.IgnoreType(ignoredType);
+                _ = builder.IgnoreType(ignoredType);
             }
 
             if (immutableType != null)
             {
-                builder.AddImmutableType(immutableType);
+                _ = builder.AddImmutableType(immutableType);
             }
 
             var settings = builder.CreateSettings(referenceHandling);

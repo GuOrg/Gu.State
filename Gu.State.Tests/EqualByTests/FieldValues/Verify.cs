@@ -13,12 +13,12 @@
             var builder = FieldsSettings.Build();
             if (excludedMembers != null)
             {
-                builder.AddIgnoredField<T>(excludedMembers);
+                _ = builder.AddIgnoredField<T>(excludedMembers);
             }
 
             if (ignoredType != null)
             {
-                builder.AddImmutableType(ignoredType);
+                _ = builder.AddImmutableType(ignoredType);
             }
 
             if (immutableType != null)

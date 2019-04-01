@@ -19,17 +19,17 @@
             var builder = PropertiesSettings.Build();
             if (excluded != null)
             {
-                builder.IgnoreProperty<T>(excluded);
+                _ = builder.IgnoreProperty<T>(excluded);
             }
 
             if (ignoredType != null)
             {
-                builder.IgnoreType(ignoredType);
+                _ = builder.IgnoreType(ignoredType);
             }
 
             if (immutableType != null)
             {
-                builder.AddImmutableType(immutableType);
+                _ = builder.AddImmutableType(immutableType);
             }
 
             var settings = builder.CreateSettings(referenceHandling);
