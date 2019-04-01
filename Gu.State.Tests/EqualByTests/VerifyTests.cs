@@ -29,29 +29,29 @@ namespace Gu.State.Tests.EqualByTests
         {
             var expected = this is FieldValues.Verify
                                ? "EqualBy.FieldValues(x, y) failed.\r\n" +
-                                 "The field WithProperty<ComplexType>.<Value>k__BackingField of type ComplexType is not supported.\r\n" +
+                                 "The field With<ComplexType>.<Value>k__BackingField of type ComplexType is not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
-                                 "* Implement IEquatable<WithProperty<ComplexType>> for WithProperty<ComplexType> or use a type that does.\r\n" +
+                                 "* Implement IEquatable<With<ComplexType>> for With<ComplexType> or use a type that does.\r\n" +
                                  "* Implement IEquatable<ComplexType> for ComplexType or use a type that does.\r\n" +
                                  "* Use FieldsSettings and specify how comparing is performed:\r\n" +
                                  "  - ReferenceHandling.Structural means that a deep equals is performed.\r\n" +
                                  "  - ReferenceHandling.References means that reference equality is used.\r\n" +
                                  "  - Exclude a combination of the following:\r\n" +
-                                 "    - The field WithProperty<ComplexType>.<Value>k__BackingField.\r\n" +
+                                 "    - The field With<ComplexType>.<Value>k__BackingField.\r\n" +
                                  "    - The type ComplexType.\r\n"
 
                                : "EqualBy.PropertyValues(x, y) failed.\r\n" +
-                                 "The property WithProperty<ComplexType>.Value of type ComplexType is not supported.\r\n" +
+                                 "The property With<ComplexType>.Value of type ComplexType is not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
-                                 "* Implement IEquatable<WithProperty<ComplexType>> for WithProperty<ComplexType> or use a type that does.\r\n" +
+                                 "* Implement IEquatable<With<ComplexType>> for With<ComplexType> or use a type that does.\r\n" +
                                  "* Implement IEquatable<ComplexType> for ComplexType or use a type that does.\r\n" +
                                  "* Use PropertiesSettings and specify how comparing is performed:\r\n" +
                                  "  - ReferenceHandling.Structural means that a deep equals is performed.\r\n" +
                                  "  - ReferenceHandling.References means that reference equality is used.\r\n" +
                                  "  - Exclude a combination of the following:\r\n" +
-                                 "    - The property WithProperty<ComplexType>.Value.\r\n" +
+                                 "    - The property With<ComplexType>.Value.\r\n" +
                                  "    - The type ComplexType.\r\n";
-            var exception = Assert.Throws<NotSupportedException>(() => this.VerifyMethod<WithProperty<ComplexType>>(ReferenceHandling.Throw));
+            var exception = Assert.Throws<NotSupportedException>(() => this.VerifyMethod<With<ComplexType>>(ReferenceHandling.Throw));
             Assert.AreEqual(expected, exception.Message);
 
             Assert.DoesNotThrow(() => this.VerifyMethod<ComplexType>());

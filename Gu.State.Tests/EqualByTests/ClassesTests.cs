@@ -131,43 +131,12 @@ namespace Gu.State.Tests.EqualByTests
             Assert.AreEqual(false, result);
         }
 
-        [TestCase(1, 1, null, true)]
-        [TestCase(1, 2, null, false)]
-        [TestCase(1, 1, ReferenceHandling.Throw, true)]
-        [TestCase(1, 1, ReferenceHandling.Structural, true)]
-        [TestCase(1, 1, ReferenceHandling.References, true)]
-        public void WithReadonlyIntHappyPath(int xv, int yv, ReferenceHandling? referenceHandling, bool expected)
-        {
-            var x = new WithReadonlyProperty<int>(xv);
-            var y = new WithReadonlyProperty<int>(yv);
-            if (referenceHandling == null)
-            {
-                var result = this.EqualBy(x, y);
-                Assert.AreEqual(expected, result);
-            }
-            else
-            {
-                var result = this.EqualBy(x, y, referenceHandling.Value);
-                Assert.AreEqual(expected, result);
-            }
-        }
-
         [TestCase("a", "a", true)]
         [TestCase("a", "b", false)]
         public void WithReadonlyComplex(string xv, string yv, bool expected)
         {
-            var x = new WithReadonlyProperty<ComplexType>(new ComplexType(xv, 1));
-            var y = new WithReadonlyProperty<ComplexType>(new ComplexType(yv, 1));
-            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(expected, result);
-        }
-
-        [TestCase("f062db24-d4b8-452a-904c-ba2d23663e92", "f062db24-d4b8-452a-904c-ba2d23663e92", true)]
-        [TestCase("f062db24-d4b8-452a-904c-ba2d23663e92", "f062db24-d4b8-452a-904c-ba2d23663e91", false)]
-        public void WithReadonlyGuid(string xv, string yv, bool expected)
-        {
-            var x = new WithReadonlyProperty<Guid>(Guid.Parse(xv));
-            var y = new WithReadonlyProperty<Guid>(Guid.Parse(yv));
+            var x = new With<ComplexType>(new ComplexType(xv, 1));
+            var y = new With<ComplexType>(new ComplexType(yv, 1));
             var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(expected, result);
         }

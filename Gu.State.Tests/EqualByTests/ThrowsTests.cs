@@ -82,33 +82,33 @@ namespace Gu.State.Tests.EqualByTests
         {
             var expected = this is FieldValues.Throws
                                ? "EqualBy.FieldValues(x, y) failed.\r\n" +
-                                 "The field WithProperty<WithIndexerType>.<Value>k__BackingField of type WithIndexerType is not supported.\r\n" +
+                                 "The field With<WithIndexerType>.<Value>k__BackingField of type WithIndexerType is not supported.\r\n" +
                                  "Indexers are not supported.\r\n" +
                                  "  - The property WithIndexerType.Item is an indexer and not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
-                                 "* Implement IEquatable<WithProperty<WithIndexerType>> for WithProperty<WithIndexerType> or use a type that does.\r\n" +
+                                 "* Implement IEquatable<With<WithIndexerType>> for With<WithIndexerType> or use a type that does.\r\n" +
                                  "* Implement IEquatable<WithIndexerType> for WithIndexerType or use a type that does.\r\n" +
                                  "* Use FieldsSettings and specify how comparing is performed:\r\n" +
                                  "  - Exclude a combination of the following:\r\n" +
-                                 "    - The field WithProperty<WithIndexerType>.<Value>k__BackingField.\r\n" +
+                                 "    - The field With<WithIndexerType>.<Value>k__BackingField.\r\n" +
                                  "    - The indexer property WithIndexerType.Item.\r\n" +
                                  "    - The type WithIndexerType.\r\n"
 
                                : "EqualBy.PropertyValues(x, y) failed.\r\n" +
-                                 "The property WithProperty<WithIndexerType>.Value of type WithIndexerType is not supported.\r\n" +
+                                 "The property With<WithIndexerType>.Value of type WithIndexerType is not supported.\r\n" +
                                  "Indexers are not supported.\r\n" +
                                  "  - The property WithIndexerType.Item is an indexer and not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
-                                 "* Implement IEquatable<WithProperty<WithIndexerType>> for WithProperty<WithIndexerType> or use a type that does.\r\n" +
+                                 "* Implement IEquatable<With<WithIndexerType>> for With<WithIndexerType> or use a type that does.\r\n" +
                                  "* Implement IEquatable<WithIndexerType> for WithIndexerType or use a type that does.\r\n" +
                                  "* Use PropertiesSettings and specify how comparing is performed:\r\n" +
                                  "  - Exclude a combination of the following:\r\n" +
-                                 "    - The property WithProperty<WithIndexerType>.Value.\r\n" +
+                                 "    - The property With<WithIndexerType>.Value.\r\n" +
                                  "    - The indexer property WithIndexerType.Item.\r\n" +
                                  "    - The type WithIndexerType.\r\n";
 
-            var source = new WithProperty<WithIndexerType>();
-            var target = new WithProperty<WithIndexerType>();
+            var source = new With<WithIndexerType>(null);
+            var target = new With<WithIndexerType>(null);
 
             var exception = Assert.Throws<NotSupportedException>(() => this.EqualBy(source, target, ReferenceHandling.Structural));
             Assert.AreEqual(expected, exception.Message);

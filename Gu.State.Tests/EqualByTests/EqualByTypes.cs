@@ -460,24 +460,9 @@ namespace Gu.State.Tests.EqualByTests
             public ComplexType ComplexType { get; set; }
         }
 
-        public class WithProperty<T>
-        {
-            public T Value { get; set; }
-        }
-
         public class WithListProperty<T>
         {
             public List<T> Items { get; set; } = new List<T>();
-        }
-
-        public class WithReadonlyProperty<T>
-        {
-            public WithReadonlyProperty(T value)
-            {
-                this.Value = value;
-            }
-
-            public T Value { get; }
         }
 
         public class WithSimpleProperties : INotifyPropertyChanged
