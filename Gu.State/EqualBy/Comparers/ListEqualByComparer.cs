@@ -9,7 +9,7 @@ namespace Gu.State
     {
         private static readonly ConcurrentDictionary<Type, EqualByComparer> Cache = new ConcurrentDictionary<Type, EqualByComparer>();
 
-        public static bool TryGetOrCreate(object x, object y, out EqualByComparer comparer)
+        internal static bool TryGetOrCreate(object x, object y, out EqualByComparer comparer)
         {
             if (x.GetType().Implements(typeof(IList<>)) && y.GetType().Implements(typeof(IList<>)))
             {

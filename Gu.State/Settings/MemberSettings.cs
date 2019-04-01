@@ -13,7 +13,6 @@
         private readonly IReadOnlyDictionary<Type, CastingComparer> comparers;
         private readonly IReadOnlyDictionary<Type, CustomCopy> copyers;
         private readonly KnownTypes knownTypes;
-        private readonly ConcurrentDictionary<MemberInfo, bool> ignoredMembers = new ConcurrentDictionary<MemberInfo, bool>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MemberSettings"/> class.
@@ -32,7 +31,7 @@
             IReadOnlyDictionary<Type, CastingComparer> comparers,
             IReadOnlyDictionary<Type, CustomCopy> copyers,
             ReferenceHandling referenceHandling,
-                        BindingFlags bindingFlags)
+            BindingFlags bindingFlags)
         {
             this.ReferenceHandling = referenceHandling;
             this.BindingFlags = bindingFlags;
@@ -40,7 +39,7 @@
             {
                 foreach (var ignoredMember in ignoredMembers)
                 {
-                    this.ignoredMembers.TryAdd(ignoredMember, true);
+                    this.IgnoredMembers.TryAdd(ignoredMember, true);
                 }
             }
 
@@ -61,7 +60,7 @@
         internal ConcurrentDictionary<Type, TypeErrors> CopyErrors => this.copyErrors.Value;
 
         /// <summary>Gets a cache for ignored members.</summary>
-        protected ConcurrentDictionary<MemberInfo, bool> IgnoredMembers => this.ignoredMembers;
+        protected ConcurrentDictionary<MemberInfo, bool> IgnoredMembers { get; } = new ConcurrentDictionary<MemberInfo, bool>();
 
         /// <summary>
         /// Check if <paramref name="type"/> is equatable.
