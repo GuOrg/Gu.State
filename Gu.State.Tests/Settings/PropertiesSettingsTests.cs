@@ -146,13 +146,10 @@ namespace Gu.State.Tests.Settings
 
         [TestCase(BindingFlags.Public, ReferenceHandling.Throw)]
         [TestCase(BindingFlags.Public, ReferenceHandling.Structural)]
+        [TestCase(BindingFlags.Public | BindingFlags.NonPublic, ReferenceHandling.Structural)]
         public void Caches(BindingFlags bindingFlags, ReferenceHandling referenceHandling)
         {
-            var settings = PropertiesSettings.GetOrCreate(referenceHandling, bindingFlags);
-            Assert.AreEqual(bindingFlags, settings.BindingFlags);
-            Assert.AreEqual(referenceHandling, settings.ReferenceHandling);
-            var second = PropertiesSettings.GetOrCreate(referenceHandling, BindingFlags.Public);
-            Assert.AreSame(settings, second);
+            Assert.AreSame(PropertiesSettings.GetOrCreate(referenceHandling, bindingFlags), PropertiesSettings.GetOrCreate(referenceHandling, bindingFlags));
         }
     }
 }

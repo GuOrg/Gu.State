@@ -93,13 +93,10 @@ namespace Gu.State.Tests.Settings
 
         [TestCase(BindingFlags.Public, ReferenceHandling.Throw)]
         [TestCase(BindingFlags.Public, ReferenceHandling.Structural)]
+        [TestCase(BindingFlags.Public| BindingFlags.NonPublic, ReferenceHandling.Structural)]
         public void Cache(BindingFlags bindingFlags, ReferenceHandling referenceHandling)
         {
-            var settings = FieldsSettings.GetOrCreate(referenceHandling, bindingFlags);
-            Assert.AreEqual(bindingFlags, settings.BindingFlags);
-            Assert.AreEqual(referenceHandling, settings.ReferenceHandling);
-            var second = FieldsSettings.GetOrCreate(referenceHandling, BindingFlags.Public);
-            Assert.AreSame(settings, second);
+            Assert.AreSame(FieldsSettings.GetOrCreate(referenceHandling, bindingFlags), FieldsSettings.GetOrCreate(referenceHandling, bindingFlags));
         }
 
         public class ComplexType
