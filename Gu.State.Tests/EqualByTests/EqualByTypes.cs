@@ -20,6 +20,8 @@ namespace Gu.State.Tests.EqualByTests
             }
 
             public T Value { get; }
+
+            public override string ToString() => $"With<{typeof(T).PrettyName()}> {{ {this.Value?.ToString() ?? "null"} }}";
         }
 
         public class IntCollection : IReadOnlyList<int>
