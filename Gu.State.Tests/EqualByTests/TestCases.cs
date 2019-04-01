@@ -19,6 +19,10 @@ namespace Gu.State.Tests.EqualByTests
             new TestCaseData((int?)null, (int?)null),
             new TestCaseData((int?)1, (int?)1),
 
+            new TestCaseData(StringComparison.Ordinal, StringComparison.Ordinal),
+            new TestCaseData((StringComparison?)null, (StringComparison?)null),
+            new TestCaseData((StringComparison?)StringComparison.Ordinal, (StringComparison?)StringComparison.Ordinal),
+
             new TestCaseData(new Point(1, 2), new Point(1, 2)),
             new TestCaseData((Point?)new Point(1, 2), (Point?)new Point(1, 2)),
 
@@ -74,6 +78,10 @@ namespace Gu.State.Tests.EqualByTests
             new TestCaseData(1, 2),
             new TestCaseData((int?)null, (int?)1),
             new TestCaseData((int?)null, (int?)1),
+
+            new TestCaseData(StringComparison.Ordinal, StringComparison.OrdinalIgnoreCase),
+            new TestCaseData((StringComparison?)null, (StringComparison?)StringComparison.Ordinal),
+            new TestCaseData((StringComparison?)StringComparison.Ordinal, (StringComparison?)StringComparison.OrdinalIgnoreCase),
 
             new TestCaseData(new Point(1, 2), new Point(1, -2)),
             new TestCaseData(new Point(1, 2), new Point(-1, 2)),
