@@ -26,13 +26,13 @@
         /// <returns>True if any of <paramref name="x"/> and <paramref name="y"/> is null.</returns>
         protected static bool TryGetEitherNullEquals(object x, object y, out bool result)
         {
-            if (x == null && y == null)
+            if (x is null && y is null)
             {
                 result = true;
                 return true;
             }
 
-            if (x == null || y == null)
+            if (x is null || y is null)
             {
                 result = false;
                 return true;
