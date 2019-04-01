@@ -78,8 +78,8 @@
                         }
 
                         return this.valueReference.TryGetTarget(out var value)
-           ? value
-           : null;
+                           ? value
+                           : null;
                     }
                 }
 

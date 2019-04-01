@@ -33,7 +33,7 @@ namespace Gu.State
         /// </summary>
         /// <returns>A hash code for the specified object.</returns>
         /// <param name="obj">
-        ///     The <see cref="System.Object" /> for which a hash code is to be returned.
+        ///     The <see cref="object" /> for which a hash code is to be returned.
         /// </param>
         /// <exception cref="System.ArgumentNullException">
         ///     The type of <paramref name="obj" /> is a reference type and <paramref name="obj" /> is null.

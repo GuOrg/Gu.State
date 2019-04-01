@@ -106,7 +106,7 @@
 
         public override IEnumerable<MemberInfo> GetMembers(Type type) => this.GetProperties(type);
 
-       public override bool IsIgnoringMember(MemberInfo member)
+        public override bool IsIgnoringMember(MemberInfo member)
         {
             Debug.Assert(member is PropertyInfo, "member is PropertyInfo");
             return this.IsIgnoringProperty((PropertyInfo)member);

@@ -74,7 +74,7 @@ namespace Gu.State.Tests.EqualByTests
             new TestCaseData(new With<IReadOnlyList<int>>(null), new With<IReadOnlyList<int>>(null)),
             new TestCaseData(new With<IReadOnlyList<int>>(new int[0]), new With<IReadOnlyList<int>>(new int[0])),
             new TestCaseData(new With<IReadOnlyList<int>>(new[] { 1, 2, 3 }), new With<IReadOnlyList<int>>(new[] { 1, 2, 3 })),
-            new TestCaseData(new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = 2 }),new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = 2 })),
+            new TestCaseData(new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = 2 }), new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = 2 })),
         };
 
         public static readonly TestCaseData[] WhenNotEqual =

@@ -6,11 +6,7 @@
 
     public static partial class DiffBy
     {
-        internal static void UpdateDiffs<T>(
-           this DiffBuilder builder,
-            T x,
-            T y,
-            MemberSettings settings)
+        internal static void UpdateDiffs<T>(this DiffBuilder builder, T x, T y, MemberSettings settings)
         {
             EqualBy.Verify.CanEqualByMemberValues(x, y, settings, typeof(DiffBy).Name, settings.DiffMethodName());
             builder.TryAddCollectionDiffs(x, y, settings);
