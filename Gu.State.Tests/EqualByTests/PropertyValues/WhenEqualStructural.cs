@@ -3,6 +3,8 @@ namespace Gu.State.Tests.EqualByTests.PropertyValues
 {
     using NUnit.Framework;
 
+    using static EqualByTypes;
+
     public class WhenEqualStructural
     {
         [TestCaseSource(typeof(TestCases), nameof(TestCases.WhenEqualStructural))]
@@ -19,11 +21,22 @@ namespace Gu.State.Tests.EqualByTests.PropertyValues
             Assert.AreEqual(true, EqualBy.PropertyValues(y, x, ReferenceHandling.Structural));
         }
 
-        //[TestCaseSource(typeof(TestCases), nameof(TestCases.WhenEqualStructural))]
-        //public void ExplicitReferences(object x, object y)
-        //{
-        //    Assert.AreEqual(false, EqualBy.PropertyValues(x, y, ReferenceHandling.References));
-        //    Assert.AreEqual(false, EqualBy.PropertyValues(y, x, ReferenceHandling.References));
-        //}
+        [TestCaseSource(typeof(TestCases), nameof(TestCases.WhenEqualStructural))]
+        public void ExplicitReferences(object x, object y)
+        {
+            if (x is IWith xw &&
+                xw.Value is null &&
+                y is IWith yw &&
+                yw.Value is null)
+            {
+                Assert.AreEqual(true, EqualBy.FieldValues(x, y, ReferenceHandling.References));
+                Assert.AreEqual(true, EqualBy.FieldValues(y, x, ReferenceHandling.References));
+            }
+            else
+            {
+                Assert.AreEqual(false, EqualBy.FieldValues(x, y, ReferenceHandling.References));
+                Assert.AreEqual(false, EqualBy.FieldValues(y, x, ReferenceHandling.References));
+            }
+        }
     }
 }

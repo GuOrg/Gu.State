@@ -12,7 +12,12 @@ namespace Gu.State.Tests.EqualByTests
 
     public static class EqualByTypes
     {
-        public class With<T>
+        public interface IWith
+        {
+            object Value { get; }
+        }
+
+        public class With<T> : IWith
         {
             public With(T value)
             {
@@ -20,6 +25,8 @@ namespace Gu.State.Tests.EqualByTests
             }
 
             public T Value { get; }
+
+            object IWith.Value => this.Value;
 
             public override string ToString() => $"With<{typeof(T).PrettyName()}> {{ {this.Value?.ToString() ?? "null"} }}";
         }

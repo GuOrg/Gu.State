@@ -1,7 +1,6 @@
 ﻿namespace Gu.State.Tests.EqualByTests.FieldValues
 {
     using System;
-    using System.Collections.Generic;
 
     public class Structs : StructsTests
     {
