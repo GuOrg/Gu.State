@@ -17,12 +17,9 @@ namespace Gu.State.Tests.EqualByTests
             new TestCaseData((int?)null, (int?)null),
             new TestCaseData((int?)1, (int?)1),
 
-            new TestCaseData(
-                new WithSimpleValues(1, 2, "3", StringSplitOptions.RemoveEmptyEntries),
-                new WithSimpleValues(1, 2, "3", StringSplitOptions.RemoveEmptyEntries)),
-            new TestCaseData(
-                new WithSimpleValues(1, null, "3", StringSplitOptions.RemoveEmptyEntries),
-                new WithSimpleValues(1, null, "3", StringSplitOptions.RemoveEmptyEntries)),
+            new TestCaseData(new WithSimpleValues(1, 2, "3", StringSplitOptions.RemoveEmptyEntries), new WithSimpleValues(1, 2, "3", StringSplitOptions.RemoveEmptyEntries)),
+            new TestCaseData(new WithSimpleValues(1, 2, null, StringSplitOptions.RemoveEmptyEntries), new WithSimpleValues(1, 2, null, StringSplitOptions.RemoveEmptyEntries)),
+            new TestCaseData(new WithSimpleValues(1, null, "3", StringSplitOptions.RemoveEmptyEntries), new WithSimpleValues(1, null, "3", StringSplitOptions.RemoveEmptyEntries)),
 
             new TestCaseData((int[])null, (int[])null),
             new TestCaseData(new int[0], new int[0]),
@@ -88,6 +85,9 @@ namespace Gu.State.Tests.EqualByTests
             new TestCaseData(
                 new WithSimpleValues(1, 2, "3", StringSplitOptions.RemoveEmptyEntries),
                 new WithSimpleValues(1, null, "3", StringSplitOptions.RemoveEmptyEntries)),
+            new TestCaseData(
+                new WithSimpleValues(1, 2, "3", StringSplitOptions.RemoveEmptyEntries),
+                new WithSimpleValues(1, 5, null, StringSplitOptions.RemoveEmptyEntries)),
             new TestCaseData(
                 new WithSimpleValues(1, 2, "3", StringSplitOptions.RemoveEmptyEntries),
                 new WithSimpleValues(1, 2, "5", StringSplitOptions.RemoveEmptyEntries)),

@@ -10,8 +10,6 @@ namespace Gu.State.Tests.EqualByTests
 
     public abstract class ClassesTests
     {
-        public static IReadOnlyList<EqualByTestsShared.EqualsData> EqualsSource => EqualByTestsShared.EqualsSource;
-
         public abstract bool EqualBy<T>(
             T x,
             T y,
@@ -19,12 +17,6 @@ namespace Gu.State.Tests.EqualByTests
             string excludedMembers = null,
             Type ignoredType = null)
             where T : class;
-
-        [TestCaseSource(nameof(EqualsSource))]
-        public void PropertyValuesHappyPath(EqualByTestsShared.EqualsData data)
-        {
-            Assert.AreEqual(data.Equals, this.EqualBy(data.Source, data.Target));
-        }
 
         [TestCase("b", "b", true)]
         [TestCase("b", "c", false)]

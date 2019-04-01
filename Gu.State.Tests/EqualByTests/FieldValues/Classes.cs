@@ -1,12 +1,9 @@
 ﻿namespace Gu.State.Tests.EqualByTests.FieldValues
 {
     using System;
-    using System.Collections.Generic;
 
     public class Classes : ClassesTests
     {
-        public static new IReadOnlyList<EqualByTestsShared.EqualsData> EqualsSource => EqualByTestsShared.EqualsSource;
-
         public override bool EqualBy<T>(
             T x,
             T y,
@@ -17,7 +14,7 @@
             var builder = FieldsSettings.Build();
             if (excludedMembers != null)
             {
-                builder.AddIgnoredField<T>(excludedMembers);
+                _ = builder.AddIgnoredField<T>(excludedMembers);
             }
 
             if (ignoredType != null)
