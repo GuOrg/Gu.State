@@ -49,7 +49,7 @@
             this.copyers = copyers;
         }
 
-        /// <summary>Gets the bindingflags used for getting members.</summary>
+        /// <summary>Gets the <see cref="BindingFlags"/> used for getting members.</summary>
         public BindingFlags BindingFlags { get; }
 
         /// <summary>Gets a value indicating how reference values are handled.</summary>

@@ -17,11 +17,19 @@
             }
 
             Verify.CanEqualByMemberValues(x, y, settings, typeof(EqualBy).Name, settings.EqualByMethodName());
-            using (var borrowed = settings.ReferenceHandling == ReferenceHandling.Structural
-                                   ? ReferencePairCollection.Borrow()
-                                   : null)
+            using (var referencePairs = GetReferencePairs())
             {
-                return MemberValues(x, y, settings, borrowed?.Value);
+                return MemberValues(x, y, settings, referencePairs?.Value);
+            }
+
+            IBorrowed<ReferencePairCollection> GetReferencePairs()
+            {
+                if (settings.ReferenceHandling == ReferenceHandling.Structural)
+                {
+                    return ReferencePairCollection.Borrow();
+                }
+
+                return null;
             }
         }
 
