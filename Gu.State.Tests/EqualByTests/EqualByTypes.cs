@@ -255,6 +255,8 @@ namespace Gu.State.Tests.EqualByTests
 
             public int Value { get; set; }
 
+            public override string ToString() => $"{this.GetType().Name} {{ Name: {this.Name}, Value: {this.Value} }}";
+
             public sealed class TestComparer : IEqualityComparer<ComplexType>, IComparer<ComplexType>, IComparer
             {
                 public bool Equals(ComplexType x, ComplexType y)
