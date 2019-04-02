@@ -49,63 +49,40 @@ namespace Gu.State
                     return result;
                 }
 
-                var xd = (IReadOnlyDictionary<TKey, TValue>)x;
-                var yd = (IReadOnlyDictionary<TKey, TValue>)y;
-                if (xd.Count != yd.Count)
+                return Equals((IReadOnlyDictionary<TKey, TValue>)x, (IReadOnlyDictionary<TKey, TValue>)y, settings, referencePairs);
+            }
+
+            private static bool Equals(IReadOnlyDictionary<TKey, TValue> x, IReadOnlyDictionary<TKey, TValue> y, MemberSettings settings, ReferencePairCollection referencePairs)
+            {
+                if (x.Count != y.Count)
                 {
                     return false;
                 }
 
-                if (settings.IsEquatable(typeof(TValue)))
+                var comparer = settings.GetEqualByComparer(typeof(TKey), checkReferenceHandling: true);
+                using (var borrow = HashSetPool<TKey>.Borrow((xi, yi) => comparer.Equals(xi, yi, settings, referencePairs), xi => xi.GetHashCode()))
                 {
-                    return KeysAndValuesEquals(xd, yd, EqualityComparer<TValue>.Default.Equals);
+                    borrow.Value.UnionWith(x.Keys);
+                    if (!borrow.Value.SetEquals(y.Keys))
+                    {
+                        return false;
+                    }
                 }
 
-                if (settings.ReferenceHandling == ReferenceHandling.References)
-                {
-                    return KeysAndValuesEquals(xd, yd, (xi, yi) => ReferenceEquals(xi, yi));
-                }
-
-                return KeysAndValuesEquals(xd, yd, settings, referencePairs);
+                return ValuesEquals(x, y, settings, referencePairs);
             }
 
-            internal static bool KeysAndValuesEquals(IReadOnlyDictionary<TKey, TValue> x, IReadOnlyDictionary<TKey, TValue> y, MemberSettings settings, ReferencePairCollection referencePairs)
+            private static bool ValuesEquals(IReadOnlyDictionary<TKey, TValue> x, IReadOnlyDictionary<TKey, TValue> y, MemberSettings settings, ReferencePairCollection referencePairs)
             {
+                var comparer = settings.GetEqualByComparer(typeof(TValue), checkReferenceHandling: true);
                 foreach (var key in x.Keys)
                 {
-                    var xv = x[key];
-
                     if (!y.TryGetValue(key, out var yv))
                     {
                         return false;
                     }
 
-                    if (referencePairs?.Contains(xv, yv) == true)
-                    {
-                        continue;
-                    }
-
-                    if (!EqualBy.MemberValues(xv, yv, settings, referencePairs))
-                    {
-                        return false;
-                    }
-                }
-
-                return true;
-            }
-
-            internal static bool KeysAndValuesEquals(IReadOnlyDictionary<TKey, TValue> x, IReadOnlyDictionary<TKey, TValue> y, Func<TValue, TValue, bool> compareItem)
-            {
-                foreach (var key in x.Keys)
-                {
-                    var xv = x[key];
-
-                    if (!y.TryGetValue(key, out var yv))
-                    {
-                        return false;
-                    }
-
-                    if (!compareItem(xv, yv))
+                    if (!comparer.Equals(x[key], yv, settings, referencePairs))
                     {
                         return false;
                     }
