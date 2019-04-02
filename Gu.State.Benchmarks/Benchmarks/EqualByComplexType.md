@@ -8,13 +8,13 @@ Frequency=3410070 Hz, Resolution=293.2491 ns, Timer=TSC
 
 
 ```
-|                            Method |         Mean |      Error |      StdDev |  Ratio | RatioSD | Gen 0/1k Op | Gen 1/1k Op | Gen 2/1k Op | Allocated Memory/Op |
-|---------------------------------- |-------------:|-----------:|------------:|-------:|--------:|------------:|------------:|------------:|--------------------:|
-|              this_x_Equals_this_y |    11.847 ns |  0.2397 ns |   0.2125 ns |   1.00 |    0.00 |           - |           - |           - |                   - |
-|                      ObjectEquals |    11.942 ns |  0.2264 ns |   0.2007 ns |   1.01 |    0.02 |           - |           - |           - |                   - |
-|                              Func |     2.855 ns |  0.0929 ns |   0.1208 ns |   0.24 |    0.01 |           - |           - |           - |                   - |
-|                          Comparer |     8.771 ns |  0.1568 ns |   0.1310 ns |   0.74 |    0.02 |           - |           - |           - |                   - |
-|             EqualByPropertyValues | 3,088.538 ns | 62.4667 ns |  64.1487 ns | 261.67 |    6.49 |      0.2213 |      0.0267 |      0.0076 |              1450 B |
-| EqualByPropertyValuesWithComparer |    59.201 ns |  0.1823 ns |   0.1522 ns |   5.00 |    0.10 |           - |           - |           - |                   - |
-|                EqualByFieldValues | 3,077.467 ns | 62.2499 ns | 105.7050 ns | 260.54 |    9.62 |      0.2213 |      0.0267 |      0.0076 |              1450 B |
-|    EqualByFieldValuesWithComparer |    58.016 ns |  0.1769 ns |   0.1381 ns |   4.91 |    0.09 |           - |           - |           - |                   - |
+|                            Method |         Mean |      Error |     StdDev |  Ratio | RatioSD | Gen 0/1k Op | Gen 1/1k Op | Gen 2/1k Op | Allocated Memory/Op |
+|---------------------------------- |-------------:|-----------:|-----------:|-------:|--------:|------------:|------------:|------------:|--------------------:|
+|              this_x_Equals_this_y |    11.599 ns |  0.1465 ns |  0.1299 ns |   1.00 |    0.00 |           - |           - |           - |                   - |
+|                      ObjectEquals |    12.373 ns |  0.2431 ns |  0.2274 ns |   1.07 |    0.02 |           - |           - |           - |                   - |
+|                              Func |     2.776 ns |  0.0960 ns |  0.1180 ns |   0.24 |    0.01 |           - |           - |           - |                   - |
+|                          Comparer |     7.637 ns |  0.1890 ns |  0.2829 ns |   0.66 |    0.02 |           - |           - |           - |                   - |
+|             EqualByPropertyValues | 3,171.021 ns | 62.5449 ns | 87.6792 ns | 272.81 |    9.11 |      0.2251 |      0.0267 |      0.0076 |              1458 B |
+| EqualByPropertyValuesWithComparer | 1,025.328 ns | 16.4699 ns | 14.6001 ns |  88.40 |    1.43 |      0.1373 |      0.0191 |      0.0019 |               869 B |
+|                EqualByFieldValues | 2,995.436 ns | 24.8790 ns | 20.7751 ns | 257.88 |    3.24 |      0.2251 |      0.0267 |      0.0076 |              1458 B |
+|    EqualByFieldValuesWithComparer | 1,094.956 ns | 20.9878 ns | 25.7749 ns |  94.21 |    1.81 |      0.1373 |      0.0191 |      0.0019 |               869 B |
