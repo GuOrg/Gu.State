@@ -76,7 +76,10 @@
 
                 EqualByComparer GetComparer()
                 {
-                    if (!member.MemberType().IsValueType)
+                    var memberType = member.MemberType();
+                    if (!memberType.IsValueType &&
+                        !settings.IsEquatable(memberType) &&
+                        !settings.TryGetComparer(memberType, out _))
                     {
                         switch (settings.ReferenceHandling)
                         {
