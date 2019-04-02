@@ -168,11 +168,10 @@
                 }
 
                 if (EquatableEqualByComparer.TryGet(type, this, out var comparer) ||
-                    SetEqualByComparer.TryGet(type, this, out comparer) ||
-                    ReadOnlyListEqualByComparer.TryGet(type, this, out comparer) ||
+                    ISetEqualByComparer.TryGet(type, this, out comparer) ||
+                    IReadOnlyListEqualByComparer.TryGet(type, this, out comparer) ||
                     ArrayEqualByComparer.TryGet(type, this, out comparer) ||
-                    //DictionaryEqualByComparer.TryGet(type, this, out comparer) ||
-                    //ReadOnlyDictionaryEqualByComparer.TryGet(type, this, out comparer) ||
+                    IReadOnlyDictionaryEqualByComparer.TryGet(type, this, out comparer) ||
                     //EnumerableEqualByComparer.TryGet(type, this, out comparer) ||
                     ComplexTypeEqualByComparer.TryGet(type, this, out comparer))
                 {

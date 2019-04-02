@@ -4,7 +4,7 @@ namespace Gu.State
     using System.Collections.Generic;
     using System.Reflection;
 
-    internal static class ReadOnlyListEqualByComparer
+    internal static class IReadOnlyListEqualByComparer
     {
         internal static bool TryGet(Type type, MemberSettings settings, out EqualByComparer comparer)
         {
@@ -49,11 +49,7 @@ namespace Gu.State
             {
             }
 
-            public override bool Equals(
-                object x,
-                object y,
-                MemberSettings settings,
-                ReferencePairCollection referencePairs)
+            public override bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs)
             {
                 return TryGetEitherNullEquals(x, y, out var result)
                     ? result
@@ -88,11 +84,7 @@ namespace Gu.State
             {
             }
 
-            public override bool Equals(
-                object x,
-                object y,
-                MemberSettings settings,
-                ReferencePairCollection referencePairs)
+            public override bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs)
             {
                 return TryGetEitherNullEquals(x, y, out var result)
                     ? result
@@ -127,11 +119,7 @@ namespace Gu.State
             {
             }
 
-            public override bool Equals(
-                object x,
-                object y,
-                MemberSettings settings,
-                ReferencePairCollection referencePairs)
+            public override bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs)
             {
                 return TryGetEitherNullEquals(x, y, out var result)
                     ? result

@@ -4,7 +4,7 @@ namespace Gu.State
     using System.Collections.Generic;
     using System.Reflection;
 
-    internal static class SetEqualByComparer
+    internal static class ISetEqualByComparer
     {
         internal static bool TryGet(Type type, MemberSettings settings, out EqualByComparer comparer)
         {
