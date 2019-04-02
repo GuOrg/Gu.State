@@ -17,6 +17,23 @@ namespace Gu.State.Tests.EqualByTests
             object Value { get; }
         }
 
+        public struct Struct
+        {
+            public int Value { get; set; }
+        }
+
+        public struct EquatableStruct : IEquatable<EquatableStruct>
+        {
+            public int Value { get; set; }
+
+            public override bool Equals(object obj) => obj is EquatableStruct other &&
+                                                       this.Equals(other);
+
+            public bool Equals(EquatableStruct other) => this.Value == other.Value;
+
+            public override int GetHashCode() => this.Value;
+        }
+
         public class With<T> : IWith
         {
             public With(T value)

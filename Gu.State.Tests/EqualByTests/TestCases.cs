@@ -26,10 +26,20 @@ namespace Gu.State.Tests.EqualByTests
 
             new TestCaseData(new Point(1, 2), new Point(1, 2)),
             new TestCaseData((Point?)new Point(1, 2), (Point?)new Point(1, 2)),
+            new TestCaseData((Point?)null, (Point?)null),
+            new TestCaseData(new Struct { Value = 1 }, new Struct { Value = 1 }),
+            new TestCaseData(new EquatableStruct { Value = 1 }, new EquatableStruct { Value = 1 }),
 
             new TestCaseData(new With<int>(1), new With<int>(1)),
             new TestCaseData(new With<int?>(1), new With<int?>(1)),
             new TestCaseData(new With<int?>(null), new With<int?>(null)),
+
+            new TestCaseData(new With<Struct>(new Struct { Value = 1 }), new With<Struct>(new Struct { Value = 1 })),
+            new TestCaseData(new With<Struct?>(new Struct { Value = 1 }), new With<Struct?>(new Struct { Value = 1 })),
+            new TestCaseData(new With<Struct?>(null), new With<Struct?>(null)),
+            new TestCaseData(new With<EquatableStruct>(new EquatableStruct { Value = 1 }), new With<EquatableStruct>(new EquatableStruct { Value = 1 })),
+            new TestCaseData(new With<EquatableStruct?>(new EquatableStruct { Value = 1 }), new With<EquatableStruct?>(new EquatableStruct { Value = 1 })),
+            new TestCaseData(new With<EquatableStruct?>(null), new With<EquatableStruct?>(null)),
 
             new TestCaseData(new With<StringComparison>(StringComparison.Ordinal), new With<StringComparison>(StringComparison.Ordinal)),
             new TestCaseData(new With<StringComparison?>(StringComparison.Ordinal), new With<StringComparison?>(StringComparison.Ordinal)),
@@ -52,17 +62,11 @@ namespace Gu.State.Tests.EqualByTests
 
             new TestCaseData(new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }, new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }),
 
-            new TestCaseData(Enumerable.Empty<int>().Select(x =>x * x), Enumerable.Empty<int>().Select(x => x * x)),
+            new TestCaseData(Enumerable.Empty<int>().Select(x => x * x), Enumerable.Empty<int>().Select(x => x * x)),
             new TestCaseData("1,2".Split(',').Select(int.Parse), "1,2".Split(',').Select(int.Parse)),
-            //new TestCaseData(
-            //    new With<Point>(new Point(1, 2)),
-            //    new With<Point>(new Point(1, 2))),
-            //new TestCaseData(
-            //    new With<Point?>(new Point(1, 2)),
-            //    new With<Point?>(new Point(1, 2))),
-            //new TestCaseData(
-            //    new With<Point?>(null),
-            //    new With<Point?>(null)),
+            new TestCaseData(new With<Point>(new Point(1, 2)), new With<Point>(new Point(1, 2))),
+            new TestCaseData(new With<Point?>(new Point(1, 2)), new With<Point?>(new Point(1, 2))),
+            new TestCaseData(new With<Point?>(null), new With<Point?>(null)),
         };
 
         public static readonly TestCaseData[] WhenEqualStructural =
@@ -84,10 +88,13 @@ namespace Gu.State.Tests.EqualByTests
         public static readonly TestCaseData[] WhenNotEqual =
         {
             new TestCaseData(null, (object)1),
-            new TestCaseData( (object)1,  (object)2),
+            new TestCaseData((object)1,  (object)2),
             new TestCaseData(1, 2),
             new TestCaseData((int?)null, (int?)1),
             new TestCaseData((int?)null, (int?)1),
+
+            new TestCaseData(new Struct { Value = 1 }, new Struct { Value = -1 }),
+            new TestCaseData(new EquatableStruct { Value = 1 }, new EquatableStruct { Value = -1 }),
 
             new TestCaseData(StringComparison.Ordinal, StringComparison.OrdinalIgnoreCase),
             new TestCaseData((StringComparison?)null, (StringComparison?)StringComparison.Ordinal),
@@ -103,6 +110,13 @@ namespace Gu.State.Tests.EqualByTests
             new TestCaseData(new With<int?>(1), new With<int?>(2)),
             new TestCaseData(new With<int?>(1), new With<int?>(null)),
             new TestCaseData(new With<int>(1), (With<int>)null),
+
+            new TestCaseData(new With<Struct>(new Struct { Value = 1 }), new With<Struct>(new Struct { Value = -1 })),
+            new TestCaseData(new With<Struct?>(new Struct { Value = 1 }), new With<Struct?>(new Struct { Value = -1 })),
+            new TestCaseData(new With<Struct?>(null), new With<Struct?>(new Struct { Value = -1 })),
+            new TestCaseData(new With<EquatableStruct>(new EquatableStruct { Value = 1 }), new With<EquatableStruct>(new EquatableStruct { Value = -1 })),
+            new TestCaseData(new With<EquatableStruct?>(new EquatableStruct { Value = 1 }), new With<EquatableStruct?>(new EquatableStruct { Value = -1 })),
+            new TestCaseData(new With<EquatableStruct?>(null), new With<EquatableStruct?>(new EquatableStruct { Value = -1 })),
 
             new TestCaseData(new With<StringComparison>(StringComparison.Ordinal), new With<StringComparison>(StringComparison.OrdinalIgnoreCase)),
             new TestCaseData(new With<StringComparison?>(StringComparison.Ordinal), new With<StringComparison?>(StringComparison.OrdinalIgnoreCase)),
