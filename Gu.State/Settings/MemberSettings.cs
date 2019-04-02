@@ -12,6 +12,7 @@
         private readonly Lazy<ConcurrentDictionary<Type, TypeErrors>> equalByErrors = new Lazy<ConcurrentDictionary<Type, TypeErrors>>();
         private readonly Lazy<ConcurrentDictionary<Type, TypeErrors>> copyErrors = new Lazy<ConcurrentDictionary<Type, TypeErrors>>();
         private readonly ImmutableSet<Type> immutableTypes;
+        private readonly ConcurrentDictionary<Type, EqualByComparer> rootEqualByComparers = new ConcurrentDictionary<Type, EqualByComparer>();
         private readonly ConcurrentDictionary<Type, EqualByComparer> equalByComparers = new ConcurrentDictionary<Type, EqualByComparer>();
         private readonly IReadOnlyDictionary<Type, CastingComparer> comparers;
         private readonly IReadOnlyDictionary<Type, CustomCopy> copyers;
@@ -56,6 +57,7 @@
                 foreach (var comparer in comparers)
                 {
                     this.equalByComparers[comparer.Key] = new ExplicitEqualByComparer(comparer.Value);
+                    this.rootEqualByComparers[comparer.Key] = new ExplicitEqualByComparer(comparer.Value);
                 }
             }
         }
@@ -155,7 +157,9 @@
         internal EqualByComparer GetEqualByComparer(Type type, bool checkReferenceHandling)
         {
             Debug.Assert(type != null, "type != null");
-            return this.equalByComparers.GetOrAdd(type, t => Create());
+            return checkReferenceHandling
+                ? this.rootEqualByComparers.GetOrAdd(type, _ => Create())
+                : this.equalByComparers.GetOrAdd(type, t => Create());
 
             EqualByComparer Create()
             {
