@@ -1,12 +1,14 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net461</TargetFrameworks>
+    <TargetFrameworks>net472</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <CodeAnalysisRuleSet>Gu.State.Benchmarks.ruleset</CodeAnalysisRuleSet>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Gu.State\Gu.State.csproj" />
   </ItemGroup>
+  
   <Import Project="..\.paket\Paket.Restore.targets" />
 </Project>
