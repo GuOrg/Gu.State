@@ -94,10 +94,7 @@ namespace Gu.State
                 return true;
             }
 
-            internal static bool KeysAndValuesEquals(
-                IReadOnlyDictionary<TKey, TValue> x,
-                IReadOnlyDictionary<TKey, TValue> y,
-                Func<TValue, TValue, bool> compareItem)
+            internal static bool KeysAndValuesEquals(IReadOnlyDictionary<TKey, TValue> x, IReadOnlyDictionary<TKey, TValue> y, Func<TValue, TValue, bool> compareItem)
             {
                 foreach (var key in x.Keys)
                 {

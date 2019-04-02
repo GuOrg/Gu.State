@@ -58,16 +58,10 @@ namespace Gu.State
                 }
 
                 var comparer = settings.GetEqualByComparer(typeof(T), checkReferenceHandling: true);
-                return ItemsEquals(x, y, (xi, yi) => comparer.Equals(xi, yi, settings, referencePairs), xi => xi.GetHashCode());
-            }
-
-            private static bool ItemsEquals(IReadOnlyCollection<T> x, IReadOnlyCollection<T> y, Func<T, T, bool> compare, Func<T, int> getHashCode)
-            {
-                using (var borrow = HashSetPool<T>.Borrow(compare, getHashCode))
+                using (var borrow = HashSetPool<T>.Borrow((xi, yi) => comparer.Equals(xi, yi, settings, referencePairs), xi => xi.GetHashCode()))
                 {
                     borrow.Value.UnionWith(x);
-                    var result = borrow.Value.SetEquals(y);
-                    return result;
+                    return borrow.Value.SetEquals(y);
                 }
             }
         }
