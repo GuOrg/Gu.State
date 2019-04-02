@@ -2,7 +2,6 @@
 {
     using System;
     using System.Linq;
-    using System.Reflection;
 
     internal static class ComplexTypeEqualByComparer
     {
@@ -15,7 +14,7 @@
             return true;
         }
 
-        private class Comparer<T> : EqualByComparer
+        private class Comparer<T> : EqualByComparer<T>
         {
             private readonly ImmutableArray<MemberEqualByComparer> memberComparers;
 
@@ -24,14 +23,7 @@
                 this.memberComparers = memberComparers;
             }
 
-            public override bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs)
-            {
-                return TryGetEitherNullEquals(x, y, out var result)
-                    ? result
-                    : this.Equals((T)x, (T)y, settings, referencePairs);
-            }
-
-            private bool Equals(T x, T y, MemberSettings settings, ReferencePairCollection referencePairs)
+            public override bool Equals(T x, T y, MemberSettings settings, ReferencePairCollection referencePairs)
             {
                 if (referencePairs != null &&
                     referencePairs.Add(x, y) == false)

@@ -36,7 +36,7 @@ namespace Gu.State
             return false;
         }
 
-        private class Comparer<T> : EqualByComparer
+        private class Comparer<T> : EqualByComparer<IReadOnlyList<T>>
         {
             public static Comparer<T> Default = new Comparer<T>();
 
@@ -44,14 +44,7 @@ namespace Gu.State
             {
             }
 
-            public override bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs)
-            {
-                return TryGetEitherNullEquals(x, y, out var result)
-                    ? result
-                    : this.Equals((IReadOnlyList<T>)x, (IReadOnlyList<T>)y, settings, referencePairs);
-            }
-
-            private bool Equals(IReadOnlyList<T> x, IReadOnlyList<T> y, MemberSettings settings, ReferencePairCollection referencePairs)
+            public override bool Equals(IReadOnlyList<T> x, IReadOnlyList<T> y, MemberSettings settings, ReferencePairCollection referencePairs)
             {
                 if (x.Count != y.Count)
                 {
@@ -71,7 +64,7 @@ namespace Gu.State
             }
         }
 
-        private class ListComparer<T> : EqualByComparer
+        private class ListComparer<T> : EqualByComparer<List<T>>
         {
             public static ListComparer<T> Default = new ListComparer<T>();
 
@@ -79,14 +72,7 @@ namespace Gu.State
             {
             }
 
-            public override bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs)
-            {
-                return TryGetEitherNullEquals(x, y, out var result)
-                    ? result
-                    : this.Equals((List<T>)x, (List<T>)y, settings, referencePairs);
-            }
-
-            private bool Equals(List<T> x, List<T> y, MemberSettings settings, ReferencePairCollection referencePairs)
+            public override bool Equals(List<T> x, List<T> y, MemberSettings settings, ReferencePairCollection referencePairs)
             {
                 if (x.Count != y.Count)
                 {
@@ -106,7 +92,7 @@ namespace Gu.State
             }
         }
 
-        private class ArrayComparer<T> : EqualByComparer
+        private class ArrayComparer<T> : EqualByComparer<T[]>
         {
             public static ArrayComparer<T> Default = new ArrayComparer<T>();
 
@@ -114,14 +100,7 @@ namespace Gu.State
             {
             }
 
-            public override bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs)
-            {
-                return TryGetEitherNullEquals(x, y, out var result)
-                    ? result
-                    : this.Equals((T[])x, (T[])y, settings, referencePairs);
-            }
-
-            private bool Equals(T[] x, T[] y, MemberSettings settings, ReferencePairCollection referencePairs)
+            public override bool Equals(T[] x, T[] y, MemberSettings settings, ReferencePairCollection referencePairs)
             {
                 if (x.Length != y.Length)
                 {

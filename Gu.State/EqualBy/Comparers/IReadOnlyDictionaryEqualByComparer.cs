@@ -26,7 +26,7 @@ namespace Gu.State
             return false;
         }
 
-        private class Comparer<TKey, TValue> : EqualByComparer
+        private class Comparer<TKey, TValue> : EqualByComparer<IReadOnlyDictionary<TKey, TValue>>
         {
             public static readonly Comparer<TKey, TValue> Default = new Comparer<TKey, TValue>();
 
@@ -34,18 +34,7 @@ namespace Gu.State
             {
             }
 
-            /// <inheritdoc />
-            public override bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs)
-            {
-                if (TryGetEitherNullEquals(x, y, out var result))
-                {
-                    return result;
-                }
-
-                return Equals((IReadOnlyDictionary<TKey, TValue>)x, (IReadOnlyDictionary<TKey, TValue>)y, settings, referencePairs);
-            }
-
-            private static bool Equals(IReadOnlyDictionary<TKey, TValue> x, IReadOnlyDictionary<TKey, TValue> y, MemberSettings settings, ReferencePairCollection referencePairs)
+            public override bool Equals(IReadOnlyDictionary<TKey, TValue> x, IReadOnlyDictionary<TKey, TValue> y, MemberSettings settings, ReferencePairCollection referencePairs)
             {
                 if (x.Count != y.Count)
                 {

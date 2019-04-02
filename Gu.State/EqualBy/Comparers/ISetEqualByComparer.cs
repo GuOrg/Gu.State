@@ -56,7 +56,7 @@ namespace Gu.State
             }
         }
 
-        private class Comparer<T> : EqualByComparer
+        private class Comparer<T> : EqualByComparer<IReadOnlyCollection<T>>
         {
             public static readonly Comparer<T> Default = new Comparer<T>();
 
@@ -64,18 +64,7 @@ namespace Gu.State
             {
             }
 
-            /// <inheritdoc />
-            public override bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs)
-            {
-                if (TryGetEitherNullEquals(x, y, out var result))
-                {
-                    return result;
-                }
-
-                return Equals((IReadOnlyCollection<T>)x, (IReadOnlyCollection<T>)y, settings, referencePairs);
-            }
-
-            private static bool Equals(IReadOnlyCollection<T> x, IReadOnlyCollection<T> y, MemberSettings settings, ReferencePairCollection referencePairs)
+            public override bool Equals(IReadOnlyCollection<T> x, IReadOnlyCollection<T> y, MemberSettings settings, ReferencePairCollection referencePairs)
             {
                 if (x.Count != y.Count)
                 {
