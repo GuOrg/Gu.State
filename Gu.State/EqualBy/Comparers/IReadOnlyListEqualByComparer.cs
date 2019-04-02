@@ -10,26 +10,21 @@ namespace Gu.State
         {
             if (type.Implements(typeof(IReadOnlyList<>)))
             {
-                var itemType = type.GetItemType();
-
-                // resolve comparer so we throw as early as possible if there are errors.
-                _ = settings.GetEqualByComparer(itemType, checkReferenceHandling: true);
-
                 if (type.IsArray)
                 {
-                    comparer = (EqualByComparer)typeof(ArrayComparer<>).MakeGenericType(itemType)
+                    comparer = (EqualByComparer)typeof(ArrayComparer<>).MakeGenericType(type.GetItemType())
                                                                   .GetField(nameof(ArrayComparer<int>.Default), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
                                                                   .GetValue(null);
                 }
                 else if (type.GetGenericTypeDefinition() == typeof(List<>))
                 {
-                    comparer = (EqualByComparer)typeof(ListComparer<>).MakeGenericType(itemType)
+                    comparer = (EqualByComparer)typeof(ListComparer<>).MakeGenericType(type.GetItemType())
                                                                       .GetField(nameof(ListComparer<int>.Default), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
                                                                       .GetValue(null);
                 }
                 else
                 {
-                    comparer = (EqualByComparer)typeof(Comparer<>).MakeGenericType(itemType)
+                    comparer = (EqualByComparer)typeof(Comparer<>).MakeGenericType(type.GetItemType())
                                                                   .GetField(nameof(Comparer<int>.Default), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
                                                                   .GetValue(null);
                 }

@@ -10,11 +10,7 @@ namespace Gu.State
         {
             if (type.Implements(typeof(ISet<>)))
             {
-                var itemType = type.GetItemType();
-
-                // resolve comparer so we throw as early as possible if there are errors.
-                _ = settings.GetEqualByComparer(itemType, checkReferenceHandling: true);
-                comparer = (EqualByComparer)typeof(Comparer<>).MakeGenericType(itemType)
+                comparer = (EqualByComparer)typeof(Comparer<>).MakeGenericType(type.GetItemType())
                                                               .GetField(nameof(Comparer<int>.Default), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
                                                               .GetValue(null);
                 return true;

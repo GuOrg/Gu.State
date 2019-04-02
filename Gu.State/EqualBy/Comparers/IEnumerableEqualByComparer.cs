@@ -10,11 +10,7 @@ namespace Gu.State
         {
             if (type.Implements(typeof(IEnumerable<>)))
             {
-                var itemType = type.GetItemType();
-
-                // resolve comparer so we throw as early as possible if there are errors.
-                _ = settings.GetEqualByComparer(itemType, checkReferenceHandling: true);
-                comparer = (EqualByComparer)typeof(Comparer<>).MakeGenericType(itemType)
+                comparer = (EqualByComparer)typeof(Comparer<>).MakeGenericType(type.GetItemType())
                                                               .GetField(nameof(Comparer<int>.Default), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
                                                               .GetValue(null);
                 return true;
@@ -44,7 +40,7 @@ namespace Gu.State
                 return Equals((IEnumerable<T>)x, (IEnumerable<T>)x, settings, referencePairs);
             }
 
-            private static bool ItemsEquals(IEnumerable<T> x, IEnumerable<T> y, MemberSettings settings, ReferencePairCollection referencePairs)
+            private static bool Equals(IEnumerable<T> x, IEnumerable<T> y, MemberSettings settings, ReferencePairCollection referencePairs)
             {
                 var comparer = settings.GetEqualByComparer(typeof(T), checkReferenceHandling: true);
                 using (var xe = x.GetEnumerator())

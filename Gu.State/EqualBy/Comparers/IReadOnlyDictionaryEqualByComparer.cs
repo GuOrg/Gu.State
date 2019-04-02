@@ -16,14 +16,7 @@ namespace Gu.State
                 var iDict = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IReadOnlyDictionary<,>)
                     ? type
                     : type.GetInterface("IReadOnlyDictionary`2");
-                var keyType = iDict.GenericTypeArguments[0];
-                // resolve comparer so we throw as early as possible if there are errors.
-                _ = settings.GetEqualByComparer(keyType, checkReferenceHandling: true);
-                var valueType = iDict.GenericTypeArguments[1];
-                // resolve comparer so we throw as early as possible if there are errors.
-                _ = settings.GetEqualByComparer(valueType, checkReferenceHandling: true);
-                //// ReSharper disable once PossibleNullReferenceException nope, not here
-                comparer = (EqualByComparer)typeof(Comparer<,>).MakeGenericType(keyType, valueType)
+                comparer = (EqualByComparer)typeof(Comparer<,>).MakeGenericType(iDict.GenericTypeArguments[0], iDict.GenericTypeArguments[1])
                                                                .GetField(nameof(Comparer<int, int>.Default), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
                                                                .GetValue(null);
                 return true;
