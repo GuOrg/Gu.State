@@ -16,9 +16,14 @@
 
         public override bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs)
         {
-            return TryGetEitherNullEquals(x, y, out var result)
-                ? result
-                : this.comparer.Value.Equals(this.getterAndSetter.GetValue(x), this.getterAndSetter.GetValue(y), settings, referencePairs);
+            var xv = this.getterAndSetter.GetValue(x);
+            var yv = this.getterAndSetter.GetValue(y);
+            if (TryGetEitherNullEquals(xv, yv, out var result))
+            {
+                return result;
+            }
+
+            return this.comparer.Value.Equals(xv, yv, settings, referencePairs);
         }
 
         internal static MemberEqualByComparer Create(MemberInfo member, MemberSettings settings)
