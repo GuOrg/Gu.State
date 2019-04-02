@@ -678,11 +678,15 @@ namespace Gu.State.Tests.EqualByTests
         public class Derived1 : BaseClass
         {
             public double Derived1Value { get; set; }
+
+            public override string ToString() => $"{this.GetType().Name} {{ BaseValue: {this.BaseValue}, Derived1Value: {this.Derived1Value} }}";
         }
 
         public class Derived2 : BaseClass
         {
             public double Derived2Value { get; set; }
+
+            public override string ToString() => $"{this.GetType().Name} {{ BaseValue: {this.BaseValue}, Derived2Value: {this.Derived2Value} }}";
         }
     }
 }

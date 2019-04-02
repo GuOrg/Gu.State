@@ -98,7 +98,16 @@
 
         public override IEnumerable<MemberInfo> GetMembers(Type type)
         {
-            return type.GetFields(this.BindingFlags);
+            while (type != null &&
+                   type != typeof(object))
+            {
+                foreach (var field in type.GetFields(this.BindingFlags))
+                {
+                    yield return field;
+                }
+
+                type = type.BaseType;
+            }
         }
 
         public override bool IsIgnoringMember(MemberInfo member)
