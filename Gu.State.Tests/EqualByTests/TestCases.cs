@@ -80,7 +80,8 @@ namespace Gu.State.Tests.EqualByTests
 
         public static readonly TestCaseData[] WhenNotEqual =
         {
-            new TestCaseData(null, 1),
+            new TestCaseData(null, (object)1),
+            new TestCaseData( (object)1,  (object)2),
             new TestCaseData(1, 2),
             new TestCaseData((int?)null, (int?)1),
             new TestCaseData((int?)null, (int?)1),
@@ -99,6 +100,8 @@ namespace Gu.State.Tests.EqualByTests
             new TestCaseData(new With<int?>(1), new With<int?>(2)),
             new TestCaseData(new With<int?>(1), new With<int?>(null)),
             new TestCaseData(new With<int>(1), (With<int>)null),
+            new TestCaseData(new With<object>(1), new With<object>(2)),
+            new TestCaseData(new With<object>(1), new With<object>(null)),
 
             new TestCaseData(new With<StringComparison>(StringComparison.Ordinal), new With<StringComparison>(StringComparison.OrdinalIgnoreCase)),
             new TestCaseData(new With<StringComparison?>(StringComparison.Ordinal), new With<StringComparison?>(StringComparison.OrdinalIgnoreCase)),

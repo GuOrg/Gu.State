@@ -54,9 +54,9 @@
         private class MemberEqualByComparer : EqualByComparer
         {
             private readonly IGetterAndSetter getterAndSetter;
-            private readonly EqualByComparer comparer;
+            private readonly Lazy<EqualByComparer> comparer;
 
-            private MemberEqualByComparer(IGetterAndSetter getterAndSetter, EqualByComparer comparer)
+            private MemberEqualByComparer(IGetterAndSetter getterAndSetter, Lazy<EqualByComparer> comparer)
             {
                 this.getterAndSetter = getterAndSetter;
                 this.comparer = comparer;
@@ -66,13 +66,13 @@
             {
                 return TryGetEitherNullEquals(x, y, out var result)
                     ? result
-                    : this.comparer.Equals(this.getterAndSetter.GetValue(x), this.getterAndSetter.GetValue(y), settings, referencePairs);
+                    : this.comparer.Value.Equals(this.getterAndSetter.GetValue(x), this.getterAndSetter.GetValue(y), settings, referencePairs);
             }
 
             internal static MemberEqualByComparer Create(MemberInfo member, MemberSettings settings)
             {
                 var getterAndSetter = settings.GetOrCreateGetterAndSetter(member);
-                return new MemberEqualByComparer(getterAndSetter, GetComparer());
+                return new MemberEqualByComparer(getterAndSetter, new Lazy<EqualByComparer>(() => GetComparer()));
 
                 EqualByComparer GetComparer()
                 {

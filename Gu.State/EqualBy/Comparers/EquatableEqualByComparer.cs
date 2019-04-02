@@ -43,7 +43,9 @@
 
             public override bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs)
             {
-                return this.comparer.Equals((T)x, (T)y);
+                return TryGetEitherNullEquals(x, y, out var result)
+                    ? result
+                    : this.comparer.Equals((T)x, (T)y);
             }
         }
 
