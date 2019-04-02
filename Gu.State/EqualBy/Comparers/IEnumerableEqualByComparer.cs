@@ -4,11 +4,11 @@ namespace Gu.State
     using System.Collections.Generic;
     using System.Reflection;
 
-    internal static class ISetEqualByComparer
+    internal static class IEnumerableEqualByComparer
     {
         internal static bool TryGet(Type type, MemberSettings settings, out EqualByComparer comparer)
         {
-            if (type.Implements(typeof(ISet<>)))
+            if (type.Implements(typeof(IEnumerable<>)))
             {
                 var itemType = type.GetItemType();
 
@@ -26,6 +26,7 @@ namespace Gu.State
 
         private class Comparer<T> : EqualByComparer
         {
+            /// <summary>The default instance.</summary>
             public static readonly Comparer<T> Default = new Comparer<T>();
 
             private Comparer()
@@ -40,29 +41,33 @@ namespace Gu.State
                     return result;
                 }
 
-                return Equals((IReadOnlyCollection<T>)x, (IReadOnlyCollection<T>)y, settings, referencePairs);
+                return Equals((IEnumerable<T>)x, (IEnumerable<T>)x, settings, referencePairs);
             }
 
-            private static bool Equals(IReadOnlyCollection<T> x, IReadOnlyCollection<T> y, MemberSettings settings, ReferencePairCollection referencePairs)
+            private static bool ItemsEquals(IEnumerable<T> x, IEnumerable<T> y, MemberSettings settings, ReferencePairCollection referencePairs)
             {
-                if (x.Count != y.Count)
-                {
-                    return false;
-                }
-
-                if (x is HashSet<T> xs &&
-                    typeof(T).IsSealed &&
-                    ReferenceEquals(xs.Comparer, EqualityComparer<T>.Default) &&
-                    settings.IsEquatable(x.GetType().GetItemType()))
-                {
-                    return xs.SetEquals(y);
-                }
-
                 var comparer = settings.GetEqualByComparer(typeof(T), checkReferenceHandling: true);
-                using (var borrow = HashSetPool<T>.Borrow((xi, yi) => comparer.Equals(xi, yi, settings, referencePairs), xi => xi.GetHashCode()))
+                using (var xe = x.GetEnumerator())
                 {
-                    borrow.Value.UnionWith(x);
-                    return borrow.Value.SetEquals(y);
+                    using (var ye = y.GetEnumerator())
+                    {
+                        while (true)
+                        {
+                            var xn = xe.MoveNext();
+                            var yn = ye.MoveNext();
+                            if (xn && yn)
+                            {
+                                if (!comparer.Equals(xe.Current, ye.Current, settings, referencePairs))
+                                {
+                                    return false;
+                                }
+
+                                continue;
+                            }
+
+                            return !xn && !yn;
+                        }
+                    }
                 }
             }
         }

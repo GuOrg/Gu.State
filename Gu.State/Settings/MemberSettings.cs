@@ -172,7 +172,7 @@
                     IReadOnlyListEqualByComparer.TryGet(type, this, out comparer) ||
                     ArrayEqualByComparer.TryGet(type, this, out comparer) ||
                     IReadOnlyDictionaryEqualByComparer.TryGet(type, this, out comparer) ||
-                    //EnumerableEqualByComparer.TryGet(type, this, out comparer) ||
+                    IEnumerableEqualByComparer.TryGet(type, this, out comparer) ||
                     ComplexTypeEqualByComparer.TryGet(type, this, out comparer))
                 {
                     return comparer;
