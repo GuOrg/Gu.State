@@ -72,7 +72,25 @@
             internal static MemberEqualByComparer Create(MemberInfo member, MemberSettings settings)
             {
                 var getterAndSetter = settings.GetOrCreateGetterAndSetter(member);
-                return new MemberEqualByComparer(getterAndSetter, settings.GetEqualByComparer(getterAndSetter.ValueType));
+                return new MemberEqualByComparer(getterAndSetter, GetComparer());
+
+                EqualByComparer GetComparer()
+                {
+                    if (!member.MemberType().IsValueType)
+                    {
+                        switch (settings.ReferenceHandling)
+                        {
+                            case ReferenceHandling.Throw:
+                                throw new InvalidOperationException($"Member {member} is a reference type {member.MemberType().PrettyName()} and ReferenceHandling.Throw is used.");
+                            case ReferenceHandling.References:
+                                return ReferenceEqualByComparer.Default;
+                            case ReferenceHandling.Structural:
+                                break;
+                        }
+                    }
+
+                    return settings.GetEqualByComparer(getterAndSetter.ValueType);
+                }
             }
         }
     }
