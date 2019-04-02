@@ -5,13 +5,15 @@
 
     internal class MemberEqualByComparer : EqualByComparer
     {
-        private readonly IGetterAndSetter getterAndSetter;
-        private readonly Lazy<EqualByComparer> comparer;
+        private static readonly Lazy<EqualByComparer> EmptyLazy = new Lazy<EqualByComparer>(() => null);
 
-        private MemberEqualByComparer(IGetterAndSetter getterAndSetter, Lazy<EqualByComparer> comparer)
+        private readonly IGetterAndSetter getterAndSetter;
+        private readonly Lazy<EqualByComparer> lazyComparer;
+
+        private MemberEqualByComparer(IGetterAndSetter getterAndSetter, Lazy<EqualByComparer> lazyComparer)
         {
             this.getterAndSetter = getterAndSetter;
-            this.comparer = comparer;
+            this.lazyComparer = lazyComparer;
         }
 
         public override bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs)
@@ -23,14 +25,20 @@
                 return result;
             }
 
-            return this.comparer.Value.Equals(xv, yv, settings, referencePairs);
+            var comparer = this.lazyComparer.Value ?? settings.GetEqualByComparer(xv.GetType());
+            return comparer.Equals(xv, yv, settings, referencePairs);
         }
 
         internal static MemberEqualByComparer Create(MemberInfo member, MemberSettings settings)
         {
             var getterAndSetter = settings.GetOrCreateGetterAndSetter(member);
 
-            return new MemberEqualByComparer(getterAndSetter, new Lazy<EqualByComparer>(() => settings.GetEqualByComparer(getterAndSetter.ValueType)));
+            if (getterAndSetter.ValueType.IsSealed)
+            {
+                return new MemberEqualByComparer(getterAndSetter, new Lazy<EqualByComparer>(() => settings.GetEqualByComparer(getterAndSetter.ValueType)));
+            }
+
+            return new MemberEqualByComparer(getterAndSetter, EmptyLazy);
         }
     }
 }
