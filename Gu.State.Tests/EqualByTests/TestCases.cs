@@ -150,61 +150,26 @@ namespace Gu.State.Tests.EqualByTests
 
         public static readonly TestCaseData[] WhenNotEqualStructural =
         {
-            new TestCaseData(
-                new With<int[]>(new[] { 1, 2, 3 }),
-                new With<int[]>(new[] { 1, 2, 4 })),
-            new TestCaseData(
-                new With<int[]>(new[] { 1, 2, 3 }),
-                new With<int[]>(new[] { 0, 2, 3 })),
-            new TestCaseData(
-                new With<int[]>(new[] { 1, 2 }),
-                new With<int[]>(new[] { 1, 2, 3 })),
-            new TestCaseData(
-                new With<int[]>(new[] { 1, 2 }),
-                new With<int[]>(null)),
-            new TestCaseData(
-                new With<int[]>(new int[0]),
-                new With<int[]>(null)),
+            new TestCaseData(new With<int[]>(new[] { 1, 2, 3 }), new With<int[]>(new[] { 1, 2, 4 })),
+            new TestCaseData(new With<int[]>(new[] { 1, 2, 3 }), new With<int[]>(new[] { 0, 2, 3 })),
+            new TestCaseData(new With<int[]>(new[] { 1, 2 }), new With<int[]>(new[] { 1, 2, 3 })),
+            new TestCaseData(new With<int[]>(new[] { 1, 2 }), new With<int[]>(null)),
+            new TestCaseData(new With<int[]>(new int[0]), new With<int[]>(null)),
 
-            new TestCaseData(
-                new With<List<int>>(new List<int> { 1, 2, 3 }),
-                new With<List<int>>(new List<int> { 1, 2, 4 })),
-            new TestCaseData(
-                new With<List<int>>(new List<int> { 1, 2, 3 }),
-                new With<List<int>>(new List<int> { 0, 2, 3 })),
-            new TestCaseData(
-                new With<List<int>>(new List<int> { 1, 2 }),
-                new With<List<int>>(new List<int> { 1, 2, 3 })),
-            new TestCaseData(
-                new With<List<int>>(new List<int> { 1, 2 }),
-                new With<List<int>>(null)),
-            new TestCaseData(
-                new With<List<int>>(new List<int>()),
-                new With<List<int>>(null)),
+            new TestCaseData(new With<List<int>>(new List<int> { 1, 2, 3 }), new With<List<int>>(new List<int> { 1, 2, 4 })),
+            new TestCaseData(new With<List<int>>(new List<int> { 1, 2, 3 }), new With<List<int>>(new List<int> { 0, 2, 3 })),
+            new TestCaseData(new With<List<int>>(new List<int> { 1, 2 }), new With<List<int>>(new List<int> { 1, 2, 3 })),
+            new TestCaseData(new With<List<int>>(new List<int> { 1, 2 }), new With<List<int>>(null)),
+            new TestCaseData(new With<List<int>>(new List<int>()), new With<List<int>>(null)),
 
-            new TestCaseData(
-                new With<IReadOnlyList<int>>(new[] { 1, 2, 3 }),
-                new With<IReadOnlyList<int>>(new[] { 1, 2, 4 })),
-            new TestCaseData(
-                new With<IReadOnlyList<int>>(new[] { 1, 2, 3 }),
-                new With<IReadOnlyList<int>>(new[] { 0, 2, 3 })),
-            new TestCaseData(
-                new With<IReadOnlyList<int>>(new[] { 1, 2 }),
-                new With<IReadOnlyList<int>>(new[] { 1, 2, 3 })),
-            new TestCaseData(
-                new With<IReadOnlyList<int>>(new[] { 1, 2 }),
-                new With<IReadOnlyList<int>>(null)),
-            new TestCaseData(
-                new With<IReadOnlyList<int>>(new int[0]),
-                new With<IReadOnlyList<int>>(null)),
+            new TestCaseData(new With<IReadOnlyList<int>>(new[] { 1, 2, 3 }), new With<IReadOnlyList<int>>(new[] { 1, 2, 4 })),
+            new TestCaseData(new With<IReadOnlyList<int>>(new[] { 1, 2, 3 }), new With<IReadOnlyList<int>>(new[] { 0, 2, 3 })),
+            new TestCaseData(new With<IReadOnlyList<int>>(new[] { 1, 2 }), new With<IReadOnlyList<int>>(new[] { 1, 2, 3 })),
+            new TestCaseData(new With<IReadOnlyList<int>>(new[] { 1, 2 }), new With<IReadOnlyList<int>>(null)),
+            new TestCaseData(new With<IReadOnlyList<int>>(new int[0]), new With<IReadOnlyList<int>>(null)),
 
-            new TestCaseData(
-                new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = 2 }),
-                new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = -2 })),
-            new TestCaseData(
-                new With<BaseClass>(new Derived1()),
-                new With<BaseClass>(new Derived2())),
-
+            new TestCaseData(new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = 2 }), new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = -2 })),
+            new TestCaseData(new With<BaseClass>(new Derived1()), new With<BaseClass>(new Derived2())),
         };
     }
 }
