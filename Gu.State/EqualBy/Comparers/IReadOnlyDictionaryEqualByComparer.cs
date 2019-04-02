@@ -52,17 +52,8 @@ namespace Gu.State
                     return false;
                 }
 
-                var comparer = settings.GetEqualByComparer(typeof(TKey), checkReferenceHandling: true);
-                using (var borrow = HashSetPool<TKey>.Borrow((xi, yi) => comparer.Equals(xi, yi, settings, referencePairs), xi => xi.GetHashCode()))
-                {
-                    borrow.Value.UnionWith(x.Keys);
-                    if (!borrow.Value.SetEquals(y.Keys))
-                    {
-                        return false;
-                    }
-                }
-
-                return ValuesEquals(x, y, settings, referencePairs);
+                return ISetEqualByComparer.SetEquals(x.Keys, y.Keys,settings, referencePairs) &&
+                       ValuesEquals(x, y, settings, referencePairs);
             }
 
             private static bool ValuesEquals(IReadOnlyDictionary<TKey, TValue> x, IReadOnlyDictionary<TKey, TValue> y, MemberSettings settings, ReferencePairCollection referencePairs)

@@ -3,6 +3,7 @@ namespace Gu.State
     using System;
     using System.Collections.Generic;
     using System.Reflection;
+    using System.Runtime.CompilerServices;
 
     internal static class ISetEqualByComparer
     {
@@ -18,6 +19,18 @@ namespace Gu.State
 
             comparer = null;
             return false;
+        }
+
+        internal static bool SetEquals<T>(IEnumerable<T> xs, IEnumerable<T> ys, MemberSettings settings, ReferencePairCollection referencePairs)
+        {
+            var comparer = settings.GetEqualByComparer(typeof(T), checkReferenceHandling: true);
+            using (var borrowed = HashSetPool<T>.Borrow(
+                (x, y) => comparer.Equals(x, y, settings, referencePairs),
+                x => RuntimeHelpers.GetHashCode(x)))
+            {
+                borrowed.Value.UnionWith(xs);
+                return borrowed.Value.SetEquals(ys);
+            }
         }
 
         private class Comparer<T> : EqualByComparer
@@ -54,12 +67,7 @@ namespace Gu.State
                     return xs.SetEquals(y);
                 }
 
-                var comparer = settings.GetEqualByComparer(typeof(T), checkReferenceHandling: true);
-                using (var borrow = HashSetPool<T>.Borrow((xi, yi) => comparer.Equals(xi, yi, settings, referencePairs), xi => xi.GetHashCode()))
-                {
-                    borrow.Value.UnionWith(x);
-                    return borrow.Value.SetEquals(y);
-                }
+                return SetEquals(x, y, settings, referencePairs);
             }
         }
     }
