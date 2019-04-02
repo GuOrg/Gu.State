@@ -19,7 +19,8 @@
 
         internal static EqualByComparer Create(Type type, MemberSettings settings)
         {
-            if (EquatableEqualByComparer.TryGet(type, settings, out var comparer) ||
+            if (NullableEqualByComparer.TryGet(type, settings, out var comparer) ||
+                EquatableEqualByComparer.TryGet(type, settings, out comparer) ||
                 ISetEqualByComparer.TryGet(type, settings, out comparer) ||
                 IReadOnlyListEqualByComparer.TryGet(type, settings, out comparer) ||
                 ArrayEqualByComparer.TryGet(type, settings, out comparer) ||
