@@ -43,7 +43,7 @@ namespace Gu.State
                 return Equals((IReadOnlyCollection<T>)x, (IReadOnlyCollection<T>)y, settings, referencePairs);
             }
 
-            private static bool Equals<T>(IReadOnlyCollection<T> x, IReadOnlyCollection<T> y, MemberSettings settings, ReferencePairCollection referencePairs)
+            private static bool Equals(IReadOnlyCollection<T> x, IReadOnlyCollection<T> y, MemberSettings settings, ReferencePairCollection referencePairs)
             {
                 if (x.Count != y.Count)
                 {
@@ -52,6 +52,7 @@ namespace Gu.State
 
                 if (x is HashSet<T> xs &&
                     typeof(T).IsSealed &&
+                    ReferenceEquals(xs.Comparer, EqualityComparer<T>.Default) &&
                     settings.IsEquatable(x.GetType().GetItemType()))
                 {
                     return xs.SetEquals(y);
