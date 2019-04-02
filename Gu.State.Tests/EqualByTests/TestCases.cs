@@ -142,7 +142,7 @@ namespace Gu.State.Tests.EqualByTests
 
             new TestCaseData(new[] { 1 }.Select(x => x * x), Enumerable.Empty<int>().Select(x => x * x)),
             new TestCaseData("1,2".Split(',').Select(int.Parse), "1,-2".Split(',').Select(int.Parse)),
-            new TestCaseData("1,2".Split(',').Select(int.Parse), "1,2".Split(',').Select(int.Parse)),
+            new TestCaseData("1,2".Split(',').Select(int.Parse), "-1,2".Split(',').Select(int.Parse)),
             //new TestCaseData(
             //    new With<Point>(new Point(1, 2)),
             //    new With<Point>(new Point(1, 3))),

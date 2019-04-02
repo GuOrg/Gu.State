@@ -37,7 +37,7 @@ namespace Gu.State
                     return result;
                 }
 
-                return Equals((IEnumerable<T>)x, (IEnumerable<T>)x, settings, referencePairs);
+                return Equals((IEnumerable<T>)x, (IEnumerable<T>)y, settings, referencePairs);
             }
 
             private static bool Equals(IEnumerable<T> x, IEnumerable<T> y, MemberSettings settings, ReferencePairCollection referencePairs)
@@ -47,22 +47,23 @@ namespace Gu.State
                 {
                     using (var ye = y.GetEnumerator())
                     {
-                        while (true)
+                        bool xn;
+                        bool yn;
+                        do
                         {
-                            var xn = xe.MoveNext();
-                            var yn = ye.MoveNext();
+                            xn = xe.MoveNext();
+                            yn = ye.MoveNext();
                             if (xn && yn)
                             {
                                 if (!comparer.Equals(xe.Current, ye.Current, settings, referencePairs))
                                 {
                                     return false;
                                 }
-
-                                continue;
                             }
-
-                            return !xn && !yn;
                         }
+                        while (xn && yn);
+
+                        return xn == yn;
                     }
                 }
             }
