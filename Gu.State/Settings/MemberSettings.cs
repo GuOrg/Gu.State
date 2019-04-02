@@ -26,7 +26,7 @@
         /// <param name="comparers">A map of types with custom comparers. Can be null.</param>
         /// <param name="copyers">A map of custom copy implementations for types. Can be null.</param>
         /// <param name="referenceHandling">How reference values are handled.</param>
-        /// <param name="bindingFlags">The bindingflags used for getting members.</param>
+        /// <param name="bindingFlags">The <see cref="BindingFlags"/> used for getting members.</param>
         protected MemberSettings(
             IEnumerable<MemberInfo> ignoredMembers,
             IEnumerable<Type> ignoredTypes,
@@ -38,6 +38,11 @@
         {
             this.ReferenceHandling = referenceHandling;
             this.BindingFlags = bindingFlags;
+            this.comparers = comparers;
+            this.copyers = copyers;
+            this.knownTypes = KnownTypes.Create(ignoredTypes);
+            this.immutableTypes = ImmutableSet<Type>.Create(immutableTypes);
+
             if (ignoredMembers != null)
             {
                 foreach (var ignoredMember in ignoredMembers)
@@ -46,10 +51,13 @@
                 }
             }
 
-            this.knownTypes = KnownTypes.Create(ignoredTypes);
-            this.immutableTypes = ImmutableSet<Type>.Create(immutableTypes);
-            this.comparers = comparers;
-            this.copyers = copyers;
+            if (comparers != null)
+            {
+                foreach (var comparer in comparers)
+                {
+                    this.equalByComparers[comparer.Key] = new ExplicitEqualByComparer(comparer.Value);
+                }
+            }
         }
 
         /// <summary>Gets the <see cref="BindingFlags"/> used for getting members.</summary>
@@ -153,8 +161,7 @@
             {
                 if (checkReferenceHandling &&
                     !type.IsValueType &&
-                    !this.IsEquatable(type) &&
-                    !this.TryGetComparer(type, out _))
+                    !this.IsEquatable(type))
                 {
                     switch (this.ReferenceHandling)
                     {
