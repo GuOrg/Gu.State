@@ -24,9 +24,32 @@ namespace Gu.State
         internal static bool SetEquals<T>(IEnumerable<T> xs, IEnumerable<T> ys, MemberSettings settings, ReferencePairCollection referencePairs)
         {
             var comparer = settings.GetEqualByComparer(typeof(T), checkReferenceHandling: true);
+            if (comparer is ReferenceEqualByComparer)
+            {
+                using (var borrowed = HashSetPool<T>.Borrow(
+                    (x, y) => comparer.Equals(x, y, settings, referencePairs),
+                    x => RuntimeHelpers.GetHashCode(x)))
+                {
+                    borrowed.Value.UnionWith(xs);
+                    return borrowed.Value.SetEquals(ys);
+                }
+            }
+
+            if (typeof(T).IsSealed &&
+                settings.IsEquatable(typeof(T)))
+            {
+                using (var borrowed = HashSetPool<T>.Borrow(
+                    (x, y) => comparer.Equals(x, y, settings, referencePairs),
+                    x => x.GetHashCode()))
+                {
+                    borrowed.Value.UnionWith(xs);
+                    return borrowed.Value.SetEquals(ys);
+                }
+            }
+
             using (var borrowed = HashSetPool<T>.Borrow(
                 (x, y) => comparer.Equals(x, y, settings, referencePairs),
-                x => RuntimeHelpers.GetHashCode(x)))
+                x => 0))
             {
                 borrowed.Value.UnionWith(xs);
                 return borrowed.Value.SetEquals(ys);
