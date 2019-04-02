@@ -1,5 +1,7 @@
 ﻿namespace Gu.State
 {
+    using System;
+
     /// <summary>A comparer that compares by member or index.</summary>
     public abstract class EqualByComparer
     {
@@ -13,11 +15,23 @@
         /// The already compared items. This is used to stop infinite recursion when there are reference loops.
         /// </param>
         /// <returns>True if <paramref name="x"/> and <paramref name="y"/> are equal.</returns>
-        public abstract bool Equals(
-            object x,
-            object y,
-            MemberSettings settings,
-            ReferencePairCollection referencePairs);
+        public abstract bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs);
+
+        internal static EqualByComparer Create(Type type, MemberSettings settings)
+        {
+            if (EquatableEqualByComparer.TryGet(type, settings, out var comparer) ||
+                ISetEqualByComparer.TryGet(type, settings, out comparer) ||
+                IReadOnlyListEqualByComparer.TryGet(type, settings, out comparer) ||
+                ArrayEqualByComparer.TryGet(type, settings, out comparer) ||
+                IReadOnlyDictionaryEqualByComparer.TryGet(type, settings, out comparer) ||
+                IEnumerableEqualByComparer.TryGet(type, settings, out comparer) ||
+                ComplexTypeEqualByComparer.TryGet(type, settings, out comparer))
+            {
+                return comparer;
+            }
+
+            throw Throw.ShouldNeverGetHereException($"Could not find an EqualByComparer<{type.PrettyName()}>");
+        }
 
         /// <summary>Convenience method for checking equality if either or both <paramref name="x"/> and <paramref name="y"/> are null.</summary>
         /// <param name="x">The x value.</param>

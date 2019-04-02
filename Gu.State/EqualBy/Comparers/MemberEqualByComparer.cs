@@ -30,7 +30,7 @@
         {
             var getterAndSetter = settings.GetOrCreateGetterAndSetter(member);
 
-            return new MemberEqualByComparer(getterAndSetter, new Lazy<EqualByComparer>(() => settings.GetEqualByComparer(getterAndSetter.ValueType, checkReferenceHandling: true)));
+            return new MemberEqualByComparer(getterAndSetter, new Lazy<EqualByComparer>(() => settings.GetEqualByComparer(getterAndSetter.ValueType)));
         }
     }
 }

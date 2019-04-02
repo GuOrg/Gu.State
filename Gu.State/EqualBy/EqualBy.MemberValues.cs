@@ -28,7 +28,7 @@
         internal static bool MemberValues<T>(T x, T y, MemberSettings settings, ReferencePairCollection referencePairs)
         {
             Verify.CanEqualByMemberValues(x, y, settings, typeof(EqualBy).Name, settings.EqualByMethodName());
-            return settings.GetEqualByComparer(x?.GetType() ?? y?.GetType() ?? typeof(T), checkReferenceHandling: false)
+            return settings.GetRootEqualByComparer(x?.GetType() ?? y?.GetType() ?? typeof(T))
                            .Equals(x, y, settings, referencePairs);
         }
 

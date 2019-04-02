@@ -154,17 +154,25 @@
         /// <returns>A <see cref="IGetterAndSetter"/>.</returns>
         internal abstract IGetterAndSetter GetOrCreateGetterAndSetter(MemberInfo member);
 
-        internal EqualByComparer GetEqualByComparer(Type type, bool checkReferenceHandling)
+        internal EqualByComparer GetRootEqualByComparer(Type type)
         {
             Debug.Assert(type != null, "type != null");
-            return checkReferenceHandling
-                ? this.rootEqualByComparers.GetOrAdd(type, _ => Create())
-                : this.equalByComparers.GetOrAdd(type, t => Create());
+            return this.rootEqualByComparers.GetOrAdd(type, _ => Create());
 
             EqualByComparer Create()
             {
-                if (checkReferenceHandling &&
-                    !type.IsValueType &&
+                return EqualByComparer.Create(type, this);
+            }
+        }
+
+        internal EqualByComparer GetEqualByComparer(Type type)
+        {
+            Debug.Assert(type != null, "type != null");
+            return this.equalByComparers.GetOrAdd(type, t => Create());
+
+            EqualByComparer Create()
+            {
+                if (!type.IsValueType &&
                     !this.IsEquatable(type))
                 {
                     switch (this.ReferenceHandling)
@@ -178,18 +186,7 @@
                     }
                 }
 
-                if (EquatableEqualByComparer.TryGet(type, this, out var comparer) ||
-                    ISetEqualByComparer.TryGet(type, this, out comparer) ||
-                    IReadOnlyListEqualByComparer.TryGet(type, this, out comparer) ||
-                    ArrayEqualByComparer.TryGet(type, this, out comparer) ||
-                    IReadOnlyDictionaryEqualByComparer.TryGet(type, this, out comparer) ||
-                    IEnumerableEqualByComparer.TryGet(type, this, out comparer) ||
-                    ComplexTypeEqualByComparer.TryGet(type, this, out comparer))
-                {
-                    return comparer;
-                }
-
-                throw Throw.ShouldNeverGetHereException($"Could not find an EqualByComparer<{type.PrettyName()}>");
+                return EqualByComparer.Create(type, this);
             }
         }
     }

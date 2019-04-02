@@ -42,7 +42,7 @@ namespace Gu.State
 
             private static bool Equals(IEnumerable<T> x, IEnumerable<T> y, MemberSettings settings, ReferencePairCollection referencePairs)
             {
-                var comparer = settings.GetEqualByComparer(typeof(T), checkReferenceHandling: true);
+                var comparer = settings.GetEqualByComparer(typeof(T));
                 using (var xe = x.GetEnumerator())
                 {
                     using (var ye = y.GetEnumerator())

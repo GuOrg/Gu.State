@@ -23,7 +23,7 @@ namespace Gu.State
 
         internal static bool SetEquals<T>(IEnumerable<T> xs, IEnumerable<T> ys, MemberSettings settings, ReferencePairCollection referencePairs)
         {
-            var comparer = settings.GetEqualByComparer(typeof(T), checkReferenceHandling: true);
+            var comparer = settings.GetEqualByComparer(typeof(T));
             if (comparer is ReferenceEqualByComparer)
             {
                 using (var borrowed = HashSetPool<T>.Borrow(

@@ -58,7 +58,7 @@ namespace Gu.State
                     return false;
                 }
 
-                var comparer = settings.GetEqualByComparer(typeof(T), checkReferenceHandling: true);
+                var comparer = settings.GetEqualByComparer(typeof(T));
                 for (var i = 0; i < x.Count; i++)
                 {
                     if (!comparer.Equals(x[i], y[i], settings, referencePairs))
@@ -93,7 +93,7 @@ namespace Gu.State
                     return false;
                 }
 
-                var comparer = settings.GetEqualByComparer(typeof(T), checkReferenceHandling: true);
+                var comparer = settings.GetEqualByComparer(typeof(T));
                 for (var i = 0; i < x.Count; i++)
                 {
                     if (!comparer.Equals(x[i], y[i], settings, referencePairs))
@@ -128,7 +128,7 @@ namespace Gu.State
                     return false;
                 }
 
-                var comparer = settings.GetEqualByComparer(typeof(T), checkReferenceHandling: true);
+                var comparer = settings.GetEqualByComparer(typeof(T));
                 for (var i = 0; i < x.Length; i++)
                 {
                     if (!comparer.Equals(x[i], y[i], settings, referencePairs))

@@ -58,7 +58,7 @@ namespace Gu.State
 
             private static bool ValuesEquals(IReadOnlyDictionary<TKey, TValue> x, IReadOnlyDictionary<TKey, TValue> y, MemberSettings settings, ReferencePairCollection referencePairs)
             {
-                var comparer = settings.GetEqualByComparer(typeof(TValue), checkReferenceHandling: true);
+                var comparer = settings.GetEqualByComparer(typeof(TValue));
                 foreach (var key in x.Keys)
                 {
                     if (!y.TryGetValue(key, out var yv))
