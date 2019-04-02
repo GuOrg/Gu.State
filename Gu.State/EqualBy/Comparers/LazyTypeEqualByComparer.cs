@@ -12,7 +12,7 @@
         {
             return TryGetEitherNullEquals(x, y, out var result)
                 ? result
-                : settings.GetEqualByComparer(x.GetType()).Equals(x, y, settings, referencePairs);
+                : settings.GetEqualByComparer(x.GetType(), checkReferenceHandling: true).Equals(x, y, settings, referencePairs);
         }
     }
 }

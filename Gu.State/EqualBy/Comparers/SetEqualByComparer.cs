@@ -14,7 +14,7 @@ namespace Gu.State
                 var itemType = type.GetItemType();
 
                 // resolve comparer so we throw as early as possible if there are errors.
-                _ = settings.GetEqualByComparer(itemType);
+                _ = settings.GetEqualByComparer(itemType, checkReferenceHandling: true);
                 comparer = (EqualByComparer)typeof(Comparer<>).MakeGenericType(itemType)
                                                                         .GetField(nameof(Comparer<int>.Default), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
                                                                         .GetValue(null);

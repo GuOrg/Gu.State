@@ -3,7 +3,7 @@
     using System;
     using System.Reflection;
 
-    internal partial class MemberEqualByComparer : EqualByComparer
+    internal class MemberEqualByComparer : EqualByComparer
     {
         private readonly IGetterAndSetter getterAndSetter;
         private readonly Lazy<EqualByComparer> comparer;
@@ -25,33 +25,7 @@
         {
             var getterAndSetter = settings.GetOrCreateGetterAndSetter(member);
 
-            return new MemberEqualByComparer(getterAndSetter, new Lazy<EqualByComparer>(() => GetComparer()));
-
-            EqualByComparer GetComparer()
-            {
-                var memberType = member.MemberType();
-                if (!memberType.IsValueType &&
-                    !settings.IsEquatable(memberType) &&
-                    !settings.TryGetComparer(memberType, out _))
-                {
-                    switch (settings.ReferenceHandling)
-                    {
-                        case ReferenceHandling.Throw:
-                            throw new InvalidOperationException($"Member {member} is a reference type {member.MemberType().PrettyName()} and ReferenceHandling.Throw is used.");
-                        case ReferenceHandling.References:
-                            return ReferenceEqualByComparer.Default;
-                        case ReferenceHandling.Structural:
-                            break;
-                    }
-                }
-
-                if (memberType.IsSealed)
-                {
-                    return settings.GetEqualByComparer(getterAndSetter.ValueType);
-                }
-
-                return LazyTypeEqualByComparer.Default;
-            }
+            return new MemberEqualByComparer(getterAndSetter, new Lazy<EqualByComparer>(() => settings.GetEqualByComparer(getterAndSetter.ValueType, checkReferenceHandling: true)));
         }
     }
 }

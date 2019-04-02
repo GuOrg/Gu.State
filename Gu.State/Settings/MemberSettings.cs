@@ -144,13 +144,29 @@
         /// <returns>A <see cref="IGetterAndSetter"/>.</returns>
         internal abstract IGetterAndSetter GetOrCreateGetterAndSetter(MemberInfo member);
 
-        internal EqualByComparer GetEqualByComparer(Type type)
+        internal EqualByComparer GetEqualByComparer(Type type, bool checkReferenceHandling)
         {
             Debug.Assert(type != null, "type != null");
             return this.equalByComparers.GetOrAdd(type, t => Create());
 
             EqualByComparer Create()
             {
+                if (checkReferenceHandling &&
+                    !type.IsValueType &&
+                    !this.IsEquatable(type) &&
+                    !this.TryGetComparer(type, out _))
+                {
+                    switch (this.ReferenceHandling)
+                    {
+                        case ReferenceHandling.Throw:
+                            throw new InvalidOperationException($"Type {type.PrettyName()} and ReferenceHandling.Throw is used.");
+                        case ReferenceHandling.References:
+                            return ReferenceEqualByComparer.Default;
+                        case ReferenceHandling.Structural:
+                            break;
+                    }
+                }
+
                 if (EquatableEqualByComparer.TryGet(type, this, out var comparer) ||
                     SetEqualByComparer.TryGet(type, this, out comparer) ||
                     ReadOnlyListEqualByComparer.TryGet(type, this, out comparer) ||

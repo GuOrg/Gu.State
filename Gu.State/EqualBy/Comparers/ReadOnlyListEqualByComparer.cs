@@ -13,7 +13,7 @@ namespace Gu.State
                 var itemType = type.GetItemType();
 
                 // resolve comparer so we throw as early as possible if there are errors.
-                _ = settings.GetEqualByComparer(itemType);
+                _ = settings.GetEqualByComparer(itemType, checkReferenceHandling: true);
 
                 if (type.IsArray)
                 {
@@ -67,7 +67,7 @@ namespace Gu.State
                     return false;
                 }
 
-                var comparer = settings.GetEqualByComparer(typeof(T));
+                var comparer = settings.GetEqualByComparer(typeof(T), checkReferenceHandling: true);
                 for (var i = 0; i < x.Count; i++)
                 {
                     if (!comparer.Equals(x[i], y[i], settings, referencePairs))
@@ -106,7 +106,7 @@ namespace Gu.State
                     return false;
                 }
 
-                var comparer = settings.GetEqualByComparer(typeof(T));
+                var comparer = settings.GetEqualByComparer(typeof(T), checkReferenceHandling: true);
                 for (var i = 0; i < x.Count; i++)
                 {
                     if (!comparer.Equals(x[i], y[i], settings, referencePairs))
@@ -145,7 +145,7 @@ namespace Gu.State
                     return false;
                 }
 
-                var comparer = settings.GetEqualByComparer(typeof(T));
+                var comparer = settings.GetEqualByComparer(typeof(T), checkReferenceHandling: true);
                 for (var i = 0; i < x.Length; i++)
                 {
                     if (!comparer.Equals(x[i], y[i], settings, referencePairs))
