@@ -651,7 +651,7 @@ namespace Gu.State.Tests.EqualByTests
             }
         }
 
-        public class WithIndexerType
+        public class WithIllegalIndexer
         {
             // ReSharper disable once UnusedParameter.Global
             public int this[int index]

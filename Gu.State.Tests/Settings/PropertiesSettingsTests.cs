@@ -39,11 +39,11 @@ namespace Gu.State.Tests.Settings
         [Test]
         public void IgnoresIndexer()
         {
-            var type = typeof(SettingsTypes.WithIndexerType);
-            var nameProperty = type.GetProperty(nameof(SettingsTypes.WithIndexerType.Name), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var type = typeof(SettingsTypes.WithIllegalIndexer);
+            var nameProperty = type.GetProperty(nameof(SettingsTypes.WithIllegalIndexer.Name), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             var indexerProperty = type.GetProperties().Single(x => x.GetIndexParameters().Length > 0);
             var settings = PropertiesSettings.Build()
-                                             .IgnoreIndexersFor<SettingsTypes.WithIndexerType>()
+                                             .IgnoreIndexersFor<SettingsTypes.WithIllegalIndexer>()
                                              .CreateSettings();
             Assert.AreEqual(false, settings.IsIgnoringProperty(nameProperty));
             Assert.AreEqual(true, settings.IsIgnoringProperty(indexerProperty));

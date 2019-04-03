@@ -54,23 +54,23 @@ namespace Gu.State.Tests.DiffTests
             var expected = this is DiffTests.FieldValues.Throws
                                ? "DiffBy.FieldValues(x, y) failed.\r\n" +
                                  "Indexers are not supported.\r\n" +
-                                 "  - The property WithIndexerType.Item is an indexer and not supported.\r\n" +
+                                 "  - The property WithIllegalIndexer.Item is an indexer and not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
-                                 "* Implement IEquatable<WithIndexerType> for WithIndexerType or use a type that does.\r\n" +
+                                 "* Implement IEquatable<WithIllegalIndexer> for WithIllegalIndexer or use a type that does.\r\n" +
                                  "* Use FieldsSettings and specify how comparing is performed:\r\n" +
                                  "  - Exclude a combination of the following:\r\n" +
-                                 "    - The indexer property WithIndexerType.Item.\r\n"
+                                 "    - The indexer property WithIllegalIndexer.Item.\r\n"
 
                                : "DiffBy.PropertyValues(x, y) failed.\r\n" +
                                  "Indexers are not supported.\r\n" +
-                                 "  - The property WithIndexerType.Item is an indexer and not supported.\r\n" +
+                                 "  - The property WithIllegalIndexer.Item is an indexer and not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
-                                 "* Implement IEquatable<WithIndexerType> for WithIndexerType or use a type that does.\r\n" +
+                                 "* Implement IEquatable<WithIllegalIndexer> for WithIllegalIndexer or use a type that does.\r\n" +
                                  "* Use PropertiesSettings and specify how comparing is performed:\r\n" +
                                  "  - Exclude a combination of the following:\r\n" +
-                                 "    - The indexer property WithIndexerType.Item.\r\n";
-            var source = new WithIndexerType();
-            var target = new WithIndexerType();
+                                 "    - The indexer property WithIllegalIndexer.Item.\r\n";
+            var source = new WithIllegalIndexer();
+            var target = new WithIllegalIndexer();
 
             var exception = Assert.Throws<NotSupportedException>(() => this.DiffBy(source, target, ReferenceHandling.Structural));
             Assert.AreEqual(expected, exception.Message);
@@ -81,33 +81,33 @@ namespace Gu.State.Tests.DiffTests
         {
             var expected = this is DiffTests.FieldValues.Throws
                                ? "DiffBy.FieldValues(x, y) failed.\r\n" +
-                                 "The field WithProperty<WithIndexerType>.<Value>k__BackingField of type WithIndexerType is not supported.\r\n" +
+                                 "The field WithProperty<WithIllegalIndexer>.<Value>k__BackingField of type WithIllegalIndexer is not supported.\r\n" +
                                  "Indexers are not supported.\r\n" +
-                                 "  - The property WithIndexerType.Item is an indexer and not supported.\r\n" +
+                                 "  - The property WithIllegalIndexer.Item is an indexer and not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
-                                 "* Implement IEquatable<WithProperty<WithIndexerType>> for WithProperty<WithIndexerType> or use a type that does.\r\n" +
-                                 "* Implement IEquatable<WithIndexerType> for WithIndexerType or use a type that does.\r\n" +
+                                 "* Implement IEquatable<WithProperty<WithIllegalIndexer>> for WithProperty<WithIllegalIndexer> or use a type that does.\r\n" +
+                                 "* Implement IEquatable<WithIllegalIndexer> for WithIllegalIndexer or use a type that does.\r\n" +
                                  "* Use FieldsSettings and specify how comparing is performed:\r\n" +
                                  "  - Exclude a combination of the following:\r\n" +
-                                 "    - The field WithProperty<WithIndexerType>.<Value>k__BackingField.\r\n" +
-                                 "    - The indexer property WithIndexerType.Item.\r\n" +
-                                 "    - The type WithIndexerType.\r\n"
+                                 "    - The field WithProperty<WithIllegalIndexer>.<Value>k__BackingField.\r\n" +
+                                 "    - The indexer property WithIllegalIndexer.Item.\r\n" +
+                                 "    - The type WithIllegalIndexer.\r\n"
 
                                : "DiffBy.PropertyValues(x, y) failed.\r\n" +
-                                 "The property WithProperty<WithIndexerType>.Value of type WithIndexerType is not supported.\r\n" +
+                                 "The property WithProperty<WithIllegalIndexer>.Value of type WithIllegalIndexer is not supported.\r\n" +
                                  "Indexers are not supported.\r\n" +
-                                 "  - The property WithIndexerType.Item is an indexer and not supported.\r\n" +
+                                 "  - The property WithIllegalIndexer.Item is an indexer and not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
-                                 "* Implement IEquatable<WithProperty<WithIndexerType>> for WithProperty<WithIndexerType> or use a type that does.\r\n" +
-                                 "* Implement IEquatable<WithIndexerType> for WithIndexerType or use a type that does.\r\n" +
+                                 "* Implement IEquatable<WithProperty<WithIllegalIndexer>> for WithProperty<WithIllegalIndexer> or use a type that does.\r\n" +
+                                 "* Implement IEquatable<WithIllegalIndexer> for WithIllegalIndexer or use a type that does.\r\n" +
                                  "* Use PropertiesSettings and specify how comparing is performed:\r\n" +
                                  "  - Exclude a combination of the following:\r\n" +
-                                 "    - The property WithProperty<WithIndexerType>.Value.\r\n" +
-                                 "    - The indexer property WithIndexerType.Item.\r\n" +
-                                 "    - The type WithIndexerType.\r\n";
+                                 "    - The property WithProperty<WithIllegalIndexer>.Value.\r\n" +
+                                 "    - The indexer property WithIllegalIndexer.Item.\r\n" +
+                                 "    - The type WithIllegalIndexer.\r\n";
 
-            var source = new WithProperty<WithIndexerType>();
-            var target = new WithProperty<WithIndexerType>();
+            var source = new WithProperty<WithIllegalIndexer>();
+            var target = new WithProperty<WithIllegalIndexer>();
 
             var exception = Assert.Throws<NotSupportedException>(() => this.DiffBy(source, target, ReferenceHandling.Structural));
             Assert.AreEqual(expected, exception.Message);

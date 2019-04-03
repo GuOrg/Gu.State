@@ -55,23 +55,23 @@ namespace Gu.State.Tests.EqualByTests
             var expected = this is FieldValues.Throws
                                ? "EqualBy.FieldValues(x, y) failed.\r\n" +
                                  "Indexers are not supported.\r\n" +
-                                 "  - The property WithIndexerType.Item is an indexer and not supported.\r\n" +
+                                 "  - The property WithIllegalIndexer.Item is an indexer and not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
-                                 "* Implement IEquatable<WithIndexerType> for WithIndexerType or use a type that does.\r\n" +
+                                 "* Implement IEquatable<WithIllegalIndexer> for WithIllegalIndexer or use a type that does.\r\n" +
                                  "* Use FieldsSettings and specify how comparing is performed:\r\n" +
                                  "  - Exclude a combination of the following:\r\n" +
-                                 "    - The indexer property WithIndexerType.Item.\r\n"
+                                 "    - The indexer property WithIllegalIndexer.Item.\r\n"
 
                                : "EqualBy.PropertyValues(x, y) failed.\r\n" +
                                  "Indexers are not supported.\r\n" +
-                                 "  - The property WithIndexerType.Item is an indexer and not supported.\r\n" +
+                                 "  - The property WithIllegalIndexer.Item is an indexer and not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
-                                 "* Implement IEquatable<WithIndexerType> for WithIndexerType or use a type that does.\r\n" +
+                                 "* Implement IEquatable<WithIllegalIndexer> for WithIllegalIndexer or use a type that does.\r\n" +
                                  "* Use PropertiesSettings and specify how comparing is performed:\r\n" +
                                  "  - Exclude a combination of the following:\r\n" +
-                                 "    - The indexer property WithIndexerType.Item.\r\n";
-            var source = new WithIndexerType();
-            var target = new WithIndexerType();
+                                 "    - The indexer property WithIllegalIndexer.Item.\r\n";
+            var source = new WithIllegalIndexer();
+            var target = new WithIllegalIndexer();
 
             var exception = Assert.Throws<NotSupportedException>(() => this.EqualBy(source, target, ReferenceHandling.Structural));
             Assert.AreEqual(expected, exception.Message);
@@ -82,33 +82,33 @@ namespace Gu.State.Tests.EqualByTests
         {
             var expected = this is FieldValues.Throws
                                ? "EqualBy.FieldValues(x, y) failed.\r\n" +
-                                 "The field With<WithIndexerType>.<Value>k__BackingField of type WithIndexerType is not supported.\r\n" +
+                                 "The field With<WithIllegalIndexer>.<Value>k__BackingField of type WithIllegalIndexer is not supported.\r\n" +
                                  "Indexers are not supported.\r\n" +
-                                 "  - The property WithIndexerType.Item is an indexer and not supported.\r\n" +
+                                 "  - The property WithIllegalIndexer.Item is an indexer and not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
-                                 "* Implement IEquatable<With<WithIndexerType>> for With<WithIndexerType> or use a type that does.\r\n" +
-                                 "* Implement IEquatable<WithIndexerType> for WithIndexerType or use a type that does.\r\n" +
+                                 "* Implement IEquatable<With<WithIllegalIndexer>> for With<WithIllegalIndexer> or use a type that does.\r\n" +
+                                 "* Implement IEquatable<WithIllegalIndexer> for WithIllegalIndexer or use a type that does.\r\n" +
                                  "* Use FieldsSettings and specify how comparing is performed:\r\n" +
                                  "  - Exclude a combination of the following:\r\n" +
-                                 "    - The field With<WithIndexerType>.<Value>k__BackingField.\r\n" +
-                                 "    - The indexer property WithIndexerType.Item.\r\n" +
-                                 "    - The type WithIndexerType.\r\n"
+                                 "    - The field With<WithIllegalIndexer>.<Value>k__BackingField.\r\n" +
+                                 "    - The indexer property WithIllegalIndexer.Item.\r\n" +
+                                 "    - The type WithIllegalIndexer.\r\n"
 
                                : "EqualBy.PropertyValues(x, y) failed.\r\n" +
-                                 "The property With<WithIndexerType>.Value of type WithIndexerType is not supported.\r\n" +
+                                 "The property With<WithIllegalIndexer>.Value of type WithIllegalIndexer is not supported.\r\n" +
                                  "Indexers are not supported.\r\n" +
-                                 "  - The property WithIndexerType.Item is an indexer and not supported.\r\n" +
+                                 "  - The property WithIllegalIndexer.Item is an indexer and not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
-                                 "* Implement IEquatable<With<WithIndexerType>> for With<WithIndexerType> or use a type that does.\r\n" +
-                                 "* Implement IEquatable<WithIndexerType> for WithIndexerType or use a type that does.\r\n" +
+                                 "* Implement IEquatable<With<WithIllegalIndexer>> for With<WithIllegalIndexer> or use a type that does.\r\n" +
+                                 "* Implement IEquatable<WithIllegalIndexer> for WithIllegalIndexer or use a type that does.\r\n" +
                                  "* Use PropertiesSettings and specify how comparing is performed:\r\n" +
                                  "  - Exclude a combination of the following:\r\n" +
-                                 "    - The property With<WithIndexerType>.Value.\r\n" +
-                                 "    - The indexer property WithIndexerType.Item.\r\n" +
-                                 "    - The type WithIndexerType.\r\n";
+                                 "    - The property With<WithIllegalIndexer>.Value.\r\n" +
+                                 "    - The indexer property WithIllegalIndexer.Item.\r\n" +
+                                 "    - The type WithIllegalIndexer.\r\n";
 
-            var source = new With<WithIndexerType>(null);
-            var target = new With<WithIndexerType>(null);
+            var source = new With<WithIllegalIndexer>(null);
+            var target = new With<WithIllegalIndexer>(null);
 
             var exception = Assert.Throws<NotSupportedException>(() => this.EqualBy(source, target, ReferenceHandling.Structural));
             Assert.AreEqual(expected, exception.Message);

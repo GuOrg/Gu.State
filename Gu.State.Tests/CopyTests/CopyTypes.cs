@@ -539,7 +539,7 @@ namespace Gu.State.Tests.CopyTests
             }
         }
 
-        public class WithIndexerType
+        public class WithIllegalIndexer
         {
             // ReSharper disable once UnusedParameter.Global
             public int this[int index]

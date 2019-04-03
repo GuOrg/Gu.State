@@ -492,7 +492,7 @@ namespace Gu.State.Tests.DiffTests
             }
         }
 
-        public class WithIndexerType
+        public class WithIllegalIndexer
         {
             // ReSharper disable once UnusedParameter.Global
             public int this[int index]
