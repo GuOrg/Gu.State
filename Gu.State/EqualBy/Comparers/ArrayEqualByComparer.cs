@@ -13,11 +13,7 @@ namespace Gu.State
         }
 
         /// <inheritdoc />
-        public override bool Equals(
-            object x,
-            object y,
-            MemberSettings settings,
-            ReferencePairCollection referencePairs)
+        public override bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs)
         {
             if (TryGetEitherNullEquals(x, y, out var result))
             {
@@ -39,37 +35,19 @@ namespace Gu.State
             return false;
         }
 
-        private static bool Equals(
-            Array x,
-            Array y,
-            MemberSettings settings,
-            ReferencePairCollection referencePairs)
+        private static bool Equals(Array x, Array y, MemberSettings settings, ReferencePairCollection referencePairs)
         {
             if (!Is.SameSize(x, y))
             {
                 return false;
             }
 
-            var isEquatable = settings.IsEquatable(x.GetType().GetItemType());
-            if (settings.ReferenceHandling == ReferenceHandling.References)
-            {
-                return isEquatable
-                           ? ItemsEquals(x, y, Equals)
-                           : ItemsEquals(x, y, ReferenceEquals);
-            }
-
-            return isEquatable
-                       ? ItemsEquals(x, y, Equals)
-                       : ItemsEquals(x, y, (xi, yi) => EqualBy.MemberValues(xi, yi, settings, referencePairs));
-        }
-
-        private static bool ItemsEquals(Array x, Array y, Func<object, object, bool> compare)
-        {
+            var comparer = settings.GetEqualByComparer(x.GetType().GetItemType());
             var xe = x.GetEnumerator();
             var ye = y.GetEnumerator();
             while (xe.MoveNext() && ye.MoveNext())
             {
-                if (!compare(xe.Current, ye.Current))
+                if (!comparer.Equals(xe.Current, ye.Current, settings, referencePairs))
                 {
                     return false;
                 }
