@@ -20,5 +20,11 @@ namespace Gu.State
             Throw.ExpectedParameterOfTypes<FieldInfo, PropertyInfo>(nameof(memberInfo));
             throw new InvalidOperationException("Never getting here");
         }
+
+        internal static bool IsIndexer(this MemberInfo member)
+        {
+            return member is PropertyInfo property &&
+                   property.GetIndexParameters().Length > 0;
+        }
     }
 }

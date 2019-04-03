@@ -228,7 +228,7 @@
             if (this.TrackProperties.Contains(propertyInfo) &&
                (this.Settings.ReferenceHandling == ReferenceHandling.Structural))
             {
-                var getter = this.Settings.GetOrCreateGetterAndSetter(propertyInfo);
+                var getter = GetterAndSetter.GetOrCreate(propertyInfo);
                 var xValue = getter.GetValue(this.X);
                 var yValue = getter.GetValue(this.Y);
                 if (this.TrCreateChild(xValue, yValue, out var node))

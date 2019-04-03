@@ -25,7 +25,7 @@
                 return;
             }
 
-            var getterAndSetter = settings.GetOrCreateGetterAndSetter(member);
+            var getterAndSetter = GetterAndSetter.GetOrCreate(member);
             if (getterAndSetter.TryGetValueEquals(xSource, ySource, settings, out var equal, out var xValue, out var yValue))
             {
                 if (equal)

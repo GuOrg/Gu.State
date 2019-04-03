@@ -40,7 +40,7 @@
                         continue;
                     }
 
-                    var getterAndSetter = settings.GetOrCreateGetterAndSetter(member);
+                    var getterAndSetter = GetterAndSetter.GetOrCreate(member);
                     Member(source, target, settings, referencePairs, getterAndSetter);
                     if (getterAndSetter.IsInitOnly)
                     {
@@ -73,7 +73,7 @@
                 return;
             }
 
-            var getterAndSetter = settings.GetOrCreateGetterAndSetter(member);
+            var getterAndSetter = GetterAndSetter.GetOrCreate(member);
             Member(source, target, settings, referencePairs, getterAndSetter);
         }
 

@@ -1,8 +1,10 @@
 ﻿namespace Gu.State
 {
     using System;
+    using System.Diagnostics;
     using System.Reflection;
 
+    [DebuggerDisplay("MemberEqualByComparer: {this.Member}")]
     internal class MemberEqualByComparer : EqualByComparer
     {
         private static readonly Lazy<EqualByComparer> EmptyLazy = new Lazy<EqualByComparer>(() => null);
@@ -10,13 +12,20 @@
         private readonly IGetterAndSetter getterAndSetter;
         private readonly Lazy<EqualByComparer> lazyComparer;
 
-        private MemberEqualByComparer(IGetterAndSetter getterAndSetter, Lazy<EqualByComparer> lazyComparer)
+        private MemberEqualByComparer(MemberInfo member, Lazy<EqualByComparer> lazyComparer)
         {
-            this.getterAndSetter = getterAndSetter;
+            this.Member = member;
+            if (!member.IsIndexer())
+            {
+                this.getterAndSetter = GetterAndSetter.GetOrCreate(member);
+            }
+
             this.lazyComparer = lazyComparer;
         }
 
-        public override bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs)
+        internal MemberInfo Member { get; }
+
+        internal override bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs)
         {
             var xv = this.getterAndSetter.GetValue(x);
             var yv = this.getterAndSetter.GetValue(y);
@@ -31,14 +40,18 @@
 
         internal static MemberEqualByComparer Create(MemberInfo member, MemberSettings settings)
         {
-            var getterAndSetter = settings.GetOrCreateGetterAndSetter(member);
-
-            if (getterAndSetter.ValueType.IsSealed)
+            if (member.IsIndexer())
             {
-                return new MemberEqualByComparer(getterAndSetter, new Lazy<EqualByComparer>(() => settings.GetEqualByComparer(getterAndSetter.ValueType)));
+                return new MemberEqualByComparer(member, new Lazy<EqualByComparer>(() => new ErrorEqualByComparer(member.ReflectedType, UnsupportedIndexer.GetOrCreate((PropertyInfo)member))));
             }
 
-            return new MemberEqualByComparer(getterAndSetter, EmptyLazy);
+            var memberType = member.MemberType();
+            if (memberType.IsSealed)
+            {
+                return new MemberEqualByComparer(member, new Lazy<EqualByComparer>(() => settings.GetEqualByComparer(memberType)));
+            }
+
+            return new MemberEqualByComparer(member, EmptyLazy);
         }
     }
 }

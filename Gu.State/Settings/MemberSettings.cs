@@ -149,11 +149,6 @@
             return this.GetMembers(type).Where(x => !this.IsIgnoringMember(x));
         }
 
-        /// <summary>Get an <see cref="IGetterAndSetter"/> that is  used for getting ans setting values.</summary>
-        /// <param name="member">The member.</param>
-        /// <returns>A <see cref="IGetterAndSetter"/>.</returns>
-        internal abstract IGetterAndSetter GetOrCreateGetterAndSetter(MemberInfo member);
-
         internal EqualByComparer GetRootEqualByComparer(Type type)
         {
             Debug.Assert(type != null, "type != null");
