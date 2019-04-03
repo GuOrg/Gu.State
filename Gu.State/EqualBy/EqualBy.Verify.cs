@@ -5,6 +5,11 @@
 
     public static partial class EqualBy
     {
+        internal static void VerifyCanEqualByMemberValues(Type type, MemberSettings settings, string typeName, string methodName)
+        {
+            Verify.CanEqualByMemberValues(type, settings, typeName, methodName);
+        }
+
         /// <summary>
         /// Check if the properties of <typeparamref name="T"/> can be compared for equality
         /// This method will throw an exception if copy cannot be performed for <typeparamref name="T"/>
