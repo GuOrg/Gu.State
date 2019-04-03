@@ -16,9 +16,7 @@
         /// If Structural is used a deep equality check is performed.
         /// </param>
         /// <param name="bindingFlags">The binding flags to use when getting properties.</param>
-        public static void VerifyCanEqualByPropertyValues<T>(
-            ReferenceHandling referenceHandling = ReferenceHandling.Structural,
-            BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
+        public static void VerifyCanEqualByPropertyValues<T>(ReferenceHandling referenceHandling = ReferenceHandling.Structural, BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
         {
             var settings = PropertiesSettings.GetOrCreate(referenceHandling, bindingFlags);
             VerifyCanEqualByPropertyValues<T>(settings);

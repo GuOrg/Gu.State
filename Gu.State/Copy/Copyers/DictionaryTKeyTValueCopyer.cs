@@ -24,11 +24,7 @@
             return false;
         }
 
-        public void Copy(
-            object source,
-            object target,
-            MemberSettings settings,
-            ReferencePairCollection referencePairs)
+        public void Copy(object source, object target, MemberSettings settings, ReferencePairCollection referencePairs)
         {
             var genericArguments = source.GetType()
                                  .GetInterface("IDictionary`2")
@@ -41,11 +37,7 @@
             copyMethod.Invoke(null, new[] { source, target, settings, referencePairs });
         }
 
-        internal static void Copy<TKey, TValue>(
-            IDictionary<TKey, TValue> source,
-            IDictionary<TKey, TValue> target,
-            MemberSettings settings,
-            ReferencePairCollection referencePairs)
+        internal static void Copy<TKey, TValue>(IDictionary<TKey, TValue> source, IDictionary<TKey, TValue> target, MemberSettings settings, ReferencePairCollection referencePairs)
         {
             using (var toRemove = ListPool<TKey>.Borrow())
             {
