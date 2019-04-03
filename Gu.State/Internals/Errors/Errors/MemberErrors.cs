@@ -14,14 +14,11 @@ namespace Gu.State
         {
         }
 
-        public MemberErrors(MemberPath path, TypeErrors errors)
+        public MemberErrors(MemberPath path, params Error[] errors)
         {
             this.Path = path;
-            this.Error = errors;
-            this.Errors = errors == null ? EmptyErrors : new[] { errors };
+            this.Errors = errors;
         }
-
-        public TypeErrors Error { get;  }
 
         public MemberPath Path { get; }
 
