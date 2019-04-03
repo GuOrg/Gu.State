@@ -31,7 +31,7 @@ namespace Gu.State.Tests.EqualByTests
         }
 
         [TestCase(ReferenceHandling.Structural, true)]
-        [TestCase(ReferenceHandling.References, true)]
+        [TestCase(ReferenceHandling.References, false)]
         public void WithGetSetObject(ReferenceHandling referenceHandling, bool expected)
         {
             var x = new WithGetSet<object>(null);
