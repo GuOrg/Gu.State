@@ -3,7 +3,6 @@ namespace Gu.State
     using System;
     using System.Reflection;
 
-    /// <inheritdoc />
     internal static class ArrayEqualByComparer
     {
         internal static bool TryGet(Type type, MemberSettings settings, out EqualByComparer comparer)
@@ -62,7 +61,7 @@ namespace Gu.State
             }
         }
 
-        private class Comparer : EqualByComparer<Array>
+        private class Comparer : EqualByComparer
         {
             /// <summary>The default instance.</summary>
             public static readonly Comparer Default = new Comparer();
@@ -71,7 +70,17 @@ namespace Gu.State
             {
             }
 
-            public override bool Equals(Array x, Array y, MemberSettings settings, ReferencePairCollection referencePairs)
+            public override bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs)
+            {
+                if (TryGetEitherNullEquals(x, y, out var result))
+                {
+                    return result;
+                }
+
+                return Equals((Array) x, (Array) y, settings, referencePairs);
+            }
+
+            private static bool Equals(Array x, Array y, MemberSettings settings, ReferencePairCollection referencePairs)
             {
                 if (!Is.SameSize(x, y))
                 {
