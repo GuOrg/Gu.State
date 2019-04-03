@@ -104,7 +104,7 @@ namespace Gu.State.Tests.EqualByTests
                                ? "EqualBy.FieldValues(x, y) failed.\r\n" +
                                  "The field WithListProperty<WithIllegalIndexer>.<Items>k__BackingField of type List<WithIllegalIndexer> is not supported.\r\n" +
                                  "Indexers are not supported.\r\n" +
-                                 "  - The property WithIllegalIndexer.Item is an indexer and not supported.\r\n" +
+                                 "  - The property WithIllegalIndexer[int] is an indexer and not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
                                  "* Implement IEquatable<WithListProperty<WithIllegalIndexer>> for WithListProperty<WithIllegalIndexer> or use a type that does.\r\n" +
                                  "* Use a type that implements IEquatable<> instead of List<WithIllegalIndexer>.\r\n" +
@@ -119,7 +119,7 @@ namespace Gu.State.Tests.EqualByTests
                                : "EqualBy.PropertyValues(x, y) failed.\r\n" +
                                  "The property WithListProperty<WithIllegalIndexer>.Items of type List<WithIllegalIndexer> is not supported.\r\n" +
                                  "Indexers are not supported.\r\n" +
-                                 "  - The property WithIllegalIndexer.Item is an indexer and not supported.\r\n" +
+                                 "  - The property WithIllegalIndexer[int] is an indexer and not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
                                  "* Implement IEquatable<WithListProperty<WithIllegalIndexer>> for WithListProperty<WithIllegalIndexer> or use a type that does.\r\n" +
                                  "* Use a type that implements IEquatable<> instead of List<WithIllegalIndexer>.\r\n" +

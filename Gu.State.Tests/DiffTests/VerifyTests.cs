@@ -66,7 +66,7 @@ namespace Gu.State.Tests.DiffTests
                                  "* Implement IEquatable<WithIllegalIndexer> for WithIllegalIndexer or use a type that does.\r\n" +
                                  "* Use FieldsSettings and specify how comparing is performed:\r\n" +
                                  "  - Exclude a combination of the following:\r\n" +
-                                 "    - The indexer property WithIllegalIndexer.Item.\r\n"
+                                 "    - The indexer property WithIllegalIndexer[int].\r\n"
 
                                : "DiffBy.PropertyValues(x, y) failed.\r\n" +
                                  "Indexers are not supported.\r\n" +
@@ -75,7 +75,7 @@ namespace Gu.State.Tests.DiffTests
                                  "* Implement IEquatable<WithIllegalIndexer> for WithIllegalIndexer or use a type that does.\r\n" +
                                  "* Use PropertiesSettings and specify how comparing is performed:\r\n" +
                                  "  - Exclude a combination of the following:\r\n" +
-                                 "    - The indexer property WithIllegalIndexer.Item.\r\n";
+                                 "    - The indexer property WithIllegalIndexer[int].\r\n";
 
             var exception = Assert.Throws<NotSupportedException>(() => this.VerifyMethod<WithIllegalIndexer>(ReferenceHandling.Structural));
             Assert.AreEqual(expected, exception.Message);
@@ -88,7 +88,7 @@ namespace Gu.State.Tests.DiffTests
                                ? "DiffBy.FieldValues(x, y) failed.\r\n" +
                                  "The field WithListProperty<WithIllegalIndexer>.<Items>k__BackingField of type List<WithIllegalIndexer> is not supported.\r\n" +
                                  "Indexers are not supported.\r\n" +
-                                 "  - The property WithIllegalIndexer.Item is an indexer and not supported.\r\n" +
+                                 "  - The property WithIllegalIndexer[int] is an indexer and not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
                                  "* Implement IEquatable<WithListProperty<WithIllegalIndexer>> for WithListProperty<WithIllegalIndexer> or use a type that does.\r\n" +
                                  "* Use a type that implements IEquatable<> instead of List<WithIllegalIndexer>.\r\n" +
@@ -96,14 +96,14 @@ namespace Gu.State.Tests.DiffTests
                                  "* Use FieldsSettings and specify how comparing is performed:\r\n" +
                                  "  - Exclude a combination of the following:\r\n" +
                                  "    - The field WithListProperty<WithIllegalIndexer>.<Items>k__BackingField.\r\n" +
-                                 "    - The indexer property WithIllegalIndexer.Item.\r\n" +
+                                 "    - The indexer property WithIllegalIndexer[int].\r\n" +
                                  "    - The type List<WithIllegalIndexer>.\r\n" +
                                  "    - The type WithIllegalIndexer.\r\n"
 
                                : "DiffBy.PropertyValues(x, y) failed.\r\n" +
                                  "The property WithListProperty<WithIllegalIndexer>.Items of type List<WithIllegalIndexer> is not supported.\r\n" +
                                  "Indexers are not supported.\r\n" +
-                                 "  - The property WithIllegalIndexer.Item is an indexer and not supported.\r\n" +
+                                 "  - The property WithIllegalIndexer[int] is an indexer and not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
                                  "* Implement IEquatable<WithListProperty<WithIllegalIndexer>> for WithListProperty<WithIllegalIndexer> or use a type that does.\r\n" +
                                  "* Use a type that implements IEquatable<> instead of List<WithIllegalIndexer>.\r\n" +
@@ -111,7 +111,7 @@ namespace Gu.State.Tests.DiffTests
                                  "* Use PropertiesSettings and specify how comparing is performed:\r\n" +
                                  "  - Exclude a combination of the following:\r\n" +
                                  "    - The property WithListProperty<WithIllegalIndexer>.Items.\r\n" +
-                                 "    - The indexer property WithIllegalIndexer.Item.\r\n" +
+                                 "    - The indexer property WithIllegalIndexer[int].\r\n" +
                                  "    - The type List<WithIllegalIndexer>.\r\n" +
                                  "    - The type WithIllegalIndexer.\r\n";
 
