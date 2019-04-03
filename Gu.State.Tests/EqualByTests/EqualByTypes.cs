@@ -31,6 +31,20 @@ namespace Gu.State.Tests.EqualByTests
             public override string ToString() => $"With<{typeof(T).PrettyName()}> {{ {this.Value?.ToString() ?? "null"} }}";
         }
 
+        public class WithGetSet<T> : IWith
+        {
+            public WithGetSet(T value)
+            {
+                this.Value = value;
+            }
+
+            public T Value { get; set; }
+
+            object IWith.Value => this.Value;
+
+            public override string ToString() => $"With<{typeof(T).PrettyName()}> {{ {this.Value?.ToString() ?? "null"} }}";
+        }
+
         public class IntCollection : IReadOnlyList<int>
         {
             public static readonly IEqualityComparer<IntCollection> Comparer = new IntsEqualityComparer();

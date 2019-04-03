@@ -3,7 +3,7 @@
 namespace Gu.State.Tests.EqualByTests
 {
     using System;
-
+    using Gu.State.Tests.Settings;
     using NUnit.Framework;
 
     using static EqualByTypes;
@@ -27,6 +27,23 @@ namespace Gu.State.Tests.EqualByTests
             Assert.AreEqual(expected, result);
 
             result = this.EqualBy(y, x, ReferenceHandling.Structural);
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestCase(ReferenceHandling.Structural, true)]
+        [TestCase(ReferenceHandling.References, true)]
+        public void WithGetSetObject(ReferenceHandling referenceHandling, bool expected)
+        {
+            var x = new WithGetSet<object>(null);
+            x.Value = x;
+
+            var y = new WithGetSet<object>(null);
+            y.Value = y;
+
+            var result = this.EqualBy(x, y, referenceHandling);
+            Assert.AreEqual(expected, result);
+
+            result = this.EqualBy(y, x, referenceHandling);
             Assert.AreEqual(expected, result);
         }
 
