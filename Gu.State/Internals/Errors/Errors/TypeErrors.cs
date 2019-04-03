@@ -8,14 +8,15 @@ namespace Gu.State
     internal sealed class TypeErrors : Error, IWithErrors
     {
         private static readonly Error[] EmptyErrors = new Error[0];
+        private IReadOnlyList<Error> lazyAllErrors;
 
         internal TypeErrors(Type type)
             : this(type, EmptyErrors)
         {
         }
 
-        internal TypeErrors(Type type, Error error)
-            : this(type, new[] { error })
+        internal TypeErrors(Type type, params Error[] errors)
+            : this(type, (IReadOnlyList<Error>)errors)
         {
         }
 
@@ -23,14 +24,14 @@ namespace Gu.State
         {
             this.Type = type;
             this.Errors = errors;
-            this.AllErrors = MergedErrors.MergeAll(this, errors);
         }
 
         internal Type Type { get; }
 
         public IReadOnlyList<Error> Errors { get; }
 
-        internal IReadOnlyList<Error> AllErrors { get; }
+        internal IReadOnlyList<Error> AllErrors => this.lazyAllErrors ??
+                                                   (this.lazyAllErrors = MergedErrors.MergeAll(this, this.Errors));
 
         internal static TypeErrors Create(ErrorBuilder.TypeErrorsBuilder builder) => new TypeErrors(builder.Type, builder.Errors);
     }
