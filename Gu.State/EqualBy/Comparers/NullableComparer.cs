@@ -29,7 +29,7 @@
             {
             }
 
-            public override bool Equals(T? x, T? y, MemberSettings settings, ReferencePairCollection referencePairs)
+            internal override bool Equals(T? x, T? y, MemberSettings settings, ReferencePairCollection referencePairs)
             {
                 if (IsEquatable)
                 {

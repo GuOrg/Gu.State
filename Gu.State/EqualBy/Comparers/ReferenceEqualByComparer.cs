@@ -4,7 +4,7 @@
     {
         public static readonly ReferenceEqualByComparer Default = new ReferenceEqualByComparer();
 
-        public override bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs)
+        internal override bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs)
         {
             return ReferenceEquals(x, y);
         }

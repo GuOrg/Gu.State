@@ -37,7 +37,7 @@ namespace Gu.State
             {
             }
 
-            public override bool Equals(T[,] xs, T[,] ys, MemberSettings settings, ReferencePairCollection referencePairs)
+            internal override bool Equals(T[,] xs, T[,] ys, MemberSettings settings, ReferencePairCollection referencePairs)
             {
                 if (!Is.SameSize(xs, ys))
                 {
@@ -70,7 +70,7 @@ namespace Gu.State
             {
             }
 
-            public override bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs)
+            internal override bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs)
             {
                 if (TryGetEitherNullEquals(x, y, out var result))
                 {

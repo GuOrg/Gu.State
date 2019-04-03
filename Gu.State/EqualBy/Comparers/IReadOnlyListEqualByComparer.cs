@@ -44,7 +44,7 @@ namespace Gu.State
             {
             }
 
-            public override bool Equals(IReadOnlyList<T> x, IReadOnlyList<T> y, MemberSettings settings, ReferencePairCollection referencePairs)
+            internal override bool Equals(IReadOnlyList<T> x, IReadOnlyList<T> y, MemberSettings settings, ReferencePairCollection referencePairs)
             {
                 if (x.Count != y.Count)
                 {
@@ -72,7 +72,7 @@ namespace Gu.State
             {
             }
 
-            public override bool Equals(List<T> x, List<T> y, MemberSettings settings, ReferencePairCollection referencePairs)
+            internal override bool Equals(List<T> x, List<T> y, MemberSettings settings, ReferencePairCollection referencePairs)
             {
                 if (x.Count != y.Count)
                 {
@@ -100,7 +100,7 @@ namespace Gu.State
             {
             }
 
-            public override bool Equals(T[] x, T[] y, MemberSettings settings, ReferencePairCollection referencePairs)
+            internal override bool Equals(T[] x, T[] y, MemberSettings settings, ReferencePairCollection referencePairs)
             {
                 if (x.Length != y.Length)
                 {

@@ -16,8 +16,8 @@ namespace Gu.State
                 var iDict = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IReadOnlyDictionary<,>)
                     ? type
                     : type.GetInterface("IReadOnlyDictionary`2");
-                comparer = (EqualByComparer)typeof(Comparer<,>).MakeGenericType(iDict.GenericTypeArguments[0], iDict.GenericTypeArguments[1])
-                                                               .GetField(nameof(Comparer<int, int>.Default), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
+                comparer = (EqualByComparer)typeof(Comparer<,,>).MakeGenericType(type, iDict.GenericTypeArguments[0], iDict.GenericTypeArguments[1])
+                                                               .GetField(nameof(Comparer<int, int, int>.Default), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
                                                                .GetValue(null);
                 return true;
             }
@@ -26,15 +26,15 @@ namespace Gu.State
             return false;
         }
 
-        private class Comparer<TKey, TValue> : EqualByComparer<IReadOnlyDictionary<TKey, TValue>>
+        private class Comparer<TMap, TKey, TValue> : EqualByComparer<IReadOnlyDictionary<TKey, TValue>>
         {
-            public static readonly Comparer<TKey, TValue> Default = new Comparer<TKey, TValue>();
+            public static readonly Comparer<TMap, TKey, TValue> Default = new Comparer<TMap, TKey, TValue>();
 
             private Comparer()
             {
             }
 
-            public override bool Equals(IReadOnlyDictionary<TKey, TValue> x, IReadOnlyDictionary<TKey, TValue> y, MemberSettings settings, ReferencePairCollection referencePairs)
+            internal override bool Equals(IReadOnlyDictionary<TKey, TValue> x, IReadOnlyDictionary<TKey, TValue> y, MemberSettings settings, ReferencePairCollection referencePairs)
             {
                 if (x.Count != y.Count)
                 {

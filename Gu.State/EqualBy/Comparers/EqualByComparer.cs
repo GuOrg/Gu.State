@@ -3,7 +3,7 @@
     using System;
 
     /// <summary>A comparer that compares by member or index.</summary>
-    public abstract class EqualByComparer
+    internal abstract class EqualByComparer
     {
         /// <summary>
         /// Compare <paramref name="x"/> with <paramref name="y"/>.
@@ -15,7 +15,7 @@
         /// The already compared items. This is used to stop infinite recursion when there are reference loops.
         /// </param>
         /// <returns>True if <paramref name="x"/> and <paramref name="y"/> are equal.</returns>
-        public abstract bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs);
+        internal abstract bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs);
 
         internal static EqualByComparer Create(Type type, MemberSettings settings)
         {

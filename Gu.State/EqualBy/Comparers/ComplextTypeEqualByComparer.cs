@@ -1,7 +1,9 @@
 ﻿namespace Gu.State
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
 
     internal static class ComplexTypeEqualByComparer
     {
@@ -23,7 +25,7 @@
                 this.memberComparers = memberComparers;
             }
 
-            public override bool Equals(T x, T y, MemberSettings settings, ReferencePairCollection referencePairs)
+            internal override bool Equals(T x, T y, MemberSettings settings, ReferencePairCollection referencePairs)
             {
                 if (referencePairs != null &&
                     referencePairs.Add(x, y) == false)

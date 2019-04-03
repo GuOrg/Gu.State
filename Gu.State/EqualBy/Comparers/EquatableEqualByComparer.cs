@@ -21,7 +21,7 @@
             return false;
         }
 
-        private class Comparer<T> : EqualByComparer
+        private class Comparer<T> : EqualByComparer<T>
         {
             public static Comparer<T> Default = new Comparer<T>(EqualityComparer<T>.Default);
             private readonly EqualityComparer<T> comparer;
@@ -31,11 +31,9 @@
                 this.comparer = comparer;
             }
 
-            public override bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs)
+            internal override bool Equals(T x, T y, MemberSettings settings, ReferencePairCollection referencePairs)
             {
-                return TryGetEitherNullEquals(x, y, out var result)
-                    ? result
-                    : this.comparer.Equals((T)x, (T)y);
+                return this.comparer.Equals((T)x, (T)y);
             }
         }
     }
