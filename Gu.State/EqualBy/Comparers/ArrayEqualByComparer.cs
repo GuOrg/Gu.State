@@ -50,7 +50,7 @@ namespace Gu.State
                 {
                     for (var j = 0; j < xs.GetLength(1); j++)
                     {
-                        if (!comparer.Equals(i, j, settings, referencePairs))
+                        if (!comparer.Equals(xs[i, j], ys[i, j], settings, referencePairs))
                         {
                             return false;
                         }
@@ -77,7 +77,7 @@ namespace Gu.State
                     return result;
                 }
 
-                return Equals((Array) x, (Array) y, settings, referencePairs);
+                return Equals((Array)x, (Array)y, settings, referencePairs);
             }
 
             private static bool Equals(Array x, Array y, MemberSettings settings, ReferencePairCollection referencePairs)
