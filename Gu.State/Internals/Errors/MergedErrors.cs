@@ -120,8 +120,7 @@
             if (match != null)
             {
                 this.errors.Remove(match);
-                var mergedTypeErrors = match.Error.Merge(error.Error);
-                var merged = new MemberErrors(match.Path, mergedTypeErrors);
+                var merged = new MemberErrors(match.Path, new MergedErrors(match.Errors, error.Errors).ToArray());
                 this.errors.Add(merged);
                 return true;
             }
@@ -141,8 +140,8 @@
             public bool Equals(Error x, Error y)
             {
                 if (TryEquals(x as TypeErrors, y as TypeErrors, out var equals) ||
-    TryEquals(x as MemberErrors, y as MemberErrors, out equals) ||
-    TryEquals(x as UnsupportedIndexer, y as UnsupportedIndexer, out equals))
+                    TryEquals(x as MemberErrors, y as MemberErrors, out equals) ||
+                    TryEquals(x as UnsupportedIndexer, y as UnsupportedIndexer, out equals))
                 {
                     return equals;
                 }
