@@ -19,11 +19,6 @@ namespace Gu.State
         {
         }
 
-        internal TypeErrors(ErrorBuilder.TypeErrorsBuilder builder)
-            : this(builder.Type, builder.Errors)
-        {
-        }
-
         internal TypeErrors(Type type, IReadOnlyList<Error> errors)
         {
             this.Type = type;
@@ -31,10 +26,12 @@ namespace Gu.State
             this.AllErrors = MergedErrors.MergeAll(this, errors);
         }
 
-        public IReadOnlyList<Error> Errors { get; }
-
         internal Type Type { get; }
 
+        public IReadOnlyList<Error> Errors { get; }
+
         internal IReadOnlyList<Error> AllErrors { get; }
+
+        internal static TypeErrors Create(ErrorBuilder.TypeErrorsBuilder builder) => new TypeErrors(builder.Type, builder.Errors);
     }
 }

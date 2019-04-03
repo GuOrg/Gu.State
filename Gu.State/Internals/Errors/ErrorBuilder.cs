@@ -21,7 +21,7 @@ namespace Gu.State
                 return null;
             }
 
-            return new TypeErrors(builder);
+            return TypeErrors.Create(builder);
         }
 
         internal static TypeErrors Merge(this TypeErrors first, TypeErrors other)
