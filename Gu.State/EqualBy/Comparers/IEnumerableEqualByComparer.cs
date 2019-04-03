@@ -29,12 +29,6 @@ namespace Gu.State
             {
             }
 
-            {
-                {
-                }
-
-            }
-
             internal override bool Equals(IEnumerable<T> x, IEnumerable<T> y, MemberSettings settings, ReferencePairCollection referencePairs)
             {
                 var comparer = settings.GetEqualByComparer(typeof(T));
