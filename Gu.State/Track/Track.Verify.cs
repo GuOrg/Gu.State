@@ -123,7 +123,7 @@
                 return false;
             }
 
-            if (errors.Errors.Count == 1 && ReferenceEquals(errors.Errors[0], RequiresReferenceHandling.ComplexType))
+            if (errors.Errors.Count == 1 && ReferenceEquals(errors.Errors[0], RequiresReferenceHandling.Default))
             {
                 return false;
             }

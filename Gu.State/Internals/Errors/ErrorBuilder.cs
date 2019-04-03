@@ -57,7 +57,7 @@ namespace Gu.State
                 return new TypeErrors(first.Type, errors);
             }
 
-            return new TypeErrors(null, new[] { first, other });
+            return new TypeErrors(null, first, other);
         }
 
         internal static TypeErrorsBuilder CheckRequiresReferenceHandling(this TypeErrorsBuilder typeErrors, Type type, MemberSettings settings, Func<Type, bool> requiresReferenceHandling)
@@ -74,13 +74,13 @@ namespace Gu.State
                             requiresReferenceHandling(arguments[1]))
                         {
                             typeErrors = typeErrors.CreateIfNull(type)
-                                                   .Add(RequiresReferenceHandling.Enumerable);
+                                                   .Add(RequiresReferenceHandling.Default);
                         }
                     }
                     else if (requiresReferenceHandling(type.GetItemType()))
                     {
                         typeErrors = typeErrors.CreateIfNull(type)
-                                               .Add(RequiresReferenceHandling.Enumerable);
+                                               .Add(RequiresReferenceHandling.Default);
                     }
                 }
                 else if (type.IsKeyValuePair())
@@ -89,13 +89,13 @@ namespace Gu.State
                     if (requiresReferenceHandling(arguments[0]) || requiresReferenceHandling(arguments[1]))
                     {
                         typeErrors = typeErrors.CreateIfNull(type)
-                                               .Add(RequiresReferenceHandling.ComplexType);
+                                               .Add(RequiresReferenceHandling.Default);
                     }
                 }
                 else if (requiresReferenceHandling(type))
                 {
                     typeErrors = typeErrors.CreateIfNull(type)
-                                           .Add(RequiresReferenceHandling.ComplexType);
+                                           .Add(RequiresReferenceHandling.Default);
                 }
             }
 

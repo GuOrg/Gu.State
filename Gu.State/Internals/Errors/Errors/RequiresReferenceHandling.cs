@@ -1,17 +1,11 @@
 namespace Gu.State
 {
-    using System.Collections;
-
     internal sealed class RequiresReferenceHandling : Error, IFixWithImmutable
     {
-        public static readonly RequiresReferenceHandling Enumerable = new RequiresReferenceHandling(typeof(IEnumerable).Name);
-        public static readonly RequiresReferenceHandling ComplexType = new RequiresReferenceHandling(nameof(ComplexType));
+        public static readonly RequiresReferenceHandling Default = new RequiresReferenceHandling();
 
-        private readonly string type;
-
-        private RequiresReferenceHandling(string type)
+        private RequiresReferenceHandling()
         {
-            this.type = type;
         }
 
         public static bool operator ==(RequiresReferenceHandling left, RequiresReferenceHandling right)
@@ -24,14 +18,8 @@ namespace Gu.State
             return !ReferenceEquals(left, right);
         }
 
-        public override bool Equals(object obj)
-        {
-            return ReferenceEquals(this, obj);
-        }
+        public override bool Equals(object obj) => ReferenceEquals(this, obj);
 
-        public override int GetHashCode()
-        {
-            return this.type.GetHashCode();
-        }
+        public override int GetHashCode() => 0;
     }
 }
