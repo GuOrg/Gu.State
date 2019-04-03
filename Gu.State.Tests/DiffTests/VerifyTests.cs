@@ -22,7 +22,7 @@ namespace Gu.State.Tests.DiffTests
         [Test]
         public void ComplexValueThrowsWithoutReferenceHandling()
         {
-            var expected = this is DiffTests.FieldValues.Verify
+            var expected = this is FieldValues.Verify
                                ? "DiffBy.FieldValues(x, y) failed.\r\n" +
                                  "The field WithProperty<ComplexType>.<Value>k__BackingField of type ComplexType is not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
@@ -58,10 +58,10 @@ namespace Gu.State.Tests.DiffTests
         [Test]
         public void WithIndexer()
         {
-            var expected = this is DiffTests.FieldValues.Verify
+            var expected = this is FieldValues.Verify
                                ? "DiffBy.FieldValues(x, y) failed.\r\n" +
                                  "Indexers are not supported.\r\n" +
-                                 "  - The property WithIllegalIndexer.Item is an indexer and not supported.\r\n" +
+                                 "  - The property WithIllegalIndexer[int] is an indexer and not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
                                  "* Implement IEquatable<WithIllegalIndexer> for WithIllegalIndexer or use a type that does.\r\n" +
                                  "* Use FieldsSettings and specify how comparing is performed:\r\n" +
@@ -70,7 +70,7 @@ namespace Gu.State.Tests.DiffTests
 
                                : "DiffBy.PropertyValues(x, y) failed.\r\n" +
                                  "Indexers are not supported.\r\n" +
-                                 "  - The property WithIllegalIndexer.Item is an indexer and not supported.\r\n" +
+                                 "  - The property WithIllegalIndexer[int] is an indexer and not supported.\r\n" +
                                  "Solve the problem by any of:\r\n" +
                                  "* Implement IEquatable<WithIllegalIndexer> for WithIllegalIndexer or use a type that does.\r\n" +
                                  "* Use PropertiesSettings and specify how comparing is performed:\r\n" +
@@ -84,7 +84,7 @@ namespace Gu.State.Tests.DiffTests
         [Test]
         public void ListOfWithIndexers()
         {
-            var expected = this is DiffTests.FieldValues.Verify
+            var expected = this is FieldValues.Verify
                                ? "DiffBy.FieldValues(x, y) failed.\r\n" +
                                  "The field WithListProperty<WithIllegalIndexer>.<Items>k__BackingField of type List<WithIllegalIndexer> is not supported.\r\n" +
                                  "Indexers are not supported.\r\n" +
