@@ -38,9 +38,15 @@ namespace Gu.State.Benchmarks
         }
 
         [Benchmark]
-        public bool EqualByPropertyValues()
+        public bool EqualByPropertyValuesStructural()
         {
-            return State.EqualBy.PropertyValues(this.x, this.y);
+            return State.EqualBy.PropertyValues(this.x, this.y, ReferenceHandling.Structural);
+        }
+
+        [Benchmark]
+        public bool EqualByPropertyValuesReferences()
+        {
+            return State.EqualBy.PropertyValues(this.x, this.y, ReferenceHandling.References);
         }
 
         [Benchmark]
@@ -50,9 +56,15 @@ namespace Gu.State.Benchmarks
         }
 
         [Benchmark]
-        public bool EqualByFieldValues()
+        public bool EqualByFieldValuesStructural()
         {
-            return State.EqualBy.FieldValues(this.x, this.y);
+            return State.EqualBy.FieldValues(this.x, this.y, ReferenceHandling.Structural);
+        }
+
+        [Benchmark]
+        public bool EqualByFieldValuesReferences()
+        {
+            return State.EqualBy.FieldValues(this.x, this.y, ReferenceHandling.References);
         }
 
         [Benchmark]
