@@ -697,6 +697,13 @@ namespace Gu.State.Tests.EqualByTests
 
             public int Value { get; set; }
 
+            public override bool Equals(object obj)
+            {
+                return obj is HashCollisionType type &&
+                       this.HashValue == type.HashValue &&
+                       this.Value == type.Value;
+            }
+
             public override int GetHashCode()
             {
                 return this.HashValue;

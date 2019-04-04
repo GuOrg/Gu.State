@@ -81,8 +81,8 @@
         [TestCase(ReferenceHandling.References)]
         public void WithCollisionsWhenEqual(ReferenceHandling referenceHandling)
         {
-            var e1 = new HashCollisionType();
-            var e2 = new HashCollisionType();
+            var e1 = new HashCollisionType { Value = 1 };
+            var e2 = new HashCollisionType { Value = 2 };
             var x = new HashSet<HashCollisionType> { e1, e2 };
             var y = new HashSet<HashCollisionType> { e2, e1 };
             var result = this.EqualBy(x, y, referenceHandling);

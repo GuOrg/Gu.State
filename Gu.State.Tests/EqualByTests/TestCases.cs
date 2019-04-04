@@ -64,6 +64,7 @@ namespace Gu.State.Tests.EqualByTests
             Case(new[] { 1, 2, 3 }, new[] { 1, 2, 3 }),
 
             Case(new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }, new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }),
+            Case(new HashSet<int>(new[] { 1, 2, 3 }), new HashSet<int>(new[] { 1, 2, 3 })),
 
             Case(new Dictionary<int, string> { { 1, "1" } }, new Dictionary<int, string> { { 1, "1" } }),
 
@@ -98,6 +99,9 @@ namespace Gu.State.Tests.EqualByTests
             Case(new With<IReadOnlyList<int>>(new[] { 1, 2, 3 }), new With<IReadOnlyList<int>>(new[] { 1, 2, 3 })),
 
             Case(new[] { new[] { 1, 2, 3 }, new[] { 4, 5 } }, new[] { new[] { 1, 2, 3 }, new[] { 4, 5 } }),
+
+            Case(new HashSet<HashCollisionType> {new HashCollisionType { Value = 1 } }, new HashSet<HashCollisionType> {new HashCollisionType { Value = 1 } }),
+            Case(new Dictionary<HashCollisionType, string> { { new HashCollisionType { Value = 1 }, "1" } }, new Dictionary<HashCollisionType, string> { { new HashCollisionType { Value = 1 }, "1" } }),
 
             Case(new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = 2 }), new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = 2 })),
             Case(new[] { new With<int>(1), new With<int>(2), new With<int>(3) }, new[] { new With<int>(1), new With<int>(2), new With<int>(3) }),
@@ -221,6 +225,10 @@ namespace Gu.State.Tests.EqualByTests
             Case(new[] { new[] { 1, 2, 3 }, new[] { 4, 5 } }, new[] { new[] { 1, 2, 3 }, new[] { 4 } }),
             Case(new[] { new[] { 1, 2, 3 }, new[] { 4, 5 } }, new[] { new[] { -1, 2, 3 }, new[] { 4, 5 } }),
             Case(new[] { new[] { 1, 2, 3 }, new[] { 4, 5 } }, new[] { new[] { 1, 2, 3 }, new[] { 4, -5 } }),
+
+            Case(new HashSet<HashCollisionType> {new HashCollisionType { Value = 1 } }, new HashSet<HashCollisionType> {new HashCollisionType { Value = -1 } }),
+
+            Case(new Dictionary<HashCollisionType, string> { { new HashCollisionType { Value = 1 }, "1" } }, new Dictionary<HashCollisionType, string> { { new HashCollisionType { Value = -1 }, "1" } }),
 
             Case(new[] { new With<int>(1), new With<int>(2), new With<int>(3) }, new[] { new With<int>(4), new With<int>(5), new With<int>(6) }),
 
