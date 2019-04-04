@@ -76,6 +76,7 @@ namespace Gu.State.Tests.EqualByTests
             Case(ImmutableHashSet.Create(new[] { 1, 2, 3 }), ImmutableHashSet.Create(new[] { 1, 2, 3 })),
             Case(ImmutableStack.Create(new[] { 1, 2, 3 }), ImmutableStack.Create(new[] { 1, 2, 3 })),
             Case(ImmutableQueue.Create(new[] { 1, 2, 3 }), ImmutableQueue.Create(new[] { 1, 2, 3 })),
+            Case(ImmutableDictionary.CreateRange(new Dictionary<int,string> { { 1, "1" } }), ImmutableDictionary.CreateRange(new Dictionary<int,string> { { 1, "1" } })),
 
             Case(Enumerable.Empty<int>().Select(x => x * x), Enumerable.Empty<int>().Select(x => x * x)),
             Case("1,2".Split(',').Select(int.Parse), "1,2".Split(',').Select(int.Parse)),
@@ -192,6 +193,8 @@ namespace Gu.State.Tests.EqualByTests
             Case(ImmutableHashSet.Create(new[] { 1, 2, 3 }), ImmutableHashSet.Create(new[] { 1, 2, -3 })),
             Case(ImmutableStack.Create(new[] { 1, 2, 3 }), ImmutableStack.Create(new[] { 1, 2, -3 })),
             Case(ImmutableQueue.Create(new[] { 1, 2, 3 }), ImmutableQueue.Create(new[] { 1, 2, -3 })),
+            Case(ImmutableDictionary.CreateRange(new Dictionary<int,string> { { 1, "1" } }), ImmutableDictionary.CreateRange(new Dictionary<int,string> { { -1, "1" } })),
+            Case(ImmutableDictionary.CreateRange(new Dictionary<int,string> { { 1, "1" } }), ImmutableDictionary.CreateRange(new Dictionary<int,string> { { 1, "-1" } })),
 
             Case(new[] { 1 }.Select(x => x * x), Enumerable.Empty<int>().Select(x => x * x)),
             Case("1,2".Split(',').Select(int.Parse), "1,-2".Split(',').Select(int.Parse)),
