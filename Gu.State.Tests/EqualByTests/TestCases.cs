@@ -80,6 +80,8 @@ namespace Gu.State.Tests.EqualByTests
 
             Case(Enumerable.Empty<int>().Select(x => x * x), Enumerable.Empty<int>().Select(x => x * x)),
             Case("1,2".Split(',').Select(int.Parse), "1,2".Split(',').Select(int.Parse)),
+            Case("1,2".Split(',').Select(int.Parse), "1,2".Split(',').Select(int.Parse)),
+
             Case(new With<Point>(new Point(1, 2)), new With<Point>(new Point(1, 2))),
             Case(new With<Point?>(new Point(1, 2)), new With<Point?>(new Point(1, 2))),
             Case(new With<Point?>(null), new With<Point?>(null)),
@@ -106,6 +108,8 @@ namespace Gu.State.Tests.EqualByTests
 
             Case(new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = 2 }), new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = 2 })),
             Case(new[] { new With<int>(1), new With<int>(2), new With<int>(3) }, new[] { new With<int>(1), new With<int>(2), new With<int>(3) }),
+            Case(new object[] { 1, null }.Select(x => x), new object[] { 1, null }.Select(x => x)),
+            Case(new object[] { 1, 1.2 }.Select(x => x), new object[] { 1, 1.2 }.Select(x => x)),
         };
 
         public static readonly TestCaseData[] WhenNotEqual =
@@ -237,6 +241,8 @@ namespace Gu.State.Tests.EqualByTests
 
             Case(new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = 2 }), new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = -2 })),
             Case(new With<BaseClass>(new Derived1()), new With<BaseClass>(new Derived2())),
+            Case(new object[] { 1, null }.Select(x => x), new object[] { null, 1 }.Select(x => x)),
+            Case(new object[] { 1, null }.Select(x => x), new object[] { 1 }.Select(x => x)),
         };
 
         private static TestCaseData Case<T>(T x, T y) => new TestCaseData(x, y);
