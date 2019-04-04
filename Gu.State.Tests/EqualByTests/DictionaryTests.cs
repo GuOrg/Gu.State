@@ -11,20 +11,6 @@ namespace Gu.State.Tests.EqualByTests
         public abstract bool EqualBy<T>(T source, T target, ReferenceHandling referenceHandling)
             where T : class;
 
-        [TestCase(1, "one", true)]
-        [TestCase(2, "one", false)]
-        [TestCase(1, "two", false)]
-        public void SameLength(int key, string value, bool expected)
-        {
-            var x = new Dictionary<int, string> { { key, value } };
-            var y = new Dictionary<int, string> { { 1, "one" } };
-            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(expected, result);
-
-            result = this.EqualBy(y, x, ReferenceHandling.Structural);
-            Assert.AreEqual(expected, result);
-        }
-
         [Test]
         public void OneEmpty()
         {

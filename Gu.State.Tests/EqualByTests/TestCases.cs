@@ -64,6 +64,8 @@ namespace Gu.State.Tests.EqualByTests
 
             Case(new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }, new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }),
 
+            Case(new Dictionary<int, string> { { 1, "1" } }, new Dictionary<int, string> { { 1, "1" } }),
+
             Case(ImmutableList.Create(1, 2, 3), ImmutableList.Create(1, 2, 3)),
             Case(ImmutableArray<int>.Empty, ImmutableArray<int>.Empty),
             //Case(default(ImmutableArray<int>), default(ImmutableArray<int>)),
@@ -172,6 +174,10 @@ namespace Gu.State.Tests.EqualByTests
             Case(new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }, new[,] { { -1, 2 }, { 3, 4 }, { 5, 6 } }),
             Case(new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }, new[,] { { 1, 2 }, { -3, 4 }, { 5, 6 } }),
             Case(new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }, new[,] { { 1, 2 }, { 3, 4 }, { 5, -6 } }),
+
+            Case(new Dictionary<int, string> { { 1, "1" }, { 2, "2" } }, new Dictionary<int, string> { { 1, "1" } }),
+            Case(new Dictionary<int, string> { { 1, "1" } }, new Dictionary<int, string> { { -1, "1" } }),
+            Case(new Dictionary<int, string> { { 1, "1" } }, new Dictionary<int, string> { { 1, "-1" } }),
 
             Case(ImmutableList.Create(1, 2, 3), ImmutableList.Create(1, 2, -3)),
             Case(ImmutableArray.Create(new[] { 1, 2, 3 }), ImmutableArray.Create(new[] { 1, 2, -3 })),
