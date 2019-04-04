@@ -1,4 +1,5 @@
 ﻿// ReSharper disable RedundantArgumentDefaultValue
+// ReSharper disable RedundantCast
 #pragma warning disable CA1825 // Avoid zero-length array allocations.
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 namespace Gu.State.Tests.EqualByTests
@@ -175,6 +176,7 @@ namespace Gu.State.Tests.EqualByTests
             Case(new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }, new[,] { { 1, 2 }, { -3, 4 }, { 5, 6 } }),
             Case(new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }, new[,] { { 1, 2 }, { 3, 4 }, { 5, -6 } }),
 
+            Case(new Dictionary<int, string> { { 1, "1" } }, new Dictionary<int, string>()),
             Case(new Dictionary<int, string> { { 1, "1" }, { 2, "2" } }, new Dictionary<int, string> { { 1, "1" } }),
             Case(new Dictionary<int, string> { { 1, "1" } }, new Dictionary<int, string> { { -1, "1" } }),
             Case(new Dictionary<int, string> { { 1, "1" } }, new Dictionary<int, string> { { 1, "-1" } }),
