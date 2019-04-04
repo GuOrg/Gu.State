@@ -11,7 +11,16 @@
         {
             using (var referencePairs = GetReferencePairs())
             {
-                return MemberValues(x, y, settings, referencePairs?.Value);
+                try
+                {
+                    return settings.GetRootEqualByComparer(x?.GetType() ?? y?.GetType() ?? typeof(T))
+                                   .Equals(x, y, settings, referencePairs?.Value);
+                }
+                catch (InvalidOperationException e) when (e.Message == nameof(Throw.CompareWhenError))
+                {
+                    ThrowIfHasErrors(settings.GetRootEqualByComparer(x?.GetType() ?? y?.GetType() ?? typeof(T)), settings, typeof(EqualBy).Name, settings is FieldsSettings ? nameof(FieldValues) : nameof(PropertyValues));
+                    throw;
+                }
             }
 
             IBorrowed<ReferencePairCollection> GetReferencePairs()
@@ -22,20 +31,6 @@
                 }
 
                 return null;
-            }
-        }
-
-        internal static bool MemberValues<T>(T x, T y, MemberSettings settings, ReferencePairCollection referencePairs)
-        {
-            try
-            {
-                return settings.GetRootEqualByComparer(x?.GetType() ?? y?.GetType() ?? typeof(T))
-                               .Equals(x, y, settings, referencePairs);
-            }
-            catch (InvalidOperationException e) when (e.Message == nameof(Throw.CompareWhenError))
-            {
-                ThrowIfHasErrors(settings.GetRootEqualByComparer(x?.GetType() ?? y?.GetType() ?? typeof(T)), settings, typeof(EqualBy).Name, settings is FieldsSettings ? nameof(FieldValues) : nameof(PropertyValues));
-                throw;
             }
         }
 
