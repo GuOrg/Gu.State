@@ -1,4 +1,5 @@
-﻿#pragma warning disable SA1300 // Element must begin with upper-case letter
+﻿// ReSharper disable RedundantArgumentDefaultValue
+#pragma warning disable SA1300 // Element must begin with upper-case letter
 namespace Gu.State.Benchmarks
 {
     using System;
@@ -14,64 +15,34 @@ namespace Gu.State.Benchmarks
         private static readonly FieldsSettings FieldsSettingsWithComparer = FieldsSettings.Build().AddComparer(ComplexTypeComparer.Default).CreateSettings();
 
         [Benchmark(Baseline = true)]
-        public bool this_x_Equals_this_y()
-        {
-            return X.Equals(Y);
-        }
+        public bool this_x_Equals_this_y() => X.Equals(Y);
 
         [Benchmark]
-        public bool ObjectEquals()
-        {
-            return Equals(X, Y);
-        }
+        public bool ObjectEquals() => Equals(X, Y);
 
         [Benchmark]
-        public bool Func()
-        {
-            return CompareFunc(X, Y);
-        }
+        public bool Func() => CompareFunc(X, Y);
 
         [Benchmark]
-        public bool Comparer()
-        {
-            return ComplexTypeComparer.Default.Equals(X, Y);
-        }
+        public bool Comparer() => ComplexTypeComparer.Default.Equals(X, Y);
 
         [Benchmark]
-        public bool EqualByPropertyValuesStructural()
-        {
-            return State.EqualBy.PropertyValues(X, Y, ReferenceHandling.Structural);
-        }
+        public bool EqualByPropertyValuesStructural() => State.EqualBy.PropertyValues(X, Y, ReferenceHandling.Structural);
 
         [Benchmark]
-        public bool EqualByPropertyValuesReferences()
-        {
-            return State.EqualBy.PropertyValues(X, Y, ReferenceHandling.References);
-        }
+        public bool EqualByPropertyValuesReferences() => State.EqualBy.PropertyValues(X, Y, ReferenceHandling.References);
 
         [Benchmark]
-        public bool EqualByPropertyValuesWithComparer()
-        {
-            return State.EqualBy.PropertyValues(X, Y, PropertiesSettingsWithComparer);
-        }
+        public bool EqualByPropertyValuesWithComparer() => State.EqualBy.PropertyValues(X, Y, PropertiesSettingsWithComparer);
 
         [Benchmark]
-        public bool EqualByFieldValuesStructural()
-        {
-            return State.EqualBy.FieldValues(X, Y, ReferenceHandling.Structural);
-        }
+        public bool EqualByFieldValuesStructural() => State.EqualBy.FieldValues(X, Y, ReferenceHandling.Structural);
 
         [Benchmark]
-        public bool EqualByFieldValuesReferences()
-        {
-            return State.EqualBy.FieldValues(X, Y, ReferenceHandling.References);
-        }
+        public bool EqualByFieldValuesReferences() => State.EqualBy.FieldValues(X, Y, ReferenceHandling.References);
 
         [Benchmark]
-        public bool EqualByFieldValuesWithComparer()
-        {
-            return State.EqualBy.FieldValues(X, Y, FieldsSettingsWithComparer);
-        }
+        public bool EqualByFieldValuesWithComparer() => State.EqualBy.FieldValues(X, Y, FieldsSettingsWithComparer);
 
         private class ComplexTypeComparer : IEqualityComparer<ComplexType>
         {
@@ -92,10 +63,7 @@ namespace Gu.State.Benchmarks
                 return x.Value == y.Value && x.Name == y.Name;
             }
 
-            public int GetHashCode(ComplexType obj)
-            {
-                throw new NotImplementedException();
-            }
+            public int GetHashCode(ComplexType obj) => throw new NotImplementedException();
         }
     }
 }
