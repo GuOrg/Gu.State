@@ -82,7 +82,11 @@ namespace Gu.State.Tests.EqualByTests
             new TestCaseData(new With<IReadOnlyList<int>>(null), new With<IReadOnlyList<int>>(null)),
             new TestCaseData(new With<IReadOnlyList<int>>(new int[0]), new With<IReadOnlyList<int>>(new int[0])),
             new TestCaseData(new With<IReadOnlyList<int>>(new[] { 1, 2, 3 }), new With<IReadOnlyList<int>>(new[] { 1, 2, 3 })),
+
+            new TestCaseData(new[] { new[] { 1, 2, 3 }, new[] { 4, 5 } }, new[] { new[] { 1, 2, 3 }, new[] { 4, 5 } }),
+
             new TestCaseData(new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = 2 }), new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = 2 })),
+            new TestCaseData(new[] { new With<int>(1), new With<int>(2), new With<int>(3) }, new[] { new With<int>(1), new With<int>(2), new With<int>(3) }),
         };
 
         public static readonly TestCaseData[] WhenNotEqual =
@@ -185,6 +189,13 @@ namespace Gu.State.Tests.EqualByTests
             new TestCaseData(new With<IReadOnlyList<int>>(new[] { 1, 2 }), new With<IReadOnlyList<int>>(new[] { 1, 2, 3 })),
             new TestCaseData(new With<IReadOnlyList<int>>(new[] { 1, 2 }), new With<IReadOnlyList<int>>(null)),
             new TestCaseData(new With<IReadOnlyList<int>>(new int[0]), new With<IReadOnlyList<int>>(null)),
+
+            new TestCaseData(new[] { new[] { 1, 2, 3 }, new[] { 4, 5 } }, new[] { new[] { 1, 2 }, new[] { 4, 5 } }),
+            new TestCaseData(new[] { new[] { 1, 2, 3 }, new[] { 4, 5 } }, new[] { new[] { 1, 2, 3 }, new[] { 4 } }),
+            new TestCaseData(new[] { new[] { 1, 2, 3 }, new[] { 4, 5 } }, new[] { new[] { -1, 2, 3 }, new[] { 4, 5 } }),
+            new TestCaseData(new[] { new[] { 1, 2, 3 }, new[] { 4, 5 } }, new[] { new[] { 1, 2, 3 }, new[] { 4, -5 } }),
+
+            new TestCaseData(new[] { new With<int>(1), new With<int>(2), new With<int>(3) }, new[] { new With<int>(4), new With<int>(5), new With<int>(6) }),
 
             new TestCaseData(new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = 2 }), new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = -2 })),
             new TestCaseData(new With<BaseClass>(new Derived1()), new With<BaseClass>(new Derived2())),

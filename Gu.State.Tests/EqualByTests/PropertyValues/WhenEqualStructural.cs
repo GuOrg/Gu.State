@@ -29,13 +29,13 @@ namespace Gu.State.Tests.EqualByTests.PropertyValues
                 y is IWith yw &&
                 yw.Value is null)
             {
-                Assert.AreEqual(true, EqualBy.FieldValues(x, y, ReferenceHandling.References));
-                Assert.AreEqual(true, EqualBy.FieldValues(y, x, ReferenceHandling.References));
+                Assert.AreEqual(true, EqualBy.PropertyValues(x, y, ReferenceHandling.References));
+                Assert.AreEqual(true, EqualBy.PropertyValues(y, x, ReferenceHandling.References));
             }
             else
             {
-                Assert.AreEqual(false, EqualBy.FieldValues(x, y, ReferenceHandling.References));
-                Assert.AreEqual(false, EqualBy.FieldValues(y, x, ReferenceHandling.References));
+                Assert.AreEqual(false, EqualBy.PropertyValues(x, y, ReferenceHandling.References));
+                Assert.AreEqual(false, EqualBy.PropertyValues(y, x, ReferenceHandling.References));
             }
         }
     }
