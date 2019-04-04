@@ -7,70 +7,70 @@ namespace Gu.State.Benchmarks
 
     public class EqualByComplexType
     {
-        private readonly ComplexType x = new ComplexType();
-        private readonly ComplexType y = new ComplexType();
-        private readonly Func<ComplexType, ComplexType, bool> compareFunc = (x, y) => x.Name == y.Name && x.Value == y.Value;
-        private readonly PropertiesSettings propertiesSettings = PropertiesSettings.Build().AddComparer(ComplexTypeComparer.Default).CreateSettings();
-        private readonly FieldsSettings fieldsSettings = FieldsSettings.Build().AddComparer(ComplexTypeComparer.Default).CreateSettings();
+        private static readonly ComplexType X = new ComplexType();
+        private static readonly ComplexType Y = new ComplexType();
+        private static readonly Func<ComplexType, ComplexType, bool> CompareFunc = (x, y) => x.Name == y.Name && x.Value == y.Value;
+        private static readonly PropertiesSettings PropertiesSettingsWithComparer = PropertiesSettings.Build().AddComparer(ComplexTypeComparer.Default).CreateSettings();
+        private static readonly FieldsSettings FieldsSettingsWithComparer = FieldsSettings.Build().AddComparer(ComplexTypeComparer.Default).CreateSettings();
 
         [Benchmark(Baseline = true)]
         public bool this_x_Equals_this_y()
         {
-            return this.x.Equals(this.y);
+            return X.Equals(Y);
         }
 
         [Benchmark]
         public bool ObjectEquals()
         {
-            return Equals(this.x, this.y);
+            return Equals(X, Y);
         }
 
         [Benchmark]
         public bool Func()
         {
-            return this.compareFunc(this.x, this.y);
+            return CompareFunc(X, Y);
         }
 
         [Benchmark]
         public bool Comparer()
         {
-            return ComplexTypeComparer.Default.Equals(this.x, this.y);
+            return ComplexTypeComparer.Default.Equals(X, Y);
         }
 
         [Benchmark]
         public bool EqualByPropertyValuesStructural()
         {
-            return State.EqualBy.PropertyValues(this.x, this.y, ReferenceHandling.Structural);
+            return State.EqualBy.PropertyValues(X, Y, ReferenceHandling.Structural);
         }
 
         [Benchmark]
         public bool EqualByPropertyValuesReferences()
         {
-            return State.EqualBy.PropertyValues(this.x, this.y, ReferenceHandling.References);
+            return State.EqualBy.PropertyValues(X, Y, ReferenceHandling.References);
         }
 
         [Benchmark]
         public bool EqualByPropertyValuesWithComparer()
         {
-            return State.EqualBy.PropertyValues(this.x, this.y, this.propertiesSettings);
+            return State.EqualBy.PropertyValues(X, Y, PropertiesSettingsWithComparer);
         }
 
         [Benchmark]
         public bool EqualByFieldValuesStructural()
         {
-            return State.EqualBy.FieldValues(this.x, this.y, ReferenceHandling.Structural);
+            return State.EqualBy.FieldValues(X, Y, ReferenceHandling.Structural);
         }
 
         [Benchmark]
         public bool EqualByFieldValuesReferences()
         {
-            return State.EqualBy.FieldValues(this.x, this.y, ReferenceHandling.References);
+            return State.EqualBy.FieldValues(X, Y, ReferenceHandling.References);
         }
 
         [Benchmark]
         public bool EqualByFieldValuesWithComparer()
         {
-            return State.EqualBy.FieldValues(this.x, this.y, this.fieldsSettings);
+            return State.EqualBy.FieldValues(X, Y, FieldsSettingsWithComparer);
         }
 
         private class ComplexTypeComparer : IEqualityComparer<ComplexType>
