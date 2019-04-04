@@ -9,12 +9,15 @@
         {
             foreach (var error in errors.AllErrors.OfType<INotSupported>().Distinct())
             {
-                error.AppendNotSupported(errorBuilder);
+                _ = error.AppendNotSupported(errorBuilder);
             }
 
             foreach (var member in errors.AllErrors.OfType<MemberErrors>().Select(x => x.Member).Distinct())
             {
-                errorBuilder.AppendNotSupportedMember(member);
+                if (!member.IsIndexer())
+                {
+                    _ = errorBuilder.AppendNotSupportedMember(member);
+                }
             }
 
             if (errors.AllErrors.OfType<UnsupportedIndexer>().Any())
@@ -22,7 +25,7 @@
                 errorBuilder.AppendLine("Indexers are not supported.");
                 foreach (var indexer in errors.AllErrors.OfType<UnsupportedIndexer>().Select(x => x.Indexer).Distinct())
                 {
-                    errorBuilder.AppendNotSupportedMember(indexer);
+                    _ = errorBuilder.AppendNotSupportedMember(indexer);
                 }
             }
 
@@ -31,16 +34,12 @@
 
         internal static StringBuilder AppendSuggestEquatable(this StringBuilder errorBuilder, TypeErrors errors)
         {
-            const string Format = "IEquatable<{0}>";
-            var types = errors.AllErrors.OfType<TypeErrors>()
-                              .Select(x => x.Type)
-                              .Distinct();
+            var types = errors.AllErrors.OfType<TypeErrors>().Select(x => x.Type).Distinct();
             foreach (var type in types)
             {
-                var iEquatable = string.Format(Format, type.PrettyName());
                 var line = type.Assembly == typeof(int).Assembly
                     ? $"* Use a type that implements IEquatable<> instead of {type.PrettyName()}."
-                    : $"* Implement {iEquatable} for {type.PrettyName()} or use a type that does.";
+                    : $"* Implement IEquatable<{type.PrettyName()}> for {type.PrettyName()} or use a type that does.";
                 errorBuilder.AppendLine(line);
             }
 
@@ -82,7 +81,7 @@
             {
                 var fixable = error.Errors.OfType<IFixWithNotify>()
                                           .First();
-                fixable.AppendSuggestFixWithNotify(errorBuilder, error.Type);
+                _ = fixable.AppendSuggestFixWithNotify(errorBuilder, error.Type);
             }
 
             return errorBuilder;
@@ -101,7 +100,7 @@
                 errorBuilder.AppendLine("  - Exclude a combination of the following:");
                 foreach (var member in errors.AllErrors.OfType<IExcludableMember>().Select(x => x.Member).Distinct())
                 {
-                    errorBuilder.AppendSuggestExcludeMember(member);
+                    _ = errorBuilder.AppendSuggestExcludeMember(member);
                 }
 
                 foreach (var type in types)

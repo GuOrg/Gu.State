@@ -33,7 +33,7 @@
         /// <param name="settings">The settings to use.</param>
         public static void VerifyCanDiffByFieldValues<T>(FieldsSettings settings)
         {
-            EqualBy.Verify.CanEqualByMemberValues<T>(settings, typeof(DiffBy).Name, nameof(FieldValues));
+            EqualBy.VerifyCanEqualByMemberValues(typeof(T), settings, typeof(DiffBy).Name, nameof(FieldValues));
         }
 
         /// <summary>
@@ -65,7 +65,7 @@
         /// <param name="settings">The settings to use.</param>
         public static void VerifyCanDiffByPropertyValues<T>(PropertiesSettings settings)
         {
-            EqualBy.Verify.CanEqualByMemberValues<T>(settings, typeof(DiffBy).Name, nameof(DiffBy.PropertyValues));
+            EqualBy.VerifyCanEqualByMemberValues(typeof(T), settings, typeof(DiffBy).Name, nameof(PropertyValues));
         }
     }
 }

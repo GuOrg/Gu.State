@@ -8,7 +8,7 @@
     {
         internal static void UpdateDiffs<T>(this DiffBuilder builder, T x, T y, MemberSettings settings)
         {
-            EqualBy.Verify.CanEqualByMemberValues(x, y, settings, typeof(DiffBy).Name, settings.DiffMethodName());
+            EqualBy.VerifyCanEqualByMemberValues(x?.GetType() ?? y?.GetType() ?? typeof(T), settings, typeof(DiffBy).Name, settings.DiffMethodName());
             builder.TryAddCollectionDiffs(x, y, settings);
             TryAddMemberDiffs(x, y, settings, builder);
         }
@@ -25,7 +25,7 @@
                 return;
             }
 
-            var getterAndSetter = settings.GetOrCreateGetterAndSetter(member);
+            var getterAndSetter = GetterAndSetter.GetOrCreate(member);
             if (getterAndSetter.TryGetValueEquals(xSource, ySource, settings, out var equal, out var xValue, out var yValue))
             {
                 if (equal)

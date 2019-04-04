@@ -18,7 +18,7 @@
 
             if (ignoredType != null)
             {
-                builder.IgnoreType(ignoredType);
+                _ = builder.IgnoreType(ignoredType);
             }
 
             if (immutableType != null)

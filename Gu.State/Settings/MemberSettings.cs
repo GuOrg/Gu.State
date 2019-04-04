@@ -3,13 +3,16 @@
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
     using System.Reflection;
 
     public abstract partial class MemberSettings
     {
-        private readonly Lazy<ConcurrentDictionary<Type, TypeErrors>> equalByErrors = new Lazy<ConcurrentDictionary<Type, TypeErrors>>();
         private readonly Lazy<ConcurrentDictionary<Type, TypeErrors>> copyErrors = new Lazy<ConcurrentDictionary<Type, TypeErrors>>();
         private readonly ImmutableSet<Type> immutableTypes;
+        private readonly ConcurrentDictionary<Type, EqualByComparer> rootEqualByComparers = new ConcurrentDictionary<Type, EqualByComparer>();
+        private readonly ConcurrentDictionary<Type, EqualByComparer> equalByComparers = new ConcurrentDictionary<Type, EqualByComparer>();
         private readonly IReadOnlyDictionary<Type, CastingComparer> comparers;
         private readonly IReadOnlyDictionary<Type, CustomCopy> copyers;
         private readonly KnownTypes knownTypes;
@@ -23,7 +26,7 @@
         /// <param name="comparers">A map of types with custom comparers. Can be null.</param>
         /// <param name="copyers">A map of custom copy implementations for types. Can be null.</param>
         /// <param name="referenceHandling">How reference values are handled.</param>
-        /// <param name="bindingFlags">The bindingflags used for getting members.</param>
+        /// <param name="bindingFlags">The <see cref="BindingFlags"/> used for getting members.</param>
         protected MemberSettings(
             IEnumerable<MemberInfo> ignoredMembers,
             IEnumerable<Type> ignoredTypes,
@@ -35,6 +38,11 @@
         {
             this.ReferenceHandling = referenceHandling;
             this.BindingFlags = bindingFlags;
+            this.comparers = comparers;
+            this.copyers = copyers;
+            this.knownTypes = KnownTypes.Create(ignoredTypes);
+            this.immutableTypes = ImmutableSet<Type>.Create(immutableTypes);
+
             if (ignoredMembers != null)
             {
                 foreach (var ignoredMember in ignoredMembers)
@@ -43,10 +51,14 @@
                 }
             }
 
-            this.knownTypes = KnownTypes.Create(ignoredTypes);
-            this.immutableTypes = ImmutableSet<Type>.Create(immutableTypes);
-            this.comparers = comparers;
-            this.copyers = copyers;
+            if (comparers != null)
+            {
+                foreach (var comparer in comparers)
+                {
+                    this.equalByComparers[comparer.Key] = new ExplicitEqualByComparer(comparer.Value);
+                    this.rootEqualByComparers[comparer.Key] = new ExplicitEqualByComparer(comparer.Value);
+                }
+            }
         }
 
         /// <summary>Gets the <see cref="BindingFlags"/> used for getting members.</summary>
@@ -54,8 +66,6 @@
 
         /// <summary>Gets a value indicating how reference values are handled.</summary>
         public ReferenceHandling ReferenceHandling { get; }
-
-        internal ConcurrentDictionary<Type, TypeErrors> EqualByErrors => this.equalByErrors.Value;
 
         internal ConcurrentDictionary<Type, TypeErrors> CopyErrors => this.copyErrors.Value;
 
@@ -131,9 +141,45 @@
             return this.copyers?.TryGetValue(type, out copyer) == true;
         }
 
-        /// <summary>Get an <see cref="IGetterAndSetter"/> that is  used for getting ans setting values.</summary>
-        /// <param name="member">The member.</param>
-        /// <returns>A <see cref="IGetterAndSetter"/>.</returns>
-        internal abstract IGetterAndSetter GetOrCreateGetterAndSetter(MemberInfo member);
+        internal IEnumerable<MemberInfo> GetEffectiveMembers(Type type)
+        {
+            return this.GetMembers(type).Where(x => !this.IsIgnoringMember(x) && !x.IsIndexer());
+        }
+
+        internal EqualByComparer GetRootEqualByComparer(Type type)
+        {
+            Debug.Assert(type != null, "type != null");
+            return this.rootEqualByComparers.GetOrAdd(type, _ => Create());
+
+            EqualByComparer Create()
+            {
+                return EqualByComparer.Create(type, this);
+            }
+        }
+
+        internal EqualByComparer GetEqualByComparer(Type type)
+        {
+            Debug.Assert(type != null, "type != null");
+            return this.equalByComparers.GetOrAdd(type, t => Create());
+
+            EqualByComparer Create()
+            {
+                if (!type.IsValueType &&
+                    !this.IsEquatable(type))
+                {
+                    switch (this.ReferenceHandling)
+                    {
+                        case ReferenceHandling.Throw:
+                            return new ErrorEqualByComparer(type, new TypeErrors(type, RequiresReferenceHandling.Default));
+                        case ReferenceHandling.References:
+                            return ReferenceEqualByComparer.Default;
+                        case ReferenceHandling.Structural:
+                            break;
+                    }
+                }
+
+                return EqualByComparer.Create(type, this);
+            }
+        }
     }
 }

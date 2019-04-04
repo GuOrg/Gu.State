@@ -1,7 +1,9 @@
 ﻿namespace Gu.State
 {
     using System;
+    using System.Linq;
     using System.Reflection;
+    using System.Text;
 
     public static partial class EqualBy
     {
@@ -16,12 +18,10 @@
         /// If Structural is used a deep equality check is performed.
         /// </param>
         /// <param name="bindingFlags">The binding flags to use when getting properties.</param>
-        public static void VerifyCanEqualByPropertyValues<T>(
-            ReferenceHandling referenceHandling = ReferenceHandling.Structural,
-            BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
+        public static void VerifyCanEqualByPropertyValues<T>(ReferenceHandling referenceHandling = ReferenceHandling.Structural, BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
         {
             var settings = PropertiesSettings.GetOrCreate(referenceHandling, bindingFlags);
-            VerifyCanEqualByPropertyValues<T>(settings);
+            ThrowIfHasErrors(settings.GetRootEqualByComparer(typeof(T)), settings, typeof(EqualBy).Name, nameof(PropertyValues));
         }
 
         /// <summary>
@@ -34,8 +34,7 @@
         /// <param name="settings">The settings to use.</param>
         public static void VerifyCanEqualByPropertyValues<T>(PropertiesSettings settings)
         {
-            var type = typeof(T);
-            VerifyCanEqualByPropertyValues(type, settings);
+            ThrowIfHasErrors(settings.GetRootEqualByComparer(typeof(T)), settings, typeof(EqualBy).Name, nameof(PropertyValues));
         }
 
         /// <summary>
@@ -48,7 +47,7 @@
         /// <param name="settings">The settings to use.</param>
         public static void VerifyCanEqualByPropertyValues(Type type, PropertiesSettings settings)
         {
-            Verify.CanEqualByMemberValues(type, settings, typeof(EqualBy).Name, nameof(EqualBy.PropertyValues));
+            ThrowIfHasErrors(settings.GetRootEqualByComparer(type), settings, typeof(EqualBy).Name, nameof(PropertyValues));
         }
 
         /// <summary>
@@ -67,7 +66,7 @@
             BindingFlags bindingFlags = Constants.DefaultFieldBindingFlags)
         {
             var settings = FieldsSettings.GetOrCreate(referenceHandling, bindingFlags);
-            VerifyCanEqualByFieldValues<T>(settings);
+            ThrowIfHasErrors(settings.GetRootEqualByComparer(typeof(T)), settings, typeof(EqualBy).Name, nameof(PropertyValues));
         }
 
         /// <summary>
@@ -80,8 +79,7 @@
         /// <param name="settings">The settings to use.</param>
         public static void VerifyCanEqualByFieldValues<T>(FieldsSettings settings)
         {
-            var type = typeof(T);
-            VerifyCanEqualByFieldValues(type, settings);
+            ThrowIfHasErrors(settings.GetRootEqualByComparer(typeof(T)), settings, typeof(EqualBy).Name, nameof(FieldValues));
         }
 
         /// <summary>
@@ -94,71 +92,55 @@
         /// <param name="settings">The settings to use.</param>
         public static void VerifyCanEqualByFieldValues(Type type, FieldsSettings settings)
         {
-            Verify.CanEqualByMemberValues(type, settings, typeof(EqualBy).Name, nameof(EqualBy.FieldValues));
+            ThrowIfHasErrors(settings.GetRootEqualByComparer(type), settings, typeof(EqualBy).Name, nameof(FieldValues));
         }
 
-        internal static class Verify
+        internal static void VerifyCanEqualByMemberValues(Type type, MemberSettings settings, string typeName, string methodName)
         {
-            internal static void CanEqualByMemberValues<T>(T x, T y, MemberSettings settings)
-            {
-                CanEqualByMemberValues(x, y, settings, typeof(EqualBy).Name, settings.EqualByMethodName());
-            }
+            ThrowIfHasErrors(settings.GetRootEqualByComparer(type), settings, typeName, methodName);
+        }
 
-            internal static void CanEqualByMemberValues<T>(T x, T y, MemberSettings settings, string className, string methodName)
+        private static void ThrowIfHasErrors(EqualByComparer comparer, MemberSettings settings, string className, string methodName)
+        {
+            if (comparer.TryGetError(settings, out var errors))
             {
-                var type = x?.GetType() ?? y?.GetType() ?? typeof(T);
-                CanEqualByMemberValues(type, settings, className, methodName);
-            }
-
-            internal static void CanEqualByMemberValues<T>(
-                MemberSettings settings,
-                string className,
-                string methodName)
-            {
-                CanEqualByMemberValues(typeof(T), settings, className, methodName);
-            }
-
-            internal static void CanEqualByMemberValues(Type type, MemberSettings settings, string className, string methodName)
-            {
-                GetOrCreateErrors(type, settings)
-                    .ThrowIfHasErrors(settings, className, methodName);
-            }
-
-            private static TypeErrors GetOrCreateErrors(Type type, MemberSettings settings, MemberPath path = null)
-            {
-                return settings.EqualByErrors.GetOrAdd(type, t => CreateErrors(t, settings, path));
-            }
-
-            private static TypeErrors CreateErrors(Type type, MemberSettings settings, MemberPath path)
-            {
-                if (settings.IsEquatable(type) || settings.TryGetComparer(type, out _))
+                if (errors is TypeErrors typeErrors)
                 {
-                    return null;
+                    var errorBuilder = new StringBuilder()
+                                       .AppendLine($"{className}.{methodName}(x, y) failed.")
+                                       .AppendNotSupported(typeErrors)
+                                       .AppendSolveTheProblemBy()
+                                       .AppendSuggestEquatable(typeErrors)
+                                       .AppendLine($"* Use {settings.GetType().Name} and specify how comparing is performed:")
+                                       .AppendSuggestReferenceHandling(typeErrors, settings)
+                                       .AppendSuggestExclude(typeErrors);
+
+                    var message = errorBuilder.ToString();
+                    throw new NotSupportedException(message);
                 }
 
-                var errors = VerifyCore(settings, type)
-                    .VerifyRecursive(type, settings, path, GetNodeErrors)
-                    .Finnish();
-                return errors;
+                throw Throw.ShouldNeverGetHereException($"Expected TypeErrors was {errors}.");
             }
+        }
 
-            private static ErrorBuilder.TypeErrorsBuilder VerifyCore(MemberSettings settings, Type type)
+        private static StringBuilder AppendSuggestReferenceHandling(this StringBuilder errorBuilder, TypeErrors errors, MemberSettings settings)
+        {
+            var references = $"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.References)} means that reference equality is used.";
+            if (settings.ReferenceHandling == ReferenceHandling.Throw)
             {
-                return ErrorBuilder.Start()
-                                   .CheckRequiresReferenceHandling(type, settings, t => !settings.IsEquatable(t))
-                                   .CheckIndexers(type, settings);
-            }
-
-            private static TypeErrors GetNodeErrors(MemberSettings settings, MemberPath path)
-            {
-                if (settings.ReferenceHandling == ReferenceHandling.References)
+                if (errors.AllErrors.OfType<RequiresReferenceHandling>().Any())
                 {
-                    return null;
+                    return errorBuilder.AppendLine($"  - {typeof(ReferenceHandling).Name}.{nameof(ReferenceHandling.Structural)} means that a deep equals is performed.")
+                                       .AppendLine(references);
                 }
-
-                var type = path.LastNodeType;
-                return GetOrCreateErrors(type, settings, path);
             }
+
+            if (errors.AllErrors.OfType<ReferenceLoop>().Any())
+            {
+                return errorBuilder.AppendLine(references);
+            }
+
+            return errorBuilder;
         }
     }
 }

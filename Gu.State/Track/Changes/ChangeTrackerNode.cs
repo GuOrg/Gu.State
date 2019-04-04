@@ -199,7 +199,7 @@
                 return;
             }
 
-            var getter = this.Settings.GetOrCreateGetterAndSetter(property);
+            var getter = GetterAndSetter.GetOrCreate(property);
             var value = getter.GetValue(this.Source);
             if (TryGetOrCreate(value, this.Settings, isRoot: false, result: out var node))
             {

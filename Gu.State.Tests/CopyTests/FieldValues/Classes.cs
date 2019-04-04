@@ -45,7 +45,7 @@
                            "The readonly field WithReadonlyField.ReadonlyValue differs after copy.\r\n" +
                            " - Source value (int): 1.\r\n" +
                            " - Target value (int): 3.\r\n" +
-                           "Solve the problem by any of:\r\n" +
+                           "Below are a couple of suggestions that may solve the problem:\r\n" +
                            "* Use FieldsSettings and specify how copying is performed:\r\n" +
                            "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
                            "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +

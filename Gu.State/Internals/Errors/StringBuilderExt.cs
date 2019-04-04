@@ -1,5 +1,6 @@
 ﻿namespace Gu.State
 {
+    using System.Linq;
     using System.Reflection;
     using System.Text;
 
@@ -7,7 +8,7 @@
     {
         internal static StringBuilder AppendSolveTheProblemBy(this StringBuilder errorBuilder)
         {
-            return errorBuilder.AppendLine("Solve the problem by any of:");
+            return errorBuilder.AppendLine("Below are a couple of suggestions that may solve the problem:");
         }
 
         internal static StringBuilder AppendSuggestExcludeMember(this StringBuilder errorBuilder, MemberInfo member)
@@ -21,7 +22,7 @@
             {
                 if (propertyInfo.GetIndexParameters().Length > 0)
                 {
-                    return errorBuilder.AppendLine($"    - The indexer property {propertyInfo.DeclaringType.PrettyName()}.{propertyInfo.Name}.");
+                    return errorBuilder.AppendLine($"    - The indexer property {propertyInfo.DeclaringType.PrettyName()}[{string.Join(", ", propertyInfo.GetIndexParameters().Select(x => x.ParameterType.PrettyName()))}].");
                 }
 
                 return errorBuilder.AppendLine($"    - The property {member.DeclaringType.PrettyName()}.{propertyInfo.Name}.");
@@ -41,7 +42,7 @@
             {
                 if (propertyInfo.GetIndexParameters().Length > 0)
                 {
-                    return errorBuilder.AppendLine($"  - The property {propertyInfo.DeclaringType.PrettyName()}.{propertyInfo.Name} is an indexer and not supported.");
+                    return errorBuilder.AppendLine($"  - The property {propertyInfo.DeclaringType.PrettyName()}[{string.Join(",", propertyInfo.GetIndexParameters().Select(x => x.ParameterType.PrettyName()))}] is an indexer and not supported.");
                 }
 
                 return errorBuilder.AppendLine($"The property {propertyInfo.DeclaringType.PrettyName()}.{propertyInfo.Name} of type {propertyInfo.PropertyType.PrettyName()} is not supported.");

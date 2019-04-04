@@ -232,7 +232,7 @@ namespace Gu.State.Tests.Settings
             public T Value { get; set; }
         }
 
-        public class WithIndexerType
+        public class WithIllegalIndexer
         {
             public string Name { get; set; }
 

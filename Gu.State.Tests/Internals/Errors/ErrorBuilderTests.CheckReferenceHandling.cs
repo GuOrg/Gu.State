@@ -34,7 +34,7 @@
                                          .Finnish();
                 if (requiresRef)
                 {
-                    var error = RequiresReferenceHandling.Enumerable;
+                    var error = RequiresReferenceHandling.Default;
                     var expected = new[] { error };
                     CollectionAssert.AreEqual(expected, errors.Errors);
                     var stringBuilder = new StringBuilder();
@@ -63,7 +63,7 @@
                 var errors = ErrorBuilder.Start()
                                          .CheckRequiresReferenceHandling(type, settings, _ => true)
                                          .Finnish();
-                var expected = new[] { RequiresReferenceHandling.ComplexType };
+                var expected = new[] { RequiresReferenceHandling.Default };
                 CollectionAssert.AreEqual(expected, errors.Errors);
             }
         }

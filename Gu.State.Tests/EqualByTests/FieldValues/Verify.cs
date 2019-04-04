@@ -23,7 +23,7 @@
 
             if (immutableType != null)
             {
-                builder.AddImmutableType(immutableType);
+                _ = builder.AddImmutableType(immutableType);
             }
 
             var settings = builder.CreateSettings(referenceHandling);

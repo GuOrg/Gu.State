@@ -43,7 +43,7 @@
             Ensure.NotNull(x, nameof(x));
             Ensure.NotNull(y, nameof(y));
             Ensure.NotNull(settings, nameof(settings));
-            EqualBy.Verify.CanEqualByMemberValues(x, y, settings, typeof(DiffBy).Name, nameof(PropertyValues));
+            EqualBy.VerifyCanEqualByMemberValues(x?.GetType() ?? y?.GetType() ?? typeof(T), settings, typeof(DiffBy).Name, nameof(PropertyValues));
             return TryCreateValueDiff(x, y, settings) ?? new EmptyDiff(x, y);
         }
 

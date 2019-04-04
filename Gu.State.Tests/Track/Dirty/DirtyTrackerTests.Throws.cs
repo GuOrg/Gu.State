@@ -15,7 +15,7 @@ namespace Gu.State.Tests
             {
                 var expected = "Track.IsDirty(x, y) failed.\r\n" +
                                "The property WithComplexProperty.ComplexType of type ComplexType is not supported.\r\n" +
-                               "Solve the problem by any of:\r\n" +
+                               "Below are a couple of suggestions that may solve the problem:\r\n" +
                                "* Implement IEquatable<WithComplexProperty> for WithComplexProperty or use a type that does.\r\n" +
                                "* Implement IEquatable<ComplexType> for ComplexType or use a type that does.\r\n" +
                                "* Use PropertiesSettings and specify how comparing is performed:\r\n" +

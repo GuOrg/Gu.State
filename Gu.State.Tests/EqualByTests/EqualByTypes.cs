@@ -17,6 +17,23 @@ namespace Gu.State.Tests.EqualByTests
             object Value { get; }
         }
 
+        public struct Struct
+        {
+            public int Value { get; set; }
+        }
+
+        public struct EquatableStruct : IEquatable<EquatableStruct>
+        {
+            public int Value { get; set; }
+
+            public override bool Equals(object obj) => obj is EquatableStruct other &&
+                                                       this.Equals(other);
+
+            public bool Equals(EquatableStruct other) => this.Value == other.Value;
+
+            public override int GetHashCode() => this.Value;
+        }
+
         public class With<T> : IWith
         {
             public With(T value)
@@ -254,6 +271,8 @@ namespace Gu.State.Tests.EqualByTests
             public string Name { get; set; }
 
             public int Value { get; set; }
+
+            public override string ToString() => $"{this.GetType().Name} {{ Name: {this.Name}, Value: {this.Value} }}";
 
             public sealed class TestComparer : IEqualityComparer<ComplexType>, IComparer<ComplexType>, IComparer
             {
@@ -632,7 +651,7 @@ namespace Gu.State.Tests.EqualByTests
             }
         }
 
-        public class WithIndexerType
+        public class WithIllegalIndexer
         {
             // ReSharper disable once UnusedParameter.Global
             public int this[int index]

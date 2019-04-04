@@ -112,17 +112,6 @@
             return this.IsIgnoringProperty((PropertyInfo)member);
         }
 
-        internal override IGetterAndSetter GetOrCreateGetterAndSetter(MemberInfo member)
-        {
-            Debug.Assert(member is PropertyInfo, "member is PropertyInfo");
-            return this.GetOrCreateGetterAndSetter((PropertyInfo)member);
-        }
-
-        internal IGetterAndSetter GetOrCreateGetterAndSetter(PropertyInfo propertyInfo)
-        {
-            return GetterAndSetter.GetOrCreate(propertyInfo);
-        }
-
         private bool GetIsIgnoring(MemberInfo propertyInfo)
         {
             foreach (var kvp in this.IgnoredMembers)

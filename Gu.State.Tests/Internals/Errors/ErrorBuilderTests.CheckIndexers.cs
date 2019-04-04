@@ -38,14 +38,14 @@
                 var message = stringBuilder.AppendNotSupported(errors)
                                      .ToString();
                 var expectedMessage = "Indexers are not supported.\r\n" +
-                                      "  - The property WithIndexer.Item is an indexer and not supported.\r\n";
+                                      "  - The property WithIndexer[int] is an indexer and not supported.\r\n";
                 Assert.AreEqual(expectedMessage, message);
 
                 stringBuilder = new StringBuilder();
                 message = stringBuilder.AppendSuggestExclude(errors)
                                        .ToString();
                 expectedMessage = "  - Exclude a combination of the following:\r\n" +
-                                  "    - The indexer property WithIndexer.Item.\r\n";
+                                  "    - The indexer property WithIndexer[int].\r\n";
                 Assert.AreEqual(expectedMessage, message);
             }
         }

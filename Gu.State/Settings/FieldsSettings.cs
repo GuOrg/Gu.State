@@ -112,19 +112,8 @@
 
         public override bool IsIgnoringMember(MemberInfo member)
         {
-            Debug.Assert(member is FieldInfo, "member is FieldInfo");
-            return this.IsIgnoringField((FieldInfo)member);
-        }
-
-        internal override IGetterAndSetter GetOrCreateGetterAndSetter(MemberInfo member)
-        {
-            Debug.Assert(member is FieldInfo, "member is FieldInfo");
-            return this.GetOrCreateGetterAndSetter((FieldInfo)member);
-        }
-
-        private IGetterAndSetter GetOrCreateGetterAndSetter(FieldInfo propertyInfo)
-        {
-            return GetterAndSetter.GetOrCreate(propertyInfo);
+            return member is FieldInfo field &&
+                   this.IsIgnoringField(field);
         }
     }
 }

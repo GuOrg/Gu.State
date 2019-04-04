@@ -85,18 +85,8 @@ namespace Gu.State.Tests.EqualByTests
         [Test]
         public void WithComplexReferenceWhenNotSame()
         {
-            var x = new WithComplexProperty
-            {
-                Name = "a",
-                Value = 1,
-                ComplexType = new ComplexType { Name = "b", Value = 2 },
-            };
-            var y = new WithComplexProperty
-            {
-                Name = "a",
-                Value = 1,
-                ComplexType = new ComplexType { Name = "b", Value = 2 },
-            };
+            var x = new WithComplexProperty { Name = "a", Value = 1, ComplexType = new ComplexType { Name = "b", Value = 2 } };
+            var y = new WithComplexProperty { Name = "a", Value = 1, ComplexType = new ComplexType { Name = "b", Value = 2 } };
             var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
 

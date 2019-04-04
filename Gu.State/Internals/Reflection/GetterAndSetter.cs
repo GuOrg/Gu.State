@@ -1,5 +1,6 @@
 ﻿namespace Gu.State
 {
+    using System;
     using System.Collections.Concurrent;
     using System.Reflection;
 
@@ -7,6 +8,19 @@
     {
         private static readonly ConcurrentDictionary<PropertyInfo, IGetterAndSetter> PropertyCache = new ConcurrentDictionary<PropertyInfo, IGetterAndSetter>();
         private static readonly ConcurrentDictionary<FieldInfo, IGetterAndSetter> FieldCache = new ConcurrentDictionary<FieldInfo, IGetterAndSetter>();
+
+        internal static IGetterAndSetter GetOrCreate(MemberInfo member)
+        {
+            switch (member)
+            {
+                case PropertyInfo property:
+                    return GetOrCreate(property);
+                case FieldInfo field:
+                    return GetOrCreate(field);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(member), member, $"Cannot create IGetterAndSetter for member {member}.");
+            }
+        }
 
         internal static IGetterAndSetter GetOrCreate(PropertyInfo propertyInfo)
         {

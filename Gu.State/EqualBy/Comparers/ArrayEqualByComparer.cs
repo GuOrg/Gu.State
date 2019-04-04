@@ -1,81 +1,123 @@
 namespace Gu.State
 {
     using System;
+    using System.Reflection;
 
-    /// <inheritdoc />
-    internal class ArrayEqualByComparer : EqualByComparer
+    internal static class ArrayEqualByComparer
     {
-        /// <summary>The default instance.</summary>
-        public static readonly ArrayEqualByComparer Default = new ArrayEqualByComparer();
-
-        private ArrayEqualByComparer()
+        internal static bool TryGet(Type type, MemberSettings settings, out EqualByComparer comparer)
         {
-        }
-
-        public static bool TryGetOrCreate(object x, object y, out EqualByComparer comparer)
-        {
-            if (x is Array && y is Array)
+            if (type.IsArray)
             {
-                comparer = Default;
-                return true;
+                switch (type.GetArrayRank())
+                {
+                    case 1:
+                        return IReadOnlyListEqualByComparer.TryGet(type, settings, out comparer);
+                    case 2:
+                        comparer = (EqualByComparer)typeof(Comparer2D<>).MakeGenericType(type.GetItemType())
+                                                                           .GetField(nameof(Comparer2D<int>.Default), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
+                                                                           .GetValue(null);
+                        return true;
+                    default:
+                        comparer = Comparer.Default;
+                        return true;
+                }
             }
 
             comparer = null;
             return false;
         }
 
-        /// <inheritdoc />
-        public override bool Equals(
-            object x,
-            object y,
-            MemberSettings settings,
-            ReferencePairCollection referencePairs)
+        private class Comparer2D<T> : EqualByComparer<T[,]>
         {
-            if (TryGetEitherNullEquals(x, y, out var result))
+            /// <summary>The default instance.</summary>
+            public static readonly Comparer2D<T> Default = new Comparer2D<T>();
+
+            private Comparer2D()
             {
-                return result;
             }
 
-            return Equals((Array)x, (Array)y, settings, referencePairs);
-        }
-
-        private static bool Equals(
-            Array x,
-            Array y,
-            MemberSettings settings,
-            ReferencePairCollection referencePairs)
-        {
-            if (!Is.SameSize(x, y))
+            internal override bool TryGetError(MemberSettings settings, out Error error)
             {
+                if (settings.GetEqualByComparer(typeof(T)) is ErrorEqualByComparer errorEqualByComparer)
+                {
+                    error = errorEqualByComparer.Error;
+                    return true;
+                }
+
+                error = null;
                 return false;
             }
 
-            var isEquatable = settings.IsEquatable(x.GetType().GetItemType());
-            if (settings.ReferenceHandling == ReferenceHandling.References)
+            internal override bool Equals(T[,] xs, T[,] ys, MemberSettings settings, ReferencePairCollection referencePairs)
             {
-                return isEquatable
-                           ? ItemsEquals(x, y, Equals)
-                           : ItemsEquals(x, y, ReferenceEquals);
-            }
-
-            return isEquatable
-                       ? ItemsEquals(x, y, Equals)
-                       : ItemsEquals(x, y, (xi, yi) => EqualBy.MemberValues(xi, yi, settings, referencePairs));
-        }
-
-        private static bool ItemsEquals(Array x, Array y, Func<object, object, bool> compare)
-        {
-            var xe = x.GetEnumerator();
-            var ye = y.GetEnumerator();
-            while (xe.MoveNext() && ye.MoveNext())
-            {
-                if (!compare(xe.Current, ye.Current))
+                if (!Is.SameSize(xs, ys))
                 {
                     return false;
                 }
+
+                var comparer = settings.GetEqualByComparer(typeof(T));
+
+                for (var i = 0; i < xs.GetLength(0); i++)
+                {
+                    for (var j = 0; j < xs.GetLength(1); j++)
+                    {
+                        if (!comparer.Equals(xs[i, j], ys[i, j], settings, referencePairs))
+                        {
+                            return false;
+                        }
+                    }
+                }
+
+                return true;
+            }
+        }
+
+        private class Comparer : EqualByComparer
+        {
+            /// <summary>The default instance.</summary>
+            public static readonly Comparer Default = new Comparer();
+
+            private Comparer()
+            {
             }
 
-            return true;
+            internal override bool TryGetError(MemberSettings settings, out Error errors)
+            {
+                errors = null;
+                return false;
+            }
+
+            internal override bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs)
+            {
+                if (TryGetEitherNullEquals(x, y, out var result))
+                {
+                    return result;
+                }
+
+                return Equals((Array)x, (Array)y, settings, referencePairs);
+            }
+
+            private static bool Equals(Array x, Array y, MemberSettings settings, ReferencePairCollection referencePairs)
+            {
+                if (!Is.SameSize(x, y))
+                {
+                    return false;
+                }
+
+                var comparer = settings.GetEqualByComparer(x.GetType().GetItemType());
+                var xe = x.GetEnumerator();
+                var ye = y.GetEnumerator();
+                while (xe.MoveNext() && ye.MoveNext())
+                {
+                    if (!comparer.Equals(xe.Current, ye.Current, settings, referencePairs))
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
         }
     }
 }

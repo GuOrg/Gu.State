@@ -112,7 +112,7 @@
 
         internal static void VerifyCanTrackIsDirty(Type type, PropertiesSettings settings, string className, string methodName)
         {
-            EqualBy.Verify.CanEqualByMemberValues(type, settings, className, methodName);
+            EqualBy.VerifyCanEqualByMemberValues(type, settings, className, methodName);
             VerifyCanTrackChanges(type, settings, className, methodName);
         }
 
@@ -123,7 +123,7 @@
                 return false;
             }
 
-            if (errors.Errors.Count == 1 && ReferenceEquals(errors.Errors[0], RequiresReferenceHandling.ComplexType))
+            if (errors.Errors.Count == 1 && ReferenceEquals(errors.Errors[0], RequiresReferenceHandling.Default))
             {
                 return false;
             }

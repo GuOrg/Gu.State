@@ -44,6 +44,19 @@
             return this.GetEnumerator();
         }
 
+        internal static MemberPath Create(MemberInfo member)
+        {
+            switch (member)
+            {
+                case FieldInfo field:
+                    return new MemberPath(new RootItem(member.ReflectedType), new[] { new FieldItem(field), });
+                case PropertyInfo property:
+                    return new MemberPath(new RootItem(member.ReflectedType), new[] { new PropertyItem(property), });
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(member), member, "Not suppoeted member type.");
+            }
+        }
+
         internal string PathString()
         {
             var stringBuilder = new StringBuilder();
