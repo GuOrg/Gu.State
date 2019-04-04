@@ -2,7 +2,7 @@
 {
     using System.Diagnostics;
 
-    [DebuggerDisplay("Comparer<{typeof(T).PrettyName()}>")]
+    [DebuggerDisplay("{GetType().Name}<{typeof(T).PrettyName()}>")]
     internal abstract class EqualByComparer<T> : EqualByComparer
     {
         internal override bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs)

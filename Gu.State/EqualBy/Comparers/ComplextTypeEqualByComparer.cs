@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
 
@@ -29,6 +30,7 @@
             }
         }
 
+        [DebuggerDisplay("ComplexTypeEqualByComparer<{typeof(T).PrettyName()}>")]
         private class Comparer<T> : EqualByComparer<T>
         {
             private readonly ImmutableArray<MemberEqualByComparer> memberComparers;

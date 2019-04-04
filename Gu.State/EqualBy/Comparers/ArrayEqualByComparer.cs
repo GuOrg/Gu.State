@@ -28,25 +28,13 @@ namespace Gu.State
             return false;
         }
 
-        private class Comparer2D<T> : EqualByComparer<T[,]>
+        private class Comparer2D<T> : CollectionEqualByComparer<T[,], T>
         {
             /// <summary>The default instance.</summary>
             public static readonly Comparer2D<T> Default = new Comparer2D<T>();
 
             private Comparer2D()
             {
-            }
-
-            internal override bool TryGetError(MemberSettings settings, out Error error)
-            {
-                if (settings.GetEqualByComparer(typeof(T)) is ErrorEqualByComparer errorEqualByComparer)
-                {
-                    error = errorEqualByComparer.Error;
-                    return true;
-                }
-
-                error = null;
-                return false;
             }
 
             internal override bool Equals(T[,] xs, T[,] ys, MemberSettings settings, ReferencePairCollection referencePairs)
@@ -73,7 +61,7 @@ namespace Gu.State
             }
         }
 
-        private class Comparer : EqualByComparer
+        private class Comparer : EqualByComparer<Array>
         {
             /// <summary>The default instance.</summary>
             public static readonly Comparer Default = new Comparer();
@@ -88,17 +76,7 @@ namespace Gu.State
                 return false;
             }
 
-            internal override bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs)
-            {
-                if (TryGetEitherNullEquals(x, y, out var result))
-                {
-                    return result;
-                }
-
-                return Equals((Array)x, (Array)y, settings, referencePairs);
-            }
-
-            private static bool Equals(Array x, Array y, MemberSettings settings, ReferencePairCollection referencePairs)
+            internal override bool Equals(Array x, Array y, MemberSettings settings, ReferencePairCollection referencePairs)
             {
                 if (!Is.SameSize(x, y))
                 {
