@@ -25,8 +25,24 @@
 
         internal MemberInfo Member { get; }
 
+        internal override bool TryGetError(MemberSettings settings, out Error error)
+        {
+            if (this.lazyComparer.Value is ErrorEqualByComparer errorEqualByComparer)
+            {
+                error = errorEqualByComparer.Error;
+                return true;
+            }
+
+            return settings.GetEqualByComparer(this.Member.MemberType()).TryGetError(settings, out error);
+        }
+
         internal override bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs)
         {
+            if (this.getterAndSetter == null)
+            {
+                throw Throw.CompareWhenError;
+            }
+
             var xv = this.getterAndSetter.GetValue(x);
             var yv = this.getterAndSetter.GetValue(y);
             if (TryGetEitherNullEquals(xv, yv, out var result))

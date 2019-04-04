@@ -9,7 +9,6 @@
 
     public abstract partial class MemberSettings
     {
-        private readonly Lazy<ConcurrentDictionary<Type, TypeErrors>> equalByErrors = new Lazy<ConcurrentDictionary<Type, TypeErrors>>();
         private readonly Lazy<ConcurrentDictionary<Type, TypeErrors>> copyErrors = new Lazy<ConcurrentDictionary<Type, TypeErrors>>();
         private readonly ImmutableSet<Type> immutableTypes;
         private readonly ConcurrentDictionary<Type, EqualByComparer> rootEqualByComparers = new ConcurrentDictionary<Type, EqualByComparer>();
@@ -67,8 +66,6 @@
 
         /// <summary>Gets a value indicating how reference values are handled.</summary>
         public ReferenceHandling ReferenceHandling { get; }
-
-        internal ConcurrentDictionary<Type, TypeErrors> EqualByErrors => this.equalByErrors.Value;
 
         internal ConcurrentDictionary<Type, TypeErrors> CopyErrors => this.copyErrors.Value;
 
@@ -146,7 +143,7 @@
 
         internal IEnumerable<MemberInfo> GetEffectiveMembers(Type type)
         {
-            return this.GetMembers(type).Where(x => !this.IsIgnoringMember(x));
+            return this.GetMembers(type).Where(x => !this.IsIgnoringMember(x) && !x.IsIndexer());
         }
 
         internal EqualByComparer GetRootEqualByComparer(Type type)
@@ -173,7 +170,7 @@
                     switch (this.ReferenceHandling)
                     {
                         case ReferenceHandling.Throw:
-                            throw new InvalidOperationException($"Type {type.PrettyName()} and ReferenceHandling.Throw is used.");
+                            return new ErrorEqualByComparer(type, new TypeErrors(type, RequiresReferenceHandling.Default));
                         case ReferenceHandling.References:
                             return ReferenceEqualByComparer.Default;
                         case ReferenceHandling.Structural:

@@ -29,6 +29,18 @@
             {
             }
 
+            internal override bool TryGetError(MemberSettings settings, out Error error)
+            {
+                if (settings.GetEqualByComparer(typeof(T)) is ErrorEqualByComparer errorEqualByComparer)
+                {
+                    error = errorEqualByComparer.Error;
+                    return true;
+                }
+
+                error = null;
+                return false;
+            }
+
             internal override bool Equals(T? x, T? y, MemberSettings settings, ReferencePairCollection referencePairs)
             {
                 if (IsEquatable)

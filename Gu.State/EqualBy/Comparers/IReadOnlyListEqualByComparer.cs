@@ -36,7 +36,7 @@ namespace Gu.State
             return false;
         }
 
-        private class Comparer<T> : EqualByComparer<IReadOnlyList<T>>
+        private class Comparer<T> : CollectionEqualByComparer<IReadOnlyList<T>,T>
         {
             public static Comparer<T> Default = new Comparer<T>();
 
@@ -64,7 +64,7 @@ namespace Gu.State
             }
         }
 
-        private class ListComparer<T> : EqualByComparer<List<T>>
+        private class ListComparer<T> : CollectionEqualByComparer<List<T>, T>
         {
             public static ListComparer<T> Default = new ListComparer<T>();
 
@@ -92,7 +92,7 @@ namespace Gu.State
             }
         }
 
-        private class ArrayComparer<T> : EqualByComparer<T[]>
+        private class ArrayComparer<T> : CollectionEqualByComparer<T[], T>
         {
             public static ArrayComparer<T> Default = new ArrayComparer<T>();
 

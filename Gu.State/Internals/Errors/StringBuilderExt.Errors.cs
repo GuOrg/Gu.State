@@ -34,9 +34,7 @@
 
         internal static StringBuilder AppendSuggestEquatable(this StringBuilder errorBuilder, TypeErrors errors)
         {
-            var types = errors.AllErrors.OfType<TypeErrors>()
-                              .Select(x => x.Type)
-                              .Distinct();
+            var types = errors.AllErrors.OfType<TypeErrors>().Select(x => x.Type).Distinct();
             foreach (var type in types)
             {
                 var line = type.Assembly == typeof(int).Assembly

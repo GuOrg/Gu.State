@@ -7,8 +7,6 @@ namespace Gu.State
     [DebuggerDisplay("{GetType().Name} Member: {Path.LastMember.DeclaringType.Name}.{Path.LastMember.Name}")]
     internal sealed class MemberErrors : Error, IWithErrors, IExcludableMember, INotsupportedMember
     {
-        private static readonly Error[] EmptyErrors = new Error[0];
-
         public MemberErrors(MemberInfo memberInfo)
             : this(new MemberPath(null).WithMember(memberInfo), null)
         {

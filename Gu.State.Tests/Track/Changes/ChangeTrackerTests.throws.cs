@@ -20,7 +20,7 @@ namespace Gu.State.Tests
                                "The type NotifyingStruct is a mutable struct that implements INotifyPropertyChanged.\r\n" +
                                "  As it is a value type subscribing to changes does not make sense.\r\n" +
                                "The property With<NotifyingStruct>.Value of type NotifyingStruct is not supported.\r\n" +
-                               "Solve the problem by any of:\r\n" +
+                               "Below are a couple of suggestions that may solve the problem:\r\n" +
                                "* Make NotifyingStruct immutable or use an immutable type.\r\n" +
                                "  - For immutable types the following must hold:\r\n" +
                                "    - Must be a sealed class or a struct.\r\n" +
@@ -48,7 +48,7 @@ namespace Gu.State.Tests
                 var expected = // "Track.Changes(x, y) failed for item: ObservableCollection<ComplexType>[0].Illegal.\r\n" +
                     "Track.Changes(x, y) failed.\r\n" +
                     "The property With<ComplexType>.Value of type ComplexType is not supported.\r\n" +
-                    "Solve the problem by any of:\r\n" +
+                    "Below are a couple of suggestions that may solve the problem:\r\n" +
                     "* Make ComplexType immutable or use an immutable type.\r\n" +
                     "  - For immutable types the following must hold:\r\n" +
                     "    - Must be a sealed class or a struct.\r\n" +
@@ -82,7 +82,7 @@ namespace Gu.State.Tests
                 var expected = "Track.Changes(x, y) failed.\r\n" +
                                "The type IllegalType does not notify changes.\r\n" +
                                "The property IllegalSubType.Illegal of type IllegalType is not supported.\r\n" +
-                               "Solve the problem by any of:\r\n" +
+                               "Below are a couple of suggestions that may solve the problem:\r\n" +
                                "* Implement INotifyPropertyChanged for IllegalType or use a type that does.\r\n" +
                                "* Make IllegalSubType immutable or use an immutable type.\r\n" +
                                "* Make IllegalType immutable or use an immutable type.\r\n" +
@@ -115,7 +115,7 @@ namespace Gu.State.Tests
                                "Track.Changes(x, y) failed.\r\n" +
                                "The type IllegalType does not notify changes.\r\n" +
                                "The property IllegalSubType.Illegal of type IllegalType is not supported.\r\n" +
-                               "Solve the problem by any of:\r\n" +
+                               "Below are a couple of suggestions that may solve the problem:\r\n" +
                                "* Implement INotifyPropertyChanged for IllegalType or use a type that does.\r\n" +
                                "* Make IllegalSubType immutable or use an immutable type.\r\n" +
                                "* Make IllegalType immutable or use an immutable type.\r\n" +
@@ -148,7 +148,7 @@ namespace Gu.State.Tests
                                "Track.Changes(x, y) failed.\r\n" +
                                "The type IllegalType does not notify changes.\r\n" +
                                "The property WithIllegal.Illegal of type IllegalType is not supported.\r\n" +
-                               "Solve the problem by any of:\r\n" +
+                               "Below are a couple of suggestions that may solve the problem:\r\n" +
                                "* Implement INotifyPropertyChanged for IllegalType or use a type that does.\r\n" +
                                "* Make IllegalType immutable or use an immutable type.\r\n" +
                                "  - For immutable types the following must hold:\r\n" +
@@ -178,7 +178,7 @@ namespace Gu.State.Tests
             {
                 var expected = "Track.Changes(x, y) failed.\r\n" +
                                "The collection type IllegalEnumerable does not notify changes.\r\n" +
-                               "Solve the problem by any of:\r\n" +
+                               "Below are a couple of suggestions that may solve the problem:\r\n" +
                                "* Implement INotifyCollectionChanged for IllegalEnumerable or use a type that does.\r\n" +
                                "* Use PropertiesSettings and specify how change tracking is performed:\r\n" +
                                "  - ReferenceHandling.Structural means that a the entire graph is tracked.\r\n" +
@@ -198,7 +198,7 @@ namespace Gu.State.Tests
                 var expected = "Track.Changes(x, y) failed.\r\n" +
                                "The collection type List<int> does not notify changes.\r\n" +
                                "The property With<List<int>>.Value of type List<int> is not supported.\r\n" +
-                               "Solve the problem by any of:\r\n" +
+                               "Below are a couple of suggestions that may solve the problem:\r\n" +
                                "* Use a type that implements INotifyCollectionChanged instead of List<int>.\r\n" +
                                "* Use an immutable type instead of List<int>.\r\n" +
                                "  - For immutable types the following must hold:\r\n" +

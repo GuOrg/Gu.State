@@ -9,6 +9,12 @@
             this.comparer = comparer;
         }
 
+        internal override bool TryGetError(MemberSettings settings, out Error error)
+        {
+            error = null;
+            return false;
+        }
+
         internal override bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs)
         {
             return TryGetEitherNullEquals(x, y, out var result)

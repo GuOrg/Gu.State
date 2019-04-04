@@ -5,6 +5,8 @@
     /// <summary>A comparer that compares by member or index.</summary>
     internal abstract class EqualByComparer
     {
+        internal abstract bool TryGetError(MemberSettings settings, out Error error);
+
         /// <summary>
         /// Compare <paramref name="x"/> with <paramref name="y"/>.
         /// </summary>
@@ -31,7 +33,7 @@
                 return comparer;
             }
 
-            throw Throw.ShouldNeverGetHereException($"Could not find an EqualByComparer<{type.PrettyName()}>");
+            return new ErrorEqualByComparer(type, new NotSupported(type, $"Could not find an EqualByComparer<{type.PrettyName()}>"));
         }
 
         /// <summary>Convenience method for checking equality if either or both <paramref name="x"/> and <paramref name="y"/> are null.</summary>

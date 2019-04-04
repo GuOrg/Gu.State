@@ -39,7 +39,7 @@
             var expected = this is FieldValues.Verify
                    ? "Copy.VerifyCanCopyFieldValues(x, y) failed.\r\n" +
                      "The field WithComplexProperty.<ComplexType>k__BackingField of type ComplexType is not supported.\r\n" +
-                     "Solve the problem by any of:\r\n" +
+                     "Below are a couple of suggestions that may solve the problem:\r\n" +
                      "* Make ComplexType immutable or use an immutable type.\r\n" +
                      "  - For immutable types the following must hold:\r\n" +
                      "    - Must be a sealed class or a struct.\r\n" +
@@ -57,7 +57,7 @@
 
                    : "Copy.VerifyCanCopyPropertyValues(x, y) failed.\r\n" +
                      "The property WithComplexProperty.ComplexType of type ComplexType is not supported.\r\n" +
-                     "Solve the problem by any of:\r\n" +
+                     "Below are a couple of suggestions that may solve the problem:\r\n" +
                      "* Make ComplexType immutable or use an immutable type.\r\n" +
                      "  - For immutable types the following must hold:\r\n" +
                      "    - Must be a sealed class or a struct.\r\n" +
@@ -137,7 +137,7 @@
                                ? "Copy.VerifyCanCopyFieldValues(x, y) failed.\r\n" +
                                  "Indexers are not supported.\r\n" +
                                  "  - The property WithIllegalIndexer[int] is an indexer and not supported.\r\n" +
-                                 "Solve the problem by any of:\r\n" +
+                                 "Below are a couple of suggestions that may solve the problem:\r\n" +
                                  "* Use FieldsSettings and specify how copying is performed:\r\n" +
                                  "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
                                  "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
@@ -148,7 +148,7 @@
                                : "Copy.VerifyCanCopyPropertyValues(x, y) failed.\r\n" +
                                  "Indexers are not supported.\r\n" +
                                  "  - The property WithIllegalIndexer[int] is an indexer and not supported.\r\n" +
-                                 "Solve the problem by any of:\r\n" +
+                                 "Below are a couple of suggestions that may solve the problem:\r\n" +
                                  "* Use PropertiesSettings and specify how copying is performed:\r\n" +
                                  "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
                                  "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
@@ -169,7 +169,7 @@
                      "  - The loop is Parent.child.<Parent>k__BackingField.child...\r\n" +
                      "The field Parent.child of type Child is not supported.\r\n" +
                      "The field Child.<Parent>k__BackingField of type Parent is not supported.\r\n" +
-                     "Solve the problem by any of:\r\n" +
+                     "Below are a couple of suggestions that may solve the problem:\r\n" +
                      "* Make Child immutable or use an immutable type.\r\n" +
                      "  - For immutable types the following must hold:\r\n" +
                      "    - Must be a sealed class or a struct.\r\n" +
@@ -191,7 +191,7 @@
                      "  - The loop is Parent.Child.Parent.Child...\r\n" +
                      "The property Parent.Child of type Child is not supported.\r\n" +
                      "The property Child.Parent of type Parent is not supported.\r\n" +
-                     "Solve the problem by any of:\r\n" +
+                     "Below are a couple of suggestions that may solve the problem:\r\n" +
                      "* Make Child immutable or use an immutable type.\r\n" +
                      "  - For immutable types the following must hold:\r\n" +
                      "    - Must be a sealed class or a struct.\r\n" +

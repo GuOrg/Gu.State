@@ -27,9 +27,16 @@
 
         internal static bool MemberValues<T>(T x, T y, MemberSettings settings, ReferencePairCollection referencePairs)
         {
-            Verify.CanEqualByMemberValues(x, y, settings, typeof(EqualBy).Name, settings.EqualByMethodName());
-            return settings.GetRootEqualByComparer(x?.GetType() ?? y?.GetType() ?? typeof(T))
-                           .Equals(x, y, settings, referencePairs);
+            try
+            {
+                return settings.GetRootEqualByComparer(x?.GetType() ?? y?.GetType() ?? typeof(T))
+                               .Equals(x, y, settings, referencePairs);
+            }
+            catch (InvalidOperationException e) when (e.Message == nameof(Throw.CompareWhenError))
+            {
+                ThrowIfHasErrors(settings.GetRootEqualByComparer(x?.GetType() ?? y?.GetType() ?? typeof(T)), settings, typeof(EqualBy).Name, settings is FieldsSettings ? nameof(FieldValues) : nameof(PropertyValues));
+                throw;
+            }
         }
 
         [Obsolete("This can probably be removed.")]

@@ -56,7 +56,7 @@ namespace Gu.State
             }
         }
 
-        private class Comparer<T> : EqualByComparer<IReadOnlyCollection<T>>
+        private class Comparer<T> : CollectionEqualByComparer<IReadOnlyCollection<T>,T>
         {
             public static readonly Comparer<T> Default = new Comparer<T>();
 

@@ -20,7 +20,7 @@ namespace Gu.State
             return false;
         }
 
-        private class Comparer<T> : EqualByComparer<IEnumerable<T>>
+        private class Comparer<T> : CollectionEqualByComparer<IEnumerable<T>,T>
         {
             /// <summary>The default instance.</summary>
             public static readonly Comparer<T> Default = new Comparer<T>();

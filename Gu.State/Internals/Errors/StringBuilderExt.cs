@@ -8,7 +8,7 @@
     {
         internal static StringBuilder AppendSolveTheProblemBy(this StringBuilder errorBuilder)
         {
-            return errorBuilder.AppendLine("Solve the problem by any of:");
+            return errorBuilder.AppendLine("Below are a couple of suggestions that may solve the problem:");
         }
 
         internal static StringBuilder AppendSuggestExcludeMember(this StringBuilder errorBuilder, MemberInfo member)

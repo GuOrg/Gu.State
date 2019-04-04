@@ -17,7 +17,7 @@ namespace Gu.State.Tests
             {
                 var expected = "Synchronize.PropertyValues(x, y) failed.\r\n" +
                                "The property WithComplexProperty.ComplexType of type ComplexType is not supported.\r\n" +
-                               "Solve the problem by any of:\r\n" +
+                               "Below are a couple of suggestions that may solve the problem:\r\n" +
                                "* Make ComplexType immutable or use an immutable type.\r\n" +
                                "  - For immutable types the following must hold:\r\n" +
                                "    - Must be a sealed class or a struct.\r\n" +

@@ -19,7 +19,7 @@ namespace Gu.State.Tests.CopyTests
             var expected = this is FieldValues.Throws
                    ? "Copy.FieldValues(x, y) failed.\r\n" +
                      "The field WithComplexProperty.<ComplexType>k__BackingField of type ComplexType is not supported.\r\n" +
-                     "Solve the problem by any of:\r\n" +
+                     "Below are a couple of suggestions that may solve the problem:\r\n" +
                      "* Make ComplexType immutable or use an immutable type.\r\n" +
                      "  - For immutable types the following must hold:\r\n" +
                      "    - Must be a sealed class or a struct.\r\n" +
@@ -37,7 +37,7 @@ namespace Gu.State.Tests.CopyTests
 
                    : "Copy.PropertyValues(x, y) failed.\r\n" +
                      "The property WithComplexProperty.ComplexType of type ComplexType is not supported.\r\n" +
-                     "Solve the problem by any of:\r\n" +
+                     "Below are a couple of suggestions that may solve the problem:\r\n" +
                      "* Make ComplexType immutable or use an immutable type.\r\n" +
                      "  - For immutable types the following must hold:\r\n" +
                      "    - Must be a sealed class or a struct.\r\n" +
@@ -70,7 +70,7 @@ namespace Gu.State.Tests.CopyTests
                   "The readonly field WithReadonlyProperty<Immutable>.<Value>k__BackingField differs after copy.\r\n" +
                   " - Source value (Immutable): Gu.State.Tests.CopyTests.CopyTypes+Immutable.\r\n" +
                   " - Target value (Immutable): Gu.State.Tests.CopyTests.CopyTypes+Immutable.\r\n" +
-                  "Solve the problem by any of:\r\n" +
+                  "Below are a couple of suggestions that may solve the problem:\r\n" +
                   "* Use FieldsSettings and specify how copying is performed:\r\n" +
                   "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
                   "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
@@ -82,7 +82,7 @@ namespace Gu.State.Tests.CopyTests
                     "The readonly property WithReadonlyProperty<Immutable>.Value differs after copy.\r\n" +
                     " - Source value (Immutable): Gu.State.Tests.CopyTests.CopyTypes+Immutable.\r\n" +
                     " - Target value (Immutable): Gu.State.Tests.CopyTests.CopyTypes+Immutable.\r\n" +
-                    "Solve the problem by any of:\r\n" +
+                    "Below are a couple of suggestions that may solve the problem:\r\n" +
                     "* Use PropertiesSettings and specify how copying is performed:\r\n" +
                     "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
                     "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
@@ -105,7 +105,7 @@ namespace Gu.State.Tests.CopyTests
                                  "The collections are fixed size type: int[]\r\n" +
                                  "  - Source count: 3\r\n" +
                                  "  - Target count: 1\r\n" +
-                                 "Solve the problem by any of:\r\n" +
+                                 "Below are a couple of suggestions that may solve the problem:\r\n" +
                                  "* Use a resizable collection like List<int> instead of int[].\r\n" +
                                  "* Check that the collections are the same size before calling.\r\n" +
                                  "* Use FieldsSettings and specify how copying is performed:\r\n" +
@@ -117,7 +117,7 @@ namespace Gu.State.Tests.CopyTests
                                  "The collections are fixed size type: int[]\r\n" +
                                  "  - Source count: 3\r\n" +
                                  "  - Target count: 1\r\n" +
-                                 "Solve the problem by any of:\r\n" +
+                                 "Below are a couple of suggestions that may solve the problem:\r\n" +
                                  "* Use a resizable collection like List<int> instead of int[].\r\n" +
                                  "* Check that the collections are the same size before calling.\r\n" +
                                  "* Use PropertiesSettings and specify how copying is performed:\r\n" +
@@ -138,7 +138,7 @@ namespace Gu.State.Tests.CopyTests
                                ? "Copy.FieldValues(x, y) failed.\r\n" +
                                  "Indexers are not supported.\r\n" +
                                  "  - The property WithIllegalIndexer[int] is an indexer and not supported.\r\n" +
-                                 "Solve the problem by any of:\r\n" +
+                                 "Below are a couple of suggestions that may solve the problem:\r\n" +
                                  "* Use FieldsSettings and specify how copying is performed:\r\n" +
                                  "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
                                  "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
@@ -149,7 +149,7 @@ namespace Gu.State.Tests.CopyTests
                                : "Copy.PropertyValues(x, y) failed.\r\n" +
                                  "Indexers are not supported.\r\n" +
                                  "  - The property WithIllegalIndexer[int] is an indexer and not supported.\r\n" +
-                                 "Solve the problem by any of:\r\n" +
+                                 "Below are a couple of suggestions that may solve the problem:\r\n" +
                                  "* Use PropertiesSettings and specify how copying is performed:\r\n" +
                                  "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
                                  "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
@@ -169,7 +169,7 @@ namespace Gu.State.Tests.CopyTests
             var expected = this is FieldValues.Throws
                    ? "Copy.FieldValues(x, y) failed.\r\n" +
                      "Activator.CreateInstance failed for type WithoutDefaultCtor.\r\n" +
-                     "Solve the problem by any of:\r\n" +
+                     "Below are a couple of suggestions that may solve the problem:\r\n" +
                      "* Add a parameterless constructor to WithoutDefaultCtor, can be private.\r\n" +
                      "* Use FieldsSettings and specify how copying is performed:\r\n" +
                      "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
@@ -178,7 +178,7 @@ namespace Gu.State.Tests.CopyTests
 
                    : "Copy.PropertyValues(x, y) failed.\r\n" +
                      "Activator.CreateInstance failed for type WithoutDefaultCtor.\r\n" +
-                     "Solve the problem by any of:\r\n" +
+                     "Below are a couple of suggestions that may solve the problem:\r\n" +
                      "* Add a parameterless constructor to WithoutDefaultCtor, can be private.\r\n" +
                      "* Use PropertiesSettings and specify how copying is performed:\r\n" +
                      "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +

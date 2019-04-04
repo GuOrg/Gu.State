@@ -34,6 +34,24 @@ namespace Gu.State
             {
             }
 
+            internal override bool TryGetError(MemberSettings settings, out Error error)
+            {
+                if (CollectionEqualByComparer<TMap, TKey>.TryGetItemError(settings, out var keyError))
+                {
+                    error = keyError;
+                    return true;
+                }
+
+                if (CollectionEqualByComparer<TMap, TValue>.TryGetItemError(settings, out var valueError))
+                {
+                    error = new TypeErrors(typeof(TMap), valueError);
+                    return true;
+                }
+
+                error = null;
+                return false;
+            }
+
             internal override bool Equals(IReadOnlyDictionary<TKey, TValue> x, IReadOnlyDictionary<TKey, TValue> y, MemberSettings settings, ReferencePairCollection referencePairs)
             {
                 if (x.Count != y.Count)
@@ -41,7 +59,7 @@ namespace Gu.State
                     return false;
                 }
 
-                return ISetEqualByComparer.SetEquals(x.Keys, y.Keys,settings, referencePairs) &&
+                return ISetEqualByComparer.SetEquals(x.Keys, y.Keys, settings, referencePairs) &&
                        ValuesEquals(x, y, settings, referencePairs);
             }
 

@@ -14,9 +14,15 @@
 
         public Error Error { get; }
 
+        internal override bool TryGetError(MemberSettings settings, out Error error)
+        {
+            error = this.Error;
+            return true;
+        }
+
         internal override bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs)
         {
-            throw Throw.ShouldNeverGetHereException("This is ");
+            throw Throw.CompareWhenError;
         }
     }
 }
