@@ -2,6 +2,7 @@ namespace Gu.State
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Reflection;
 
     internal static class IReadOnlyListEqualByComparer
@@ -36,6 +37,7 @@ namespace Gu.State
             return false;
         }
 
+        [DebuggerDisplay("IReadOnlyListEqualByComparer<IReadOnlyListEqualByComparer<{typeof(T).PrettyName()}>>")]
         private class Comparer<T> : CollectionEqualByComparer<IReadOnlyList<T>,T>
         {
             public static Comparer<T> Default = new Comparer<T>();
@@ -64,6 +66,7 @@ namespace Gu.State
             }
         }
 
+        [DebuggerDisplay("ListByComparer<List<{typeof(T).PrettyName()}>>")]
         private class ListComparer<T> : CollectionEqualByComparer<List<T>, T>
         {
             public static ListComparer<T> Default = new ListComparer<T>();
@@ -92,6 +95,7 @@ namespace Gu.State
             }
         }
 
+        [DebuggerDisplay("ArrayEqualByComparer<{typeof(T).PrettyName()}[]>")]
         private class ArrayComparer<T> : CollectionEqualByComparer<T[], T>
         {
             public static ArrayComparer<T> Default = new ArrayComparer<T>();

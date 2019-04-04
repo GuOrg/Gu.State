@@ -1,6 +1,7 @@
 namespace Gu.State
 {
     using System;
+    using System.Diagnostics;
     using System.Reflection;
 
     internal static class ArrayEqualByComparer
@@ -28,6 +29,7 @@ namespace Gu.State
             return false;
         }
 
+        [DebuggerDisplay("ArrayEqualByComparer<{typeof(T).PrettyName()}[,]>")]
         private class Comparer2D<T> : CollectionEqualByComparer<T[,], T>
         {
             /// <summary>The default instance.</summary>
@@ -61,6 +63,7 @@ namespace Gu.State
             }
         }
 
+        [DebuggerDisplay("ArrayEqualByComparer<{typeof(T).PrettyName()}[?]>")]
         private class Comparer : EqualByComparer<Array>
         {
             /// <summary>The default instance.</summary>
