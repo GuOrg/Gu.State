@@ -187,16 +187,5 @@
             result = this.EqualBy(y, x, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
         }
-
-        [TestCase(ReferenceHandling.Throw)]
-        [TestCase(ReferenceHandling.References)]
-        [TestCase(ReferenceHandling.Structural)]
-        public void ImmutableListOfIntsWhenEqual(ReferenceHandling referenceHandling)
-        {
-            var x = System.Collections.Immutable.ImmutableList.Create(1, 2, 3);
-            var y = System.Collections.Immutable.ImmutableList.Create(1, 2, 3);
-            Assert.AreEqual(true, this.EqualBy(x, y, referenceHandling));
-            Assert.AreEqual(true, this.EqualBy(y, x, referenceHandling));
-        }
     }
 }
