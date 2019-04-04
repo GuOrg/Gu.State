@@ -5,11 +5,13 @@ namespace Gu.State.Tests.EqualByTests
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.Immutable;
     using System.Drawing;
     using System.Linq;
     using NUnit.Framework;
 
     using static EqualByTypes;
+    using ImmutableArray = Gu.State.ImmutableArray;
 
     public static class TestCases
     {
@@ -61,6 +63,15 @@ namespace Gu.State.Tests.EqualByTests
             new TestCaseData(new[] { 1, 2, 3 }, new[] { 1, 2, 3 }),
 
             new TestCaseData(new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }, new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }),
+
+            new TestCaseData(ImmutableList.Create(1, 2, 3), ImmutableList.Create(1, 2, 3)),
+            new TestCaseData(ImmutableArray<int>.Empty, ImmutableArray<int>.Empty),
+            //new TestCaseData(default(ImmutableArray<int>), default(ImmutableArray<int>)),
+            new TestCaseData(ImmutableArray.Create(new[] { 1, 2, 3 }), ImmutableArray.Create(new[] { 1, 2, 3 })),
+            new TestCaseData(ImmutableSortedSet.Create(new[] { 1, 2, 3 }), ImmutableSortedSet.Create(new[] { 1, 2, 3 })),
+            new TestCaseData(ImmutableHashSet.Create(new[] { 1, 2, 3 }), ImmutableHashSet.Create(new[] { 1, 2, 3 })),
+            new TestCaseData(ImmutableStack.Create(new[] { 1, 2, 3 }), ImmutableStack.Create(new[] { 1, 2, 3 })),
+            new TestCaseData(ImmutableQueue.Create(new[] { 1, 2, 3 }), ImmutableQueue.Create(new[] { 1, 2, 3 })),
 
             new TestCaseData(Enumerable.Empty<int>().Select(x => x * x), Enumerable.Empty<int>().Select(x => x * x)),
             new TestCaseData("1,2".Split(',').Select(int.Parse), "1,2".Split(',').Select(int.Parse)),
@@ -161,6 +172,14 @@ namespace Gu.State.Tests.EqualByTests
             new TestCaseData(new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }, new[,] { { -1, 2 }, { 3, 4 }, { 5, 6 } }),
             new TestCaseData(new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }, new[,] { { 1, 2 }, { -3, 4 }, { 5, 6 } }),
             new TestCaseData(new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }, new[,] { { 1, 2 }, { 3, 4 }, { 5, -6 } }),
+
+            new TestCaseData(ImmutableList.Create(1, 2, 3), ImmutableList.Create(1, 2, -3)),
+            new TestCaseData(ImmutableArray.Create(new[] { 1, 2, 3 }), ImmutableArray.Create(new[] { 1, 2, -3 })),
+            new TestCaseData(ImmutableHashSet.Create(new[] { 1, 2, 3 }), ImmutableHashSet.Create(new[] { 1, 2, -3 })),
+            new TestCaseData(ImmutableSortedSet.Create(new[] { 1, 2, 3 }), ImmutableSortedSet.Create(new[] { 1, 2, -3 })),
+            new TestCaseData(ImmutableHashSet.Create(new[] { 1, 2, 3 }), ImmutableHashSet.Create(new[] { 1, 2, -3 })),
+            new TestCaseData(ImmutableStack.Create(new[] { 1, 2, 3 }), ImmutableStack.Create(new[] { 1, 2, -3 })),
+            new TestCaseData(ImmutableQueue.Create(new[] { 1, 2, 3 }), ImmutableQueue.Create(new[] { 1, 2, -3 })),
 
             new TestCaseData(new[] { 1 }.Select(x => x * x), Enumerable.Empty<int>().Select(x => x * x)),
             new TestCaseData("1,2".Split(',').Select(int.Parse), "1,-2".Split(',').Select(int.Parse)),

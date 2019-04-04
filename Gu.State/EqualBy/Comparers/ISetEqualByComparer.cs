@@ -9,10 +9,12 @@ namespace Gu.State
     {
         internal static bool TryGet(Type type, MemberSettings settings, out EqualByComparer comparer)
         {
-            if (type.Implements(typeof(ISet<>)))
+            if (type.Implements(typeof(IEnumerable<>)) &&
+                type.Namespace.StartsWith("System.", StringComparison.Ordinal) &&
+                type.Name.EndsWith("Set`1", StringComparison.Ordinal))
             {
-                comparer = (EqualByComparer)typeof(Comparer<>).MakeGenericType(type.GetItemType())
-                                                              .GetField(nameof(Comparer<int>.Default), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
+                comparer = (EqualByComparer)typeof(EqualByComparer<,>).MakeGenericType(type, type.GetItemType())
+                                                              .GetField(nameof(EqualByComparer<IEnumerable<int>, int>.Default), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
                                                               .GetValue(null);
                 return true;
             }
@@ -56,24 +58,20 @@ namespace Gu.State
             }
         }
 
-        private class Comparer<T> : CollectionEqualByComparer<IReadOnlyCollection<T>,T>
+        private class EqualByComparer<TSet, TItem> : CollectionEqualByComparer<TSet, TItem>
+            where TSet : IEnumerable<TItem>
         {
-            public static readonly Comparer<T> Default = new Comparer<T>();
+            public static readonly EqualByComparer<TSet, TItem> Default = new EqualByComparer<TSet, TItem>();
 
-            private Comparer()
+            private EqualByComparer()
             {
             }
 
-            internal override bool Equals(IReadOnlyCollection<T> x, IReadOnlyCollection<T> y, MemberSettings settings, ReferencePairCollection referencePairs)
+            internal override bool Equals(TSet x, TSet y, MemberSettings settings, ReferencePairCollection referencePairs)
             {
-                if (x.Count != y.Count)
-                {
-                    return false;
-                }
-
-                if (x is HashSet<T> xs &&
-                    typeof(T).IsSealed &&
-                    ReferenceEquals(xs.Comparer, EqualityComparer<T>.Default) &&
+                if (x is HashSet<TItem> xs &&
+                    typeof(TItem).IsSealed &&
+                    ReferenceEquals(xs.Comparer, EqualityComparer<TItem>.Default) &&
                     settings.IsEquatable(x.GetType().GetItemType()))
                 {
                     return xs.SetEquals(y);
