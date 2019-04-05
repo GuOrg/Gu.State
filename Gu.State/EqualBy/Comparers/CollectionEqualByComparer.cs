@@ -28,6 +28,17 @@ namespace Gu.State
             return false;
         }
 
+        internal override bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs)
+        {
+            if (referencePairs != null &&
+                referencePairs.Add(x, y) == false)
+            {
+                return true;
+            }
+
+            return base.Equals(x, y, settings, referencePairs);
+        }
+
         internal override bool TryGetError(MemberSettings settings, out Error error) => TryGetItemError(settings, out error);
 
         protected EqualByComparer ItemComparer(MemberSettings settings)
