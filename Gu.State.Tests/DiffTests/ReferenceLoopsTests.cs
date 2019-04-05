@@ -71,9 +71,6 @@ namespace Gu.State.Tests.DiffTests
                                : "Parent Child x: Gu.State.Tests.DiffTests.DiffTypes+Child y: null";
             Assert.AreEqual(expected, result.ToString(string.Empty, " "));
 
-            //result = this.EqualBy(y, x, ReferenceHandling.Structural);
-            //Assert.AreEqual(false, result);
-
             result = this.DiffBy(x, y, ReferenceHandling.References);
             Assert.AreEqual(false, result.IsEmpty);
             Assert.AreEqual(expected, result.ToString(string.Empty, " "));

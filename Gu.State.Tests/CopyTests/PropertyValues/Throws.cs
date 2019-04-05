@@ -12,7 +12,7 @@ namespace Gu.State.Tests.CopyTests.PropertyValues
             var builder = PropertiesSettings.Build();
             if (excluded != null)
             {
-                builder.IgnoreProperty<T>(excluded);
+                _ = builder.IgnoreProperty<T>(excluded);
             }
 
             var settings = builder.CreateSettings(referenceHandling);

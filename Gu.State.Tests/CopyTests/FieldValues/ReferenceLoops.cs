@@ -11,7 +11,7 @@
             var builder = FieldsSettings.Build();
             if (excluded != null)
             {
-                builder.AddIgnoredField<T>(excluded);
+                _ = builder.AddIgnoredField<T>(excluded);
             }
 
             var settings = builder.CreateSettings(referenceHandling);
