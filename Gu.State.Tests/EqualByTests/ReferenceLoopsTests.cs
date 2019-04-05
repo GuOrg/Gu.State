@@ -72,6 +72,7 @@ namespace Gu.State.Tests.EqualByTests
             Assert.AreEqual(false, result);
         }
 
+        [Explicit("Temp.")]
         [TestCase(ReferenceHandling.Structural, true)]
         [TestCase(ReferenceHandling.References, false)]
         public void ArrayWithSelf(ReferenceHandling referenceHandling, bool expected)
