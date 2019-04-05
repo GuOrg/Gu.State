@@ -1,3 +1,4 @@
+// ReSharper disable RedundantArgumentDefaultValue
 namespace Gu.State.Tests
 {
     using System;
@@ -45,23 +46,22 @@ namespace Gu.State.Tests
             [Test]
             public void WithComplexTypeThrows()
             {
-                var expected = // "Track.Changes(x, y) failed for item: ObservableCollection<ComplexType>[0].Illegal.\r\n" +
-                    "Track.Changes(x, y) failed.\r\n" +
-                    "The property With<ComplexType>.Value of type ComplexType is not supported.\r\n" +
-                    "Below are a couple of suggestions that may solve the problem:\r\n" +
-                    "* Make ComplexType immutable or use an immutable type.\r\n" +
-                    "  - For immutable types the following must hold:\r\n" +
-                    "    - Must be a sealed class or a struct.\r\n" +
-                    "    - All fields and properties must be readonly.\r\n" +
-                    "    - All field and property types must be immutable.\r\n" +
-                    "    - All indexers must be readonly.\r\n" +
-                    "    - Event fields are ignored.\r\n" +
-                    "* Use PropertiesSettings and specify how change tracking is performed:\r\n" +
-                    "  - ReferenceHandling.Structural means that a the entire graph is tracked.\r\n" +
-                    "  - ReferenceHandling.References means that only the root level changes are tracked.\r\n" +
-                    "  - Exclude a combination of the following:\r\n" +
-                    "    - The property With<ComplexType>.Value.\r\n" +
-                    "    - The type ComplexType.\r\n";
+                var expected = "Track.Changes(x, y) failed.\r\n" +
+                               "The property With<ComplexType>.Value of type ComplexType is not supported.\r\n" +
+                               "Below are a couple of suggestions that may solve the problem:\r\n" +
+                               "* Make ComplexType immutable or use an immutable type.\r\n" +
+                               "  - For immutable types the following must hold:\r\n" +
+                               "    - Must be a sealed class or a struct.\r\n" +
+                               "    - All fields and properties must be readonly.\r\n" +
+                               "    - All field and property types must be immutable.\r\n" +
+                               "    - All indexers must be readonly.\r\n" +
+                               "    - Event fields are ignored.\r\n" +
+                               "* Use PropertiesSettings and specify how change tracking is performed:\r\n" +
+                               "  - ReferenceHandling.Structural means that a the entire graph is tracked.\r\n" +
+                               "  - ReferenceHandling.References means that only the root level changes are tracked.\r\n" +
+                               "  - Exclude a combination of the following:\r\n" +
+                               "    - The property With<ComplexType>.Value.\r\n" +
+                               "    - The type ComplexType.\r\n";
 
                 var exception = Assert.Throws<NotSupportedException>(() => Track.Changes(new With<ComplexType>(), ReferenceHandling.Throw));
                 Assert.AreEqual(expected, exception.Message);
@@ -71,7 +71,6 @@ namespace Gu.State.Tests
             public void WithComplexTypeHappyPath()
             {
                 Assert.DoesNotThrow(() => Track.Changes(new With<ComplexType>()));
-                // ReSharper disable once RedundantArgumentDefaultValue
                 Assert.DoesNotThrow(() => Track.Changes(new With<ComplexType>(), ReferenceHandling.Structural));
                 Assert.DoesNotThrow(() => Track.Changes(new With<ComplexType>(), ReferenceHandling.References));
             }
@@ -111,8 +110,7 @@ namespace Gu.State.Tests
             [Test]
             public void SetIllegalThrows()
             {
-                var expected = // "Track.Changes(x, y) failed for item: ObservableCollection<ComplexType>[0].Illegal.\r\n" +
-                               "Track.Changes(x, y) failed.\r\n" +
+                var expected = "Track.Changes(x, y) failed.\r\n" +
                                "The type IllegalType does not notify changes.\r\n" +
                                "The property IllegalSubType.Illegal of type IllegalType is not supported.\r\n" +
                                "Below are a couple of suggestions that may solve the problem:\r\n" +
@@ -144,8 +142,7 @@ namespace Gu.State.Tests
             [Test]
             public void WithIllegal()
             {
-                var expected = // "Track.Changes(x, y) failed for item: ObservableCollection<ComplexType>[0].Illegal.\r\n" +
-                               "Track.Changes(x, y) failed.\r\n" +
+                var expected = "Track.Changes(x, y) failed.\r\n" +
                                "The type IllegalType does not notify changes.\r\n" +
                                "The property WithIllegal.Illegal of type IllegalType is not supported.\r\n" +
                                "Below are a couple of suggestions that may solve the problem:\r\n" +

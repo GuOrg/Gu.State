@@ -25,6 +25,22 @@
 
         internal MemberInfo Member { get; }
 
+        internal static MemberEqualByComparer Create(MemberInfo member, MemberSettings settings)
+        {
+            if (member.IsIndexer())
+            {
+                return new MemberEqualByComparer(member, new Lazy<EqualByComparer>(() => new ErrorEqualByComparer(member.ReflectedType, UnsupportedIndexer.GetOrCreate((PropertyInfo)member))));
+            }
+
+            var memberType = member.MemberType();
+            if (memberType.IsSealed)
+            {
+                return new MemberEqualByComparer(member, new Lazy<EqualByComparer>(() => settings.GetEqualByComparer(memberType)));
+            }
+
+            return new MemberEqualByComparer(member, EmptyLazy);
+        }
+
         internal override bool TryGetError(MemberSettings settings, out Error error)
         {
             if (this.lazyComparer.Value is ErrorEqualByComparer errorEqualByComparer)
@@ -52,22 +68,6 @@
 
             var comparer = this.lazyComparer.Value ?? settings.GetEqualByComparer(xv.GetType());
             return comparer.Equals(xv, yv, settings, referencePairs);
-        }
-
-        internal static MemberEqualByComparer Create(MemberInfo member, MemberSettings settings)
-        {
-            if (member.IsIndexer())
-            {
-                return new MemberEqualByComparer(member, new Lazy<EqualByComparer>(() => new ErrorEqualByComparer(member.ReflectedType, UnsupportedIndexer.GetOrCreate((PropertyInfo)member))));
-            }
-
-            var memberType = member.MemberType();
-            if (memberType.IsSealed)
-            {
-                return new MemberEqualByComparer(member, new Lazy<EqualByComparer>(() => settings.GetEqualByComparer(memberType)));
-            }
-
-            return new MemberEqualByComparer(member, EmptyLazy);
         }
     }
 }
