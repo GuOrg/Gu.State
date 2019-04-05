@@ -69,12 +69,12 @@ namespace Gu.State
 
             internal override bool Equals(TSet x, TSet y, MemberSettings settings, ReferencePairCollection referencePairs)
             {
-                if (x is HashSet<TItem> xs &&
+                if (x is HashSet<TItem> hashSet &&
                     typeof(TItem).IsSealed &&
-                    ReferenceEquals(xs.Comparer, EqualityComparer<TItem>.Default) &&
+                    ReferenceEquals(hashSet.Comparer, EqualityComparer<TItem>.Default) &&
                     settings.IsEquatable(x.GetType().GetItemType()))
                 {
-                    return xs.SetEquals(y);
+                    return hashSet.SetEquals(y);
                 }
 
                 return SetEquals(x, y, settings, referencePairs);
