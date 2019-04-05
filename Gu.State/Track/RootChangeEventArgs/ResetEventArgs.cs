@@ -17,7 +17,6 @@ namespace Gu.State
         /// <inheritdoc />
         object IRootChangeEventArgs.Source => this.Source;
 
-
         public static bool operator ==(ResetEventArgs left, ResetEventArgs right)
         {
             return left.Equals(right);

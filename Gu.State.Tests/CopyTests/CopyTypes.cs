@@ -498,7 +498,10 @@ namespace Gu.State.Tests.CopyTests
                         return false;
                     }
 
-                    return x.IntValue == y.IntValue && x.NullableIntValue == y.NullableIntValue && string.Equals(x.StringValue, y.StringValue) && x.EnumValue == y.EnumValue;
+                    return x.IntValue == y.IntValue &&
+                           x.NullableIntValue == y.NullableIntValue
+                           && string.Equals(x.StringValue, y.StringValue, StringComparison.Ordinal) &&
+                           x.EnumValue == y.EnumValue;
                 }
 
                 public int GetHashCode(WithSimpleProperties obj)

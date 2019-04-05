@@ -73,8 +73,7 @@
                         this.UpdatePropertyNode(property);
                     }
 
-                    var list = this.Source as IList;
-                    if (list != null)
+                    if (this.Source is IList list)
                     {
                         var itemType = list.GetType().GetItemType();
                         if (!settings.IsImmutable(itemType) && !settings.IsIgnoringDeclaringType(itemType))
