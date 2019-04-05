@@ -1,1 +1,5 @@
-﻿
+﻿Gu.State.RemoveEventArgs.Equals(Gu.State.RemoveEventArgs other) -> bool
+override Gu.State.RemoveEventArgs.Equals(object obj) -> bool
+override Gu.State.RemoveEventArgs.GetHashCode() -> int
+static Gu.State.RemoveEventArgs.operator !=(Gu.State.RemoveEventArgs left, Gu.State.RemoveEventArgs right) -> bool
+static Gu.State.RemoveEventArgs.operator ==(Gu.State.RemoveEventArgs left, Gu.State.RemoveEventArgs right) -> bool
