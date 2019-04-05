@@ -99,6 +99,7 @@ namespace Gu.State.Tests.EqualByTests
             Case(new With<Point?>(null), new With<Point?>(null)),
 
             Case(new WithComplexProperty("a", 1), new WithComplexProperty("a", 1)),
+            Case(new WithListProperty<int> { Items = null }, new WithListProperty<int> { Items = null }),
             Case(new With<WithSimpleProperties>(SharedWithSimpleProperties), new With<WithSimpleProperties>(SharedWithSimpleProperties)),
         };
 
@@ -127,6 +128,8 @@ namespace Gu.State.Tests.EqualByTests
             Case(new[] { new With<int>(1), new With<int>(2), new With<int>(3) }, new[] { new With<int>(1), new With<int>(2), new With<int>(3) }),
             Case(new WithComplexProperty("a", 1) { ComplexType = new ComplexType { Name = "1", Value = 2 } }, new WithComplexProperty("a", 1) { ComplexType = new ComplexType { Name = "1", Value = 2 } }),
             Case(new With<ComplexType>(new ComplexType("1", 2)), new With<ComplexType>(new ComplexType("1", 2))),
+            Case(new WithListProperty<int> { Items = new List<int>() }, new WithListProperty<int> { Items = new List<int>() }),
+
         };
 
         public static readonly TestCaseData[] WhenNotEqual =
@@ -267,6 +270,8 @@ namespace Gu.State.Tests.EqualByTests
             Case(new WithComplexProperty("a", 1) { ComplexType = new ComplexType { Name = "1", Value = 2 } }, new WithComplexProperty("a", 1) { ComplexType = new ComplexType { Name = "1", Value = -2 } }),
             Case(new WithComplexProperty("a", 1) { ComplexType = new ComplexType { Name = "1", Value = 2 } }, new WithComplexProperty("a", 1)),
             Case(new With<ComplexType>(new ComplexType("1", 2)), new With<ComplexType>(new ComplexType("1", -2))),
+            Case(new WithListProperty<int> { Items = { 1, 2, 3 } },  new WithListProperty<int>()),
+            Case(new WithListProperty<int> { Items = { 1, 2, 3 } },  new WithListProperty<int> { Items = new List<int>() }),
         };
 
         private static TestCaseData Case<T>(T x, T y) => new TestCaseData(x, y);

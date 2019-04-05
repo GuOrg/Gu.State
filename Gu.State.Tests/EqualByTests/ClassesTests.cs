@@ -2,7 +2,6 @@
 namespace Gu.State.Tests.EqualByTests
 {
     using System;
-    using System.Collections.Generic;
 
     using NUnit.Framework;
 
@@ -26,48 +25,6 @@ namespace Gu.State.Tests.EqualByTests
             var y = new WithComplexProperty { Name = "a", Value = 1, ComplexType = x.ComplexType };
             var result = this.EqualBy(x, y, referenceHandling);
             Assert.AreEqual(true, result);
-        }
-
-        [Test]
-        public void WithListOfIntsToEmpty()
-        {
-            var x = new WithListProperty<int> { Items = { 1, 2, 3 } };
-            var y = new WithListProperty<int>();
-            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(false, result);
-        }
-
-        [Test]
-        public void WithListOfIntsNullToNull()
-        {
-            var x = new WithListProperty<int> { Items = null };
-            var y = new WithListProperty<int> { Items = null };
-            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(true, result);
-
-            result = this.EqualBy(x, y, ReferenceHandling.References);
-            Assert.AreEqual(true, result);
-        }
-
-        [Test]
-        public void WithListOfIntsEmptyToEmpty()
-        {
-            var x = new WithListProperty<int> { Items = new List<int>() };
-            var y = new WithListProperty<int> { Items = new List<int>() };
-            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(true, result);
-
-            result = this.EqualBy(x, y, ReferenceHandling.References);
-            Assert.AreEqual(false, result);
-        }
-
-        [Test]
-        public void WithListOfIntsToNull()
-        {
-            var x = new WithListProperty<int> { Items = { 1, 2, 3 } };
-            var y = new WithListProperty<int> { Items = null };
-            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(false, result);
         }
 
         [TestCase(ReferenceHandling.Structural)]
