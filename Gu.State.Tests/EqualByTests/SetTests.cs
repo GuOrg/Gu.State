@@ -11,7 +11,6 @@
         public abstract bool EqualBy<T>(T source, T target, ReferenceHandling referenceHandling)
             where T : class;
 
-
         [TestCase(ReferenceHandling.Structural)]
         public void ComplexWhenEqual(ReferenceHandling referenceHandling)
         {

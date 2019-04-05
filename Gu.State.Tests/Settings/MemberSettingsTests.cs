@@ -11,6 +11,7 @@
 
     public class MemberSettingsTests
     {
+        //[TestCase(typeof(IEnumerable<int>), true)]
         [TestCase(typeof(string), true)]
         [TestCase(typeof(bool), true)]
         [TestCase(typeof(bool?), true)]
@@ -26,7 +27,6 @@
         [TestCase(typeof(Delegate), true)]
         [TestCase(typeof(Func<int>), true)]
         [TestCase(typeof(Action<int>), true)]
-        //[TestCase(typeof(IEnumerable<int>), true)]
         [TestCase(typeof(WithGetReadOnlyPropertySealed<int>), true)]
         [TestCase(typeof(WithGetReadOnlyPropertySealed<int?>), true)]
         [TestCase(typeof(WithGetReadOnlyPropertySealed<WithGetReadOnlyPropertySealed<int>>), true)]

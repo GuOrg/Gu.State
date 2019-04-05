@@ -51,8 +51,8 @@ namespace Gu.State.Tests
                     ComplexType.Comparer);
             }
 
-            [TestCase(ReferenceHandling.Structural)]
             //[TestCase(ReferenceHandling.Reference)]
+            [TestCase(ReferenceHandling.Structural)]
             public void Add(ReferenceHandling referenceHandling)
             {
                 var source = new WithObservableCollectionProperties();
@@ -71,8 +71,8 @@ namespace Gu.State.Tests
                 }
             }
 
-            [TestCase(ReferenceHandling.Structural)]
             //[TestCase(ReferenceHandling.Reference)]
+            [TestCase(ReferenceHandling.Structural)]
             public void Remove(ReferenceHandling referenceHandling)
             {
                 var source = new WithObservableCollectionProperties(new ComplexType("a", 1), new ComplexType("b", 2));
@@ -89,8 +89,8 @@ namespace Gu.State.Tests
                 }
             }
 
-            [TestCase(ReferenceHandling.Structural)]
             //[TestCase(ReferenceHandling.Reference)]
+            [TestCase(ReferenceHandling.Structural)]
             public void Insert(ReferenceHandling referenceHandling)
             {
                 var source = new WithObservableCollectionProperties(new ComplexType("a", 1), new ComplexType("b", 2));
@@ -114,8 +114,8 @@ namespace Gu.State.Tests
                 }
             }
 
-            [TestCase(ReferenceHandling.Structural)]
             //[TestCase(ReferenceHandling.Reference)]
+            [TestCase(ReferenceHandling.Structural)]
             public void Move(ReferenceHandling referenceHandling)
             {
                 var source = new WithObservableCollectionProperties(new ComplexType("a", 1), new ComplexType("b", 2));
@@ -134,8 +134,8 @@ namespace Gu.State.Tests
                 }
             }
 
-            [TestCase(ReferenceHandling.Structural)]
             //[TestCase(ReferenceHandling.Reference)]
+            [TestCase(ReferenceHandling.Structural)]
             public void Replace(ReferenceHandling referenceHandling)
             {
                 var source = new WithObservableCollectionProperties(new ComplexType("a", 1), new ComplexType("b", 2));
