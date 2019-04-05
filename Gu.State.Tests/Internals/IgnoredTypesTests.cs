@@ -1,4 +1,5 @@
-﻿namespace Gu.State.Tests.Internals
+﻿#pragma warning disable CA1812
+namespace Gu.State.Tests.Internals
 {
     using System;
     using System.Collections.Generic;

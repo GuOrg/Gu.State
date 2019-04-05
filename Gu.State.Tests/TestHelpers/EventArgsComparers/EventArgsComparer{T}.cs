@@ -11,7 +11,9 @@
 
         public int GetHashCode(T obj)
         {
+#pragma warning disable CA1065 // Do not raise exceptions in unexpected locations
             throw new NotImplementedException();
+#pragma warning restore CA1065 // Do not raise exceptions in unexpected locations
         }
     }
 }

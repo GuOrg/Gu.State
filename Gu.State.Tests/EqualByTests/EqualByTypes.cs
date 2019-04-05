@@ -176,7 +176,9 @@ namespace Gu.State.Tests.EqualByTests
                 return this.Equals((EquatableIntCollection)obj);
             }
 
+#pragma warning disable CA1065 // Do not raise exceptions in unexpected locations
             public override int GetHashCode() => throw new NotImplementedException("message");
+#pragma warning restore CA1065 // Do not raise exceptions in unexpected locations
         }
 
         public class WithComplexValue
@@ -305,7 +307,8 @@ namespace Gu.State.Tests.EqualByTests
                         return false;
                     }
 
-                    return string.Equals(x.Name, y.Name) && x.Value == y.Value;
+                    return string.Equals(x.Name, y.Name, StringComparison.Ordinal)
+                           && x.Value == y.Value;
                 }
 
                 public int GetHashCode(ComplexType obj)

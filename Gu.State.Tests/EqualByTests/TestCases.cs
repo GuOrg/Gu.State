@@ -92,9 +92,8 @@ namespace Gu.State.Tests.EqualByTests
             Case(new Dictionary<object, string> { { 1, "1" } }, new Dictionary<object, string> { { 1, "1" } }),
             Case(new HashSet<object> { 1, 2.2, "3" }, new HashSet<object> { 1, 2.2, "3" }),
 
-            Case(ImmutableList.Create(1, 2, 3), ImmutableList.Create(1, 2, 3)),
-            
             //Case(default(ImmutableArray<int>), default(ImmutableArray<int>)),
+            Case(ImmutableList.Create(1, 2, 3), ImmutableList.Create(1, 2, 3)),
             Case(ImmutableArray<int>.Empty, ImmutableArray<int>.Empty),
             Case(ImmutableArray.Create(new[] { 1, 2, 3 }), ImmutableArray.Create(new[] { 1, 2, 3 })),
             Case(ImmutableSortedSet.Create(new[] { 1, 2, 3 }), ImmutableSortedSet.Create(new[] { 1, 2, 3 })),

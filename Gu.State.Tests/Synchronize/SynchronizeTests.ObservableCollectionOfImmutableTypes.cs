@@ -58,7 +58,7 @@ namespace Gu.State.Tests
                     var expected = new[] { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
                     CollectionAssert.AreEqual(expected, source);
                     CollectionAssert.AreEqual(expected, target);
-                    
+
                     //Assert.AreSame(source[0], target[0]);
                     //Assert.AreSame(source[1], target[1]);
                 }

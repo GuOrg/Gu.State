@@ -83,16 +83,51 @@
             this.VerifyMethod<WithComplexProperty>(referenceHandling);
         }
 
+        [TestCase(null)]
         [TestCase(ReferenceHandling.Throw)]
         public void CanCopyListOfComplexTypeThrows(ReferenceHandling? referenceHandling)
         {
             if (referenceHandling != null)
             {
-                Assert.Throws<NotSupportedException>(() => this.VerifyMethod<List<ComplexType>>(referenceHandling.Value));
+                var expected = this is FieldValues.Verify
+                       ? "Copy.VerifyCanCopyFieldValues(x, y) failed.\r\n" +
+                         "Below are a couple of suggestions that may solve the problem:\r\n" +
+                         "* Make ComplexType immutable or use an immutable type.\r\n" +
+                         "  - For immutable types the following must hold:\r\n" +
+                         "    - Must be a sealed class or a struct.\r\n" +
+                         "    - All fields and properties must be readonly.\r\n" +
+                         "    - All field and property types must be immutable.\r\n" +
+                         "    - All indexers must be readonly.\r\n" +
+                         "    - Event fields are ignored.\r\n" +
+                         "* Use FieldsSettings and specify how copying is performed:\r\n" +
+                         "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
+                         "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
+                         "  - ReferenceHandling.References means that references are copied.\r\n" +
+                         "  - Exclude a combination of the following:\r\n" +
+                         "    - The type ComplexType.\r\n"
+
+                       : "Copy.VerifyCanCopyPropertyValues(x, y) failed.\r\n" +
+                         "Below are a couple of suggestions that may solve the problem:\r\n" +
+                         "* Make ComplexType immutable or use an immutable type.\r\n" +
+                         "  - For immutable types the following must hold:\r\n" +
+                         "    - Must be a sealed class or a struct.\r\n" +
+                         "    - All fields and properties must be readonly.\r\n" +
+                         "    - All field and property types must be immutable.\r\n" +
+                         "    - All indexers must be readonly.\r\n" +
+                         "    - Event fields are ignored.\r\n" +
+                         "* Use PropertiesSettings and specify how copying is performed:\r\n" +
+                         "  - ReferenceHandling.Structural means that a the entire graph is traversed and immutable property values are copied.\r\n" +
+                         "    - For structural Activator.CreateInstance is used to create instances so a parameterless constructor may be needed, can be private.\r\n" +
+                         "  - ReferenceHandling.References means that references are copied.\r\n" +
+                         "  - Exclude a combination of the following:\r\n" +
+                         "    - The type ComplexType.\r\n";
+
+                var exception = Assert.Throws<NotSupportedException>(() => this.VerifyMethod<List<ComplexType>>(referenceHandling.Value));
+                Assert.AreEqual(expected, exception.Message);
             }
             else
             {
-                Assert.Throws<NotSupportedException>(this.VerifyMethod<List<ComplexType>>);
+                Assert.DoesNotThrow(() => this.VerifyMethod<List<ComplexType>>());
             }
         }
 

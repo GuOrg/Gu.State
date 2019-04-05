@@ -14,7 +14,7 @@
 
             if (ignoredType != null)
             {
-                builder.IgnoreType(ignoredType);
+                _ = builder.IgnoreType(ignoredType);
             }
 
             var settings = builder.CreateSettings(referenceHandling);

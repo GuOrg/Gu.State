@@ -154,7 +154,7 @@ namespace Gu.State.Tests.DiffTests
                         return false;
                     }
 
-                    return string.Equals(x.Name, y.Name);
+                    return string.Equals(x.Name, y.Name, StringComparison.Ordinal);
                 }
 
                 public int GetHashCode(ComplexType obj)

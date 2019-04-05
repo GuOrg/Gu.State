@@ -21,6 +21,11 @@ namespace Gu.State.Tests.Internals.Errors
 #pragma warning disable INPC002 // Mutable public property should notify.
             public T Value { get; set; }
 #pragma warning restore INPC002 // Mutable public property should notify.
+
+            protected virtual void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
+            {
+                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
 
         public class WithSelfProp

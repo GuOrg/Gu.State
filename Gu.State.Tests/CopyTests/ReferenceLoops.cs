@@ -13,10 +13,10 @@ namespace Gu.State.Tests.CopyTests
         public abstract void CopyMethod<T>(T source, T target, ReferenceHandling referenceHandling = ReferenceHandling.Structural, string excluded = null)
             where T : class;
 
-        [TestCase("parent", "child", true)]
-        [TestCase("", "child", false)]
-        [TestCase("parent", "", false)]
-        public void ParentChild(string p, string c, bool expected)
+        [TestCase("parent", "child")]
+        [TestCase("", "child")]
+        [TestCase("parent", "")]
+        public void ParentChild(string p, string c)
         {
             var source = new Parent("parent", new Child("child"));
             var target = new Parent(p, new Child(c));
