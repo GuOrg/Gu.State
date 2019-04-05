@@ -93,7 +93,7 @@ namespace Gu.State.Tests.Settings
 
         [TestCase(BindingFlags.Public, ReferenceHandling.Throw)]
         [TestCase(BindingFlags.Public, ReferenceHandling.Structural)]
-        [TestCase(BindingFlags.Public| BindingFlags.NonPublic, ReferenceHandling.Structural)]
+        [TestCase(BindingFlags.Public | BindingFlags.NonPublic, ReferenceHandling.Structural)]
         public void Cache(BindingFlags bindingFlags, ReferenceHandling referenceHandling)
         {
             Assert.AreSame(FieldsSettings.GetOrCreate(referenceHandling, bindingFlags), FieldsSettings.GetOrCreate(referenceHandling, bindingFlags));

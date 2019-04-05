@@ -1,4 +1,5 @@
 ﻿// ReSharper disable RedundantArgumentDefaultValue
+#pragma warning disable IDISP004
 namespace Gu.State.Tests
 {
     using System;
@@ -33,7 +34,12 @@ namespace Gu.State.Tests
                     withIllegalObject.Value++;
                     Assert.AreEqual(1, tracker.Changes);
                     CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
-                    var expected = new[] { RootChangeEventArgs.Create(ChangeTrackerNode.GetOrCreate(withIllegalObject, tracker.Settings, isRoot: false).Value, new PropertyChangeEventArgs(withIllegalObject, withIllegalObject.GetType().GetProperty(nameof(withIllegalObject.Value)))) };
+                    var expected = new[]
+                    {
+                        RootChangeEventArgs.Create(
+                            ChangeTrackerNode.GetOrCreate(withIllegalObject, tracker.Settings, isRoot: false).Value,
+                            new PropertyChangeEventArgs(withIllegalObject, withIllegalObject.GetType().GetProperty(nameof(withIllegalObject.Value), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))),
+                    };
                     CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
 
                     withIllegalObject.Illegal = new IllegalType();

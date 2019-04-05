@@ -1,3 +1,4 @@
+#pragma warning disable IDISP004
 namespace Gu.State.Tests
 {
     using System;
@@ -44,7 +45,9 @@ namespace Gu.State.Tests
                                    };
                     CollectionAssert.AreEqual(expected, changes, EventArgsComparer.Default);
 
+#pragma warning disable IDISP016 // Don't use disposed instance.
                     tracker.Dispose();
+#pragma warning restore IDISP016 // Don't use disposed instance.
 
                     source.Add(3);
                     Assert.AreEqual(2, tracker.Changes);

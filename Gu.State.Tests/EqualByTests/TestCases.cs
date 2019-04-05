@@ -82,7 +82,7 @@ namespace Gu.State.Tests.EqualByTests
             Case(ImmutableHashSet.Create(new[] { 1, 2, 3 }), ImmutableHashSet.Create(new[] { 1, 2, 3 })),
             Case(ImmutableStack.Create(new[] { 1, 2, 3 }), ImmutableStack.Create(new[] { 1, 2, 3 })),
             Case(ImmutableQueue.Create(new[] { 1, 2, 3 }), ImmutableQueue.Create(new[] { 1, 2, 3 })),
-            Case(ImmutableDictionary.CreateRange(new Dictionary<int,string> { { 1, "1" } }), ImmutableDictionary.CreateRange(new Dictionary<int,string> { { 1, "1" } })),
+            Case(ImmutableDictionary.CreateRange(new Dictionary<int, string> { { 1, "1" } }), ImmutableDictionary.CreateRange(new Dictionary<int, string> { { 1, "1" } })),
 
             Case(Enumerable.Empty<int>().Select(x => x * x), Enumerable.Empty<int>().Select(x => x * x)),
             Case("1,2".Split(',').Select(int.Parse), "1,2".Split(',').Select(int.Parse)),
@@ -108,11 +108,11 @@ namespace Gu.State.Tests.EqualByTests
             Case(new With<IReadOnlyList<int>>(null), new With<IReadOnlyList<int>>(null)),
             Case(new With<IReadOnlyList<int>>(new int[0]), new With<IReadOnlyList<int>>(new int[0])),
             Case(new With<IReadOnlyList<int>>(new[] { 1, 2, 3 }), new With<IReadOnlyList<int>>(new[] { 1, 2, 3 })),
-            Case(new With<IReadOnlyList<object>>(new object[] { 1, 2.2, 3 }), new With<IReadOnlyList<object>>(new object [] { 1, 2.2, 3 })),
+            Case(new With<IReadOnlyList<object>>(new object[] { 1, 2.2, 3 }), new With<IReadOnlyList<object>>(new object[] { 1, 2.2, 3 })),
 
             Case(new[] { new[] { 1, 2, 3 }, new[] { 4, 5 } }, new[] { new[] { 1, 2, 3 }, new[] { 4, 5 } }),
             Case(new List<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) }, new List<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) }),
-            Case(new HashSet<HashCollisionType> {new HashCollisionType { Value = 1 } }, new HashSet<HashCollisionType> {new HashCollisionType { Value = 1 } }),
+            Case(new HashSet<HashCollisionType> { new HashCollisionType { Value = 1 } }, new HashSet<HashCollisionType> { new HashCollisionType { Value = 1 } }),
             Case(new Dictionary<HashCollisionType, string> { { new HashCollisionType { Value = 1 }, "1" } }, new Dictionary<HashCollisionType, string> { { new HashCollisionType { Value = 1 }, "1" } }),
 
             Case(new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = 2 }), new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = 2 })),
@@ -153,10 +153,10 @@ namespace Gu.State.Tests.EqualByTests
             Case(new With<EquatableStruct?>(new EquatableStruct { Value = 1 }), new With<EquatableStruct?>(new EquatableStruct { Value = -1 })),
             Case(new With<EquatableStruct?>(null), new With<EquatableStruct?>(new EquatableStruct { Value = -1 })),
 
-            Case(new With<Point>(new Point(1, 2)),new With<Point>(new Point(1, -2))),
-            Case(new With<Point>(new Point(1, 2)),new With<Point>(new Point(-1, 2))),
-            Case(new With<Point?>(new Point(1, 2)),new With<Point?>(new Point(1, -2))),
-            Case(new With<Point?>(new Point(1, 2)),new With<Point?>(null)),
+            Case(new With<Point>(new Point(1, 2)), new With<Point>(new Point(1, -2))),
+            Case(new With<Point>(new Point(1, 2)), new With<Point>(new Point(-1, 2))),
+            Case(new With<Point?>(new Point(1, 2)), new With<Point?>(new Point(1, -2))),
+            Case(new With<Point?>(new Point(1, 2)), new With<Point?>(null)),
 
             Case(new With<StringComparison>(StringComparison.Ordinal), new With<StringComparison>(StringComparison.OrdinalIgnoreCase)),
             Case(new With<StringComparison?>(StringComparison.Ordinal), new With<StringComparison?>(StringComparison.OrdinalIgnoreCase)),
@@ -204,8 +204,8 @@ namespace Gu.State.Tests.EqualByTests
             Case(ImmutableHashSet.Create(new[] { 1, 2, 3 }), ImmutableHashSet.Create(new[] { 1, 2, -3 })),
             Case(ImmutableStack.Create(new[] { 1, 2, 3 }), ImmutableStack.Create(new[] { 1, 2, -3 })),
             Case(ImmutableQueue.Create(new[] { 1, 2, 3 }), ImmutableQueue.Create(new[] { 1, 2, -3 })),
-            Case(ImmutableDictionary.CreateRange(new Dictionary<int,string> { { 1, "1" } }), ImmutableDictionary.CreateRange(new Dictionary<int,string> { { -1, "1" } })),
-            Case(ImmutableDictionary.CreateRange(new Dictionary<int,string> { { 1, "1" } }), ImmutableDictionary.CreateRange(new Dictionary<int,string> { { 1, "-1" } })),
+            Case(ImmutableDictionary.CreateRange(new Dictionary<int, string> { { 1, "1" } }), ImmutableDictionary.CreateRange(new Dictionary<int, string> { { -1, "1" } })),
+            Case(ImmutableDictionary.CreateRange(new Dictionary<int, string> { { 1, "1" } }), ImmutableDictionary.CreateRange(new Dictionary<int, string> { { 1, "-1" } })),
 
             Case(new[] { 1 }.Select(x => x * x), Enumerable.Empty<int>().Select(x => x * x)),
             Case("1,2".Split(',').Select(int.Parse), "1,-2".Split(',').Select(int.Parse)),
@@ -235,14 +235,14 @@ namespace Gu.State.Tests.EqualByTests
             Case(new With<IReadOnlyList<int>>(new[] { 1, 2 }), new With<IReadOnlyList<int>>(null)),
             Case(new With<IReadOnlyList<int>>(new int[0]), new With<IReadOnlyList<int>>(null)),
 
-            Case(new object [] { 1, 2.2 }, new object[] { -1, 2.2 }),
-            Case(new object [] { 1, 2.2 }, new object[] { 1, -2.2 }),
+            Case(new object[] { 1, 2.2 }, new object[] { -1, 2.2 }),
+            Case(new object[] { 1, 2.2 }, new object[] { 1, -2.2 }),
             Case(new[] { new[] { 1, 2, 3 }, new[] { 4, 5 } }, new[] { new[] { 1, 2 }, new[] { 4, 5 } }),
             Case(new[] { new[] { 1, 2, 3 }, new[] { 4, 5 } }, new[] { new[] { 1, 2, 3 }, new[] { 4 } }),
             Case(new[] { new[] { 1, 2, 3 }, new[] { 4, 5 } }, new[] { new[] { -1, 2, 3 }, new[] { 4, 5 } }),
             Case(new[] { new[] { 1, 2, 3 }, new[] { 4, 5 } }, new[] { new[] { 1, 2, 3 }, new[] { 4, -5 } }),
 
-            Case(new HashSet<HashCollisionType> {new HashCollisionType { Value = 1 } }, new HashSet<HashCollisionType> {new HashCollisionType { Value = -1 } }),
+            Case(new HashSet<HashCollisionType> { new HashCollisionType { Value = 1 } }, new HashSet<HashCollisionType> { new HashCollisionType { Value = -1 } }),
 
             Case(new Dictionary<HashCollisionType, string> { { new HashCollisionType { Value = 1 }, "1" } }, new Dictionary<HashCollisionType, string> { { new HashCollisionType { Value = -1 }, "1" } }),
 

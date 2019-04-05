@@ -18,7 +18,7 @@
 
         public IEnumerator<Pair<object>> GetEnumerator()
         {
-            return new PairEnumerator(this.x.GetEnumerator(), this.y.GetEnumerator());
+            return new PairEnumerator(this.x, this.y);
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -53,10 +53,10 @@
             private bool mx;
             private bool my;
 
-            public PairEnumerator(IEnumerator x, IEnumerator y)
+            public PairEnumerator(IEnumerable x, IEnumerable y)
             {
-                this.x = x;
-                this.y = y;
+                this.x = x.GetEnumerator();
+                this.y = y.GetEnumerator();
             }
 
             public Pair<object> Current

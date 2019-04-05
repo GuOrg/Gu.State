@@ -1,4 +1,5 @@
-﻿namespace Gu.State.Tests
+﻿#pragma warning disable IDISP004
+namespace Gu.State.Tests
 {
     using System;
     using System.Collections.Generic;

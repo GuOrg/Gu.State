@@ -160,7 +160,7 @@ namespace Gu.State.Tests
                         return false;
                     }
 
-                    return string.Equals(x.Name, y.Name) && x.Value == y.Value;
+                    return string.Equals(x.Name, y.Name, StringComparison.Ordinal) && x.Value == y.Value;
                 }
 
                 public int GetHashCode(ComplexType obj)

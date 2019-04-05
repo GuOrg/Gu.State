@@ -1,4 +1,5 @@
 // ReSharper disable RedundantArgumentDefaultValue
+#pragma warning disable IDISP004
 namespace Gu.State.Tests
 {
     using System;
@@ -27,7 +28,9 @@ namespace Gu.State.Tests
                 CollectionAssert.IsEmpty(propertyChanges);
                 CollectionAssert.IsEmpty(changes);
 
+#pragma warning disable IDISP016 // Don't use disposed instance.
                 tracker.Dispose();
+#pragma warning restore IDISP016 // Don't use disposed instance.
 
                 source.Add(new ComplexType());
                 Assert.AreEqual(0, tracker.Changes);

@@ -1,4 +1,5 @@
 // ReSharper disable RedundantArgumentDefaultValue
+#pragma warning disable IDISP004
 namespace Gu.State.Tests
 {
     using System;
@@ -20,7 +21,9 @@ namespace Gu.State.Tests
                 var t1 = DirtyTrackerNode.GetOrCreate(x, y, settings, isRoot: true);
                 var t2 = DirtyTrackerNode.GetOrCreate(x, y, settings, isRoot: true);
                 Assert.AreSame(t1, t2);
+#pragma warning disable IDISP016 // Don't use disposed instance.
                 t1.Dispose();
+#pragma warning restore IDISP016 // Don't use disposed instance.
                 using (var t3 = DirtyTrackerNode.GetOrCreate(x, y, settings, isRoot: true))
                 {
                     Assert.AreSame(t1, t3);

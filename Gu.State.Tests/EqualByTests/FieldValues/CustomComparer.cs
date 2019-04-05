@@ -7,7 +7,7 @@
         public override bool EqualBy<T, TValue>(T x, T y, IEqualityComparer<TValue> comparer, ReferenceHandling referenceHandling = ReferenceHandling.Structural)
         {
             var builder = FieldsSettings.Build();
-            builder.AddComparer(comparer);
+            _ = builder.AddComparer(comparer);
             var settings = builder.CreateSettings(referenceHandling);
             return State.EqualBy.FieldValues(x, y, settings);
         }

@@ -23,7 +23,9 @@ namespace Gu.State.Tests.Internals
 
             Assert.AreEqual(1, pair.Count);
 
+#pragma warning disable IDISP016 // Don't use disposed instance.
             pair.Dispose();
+#pragma warning restore IDISP016 // Don't use disposed instance.
             Assert.AreEqual(0, pair.Count);
         }
 
