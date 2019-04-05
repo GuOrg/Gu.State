@@ -367,7 +367,7 @@ EqualBy.TryGetValueEquals(yValue, old.Y, this.settings, out var yEqual) && yEqua
                 return;
             }
 
-            if (!builder.TryRefCount(out var refCounted, out var created))
+            if (!builder.TryRefCount(out var refCounted, out _))
             {
                 throw Throw.ShouldNeverGetHereException("UpdateSubBuilder failed, try refcount failed");
             }

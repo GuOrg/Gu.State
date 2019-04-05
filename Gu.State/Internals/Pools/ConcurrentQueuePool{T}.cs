@@ -18,7 +18,7 @@ namespace Gu.State
 
         private static void Return(ConcurrentQueue<T> queue)
         {
-            while (queue.TryDequeue(out var temp))
+            while (queue.TryDequeue(out _))
             {
             }
 

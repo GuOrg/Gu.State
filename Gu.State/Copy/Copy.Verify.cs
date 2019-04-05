@@ -170,7 +170,7 @@
 
             private static TypeErrors CreateErrors(Type type, MemberSettings settings, MemberPath path)
             {
-                if (settings.IsImmutable(type) || settings.TryGetCopyer(type, out var temp))
+                if (settings.IsImmutable(type) || settings.TryGetCopyer(type, out _))
                 {
                     return null;
                 }

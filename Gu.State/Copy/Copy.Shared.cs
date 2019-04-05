@@ -52,7 +52,7 @@
                 return;
             }
 
-            if (TryCustomCopy(source, target, settings, out var copy))
+            if (TryCustomCopy(source, target, settings, out _))
             {
                 return;
             }

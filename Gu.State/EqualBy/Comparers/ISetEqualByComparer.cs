@@ -2,7 +2,6 @@ namespace Gu.State
 {
     using System;
     using System.Collections.Generic;
-    using System.Reflection;
     using System.Runtime.CompilerServices;
 
     internal static class ISetEqualByComparer
@@ -29,7 +28,7 @@ namespace Gu.State
                 if (xs is HashSet<TItem> hashSet &&
                     typeof(TItem).IsSealed &&
                     ReferenceEquals(hashSet.Comparer, EqualityComparer<TItem>.Default) &&
-                    settings.IsEquatable(xs.GetType().GetItemType()))
+                    settings.IsEquatable(typeof(TItem)))
                 {
                     return hashSet.SetEquals(ys);
                 }

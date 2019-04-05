@@ -1,6 +1,5 @@
 ﻿// ReSharper disable UnusedMember.Local
 #pragma warning disable INPC001 // Implement INotifyPropertyChanged.
-#pragma warning disable SA1401 // Fields must be private
 namespace Gu.State.Tests.CopyTests
 {
     using System;

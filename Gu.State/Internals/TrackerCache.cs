@@ -13,7 +13,7 @@
             where TKey : class
             where TValue : class, IDisposable
         {
-            return GetOrAdd(x, y, settings, creator, out var temp);
+            return GetOrAdd(x, y, settings, creator, out _);
         }
 
         internal static IRefCounted<TValue> GetOrAdd<TKey, TValue>(
@@ -42,7 +42,7 @@
             where TKey : class
             where TValue : class, IDisposable
         {
-            return GetOrAdd(key, settings, creator, out var temp);
+            return GetOrAdd(key, settings, creator, out _);
         }
 
         private static IRefCounted<TValue> GetOrAdd<TKey, TValue>(

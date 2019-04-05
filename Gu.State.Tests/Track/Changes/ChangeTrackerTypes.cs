@@ -1,7 +1,6 @@
 ﻿// ReSharper disable All
 #pragma warning disable INPC003 // Notify when property changes.
 #pragma warning disable INPC001 // Implement INotifyPropertyChanged.
-#pragma warning disable SA1401 // Fields must be private
 namespace Gu.State.Tests
 {
     using System;

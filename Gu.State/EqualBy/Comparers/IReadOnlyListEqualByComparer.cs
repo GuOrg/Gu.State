@@ -3,7 +3,6 @@ namespace Gu.State
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Reflection;
 
     internal static class IReadOnlyListEqualByComparer
     {

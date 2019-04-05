@@ -38,7 +38,7 @@
             disposer1.Dispose();
             disposableMock.Verify(x => x.Dispose(), Times.Once);
 
-            Assert.AreEqual(false, disposableMock.Object.TryRefCount(out IRefCounted<IDisposable> disposer3, out created));
+            Assert.AreEqual(false, disposableMock.Object.TryRefCount(out _, out created));
             Assert.AreEqual(false, created);
         }
     }

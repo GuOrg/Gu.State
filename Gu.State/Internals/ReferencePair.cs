@@ -30,7 +30,7 @@ namespace Gu.State
                 return;
             }
 
-            Cache.TryRemove(this, out var temp);
+            Cache.TryRemove(this, out _);
         }
 
         public object X
@@ -142,7 +142,7 @@ namespace Gu.State
                 }
 
                 GC.SuppressFinalize(this);
-                Cache.TryRemove(this, out var temp);
+                Cache.TryRemove(this, out _);
                 this.disposed = true;
             }
         }

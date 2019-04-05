@@ -3,7 +3,6 @@
 namespace Gu.State.Tests.EqualByTests
 {
     using System;
-    using Gu.State.Tests.Settings;
     using NUnit.Framework;
 
     using static EqualByTypes;

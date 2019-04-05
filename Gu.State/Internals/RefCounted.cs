@@ -8,7 +8,7 @@
         internal static IRefCounted<T> RefCount<T>(this T item)
             where T : class, IDisposable
         {
-            if (TryRefCount(item, out var result, out var temp))
+            if (TryRefCount(item, out var result, out _))
             {
                 return result;
             }
@@ -21,7 +21,7 @@
             out IRefCounted<TValue> refCounted)
             where TValue : class, IDisposable
         {
-            return TryRefCount(value, out refCounted, out var created);
+            return TryRefCount(value, out refCounted, out _);
         }
 
         internal static bool TryRefCount<TValue>(this TValue value, out IRefCounted<TValue> refCounted, out bool created)
