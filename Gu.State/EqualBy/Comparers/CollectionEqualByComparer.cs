@@ -4,7 +4,7 @@ namespace Gu.State
 
     internal abstract class CollectionEqualByComparer<TCollection, TItem> : EqualByComparer<TCollection>
     {
-        [Obsolete("It has state so Default field can't be used. Addign it here so subclasses do not add it.", error: true)]
+        [Obsolete("It has state so Default field can't be used. Adding it here so subclasses do not add it.", error: true)]
         internal static readonly CollectionEqualByComparer<TCollection, TItem> Default;
 
         private EqualByComparer lazyItemComparer;
@@ -30,13 +30,17 @@ namespace Gu.State
 
         internal override bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs)
         {
-            if (referencePairs != null &&
-                referencePairs.Add(x, y) == false)
+            if (TryGetEitherNullEquals(x, y, out var result))
+            {
+                return result;
+            }
+
+            if (referencePairs?.Add(x, y) == false)
             {
                 return true;
             }
 
-            return base.Equals(x, y, settings, referencePairs);
+            return this.Equals((TCollection)x, (TCollection)y, settings, referencePairs);
         }
 
         internal override bool TryGetError(MemberSettings settings, out Error error) => TryGetItemError(settings, out error);

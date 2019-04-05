@@ -66,14 +66,23 @@
                 return true;
             }
 
-            internal override bool Equals(T x, T y, MemberSettings settings, ReferencePairCollection referencePairs)
+            internal override bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs)
             {
-                if (referencePairs != null &&
-                    referencePairs.Add(x, y) == false)
+                if (TryGetEitherNullEquals(x, y, out var result))
+                {
+                    return result;
+                }
+
+                if (referencePairs?.Add(x, y) == false)
                 {
                     return true;
                 }
 
+                return this.Equals((T)x, (T)y, settings, referencePairs);
+            }
+
+            internal override bool Equals(T x, T y, MemberSettings settings, ReferencePairCollection referencePairs)
+            {
                 for (var i = 0; i < this.memberComparers.Count; i++)
                 {
                     if (!this.memberComparers[i].Equals(x, y, settings, referencePairs))

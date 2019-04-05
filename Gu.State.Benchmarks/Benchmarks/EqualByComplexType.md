@@ -8,15 +8,15 @@ Frequency=3410076 Hz, Resolution=293.2486 ns, Timer=TSC
 
 
 ```
-|                            Method |         Mean |      Error |     StdDev |       Median |  Ratio | RatioSD | Gen 0/1k Op | Gen 1/1k Op | Gen 2/1k Op | Allocated Memory/Op |
-|---------------------------------- |-------------:|-----------:|-----------:|-------------:|-------:|--------:|------------:|------------:|------------:|--------------------:|
-|              this_x_Equals_this_y |    11.779 ns |  0.1265 ns |  0.1122 ns |    11.782 ns |   1.00 |    0.00 |           - |           - |           - |                   - |
-|                      ObjectEquals |    12.688 ns |  0.2536 ns |  0.2118 ns |    12.692 ns |   1.08 |    0.02 |           - |           - |           - |                   - |
-|                              Func |     2.794 ns |  0.0071 ns |  0.0063 ns |     2.793 ns |   0.24 |    0.00 |           - |           - |           - |                   - |
-|                          Comparer |     7.968 ns |  0.1897 ns |  0.2184 ns |     8.014 ns |   0.68 |    0.02 |           - |           - |           - |                   - |
-|   EqualByPropertyValuesStructural | 2,871.609 ns | 55.9404 ns | 76.5719 ns | 2,840.899 ns | 246.78 |    6.36 |      0.2060 |      0.0229 |      0.0076 |              1352 B |
-|   EqualByPropertyValuesReferences |   212.318 ns |  0.2978 ns |  0.2325 ns |   212.263 ns |  18.04 |    0.16 |      0.0367 |           - |           - |               232 B |
-| EqualByPropertyValuesWithComparer |   985.118 ns | 19.1327 ns | 21.2660 ns |   986.793 ns |  83.59 |    1.94 |      0.1202 |      0.0191 |      0.0019 |               765 B |
-|      EqualByFieldValuesStructural | 2,884.560 ns |  4.9112 ns |  4.1010 ns | 2,885.096 ns | 244.77 |    2.40 |      0.2060 |      0.0229 |      0.0076 |              1352 B |
-|      EqualByFieldValuesReferences |   212.876 ns |  4.2368 ns |  4.3508 ns |   212.740 ns |  18.01 |    0.41 |      0.0367 |           - |           - |               232 B |
-|    EqualByFieldValuesWithComparer |   929.725 ns | 18.5845 ns | 32.5493 ns |   907.736 ns |  81.02 |    2.67 |      0.1202 |      0.0191 |      0.0019 |               765 B |
+|                            Method |         Mean |      Error |     StdDev |  Ratio | RatioSD | Gen 0/1k Op | Gen 1/1k Op | Gen 2/1k Op | Allocated Memory/Op |
+|---------------------------------- |-------------:|-----------:|-----------:|-------:|--------:|------------:|------------:|------------:|--------------------:|
+|              this_x_Equals_this_y |    11.804 ns |  0.0935 ns |  0.0875 ns |   1.00 |    0.00 |           - |           - |           - |                   - |
+|                      ObjectEquals |    12.035 ns |  0.2674 ns |  0.2501 ns |   1.02 |    0.03 |           - |           - |           - |                   - |
+|                              Func |     2.780 ns |  0.0060 ns |  0.0053 ns |   0.24 |    0.00 |           - |           - |           - |                   - |
+|                          Comparer |     7.881 ns |  0.1915 ns |  0.2205 ns |   0.67 |    0.02 |           - |           - |           - |                   - |
+|   EqualByPropertyValuesStructural | 2,875.387 ns | 56.3315 ns | 69.1801 ns | 245.44 |    6.96 |      0.2060 |      0.0229 |      0.0076 |              1352 B |
+|   EqualByPropertyValuesReferences |   208.874 ns |  0.2324 ns |  0.1940 ns |  17.70 |    0.14 |      0.0367 |           - |           - |               232 B |
+| EqualByPropertyValuesWithComparer |   941.902 ns | 18.6590 ns | 35.9495 ns |  79.19 |    3.25 |      0.1202 |      0.0191 |      0.0019 |               765 B |
+|      EqualByFieldValuesStructural | 2,783.631 ns |  8.2731 ns |  6.9084 ns | 235.91 |    1.94 |      0.2060 |      0.0229 |      0.0076 |              1352 B |
+|      EqualByFieldValuesReferences |   220.536 ns |  4.4344 ns | 10.2774 ns |  18.75 |    0.81 |      0.0367 |           - |           - |               232 B |
+|    EqualByFieldValuesWithComparer |   895.791 ns |  4.9106 ns |  3.8339 ns |  75.94 |    0.74 |      0.1211 |      0.0248 |      0.0010 |               765 B |

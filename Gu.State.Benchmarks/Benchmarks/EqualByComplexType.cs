@@ -1,5 +1,6 @@
 ﻿// ReSharper disable RedundantArgumentDefaultValue
 #pragma warning disable SA1300 // Element must begin with upper-case letter
+#pragma warning disable CA1822 // Mark members as static
 namespace Gu.State.Benchmarks
 {
     using System;
@@ -16,35 +17,35 @@ namespace Gu.State.Benchmarks
 
         [Benchmark(Baseline = true)]
 #pragma warning disable CA1707 // Identifiers should not contain underscores
-        public static bool this_x_Equals_this_y() => X.Equals(Y);
+        public bool this_x_Equals_this_y() => X.Equals(Y);
 #pragma warning restore CA1707 // Identifiers should not contain underscores
 
         [Benchmark]
-        public static bool ObjectEquals() => Equals(X, Y);
+        public bool ObjectEquals() => Equals(X, Y);
 
         [Benchmark]
-        public static bool Func() => CompareFunc(X, Y);
+        public bool Func() => CompareFunc(X, Y);
 
         [Benchmark]
-        public static bool Comparer() => ComplexTypeComparer.Default.Equals(X, Y);
+        public bool Comparer() => ComplexTypeComparer.Default.Equals(X, Y);
 
         [Benchmark]
-        public static bool EqualByPropertyValuesStructural() => EqualBy.PropertyValues(X, Y, ReferenceHandling.Structural);
+        public bool EqualByPropertyValuesStructural() => EqualBy.PropertyValues(X, Y, ReferenceHandling.Structural);
 
         [Benchmark]
-        public static bool EqualByPropertyValuesReferences() => EqualBy.PropertyValues(X, Y, ReferenceHandling.References);
+        public bool EqualByPropertyValuesReferences() => EqualBy.PropertyValues(X, Y, ReferenceHandling.References);
 
         [Benchmark]
-        public static bool EqualByPropertyValuesWithComparer() => EqualBy.PropertyValues(X, Y, PropertiesSettingsWithComparer);
+        public bool EqualByPropertyValuesWithComparer() => EqualBy.PropertyValues(X, Y, PropertiesSettingsWithComparer);
 
         [Benchmark]
-        public static bool EqualByFieldValuesStructural() => EqualBy.FieldValues(X, Y, ReferenceHandling.Structural);
+        public bool EqualByFieldValuesStructural() => EqualBy.FieldValues(X, Y, ReferenceHandling.Structural);
 
         [Benchmark]
-        public static bool EqualByFieldValuesReferences() => EqualBy.FieldValues(X, Y, ReferenceHandling.References);
+        public bool EqualByFieldValuesReferences() => EqualBy.FieldValues(X, Y, ReferenceHandling.References);
 
         [Benchmark]
-        public static bool EqualByFieldValuesWithComparer() => EqualBy.FieldValues(X, Y, FieldsSettingsWithComparer);
+        public bool EqualByFieldValuesWithComparer() => EqualBy.FieldValues(X, Y, FieldsSettingsWithComparer);
 
         private class ComplexTypeComparer : IEqualityComparer<ComplexType>
         {
