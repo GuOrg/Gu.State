@@ -307,7 +307,5 @@ namespace Gu.State.Tests.EqualByTests
         };
 
         private static TestCaseData Case<T>(T x, T y) => new TestCaseData(x, y);
-
-        private static With<T> With<T>(T x) => new With<T>(x);
     }
 }

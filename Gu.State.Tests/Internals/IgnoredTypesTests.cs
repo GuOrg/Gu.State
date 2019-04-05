@@ -1,4 +1,5 @@
-﻿#pragma warning disable CA1812
+﻿// ReSharper disable UnusedTypeParameter
+#pragma warning disable CA1812
 namespace Gu.State.Tests.Internals
 {
     using System;

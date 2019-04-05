@@ -7,11 +7,6 @@
             public T Value { get; }
         }
 
-        public class WithSelfProp
-        {
-            public WithSelfProp Value { get; }
-        }
-
         public class Parent
         {
             public Child Child { get; }

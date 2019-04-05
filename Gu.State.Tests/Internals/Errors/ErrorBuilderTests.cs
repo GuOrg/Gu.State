@@ -3,7 +3,7 @@
     using System.Reflection;
     using NUnit.Framework;
 
-    public partial class TypeErrorsBuilderTests
+    public class TypeErrorsBuilderTests
     {
         [Test]
         public void FinnishWhenNull()
