@@ -47,18 +47,6 @@
         }
 
         [Test]
-        public void ListOfIntsEmptyToEmpty()
-        {
-            var x = new List<int>();
-            var y = new List<int>();
-            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(true, result);
-
-            result = this.EqualBy(y, x, ReferenceHandling.Structural);
-            Assert.AreEqual(true, result);
-        }
-
-        [Test]
         public void ListOfIntsToLonger()
         {
             var x = new List<int> { 1, 2, 3 };
@@ -108,19 +96,6 @@
             Assert.AreEqual(false, result);
 
             result = this.EqualBy(y, x, ReferenceHandling.Structural);
-            Assert.AreEqual(true, result);
-        }
-
-        [Test]
-        public void ListOfPoints()
-        {
-            var x = new List<Point> { new Point(1, 2), new Point(1, 2) };
-            var y = new List<Point> { new Point(1, 2), new Point(1, 2) };
-
-            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(true, result);
-
-            result = this.EqualBy(x, y, ReferenceHandling.References);
             Assert.AreEqual(true, result);
         }
 

@@ -2,6 +2,7 @@
 // ReSharper disable RedundantCast
 #pragma warning disable CA1825 // Avoid zero-length array allocations.
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+#pragma warning disable SA1202 // Elements should be ordered by access
 namespace Gu.State.Tests.EqualByTests
 {
     using System;
@@ -19,6 +20,7 @@ namespace Gu.State.Tests.EqualByTests
         private static readonly WithSimpleProperties SharedWithSimpleProperties = new WithSimpleProperties(1, 2, "3", StringSplitOptions.RemoveEmptyEntries);
 
         public static readonly TestCaseData[] WhenEqual =
+#pragma warning restore SA1202 // Elements should be ordered by access
         {
             Case<object>(null, null),
             Case(1, 1),
@@ -64,8 +66,12 @@ namespace Gu.State.Tests.EqualByTests
             Case((int[])null, (int[])null),
             Case(new int[0], new int[0]),
             Case(new[] { 1, 2, 3 }, new[] { 1, 2, 3 }),
+            Case(new List<int>(), new List<int>()),
+            Case(new List<int> { 1, 2, 3 }, new List<int> { 1, 2, 3 }),
+            Case(new List<Point> { new Point(1, 2), new Point(1, 2) }, new List<Point> { new Point(1, 2), new Point(1, 2) }),
             Case(new[] { SharedWithSimpleProperties }, new[] { SharedWithSimpleProperties }),
             Case(new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }, new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }),
+            Case(new HashSet<int>(), new HashSet<int>()),
             Case(new HashSet<int>(new[] { 1, 2, 3 }), new HashSet<int>(new[] { 1, 2, 3 })),
             Case(new HashSet<WithSimpleProperties>(new[] { SharedWithSimpleProperties }), new HashSet<WithSimpleProperties>(new[] { SharedWithSimpleProperties })),
 
@@ -129,7 +135,6 @@ namespace Gu.State.Tests.EqualByTests
             Case(new WithComplexProperty("a", 1) { ComplexType = new ComplexType { Name = "1", Value = 2 } }, new WithComplexProperty("a", 1) { ComplexType = new ComplexType { Name = "1", Value = 2 } }),
             Case(new With<ComplexType>(new ComplexType("1", 2)), new With<ComplexType>(new ComplexType("1", 2))),
             Case(new WithListProperty<int> { Items = new List<int>() }, new WithListProperty<int> { Items = new List<int>() }),
-
         };
 
         public static readonly TestCaseData[] WhenNotEqual =
@@ -204,6 +209,18 @@ namespace Gu.State.Tests.EqualByTests
             Case(new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }, new[,] { { -1, 2 }, { 3, 4 }, { 5, 6 } }),
             Case(new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }, new[,] { { 1, 2 }, { -3, 4 }, { 5, 6 } }),
             Case(new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }, new[,] { { 1, 2 }, { 3, 4 }, { 5, -6 } }),
+
+            Case(new List<int> { 1, 2, 3 }, new List<int> { -1, 2, 3 }),
+            Case(new List<int> { 1, 2, 3 }, new List<int> { 1, -2, 3 }),
+            Case(new List<int> { 1, 2, 3 }, new List<int> { 1, 2, -3 }),
+            Case(new List<int> { 1, 2, 3 }, new List<int> { 1, 2 }),
+            Case(new List<int>(), new List<int> { 1, 2, 3 }),
+
+            Case(new HashSet<int> { 1, 2, 3 }, new HashSet<int>()),
+            Case(new HashSet<int> { 1, 2, 3 }, new HashSet<int> { -1, 2, 3 }),
+            Case(new HashSet<int> { 1, 2, 3 }, new HashSet<int> { 1, -2, 3 }),
+            Case(new HashSet<int> { 1, 2, 3 }, new HashSet<int> { 1, 2, -3 }),
+            Case(new HashSet<int> { 1, 2, 3 }, new HashSet<int> { 1, 2 }),
 
             Case(new Dictionary<int, string> { { 1, "1" } }, new Dictionary<int, string>()),
             Case(new Dictionary<int, string> { { 1, "1" }, { 2, "2" } }, new Dictionary<int, string> { { 1, "1" } }),
