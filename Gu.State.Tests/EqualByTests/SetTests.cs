@@ -11,46 +11,6 @@
         public abstract bool EqualBy<T>(T source, T target, ReferenceHandling referenceHandling)
             where T : class;
 
-        [TestCase(ReferenceHandling.Throw)]
-        [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.References)]
-        public void IntsWhenEqual(ReferenceHandling referenceHandling)
-        {
-            var x = new HashSet<int> { 1, 2, 3 };
-            var y = new HashSet<int> { 2, 3, 1 };
-            var result = this.EqualBy(x, y, referenceHandling);
-            Assert.AreEqual(true, result);
-
-            result = this.EqualBy(y, x, referenceHandling);
-            Assert.AreEqual(true, result);
-        }
-
-        [TestCase(ReferenceHandling.Throw)]
-        [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.References)]
-        public void IntsWhenNotEqual(ReferenceHandling referenceHandling)
-        {
-            var x = new HashSet<int> { 1, 2, 3 };
-            var y = new HashSet<int> { 1, 2, 4 };
-            var result = this.EqualBy(x, y, referenceHandling);
-            Assert.AreEqual(false, result);
-
-            result = this.EqualBy(y, x, referenceHandling);
-            Assert.AreEqual(false, result);
-        }
-
-        [TestCase(ReferenceHandling.Structural)]
-        [TestCase(ReferenceHandling.References)]
-        public void IntsWhenLonger(ReferenceHandling referenceHandling)
-        {
-            var x = new HashSet<int> { 1, 2, 3, 4 };
-            var y = new HashSet<int> { 1, 2, 3 };
-            var result = this.EqualBy(x, y, referenceHandling);
-            Assert.AreEqual(false, result);
-
-            result = this.EqualBy(y, x, referenceHandling);
-            Assert.AreEqual(false, result);
-        }
 
         [TestCase(ReferenceHandling.Structural)]
         public void ComplexWhenEqual(ReferenceHandling referenceHandling)
