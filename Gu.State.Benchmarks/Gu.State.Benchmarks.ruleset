@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <RuleSet Name="Rules for Gu.State" Description="Code analysis rules for Gu.State.csproj." ToolsVersion="14.0">
-  <Include Path="basiccorrectnessrules.ruleset" Action="Default" />
   <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
     <Rule Id="CA1001" Action="Error" />
     <Rule Id="CA1032" Action="Warning" />
@@ -22,6 +21,7 @@
     <Rule Id="CA1414" Action="Warning" />
     <Rule Id="CA1600" Action="Warning" />
     <Rule Id="CA1601" Action="Warning" />
+    <Rule Id="CA1814" Action="None" />
     <Rule Id="CA1821" Action="Warning" />
     <Rule Id="CA1824" Action="Warning" />
     <Rule Id="CA2001" Action="Warning" />

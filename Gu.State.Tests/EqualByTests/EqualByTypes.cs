@@ -26,6 +26,16 @@ namespace Gu.State.Tests.EqualByTests
         {
             public int Value { get; set; }
 
+            public static bool operator ==(EquatableStruct left, EquatableStruct right)
+            {
+                return left.Equals(right);
+            }
+
+            public static bool operator !=(EquatableStruct left, EquatableStruct right)
+            {
+                return !(left == right);
+            }
+
             public override bool Equals(object obj) => obj is EquatableStruct other &&
                                                        this.Equals(other);
 

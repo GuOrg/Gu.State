@@ -17,7 +17,7 @@
         {
             this.Source = source;
             this.Settings = settings;
-            this.TrackProperties = this.Source.GetType()
+            this.TrackProperties = source.GetType()
                                        .GetProperties()
                                        .Where(p => !this.Settings.IsIgnoringProperty(p))
                                        .Where(p => !settings.IsImmutable(p.PropertyType))

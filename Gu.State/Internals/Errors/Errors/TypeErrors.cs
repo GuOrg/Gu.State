@@ -26,9 +26,9 @@ namespace Gu.State
             this.Errors = errors;
         }
 
-        internal Type Type { get; }
-
         public IReadOnlyList<Error> Errors { get; }
+
+        internal Type Type { get; }
 
         internal IReadOnlyList<Error> AllErrors => this.lazyAllErrors ??
                                                    (this.lazyAllErrors = MergedErrors.MergeAll(this, this.Errors));

@@ -23,20 +23,12 @@
             return false;
         }
 
-        public void Copy(
-            object source,
-            object target,
-            MemberSettings settings,
-            ReferencePairCollection referencePairs)
+        public void Copy(object source, object target, MemberSettings settings, ReferencePairCollection referencePairs)
         {
             Copy((Array)source, (Array)target, settings, referencePairs);
         }
 
-        private static void Copy(
-            Array sourceArray,
-            Array targetArray,
-            MemberSettings settings,
-            ReferencePairCollection referencePairs)
+        private static void Copy(Array sourceArray, Array targetArray, MemberSettings settings, ReferencePairCollection referencePairs)
         {
             if (!Is.SameSize(sourceArray, targetArray))
             {
@@ -65,7 +57,7 @@
 
                 var copyMethod = typeof(ArrayCopyer).GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Static)
                                                     .MakeGenericMethod(itemType);
-                copyMethod.Invoke(null, new object[] { sourceArray, targetArray, settings, referencePairs });
+                _ = copyMethod.Invoke(null, new object[] { sourceArray, targetArray, settings, referencePairs });
             }
             else
             {
@@ -73,11 +65,7 @@
             }
         }
 
-        private static void Copy1DItems<T>(
-            T[] sourceArray,
-            T[] targetArray,
-            MemberSettings settings,
-            ReferencePairCollection referencePairs)
+        private static void Copy1DItems<T>(T[] sourceArray, T[] targetArray, MemberSettings settings, ReferencePairCollection referencePairs)
         {
             var copyValues = State.Copy.IsCopyValue(
                         sourceArray.GetType().GetItemType(),
@@ -105,11 +93,9 @@
             }
         }
 
-        private static void Copy2DItems<T>(
-            T[,] sourceArray,
-            T[,] targetArray,
-            MemberSettings settings,
-            ReferencePairCollection referencePairs)
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+        private static void Copy2DItems<T>(T[,] sourceArray, T[,] targetArray, MemberSettings settings, ReferencePairCollection referencePairs)
+#pragma warning restore CA1814 // Prefer jagged arrays over multidimensional
         {
             var copyValues = State.Copy.IsCopyValue(
                         sourceArray.GetType().GetItemType(),
@@ -140,11 +126,9 @@
             }
         }
 
-        private static void Copy3DItems<T>(
-            T[,,] sourceArray,
-            T[,,] targetArray,
-            MemberSettings settings,
-            ReferencePairCollection referencePairs)
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+        private static void Copy3DItems<T>(T[,,] sourceArray, T[,,] targetArray, MemberSettings settings, ReferencePairCollection referencePairs)
+#pragma warning restore CA1814 // Prefer jagged arrays over multidimensional
         {
             var copyValues = State.Copy.IsCopyValue(
                         sourceArray.GetType().GetItemType(),
@@ -178,11 +162,7 @@
             }
         }
 
-        private static void CopyAnyDimension(
-            Array sourceArray,
-            Array targetArray,
-            MemberSettings settings,
-            ReferencePairCollection referencePairs)
+        private static void CopyAnyDimension(Array sourceArray, Array targetArray, MemberSettings settings, ReferencePairCollection referencePairs)
         {
             var copyValues = State.Copy.IsCopyValue(
                         sourceArray.GetType().GetItemType(),
