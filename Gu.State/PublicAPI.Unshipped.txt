@@ -1,20 +1,30 @@
 ﻿Gu.State.AddEventArgs.Equals(Gu.State.AddEventArgs other) -> bool
 Gu.State.MoveEventArgs.Equals(Gu.State.MoveEventArgs other) -> bool
+Gu.State.PropertyChangeEventArgs.Equals(Gu.State.PropertyChangeEventArgs other) -> bool
 Gu.State.RemoveEventArgs.Equals(Gu.State.RemoveEventArgs other) -> bool
+Gu.State.ReplaceEventArgs.Equals(Gu.State.ReplaceEventArgs other) -> bool
 Gu.State.ResetEventArgs.Equals(Gu.State.ResetEventArgs other) -> bool
 override Gu.State.AddEventArgs.Equals(object obj) -> bool
 override Gu.State.AddEventArgs.GetHashCode() -> int
 override Gu.State.MoveEventArgs.Equals(object obj) -> bool
 override Gu.State.MoveEventArgs.GetHashCode() -> int
+override Gu.State.PropertyChangeEventArgs.Equals(object obj) -> bool
+override Gu.State.PropertyChangeEventArgs.GetHashCode() -> int
 override Gu.State.RemoveEventArgs.Equals(object obj) -> bool
 override Gu.State.RemoveEventArgs.GetHashCode() -> int
+override Gu.State.ReplaceEventArgs.Equals(object obj) -> bool
+override Gu.State.ReplaceEventArgs.GetHashCode() -> int
 override Gu.State.ResetEventArgs.Equals(object obj) -> bool
 override Gu.State.ResetEventArgs.GetHashCode() -> int
 static Gu.State.AddEventArgs.operator !=(Gu.State.AddEventArgs left, Gu.State.AddEventArgs right) -> bool
 static Gu.State.AddEventArgs.operator ==(Gu.State.AddEventArgs left, Gu.State.AddEventArgs right) -> bool
 static Gu.State.MoveEventArgs.operator !=(Gu.State.MoveEventArgs left, Gu.State.MoveEventArgs right) -> bool
 static Gu.State.MoveEventArgs.operator ==(Gu.State.MoveEventArgs left, Gu.State.MoveEventArgs right) -> bool
+static Gu.State.PropertyChangeEventArgs.operator !=(Gu.State.PropertyChangeEventArgs left, Gu.State.PropertyChangeEventArgs right) -> bool
+static Gu.State.PropertyChangeEventArgs.operator ==(Gu.State.PropertyChangeEventArgs left, Gu.State.PropertyChangeEventArgs right) -> bool
 static Gu.State.RemoveEventArgs.operator !=(Gu.State.RemoveEventArgs left, Gu.State.RemoveEventArgs right) -> bool
 static Gu.State.RemoveEventArgs.operator ==(Gu.State.RemoveEventArgs left, Gu.State.RemoveEventArgs right) -> bool
+static Gu.State.ReplaceEventArgs.operator !=(Gu.State.ReplaceEventArgs left, Gu.State.ReplaceEventArgs right) -> bool
+static Gu.State.ReplaceEventArgs.operator ==(Gu.State.ReplaceEventArgs left, Gu.State.ReplaceEventArgs right) -> bool
 static Gu.State.ResetEventArgs.operator !=(Gu.State.ResetEventArgs left, Gu.State.ResetEventArgs right) -> bool
 static Gu.State.ResetEventArgs.operator ==(Gu.State.ResetEventArgs left, Gu.State.ResetEventArgs right) -> bool
