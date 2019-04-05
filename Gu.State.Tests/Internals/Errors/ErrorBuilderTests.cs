@@ -1,4 +1,5 @@
-﻿namespace Gu.State.Tests.Internals.Errors
+﻿// ReSharper disable InconsistentNaming
+namespace Gu.State.Tests.Internals.Errors
 {
     using System.Reflection;
     using NUnit.Framework;

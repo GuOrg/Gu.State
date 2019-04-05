@@ -18,14 +18,14 @@
         [Benchmark]
         public ComplexType CopyPropertyValues()
         {
-            State.Copy.PropertyValues(this.source, this.target);
+            Copy.PropertyValues(this.source, this.target);
             return this.target;
         }
 
         [Benchmark]
         public ComplexType CopyFieldValues()
         {
-            State.Copy.FieldValues(this.source, this.target);
+            Copy.FieldValues(this.source, this.target);
             return this.target;
         }
     }

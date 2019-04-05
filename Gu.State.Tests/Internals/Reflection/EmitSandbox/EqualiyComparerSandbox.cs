@@ -1,4 +1,4 @@
-namespace Gu.State.Tests.Internals.Refelection.EmitSandbox
+namespace Gu.State.Tests.Internals.Reflection.EmitSandbox
 {
     using NUnit.Framework;
 

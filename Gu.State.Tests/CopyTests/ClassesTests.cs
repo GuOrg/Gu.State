@@ -148,6 +148,7 @@ namespace Gu.State.Tests.CopyTests
             Assert.AreEqual(1, target.Value.BaseValue);
 
             Assert.AreEqual(2, ((Derived1)source.Value).Derived1Value);
+            // ReSharper disable once PossibleInvalidCastException
             Assert.AreEqual(2, ((Derived1)target.Value).Derived1Value);
         }
 

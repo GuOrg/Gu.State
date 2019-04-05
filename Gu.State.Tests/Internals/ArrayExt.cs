@@ -30,6 +30,7 @@
             var indexEnumerator = expected.GetEnumerator();
             while (arrayEnumerator.MoveNext() && indexEnumerator.MoveNext())
             {
+                // ReSharper disable once AssignNullToNotNullAttribute
                 Assert.AreEqual(arrayEnumerator.Current, array.GetValue((int[])indexEnumerator.Current));
             }
         }

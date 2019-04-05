@@ -4,7 +4,7 @@ namespace Gu.State.Tests.DiffTests.FieldValues
     {
         public override Diff DiffBy<T>(T x, T y, ReferenceHandling referenceHandling)
         {
-            return Gu.State.DiffBy.FieldValues(x, y, referenceHandling);
+            return State.DiffBy.FieldValues(x, y, referenceHandling);
         }
     }
 }

@@ -464,11 +464,11 @@ namespace Gu.State.Tests.CopyTests
                 }
             }
 
-            public void SetFields(int intValue, string stringValue)
+            public void SetFields(int newIntValue, string newStringValue)
             {
 #pragma warning disable INPC003 // Notify when property changes.
-                this.intValue = intValue;
-                this.stringValue = stringValue;
+                this.intValue = newIntValue;
+                this.stringValue = newStringValue;
 #pragma warning restore INPC003 // Notify when property changes.
             }
 
@@ -549,7 +549,8 @@ namespace Gu.State.Tests.CopyTests
             // ReSharper disable once UnusedParameter.Global
             public int this[int index]
             {
-                get { return 0; }
+                get => 0;
+                //// ReSharper disable once ValueParameterNotUsed
                 set { }
             }
         }
