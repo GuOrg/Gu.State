@@ -71,5 +71,22 @@ namespace Gu.State.Tests.EqualByTests
             result = this.EqualBy(y, x, referenceHandling);
             Assert.AreEqual(false, result);
         }
+
+        [TestCase(ReferenceHandling.Structural, true)]
+        [TestCase(ReferenceHandling.References, false)]
+        public void ArrayWithSelf(ReferenceHandling referenceHandling, bool expected)
+        {
+            var x = new object[1];
+            x[0] = x;
+
+            var y = new object[1];
+            y[0] = y;
+
+            var result = this.EqualBy(x, y, referenceHandling);
+            Assert.AreEqual(expected, result);
+
+            result = this.EqualBy(y, x, referenceHandling);
+            Assert.AreEqual(expected, result);
+        }
     }
 }
