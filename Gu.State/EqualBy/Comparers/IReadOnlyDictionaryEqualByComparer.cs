@@ -3,22 +3,19 @@ namespace Gu.State
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
-    using System.Reflection;
 
     internal static class IReadOnlyDictionaryEqualByComparer
     {
         private static readonly ConcurrentDictionary<Type, EqualByComparer> Cache = new ConcurrentDictionary<Type, EqualByComparer>();
 
-        internal static bool TryGet(Type type, MemberSettings settings, out EqualByComparer comparer)
+        internal static bool TryCreate(Type type, MemberSettings settings, out EqualByComparer comparer)
         {
             if (type.Implements(typeof(IReadOnlyDictionary<,>)))
             {
-                var iDict = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IReadOnlyDictionary<,>)
+                var dictionaryType = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IReadOnlyDictionary<,>)
                     ? type
                     : type.GetInterface("IReadOnlyDictionary`2");
-                comparer = (EqualByComparer)typeof(Comparer<,,>).MakeGenericType(type, iDict.GenericTypeArguments[0], iDict.GenericTypeArguments[1])
-                                                               .GetField(nameof(Comparer<int, int, int>.Default), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
-                                                               .GetValue(null);
+                comparer = (EqualByComparer)Activator.CreateInstance(typeof(Comparer<,,>).MakeGenericType(type, dictionaryType.GenericTypeArguments[0], dictionaryType.GenericTypeArguments[1]));
                 return true;
             }
 
@@ -28,11 +25,8 @@ namespace Gu.State
 
         private class Comparer<TMap, TKey, TValue> : EqualByComparer<IReadOnlyDictionary<TKey, TValue>>
         {
-            public static readonly Comparer<TMap, TKey, TValue> Default = new Comparer<TMap, TKey, TValue>();
-
-            private Comparer()
-            {
-            }
+            private readonly ISetEqualByComparer.EqualByComparer<IEnumerable<TKey>, TKey> keysEqualByComparer = new ISetEqualByComparer.EqualByComparer<IEnumerable<TKey>, TKey>();
+            private EqualByComparer lazyValueComparer;
 
             internal override bool TryGetError(MemberSettings settings, out Error error)
             {
@@ -59,13 +53,12 @@ namespace Gu.State
                     return false;
                 }
 
-                return ISetEqualByComparer.SetEquals(x.Keys, y.Keys, settings, referencePairs) &&
-                       ValuesEquals(x, y, settings, referencePairs);
+                return this.keysEqualByComparer.Equals(x.Keys, y.Keys, settings, referencePairs) &&
+                       ValuesEquals(x, y, this.ValueComparer(settings), settings, referencePairs);
             }
 
-            private static bool ValuesEquals(IReadOnlyDictionary<TKey, TValue> x, IReadOnlyDictionary<TKey, TValue> y, MemberSettings settings, ReferencePairCollection referencePairs)
+            private static bool ValuesEquals(IReadOnlyDictionary<TKey, TValue> x, IReadOnlyDictionary<TKey, TValue> y, EqualByComparer valueComparer, MemberSettings settings, ReferencePairCollection referencePairs)
             {
-                var comparer = settings.GetEqualByComparer(typeof(TValue));
                 foreach (var key in x.Keys)
                 {
                     if (!y.TryGetValue(key, out var yv))
@@ -73,13 +66,25 @@ namespace Gu.State
                         return false;
                     }
 
-                    if (!comparer.Equals(x[key], yv, settings, referencePairs))
+                    if (!valueComparer.Equals(x[key], yv, settings, referencePairs))
                     {
                         return false;
                     }
                 }
 
                 return true;
+            }
+
+            private EqualByComparer ValueComparer(MemberSettings settings)
+            {
+                if (this.lazyValueComparer is null)
+                {
+                    this.lazyValueComparer = typeof(TValue).IsSealed
+                        ? settings.GetEqualByComparer(typeof(TValue))
+                        : new LazyEqualByComparer<TValue>();
+                }
+
+                return this.lazyValueComparer;
             }
         }
     }

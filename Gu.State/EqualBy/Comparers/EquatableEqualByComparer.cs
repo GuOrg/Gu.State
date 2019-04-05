@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Reflection;
 
     internal static class EquatableEqualByComparer
@@ -21,6 +22,7 @@
             return false;
         }
 
+        [DebuggerDisplay("EquatableEqualByComparer<{typeof(T).PrettyName()}>")]
         private class Comparer<T> : EqualByComparer<T>
         {
             public static Comparer<T> Default = new Comparer<T>(EqualityComparer<T>.Default);
@@ -33,7 +35,7 @@
 
             internal override bool Equals(T x, T y, MemberSettings settings, ReferencePairCollection referencePairs)
             {
-                return this.comparer.Equals((T)x, (T)y);
+                return this.comparer.Equals(x, y);
             }
         }
     }

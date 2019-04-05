@@ -23,10 +23,10 @@
         {
             if (NullableEqualByComparer.TryGet(type, settings, out var comparer) ||
                 EquatableEqualByComparer.TryGet(type, settings, out comparer) ||
-                ISetEqualByComparer.TryGet(type, settings, out comparer) ||
-                IReadOnlyListEqualByComparer.TryGet(type, settings, out comparer) ||
+                ISetEqualByComparer.TryCreate(type, settings, out comparer) ||
+                IReadOnlyListEqualByComparer.TryCreate(type, settings, out comparer) ||
                 ArrayEqualByComparer.TryGet(type, settings, out comparer) ||
-                IReadOnlyDictionaryEqualByComparer.TryGet(type, settings, out comparer) ||
+                IReadOnlyDictionaryEqualByComparer.TryCreate(type, settings, out comparer) ||
                 IEnumerableEqualByComparer.TryGet(type, settings, out comparer) ||
                 ComplexTypeEqualByComparer.TryGet(type, settings, out comparer))
             {

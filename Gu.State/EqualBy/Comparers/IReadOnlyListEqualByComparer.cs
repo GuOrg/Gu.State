@@ -7,27 +7,21 @@ namespace Gu.State
 
     internal static class IReadOnlyListEqualByComparer
     {
-        internal static bool TryGet(Type type, MemberSettings settings, out EqualByComparer comparer)
+        internal static bool TryCreate(Type type, MemberSettings settings, out EqualByComparer comparer)
         {
             if (type.Implements(typeof(IReadOnlyList<>)))
             {
                 if (type.IsArray)
                 {
-                    comparer = (EqualByComparer)typeof(ArrayComparer<>).MakeGenericType(type.GetItemType())
-                                                                  .GetField(nameof(ArrayComparer<int>.Default), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
-                                                                  .GetValue(null);
+                    comparer = (EqualByComparer)Activator.CreateInstance(typeof(ArrayComparer<>).MakeGenericType(type.GetItemType()));
                 }
                 else if (type.GetGenericTypeDefinition() == typeof(List<>))
                 {
-                    comparer = (EqualByComparer)typeof(ListComparer<>).MakeGenericType(type.GetItemType())
-                                                                      .GetField(nameof(ListComparer<int>.Default), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
-                                                                      .GetValue(null);
+                    comparer = (EqualByComparer)Activator.CreateInstance(typeof(ListComparer<>).MakeGenericType(type.GetItemType()));
                 }
                 else
                 {
-                    comparer = (EqualByComparer)typeof(Comparer<>).MakeGenericType(type.GetItemType())
-                                                                  .GetField(nameof(Comparer<int>.Default), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
-                                                                  .GetValue(null);
+                    comparer = (EqualByComparer)Activator.CreateInstance(typeof(Comparer<>).MakeGenericType(type.GetItemType()));
                 }
 
                 return true;
@@ -38,14 +32,8 @@ namespace Gu.State
         }
 
         [DebuggerDisplay("IReadOnlyListEqualByComparer<IReadOnlyListEqualByComparer<{typeof(T).PrettyName()}>>")]
-        private class Comparer<T> : CollectionEqualByComparer<IReadOnlyList<T>,T>
+        private class Comparer<T> : CollectionEqualByComparer<IReadOnlyList<T>, T>
         {
-            public static Comparer<T> Default = new Comparer<T>();
-
-            private Comparer()
-            {
-            }
-
             internal override bool Equals(IReadOnlyList<T> x, IReadOnlyList<T> y, MemberSettings settings, ReferencePairCollection referencePairs)
             {
                 if (x.Count != y.Count)
@@ -53,7 +41,7 @@ namespace Gu.State
                     return false;
                 }
 
-                var comparer = settings.GetEqualByComparer(typeof(T));
+                var comparer = this.ItemComparer(settings);
                 for (var i = 0; i < x.Count; i++)
                 {
                     if (!comparer.Equals(x[i], y[i], settings, referencePairs))
@@ -69,12 +57,6 @@ namespace Gu.State
         [DebuggerDisplay("ListByComparer<List<{typeof(T).PrettyName()}>>")]
         private class ListComparer<T> : CollectionEqualByComparer<List<T>, T>
         {
-            public static ListComparer<T> Default = new ListComparer<T>();
-
-            private ListComparer()
-            {
-            }
-
             internal override bool Equals(List<T> x, List<T> y, MemberSettings settings, ReferencePairCollection referencePairs)
             {
                 if (x.Count != y.Count)
@@ -82,7 +64,7 @@ namespace Gu.State
                     return false;
                 }
 
-                var comparer = settings.GetEqualByComparer(typeof(T));
+                var comparer = this.ItemComparer(settings);
                 for (var i = 0; i < x.Count; i++)
                 {
                     if (!comparer.Equals(x[i], y[i], settings, referencePairs))
@@ -98,12 +80,6 @@ namespace Gu.State
         [DebuggerDisplay("ArrayEqualByComparer<{typeof(T).PrettyName()}[]>")]
         private class ArrayComparer<T> : CollectionEqualByComparer<T[], T>
         {
-            public static ArrayComparer<T> Default = new ArrayComparer<T>();
-
-            private ArrayComparer()
-            {
-            }
-
             internal override bool Equals(T[] x, T[] y, MemberSettings settings, ReferencePairCollection referencePairs)
             {
                 if (x.Length != y.Length)
@@ -111,7 +87,7 @@ namespace Gu.State
                     return false;
                 }
 
-                var comparer = settings.GetEqualByComparer(typeof(T));
+                var comparer = this.ItemComparer(settings);
                 for (var i = 0; i < x.Length; i++)
                 {
                     if (!comparer.Equals(x[i], y[i], settings, referencePairs))

@@ -62,11 +62,17 @@ namespace Gu.State.Tests.EqualByTests
             Case((int[])null, (int[])null),
             Case(new int[0], new int[0]),
             Case(new[] { 1, 2, 3 }, new[] { 1, 2, 3 }),
-
             Case(new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }, new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }),
             Case(new HashSet<int>(new[] { 1, 2, 3 }), new HashSet<int>(new[] { 1, 2, 3 })),
 
             Case(new Dictionary<int, string> { { 1, "1" } }, new Dictionary<int, string> { { 1, "1" } }),
+
+            Case(new object[] { 1, 1.2, "3" }.Select(x => x), new object[] { 1, 1.2, "3" }.Select(x => x)),
+            Case(new object[] { 1, 2.2, "3" }, new object[] { 1, 2.2, "3" }),
+            Case(new List<object> { 1, 2.2, "3" }, new List<object> { 1, 2.2, "3" }),
+            Case(new Dictionary<object, object> { { 1, "1" } }, new Dictionary<object, object> { { 1, "1" } }),
+            Case(new Dictionary<object, string> { { 1, "1" } }, new Dictionary<object, string> { { 1, "1" } }),
+            Case(new HashSet<object> { 1, 2.2, "3" }, new HashSet<object> { 1, 2.2, "3" }),
 
             Case(ImmutableList.Create(1, 2, 3), ImmutableList.Create(1, 2, 3)),
             Case(ImmutableArray<int>.Empty, ImmutableArray<int>.Empty),
@@ -81,6 +87,7 @@ namespace Gu.State.Tests.EqualByTests
             Case(Enumerable.Empty<int>().Select(x => x * x), Enumerable.Empty<int>().Select(x => x * x)),
             Case("1,2".Split(',').Select(int.Parse), "1,2".Split(',').Select(int.Parse)),
             Case("1,2".Split(',').Select(int.Parse), "1,2".Split(',').Select(int.Parse)),
+            Case(new object[] { 1, null }.Select(x => x), new object[] { 1, null }.Select(x => x)),
 
             Case(new With<Point>(new Point(1, 2)), new With<Point>(new Point(1, 2))),
             Case(new With<Point?>(new Point(1, 2)), new With<Point?>(new Point(1, 2))),
@@ -96,20 +103,20 @@ namespace Gu.State.Tests.EqualByTests
             Case(new With<List<int>>(null), new With<List<int>>(null)),
             Case(new With<List<int>>(new List<int>()), new With<List<int>>(new List<int>())),
             Case(new With<List<int>>(new List<int> { 1, 2, 3 }), new With<List<int>>(new List<int> { 1, 2, 3 })),
+            Case(new With<List<object>>(new List<object> { 1, 2.2, 3 }), new With<List<object>>(new List<object> { 1, 2.2, 3 })),
 
             Case(new With<IReadOnlyList<int>>(null), new With<IReadOnlyList<int>>(null)),
             Case(new With<IReadOnlyList<int>>(new int[0]), new With<IReadOnlyList<int>>(new int[0])),
             Case(new With<IReadOnlyList<int>>(new[] { 1, 2, 3 }), new With<IReadOnlyList<int>>(new[] { 1, 2, 3 })),
+            Case(new With<IReadOnlyList<object>>(new object[] { 1, 2.2, 3 }), new With<IReadOnlyList<object>>(new object [] { 1, 2.2, 3 })),
 
             Case(new[] { new[] { 1, 2, 3 }, new[] { 4, 5 } }, new[] { new[] { 1, 2, 3 }, new[] { 4, 5 } }),
-
+            Case(new List<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) }, new List<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) }),
             Case(new HashSet<HashCollisionType> {new HashCollisionType { Value = 1 } }, new HashSet<HashCollisionType> {new HashCollisionType { Value = 1 } }),
             Case(new Dictionary<HashCollisionType, string> { { new HashCollisionType { Value = 1 }, "1" } }, new Dictionary<HashCollisionType, string> { { new HashCollisionType { Value = 1 }, "1" } }),
 
             Case(new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = 2 }), new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = 2 })),
             Case(new[] { new With<int>(1), new With<int>(2), new With<int>(3) }, new[] { new With<int>(1), new With<int>(2), new With<int>(3) }),
-            Case(new object[] { 1, null }.Select(x => x), new object[] { 1, null }.Select(x => x)),
-            Case(new object[] { 1, 1.2 }.Select(x => x), new object[] { 1, 1.2 }.Select(x => x)),
         };
 
         public static readonly TestCaseData[] WhenNotEqual =
@@ -228,6 +235,8 @@ namespace Gu.State.Tests.EqualByTests
             Case(new With<IReadOnlyList<int>>(new[] { 1, 2 }), new With<IReadOnlyList<int>>(null)),
             Case(new With<IReadOnlyList<int>>(new int[0]), new With<IReadOnlyList<int>>(null)),
 
+            Case(new object [] { 1, 2.2 }, new object[] { -1, 2.2 }),
+            Case(new object [] { 1, 2.2 }, new object[] { 1, -2.2 }),
             Case(new[] { new[] { 1, 2, 3 }, new[] { 4, 5 } }, new[] { new[] { 1, 2 }, new[] { 4, 5 } }),
             Case(new[] { new[] { 1, 2, 3 }, new[] { 4, 5 } }, new[] { new[] { 1, 2, 3 }, new[] { 4 } }),
             Case(new[] { new[] { 1, 2, 3 }, new[] { 4, 5 } }, new[] { new[] { -1, 2, 3 }, new[] { 4, 5 } }),

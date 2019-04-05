@@ -24,20 +24,11 @@ namespace Gu.State
             return !left.Equals(right);
         }
 
-        public bool Equals(BindingFlagsAndReferenceHandling other)
-        {
-            return this.bindingFlags == other.bindingFlags && this.referenceHandling == other.referenceHandling;
-        }
+        public bool Equals(BindingFlagsAndReferenceHandling other) => this.bindingFlags == other.bindingFlags &&
+                                                                      this.referenceHandling == other.referenceHandling;
 
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            return obj is BindingFlagsAndReferenceHandling && this.Equals((BindingFlagsAndReferenceHandling)obj);
-        }
+        public override bool Equals(object obj) => obj is BindingFlagsAndReferenceHandling other &&
+                                                   this.Equals(other);
 
         public override int GetHashCode()
         {
