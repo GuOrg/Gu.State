@@ -16,6 +16,8 @@ namespace Gu.State.Tests.EqualByTests
 
     public static class TestCases
     {
+        private static readonly WithSimpleProperties SharedWithSimpleProperties = new WithSimpleProperties(1, 2, "3", StringSplitOptions.RemoveEmptyEntries);
+
         public static readonly TestCaseData[] WhenEqual =
         {
             Case<object>(null, null),
@@ -62,10 +64,13 @@ namespace Gu.State.Tests.EqualByTests
             Case((int[])null, (int[])null),
             Case(new int[0], new int[0]),
             Case(new[] { 1, 2, 3 }, new[] { 1, 2, 3 }),
+            Case(new[] { SharedWithSimpleProperties }, new[] { SharedWithSimpleProperties }),
             Case(new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }, new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }),
             Case(new HashSet<int>(new[] { 1, 2, 3 }), new HashSet<int>(new[] { 1, 2, 3 })),
+            Case(new HashSet<WithSimpleProperties>(new[] { SharedWithSimpleProperties }), new HashSet<WithSimpleProperties>(new[] { SharedWithSimpleProperties })),
 
             Case(new Dictionary<int, string> { { 1, "1" } }, new Dictionary<int, string> { { 1, "1" } }),
+            Case(new Dictionary<int, WithSimpleProperties> { { 1, SharedWithSimpleProperties } }, new Dictionary<int, WithSimpleProperties> { { 1, SharedWithSimpleProperties } }),
 
             Case(new object[] { 1, 1.2, "3" }.Select(x => x), new object[] { 1, 1.2, "3" }.Select(x => x)),
             Case(new object[] { 1, 2.2, "3" }, new object[] { 1, 2.2, "3" }),
@@ -92,6 +97,9 @@ namespace Gu.State.Tests.EqualByTests
             Case(new With<Point>(new Point(1, 2)), new With<Point>(new Point(1, 2))),
             Case(new With<Point?>(new Point(1, 2)), new With<Point?>(new Point(1, 2))),
             Case(new With<Point?>(null), new With<Point?>(null)),
+
+            Case(new WithComplexProperty("a", 1), new WithComplexProperty("a", 1)),
+            Case(new With<WithSimpleProperties>(SharedWithSimpleProperties), new With<WithSimpleProperties>(SharedWithSimpleProperties)),
         };
 
         public static readonly TestCaseData[] WhenEqualStructural =
@@ -117,6 +125,8 @@ namespace Gu.State.Tests.EqualByTests
 
             Case(new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = 2 }), new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = 2 })),
             Case(new[] { new With<int>(1), new With<int>(2), new With<int>(3) }, new[] { new With<int>(1), new With<int>(2), new With<int>(3) }),
+            Case(new WithComplexProperty("a", 1) { ComplexType = new ComplexType { Name = "1", Value = 2 } }, new WithComplexProperty("a", 1) { ComplexType = new ComplexType { Name = "1", Value = 2 } }),
+            Case(new With<ComplexType>(new ComplexType("1", 2)), new With<ComplexType>(new ComplexType("1", 2))),
         };
 
         public static readonly TestCaseData[] WhenNotEqual =
@@ -252,6 +262,11 @@ namespace Gu.State.Tests.EqualByTests
             Case(new With<BaseClass>(new Derived1()), new With<BaseClass>(new Derived2())),
             Case(new object[] { 1, null }.Select(x => x), new object[] { null, 1 }.Select(x => x)),
             Case(new object[] { 1, null }.Select(x => x), new object[] { 1 }.Select(x => x)),
+
+            Case(new WithComplexProperty("a", 1) { ComplexType = new ComplexType { Name = "1", Value = 2 } }, new WithComplexProperty("a", -1) { ComplexType = new ComplexType { Name = "1", Value = 2 } }),
+            Case(new WithComplexProperty("a", 1) { ComplexType = new ComplexType { Name = "1", Value = 2 } }, new WithComplexProperty("a", 1) { ComplexType = new ComplexType { Name = "1", Value = -2 } }),
+            Case(new WithComplexProperty("a", 1) { ComplexType = new ComplexType { Name = "1", Value = 2 } }, new WithComplexProperty("a", 1)),
+            Case(new With<ComplexType>(new ComplexType("1", 2)), new With<ComplexType>(new ComplexType("1", -2))),
         };
 
         private static TestCaseData Case<T>(T x, T y) => new TestCaseData(x, y);

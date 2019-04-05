@@ -18,90 +18,14 @@ namespace Gu.State.Tests.EqualByTests
             Type ignoredType = null)
             where T : class;
 
-        [TestCase("b", "b", true)]
-        [TestCase("b", "c", false)]
-        public void WithComplexStructural(string xn, string yn, bool expected)
-        {
-            var x = new WithComplexProperty("a", 1) { ComplexType = new ComplexType { Name = xn, Value = 2 } };
-
-            var y = new WithComplexProperty("a", 1) { ComplexType = new ComplexType { Name = yn, Value = 2 } };
-            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(expected, result);
-        }
-
-        [Test]
-        public void WithComplexStructuralWhenNull()
-        {
-            var x = new WithComplexProperty { Name = "a", Value = 1 };
-            var y = new WithComplexProperty { Name = "a", Value = 1 };
-            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(true, result);
-
-            result = this.EqualBy(x, y, ReferenceHandling.References);
-            Assert.AreEqual(true, result);
-        }
-
-        [Test]
-        public void WithComplexStructuralWhenXIsNull()
-        {
-            var x = new WithComplexProperty { Name = "a", Value = 1, ComplexType = new ComplexType("b", 1) };
-            var y = new WithComplexProperty { Name = "a", Value = 1 };
-            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(false, result);
-
-            result = this.EqualBy(x, y, ReferenceHandling.References);
-            Assert.AreEqual(false, result);
-        }
-
-        [Test]
-        public void WithComplexStructuralWhenYIsNull()
-        {
-            var x = new WithComplexProperty { Name = "a", Value = 1 };
-            var y = new WithComplexProperty { Name = "a", Value = 1, ComplexType = new ComplexType("b", 1) };
-            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(false, result);
-
-            result = this.EqualBy(x, y, ReferenceHandling.References);
-            Assert.AreEqual(false, result);
-        }
-
-        [Test]
-        public void WithComplexReferenceWhenSame()
-        {
-            var x = new WithComplexProperty
-            {
-                Name = "a",
-                Value = 1,
-                ComplexType = new ComplexType { Name = "b", Value = 2 },
-            };
-            var y = new WithComplexProperty { Name = "a", Value = 1, ComplexType = x.ComplexType };
-            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(true, result);
-
-            result = this.EqualBy(x, y, ReferenceHandling.References);
-            Assert.AreEqual(true, result);
-        }
-
-        [Test]
-        public void WithComplexReferenceWhenNotSame()
+        [TestCase(ReferenceHandling.Structural)]
+        [TestCase(ReferenceHandling.References)]
+        public void WithComplexReferenceWhenSame(ReferenceHandling referenceHandling)
         {
             var x = new WithComplexProperty { Name = "a", Value = 1, ComplexType = new ComplexType { Name = "b", Value = 2 } };
-            var y = new WithComplexProperty { Name = "a", Value = 1, ComplexType = new ComplexType { Name = "b", Value = 2 } };
-            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
+            var y = new WithComplexProperty { Name = "a", Value = 1, ComplexType = x.ComplexType };
+            var result = this.EqualBy(x, y, referenceHandling);
             Assert.AreEqual(true, result);
-
-            result = this.EqualBy(x, y, ReferenceHandling.References);
-            Assert.AreEqual(false, result);
-        }
-
-        [TestCase("a", "a", true)]
-        [TestCase("a", "b", false)]
-        public void WithReadonlyComplex(string xv, string yv, bool expected)
-        {
-            var x = new With<ComplexType>(new ComplexType(xv, 1));
-            var y = new With<ComplexType>(new ComplexType(yv, 1));
-            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
-            Assert.AreEqual(expected, result);
         }
 
         [Test]
