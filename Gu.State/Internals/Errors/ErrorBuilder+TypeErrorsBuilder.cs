@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
 
-    [Obsolete("Remove")]
     internal static partial class ErrorBuilder
     {
         internal sealed class TypeErrorsBuilder : Error
