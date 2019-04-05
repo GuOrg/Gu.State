@@ -10,13 +10,13 @@ Frequency=3410076 Hz, Resolution=293.2486 ns, Timer=TSC
 ```
 |                            Method |         Mean |      Error |     StdDev |       Median |  Ratio | RatioSD | Gen 0/1k Op | Gen 1/1k Op | Gen 2/1k Op | Allocated Memory/Op |
 |---------------------------------- |-------------:|-----------:|-----------:|-------------:|-------:|--------:|------------:|------------:|------------:|--------------------:|
-|              this_x_Equals_this_y |    12.709 ns |  0.1923 ns |  0.1705 ns |    12.654 ns |   1.00 |    0.00 |           - |           - |           - |                   - |
-|                      ObjectEquals |    12.053 ns |  0.2750 ns |  0.3477 ns |    11.835 ns |   0.96 |    0.03 |           - |           - |           - |                   - |
-|                              Func |     2.773 ns |  0.0090 ns |  0.0080 ns |     2.771 ns |   0.22 |    0.00 |           - |           - |           - |                   - |
-|                          Comparer |     7.740 ns |  0.1888 ns |  0.2318 ns |     7.745 ns |   0.61 |    0.02 |           - |           - |           - |                   - |
-|   EqualByPropertyValuesStructural | 2,851.728 ns | 29.6178 ns | 26.2554 ns | 2,837.853 ns | 224.41 |    3.06 |      0.2060 |      0.0229 |      0.0076 |              1352 B |
-|   EqualByPropertyValuesReferences |   215.176 ns |  4.1996 ns |  4.4935 ns |   215.095 ns |  16.96 |    0.48 |      0.0367 |           - |           - |               232 B |
-| EqualByPropertyValuesWithComparer |   948.558 ns | 18.7358 ns | 31.8148 ns |   932.742 ns |  75.60 |    2.61 |      0.1202 |      0.0191 |      0.0019 |               765 B |
-|      EqualByFieldValuesStructural | 2,935.903 ns | 55.2519 ns | 61.4124 ns | 2,921.848 ns | 230.54 |    6.92 |      0.2060 |      0.0229 |      0.0076 |              1352 B |
-|      EqualByFieldValuesReferences |   214.720 ns |  4.2484 ns |  5.3729 ns |   214.403 ns |  16.82 |    0.33 |      0.0367 |           - |           - |               232 B |
-|    EqualByFieldValuesWithComparer |   924.714 ns | 13.8758 ns | 11.5869 ns |   917.808 ns |  72.70 |    1.40 |      0.1202 |      0.0191 |      0.0019 |               765 B |
+|              this_x_Equals_this_y |    11.779 ns |  0.1265 ns |  0.1122 ns |    11.782 ns |   1.00 |    0.00 |           - |           - |           - |                   - |
+|                      ObjectEquals |    12.688 ns |  0.2536 ns |  0.2118 ns |    12.692 ns |   1.08 |    0.02 |           - |           - |           - |                   - |
+|                              Func |     2.794 ns |  0.0071 ns |  0.0063 ns |     2.793 ns |   0.24 |    0.00 |           - |           - |           - |                   - |
+|                          Comparer |     7.968 ns |  0.1897 ns |  0.2184 ns |     8.014 ns |   0.68 |    0.02 |           - |           - |           - |                   - |
+|   EqualByPropertyValuesStructural | 2,871.609 ns | 55.9404 ns | 76.5719 ns | 2,840.899 ns | 246.78 |    6.36 |      0.2060 |      0.0229 |      0.0076 |              1352 B |
+|   EqualByPropertyValuesReferences |   212.318 ns |  0.2978 ns |  0.2325 ns |   212.263 ns |  18.04 |    0.16 |      0.0367 |           - |           - |               232 B |
+| EqualByPropertyValuesWithComparer |   985.118 ns | 19.1327 ns | 21.2660 ns |   986.793 ns |  83.59 |    1.94 |      0.1202 |      0.0191 |      0.0019 |               765 B |
+|      EqualByFieldValuesStructural | 2,884.560 ns |  4.9112 ns |  4.1010 ns | 2,885.096 ns | 244.77 |    2.40 |      0.2060 |      0.0229 |      0.0076 |              1352 B |
+|      EqualByFieldValuesReferences |   212.876 ns |  4.2368 ns |  4.3508 ns |   212.740 ns |  18.01 |    0.41 |      0.0367 |           - |           - |               232 B |
+|    EqualByFieldValuesWithComparer |   929.725 ns | 18.5845 ns | 32.5493 ns |   907.736 ns |  81.02 |    2.67 |      0.1202 |      0.0191 |      0.0019 |               765 B |
