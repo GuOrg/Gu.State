@@ -1,23 +1,12 @@
-﻿type file
-version 0.2.1.1
-title Gu.State
-id Gu.State
-authors Johan Larsson
-owners Johan Larsson
-copyright Copyright Johan Larsson 2017
-description Helper for managing state.
+﻿type project
 
-tags Equals, Copy, Sync, Diff, Dirty
 projectUrl https://github.com/JohanLarsson/Gu.State
 licenseUrl http://opensource.org/licenses/MIT
 
 releasenotes
-  USABILITY: Sign
-
-files
-  bin/Release/net45/Gu.State.dll ==> lib/net45
-  bin/Release/net45/Gu.State.xml ==> lib/net45
-  bin/Release/net45/Gu.State.pdb ==> lib/net45
+  BUGFIXES: Multiple fixes for EqualBy
+  PERF: EqualBy faster now, still a lot to be done.
+  BREAKING: EqualByComparer no longer public.
 
 excludedgroups
   Analyzers

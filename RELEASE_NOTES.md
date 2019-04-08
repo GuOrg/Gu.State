@@ -1,3 +1,8 @@
+#### 0.3.0
+* BUGFIXES: Multiple fixes for EqualBy
+* PERF: EqualBy faster now, still a lot to be done.
+* BREAKING: EqualByComparer no longer public.
+
 #### 0.2.1
 * USABILITY: Sign
 

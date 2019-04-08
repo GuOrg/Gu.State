@@ -1,4 +1,6 @@
 ﻿Gu.State.AddEventArgs
+Gu.State.AddEventArgs.AddEventArgs() -> void
+Gu.State.AddEventArgs.Equals(Gu.State.AddEventArgs other) -> bool
 Gu.State.AddEventArgs.Index.get -> int
 Gu.State.AddEventArgs.Source.get -> System.Collections.IList
 Gu.State.CastingComparer
@@ -22,8 +24,6 @@ Gu.State.DiffBy
 Gu.State.EmptyDiff
 Gu.State.EmptyDiff.EmptyDiff(object xValue, object yValue) -> void
 Gu.State.EqualBy
-Gu.State.EqualByComparer
-Gu.State.EqualByComparer.EqualByComparer() -> void
 Gu.State.FieldDiff
 Gu.State.FieldDiff.FieldDiff(System.Reflection.FieldInfo fieldInfo, Gu.State.ValueDiff diff) -> void
 Gu.State.FieldDiff.FieldDiff(System.Reflection.FieldInfo fieldInfo, object xValue, object yValue) -> void
@@ -80,7 +80,9 @@ Gu.State.MemberSettings.ReferenceHandling.get -> Gu.State.ReferenceHandling
 Gu.State.MemberSettings.TryGetComparer(System.Type type, out Gu.State.CastingComparer comparer) -> bool
 Gu.State.MemberSettings.TryGetCopyer(System.Type type, out Gu.State.CustomCopy copyer) -> bool
 Gu.State.MoveEventArgs
+Gu.State.MoveEventArgs.Equals(Gu.State.MoveEventArgs other) -> bool
 Gu.State.MoveEventArgs.FromIndex.get -> int
+Gu.State.MoveEventArgs.MoveEventArgs() -> void
 Gu.State.MoveEventArgs.Source.get -> System.Collections.IList
 Gu.State.MoveEventArgs.ToIndex.get -> int
 Gu.State.PropertiesSettings
@@ -102,6 +104,8 @@ Gu.State.PropertiesSettingsBuilder.IgnoreType(System.Type type) -> Gu.State.Prop
 Gu.State.PropertiesSettingsBuilder.IgnoreType<T>() -> Gu.State.PropertiesSettingsBuilder
 Gu.State.PropertiesSettingsBuilder.PropertiesSettingsBuilder() -> void
 Gu.State.PropertyChangeEventArgs
+Gu.State.PropertyChangeEventArgs.Equals(Gu.State.PropertyChangeEventArgs other) -> bool
+Gu.State.PropertyChangeEventArgs.PropertyChangeEventArgs() -> void
 Gu.State.PropertyChangeEventArgs.PropertyChangeEventArgs(object source, System.Reflection.PropertyInfo propertyInfo) -> void
 Gu.State.PropertyChangeEventArgs.PropertyInfo.get -> System.Reflection.PropertyInfo
 Gu.State.PropertyChangeEventArgs.Source.get -> object
@@ -121,12 +125,18 @@ Gu.State.ReferenceHandling.Structural = 2 -> Gu.State.ReferenceHandling
 Gu.State.ReferenceHandling.Throw = 0 -> Gu.State.ReferenceHandling
 Gu.State.ReferencePairCollection
 Gu.State.RemoveEventArgs
+Gu.State.RemoveEventArgs.Equals(Gu.State.RemoveEventArgs other) -> bool
 Gu.State.RemoveEventArgs.Index.get -> int
+Gu.State.RemoveEventArgs.RemoveEventArgs() -> void
 Gu.State.RemoveEventArgs.Source.get -> System.Collections.IList
 Gu.State.ReplaceEventArgs
+Gu.State.ReplaceEventArgs.Equals(Gu.State.ReplaceEventArgs other) -> bool
 Gu.State.ReplaceEventArgs.Index.get -> int
+Gu.State.ReplaceEventArgs.ReplaceEventArgs() -> void
 Gu.State.ReplaceEventArgs.Source.get -> System.Collections.IList
 Gu.State.ResetEventArgs
+Gu.State.ResetEventArgs.Equals(Gu.State.ResetEventArgs other) -> bool
+Gu.State.ResetEventArgs.ResetEventArgs() -> void
 Gu.State.ResetEventArgs.Source.get -> System.Collections.IList
 Gu.State.RootChangeEventArgs<T>
 Gu.State.RootChangeEventArgs<T>.EventArgs.get -> Gu.State.IRootChangeEventArgs
@@ -151,9 +161,10 @@ abstract Gu.State.CastingComparer.GetHashCode(object obj) -> int
 abstract Gu.State.CustomCopy.Copy(object source, object target) -> object
 abstract Gu.State.Diff.IsEmpty.get -> bool
 abstract Gu.State.Diff.ToString(string tabString, string newLine) -> string
-abstract Gu.State.EqualByComparer.Equals(object x, object y, Gu.State.MemberSettings settings, Gu.State.ReferencePairCollection referencePairs) -> bool
 abstract Gu.State.MemberSettings.GetMembers(System.Type type) -> System.Collections.Generic.IEnumerable<System.Reflection.MemberInfo>
 abstract Gu.State.MemberSettings.IsIgnoringMember(System.Reflection.MemberInfo member) -> bool
+override Gu.State.AddEventArgs.Equals(object obj) -> bool
+override Gu.State.AddEventArgs.GetHashCode() -> int
 override Gu.State.CustomCopy<T>.Copy(object source, object target) -> object
 override Gu.State.EmptyDiff.IsEmpty.get -> bool
 override Gu.State.EmptyDiff.ToString() -> string
@@ -164,14 +175,26 @@ override Gu.State.IndexDiff.ToString() -> string
 override Gu.State.IndexDiff.ToString(string tabString, string newLine) -> string
 override Gu.State.MemberDiff<TMember>.ToString() -> string
 override Gu.State.MemberDiff<TMember>.ToString(string tabString, string newLine) -> string
+override Gu.State.MoveEventArgs.Equals(object obj) -> bool
+override Gu.State.MoveEventArgs.GetHashCode() -> int
 override Gu.State.PropertiesSettings.GetMembers(System.Type type) -> System.Collections.Generic.IEnumerable<System.Reflection.MemberInfo>
 override Gu.State.PropertiesSettings.IsIgnoringMember(System.Reflection.MemberInfo member) -> bool
+override Gu.State.PropertyChangeEventArgs.Equals(object obj) -> bool
+override Gu.State.PropertyChangeEventArgs.GetHashCode() -> int
 override Gu.State.RankDiff.ToString() -> string
 override Gu.State.RankDiff.ToString(string tabString, string newLine) -> string
+override Gu.State.RemoveEventArgs.Equals(object obj) -> bool
+override Gu.State.RemoveEventArgs.GetHashCode() -> int
+override Gu.State.ReplaceEventArgs.Equals(object obj) -> bool
+override Gu.State.ReplaceEventArgs.GetHashCode() -> int
+override Gu.State.ResetEventArgs.Equals(object obj) -> bool
+override Gu.State.ResetEventArgs.GetHashCode() -> int
 override Gu.State.SubDiff.IsEmpty.get -> bool
 override Gu.State.ValueDiff.IsEmpty.get -> bool
 override Gu.State.ValueDiff.ToString() -> string
 override Gu.State.ValueDiff.ToString(string tabString, string newLine) -> string
+static Gu.State.AddEventArgs.operator !=(Gu.State.AddEventArgs left, Gu.State.AddEventArgs right) -> bool
+static Gu.State.AddEventArgs.operator ==(Gu.State.AddEventArgs left, Gu.State.AddEventArgs right) -> bool
 static Gu.State.CastingComparer.Create<T>(System.Collections.Generic.IEqualityComparer<T> comparer) -> Gu.State.CastingComparer
 static Gu.State.Copy.FieldValues<T>(T source, T target, Gu.State.FieldsSettings settings) -> void
 static Gu.State.Copy.FieldValues<T>(T source, T target, Gu.State.ReferenceHandling referenceHandling = Gu.State.ReferenceHandling.Structural, System.Reflection.BindingFlags bindingFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic) -> void
@@ -202,15 +225,24 @@ static Gu.State.EqualBy.VerifyCanEqualByFieldValues<T>(Gu.State.ReferenceHandlin
 static Gu.State.EqualBy.VerifyCanEqualByPropertyValues(System.Type type, Gu.State.PropertiesSettings settings) -> void
 static Gu.State.EqualBy.VerifyCanEqualByPropertyValues<T>(Gu.State.PropertiesSettings settings) -> void
 static Gu.State.EqualBy.VerifyCanEqualByPropertyValues<T>(Gu.State.ReferenceHandling referenceHandling = Gu.State.ReferenceHandling.Structural, System.Reflection.BindingFlags bindingFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public) -> void
-static Gu.State.EqualByComparer.TryGetEitherNullEquals(object x, object y, out bool result) -> bool
 static Gu.State.FieldsSettings.Build() -> Gu.State.FieldsSettingsBuilder
 static Gu.State.FieldsSettings.Default.get -> Gu.State.FieldsSettings
 static Gu.State.FieldsSettings.GetOrCreate(Gu.State.ReferenceHandling referenceHandling = Gu.State.ReferenceHandling.Structural, System.Reflection.BindingFlags bindingFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic) -> Gu.State.FieldsSettings
 static Gu.State.MemberSettings.IsEquatableCore(System.Type type) -> bool
 static Gu.State.MemberSettings.IsImmutableCore(System.Type type) -> bool
+static Gu.State.MoveEventArgs.operator !=(Gu.State.MoveEventArgs left, Gu.State.MoveEventArgs right) -> bool
+static Gu.State.MoveEventArgs.operator ==(Gu.State.MoveEventArgs left, Gu.State.MoveEventArgs right) -> bool
 static Gu.State.PropertiesSettings.Build() -> Gu.State.PropertiesSettingsBuilder
 static Gu.State.PropertiesSettings.Default.get -> Gu.State.PropertiesSettings
 static Gu.State.PropertiesSettings.GetOrCreate(Gu.State.ReferenceHandling referenceHandling = Gu.State.ReferenceHandling.Structural, System.Reflection.BindingFlags bindingFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public) -> Gu.State.PropertiesSettings
+static Gu.State.PropertyChangeEventArgs.operator !=(Gu.State.PropertyChangeEventArgs left, Gu.State.PropertyChangeEventArgs right) -> bool
+static Gu.State.PropertyChangeEventArgs.operator ==(Gu.State.PropertyChangeEventArgs left, Gu.State.PropertyChangeEventArgs right) -> bool
+static Gu.State.RemoveEventArgs.operator !=(Gu.State.RemoveEventArgs left, Gu.State.RemoveEventArgs right) -> bool
+static Gu.State.RemoveEventArgs.operator ==(Gu.State.RemoveEventArgs left, Gu.State.RemoveEventArgs right) -> bool
+static Gu.State.ReplaceEventArgs.operator !=(Gu.State.ReplaceEventArgs left, Gu.State.ReplaceEventArgs right) -> bool
+static Gu.State.ReplaceEventArgs.operator ==(Gu.State.ReplaceEventArgs left, Gu.State.ReplaceEventArgs right) -> bool
+static Gu.State.ResetEventArgs.operator !=(Gu.State.ResetEventArgs left, Gu.State.ResetEventArgs right) -> bool
+static Gu.State.ResetEventArgs.operator ==(Gu.State.ResetEventArgs left, Gu.State.ResetEventArgs right) -> bool
 static Gu.State.Synchronize.PropertyValues<T>(T source, T target, Gu.State.PropertiesSettings settings) -> System.IDisposable
 static Gu.State.Synchronize.PropertyValues<T>(T source, T target, Gu.State.ReferenceHandling referenceHandling = Gu.State.ReferenceHandling.Structural, System.Reflection.BindingFlags bindingFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public) -> System.IDisposable
 static Gu.State.Synchronize.VerifyCanSynchronize(System.Type type, Gu.State.PropertiesSettings settings) -> void
