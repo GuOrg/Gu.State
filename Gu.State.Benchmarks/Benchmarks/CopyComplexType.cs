@@ -2,6 +2,7 @@
 {
     using BenchmarkDotNet.Attributes;
 
+    [MemoryDiagnoser]
     public class CopyComplexType
     {
         private readonly ComplexType source = new ComplexType();

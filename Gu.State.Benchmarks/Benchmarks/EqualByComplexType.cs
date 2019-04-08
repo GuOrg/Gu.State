@@ -7,6 +7,7 @@ namespace Gu.State.Benchmarks
     using System.Collections.Generic;
     using BenchmarkDotNet.Attributes;
 
+    [MemoryDiagnoser]
     public class EqualByComplexType
     {
         private static readonly ComplexType X = new ComplexType();

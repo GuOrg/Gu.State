@@ -5,6 +5,7 @@
 
     using BenchmarkDotNet.Attributes;
 
+    [MemoryDiagnoser]
     public class CopyList
     {
         private readonly List<int> source;

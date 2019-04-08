@@ -2,6 +2,7 @@
 {
     using BenchmarkDotNet.Attributes;
 
+    [MemoryDiagnoser]
     public class CopyArray3D
     {
         private readonly int[,,] source;
