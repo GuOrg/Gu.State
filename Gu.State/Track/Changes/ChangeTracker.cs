@@ -28,8 +28,10 @@
             this.node.Value.Changed += this.OnNodeChange;
         }
 
+#pragma warning disable INPC007 // The class has PropertyChangedEvent but no invoker.
         /// <inheritdoc/>
         public event PropertyChangedEventHandler PropertyChanged;
+#pragma warning restore INPC007 // The class has PropertyChangedEvent but no invoker.
 
         /// <inheritdoc/>
         public event EventHandler Changed;

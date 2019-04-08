@@ -63,7 +63,9 @@
             this.isDirty = !this.Builder.IsEmpty;
         }
 
+#pragma warning disable INPC007 // The class has PropertyChangedEvent but no invoker.
         public event PropertyChangedEventHandler PropertyChanged;
+#pragma warning restore INPC007 // The class has PropertyChangedEvent but no invoker.
 
         public event EventHandler<TrackerChangedEventArgs<DirtyTrackerNode>> Changed;
 
