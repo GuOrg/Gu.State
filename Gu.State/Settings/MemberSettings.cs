@@ -9,6 +9,11 @@
 
     public abstract partial class MemberSettings
     {
+        private static readonly IReadOnlyDictionary<Type, CastingComparer> DefaultComparers = new Dictionary<Type, CastingComparer>
+        {
+            { typeof(IntPtr), CastingComparer.Create(EqualityComparer<IntPtr>.Default) },
+        };
+
         private readonly Lazy<ConcurrentDictionary<Type, TypeErrors>> copyErrors = new Lazy<ConcurrentDictionary<Type, TypeErrors>>();
         private readonly ImmutableSet<Type> immutableTypes;
         private readonly ConcurrentDictionary<Type, EqualByComparer> rootEqualByComparers = new ConcurrentDictionary<Type, EqualByComparer>();
@@ -51,13 +56,10 @@
                 }
             }
 
-            if (comparers != null)
+            foreach (var comparer in DefaultComparers.Concat(comparers ?? Enumerable.Empty<KeyValuePair<Type, CastingComparer>>()))
             {
-                foreach (var comparer in comparers)
-                {
-                    this.equalByComparers[comparer.Key] = new ExplicitEqualByComparer(comparer.Value);
-                    this.rootEqualByComparers[comparer.Key] = new ExplicitEqualByComparer(comparer.Value);
-                }
+                this.equalByComparers[comparer.Key] = new ExplicitEqualByComparer(comparer.Value);
+                this.rootEqualByComparers[comparer.Key] = new ExplicitEqualByComparer(comparer.Value);
             }
         }
 

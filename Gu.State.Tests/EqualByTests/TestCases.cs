@@ -32,6 +32,8 @@ namespace Gu.State.Tests.EqualByTests
             Case((StringComparison?)StringComparison.Ordinal, (StringComparison?)StringComparison.Ordinal),
 
             Case(new Point(1, 2), new Point(1, 2)),
+            Case(IntPtr.Zero, IntPtr.Zero),
+            Case(new IntPtr(1), new IntPtr(1)),
             Case((Point?)new Point(1, 2), (Point?)new Point(1, 2)),
             Case((Point?)null, (Point?)null),
             Case(new Struct { Value = 1 }, new Struct { Value = 1 }),
@@ -40,6 +42,9 @@ namespace Gu.State.Tests.EqualByTests
             Case(new With<int>(1), new With<int>(1)),
             Case(new With<int?>(1), new With<int?>(1)),
             Case(new With<int?>(null), new With<int?>(null)),
+            Case(new With<IntPtr>(new IntPtr(1)), new With<IntPtr>(new IntPtr(1))),
+            Case(new With<IntPtr?>(new IntPtr(1)), new With<IntPtr?>(new IntPtr(1))),
+            Case(new With<IntPtr?>(null), new With<IntPtr?>(null)),
 
             Case(new With<Struct>(new Struct { Value = 1 }), new With<Struct>(new Struct { Value = 1 })),
             Case(new With<Struct?>(new Struct { Value = 1 }), new With<Struct?>(new Struct { Value = 1 })),
@@ -152,7 +157,7 @@ namespace Gu.State.Tests.EqualByTests
             Case(1, 2),
             Case((int?)null, (int?)1),
             Case((int?)null, (int?)1),
-
+            Case(new IntPtr(1), new IntPtr(2)),
             Case(new Struct { Value = 1 }, new Struct { Value = -1 }),
             Case(new EquatableStruct { Value = 1 }, new EquatableStruct { Value = -1 }),
 
@@ -170,6 +175,10 @@ namespace Gu.State.Tests.EqualByTests
             Case(new With<int?>(1), new With<int?>(2)),
             Case(new With<int?>(1), new With<int?>(null)),
             Case(new With<int>(1), (With<int>)null),
+
+            Case(new With<IntPtr>(new IntPtr(1)), new With<IntPtr>(new IntPtr(2))),
+            Case(new With<IntPtr?>(new IntPtr(1)), new With<IntPtr?>(new IntPtr(2))),
+            Case(new With<IntPtr?>(new IntPtr(1)), new With<IntPtr?>(null)),
 
             Case(new With<Struct>(new Struct { Value = 1 }), new With<Struct>(new Struct { Value = -1 })),
             Case(new With<Struct?>(new Struct { Value = 1 }), new With<Struct?>(new Struct { Value = -1 })),
