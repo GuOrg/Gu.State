@@ -24,17 +24,24 @@ namespace Gu.State.Benchmarks
 
         private static void CopyResult(Summary summary)
         {
-            var sourceFileName = Directory.EnumerateFiles(summary.ResultsDirectoryPath, $"*{summary.Title}-report-github.md")
-                                          .Single();
+            var trimmedTitle = summary.Title.Split('.').Last().Split('-').First();
+            Console.WriteLine(trimmedTitle);
+            var sourceFileName = FindMdFile();
             var destinationFileName = Path.ChangeExtension(FindCsFile(), ".md");
             Console.WriteLine($"Copy: {sourceFileName} -> {destinationFileName}");
             File.Copy(sourceFileName, destinationFileName, overwrite: true);
+
+            string FindMdFile()
+            {
+                return Directory.EnumerateFiles(summary.ResultsDirectoryPath, $"*{trimmedTitle}-report-github.md")
+                                .Single();
+            }
 
             string FindCsFile()
             {
                 return Directory.EnumerateFiles(
                                     AppDomain.CurrentDomain.BaseDirectory.Split(new[] { "\\bin\\" }, StringSplitOptions.RemoveEmptyEntries).First(),
-                                    $"{summary.Title.Split('.').Last()}.cs",
+                                    $"{trimmedTitle}.cs",
                                     SearchOption.AllDirectories)
                                 .Single();
             }
