@@ -18,6 +18,9 @@ namespace Gu.State
         /// <inheritdoc />
         object IRootChangeEventArgs.Source => this.Source;
 
+        /// <summary>Gets the index at which an element was replaced. </summary>
+        public int Index { get; }
+
         public static bool operator ==(ReplaceEventArgs left, ReplaceEventArgs right)
         {
             return left.Equals(right);
@@ -27,9 +30,6 @@ namespace Gu.State
         {
             return !left.Equals(right);
         }
-
-        /// <summary>Gets the index at which an element was replaced. </summary>
-        public int Index { get; }
 
         /// <inheritdoc />
         public bool Equals(ReplaceEventArgs other) => Equals(this.Source, other.Source) &&
