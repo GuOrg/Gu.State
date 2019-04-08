@@ -48,7 +48,7 @@
                         });
                 if (!added)
                 {
-                    refCounter.Increment();
+                    _ = refCounter.Increment();
                 }
 
                 count = refCounter.Count;

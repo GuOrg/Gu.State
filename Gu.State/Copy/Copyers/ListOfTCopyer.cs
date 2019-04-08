@@ -33,7 +33,7 @@ namespace Gu.State
             var copyMethod = this.GetType()
                                         .GetMethod(nameof(Copy), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)
                                         .MakeGenericMethod(itemType);
-            copyMethod.Invoke(null, new[] { source, target, settings, referencePairs });
+            _ = copyMethod.Invoke(null, new[] { source, target, settings, referencePairs });
         }
 
         private static void Copy<T>(

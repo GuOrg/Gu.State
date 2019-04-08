@@ -233,7 +233,7 @@ EqualBy.TryGetValueEquals(yValue, old.Y, this.settings, out var yEqual) && yEqua
 
         internal void Refresh()
         {
-            this.TryRefresh();
+            _ = this.TryRefresh();
         }
 
         internal bool TryRefresh()

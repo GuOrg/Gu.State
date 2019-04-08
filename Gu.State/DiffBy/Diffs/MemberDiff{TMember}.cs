@@ -49,7 +49,7 @@ namespace Gu.State
                 using (var disposer = BorrowValueDiffReferenceSet())
                 {
                     writer.Write(this.MemberInfo.Name);
-                    this.WriteDiffs(writer, disposer.Value);
+                    _ = this.WriteDiffs(writer, disposer.Value);
                 }
 
                 return writer.InnerWriter.ToString();
@@ -75,7 +75,7 @@ namespace Gu.State
             foreach (var diff in this.Diffs)
             {
                 writer.WriteLine();
-                diff.WriteDiffs(writer, written);
+                _ = diff.WriteDiffs(writer, written);
             }
 
             writer.Indent--;

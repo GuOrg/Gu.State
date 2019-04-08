@@ -34,7 +34,7 @@
             var copyMethod = this.GetType()
                                  .GetMethod(nameof(this.Copy), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)
                                  .MakeGenericMethod(genericArguments[0], genericArguments[1]);
-            copyMethod.Invoke(null, new[] { source, target, settings, referencePairs });
+            _ = copyMethod.Invoke(null, new[] { source, target, settings, referencePairs });
         }
 
         internal static void Copy<TKey, TValue>(IDictionary<TKey, TValue> source, IDictionary<TKey, TValue> target, MemberSettings settings, ReferencePairCollection referencePairs)
@@ -62,7 +62,7 @@
             foreach (var key in source.Keys)
             {
                 var sv = source[key];
-                target.TryGetValue(key, out var tv);
+                _ = target.TryGetValue(key, out var tv);
                 var clone = State.Copy.CloneWithoutSync(sv, tv, settings, out var created, out var needsSync);
                 if (created)
                 {

@@ -19,7 +19,7 @@
             this.Settings = settings;
             this.TrackProperties = source.GetType()
                                        .GetProperties()
-                                       .Where(p => !this.Settings.IsIgnoringProperty(p))
+                                       .Where(p => !settings.IsIgnoringProperty(p))
                                        .Where(p => !settings.IsImmutable(p.PropertyType))
                                        .ToArray();
             if (source is INotifyPropertyChanged inpc)

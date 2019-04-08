@@ -66,7 +66,7 @@
                 {
                     var comparer = (EqualByComparer)typeof(ExplicitEqualByComparer<>).MakeGenericType(kvp.Key)
                                                                                      .GetMethod(nameof(ExplicitEqualByComparer<int>.Create), BindingFlags.NonPublic | BindingFlags.Static)
-                                                                                     .Invoke(null, new [] { kvp.Value });
+                                                                                     .Invoke(null, new[] { kvp.Value });
                     this.equalByComparers[kvp.Key] = comparer;
                     this.rootEqualByComparers[kvp.Key] = comparer;
                 }

@@ -59,7 +59,7 @@
             foreach (var diff in this.Diffs)
             {
                 writer.WriteLine();
-                diff.WriteDiffs(writer, written);
+                _ = diff.WriteDiffs(writer, written);
             }
 
             writer.Indent--;
