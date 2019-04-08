@@ -31,7 +31,7 @@
         }
 
         [DebuggerDisplay("ComplexTypeEqualByComparer<{typeof(T).PrettyName()}>")]
-        private class Comparer<T> : EqualByComparer<T>
+        private sealed class Comparer<T> : EqualByComparer<T>
         {
             private readonly ImmutableArray<MemberEqualByComparer> memberComparers;
             private TypeErrors lazyTypeErrors;
@@ -73,6 +73,11 @@
                     return result;
                 }
 
+                return this.Equals((T)x, (T)y, settings, referencePairs);
+            }
+
+            internal override bool Equals(T x, T y, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)
+            {
                 if (referencePairs != null &&
                     ReferencePairStruct.TryCreate(x, y, out var pair))
                 {
@@ -81,19 +86,19 @@
                         return true;
                     }
 
-                    var equals = this.Equals((T)x, (T)y, settings, referencePairs);
+                    for (var i = 0; i < this.memberComparers.Count; i++)
+                    {
+                        if (!this.memberComparers[i].Equals(x, y, settings, referencePairs))
+                        {
+                            referencePairs.Remove(pair);
+                            return false;
+                        }
+                    }
 
                     referencePairs.Remove(pair);
-                    return equals;
+                    return true;
                 }
-                else
-                {
-                    return this.Equals((T)x, (T)y, settings, referencePairs);
-                }
-            }
 
-            internal override bool Equals(T x, T y, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)
-            {
                 for (var i = 0; i < this.memberComparers.Count; i++)
                 {
                     if (!this.memberComparers[i].Equals(x, y, settings, referencePairs))

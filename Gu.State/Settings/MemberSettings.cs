@@ -9,10 +9,7 @@
 
     public abstract partial class MemberSettings
     {
-        private static readonly IReadOnlyDictionary<Type, CastingComparer> DefaultComparers = new Dictionary<Type, CastingComparer>
-        {
-            { typeof(IntPtr), CastingComparer.Create(EqualityComparer<IntPtr>.Default) },
-        };
+        private static readonly IReadOnlyDictionary<Type, CastingComparer> DefaultComparers = CreateDefaultComparers();
 
         private readonly Lazy<ConcurrentDictionary<Type, TypeErrors>> copyErrors = new Lazy<ConcurrentDictionary<Type, TypeErrors>>();
         private readonly ImmutableSet<Type> immutableTypes;
@@ -181,6 +178,18 @@
                 }
 
                 return EqualByComparer.Create(type, this);
+            }
+        }
+
+        private static IReadOnlyDictionary<Type, CastingComparer> CreateDefaultComparers()
+        {
+            var map = new Dictionary<Type, CastingComparer>();
+            Add(EqualityComparer<IntPtr>.Default);
+            return map;
+
+            void Add<T>(EqualityComparer<T> comparer)
+            {
+                map.Add(typeof(T), CastingComparer.Create(comparer));
             }
         }
     }

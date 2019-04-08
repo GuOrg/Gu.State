@@ -14,7 +14,6 @@ namespace Gu.State.Tests.EqualByTests
     using NUnit.Framework;
 
     using static EqualByTypes;
-    using ImmutableArray = Gu.State.ImmutableArray;
 
     public static class TestCases
     {
@@ -151,6 +150,8 @@ namespace Gu.State.Tests.EqualByTests
             Case(new With<ComplexType>(new ComplexType("1", 2)), new With<ComplexType>(new ComplexType("1", 2))),
             Case(new WithListProperty<int> { Items = new List<int>() }, new WithListProperty<int> { Items = new List<int>() }),
             Case(new ObservableCollection<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) }, new ObservableCollection<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) }),
+
+            Case(new Exception("Message."), new Exception("Message.")),
         };
 
         public static readonly TestCaseData[] WhenNotEqual =
@@ -323,6 +324,8 @@ namespace Gu.State.Tests.EqualByTests
             Case(new WithListProperty<int> { Items = { 1, 2, 3 } },  new WithListProperty<int>()),
             Case(new WithListProperty<int> { Items = { 1, 2, 3 } },  new WithListProperty<int> { Items = new List<int>() }),
             Case(new ObservableCollection<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) }, new ObservableCollection<ComplexType> { new ComplexType("b", 2), new ComplexType("c", -3) }),
+
+            Case(new Exception("Message 1."), new Exception("Message 2.")),
         };
 
         private static TestCaseData Case<T>(T x, T y) => new TestCaseData(x, y);
