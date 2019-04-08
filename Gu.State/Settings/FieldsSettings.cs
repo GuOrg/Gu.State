@@ -32,7 +32,7 @@
             IEnumerable<FieldInfo> ignoredFields,
             IEnumerable<Type> ignoredTypes,
             IEnumerable<Type> immutableTypes,
-            IReadOnlyDictionary<Type, CastingComparer> comparers,
+            IReadOnlyDictionary<Type, IEqualityComparer> comparers,
             IReadOnlyDictionary<Type, CustomCopy> copyers,
             ReferenceHandling referenceHandling = ReferenceHandling.Structural,
             BindingFlags bindingFlags = Constants.DefaultFieldBindingFlags)

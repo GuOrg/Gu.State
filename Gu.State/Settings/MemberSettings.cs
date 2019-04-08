@@ -1,6 +1,7 @@
 ﻿namespace Gu.State
 {
     using System;
+    using System.Collections;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -9,13 +10,13 @@
 
     public abstract partial class MemberSettings
     {
-        private static readonly IReadOnlyDictionary<Type, CastingComparer> DefaultComparers = CreateDefaultComparers();
+        private static readonly IReadOnlyDictionary<Type, EqualByComparer> DefaultComparers = CreateDefaultComparers();
 
         private readonly Lazy<ConcurrentDictionary<Type, TypeErrors>> copyErrors = new Lazy<ConcurrentDictionary<Type, TypeErrors>>();
         private readonly ImmutableSet<Type> immutableTypes;
         private readonly ConcurrentDictionary<Type, EqualByComparer> rootEqualByComparers = new ConcurrentDictionary<Type, EqualByComparer>();
         private readonly ConcurrentDictionary<Type, EqualByComparer> equalByComparers = new ConcurrentDictionary<Type, EqualByComparer>();
-        private readonly IReadOnlyDictionary<Type, CastingComparer> comparers;
+        private readonly IReadOnlyDictionary<Type, IEqualityComparer> comparers;
         private readonly IReadOnlyDictionary<Type, CustomCopy> copyers;
         private readonly KnownTypes knownTypes;
 
@@ -33,7 +34,7 @@
             IEnumerable<MemberInfo> ignoredMembers,
             IEnumerable<Type> ignoredTypes,
             IEnumerable<Type> immutableTypes,
-            IReadOnlyDictionary<Type, CastingComparer> comparers,
+            IReadOnlyDictionary<Type, IEqualityComparer> comparers,
             IReadOnlyDictionary<Type, CustomCopy> copyers,
             ReferenceHandling referenceHandling,
             BindingFlags bindingFlags)
@@ -53,10 +54,22 @@
                 }
             }
 
-            foreach (var comparer in DefaultComparers.Concat(comparers ?? Enumerable.Empty<KeyValuePair<Type, CastingComparer>>()))
+            foreach (var kvp in DefaultComparers)
             {
-                this.equalByComparers[comparer.Key] = new ExplicitEqualByComparer(comparer.Value);
-                this.rootEqualByComparers[comparer.Key] = new ExplicitEqualByComparer(comparer.Value);
+                this.equalByComparers[kvp.Key] = kvp.Value;
+                this.rootEqualByComparers[kvp.Key] = kvp.Value;
+            }
+
+            if (comparers != null)
+            {
+                foreach (var kvp in comparers)
+                {
+                    var comparer = (EqualByComparer)typeof(ExplicitEqualByComparer<>).MakeGenericType(kvp.Key)
+                                                                                     .GetMethod(nameof(ExplicitEqualByComparer<int>.Create), BindingFlags.NonPublic | BindingFlags.Static)
+                                                                                     .Invoke(null, new [] { kvp.Value });
+                    this.equalByComparers[kvp.Key] = comparer;
+                    this.rootEqualByComparers[kvp.Key] = comparer;
+                }
             }
         }
 
@@ -124,7 +137,7 @@
         /// <param name="type">The type.</param>
         /// <param name="comparer">The comparer.</param>
         /// <returns>True if a custom comparer is provided for <paramref name="type"/>.</returns>
-        public bool TryGetComparer(Type type, out CastingComparer comparer)
+        public bool TryGetComparer(Type type, out IEqualityComparer comparer)
         {
             comparer = null;
             return this.comparers?.TryGetValue(type, out comparer) == true;
@@ -181,15 +194,27 @@
             }
         }
 
-        private static IReadOnlyDictionary<Type, CastingComparer> CreateDefaultComparers()
+        private static IReadOnlyDictionary<Type, EqualByComparer> CreateDefaultComparers()
         {
-            var map = new Dictionary<Type, CastingComparer>();
+            var map = new Dictionary<Type, EqualByComparer>();
+            Add(EqualityComparer<decimal>.Default);
+            Add(EqualityComparer<double>.Default);
+            Add(EqualityComparer<float>.Default);
+            Add(EqualityComparer<int>.Default);
+            Add(EqualityComparer<uint>.Default);
+            Add(EqualityComparer<ulong>.Default);
+            Add(EqualityComparer<long>.Default);
+            Add(EqualityComparer<TimeSpan>.Default);
+            Add(EqualityComparer<DateTime>.Default);
+            Add(EqualityComparer<Guid>.Default);
+            Add(EqualityComparer<string>.Default);
             Add(EqualityComparer<IntPtr>.Default);
+            Add(EqualityComparer<UIntPtr>.Default);
             return map;
 
             void Add<T>(EqualityComparer<T> comparer)
             {
-                map.Add(typeof(T), CastingComparer.Create(comparer));
+                map.Add(typeof(T), new ExplicitEqualByComparer<T>(comparer));
             }
         }
     }

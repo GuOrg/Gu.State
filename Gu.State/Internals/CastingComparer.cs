@@ -1,9 +1,10 @@
 namespace Gu.State
 {
+    using System.Collections;
     using System.Collections.Generic;
 
     /// <summary>A wrapper for a generic comparer.</summary>
-    public abstract class CastingComparer
+    public abstract class CastingComparer : IEqualityComparer
     {
         /// <summary>
         /// Create a <see cref="CastingComparer"/> for <paramref name="comparer"/>.

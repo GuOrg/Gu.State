@@ -1,6 +1,7 @@
 ﻿namespace Gu.State
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
@@ -14,7 +15,7 @@
         private readonly HashSet<Type> ignoredTypes = new HashSet<Type>();
         private readonly HashSet<Type> immutableTypes = new HashSet<Type>();
         private readonly HashSet<PropertyInfo> ignoredProperties = new HashSet<PropertyInfo>(MemberInfoComparer<PropertyInfo>.Default);
-        private readonly Dictionary<Type, CastingComparer> comparers = new Dictionary<Type, CastingComparer>();
+        private readonly Dictionary<Type, IEqualityComparer> comparers = new Dictionary<Type, IEqualityComparer>();
         private readonly Dictionary<Type, CustomCopy> copyers = new Dictionary<Type, CustomCopy>();
 
         /// <summary>
@@ -183,7 +184,7 @@
         /// <returns>The builder instance for chaining.</returns>
         public PropertiesSettingsBuilder AddComparer<T>(IEqualityComparer<T> comparer)
         {
-            this.comparers[typeof(T)] = CastingComparer.Create(comparer);
+            this.comparers[typeof(T)] = comparer as IEqualityComparer ?? CastingComparer.Create(comparer);
             return this;
         }
 

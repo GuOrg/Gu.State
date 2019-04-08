@@ -1,6 +1,7 @@
 ﻿namespace Gu.State
 {
     using System;
+    using System.Collections;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -32,7 +33,7 @@
             IEnumerable<PropertyInfo> ignoredProperties,
             IEnumerable<Type> ignoredTypes,
             IEnumerable<Type> immutableTypes,
-            IReadOnlyDictionary<Type, CastingComparer> comparers,
+            IReadOnlyDictionary<Type, IEqualityComparer> comparers,
             IReadOnlyDictionary<Type, CustomCopy> copyers,
             ReferenceHandling referenceHandling = ReferenceHandling.Structural,
             BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)

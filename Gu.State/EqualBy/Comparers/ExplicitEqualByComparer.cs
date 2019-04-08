@@ -1,15 +1,18 @@
-﻿using System.Collections.Generic;
-
-namespace Gu.State
+﻿namespace Gu.State
 {
-    internal class ExplicitEqualByComparer : EqualByComparer
-    {
-        private readonly CastingComparer comparer;
+    using System.Collections;
+    using System.Collections.Generic;
 
-        public ExplicitEqualByComparer(CastingComparer comparer)
+    internal class ExplicitEqualByComparer<T> : EqualByComparer<T>
+    {
+        private readonly IEqualityComparer<T> comparer;
+
+        public ExplicitEqualByComparer(IEqualityComparer<T> comparer)
         {
             this.comparer = comparer;
         }
+
+        internal static ExplicitEqualByComparer<T> Create(IEqualityComparer comparer) => new ExplicitEqualByComparer<T>((IEqualityComparer<T>)comparer);
 
         internal override bool TryGetError(MemberSettings settings, out Error error)
         {
@@ -17,11 +20,16 @@ namespace Gu.State
             return false;
         }
 
+        internal override bool Equals(T x, T y, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)
+        {
+            return this.comparer.Equals(x, y);
+        }
+
         internal override bool Equals(object x, object y, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)
         {
             return TryGetEitherNullEquals(x, y, out var result)
                 ? result
-                : this.comparer.Equals(x, y);
+                : this.Equals((T)x, (T)y, settings, referencePairs);
         }
     }
 }

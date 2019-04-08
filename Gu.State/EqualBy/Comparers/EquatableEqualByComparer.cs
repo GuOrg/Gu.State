@@ -13,7 +13,7 @@
                 type.Name != "ImmutableArray`1")
             {
                 comparer = (EqualByComparer)typeof(Comparer<>).MakeGenericType(type)
-                                                              .GetField(nameof(Comparer<int>.Default), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
+                                                              .GetField(nameof(Comparer<int>.Default), BindingFlags.Public | BindingFlags.Static)
                                                               .GetValue(null);
                 return true;
             }
