@@ -19,7 +19,7 @@ namespace Gu.State
 
         private class Comparer<T> : CollectionEqualByComparer<IEnumerable<T>, T>
         {
-            internal override bool Equals(IEnumerable<T> x, IEnumerable<T> y, MemberSettings settings, ReferencePairCollection referencePairs)
+            internal override bool Equals(IEnumerable<T> x, IEnumerable<T> y, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)
             {
                 var comparer = this.ItemComparer(settings);
                 using (var xe = x.GetEnumerator())

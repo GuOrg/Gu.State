@@ -1,12 +1,13 @@
 ﻿namespace Gu.State
 {
     using System;
+    using System.Collections.Generic;
 
     internal class LazyEqualByComparer<T> : EqualByComparer<T>
     {
         private TypeAndComparer lazyTypeAndComparer;
 
-        internal override bool Equals(T x, T y, MemberSettings settings, ReferencePairCollection referencePairs)
+        internal override bool Equals(T x, T y, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)
         {
             var currentType = x.GetType();
             if (currentType != this.lazyTypeAndComparer.Type)

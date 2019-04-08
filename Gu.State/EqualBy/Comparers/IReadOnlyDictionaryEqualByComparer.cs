@@ -46,7 +46,7 @@ namespace Gu.State
                 return false;
             }
 
-            internal override bool Equals(IReadOnlyDictionary<TKey, TValue> x, IReadOnlyDictionary<TKey, TValue> y, MemberSettings settings, ReferencePairCollection referencePairs)
+            internal override bool Equals(IReadOnlyDictionary<TKey, TValue> x, IReadOnlyDictionary<TKey, TValue> y, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)
             {
                 if (x.Count != y.Count)
                 {
@@ -57,7 +57,7 @@ namespace Gu.State
                        ValuesEquals(x, y, this.ValueComparer(settings), settings, referencePairs);
             }
 
-            private static bool ValuesEquals(IReadOnlyDictionary<TKey, TValue> x, IReadOnlyDictionary<TKey, TValue> y, EqualByComparer valueComparer, MemberSettings settings, ReferencePairCollection referencePairs)
+            private static bool ValuesEquals(IReadOnlyDictionary<TKey, TValue> x, IReadOnlyDictionary<TKey, TValue> y, EqualByComparer valueComparer, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)
             {
                 foreach (var key in x.Keys)
                 {

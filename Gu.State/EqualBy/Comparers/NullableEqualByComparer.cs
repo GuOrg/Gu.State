@@ -1,6 +1,7 @@
 ﻿namespace Gu.State
 {
     using System;
+    using System.Collections.Generic;
     using System.Reflection;
 
     internal static class NullableEqualByComparer
@@ -41,7 +42,7 @@
                 return false;
             }
 
-            internal override bool Equals(T? x, T? y, MemberSettings settings, ReferencePairCollection referencePairs)
+            internal override bool Equals(T? x, T? y, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)
             {
                 if (IsEquatable)
                 {

@@ -1,6 +1,7 @@
 ﻿namespace Gu.State
 {
     using System;
+    using System.Collections.Generic;
 
     internal class ErrorEqualByComparer : EqualByComparer
     {
@@ -20,7 +21,7 @@
             return true;
         }
 
-        internal override bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs)
+        internal override bool Equals(object x, object y, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)
         {
             throw Throw.CompareWhenError;
         }

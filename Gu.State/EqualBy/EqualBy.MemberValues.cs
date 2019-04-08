@@ -1,6 +1,7 @@
 ﻿namespace Gu.State
 {
     using System;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Defines methods for comparing two instances.
@@ -23,11 +24,11 @@
                 }
             }
 
-            IBorrowed<ReferencePairCollection> GetReferencePairs()
+            IBorrowed<HashSet<ReferencePairStruct>> GetReferencePairs()
             {
                 if (settings.ReferenceHandling == ReferenceHandling.Structural)
                 {
-                    return ReferencePairCollection.Borrow();
+                    return HashSetPool<ReferencePairStruct>.Borrow(EqualityComparer<ReferencePairStruct>.Default);
                 }
 
                 return null;

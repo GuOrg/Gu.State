@@ -1,6 +1,7 @@
 namespace Gu.State
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Reflection;
 
@@ -40,7 +41,7 @@ namespace Gu.State
 
             internal static Comparer2D<T> Create() => new Comparer2D<T>();
 
-            internal override bool Equals(T[,] xs, T[,] ys, MemberSettings settings, ReferencePairCollection referencePairs)
+            internal override bool Equals(T[,] xs, T[,] ys, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)
             {
                 if (!Is.SameSize(xs, ys))
                 {
@@ -78,7 +79,7 @@ namespace Gu.State
                 return false;
             }
 
-            internal override bool Equals(Array x, Array y, MemberSettings settings, ReferencePairCollection referencePairs)
+            internal override bool Equals(Array x, Array y, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)
             {
                 if (!Is.SameSize(x, y))
                 {

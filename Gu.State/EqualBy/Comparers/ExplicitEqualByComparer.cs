@@ -1,4 +1,6 @@
-﻿namespace Gu.State
+﻿using System.Collections.Generic;
+
+namespace Gu.State
 {
     internal class ExplicitEqualByComparer : EqualByComparer
     {
@@ -15,7 +17,7 @@
             return false;
         }
 
-        internal override bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs)
+        internal override bool Equals(object x, object y, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)
         {
             return TryGetEitherNullEquals(x, y, out var result)
                 ? result

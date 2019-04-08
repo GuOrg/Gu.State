@@ -66,22 +66,33 @@
                 return true;
             }
 
-            internal override bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs)
+            internal override bool Equals(object x, object y, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)
             {
                 if (TryGetEitherNullEquals(x, y, out var result))
                 {
                     return result;
                 }
 
-                if (referencePairs?.Add(x, y) == false)
+                if (referencePairs != null &&
+                    ReferencePairStruct.TryCreate(x, y, out var pair))
                 {
-                    return true;
-                }
+                    if (referencePairs.Add(pair) == false)
+                    {
+                        return true;
+                    }
 
-                return this.Equals((T)x, (T)y, settings, referencePairs);
+                    var equals = this.Equals((T)x, (T)y, settings, referencePairs);
+
+                    referencePairs.Remove(pair);
+                    return equals;
+                }
+                else
+                {
+                    return this.Equals((T)x, (T)y, settings, referencePairs);
+                }
             }
 
-            internal override bool Equals(T x, T y, MemberSettings settings, ReferencePairCollection referencePairs)
+            internal override bool Equals(T x, T y, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)
             {
                 for (var i = 0; i < this.memberComparers.Count; i++)
                 {

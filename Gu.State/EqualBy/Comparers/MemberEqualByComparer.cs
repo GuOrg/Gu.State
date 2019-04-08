@@ -1,6 +1,7 @@
 ﻿namespace Gu.State
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Reflection;
 
@@ -52,7 +53,7 @@
             return settings.GetEqualByComparer(this.Member.MemberType()).TryGetError(settings, out error);
         }
 
-        internal override bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs)
+        internal override bool Equals(object x, object y, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)
         {
             if (this.getterAndSetter == null)
             {

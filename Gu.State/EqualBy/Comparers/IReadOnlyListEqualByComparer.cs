@@ -33,7 +33,7 @@ namespace Gu.State
         [DebuggerDisplay("IReadOnlyListEqualByComparer<IReadOnlyListEqualByComparer<{typeof(T).PrettyName()}>>")]
         private class Comparer<T> : CollectionEqualByComparer<IReadOnlyList<T>, T>
         {
-            internal override bool Equals(IReadOnlyList<T> x, IReadOnlyList<T> y, MemberSettings settings, ReferencePairCollection referencePairs)
+            internal override bool Equals(IReadOnlyList<T> x, IReadOnlyList<T> y, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)
             {
                 if (x.Count != y.Count)
                 {
@@ -56,7 +56,7 @@ namespace Gu.State
         [DebuggerDisplay("ListByComparer<List<{typeof(T).PrettyName()}>>")]
         private class ListComparer<T> : CollectionEqualByComparer<List<T>, T>
         {
-            internal override bool Equals(List<T> x, List<T> y, MemberSettings settings, ReferencePairCollection referencePairs)
+            internal override bool Equals(List<T> x, List<T> y, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)
             {
                 if (x.Count != y.Count)
                 {
@@ -79,7 +79,7 @@ namespace Gu.State
         [DebuggerDisplay("ArrayEqualByComparer<{typeof(T).PrettyName()}[]>")]
         private class ArrayComparer<T> : CollectionEqualByComparer<T[], T>
         {
-            internal override bool Equals(T[] x, T[] y, MemberSettings settings, ReferencePairCollection referencePairs)
+            internal override bool Equals(T[] x, T[] y, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)
             {
                 if (x.Length != y.Length)
                 {

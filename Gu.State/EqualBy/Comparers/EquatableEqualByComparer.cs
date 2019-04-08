@@ -33,7 +33,7 @@
                 this.comparer = comparer;
             }
 
-            internal override bool Equals(T x, T y, MemberSettings settings, ReferencePairCollection referencePairs)
+            internal override bool Equals(T x, T y, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)
             {
                 return this.comparer.Equals(x, y);
             }

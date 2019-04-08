@@ -1,6 +1,7 @@
 ﻿namespace Gu.State
 {
     using System;
+    using System.Collections.Generic;
 
     /// <summary>A comparer that compares by member or index.</summary>
     internal abstract class EqualByComparer
@@ -34,7 +35,7 @@
         /// The already compared items. This is used to stop infinite recursion when there are reference loops.
         /// </param>
         /// <returns>True if <paramref name="x"/> and <paramref name="y"/> are equal.</returns>
-        internal abstract bool Equals(object x, object y, MemberSettings settings, ReferencePairCollection referencePairs);
+        internal abstract bool Equals(object x, object y, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs);
 
         /// <summary>Convenience method for checking equality if either or both <paramref name="x"/> and <paramref name="y"/> are null.</summary>
         /// <param name="x">The x value.</param>
