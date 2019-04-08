@@ -71,6 +71,9 @@ namespace Gu.State.Tests.EqualByTests
             Case((int[])null, (int[])null),
             Case(new int[0], new int[0]),
             Case(new[] { 1, 2, 3 }, new[] { 1, 2, 3 }),
+            Case(new int?[] { 1, 2, 3 }, new int?[] { 1, 2, 3 }),
+            Case(new int?[] { 1, 2, null }, new int?[] { 1, 2, null }),
+            Case(new int?[] { null, 2, 3 }, new int?[] { null, 2, 3 }),
             Case(new[] { SharedWithSimpleProperties }, new[] { SharedWithSimpleProperties }),
             Case(new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }, new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }),
 
@@ -222,6 +225,13 @@ namespace Gu.State.Tests.EqualByTests
             Case(new[] { 1, 2, 3 }, new[] { 1, 2 }),
             Case(new[] { 1, 2, 3 }, new[] { 1, 2, -1 }),
             Case(new[] { 1, 2, 3 }, new[] { -1, 2, 3 }),
+
+            Case(new int?[] { 1, 2, 3 }, new int?[] { 1, 2 }),
+            Case(new int?[] { 1, 2, 3 }, new int?[] { 1, 2, null }),
+            Case(new int?[] { 1, 2, 3 }, new int?[] { 1, 2, -3 }),
+            Case(new int?[] { 1, 2, 3 }, new int?[] { 1, 2, null }),
+            Case(new int?[] { 1, 2, 3 }, new int?[] { -1, 2, 3 }),
+            Case(new int?[] { 1, 2, 3 }, new int?[] { null, 2, 3 }),
 
             Case(new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }, new[,] { { -1, 2 }, { 3, 4 }, { 5, 6 } }),
             Case(new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } }, new[,] { { 1, 2 }, { -3, 4 }, { 5, 6 } }),
