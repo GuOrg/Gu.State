@@ -5,11 +5,13 @@
 
     internal class ExplicitEqualByComparer<T> : EqualByComparer<T>
     {
-        private readonly IEqualityComparer<T> comparer;
+        public static ExplicitEqualByComparer<T> Default = new ExplicitEqualByComparer<T>(EqualityComparer<T>.Default);
 
-        public ExplicitEqualByComparer(IEqualityComparer<T> comparer)
+        internal readonly IEqualityComparer<T> EqualityComparer;
+
+        public ExplicitEqualByComparer(IEqualityComparer<T> equalityComparer)
         {
-            this.comparer = comparer;
+            this.EqualityComparer = equalityComparer;
         }
 
         internal static ExplicitEqualByComparer<T> Create(IEqualityComparer comparer) => new ExplicitEqualByComparer<T>((IEqualityComparer<T>)comparer);
@@ -22,7 +24,7 @@
 
         internal override bool Equals(T x, T y, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)
         {
-            return this.comparer.Equals(x, y);
+            return this.EqualityComparer.Equals(x, y);
         }
 
         internal override bool Equals(object x, object y, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)
