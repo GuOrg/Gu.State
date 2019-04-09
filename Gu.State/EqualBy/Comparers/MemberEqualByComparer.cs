@@ -34,12 +34,12 @@
                     {
                         case PropertiesSettings _:
                             return (MemberEqualByComparer)typeof(SealedMemberEqualByComparer)
-                                                           .GetMethod(nameof(SealedMemberEqualByComparer.CreateForProperty), BindingFlags.NonPublic | BindingFlags.Static)
+                                                           .GetMethod(nameof(SealedMemberEqualByComparer.CreateForProperty), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)
                                                            .MakeGenericMethod(member.ReflectedType, memberType)
                                                            .Invoke(null, new object[] { member, equalByComparer });
                         case FieldsSettings _:
                             return (MemberEqualByComparer)typeof(SealedMemberEqualByComparer)
-                                                          .GetMethod(nameof(SealedMemberEqualByComparer.CreateForField), BindingFlags.NonPublic | BindingFlags.Static)
+                                                          .GetMethod(nameof(SealedMemberEqualByComparer.CreateForField), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)
                                                           .MakeGenericMethod(member.ReflectedType, memberType)
                                                           .Invoke(null, new object[] { member, equalByComparer });
                     }

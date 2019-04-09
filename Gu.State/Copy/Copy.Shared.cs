@@ -2,7 +2,6 @@
 {
     using System;
     using System.Diagnostics;
-    using System.Reflection;
 
     /// <summary>
     /// Defines methods for copying values from one instance to another.

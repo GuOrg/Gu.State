@@ -34,10 +34,7 @@
             this.SetValue((TSource)source, (TValue)value);
         }
 
-        public void SetValue(TSource source, TValue value)
-        {
-            throw new InvalidOperationException("Can't set value of struct.");
-        }
+        public void SetValue(TSource source, TValue value) => throw new InvalidOperationException("Can't set value of struct.");
 
         public object GetValue(object source)
         {

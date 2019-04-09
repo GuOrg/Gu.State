@@ -4,7 +4,7 @@
 
     internal static class Throw
     {
-        internal static readonly string ThereIsABugInTheLibrary = "There is a bug in the library as it:";
+        internal const string ThereIsABugInTheLibrary = "There is a bug in the library as it:";
 
         internal static InvalidOperationException CompareWhenError => new InvalidOperationException(nameof(CompareWhenError));
 

@@ -136,7 +136,7 @@
                     }
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(e.Action));
+                    throw new ArgumentOutOfRangeException(nameof(e), e.Action, "Unknown NotifyCollectionChangedAction.");
             }
         }
 

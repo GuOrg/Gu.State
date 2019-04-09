@@ -87,7 +87,7 @@
 
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(settings), settings.ReferenceHandling, "Unknown ReferenceHandling");
+                    throw Throw.ShouldNeverGetHereException($"Unknown ReferenceHandling: {settings.ReferenceHandling}");
             }
 
             return this;

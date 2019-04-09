@@ -9,8 +9,6 @@
     {
         private static readonly ConcurrentDictionary<Type, IDiffBy> Cache = new ConcurrentDictionary<Type, IDiffBy>();
 
-        private static readonly string IDictionaryName = "IDictionary`2";
-
         public static bool TryGetOrCreate(object x, object y, out IDiffBy comparer)
         {
             if (x.GetType().Implements(typeof(IDictionary<,>)) && y.GetType().Implements(typeof(IDictionary<,>)))
@@ -25,7 +23,7 @@
 
         private static IDiffBy Create(Type type)
         {
-            var iDict = type.Name == IDictionaryName ? type : type.GetInterface(IDictionaryName);
+            var iDict = type.Name == "IDictionary`2" ? type : type.GetInterface("IDictionary`2");
             var keyType = iDict.GenericTypeArguments[0];
             var valueType = iDict.GenericTypeArguments[1];
             //// ReSharper disable once PossibleNullReferenceException nope, not here
