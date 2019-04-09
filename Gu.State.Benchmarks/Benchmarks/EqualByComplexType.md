@@ -7,15 +7,15 @@ Intel Xeon CPU E5-2637 v4 3.50GHz, 2 CPU, 16 logical and 8 physical cores
 
 
 ```
-|                            Method |       Mean |     Error |    StdDev | Ratio | RatioSD |  Gen 0 |  Gen 1 |  Gen 2 | Allocated |
-|---------------------------------- |-----------:|----------:|----------:|------:|--------:|-------:|-------:|-------:|----------:|
-|              this_x_Equals_this_y |  11.066 ns | 0.0840 ns | 0.0786 ns |  1.00 |    0.00 |      - |      - |      - |         - |
-|                      ObjectEquals |  11.614 ns | 0.0320 ns | 0.0268 ns |  1.05 |    0.01 |      - |      - |      - |         - |
-|                              Func |   2.852 ns | 0.0043 ns | 0.0038 ns |  0.26 |    0.00 |      - |      - |      - |         - |
-|                          Comparer |   7.508 ns | 0.0179 ns | 0.0149 ns |  0.68 |    0.00 |      - |      - |      - |         - |
-|   EqualByPropertyValuesStructural | 641.658 ns | 5.4413 ns | 4.8235 ns | 57.95 |    0.62 | 0.0725 | 0.0191 | 0.0010 |     461 B |
-|   EqualByPropertyValuesReferences | 212.170 ns | 1.2013 ns | 1.1237 ns | 19.17 |    0.18 | 0.0291 |      - |      - |     184 B |
-| EqualByPropertyValuesWithComparer | 372.067 ns | 2.3629 ns | 1.9731 ns | 33.58 |    0.22 | 0.0587 | 0.0172 | 0.0005 |     373 B |
-|      EqualByFieldValuesStructural | 589.112 ns | 6.9942 ns | 5.8405 ns | 53.18 |    0.57 | 0.0725 | 0.0191 | 0.0010 |     461 B |
-|      EqualByFieldValuesReferences | 174.969 ns | 1.5008 ns | 1.3305 ns | 15.80 |    0.17 | 0.0291 |      - |      - |     184 B |
-|    EqualByFieldValuesWithComparer | 374.018 ns | 5.0987 ns | 4.7693 ns | 33.80 |    0.33 | 0.0587 | 0.0172 | 0.0005 |     373 B |
+|                            Method |       Mean |     Error |    StdDev | Ratio | RatioSD |  Gen 0 | Gen 1 | Gen 2 | Allocated |
+|---------------------------------- |-----------:|----------:|----------:|------:|--------:|-------:|------:|------:|----------:|
+|              this_x_Equals_this_y |  11.708 ns | 0.2262 ns | 0.2005 ns |  1.00 |    0.00 |      - |     - |     - |         - |
+|                      ObjectEquals |  12.402 ns | 0.2827 ns | 0.2777 ns |  1.06 |    0.02 |      - |     - |     - |         - |
+|                              Func |   2.810 ns | 0.0504 ns | 0.0447 ns |  0.24 |    0.00 |      - |     - |     - |         - |
+|                          Comparer |   7.287 ns | 0.0438 ns | 0.0388 ns |  0.62 |    0.01 |      - |     - |     - |         - |
+|   EqualByPropertyValuesStructural | 208.011 ns | 1.2129 ns | 1.0752 ns | 17.77 |    0.27 | 0.0291 |     - |     - |     184 B |
+|   EqualByPropertyValuesReferences | 208.218 ns | 1.3508 ns | 1.1280 ns | 17.76 |    0.33 | 0.0291 |     - |     - |     184 B |
+| EqualByPropertyValuesWithComparer |  83.147 ns | 0.8150 ns | 0.6806 ns |  7.09 |    0.13 | 0.0151 |     - |     - |      96 B |
+|      EqualByFieldValuesStructural | 178.866 ns | 0.7655 ns | 0.7160 ns | 15.29 |    0.26 | 0.0291 |     - |     - |     184 B |
+|      EqualByFieldValuesReferences | 176.407 ns | 1.2488 ns | 1.0428 ns | 15.05 |    0.30 | 0.0291 |     - |     - |     184 B |
+|    EqualByFieldValuesWithComparer |  81.722 ns | 0.5377 ns | 0.4490 ns |  6.97 |    0.12 | 0.0151 |     - |     - |      96 B |
