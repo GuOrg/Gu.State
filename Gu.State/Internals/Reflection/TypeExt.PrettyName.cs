@@ -15,6 +15,8 @@
             [typeof(byte?)] = "byte?",
             [typeof(char)] = "char",
             [typeof(char?)] = "char?",
+            [typeof(decimal)] = "decimal",
+            [typeof(decimal?)] = "decimal?",
             [typeof(double)] = "double",
             [typeof(double?)] = "double?",
             [typeof(float)] = "float",
@@ -39,7 +41,7 @@
         ///  Returns nicely formatted type names.
         ///  Useful for generic types.</summary>
         /// <param name="type">The type.</param>
-        /// <returns>The name formnatted like : List{int}.</returns>
+        /// <returns>The name formatted like : List{int}.</returns>
         internal static string PrettyName(this Type type)
         {
             if (type == null)
