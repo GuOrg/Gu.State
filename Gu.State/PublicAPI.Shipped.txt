@@ -1,5 +1,4 @@
 ﻿Gu.State.AddEventArgs
-Gu.State.AddEventArgs.AddEventArgs() -> void
 Gu.State.AddEventArgs.Equals(Gu.State.AddEventArgs other) -> bool
 Gu.State.AddEventArgs.Index.get -> int
 Gu.State.AddEventArgs.Source.get -> System.Collections.IList
@@ -13,6 +12,12 @@ Gu.State.ChangeTracker.Dispose() -> void
 Gu.State.ChangeTracker.PropertyChanged -> System.ComponentModel.PropertyChangedEventHandler
 Gu.State.ChangeTracker.Settings.get -> Gu.State.PropertiesSettings
 Gu.State.Copy
+Gu.State.Copy
+Gu.State.Copy
+Gu.State.Copy
+Gu.State.Copy
+Gu.State.Copy
+Gu.State.Copy
 Gu.State.CustomCopy
 Gu.State.CustomCopy.CustomCopy() -> void
 Gu.State.CustomCopy<T>
@@ -21,15 +26,22 @@ Gu.State.CustomCopy<T>.CustomCopy(System.Func<T, T, T> copyValue) -> void
 Gu.State.Diff
 Gu.State.Diff.Diffs.get -> System.Collections.Generic.IReadOnlyCollection<Gu.State.SubDiff>
 Gu.State.DiffBy
+Gu.State.DiffBy
+Gu.State.DiffBy
+Gu.State.DiffBy
+Gu.State.DiffBy
 Gu.State.EmptyDiff
 Gu.State.EmptyDiff.EmptyDiff(object xValue, object yValue) -> void
+Gu.State.EqualBy
+Gu.State.EqualBy
+Gu.State.EqualBy
 Gu.State.EqualBy
 Gu.State.FieldDiff
 Gu.State.FieldDiff.FieldDiff(System.Reflection.FieldInfo fieldInfo, Gu.State.ValueDiff diff) -> void
 Gu.State.FieldDiff.FieldDiff(System.Reflection.FieldInfo fieldInfo, object xValue, object yValue) -> void
 Gu.State.FieldDiff.FieldInfo.get -> System.Reflection.FieldInfo
 Gu.State.FieldsSettings
-Gu.State.FieldsSettings.FieldsSettings(System.Collections.Generic.IEnumerable<System.Reflection.FieldInfo> ignoredFields, System.Collections.Generic.IEnumerable<System.Type> ignoredTypes, System.Collections.Generic.IEnumerable<System.Type> immutableTypes, System.Collections.Generic.IReadOnlyDictionary<System.Type, Gu.State.CastingComparer> comparers, System.Collections.Generic.IReadOnlyDictionary<System.Type, Gu.State.CustomCopy> copyers, Gu.State.ReferenceHandling referenceHandling = Gu.State.ReferenceHandling.Structural, System.Reflection.BindingFlags bindingFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic) -> void
+Gu.State.FieldsSettings.FieldsSettings(System.Collections.Generic.IEnumerable<System.Reflection.FieldInfo> ignoredFields, System.Collections.Generic.IEnumerable<System.Type> ignoredTypes, System.Collections.Generic.IEnumerable<System.Type> immutableTypes, System.Collections.Generic.IReadOnlyDictionary<System.Type, System.Collections.IEqualityComparer> comparers, System.Collections.Generic.IReadOnlyDictionary<System.Type, Gu.State.CustomCopy> copyers, Gu.State.ReferenceHandling referenceHandling = Gu.State.ReferenceHandling.Structural, System.Reflection.BindingFlags bindingFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic) -> void
 Gu.State.FieldsSettings.IgnoredFields.get -> System.Collections.Generic.IEnumerable<System.Reflection.FieldInfo>
 Gu.State.FieldsSettings.IsIgnoringField(System.Reflection.FieldInfo fieldInfo) -> bool
 Gu.State.FieldsSettingsBuilder
@@ -70,26 +82,27 @@ Gu.State.MemberDiff<TMember>.MemberDiff(TMember memberInfo, Gu.State.ValueDiff d
 Gu.State.MemberDiff<TMember>.MemberDiff(TMember memberInfo, object xValue, object yValue) -> void
 Gu.State.MemberDiff<TMember>.MemberInfo.get -> TMember
 Gu.State.MemberSettings
+Gu.State.MemberSettings
+Gu.State.MemberSettings
 Gu.State.MemberSettings.BindingFlags.get -> System.Reflection.BindingFlags
 Gu.State.MemberSettings.IgnoredMembers.get -> System.Collections.Concurrent.ConcurrentDictionary<System.Reflection.MemberInfo, bool>
 Gu.State.MemberSettings.IsEquatable(System.Type type) -> bool
 Gu.State.MemberSettings.IsIgnoringDeclaringType(System.Type declaringType) -> bool
 Gu.State.MemberSettings.IsImmutable(System.Type type) -> bool
-Gu.State.MemberSettings.MemberSettings(System.Collections.Generic.IEnumerable<System.Reflection.MemberInfo> ignoredMembers, System.Collections.Generic.IEnumerable<System.Type> ignoredTypes, System.Collections.Generic.IEnumerable<System.Type> immutableTypes, System.Collections.Generic.IReadOnlyDictionary<System.Type, Gu.State.CastingComparer> comparers, System.Collections.Generic.IReadOnlyDictionary<System.Type, Gu.State.CustomCopy> copyers, Gu.State.ReferenceHandling referenceHandling, System.Reflection.BindingFlags bindingFlags) -> void
+Gu.State.MemberSettings.MemberSettings(System.Collections.Generic.IEnumerable<System.Reflection.MemberInfo> ignoredMembers, System.Collections.Generic.IEnumerable<System.Type> ignoredTypes, System.Collections.Generic.IEnumerable<System.Type> immutableTypes, System.Collections.Generic.IReadOnlyDictionary<System.Type, System.Collections.IEqualityComparer> comparers, System.Collections.Generic.IReadOnlyDictionary<System.Type, Gu.State.CustomCopy> copyers, Gu.State.ReferenceHandling referenceHandling, System.Reflection.BindingFlags bindingFlags) -> void
 Gu.State.MemberSettings.ReferenceHandling.get -> Gu.State.ReferenceHandling
-Gu.State.MemberSettings.TryGetComparer(System.Type type, out Gu.State.CastingComparer comparer) -> bool
+Gu.State.MemberSettings.TryGetComparer(System.Type type, out System.Collections.IEqualityComparer comparer) -> bool
 Gu.State.MemberSettings.TryGetCopyer(System.Type type, out Gu.State.CustomCopy copyer) -> bool
 Gu.State.MoveEventArgs
 Gu.State.MoveEventArgs.Equals(Gu.State.MoveEventArgs other) -> bool
 Gu.State.MoveEventArgs.FromIndex.get -> int
-Gu.State.MoveEventArgs.MoveEventArgs() -> void
 Gu.State.MoveEventArgs.Source.get -> System.Collections.IList
 Gu.State.MoveEventArgs.ToIndex.get -> int
 Gu.State.PropertiesSettings
 Gu.State.PropertiesSettings.GetProperties(System.Type type) -> System.Collections.Generic.IEnumerable<System.Reflection.PropertyInfo>
 Gu.State.PropertiesSettings.IgnoredProperties.get -> System.Collections.Generic.IEnumerable<System.Reflection.PropertyInfo>
 Gu.State.PropertiesSettings.IsIgnoringProperty(System.Reflection.PropertyInfo propertyInfo) -> bool
-Gu.State.PropertiesSettings.PropertiesSettings(System.Collections.Generic.IEnumerable<System.Reflection.PropertyInfo> ignoredProperties, System.Collections.Generic.IEnumerable<System.Type> ignoredTypes, System.Collections.Generic.IEnumerable<System.Type> immutableTypes, System.Collections.Generic.IReadOnlyDictionary<System.Type, Gu.State.CastingComparer> comparers, System.Collections.Generic.IReadOnlyDictionary<System.Type, Gu.State.CustomCopy> copyers, Gu.State.ReferenceHandling referenceHandling = Gu.State.ReferenceHandling.Structural, System.Reflection.BindingFlags bindingFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public) -> void
+Gu.State.PropertiesSettings.PropertiesSettings(System.Collections.Generic.IEnumerable<System.Reflection.PropertyInfo> ignoredProperties, System.Collections.Generic.IEnumerable<System.Type> ignoredTypes, System.Collections.Generic.IEnumerable<System.Type> immutableTypes, System.Collections.Generic.IReadOnlyDictionary<System.Type, System.Collections.IEqualityComparer> comparers, System.Collections.Generic.IReadOnlyDictionary<System.Type, Gu.State.CustomCopy> copyers, Gu.State.ReferenceHandling referenceHandling = Gu.State.ReferenceHandling.Structural, System.Reflection.BindingFlags bindingFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public) -> void
 Gu.State.PropertiesSettingsBuilder
 Gu.State.PropertiesSettingsBuilder.AddComparer<T>(System.Collections.Generic.IEqualityComparer<T> comparer) -> Gu.State.PropertiesSettingsBuilder
 Gu.State.PropertiesSettingsBuilder.AddCustomCopy<T>(System.Func<T, T, T> copyMethod) -> Gu.State.PropertiesSettingsBuilder
@@ -105,7 +118,6 @@ Gu.State.PropertiesSettingsBuilder.IgnoreType<T>() -> Gu.State.PropertiesSetting
 Gu.State.PropertiesSettingsBuilder.PropertiesSettingsBuilder() -> void
 Gu.State.PropertyChangeEventArgs
 Gu.State.PropertyChangeEventArgs.Equals(Gu.State.PropertyChangeEventArgs other) -> bool
-Gu.State.PropertyChangeEventArgs.PropertyChangeEventArgs() -> void
 Gu.State.PropertyChangeEventArgs.PropertyChangeEventArgs(object source, System.Reflection.PropertyInfo propertyInfo) -> void
 Gu.State.PropertyChangeEventArgs.PropertyInfo.get -> System.Reflection.PropertyInfo
 Gu.State.PropertyChangeEventArgs.Source.get -> object
@@ -127,16 +139,13 @@ Gu.State.ReferencePairCollection
 Gu.State.RemoveEventArgs
 Gu.State.RemoveEventArgs.Equals(Gu.State.RemoveEventArgs other) -> bool
 Gu.State.RemoveEventArgs.Index.get -> int
-Gu.State.RemoveEventArgs.RemoveEventArgs() -> void
 Gu.State.RemoveEventArgs.Source.get -> System.Collections.IList
 Gu.State.ReplaceEventArgs
 Gu.State.ReplaceEventArgs.Equals(Gu.State.ReplaceEventArgs other) -> bool
 Gu.State.ReplaceEventArgs.Index.get -> int
-Gu.State.ReplaceEventArgs.ReplaceEventArgs() -> void
 Gu.State.ReplaceEventArgs.Source.get -> System.Collections.IList
 Gu.State.ResetEventArgs
 Gu.State.ResetEventArgs.Equals(Gu.State.ResetEventArgs other) -> bool
-Gu.State.ResetEventArgs.ResetEventArgs() -> void
 Gu.State.ResetEventArgs.Source.get -> System.Collections.IList
 Gu.State.RootChangeEventArgs<T>
 Gu.State.RootChangeEventArgs<T>.EventArgs.get -> Gu.State.IRootChangeEventArgs
@@ -146,6 +155,9 @@ Gu.State.SubDiff.SubDiff(Gu.State.ValueDiff valueDiff) -> void
 Gu.State.SubDiff.X.get -> object
 Gu.State.SubDiff.Y.get -> object
 Gu.State.Synchronize
+Gu.State.Synchronize
+Gu.State.Synchronize
+Gu.State.Track
 Gu.State.Track
 Gu.State.TrackerChangedEventArgs<T>
 Gu.State.TrackerChangedEventArgs<T>.Node.get -> T
