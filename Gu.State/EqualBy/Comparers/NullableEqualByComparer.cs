@@ -6,7 +6,7 @@
 
     internal static class NullableEqualByComparer
     {
-        internal static bool TryGet(Type type, MemberSettings settings, out EqualByComparer comparer)
+        internal static bool TryGet(Type type, out EqualByComparer comparer)
         {
             if (type.IsNullable())
             {

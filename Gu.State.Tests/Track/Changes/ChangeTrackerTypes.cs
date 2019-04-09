@@ -400,7 +400,9 @@ namespace Gu.State.Tests
 #pragma warning restore INPC002 // Mutable public property should notify.
         }
 
+#pragma warning disable CA1710 // Identifiers should have correct suffix
         public class IllegalEnumerable : INotifyPropertyChanged, IEnumerable<int>
+#pragma warning restore CA1710 // Identifiers should have correct suffix
         {
             public event PropertyChangedEventHandler PropertyChanged;
 

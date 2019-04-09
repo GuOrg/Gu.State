@@ -8,7 +8,7 @@
     {
         internal static EqualByComparer Create(Type type, MemberSettings settings)
         {
-            if (NullableEqualByComparer.TryGet(type, settings, out var comparer) ||
+            if (NullableEqualByComparer.TryGet(type, out var comparer) ||
                 EquatableEqualByComparer.TryGet(type, settings, out comparer) ||
                 ISetEqualByComparer.TryCreate(type, settings, out comparer) ||
                 IReadOnlyListEqualByComparer.TryCreate(type, settings, out comparer) ||
@@ -23,9 +23,9 @@
             return new ErrorEqualByComparer(type, new NotSupported(type, $"Could not find an EqualByComparer<{type.PrettyName()}>"));
         }
 
-        internal abstract bool TryGetError(MemberSettings settings, out Error error);
-
         internal abstract bool CanHaveReferenceLoops { get; }
+
+        internal abstract bool TryGetError(MemberSettings settings, out Error error);
 
         /// <summary>
         /// Compare <paramref name="x"/> with <paramref name="y"/>.

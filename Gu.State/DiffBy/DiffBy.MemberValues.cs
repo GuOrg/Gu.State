@@ -68,10 +68,7 @@
                 case ReferenceHandling.Throw:
                     throw Throw.ShouldNeverGetHereException();
                 default:
-                    throw new ArgumentOutOfRangeException(
-                        nameof(settings.ReferenceHandling),
-                        settings.ReferenceHandling,
-                        null);
+                    throw new ArgumentOutOfRangeException(nameof(settings), settings.ReferenceHandling, "Unknown ReferenceHandling.");
             }
         }
 

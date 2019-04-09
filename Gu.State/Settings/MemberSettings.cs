@@ -84,6 +84,7 @@
         /// <summary>Gets a cache for ignored members.</summary>
         protected ConcurrentDictionary<MemberInfo, bool> IgnoredMembers { get; } = new ConcurrentDictionary<MemberInfo, bool>();
 
+#pragma warning disable CA1822 // Mark members as static
         /// <summary>
         /// Check if <paramref name="type"/> is equatable.
         /// There are two ways a type can be equatable:
@@ -93,6 +94,7 @@
         /// <param name="type">The type.</param>
         /// <returns>True if <paramref name="type"/> is equatable.</returns>
         public bool IsEquatable(Type type) => IsEquatableCore(type);
+#pragma warning restore CA1822 // Mark members as static
 
         /// <summary>
         /// Check if <paramref name="type"/> is immutable.
