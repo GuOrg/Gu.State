@@ -204,19 +204,46 @@
         private static IReadOnlyDictionary<Type, EqualByComparer> CreateDefaultComparers()
         {
             var map = new Dictionary<Type, EqualByComparer>();
-            Add(EqualityComparer<decimal>.Default);
-            Add(EqualityComparer<double>.Default);
-            Add(EqualityComparer<float>.Default);
-            Add(EqualityComparer<int>.Default);
-            Add(EqualityComparer<uint>.Default);
-            Add(EqualityComparer<ulong>.Default);
-            Add(EqualityComparer<long>.Default);
-            Add(EqualityComparer<TimeSpan>.Default);
             Add(EqualityComparer<DateTime>.Default);
+            Add(EqualityComparer<DateTime?>.Default);
+            Add(EqualityComparer<DateTimeOffset>.Default);
+            Add(EqualityComparer<DateTimeOffset?>.Default);
+            Add(EqualityComparer<bool>.Default);
+            Add(EqualityComparer<bool?>.Default);
+            Add(EqualityComparer<byte>.Default);
+            Add(EqualityComparer<byte?>.Default);
+            Add(EqualityComparer<char>.Default);
+            Add(EqualityComparer<char?>.Default);
+            Add(EqualityComparer<decimal>.Default);
+            Add(EqualityComparer<decimal?>.Default);
+            Add(EqualityComparer<double>.Default);
+            Add(EqualityComparer<double?>.Default);
             Add(EqualityComparer<Guid>.Default);
+            Add(EqualityComparer<Guid?>.Default);
+            Add(EqualityComparer<short>.Default);
+            Add(EqualityComparer<short?>.Default);
+            Add(EqualityComparer<int>.Default);
+            Add(EqualityComparer<int?>.Default);
+            Add(EqualityComparer<long>.Default);
+            Add(EqualityComparer<long?>.Default);
+            Add(EqualityComparer<sbyte>.Default);
+            Add(EqualityComparer<sbyte?>.Default);
+            Add(EqualityComparer<float>.Default);
+            Add(EqualityComparer<float?>.Default);
+            Add(EqualityComparer<TimeSpan>.Default);
+            Add(EqualityComparer<TimeSpan?>.Default);
+            Add(EqualityComparer<ushort>.Default);
+            Add(EqualityComparer<ushort?>.Default);
+            Add(EqualityComparer<uint>.Default);
+            Add(EqualityComparer<uint?>.Default);
+            Add(EqualityComparer<ulong>.Default);
+            Add(EqualityComparer<ulong?>.Default);
+
             Add(EqualityComparer<string>.Default);
             Add(EqualityComparer<IntPtr>.Default);
+            Add(EqualityComparer<IntPtr?>.Default);
             Add(EqualityComparer<UIntPtr>.Default);
+            Add(EqualityComparer<UIntPtr?>.Default);
             return map;
 
             void Add<T>(EqualityComparer<T> comparer)
