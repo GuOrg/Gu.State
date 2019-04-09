@@ -48,7 +48,7 @@
             }
         }
 
-        private string DebuggerDisplay => $"{this.GetType().Name} for {this.refCountedPair.Value.X.GetType().Name}";
+        private string DebuggerDisplay => $"{typeof(DiffBuilder).Name} for {this.refCountedPair.Value.X.GetType().Name}";
 
         private Dictionary<object, SubDiff> KeyedDiffs => this.borrowedDiffs.Value;
 
@@ -122,7 +122,7 @@
                 }
 
                 if (EqualBy.TryGetValueEquals(xValue, old.X, this.settings, out var xEqual) && xEqual &&
-EqualBy.TryGetValueEquals(yValue, old.Y, this.settings, out var yEqual) && yEqual)
+                    EqualBy.TryGetValueEquals(yValue, old.Y, this.settings, out var yEqual) && yEqual)
                 {
                     return false;
                 }

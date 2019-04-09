@@ -2,6 +2,7 @@
 {
     using System;
     using System.Diagnostics;
+    using System.Reflection;
 
     /// <summary>
     /// Defines methods for copying values from one instance to another.
@@ -34,10 +35,12 @@
             {
                 return Activator.CreateInstance(type, nonPublic: true);
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception e)
             {
                 throw Throw.CreateCannotCreateInstanceException(sourceValue, settings, e);
             }
+#pragma warning restore CA1031 // Do not catch general exception types
         }
 
         internal static void Sync<T>(T source, T target, MemberSettings settings, ReferencePairCollection referencePairs)
@@ -102,10 +105,7 @@
                 case ReferenceHandling.Throw:
                     throw State.Throw.ShouldNeverGetHereException();
                 default:
-                    throw new ArgumentOutOfRangeException(
-                        nameof(settings.ReferenceHandling),
-                        settings.ReferenceHandling,
-                        null);
+                    throw new ArgumentOutOfRangeException(nameof(settings), settings.ReferenceHandling, "Unknown ReferenceHandling");
             }
         }
 

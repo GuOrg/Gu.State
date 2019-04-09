@@ -74,7 +74,7 @@
                     {
                         if (this.count == 0)
                         {
-                            throw new ObjectDisposedException($"Not allowed to get the value of a {this.GetType().PrettyName()} after it is disposed.");
+                            throw new ObjectDisposedException($"Not allowed to get the value of a {typeof(RefCounter).PrettyName()} after it is disposed.");
                         }
 
                         return this.valueReference.TryGetTarget(out var value)

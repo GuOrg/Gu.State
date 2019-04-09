@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace Gu.State
+﻿namespace Gu.State
 {
+    using System.Collections.Generic;
+
     internal class ReferenceEqualByComparer : EqualByComparer
     {
         public static readonly ReferenceEqualByComparer Default = new ReferenceEqualByComparer();

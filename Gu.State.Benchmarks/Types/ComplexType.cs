@@ -1,6 +1,7 @@
 ﻿// ReSharper disable NonReadonlyMemberInGetHashCode
 namespace Gu.State.Benchmarks
 {
+    using System;
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
 
@@ -89,10 +90,8 @@ namespace Gu.State.Benchmarks
             }
         }
 
-        protected bool Equals(ComplexType other)
-        {
-            return string.Equals(this.Name, other.Name) && this.Value == other.Value;
-        }
+        protected bool Equals(ComplexType other) => string.Equals(this.Name, other.Name, StringComparison.Ordinal) &&
+                                                    this.Value == other.Value;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

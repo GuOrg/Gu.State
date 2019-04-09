@@ -3,7 +3,9 @@
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
 
+#pragma warning disable CA1716 // Identifiers should not match keywords
     public class With<T> : INotifyPropertyChanged
+#pragma warning restore CA1716 // Identifiers should not match keywords
     {
         private string name;
 

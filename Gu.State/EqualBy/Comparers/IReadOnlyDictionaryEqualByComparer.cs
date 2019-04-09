@@ -1,13 +1,10 @@
 namespace Gu.State
 {
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
 
     internal static class IReadOnlyDictionaryEqualByComparer
     {
-        private static readonly ConcurrentDictionary<Type, EqualByComparer> Cache = new ConcurrentDictionary<Type, EqualByComparer>();
-
         internal static bool TryCreate(Type type, MemberSettings settings, out EqualByComparer comparer)
         {
             if (type.Implements(typeof(IReadOnlyDictionary<,>)))
