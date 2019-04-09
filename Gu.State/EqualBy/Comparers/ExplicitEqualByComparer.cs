@@ -14,6 +14,8 @@
             this.EqualityComparer = equalityComparer;
         }
 
+        internal override bool CanHaveReferenceLoops => false;
+
         internal static ExplicitEqualByComparer<T> Create(IEqualityComparer comparer) => new ExplicitEqualByComparer<T>((IEqualityComparer<T>)comparer);
 
         internal override bool TryGetError(MemberSettings settings, out Error error)

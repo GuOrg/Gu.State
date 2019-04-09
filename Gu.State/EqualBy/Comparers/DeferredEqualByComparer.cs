@@ -3,9 +3,11 @@
     using System;
     using System.Collections.Generic;
 
-    internal class LazyEqualByComparer<T> : EqualByComparer<T>
+    internal class DeferredEqualByComparer<T> : EqualByComparer<T>
     {
         private TypeAndComparer lazyTypeAndComparer;
+
+        internal override bool CanHaveReferenceLoops => true;
 
         internal override bool Equals(T x, T y, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)
         {

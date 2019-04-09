@@ -29,6 +29,23 @@ namespace Gu.State.Tests.EqualByTests
             Assert.AreEqual(expected, result);
         }
 
+        [TestCase("parent", "child", true)]
+        [TestCase("", "child", false)]
+        [TestCase("parent", "", false)]
+        public void SealedParentChild(string p, string c, bool expected)
+        {
+            var x = new SealedParent("parent", new SealedChild("child"));
+            Assert.AreSame(x, x.Child.Parent);
+
+            var y = new SealedParent(p, new SealedChild(c));
+            Assert.AreSame(y, y.Child.Parent);
+            var result = this.EqualBy(x, y, ReferenceHandling.Structural);
+            Assert.AreEqual(expected, result);
+
+            result = this.EqualBy(y, x, ReferenceHandling.Structural);
+            Assert.AreEqual(expected, result);
+        }
+
         [TestCase(ReferenceHandling.Structural, true)]
         [TestCase(ReferenceHandling.References, false)]
         public void WithGetSetObject(ReferenceHandling referenceHandling, bool expected)

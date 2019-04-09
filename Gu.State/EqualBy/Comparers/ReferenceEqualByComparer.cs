@@ -6,6 +6,8 @@
     {
         public static readonly ReferenceEqualByComparer Default = new ReferenceEqualByComparer();
 
+        internal override bool CanHaveReferenceLoops => false;
+
         internal override bool TryGetError(MemberSettings settings, out Error error)
         {
             error = null;

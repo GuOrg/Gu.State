@@ -24,31 +24,26 @@
             }
 
             var memberType = member.MemberType();
-            if (memberType.IsSealed)
+            var equalByComparer = settings.GetEqualByComparerOrDeferred(memberType);
+            if (equalByComparer.GetType().IsGenericType &&
+                equalByComparer.GetType().GetGenericTypeDefinition() == typeof(ExplicitEqualByComparer<>))
             {
-                var equalByComparer = settings.GetEqualByComparer(memberType);
-                if (equalByComparer.GetType().IsGenericType &&
-                    equalByComparer.GetType().GetGenericTypeDefinition() == typeof(ExplicitEqualByComparer<>))
+                switch (settings)
                 {
-                    switch (settings)
-                    {
-                        case PropertiesSettings _:
-                            return (MemberEqualByComparer)typeof(SealedMemberEqualByComparer)
-                                                           .GetMethod(nameof(SealedMemberEqualByComparer.CreateForProperty), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)
-                                                           .MakeGenericMethod(member.ReflectedType, memberType)
-                                                           .Invoke(null, new object[] { member, equalByComparer });
-                        case FieldsSettings _:
-                            return (MemberEqualByComparer)typeof(SealedMemberEqualByComparer)
-                                                          .GetMethod(nameof(SealedMemberEqualByComparer.CreateForField), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)
-                                                          .MakeGenericMethod(member.ReflectedType, memberType)
-                                                          .Invoke(null, new object[] { member, equalByComparer });
-                    }
+                    case PropertiesSettings _:
+                        return (MemberEqualByComparer)typeof(SealedMemberEqualByComparer)
+                                                      .GetMethod(nameof(SealedMemberEqualByComparer.CreateForProperty), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)
+                                                      .MakeGenericMethod(member.ReflectedType, memberType)
+                                                      .Invoke(null, new object[] { member, equalByComparer });
+                    case FieldsSettings _:
+                        return (MemberEqualByComparer)typeof(SealedMemberEqualByComparer)
+                                                      .GetMethod(nameof(SealedMemberEqualByComparer.CreateForField), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)
+                                                      .MakeGenericMethod(member.ReflectedType, memberType)
+                                                      .Invoke(null, new object[] { member, equalByComparer });
                 }
-
-                return new Comparer(member, equalByComparer);
             }
 
-            return new Comparer(member, (EqualByComparer)Activator.CreateInstance(typeof(LazyEqualByComparer<>).MakeGenericType(memberType)));
+            return new Comparer(member, equalByComparer);
         }
 
         private class Comparer : MemberEqualByComparer
@@ -62,6 +57,8 @@
                 this.getterAndSetter = GetterAndSetter.GetOrCreate(member);
                 this.comparer = comparer;
             }
+
+            internal override bool CanHaveReferenceLoops => this.comparer.CanHaveReferenceLoops;
 
             internal override bool TryGetError(MemberSettings settings, out Error error)
             {
@@ -101,6 +98,8 @@
             {
                 this.equals = equals;
             }
+
+            internal override bool CanHaveReferenceLoops => false;
 
             internal static SealedMemberEqualByComparer CreateForProperty<TSource, TValue>(PropertyInfo property, ExplicitEqualByComparer<TValue> comparer)
             {
@@ -144,6 +143,8 @@
             {
                 this.error = UnsupportedIndexer.GetOrCreate((PropertyInfo)member);
             }
+
+            internal override bool CanHaveReferenceLoops => false;
 
             internal override bool TryGetError(MemberSettings settings, out Error error)
             {

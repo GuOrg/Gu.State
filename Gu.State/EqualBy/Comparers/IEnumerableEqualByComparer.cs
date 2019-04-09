@@ -9,7 +9,9 @@ namespace Gu.State
         {
             if (type.Implements(typeof(IEnumerable<>)))
             {
-                comparer = (EqualByComparer)Activator.CreateInstance(typeof(Comparer<>).MakeGenericType(type.GetItemType()));
+                comparer = (EqualByComparer)Activator.CreateInstance(
+                    typeof(Comparer<>).MakeGenericType(type.GetItemType()),
+                    settings.GetEqualByComparerOrDeferred(type.GetItemType()));
                 return true;
             }
 
@@ -19,9 +21,14 @@ namespace Gu.State
 
         private class Comparer<T> : CollectionEqualByComparer<IEnumerable<T>, T>
         {
+            public Comparer(EqualByComparer itemComparer)
+                : base(itemComparer)
+            {
+            }
+
             internal override bool Equals(IEnumerable<T> x, IEnumerable<T> y, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)
             {
-                var comparer = this.ItemComparer(settings);
+                var comparer = this.ItemComparer;
                 using (var xe = x.GetEnumerator())
                 {
                     using (var ye = y.GetEnumerator())

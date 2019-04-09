@@ -12,7 +12,10 @@ namespace Gu.State
                 var dictionaryType = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IReadOnlyDictionary<,>)
                     ? type
                     : type.GetInterface("IReadOnlyDictionary`2");
-                comparer = (EqualByComparer)Activator.CreateInstance(typeof(Comparer<,,>).MakeGenericType(type, dictionaryType.GenericTypeArguments[0], dictionaryType.GenericTypeArguments[1]));
+                comparer = (EqualByComparer)Activator.CreateInstance(
+                    typeof(Comparer<,,>).MakeGenericType(type, dictionaryType.GenericTypeArguments[0], dictionaryType.GenericTypeArguments[1]),
+                    settings.GetEqualByComparerOrDeferred(dictionaryType.GenericTypeArguments[0]),
+                    settings.GetEqualByComparerOrDeferred(dictionaryType.GenericTypeArguments[1]));
                 return true;
             }
 
@@ -22,8 +25,17 @@ namespace Gu.State
 
         private class Comparer<TMap, TKey, TValue> : EqualByComparer<IReadOnlyDictionary<TKey, TValue>>
         {
-            private readonly ISetEqualByComparer.EqualByComparer<IEnumerable<TKey>, TKey> keysEqualByComparer = new ISetEqualByComparer.EqualByComparer<IEnumerable<TKey>, TKey>();
-            private EqualByComparer lazyValueComparer;
+            private readonly ISetEqualByComparer.EqualByComparer<IEnumerable<TKey>, TKey> keysComparer;
+            private readonly EqualByComparer valueComparer;
+
+            public Comparer(EqualByComparer keyComparer, EqualByComparer valueComparer)
+            {
+                this.keysComparer = new ISetEqualByComparer.EqualByComparer<IEnumerable<TKey>, TKey>(keyComparer);
+                this.valueComparer = valueComparer;
+            }
+
+            internal override bool CanHaveReferenceLoops => this.keysComparer.CanHaveReferenceLoops ||
+                                                            this.valueComparer.CanHaveReferenceLoops;
 
             internal override bool TryGetError(MemberSettings settings, out Error error)
             {
@@ -50,8 +62,8 @@ namespace Gu.State
                     return false;
                 }
 
-                return this.keysEqualByComparer.Equals(x.Keys, y.Keys, settings, referencePairs) &&
-                       ValuesEquals(x, y, this.ValueComparer(settings), settings, referencePairs);
+                return this.keysComparer.Equals(x.Keys, y.Keys, settings, referencePairs) &&
+                       ValuesEquals(x, y, this.valueComparer, settings, referencePairs);
             }
 
             private static bool ValuesEquals(IReadOnlyDictionary<TKey, TValue> x, IReadOnlyDictionary<TKey, TValue> y, EqualByComparer valueComparer, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)
@@ -70,18 +82,6 @@ namespace Gu.State
                 }
 
                 return true;
-            }
-
-            private EqualByComparer ValueComparer(MemberSettings settings)
-            {
-                if (this.lazyValueComparer is null)
-                {
-                    this.lazyValueComparer = typeof(TValue).IsSealed
-                        ? settings.GetEqualByComparer(typeof(TValue))
-                        : new LazyEqualByComparer<TValue>();
-                }
-
-                return this.lazyValueComparer;
             }
         }
     }

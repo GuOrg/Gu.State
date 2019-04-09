@@ -15,6 +15,8 @@
 
         public Error Error { get; }
 
+        internal override bool CanHaveReferenceLoops => false;
+
         internal override bool TryGetError(MemberSettings settings, out Error error)
         {
             error = this.Error;

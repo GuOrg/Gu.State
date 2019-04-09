@@ -12,15 +12,21 @@ namespace Gu.State
             {
                 if (type.IsArray)
                 {
-                    comparer = (EqualByComparer)Activator.CreateInstance(typeof(ArrayComparer<>).MakeGenericType(type.GetItemType()));
+                    comparer = (EqualByComparer)Activator.CreateInstance(
+                        typeof(ArrayComparer<>).MakeGenericType(type.GetItemType()),
+                        settings.GetEqualByComparerOrDeferred(type.GetItemType()));
                 }
                 else if (type.GetGenericTypeDefinition() == typeof(List<>))
                 {
-                    comparer = (EqualByComparer)Activator.CreateInstance(typeof(ListComparer<>).MakeGenericType(type.GetItemType()));
+                    comparer = (EqualByComparer)Activator.CreateInstance(
+                        typeof(ListComparer<>).MakeGenericType(type.GetItemType()),
+                        settings.GetEqualByComparerOrDeferred(type.GetItemType()));
                 }
                 else
                 {
-                    comparer = (EqualByComparer)Activator.CreateInstance(typeof(Comparer<>).MakeGenericType(type.GetItemType()));
+                    comparer = (EqualByComparer)Activator.CreateInstance(
+                        typeof(Comparer<>).MakeGenericType(type.GetItemType()),
+                        settings.GetEqualByComparerOrDeferred(type.GetItemType()));
                 }
 
                 return true;
@@ -33,6 +39,11 @@ namespace Gu.State
         [DebuggerDisplay("IReadOnlyListEqualByComparer<IReadOnlyListEqualByComparer<{typeof(T).PrettyName()}>>")]
         private class Comparer<T> : CollectionEqualByComparer<IReadOnlyList<T>, T>
         {
+            public Comparer(EqualByComparer itemComparer)
+                : base(itemComparer)
+            {
+            }
+
             internal override bool Equals(IReadOnlyList<T> x, IReadOnlyList<T> y, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)
             {
                 if (x.Count != y.Count)
@@ -40,7 +51,7 @@ namespace Gu.State
                     return false;
                 }
 
-                var comparer = this.ItemComparer(settings);
+                var comparer = this.ItemComparer;
                 for (var i = 0; i < x.Count; i++)
                 {
                     if (!comparer.Equals(x[i], y[i], settings, referencePairs))
@@ -56,6 +67,11 @@ namespace Gu.State
         [DebuggerDisplay("ListByComparer<List<{typeof(T).PrettyName()}>>")]
         private class ListComparer<T> : CollectionEqualByComparer<List<T>, T>
         {
+            public ListComparer(EqualByComparer itemComparer)
+                : base(itemComparer)
+            {
+            }
+
             internal override bool Equals(List<T> x, List<T> y, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)
             {
                 if (x.Count != y.Count)
@@ -63,7 +79,7 @@ namespace Gu.State
                     return false;
                 }
 
-                var comparer = this.ItemComparer(settings);
+                var comparer = this.ItemComparer;
                 for (var i = 0; i < x.Count; i++)
                 {
                     if (!comparer.Equals(x[i], y[i], settings, referencePairs))
@@ -79,6 +95,11 @@ namespace Gu.State
         [DebuggerDisplay("ArrayEqualByComparer<{typeof(T).PrettyName()}[]>")]
         private class ArrayComparer<T> : CollectionEqualByComparer<T[], T>
         {
+            public ArrayComparer(EqualByComparer itemComparer)
+                : base(itemComparer)
+            {
+            }
+
             internal override bool Equals(T[] x, T[] y, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)
             {
                 if (x.Length != y.Length)
@@ -86,7 +107,7 @@ namespace Gu.State
                     return false;
                 }
 
-                var comparer = this.ItemComparer(settings);
+                var comparer = this.ItemComparer;
                 for (var i = 0; i < x.Length; i++)
                 {
                     if (!comparer.Equals(x[i], y[i], settings, referencePairs))

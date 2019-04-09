@@ -704,6 +704,36 @@ namespace Gu.State.Tests.EqualByTests
             public Parent Parent { get; set; }
         }
 
+        public class SealedParent
+        {
+            public SealedParent(string name, SealedChild child)
+            {
+                this.Name = name;
+                if (child != null)
+                {
+                    child.Parent = this;
+                }
+
+                this.Child = child;
+            }
+
+            public string Name { get; }
+
+            public SealedChild Child { get; set; }
+        }
+
+        public class SealedChild
+        {
+            public SealedChild(string name)
+            {
+                this.Name = name;
+            }
+
+            public string Name { get; }
+
+            public SealedParent Parent { get; set; }
+        }
+
         public class HashCollisionType
         {
             public int HashValue { get; set; } = 0;

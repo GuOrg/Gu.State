@@ -194,6 +194,13 @@
             }
         }
 
+        internal EqualByComparer GetEqualByComparerOrDeferred(Type type)
+        {
+            return type.IsSealed
+                ? this.GetEqualByComparer(type)
+                : (EqualByComparer)Activator.CreateInstance(typeof(DeferredEqualByComparer<>).MakeGenericType(type));
+        }
+
         private static IReadOnlyDictionary<Type, EqualByComparer> CreateDefaultComparers()
         {
             var map = new Dictionary<Type, EqualByComparer>();

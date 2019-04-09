@@ -3,7 +3,6 @@ namespace Gu.State
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Reflection;
 
     internal static class ArrayEqualByComparer
     {
@@ -16,14 +15,14 @@ namespace Gu.State
                     case 1:
                         return IReadOnlyListEqualByComparer.TryCreate(type, settings, out comparer);
                     case 2:
-                        comparer = (EqualByComparer)typeof(Comparer2D<>).MakeGenericType(type.GetItemType())
-                                                                        .GetMethod(nameof(Comparer2D<int>.Create), BindingFlags.NonPublic | BindingFlags.Static)
-                                                                        .Invoke(null, null);
+                        comparer = (EqualByComparer)Activator.CreateInstance(
+                            typeof(Comparer2D<>).MakeGenericType(type.GetItemType()),
+                            settings.GetEqualByComparerOrDeferred(type.GetItemType()));
                         return true;
                     default:
-                        comparer = (EqualByComparer)typeof(Comparer<>).MakeGenericType(type.GetItemType())
-                                                                      .GetMethod(nameof(Comparer<int>.Create), BindingFlags.NonPublic | BindingFlags.Static)
-                                                                      .Invoke(null, null);
+                        comparer = (EqualByComparer)Activator.CreateInstance(
+                            typeof(Comparer<>).MakeGenericType(type.GetItemType()),
+                            settings.GetEqualByComparerOrDeferred(type.GetItemType()));
                         return true;
                 }
             }
@@ -35,11 +34,10 @@ namespace Gu.State
         [DebuggerDisplay("ArrayEqualByComparer<{typeof(T).PrettyName()}[,]>")]
         private class Comparer2D<T> : CollectionEqualByComparer<T[,], T>
         {
-            private Comparer2D()
+            public Comparer2D(EqualByComparer equalByComparer)
+                : base(equalByComparer)
             {
             }
-
-            internal static Comparer2D<T> Create() => new Comparer2D<T>();
 
             internal override bool Equals(T[,] xs, T[,] ys, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)
             {
@@ -48,7 +46,7 @@ namespace Gu.State
                     return false;
                 }
 
-                var comparer = this.ItemComparer(settings);
+                var comparer = this.ItemComparer;
                 for (var i = 0; i < xs.GetLength(0); i++)
                 {
                     for (var j = 0; j < xs.GetLength(1); j++)
@@ -67,11 +65,10 @@ namespace Gu.State
         [DebuggerDisplay("ArrayEqualByComparer<{typeof(T).PrettyName()}[?]>")]
         private class Comparer<TItem> : CollectionEqualByComparer<Array, TItem>
         {
-            private Comparer()
+            private Comparer(EqualByComparer equalByComparer)
+                : base(equalByComparer)
             {
             }
-
-            internal static Comparer<TItem> Create() => new Comparer<TItem>();
 
             internal override bool TryGetError(MemberSettings settings, out Error errors)
             {
@@ -86,7 +83,7 @@ namespace Gu.State
                     return false;
                 }
 
-                var comparer = this.ItemComparer(settings);
+                var comparer = this.ItemComparer;
                 var xe = x.GetEnumerator();
                 var ye = y.GetEnumerator();
                 while (xe.MoveNext() && ye.MoveNext())

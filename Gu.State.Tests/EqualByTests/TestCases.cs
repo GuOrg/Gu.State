@@ -39,6 +39,7 @@ namespace Gu.State.Tests.EqualByTests
             Case(new EquatableStruct { Value = 1 }, new EquatableStruct { Value = 1 }),
 
             Case(new With<int>(1), new With<int>(1)),
+            Case(new With<object>(1), new With<object>(1)),
             Case(new With<int?>(1), new With<int?>(1)),
             Case(new With<int?>(null), new With<int?>(null)),
             Case(new With<IntPtr>(new IntPtr(1)), new With<IntPtr>(new IntPtr(1))),
@@ -176,6 +177,7 @@ namespace Gu.State.Tests.EqualByTests
             Case((Point?)new Point(1, 2), (Point?)null),
 
             Case(new With<int>(1), new With<int>(2)),
+            Case(new With<object>(1), new With<object>(2)),
             Case(new With<int?>(1), new With<int?>(2)),
             Case(new With<int?>(1), new With<int?>(null)),
             Case(new With<int>(1), (With<int>)null),

@@ -8,7 +8,14 @@ namespace Gu.State
         [Obsolete("It has state so Default field can't be used. Adding it here so subclasses do not add it.", error: true)]
         internal static readonly CollectionEqualByComparer<TCollection, TItem> Default;
 
-        private EqualByComparer lazyItemComparer;
+        protected readonly EqualByComparer ItemComparer;
+
+        protected CollectionEqualByComparer(EqualByComparer itemComparer)
+        {
+            this.ItemComparer = itemComparer;
+        }
+
+        internal override bool CanHaveReferenceLoops => this.ItemComparer.CanHaveReferenceLoops;
 
         internal static bool TryGetItemError(MemberSettings settings, out Error error)
         {
@@ -56,17 +63,5 @@ namespace Gu.State
         }
 
         internal override bool TryGetError(MemberSettings settings, out Error error) => TryGetItemError(settings, out error);
-
-        protected EqualByComparer ItemComparer(MemberSettings settings)
-        {
-            if (this.lazyItemComparer is null)
-            {
-                this.lazyItemComparer = typeof(TItem).IsSealed
-                    ? settings.GetEqualByComparer(typeof(TItem))
-                    : new LazyEqualByComparer<TItem>();
-            }
-
-            return this.lazyItemComparer;
-        }
     }
 }

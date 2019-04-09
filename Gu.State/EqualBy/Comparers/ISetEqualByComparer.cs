@@ -12,7 +12,9 @@ namespace Gu.State
                 type.Namespace?.StartsWith("System.", StringComparison.Ordinal) == true &&
                 type.Name.EndsWith("Set`1", StringComparison.Ordinal))
             {
-                comparer = (EqualByComparer)Activator.CreateInstance(typeof(EqualByComparer<,>).MakeGenericType(type, type.GetItemType()));
+                comparer = (EqualByComparer)Activator.CreateInstance(
+                    typeof(EqualByComparer<,>).MakeGenericType(type, type.GetItemType()),
+                    settings.GetEqualByComparerOrDeferred(type.GetItemType()));
                 return true;
             }
 
@@ -23,6 +25,11 @@ namespace Gu.State
         internal class EqualByComparer<TSet, TItem> : CollectionEqualByComparer<TSet, TItem>
             where TSet : IEnumerable<TItem>
         {
+            public EqualByComparer(EqualByComparer itemComparer)
+                : base(itemComparer)
+            {
+            }
+
             internal override bool Equals(TSet xs, TSet ys, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)
             {
                 // Not using pattern matching here as AppVeyor does not yet have a VS2019 image.
@@ -35,8 +42,7 @@ namespace Gu.State
                     return hashSet.SetEquals(ys);
                 }
 
-                var itemComparer = this.ItemComparer(settings);
-                if (itemComparer is ReferenceEqualByComparer)
+                if (this.ItemComparer is ReferenceEqualByComparer)
                 {
                     using (var borrowed = HashSetPool<TItem>.Borrow(
                         (x, y) => ReferenceEquals(x, y),
@@ -51,7 +57,7 @@ namespace Gu.State
                     settings.IsEquatable(typeof(TItem)))
                 {
                     using (var borrowed = HashSetPool<TItem>.Borrow(
-                        (x, y) => itemComparer.Equals(x, y, settings, referencePairs),
+                        (x, y) => this.ItemComparer.Equals(x, y, settings, referencePairs),
                         x => x.GetHashCode()))
                     {
                         borrowed.Value.UnionWith(xs);
@@ -60,7 +66,7 @@ namespace Gu.State
                 }
 
                 using (var borrowed = HashSetPool<TItem>.Borrow(
-                    (x, y) => itemComparer.Equals(x, y, settings, referencePairs),
+                    (x, y) => this.ItemComparer.Equals(x, y, settings, referencePairs),
                     x => 0))
                 {
                     borrowed.Value.UnionWith(xs);

@@ -35,6 +35,7 @@
         {
             private readonly ImmutableArray<MemberEqualByComparer> memberComparers;
             private TypeErrors lazyTypeErrors;
+            private bool? lazyCanHaveReferenceLoops;
 
             public Comparer(ImmutableArray<MemberEqualByComparer> memberComparers)
             {
@@ -64,6 +65,21 @@
 
                 error = this.lazyTypeErrors;
                 return true;
+            }
+
+            internal override bool CanHaveReferenceLoops
+            {
+                get
+                {
+                    if (this.lazyCanHaveReferenceLoops == null)
+                    {
+                        // Setting it to true here to detect reference loop via recursion.
+                        this.lazyCanHaveReferenceLoops = true;
+                        this.lazyCanHaveReferenceLoops = this.memberComparers.Any(x => x.CanHaveReferenceLoops);
+                    }
+
+                    return this.lazyCanHaveReferenceLoops.Value;
+                }
             }
 
             internal override bool Equals(object x, object y, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)

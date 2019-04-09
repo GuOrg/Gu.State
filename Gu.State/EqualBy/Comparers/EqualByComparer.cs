@@ -25,6 +25,8 @@
 
         internal abstract bool TryGetError(MemberSettings settings, out Error error);
 
+        internal abstract bool CanHaveReferenceLoops { get; }
+
         /// <summary>
         /// Compare <paramref name="x"/> with <paramref name="y"/>.
         /// </summary>

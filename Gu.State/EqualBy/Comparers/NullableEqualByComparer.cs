@@ -30,6 +30,8 @@
             {
             }
 
+            internal override bool CanHaveReferenceLoops => !IsEquatable;
+
             internal override bool TryGetError(MemberSettings settings, out Error error)
             {
                 if (settings.GetEqualByComparer(typeof(T)) is ErrorEqualByComparer errorEqualByComparer)
