@@ -30,7 +30,7 @@
         /// Check if x and y can be equated by value semantics.
         /// This can be if:
         /// 1) either or both are null.
-        /// 2) They are the same insatnce.
+        /// 2) They are the same instance.
         /// 3) They are of types implementing IEquatable
         /// 4) An IEqualityComparer if provided for the type.
         ///  </summary>
