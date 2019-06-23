@@ -8,8 +8,8 @@ group Analyzers
   nuget Gu.Analyzers
   nuget IDisposableAnalyzers
   nuget Microsoft.CodeAnalysis.FxCopAnalyzers
-  nuget PropertyChangedAnalyzers
   nuget Microsoft.CodeAnalysis.PublicApiAnalyzers
+  nuget PropertyChangedAnalyzers
   nuget ReflectionAnalyzers prerelease
   nuget StyleCop.Analyzers prerelease
   nuget JetBrains.Annotations

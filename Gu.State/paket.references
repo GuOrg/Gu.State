@@ -3,8 +3,8 @@ group Analyzers
   Gu.Analyzers
   IDisposableAnalyzers
   Microsoft.CodeAnalysis.FxCopAnalyzers
-  PropertyChangedAnalyzers
   Microsoft.CodeAnalysis.PublicApiAnalyzers
+  PropertyChangedAnalyzers
   ReflectionAnalyzers
   StyleCop.Analyzers
   JetBrains.Annotations
