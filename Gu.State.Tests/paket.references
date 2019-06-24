@@ -11,6 +11,7 @@ group Analyzers
 group Test
   NUnit
   NUnit3TestAdapter
+  Microsoft.NET.Test.Sdk
   Moq
   System.Collections.Immutable
   Gu.Units
