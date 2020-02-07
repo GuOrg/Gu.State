@@ -32,17 +32,6 @@
             throw new ArgumentException($"Expected {parameterName} to be of type {typeof(T)}", parameterName);
         }
 
-        internal static void NotIs<T>(object x, string parameterName)
-        {
-            Debug.Assert(!string.IsNullOrEmpty(parameterName), $"{nameof(parameterName)} cannot be null");
-            if (!(x is T))
-            {
-                return;
-            }
-
-            throw new ArgumentException($"Expected {parameterName} to not be of type {typeof(T)}", parameterName);
-        }
-
         internal static void IsAssignableFrom<T>(object x, string parameterName)
         {
             IsAssignableFrom(x, typeof(T), parameterName);
@@ -64,11 +53,6 @@
             {
                 throw new ArgumentException($"Expected {parameterName} to be {type}", parameterName);
             }
-        }
-
-        internal static void NotAssignableFrom<T>(object x, string parameterName)
-        {
-            NotAssignableFrom(x, typeof(T), parameterName);
         }
 
         internal static void NotAssignableFrom(object x, Type type, string parameterName)
