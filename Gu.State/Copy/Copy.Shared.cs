@@ -10,7 +10,7 @@
     {
         internal static object CreateInstance(object sourceValue, MemberSettings settings)
         {
-            if (sourceValue == null)
+            if (sourceValue is null)
             {
                 return null;
             }
@@ -65,7 +65,7 @@
 
         internal static T CloneWithoutSync<T>(T sourceItem, T targetItem, MemberSettings settings, out bool createdValue, out bool needsSync)
         {
-            if (sourceItem == null || settings.ReferenceHandling == ReferenceHandling.References
+            if (sourceItem is null || settings.ReferenceHandling == ReferenceHandling.References
                 || ReferenceEquals(sourceItem, targetItem))
             {
                 needsSync = false;
@@ -88,7 +88,7 @@
                     createdValue = true;
                     return sourceItem;
                 case ReferenceHandling.Structural:
-                    if (targetItem == null || !Is.SameType(sourceItem, targetItem))
+                    if (targetItem is null || !Is.SameType(sourceItem, targetItem))
                     {
                         copy = (T)CreateInstance(sourceItem, settings);
                         createdValue = true;
@@ -149,7 +149,7 @@
                 return true;
             }
 
-            if (x == null)
+            if (x is null)
             {
                 // ReSharper disable once ExpressionIsAlwaysNull R# not getting static analysis right here
                 result = x;

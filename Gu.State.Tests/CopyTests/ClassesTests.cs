@@ -182,7 +182,7 @@ namespace Gu.State.Tests.CopyTests
         {
             var source = new With<Immutable>(new Immutable(1));
             var target = new With<Immutable>(new Immutable(2));
-            if (referenceHandling == null)
+            if (referenceHandling is null)
             {
                 this.CopyMethod(source, target);
             }

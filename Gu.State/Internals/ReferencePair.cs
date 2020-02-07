@@ -112,7 +112,7 @@ namespace Gu.State
             }
 
             var other = obj as ReferencePair;
-            if (other == null)
+            if (other is null)
             {
                 return false;
             }

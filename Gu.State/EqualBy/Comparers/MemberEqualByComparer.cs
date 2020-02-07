@@ -73,7 +73,7 @@
 
             internal override bool Equals(object x, object y, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)
             {
-                if (this.getterAndSetter == null)
+                if (this.getterAndSetter is null)
                 {
                     throw Throw.CompareWhenError;
                 }

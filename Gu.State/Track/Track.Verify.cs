@@ -118,7 +118,7 @@
 
         private static bool HasErrors(this TypeErrors errors)
         {
-            if (errors == null)
+            if (errors is null)
             {
                 return false;
             }

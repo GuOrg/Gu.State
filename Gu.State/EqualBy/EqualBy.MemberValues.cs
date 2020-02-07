@@ -32,7 +32,7 @@
                 return true;
             }
 
-            if (x == null || y == null)
+            if (x is null || y is null)
             {
                 result = false;
                 return true;

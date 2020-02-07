@@ -44,7 +44,7 @@
         /// <returns>The name formatted like : List{int}.</returns>
         internal static string PrettyName(this Type type)
         {
-            if (type == null)
+            if (type is null)
             {
                 return "null";
             }

@@ -19,17 +19,17 @@ namespace Gu.State.Tests
 
         public new bool Equals(object expected, object actual)
         {
-            if (expected == null && actual == null)
+            if (expected is null && actual is null)
             {
                 return true;
             }
 
-            if (expected == null && actual != null)
+            if (expected is null && actual != null)
             {
                 throw new AssertionException($"Expected actual to be null but was: {actual}");
             }
 
-            if (expected != null && actual == null)
+            if (expected != null && actual is null)
             {
                 throw new AssertionException($"Expected actual to be {expected} but was: null");
             }
@@ -65,7 +65,7 @@ namespace Gu.State.Tests
 
         int IComparer.Compare(object x, object y)
         {
-            if (x == null && y == null)
+            if (x is null && y is null)
             {
                 return 0;
             }

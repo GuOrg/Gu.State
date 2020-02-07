@@ -84,7 +84,7 @@
             var tv = getterAndSetter.GetValue(target);
             if (getterAndSetter.IsInitOnly)
             {
-                if (settings.IsImmutable(getterAndSetter.ValueType) || sv == null)
+                if (settings.IsImmutable(getterAndSetter.ValueType) || sv is null)
                 {
                     return;
                 }
@@ -93,7 +93,7 @@
                 return;
             }
 
-            if (settings.IsImmutable(getterAndSetter.ValueType) || sv == null)
+            if (settings.IsImmutable(getterAndSetter.ValueType) || sv is null)
             {
                 getterAndSetter.CopyValue(source, target);
                 return;

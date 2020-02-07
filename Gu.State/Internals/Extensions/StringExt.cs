@@ -7,7 +7,7 @@ namespace Gu.State
     {
         internal static string ToInvariantOrNullString(this object o)
         {
-            if (o == null)
+            if (o is null)
             {
                 return "null";
             }

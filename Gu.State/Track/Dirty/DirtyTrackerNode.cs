@@ -184,7 +184,7 @@
 
         private static bool IsNullOrMissing(object x)
         {
-            return x == null || x == PaddedPairs.MissingItem;
+            return x is null || x == PaddedPairs.MissingItem;
         }
 
         private IEnumerable<DirtyTrackerNode> AllChildNodes(HashSet<DirtyTrackerNode> @checked)
@@ -208,7 +208,7 @@
         {
             this.UpdatePropertyChildNode(e.PropertyInfo);
             //// we create the builder after subscribing so no guarantee that we have a builder if an event fires before the ctor is finished.
-            if (this.Builder == null ||
+            if (this.Builder is null ||
                 this.Settings.IsIgnoringProperty(e.PropertyInfo))
             {
                 return;
@@ -349,7 +349,7 @@
         private void UpdateIndexDiff(int index)
         {
             // we create the builder after subscribing so no guarantee that we have a builder if an event fires before the ctor is finished.
-            if (this.Builder == null)
+            if (this.Builder is null)
             {
                 return;
             }
@@ -375,7 +375,7 @@
         // ReSharper disable once UnusedParameter.Local
         private void OnChildNodeChanged(object _, TrackerChangedEventArgs<DirtyTrackerNode> e)
         {
-            if (this.Builder == null)
+            if (this.Builder is null)
             {
                 return;
             }

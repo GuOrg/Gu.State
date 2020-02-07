@@ -84,7 +84,7 @@
         /// <returns>A value indicating if <paramref name="propertyInfo"/> is ignored.</returns>
         public bool IsIgnoringProperty(PropertyInfo propertyInfo)
         {
-            if (propertyInfo == null)
+            if (propertyInfo is null)
             {
                 return true;
             }

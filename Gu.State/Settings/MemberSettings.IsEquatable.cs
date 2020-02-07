@@ -29,7 +29,7 @@
 
         protected static bool IsEquatableCore(Type type)
         {
-            if (type == null)
+            if (type is null)
             {
                 return false;
             }

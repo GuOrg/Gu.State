@@ -51,7 +51,7 @@
 
         private static bool IsReferencePair(object x, object y)
         {
-            if (x == null || y == null)
+            if (x is null || y is null)
             {
                 return false;
             }

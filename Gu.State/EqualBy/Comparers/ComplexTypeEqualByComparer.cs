@@ -46,7 +46,7 @@
             {
                 get
                 {
-                    if (this.lazyCanHaveReferenceLoops == null)
+                    if (this.lazyCanHaveReferenceLoops is null)
                     {
                         // Setting it to true here to detect reference loop via recursion.
                         this.lazyCanHaveReferenceLoops = true;
@@ -59,7 +59,7 @@
 
             internal override bool TryGetError(MemberSettings settings, out Error error)
             {
-                if (this.lazyTypeErrors == null)
+                if (this.lazyTypeErrors is null)
                 {
                     var errors = new List<Error>();
                     this.lazyTypeErrors = new TypeErrors(typeof(T), errors);

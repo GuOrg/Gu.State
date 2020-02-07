@@ -42,7 +42,7 @@
 
         private static void Add(IReadOnlyCollection<Error> errors, List<Error> allErrors, List<IWithErrors> withErrors = null)
         {
-            if (errors == null)
+            if (errors is null)
             {
                 return;
             }
@@ -56,7 +56,7 @@
 
                 if (error is IWithErrors we)
                 {
-                    if (withErrors == null)
+                    if (withErrors is null)
                     {
                         withErrors = new List<IWithErrors>();
                     }
@@ -91,7 +91,7 @@
 
         private bool TryMerge(TypeErrors error)
         {
-            if (error == null)
+            if (error is null)
             {
                 return false;
             }
@@ -111,7 +111,7 @@
 
         private bool TryMerge(MemberErrors error)
         {
-            if (error == null)
+            if (error is null)
             {
                 return false;
             }
@@ -156,7 +156,7 @@
 
             private static bool TryEquals(TypeErrors x, TypeErrors y, out bool result)
             {
-                if (x == null || y == null)
+                if (x is null || y is null)
                 {
                     result = false;
                     return false;
@@ -168,7 +168,7 @@
 
             private static bool TryEquals(MemberErrors x, MemberErrors y, out bool result)
             {
-                if (x == null || y == null)
+                if (x is null || y is null)
                 {
                     result = false;
                     return false;
@@ -180,7 +180,7 @@
 
             private static bool TryEquals(UnsupportedIndexer x, UnsupportedIndexer y, out bool result)
             {
-                if (x == null || y == null)
+                if (x is null || y is null)
                 {
                     result = false;
                     return false;

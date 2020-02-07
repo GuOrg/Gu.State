@@ -39,8 +39,8 @@
 
         internal static bool TryCreate<T>(T x, T y, out ReferencePairStruct result)
         {
-            if (x == null ||
-                y == null ||
+            if (x is null ||
+                y is null ||
                 typeof(T).IsValueType)
             {
                 result = default(ReferencePairStruct);

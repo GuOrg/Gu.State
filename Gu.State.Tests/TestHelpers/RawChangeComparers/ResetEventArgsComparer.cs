@@ -20,12 +20,12 @@ namespace Gu.State.Tests
 
         private static bool Equals(IList x, IList y)
         {
-            if (x == null && y == null)
+            if (x is null && y is null)
             {
                 return true;
             }
 
-            if (x == null || y == null)
+            if (x is null || y is null)
             {
                 return false;
             }

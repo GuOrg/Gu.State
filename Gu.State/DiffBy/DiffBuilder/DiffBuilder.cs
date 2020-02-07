@@ -359,7 +359,7 @@
 
         private void UpdateSubBuilder(object key, DiffBuilder builder)
         {
-            if (builder == null)
+            if (builder is null)
             {
                 this.KeyedSubBuilders.TryRemoveAndDispose(key);
                 return;

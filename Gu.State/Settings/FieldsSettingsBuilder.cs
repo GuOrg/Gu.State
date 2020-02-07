@@ -27,7 +27,7 @@
             BindingFlags bindingFlags = Constants.DefaultFieldBindingFlags)
         {
             if (this.ignoredFields.Count == 0 &&
-                this.ignoredTypes == null &&
+                this.ignoredTypes is null &&
                 this.comparers.Count == 0 &&
                 this.copyers.Count == 0)
             {
@@ -112,7 +112,7 @@
         public FieldsSettingsBuilder AddIgnoredField<TSource>(string name)
         {
             var fieldInfo = typeof(TSource).GetField(name, Constants.DefaultFieldBindingFlags);
-            if (fieldInfo == null)
+            if (fieldInfo is null)
             {
                 var message = $"{name} must be a field on {typeof(TSource).Name}\r\n" +
                               $"Nested Fields are not allowed";

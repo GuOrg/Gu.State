@@ -40,7 +40,7 @@
 
         public static KnownTypes Create(IEnumerable<Type> ignoredTypes)
         {
-            if (ignoredTypes == null || !ignoredTypes.Any())
+            if (ignoredTypes is null || !ignoredTypes.Any())
             {
                 return Default;
             }
@@ -50,7 +50,7 @@
 
         public bool IsKnownType(Type type)
         {
-            if (type == null)
+            if (type is null)
             {
                 return false;
             }

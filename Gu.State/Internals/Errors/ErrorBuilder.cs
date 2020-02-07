@@ -16,7 +16,7 @@ namespace Gu.State
 
         internal static TypeErrors Finnish(this TypeErrorsBuilder builder)
         {
-            if (builder == null || builder.Errors.Count == 0)
+            if (builder is null || builder.Errors.Count == 0)
             {
                 return null;
             }
@@ -26,12 +26,12 @@ namespace Gu.State
 
         internal static TypeErrors Merge(this TypeErrors first, TypeErrors other)
         {
-            if (first == null)
+            if (first is null)
             {
                 return other;
             }
 
-            if (other == null)
+            if (other is null)
             {
                 return first;
             }
@@ -192,7 +192,7 @@ namespace Gu.State
                     continue;
                 }
 
-                if (memberPath == null)
+                if (memberPath is null)
                 {
                     memberPath = new MemberPath(type);
                 }
@@ -217,12 +217,12 @@ namespace Gu.State
         {
             if (typeof(IEnumerable).IsAssignableFrom(type))
             {
-                memberPath = memberPath == null
+                memberPath = memberPath is null
                                  ? new MemberPath(type)
                                  : memberPath.WithCollectionItem(type);
 
                 var recursiveErrors = getErrorsRecursively(settings, memberPath);
-                if (recursiveErrors == null)
+                if (recursiveErrors is null)
                 {
                     return typeErrors;
                 }
@@ -256,7 +256,7 @@ namespace Gu.State
             }
 
             var recursiveErrors = getErrorsRecursively(settings, memberPath);
-            if (recursiveErrors == null)
+            if (recursiveErrors is null)
             {
                 return typeErrors;
             }

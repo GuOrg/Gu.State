@@ -12,7 +12,7 @@ namespace Gu.State
 
             internal void SetValue(PropertyInfo property, IUnsubscriber<IChildNode<T>> childNode)
             {
-                if (childNode == null)
+                if (childNode is null)
                 {
                     this.Remove(property);
                 }

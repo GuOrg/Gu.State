@@ -156,7 +156,7 @@
 
         private static bool ShouldCheckPropertyOrField(Type type, ref List<Type> checkedTypes)
         {
-            if (checkedTypes == null)
+            if (checkedTypes is null)
             {
                 checkedTypes = new List<Type>(1) { type };
             }

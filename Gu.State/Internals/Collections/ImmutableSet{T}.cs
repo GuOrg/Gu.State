@@ -15,7 +15,7 @@
 
         internal static ImmutableSet<T> Create(IEnumerable<T> items)
         {
-            if (items == null || !items.Any())
+            if (items is null || !items.Any())
             {
                 return Empty;
             }

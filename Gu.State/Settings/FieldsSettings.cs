@@ -82,7 +82,7 @@
         /// <returns>A value indicating if <paramref name="fieldInfo"/> is ignored.</returns>
         public bool IsIgnoringField(FieldInfo fieldInfo)
         {
-            if (fieldInfo == null || fieldInfo.IsEventField() || typeof(IEnumerator).IsAssignableFrom(fieldInfo.DeclaringType))
+            if (fieldInfo is null || fieldInfo.IsEventField() || typeof(IEnumerator).IsAssignableFrom(fieldInfo.DeclaringType))
             {
                 return true;
             }

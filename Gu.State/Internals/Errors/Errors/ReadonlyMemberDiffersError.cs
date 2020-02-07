@@ -47,7 +47,7 @@
 
         private string GetType(object value)
         {
-            if (value == null)
+            if (value is null)
             {
                 return string.Empty;
             }
@@ -57,7 +57,7 @@
 
         private string GetValue(object value)
         {
-            if (value == null)
+            if (value is null)
             {
                 return "null";
             }

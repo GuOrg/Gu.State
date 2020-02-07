@@ -19,7 +19,7 @@
         internal static void NotNull<T>(T value, string parameterName)
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), $"{nameof(parameterName)} cannot be null");
-            if (value == null)
+            if (value is null)
             {
                 throw new ArgumentNullException(parameterName);
             }

@@ -84,7 +84,7 @@ namespace Gu.State.Tests.EqualByTests
             var excluded = this is FieldValues.Classes
                                ? "nullableIntValue"
                                : nameof(WithSimpleProperties.NullableIntValue);
-            if (referenceHandling == null)
+            if (referenceHandling is null)
             {
                 var result = this.EqualBy(x, y, excludedMembers: excluded);
                 Assert.AreEqual(expected, result);

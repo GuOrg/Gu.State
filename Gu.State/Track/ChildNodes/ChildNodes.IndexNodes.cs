@@ -24,7 +24,7 @@
 
             internal void Insert(int index, IUnsubscriber<IChildNode<T>> childNode)
             {
-                if (childNode == null)
+                if (childNode is null)
                 {
                     this.Remove(index);
                 }
@@ -49,7 +49,7 @@
 
             internal void SetValue(int index, IUnsubscriber<IChildNode<T>> childNode)
             {
-                if (childNode == null)
+                if (childNode is null)
                 {
                     this.Remove(index);
                 }

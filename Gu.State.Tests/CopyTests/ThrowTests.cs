@@ -55,7 +55,7 @@ namespace Gu.State.Tests.CopyTests
             var source = new WithComplexProperty();
             var target = new WithComplexProperty();
 
-            var exception = referenceHandling == null
+            var exception = referenceHandling is null
                 ? Assert.Throws<NotSupportedException>(() => this.CopyMethod(source, target))
                 : Assert.Throws<NotSupportedException>(() => this.CopyMethod(source, target, referenceHandling.Value));
             Assert.AreEqual(expected, exception.Message);

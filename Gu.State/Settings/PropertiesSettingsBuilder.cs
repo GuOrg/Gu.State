@@ -29,7 +29,7 @@
             BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
         {
             if (this.ignoredProperties.Count == 0 &&
-                this.ignoredTypes == null &&
+                this.ignoredTypes is null &&
                 this.comparers.Count == 0 &&
                 this.copyers.Count == 0)
             {
@@ -114,7 +114,7 @@
         public PropertiesSettingsBuilder IgnoreProperty<TSource>(string name)
         {
             var propertyInfo = typeof(TSource).GetProperty(name, Constants.DefaultFieldBindingFlags);
-            if (propertyInfo == null)
+            if (propertyInfo is null)
             {
                 var message = $"{name} must be a property on {typeof(TSource).Name}\r\n" +
                               $"Nested properties are not allowed";
@@ -133,7 +133,7 @@
         public PropertiesSettingsBuilder IgnoreProperty<TSource>(Expression<Func<TSource, object>> property)
         {
             var memberExpression = property.Body as MemberExpression;
-            if (memberExpression == null)
+            if (memberExpression is null)
             {
                 if (property.Body.NodeType == ExpressionType.Convert)
                 {
@@ -141,7 +141,7 @@
                 }
             }
 
-            if (memberExpression == null)
+            if (memberExpression is null)
             {
                 var message = $"{nameof(property)} must be a property expression like foo => foo.Bar\r\n" +
                               $"Nested properties are not allowed";
@@ -156,7 +156,7 @@
             }
 
             var propertyInfo = memberExpression.Member as PropertyInfo;
-            if (propertyInfo == null)
+            if (propertyInfo is null)
             {
                 var message = $"{nameof(property)} must be a property expression like foo => foo.Bar";
                 throw new ArgumentException(message);

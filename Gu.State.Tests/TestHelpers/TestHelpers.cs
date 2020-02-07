@@ -16,7 +16,7 @@
         {
             var propertyInfo = item.GetType()
                                    .GetProperty(propertyName);
-            if (propertyInfo == null)
+            if (propertyInfo is null)
             {
                 throw new ArgumentOutOfRangeException($"The type: {item.GetType().Name} does not have a property named: {propertyName}");
             }

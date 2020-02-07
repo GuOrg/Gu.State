@@ -25,7 +25,7 @@ namespace Gu.State.Benchmarks
         private static void CopyResult(Summary summary)
         {
             var name = summary.Title.Split('.').LastOrDefault()?.Split('-').FirstOrDefault();
-            if (name == null)
+            if (name is null)
             {
                 Console.WriteLine("Did not find name in: " + summary.Title);
                 Console.WriteLine("Press any key to exit.");
@@ -36,7 +36,7 @@ namespace Gu.State.Benchmarks
             var pattern = $"*{name}-report-github.md";
             var sourceFileName = Directory.EnumerateFiles(summary.ResultsDirectoryPath, pattern)
                                           .SingleOrDefault();
-            if (sourceFileName == null)
+            if (sourceFileName is null)
             {
                 Console.WriteLine("Did not find a file matching the pattern: " + pattern);
                 Console.WriteLine("Press any key to exit.");

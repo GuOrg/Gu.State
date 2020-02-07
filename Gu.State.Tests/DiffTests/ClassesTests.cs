@@ -202,7 +202,7 @@ namespace Gu.State.Tests.DiffTests
                     : "Value");
             var x = new WithReadonlyProperty<int>(xv);
             var y = new WithReadonlyProperty<int>(yv);
-            if (referenceHandling == null)
+            if (referenceHandling is null)
             {
                 var result = this.DiffBy(x, y);
                 Assert.AreEqual(expected, result.ToString(string.Empty, " "));
@@ -362,7 +362,7 @@ namespace Gu.State.Tests.DiffTests
             var excluded = this is FieldValues.Classes
                                ? "nullableIntValue"
                                : nameof(WithSimpleProperties.NullableIntValue);
-            if (referenceHandling == null)
+            if (referenceHandling is null)
             {
                 var result = this.DiffBy(x, y, excludedMembers: excluded);
                 Assert.AreEqual(expected, result.ToString(string.Empty, " "));

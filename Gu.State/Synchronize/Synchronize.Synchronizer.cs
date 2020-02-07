@@ -42,7 +42,7 @@ namespace Gu.State
                 lock (this.gate)
                 {
                     // below is not perfect but catches simple cases of when target changes
-                    if (this.processingNode == null &&
+                    if (this.processingNode is null &&
                         !ReferenceEquals(root.Node.X, root.EventArgs.Source) &&
                         ReferenceEquals(root.Node.Y, root.EventArgs.Source))
                     {

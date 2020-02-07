@@ -30,7 +30,7 @@
         // ReSharper disable once UnusedParameter.Local
         private static void ThrowIfHasErrors(this TypeErrors errors, MemberSettings settings, string className, string methodName)
         {
-            if (errors == null)
+            if (errors is null)
             {
                 return;
             }

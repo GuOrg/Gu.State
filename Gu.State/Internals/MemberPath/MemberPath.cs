@@ -92,7 +92,7 @@
 
         internal MemberPath WithMember(MemberInfo memberInfo)
         {
-            if (memberInfo == null)
+            if (memberInfo is null)
             {
                 return this;
             }
@@ -138,7 +138,7 @@
         {
             var lastOrDefault = this.Path.OfType<IMemberItem>()
                                     .LastOrDefault();
-            if (lastOrDefault == null)
+            if (lastOrDefault is null)
             {
                 return false;
             }
