@@ -2,7 +2,7 @@ namespace Gu.State
 {
     using System.Collections;
 
-    internal class ListCopyer : ICopyer
+    internal sealed class ListCopyer : ICopyer
     {
         public static readonly ListCopyer Default = new ListCopyer();
 

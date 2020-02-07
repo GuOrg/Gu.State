@@ -373,7 +373,7 @@
             this.KeyedSubBuilders.AddOrUpdate(key, refCounted);
         }
 
-        private class SubDiffComparer : IComparer<SubDiff>
+        private sealed class SubDiffComparer : IComparer<SubDiff>
         {
             public static readonly SubDiffComparer Default = new SubDiffComparer();
 

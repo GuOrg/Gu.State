@@ -535,7 +535,7 @@ namespace Gu.State.Tests.DiffTests
             public Parent Parent { get; set; }
         }
 
-        public class HashCollisionType
+        public sealed class HashCollisionType
         {
             private int value;
 

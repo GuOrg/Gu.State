@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    internal class DictionaryDiffBy<TKey, TValue> : DictionaryDiffBy, IDiffBy
+    internal sealed class DictionaryDiffBy<TKey, TValue> : DictionaryDiffBy, IDiffBy
     {
         public static readonly DictionaryDiffBy<TKey, TValue> Default = new DictionaryDiffBy<TKey, TValue>();
 

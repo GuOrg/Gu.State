@@ -2,11 +2,11 @@
 {
     using System;
 
-    internal class ArrayDiffBy : IDiffBy
+    internal sealed class ArrayDiffBy : IDiffBy
     {
-        public static readonly ArrayDiffBy Default = new ArrayDiffBy();
+        internal static readonly ArrayDiffBy Default = new ArrayDiffBy();
 
-        public static bool TryGetOrCreate(object x, object y, out IDiffBy result)
+        internal static bool TryGetOrCreate(object x, object y, out IDiffBy result)
         {
             if (x is Array && y is Array)
             {

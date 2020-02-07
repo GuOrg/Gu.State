@@ -124,7 +124,7 @@ namespace Gu.State.Tests.EqualByTests
             }
         }
 
-        public class EquatableIntCollection : IReadOnlyList<int>, IEquatable<EquatableIntCollection>
+        public sealed class EquatableIntCollection : IReadOnlyList<int>, IEquatable<EquatableIntCollection>
         {
             private readonly IReadOnlyList<int> ints;
 
@@ -734,7 +734,7 @@ namespace Gu.State.Tests.EqualByTests
             public SealedParent Parent { get; set; }
         }
 
-        public class HashCollisionType
+        public sealed class HashCollisionType
         {
             public int HashValue { get; set; } = 0;
 

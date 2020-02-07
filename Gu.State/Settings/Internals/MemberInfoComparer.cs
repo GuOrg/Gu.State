@@ -4,7 +4,7 @@
     using System.Reflection;
 
     /// <inheritdoc />
-    internal class MemberInfoComparer<T> : IEqualityComparer<T>
+    internal sealed class MemberInfoComparer<T> : IEqualityComparer<T>
         where T : MemberInfo
     {
         public static readonly MemberInfoComparer<T> Default = new MemberInfoComparer<T>();

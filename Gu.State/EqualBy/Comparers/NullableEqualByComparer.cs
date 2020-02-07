@@ -20,7 +20,7 @@
             return false;
         }
 
-        internal class Comparer<T> : EqualByComparer<T?>
+        internal sealed class Comparer<T> : EqualByComparer<T?>
             where T : struct
         {
             public static readonly Comparer<T> Default = new Comparer<T>();

@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
 
-    internal class ListDiffBy<T> : ListDiffBy, IDiffBy
+    internal sealed class ListDiffBy<T> : ListDiffBy, IDiffBy
     {
         public static readonly ListDiffBy<T> Default = new ListDiffBy<T>();
 

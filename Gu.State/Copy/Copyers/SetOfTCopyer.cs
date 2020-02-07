@@ -5,7 +5,7 @@
     using System.Reflection;
     using System.Runtime.CompilerServices;
 
-    internal class SetOfTCopyer : ICopyer
+    internal sealed class SetOfTCopyer : ICopyer
     {
         public static readonly SetOfTCopyer Default = new SetOfTCopyer();
 

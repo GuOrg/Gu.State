@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    internal class EnumerableDiffBy<T> : EnumerableDiffBy, IDiffBy
+    internal sealed class EnumerableDiffBy<T> : EnumerableDiffBy, IDiffBy
     {
         public static readonly EnumerableDiffBy<T> Default = new EnumerableDiffBy<T>();
 

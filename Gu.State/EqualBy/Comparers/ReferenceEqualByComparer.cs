@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    internal class ReferenceEqualByComparer : EqualByComparer
+    internal sealed class ReferenceEqualByComparer : EqualByComparer
     {
         public static readonly ReferenceEqualByComparer Default = new ReferenceEqualByComparer();
 

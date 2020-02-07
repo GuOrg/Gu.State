@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Runtime.CompilerServices;
 
-    internal class SetDiffBy<T> : SetDiffBy, IDiffBy
+    internal sealed class SetDiffBy<T> : SetDiffBy, IDiffBy
     {
         public static readonly SetDiffBy<T> Default = new SetDiffBy<T>();
 

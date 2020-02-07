@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    internal class ReferenceComparer : IEqualityComparer<object>
+    internal sealed class ReferenceComparer : IEqualityComparer<object>
     {
         public static readonly ReferenceComparer Default = new ReferenceComparer();
 
