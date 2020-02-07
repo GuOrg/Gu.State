@@ -1,20 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{7AC03612-FB5D-4ECD-BA49-4DF76BD9C0D7}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".sln", ".sln", "{7AC03612-FB5D-4ECD-BA49-4DF76BD9C0D7}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		appveyor.yml = appveyor.yml
-		paket.dependencies = paket.dependencies
-		paket.lock = paket.lock
-		.paket\paket.targets = .paket\paket.targets
-		.paket\Readme.paket.md = .paket\Readme.paket.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gu.State", "Gu.State\Gu.State.csproj", "{4A48CE03-A71A-42BA-B6D8-E37278451AF6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gu.State", "Gu.State\Gu.State.csproj", "{4A48CE03-A71A-42BA-B6D8-E37278451AF6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gu.State.Tests", "Gu.State.Tests\Gu.State.Tests.csproj", "{98F5E378-3860-4DE1-A62C-88C05B351809}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gu.State.Tests", "Gu.State.Tests\Gu.State.Tests.csproj", "{98F5E378-3860-4DE1-A62C-88C05B351809}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".docs", ".docs", "{2ADA02F1-C4A8-4EA7-9BD8-5350DD9EAA55}"
 	ProjectSection(SolutionItems) = preProject
@@ -23,7 +20,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".docs", ".docs", "{2ADA02F1
 		RELEASE_NOTES.md = RELEASE_NOTES.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gu.State.Benchmarks", "Gu.State.Benchmarks\Gu.State.Benchmarks.csproj", "{DC912B58-CD7A-4BD9-A387-FD67AFD28097}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gu.State.Benchmarks", "Gu.State.Benchmarks\Gu.State.Benchmarks.csproj", "{DC912B58-CD7A-4BD9-A387-FD67AFD28097}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,5 +43,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {065D0D34-0485-4ED3-8679-A5E35DFCBBA8}
 	EndGlobalSection
 EndGlobal

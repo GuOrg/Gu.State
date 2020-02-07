@@ -1,14 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net472</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <CodeAnalysisRuleSet>Gu.State.Benchmarks.ruleset</CodeAnalysisRuleSet>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Gu.State\Gu.State.csproj" />
   </ItemGroup>
-  
-  <Import Project="..\.paket\Paket.Restore.targets" />
+
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.12.0" />
+    <PackageReference Include="Gu.Analyzers" Version="1.6.7-dev" PrivateAssets="all" />
+    <PackageReference Include="IDisposableAnalyzers" Version="3.3.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8" PrivateAssets="all" />
+    <PackageReference Include="ReflectionAnalyzers" Version="0.1.21-dev" PrivateAssets="all" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.113" PrivateAssets="all" />
+  </ItemGroup>
 </Project>

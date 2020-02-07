@@ -24,24 +24,37 @@ namespace Gu.State.Benchmarks
 
         private static void CopyResult(Summary summary)
         {
-            var trimmedTitle = summary.Title.Split('.').Last().Split('-').First();
-            Console.WriteLine(trimmedTitle);
-            var sourceFileName = FindMdFile();
-            var destinationFileName = Path.ChangeExtension(FindCsFile(), ".md");
-            Console.WriteLine($"Copy: {sourceFileName} -> {destinationFileName}");
-            File.Copy(sourceFileName, destinationFileName, overwrite: true);
-
-            string FindMdFile()
+            var name = summary.Title.Split('.').LastOrDefault()?.Split('-').FirstOrDefault();
+            if (name == null)
             {
-                return Directory.EnumerateFiles(summary.ResultsDirectoryPath, $"*{trimmedTitle}-report-github.md")
-                                .Single();
+                Console.WriteLine("Did not find name in: " + summary.Title);
+                Console.WriteLine("Press any key to exit.");
+                _ = Console.ReadKey();
+                return;
             }
+
+            var pattern = $"*{name}-report-github.md";
+            var sourceFileName = Directory.EnumerateFiles(summary.ResultsDirectoryPath, pattern)
+                                          .SingleOrDefault();
+            if (sourceFileName == null)
+            {
+                Console.WriteLine("Did not find a file matching the pattern: " + pattern);
+                Console.WriteLine("Press any key to exit.");
+                _ = Console.ReadKey();
+                return;
+            }
+
+            var destinationFileName = Path.ChangeExtension(FindCsFile(), ".md");
+            Console.WriteLine($"Copy:");
+            Console.WriteLine($"Source: {sourceFileName}");
+            Console.WriteLine($"Target: {destinationFileName}");
+            File.Copy(sourceFileName, destinationFileName, overwrite: true);
 
             string FindCsFile()
             {
                 return Directory.EnumerateFiles(
                                     AppDomain.CurrentDomain.BaseDirectory.Split(new[] { "\\bin\\" }, StringSplitOptions.RemoveEmptyEntries).First(),
-                                    $"{trimmedTitle}.cs",
+                                    $"{name}.cs",
                                     SearchOption.AllDirectories)
                                 .Single();
             }
