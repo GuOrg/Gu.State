@@ -48,7 +48,7 @@ namespace Gu.State.Benchmarks
         [Benchmark]
         public bool EqualByFieldValuesWithComparer() => EqualBy.FieldValues(X, Y, FieldsSettingsWithComparer);
 
-        private class ComplexTypeComparer : IEqualityComparer<ComplexType>
+        private sealed class ComplexTypeComparer : IEqualityComparer<ComplexType>
         {
             public static readonly ComplexTypeComparer Default = new ComplexTypeComparer();
 

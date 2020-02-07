@@ -24,10 +24,8 @@ namespace Gu.State.Tests.EqualByTests.PropertyValues
         [TestCaseSource(typeof(TestCases), nameof(TestCases.WhenEqualStructural))]
         public void ExplicitReferences(object x, object y)
         {
-            if (x is IWith xw &&
-                xw.Value is null &&
-                y is IWith yw &&
-                yw.Value is null)
+            if (x is IWith { Value: null } &&
+                y is IWith { Value: null })
             {
                 Assert.AreEqual(true, EqualBy.PropertyValues(x, y, ReferenceHandling.References));
                 Assert.AreEqual(true, EqualBy.PropertyValues(y, x, ReferenceHandling.References));

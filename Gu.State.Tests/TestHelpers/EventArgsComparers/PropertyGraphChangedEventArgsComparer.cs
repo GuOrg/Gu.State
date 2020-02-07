@@ -2,7 +2,7 @@ namespace Gu.State.Tests
 {
     using NUnit.Framework;
 
-    public class PropertyGraphChangedEventArgsComparer<TNode> : EventArgsComparer<PropertyGraphChangedEventArgs<TNode>>
+    public sealed class PropertyGraphChangedEventArgsComparer<TNode> : EventArgsComparer<PropertyGraphChangedEventArgs<TNode>>
     {
         public static readonly PropertyGraphChangedEventArgsComparer<TNode> Default = new PropertyGraphChangedEventArgsComparer<TNode>();
 

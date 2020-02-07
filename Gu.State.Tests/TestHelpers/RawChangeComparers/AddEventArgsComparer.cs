@@ -2,7 +2,7 @@ namespace Gu.State.Tests
 {
     using NUnit.Framework;
 
-    public class AddEventArgsComparer : EventArgsComparer<AddEventArgs>
+    public sealed class AddEventArgsComparer : EventArgsComparer<AddEventArgs>
     {
         public static readonly AddEventArgsComparer Default = new AddEventArgsComparer();
 

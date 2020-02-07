@@ -4,7 +4,7 @@ namespace Gu.State.Tests
 
     using NUnit.Framework;
 
-    public class ResetEventArgsComparer : EventArgsComparer<ResetEventArgs>
+    public sealed class ResetEventArgsComparer : EventArgsComparer<ResetEventArgs>
     {
         public static readonly ResetEventArgsComparer Default = new ResetEventArgsComparer();
 
@@ -35,7 +35,7 @@ namespace Gu.State.Tests
                 return false;
             }
 
-            for (int i = 0; i < x.Count; i++)
+            for (var i = 0; i < x.Count; i++)
             {
                 if (!Equals(x[i], y[i]))
                 {

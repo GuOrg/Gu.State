@@ -2,7 +2,7 @@ namespace Gu.State.Tests
 {
     using NUnit.Framework;
 
-    public class PropertyChangedEventArgsComparer : EventArgsComparer<PropertyChangeEventArgs>
+    public sealed class PropertyChangedEventArgsComparer : EventArgsComparer<PropertyChangeEventArgs>
     {
         public static readonly PropertyChangedEventArgsComparer Default = new PropertyChangedEventArgsComparer();
 

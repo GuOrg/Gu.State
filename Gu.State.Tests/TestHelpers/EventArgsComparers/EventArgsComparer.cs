@@ -9,7 +9,7 @@ namespace Gu.State.Tests
 
     using Is = Gu.State.Is;
 
-    public class EventArgsComparer : IEqualityComparer<object>, IComparer
+    public sealed class EventArgsComparer : IEqualityComparer<object>, IComparer
     {
         public static readonly EventArgsComparer Default = new EventArgsComparer();
 

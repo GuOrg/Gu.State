@@ -2,7 +2,7 @@ namespace Gu.State.Tests
 {
     using NUnit.Framework;
 
-    public class RemoveEventArgsComparer : EventArgsComparer<RemoveEventArgs>
+    public sealed class RemoveEventArgsComparer : EventArgsComparer<RemoveEventArgs>
     {
         public static readonly RemoveEventArgsComparer Default = new RemoveEventArgsComparer();
 

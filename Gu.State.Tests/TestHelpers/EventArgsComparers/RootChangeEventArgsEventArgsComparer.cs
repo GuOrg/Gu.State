@@ -2,7 +2,7 @@ namespace Gu.State.Tests
 {
     using NUnit.Framework;
 
-    public class RootChangeEventArgsEventArgsComparer<TNode> : EventArgsComparer<RootChangeEventArgs<TNode>>
+    public sealed class RootChangeEventArgsEventArgsComparer<TNode> : EventArgsComparer<RootChangeEventArgs<TNode>>
     {
         public static readonly RootChangeEventArgsEventArgsComparer<TNode> Default = new RootChangeEventArgsEventArgsComparer<TNode>();
 
