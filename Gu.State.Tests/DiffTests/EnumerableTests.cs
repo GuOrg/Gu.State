@@ -13,7 +13,7 @@ namespace Gu.State.Tests.DiffTests
         [TestCase("1, 2, 3", "1, 2", "WhereSelectArrayIterator<string, int> [Skip(2)] x: 3 y: missing item")]
         [TestCase("1, 2", "1, 2, 3", "WhereSelectArrayIterator<string, int> [Skip(2)] x: missing item y: 3")]
         [TestCase("5, 2, 3", "1, 2, 3", "WhereSelectArrayIterator<string, int> [Skip(0)] x: 5 y: 1")]
-        public void EnumarebleStructural(string xs, string ys, string expected)
+        public void EnumerableStructural(string xs, string ys, string expected)
         {
             var x = xs.Split(',').Select(int.Parse);
             var y = ys.Split(',').Select(int.Parse);
@@ -29,7 +29,7 @@ namespace Gu.State.Tests.DiffTests
         [TestCase(0, 1, 0, 2, "<RepeatIterator>d__11\\d<int> \\[Skip\\(1\\)\\] x: missing item y: 0")]
         [TestCase(1, 1, 0, 1, "<RepeatIterator>d__11\\d<int> \\[Skip\\(0\\)\\] x: 1 y: 0")]
         [TestCase(0, 1, 1, 1, "<RepeatIterator>d__11\\d<int> \\[Skip\\(0\\)\\] x: 0 y: 1")]
-        public void EnumarebleRepeatStructural(int startX, int countX, int startY, int countY, string expected)
+        public void EnumerableRepeatStructural(int startX, int countX, int startY, int countY, string expected)
         {
             var x = Enumerable.Repeat(startX, countX);
             var y = Enumerable.Repeat(startY, countY);
@@ -38,7 +38,7 @@ namespace Gu.State.Tests.DiffTests
         }
 
         [Test]
-        public void EnumarebleNullsStructural()
+        public void EnumerableNullsStructural()
         {
             var x = new object[] { 1, null }.Select(z => z);
             var y = new object[] { 1, null }.Select(z => z);
