@@ -39,22 +39,13 @@
             var rank = sourceArray.Rank;
             if (rank < 4)
             {
-                string methodName;
-                switch (rank)
+                var methodName = rank switch
                 {
-                    case 1:
-                        methodName = nameof(Copy1DItems);
-                        break;
-                    case 2:
-                        methodName = nameof(Copy2DItems);
-                        break;
-                    case 3:
-                        methodName = nameof(Copy3DItems);
-                        break;
-                    default:
-                        throw Throw.ShouldNeverGetHereException("Expected rank {1, 2, 3} was : " + rank);
-                }
-
+                    1 => nameof(Copy1DItems),
+                    2 => nameof(Copy2DItems),
+                    3 => nameof(Copy3DItems),
+                    _ => throw Throw.ShouldNeverGetHereException("Expected rank {1, 2, 3} was : " + rank),
+                };
                 var copyMethod = typeof(ArrayCopyer).GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Static)
                                                     .MakeGenericMethod(itemType);
                 _ = copyMethod.Invoke(null, new object[] { sourceArray, targetArray, settings, referencePairs });

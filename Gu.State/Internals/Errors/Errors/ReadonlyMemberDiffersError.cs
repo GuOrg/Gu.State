@@ -6,17 +6,17 @@
 
     internal sealed class ReadonlyMemberDiffersError : Error, INotSupported, IExcludableMember
     {
-        public ReadonlyMemberDiffersError(SourceAndTargetValue sourceAndTargetValue, MemberInfo member)
+        internal ReadonlyMemberDiffersError(SourceAndTargetValue sourceAndTargetValue, MemberInfo member)
         {
             this.SourceAndTargetValue = sourceAndTargetValue;
             this.Member = member;
         }
 
-        public SourceAndTargetValue SourceAndTargetValue { get; }
-
         public MemberInfo Member { get; }
 
-        public Type Type => this.SourceAndTargetValue.Source.GetType();
+        internal SourceAndTargetValue SourceAndTargetValue { get; }
+
+        internal Type Type => this.SourceAndTargetValue.Source.GetType();
 
         public StringBuilder AppendNotSupported(StringBuilder errorBuilder)
         {
@@ -41,7 +41,7 @@
             }
 
             errorBuilder.AppendLine($" - Source value {this.GetType(this.SourceAndTargetValue.SourceValue)}: {this.GetValue(this.SourceAndTargetValue.SourceValue)}.")
-                        .AppendLine($" - Target value {this.GetType(this.SourceAndTargetValue.TargeteValue)}: {this.GetValue(this.SourceAndTargetValue.TargeteValue)}.");
+                        .AppendLine($" - Target value {this.GetType(this.SourceAndTargetValue.TargetValue)}: {this.GetValue(this.SourceAndTargetValue.TargetValue)}.");
             return errorBuilder;
         }
 

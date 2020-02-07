@@ -131,7 +131,7 @@
 
         private sealed class ErrorComparer : IEqualityComparer<Error>
         {
-            public static readonly ErrorComparer Default = new ErrorComparer();
+            internal static readonly ErrorComparer Default = new ErrorComparer();
 
             private ErrorComparer()
             {

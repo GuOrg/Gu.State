@@ -385,7 +385,7 @@ namespace Gu.State.Tests
 
                 public int GetHashCode(IntCollection obj)
                 {
-                    throw new NotImplementedException("message");
+                    throw new NotSupportedException("message");
                 }
             }
         }

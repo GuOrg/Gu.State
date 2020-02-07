@@ -42,12 +42,12 @@ namespace Gu.State.Tests.Internals
 
         internal sealed class Recursive : IDisposable
         {
-            public Recursive(IRefCounted<ReferencePair> pair, MemberSettings settings)
+            internal Recursive(IRefCounted<ReferencePair> pair, MemberSettings settings)
             {
                 this.Next = TrackerCache.GetOrAdd(pair.Value.X, pair.Value.Y, settings, x => new Recursive(x, settings));
             }
 
-            public IRefCounted<Recursive> Next { get; }
+            internal IRefCounted<Recursive> Next { get; }
 
             public void Dispose()
             {

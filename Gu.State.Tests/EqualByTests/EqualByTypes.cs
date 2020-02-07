@@ -119,7 +119,7 @@ namespace Gu.State.Tests.EqualByTests
 
                 public int GetHashCode(IntCollection obj)
                 {
-                    throw new NotImplementedException("message");
+                    throw new NotSupportedException("message");
                 }
             }
         }
@@ -177,7 +177,7 @@ namespace Gu.State.Tests.EqualByTests
             }
 
 #pragma warning disable CA1065 // Do not raise exceptions in unexpected locations
-            public override int GetHashCode() => throw new NotImplementedException("message");
+            public override int GetHashCode() => throw new NotSupportedException("message");
 #pragma warning restore CA1065 // Do not raise exceptions in unexpected locations
         }
 

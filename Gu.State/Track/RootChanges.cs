@@ -33,25 +33,25 @@
             }
         }
 
-        public event EventHandler<PropertyChangeEventArgs> PropertyChange;
+        internal event EventHandler<PropertyChangeEventArgs> PropertyChange;
 
-        public event EventHandler<ResetEventArgs> Reset;
+        internal event EventHandler<ResetEventArgs> Reset;
 
-        public event EventHandler<AddEventArgs> Add;
+        internal event EventHandler<AddEventArgs> Add;
 
-        public event EventHandler<RemoveEventArgs> Remove;
+        internal event EventHandler<RemoveEventArgs> Remove;
 
-        public event EventHandler<ReplaceEventArgs> Replace;
+        internal event EventHandler<ReplaceEventArgs> Replace;
 
-        public event EventHandler<MoveEventArgs> Move;
+        internal event EventHandler<MoveEventArgs> Move;
 
-        public event EventHandler<EventArgs> RawChange;
+        internal event EventHandler<EventArgs> RawChange;
 
-        public object Source { get; }
+        internal object Source { get; }
 
-        public IReadOnlyCollection<PropertyInfo> TrackProperties { get; }
+        internal IReadOnlyCollection<PropertyInfo> TrackProperties { get; }
 
-        public PropertiesSettings Settings { get; }
+        internal PropertiesSettings Settings { get; }
 
         public void Dispose()
         {

@@ -67,7 +67,7 @@ namespace Gu.State.Benchmarks
                 return x.Value == y.Value && x.Name == y.Name;
             }
 
-            public int GetHashCode(ComplexType obj) => throw new NotImplementedException();
+            public int GetHashCode(ComplexType obj) => throw new NotSupportedException();
         }
     }
 }

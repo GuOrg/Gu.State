@@ -2,7 +2,7 @@ namespace Gu.State.Tests
 {
     using NUnit.Framework;
 
-    public class MoveEventArgsComparer : EventArgsComparer<MoveEventArgs>
+    public sealed class MoveEventArgsComparer : EventArgsComparer<MoveEventArgs>
     {
         public static readonly MoveEventArgsComparer Default = new MoveEventArgsComparer();
 

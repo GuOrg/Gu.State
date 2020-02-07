@@ -11,15 +11,12 @@
 
         internal static IGetterAndSetter GetOrCreate(MemberInfo member)
         {
-            switch (member)
+            return member switch
             {
-                case PropertyInfo property:
-                    return GetOrCreate(property);
-                case FieldInfo field:
-                    return GetOrCreate(field);
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(member), member, $"Cannot create IGetterAndSetter for member {member}.");
-            }
+                PropertyInfo property => GetOrCreate(property),
+                FieldInfo field => GetOrCreate(field),
+                _ => throw new ArgumentOutOfRangeException(nameof(member), member, $"Cannot create IGetterAndSetter for member {member}."),
+            };
         }
 
         internal static IGetterAndSetter GetOrCreate(PropertyInfo propertyInfo)

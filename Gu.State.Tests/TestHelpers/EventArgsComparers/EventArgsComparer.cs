@@ -55,12 +55,12 @@ namespace Gu.State.Tests
                 return result;
             }
 
-            throw new NotImplementedException("Handle: " + expected.GetType().Name);
+            throw new NotSupportedException("Handle: " + expected.GetType().Name);
         }
 
         int IEqualityComparer<object>.GetHashCode(object obj)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         int IComparer.Compare(object x, object y)

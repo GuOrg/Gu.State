@@ -5,14 +5,14 @@ namespace Gu.State
 
     internal class CollectionItem : PathItem, ITypedNode
     {
-        public CollectionItem(Type collectionType)
+        internal CollectionItem(Type collectionType)
         {
             Ensure.IsAssignableFrom<IEnumerable>(collectionType, nameof(collectionType));
             this.CollectionType = collectionType;
         }
 
-        public Type CollectionType { get; }
-
         Type ITypedNode.Type => this.CollectionType.GetItemType();
+
+        internal Type CollectionType { get; }
     }
 }

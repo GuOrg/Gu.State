@@ -5,15 +5,15 @@ namespace Gu.State
 
     internal class FieldItem : PathItem, IMemberItem
     {
-        public FieldItem(FieldInfo field)
+        internal FieldItem(FieldInfo field)
         {
             this.Field = field;
         }
 
-        public FieldInfo Field { get; }
-
         MemberInfo IMemberItem.Member => this.Field;
 
         Type ITypedNode.Type => this.Field.FieldType;
+
+        internal FieldInfo Field { get; }
     }
 }

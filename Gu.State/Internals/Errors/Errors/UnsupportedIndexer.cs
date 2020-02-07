@@ -14,9 +14,9 @@ namespace Gu.State
             this.Indexer = indexer;
         }
 
-        public PropertyInfo Indexer { get; }
-
         public MemberInfo Member => this.Indexer;
+
+        internal PropertyInfo Indexer { get; }
 
         internal static UnsupportedIndexer GetOrCreate(PropertyInfo indexer)
         {

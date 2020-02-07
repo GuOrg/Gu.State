@@ -5,15 +5,15 @@ namespace Gu.State
 
     internal class PropertyItem : PathItem, IMemberItem
     {
-        public PropertyItem(PropertyInfo property)
+        internal PropertyItem(PropertyInfo property)
         {
             this.Property = property;
         }
 
-        public PropertyInfo Property { get; }
-
         MemberInfo IMemberItem.Member => this.Property;
 
         Type ITypedNode.Type => this.Property.PropertyType;
+
+        internal PropertyInfo Property { get; }
     }
 }
