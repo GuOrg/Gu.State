@@ -44,25 +44,21 @@ namespace Gu.State
 
                 if (this.ItemComparer is ReferenceEqualByComparer)
                 {
-                    using (var borrowed = HashSetPool<TItem>.Borrow(
+                    using var borrowed = HashSetPool<TItem>.Borrow(
                         (x, y) => ReferenceEquals(x, y),
-                        x => RuntimeHelpers.GetHashCode(x)))
-                    {
-                        borrowed.Value.UnionWith(xs);
-                        return borrowed.Value.SetEquals(ys);
-                    }
+                        x => RuntimeHelpers.GetHashCode(x));
+                    borrowed.Value.UnionWith(xs);
+                    return borrowed.Value.SetEquals(ys);
                 }
 
                 if (typeof(TItem).IsSealed &&
                     settings.IsEquatable(typeof(TItem)))
                 {
-                    using (var borrowed = HashSetPool<TItem>.Borrow(
+                    using var borrowed = HashSetPool<TItem>.Borrow(
                         (x, y) => this.ItemComparer.Equals(x, y, settings, referencePairs),
-                        x => x.GetHashCode()))
-                    {
-                        borrowed.Value.UnionWith(xs);
-                        return borrowed.Value.SetEquals(ys);
-                    }
+                        x => x.GetHashCode());
+                    borrowed.Value.UnionWith(xs);
+                    return borrowed.Value.SetEquals(ys);
                 }
 
                 using (var borrowed = HashSetPool<TItem>.Borrow(

@@ -51,13 +51,11 @@
 
             if (settings.IsImmutable(typeof(T)))
             {
-                using (var borrow = HashSetPool<T>.Borrow(EqualityComparer<T>.Default))
-                {
-                    borrow.Value.UnionWith(source);
-                    target.IntersectWith(borrow.Value);
-                    target.UnionWith(borrow.Value);
-                    return;
-                }
+                using var borrow = HashSetPool<T>.Borrow(EqualityComparer<T>.Default);
+                borrow.Value.UnionWith(source);
+                target.IntersectWith(borrow.Value);
+                target.UnionWith(borrow.Value);
+                return;
             }
 
             switch (settings.ReferenceHandling)

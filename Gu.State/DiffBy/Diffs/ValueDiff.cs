@@ -40,17 +40,15 @@
                 return $"{this.X.GetType().PrettyName()} x: {this.X.ToInvariantOrNullString()} y: {this.Y.ToInvariantOrNullString()}";
             }
 
-            using (var writer = new IndentedTextWriter(new StringWriter(), tabString) { NewLine = newLine })
+            using var writer = new IndentedTextWriter(new StringWriter(), tabString) { NewLine = newLine };
+            writer.Write(this.X.GetType().PrettyName());
+            using (var disposer = BorrowValueDiffReferenceSet())
             {
-                writer.Write(this.X.GetType().PrettyName());
-                using (var disposer = BorrowValueDiffReferenceSet())
-                {
-                    disposer.Value.Add(this);
-                    this.WriteDiffs(writer, disposer.Value);
-                }
-
-                return writer.InnerWriter.ToString();
+                disposer.Value.Add(this);
+                this.WriteDiffs(writer, disposer.Value);
             }
+
+            return writer.InnerWriter.ToString();
         }
 
         internal override IndentedTextWriter WriteDiffs(IndentedTextWriter writer, HashSet<ValueDiff> written)

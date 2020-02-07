@@ -36,10 +36,8 @@ namespace Gu.State.Tests.Internals
             var x = new object();
             var y = new object();
             var settings = PropertiesSettings.GetOrCreate();
-            using (var rec = TrackerCache.GetOrAdd(x, y, settings, p => new Recursive(p, settings)))
-            {
-                Assert.AreSame(rec, rec.Value.Next);
-            }
+            using var rec = TrackerCache.GetOrAdd(x, y, settings, p => new Recursive(p, settings));
+            Assert.AreSame(rec, rec.Value.Next);
         }
 
         internal sealed class Recursive : IDisposable

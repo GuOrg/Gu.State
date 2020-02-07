@@ -25,16 +25,14 @@
             IDictionary<TKey, TValue> y,
             MemberSettings settings)
         {
-            using (var borrow = HashSetPool<TKey>.Borrow(EqualityComparer<TKey>.Default.Equals, EqualityComparer<TKey>.Default.GetHashCode))
+            using var borrow = HashSetPool<TKey>.Borrow(EqualityComparer<TKey>.Default.Equals, EqualityComparer<TKey>.Default.GetHashCode);
+            borrow.Value.UnionWith(x.Keys);
+            borrow.Value.UnionWith(y.Keys);
+            foreach (var key in borrow.Value)
             {
-                borrow.Value.UnionWith(x.Keys);
-                borrow.Value.UnionWith(y.Keys);
-                foreach (var key in borrow.Value)
-                {
-                    var xv = x.ElementAtOrMissing(key);
-                    var yv = y.ElementAtOrMissing(key);
-                    collectionBuilder.UpdateCollectionItemDiff(xv, yv, key, settings);
-                }
+                var xv = x.ElementAtOrMissing(key);
+                var yv = y.ElementAtOrMissing(key);
+                collectionBuilder.UpdateCollectionItemDiff(xv, yv, key, settings);
             }
         }
     }

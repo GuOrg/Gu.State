@@ -170,21 +170,19 @@
             Debug.Assert(!this.disposed, "this.disposed");
             lock (this.gate)
             {
-                using (var borrowed = ListPool<object>.Borrow())
+                using var borrowed = ListPool<object>.Borrow();
+                foreach (var subDiff in this.KeyedDiffs)
                 {
-                    foreach (var subDiff in this.KeyedDiffs)
+                    if (subDiff.Value is IndexDiff indexDiff)
                     {
-                        if (subDiff.Value is IndexDiff indexDiff)
-                        {
-                            borrowed.Value.Add(indexDiff.Index);
-                        }
+                        borrowed.Value.Add(indexDiff.Index);
                     }
+                }
 
-                    foreach (var index in borrowed.Value)
-                    {
-                        this.needsRefresh = true;
-                        this.Remove(index);
-                    }
+                foreach (var index in borrowed.Value)
+                {
+                    this.needsRefresh = true;
+                    this.Remove(index);
                 }
             }
         }

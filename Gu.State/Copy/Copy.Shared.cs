@@ -135,12 +135,10 @@
             ////    return copy;
             ////}
 
-            using (var borrowed = settings.ReferenceHandling == ReferenceHandling.Structural
-                                   ? ReferencePairCollection.Borrow()
-                                   : null)
-            {
-                Sync(source, target, settings, borrowed?.Value);
-            }
+            using var borrowed = settings.ReferenceHandling == ReferenceHandling.Structural
+                ? ReferencePairCollection.Borrow()
+                : null;
+            Sync(source, target, settings, borrowed?.Value);
         }
 
         private static bool TryCopyValue<T>(T x, T y, MemberSettings settings, out T result)

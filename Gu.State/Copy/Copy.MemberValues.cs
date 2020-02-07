@@ -17,12 +17,10 @@
                 return;
             }
 
-            using (var borrowed = settings.ReferenceHandling == ReferenceHandling.Structural
-                                   ? ReferencePairCollection.Borrow()
-                                   : null)
-            {
-                Member(source, target, settings, borrowed?.Value, member);
-            }
+            using var borrowed = settings.ReferenceHandling == ReferenceHandling.Structural
+                ? ReferencePairCollection.Borrow()
+                : null;
+            Member(source, target, settings, borrowed?.Value, member);
         }
 
         private static void Members<T>(T source, T target, MemberSettings settings, ReferencePairCollection referencePairs)
@@ -31,32 +29,30 @@
             Debug.Assert(target != null, nameof(target));
             Debug.Assert(source.GetType() == target.GetType(), "Must be same type");
 
-            using (var borrowed = ListPool<IGetterAndSetter>.Borrow())
+            using var borrowed = ListPool<IGetterAndSetter>.Borrow();
+            foreach (var member in settings.GetMembers(source.GetType()))
             {
-                foreach (var member in settings.GetMembers(source.GetType()))
+                if (settings.IsIgnoringMember(member))
                 {
-                    if (settings.IsIgnoringMember(member))
-                    {
-                        continue;
-                    }
-
-                    var getterAndSetter = GetterAndSetter.GetOrCreate(member);
-                    Member(source, target, settings, referencePairs, getterAndSetter);
-                    if (getterAndSetter.IsInitOnly)
-                    {
-                        borrowed.Value.Add(getterAndSetter);
-                    }
+                    continue;
                 }
 
-                foreach (var getterAndSetter in borrowed.Value)
+                var getterAndSetter = GetterAndSetter.GetOrCreate(member);
+                Member(source, target, settings, referencePairs, getterAndSetter);
+                if (getterAndSetter.IsInitOnly)
                 {
-                    var sv = getterAndSetter.GetValue(source);
-                    var tv = getterAndSetter.GetValue(target);
+                    borrowed.Value.Add(getterAndSetter);
+                }
+            }
 
-                    if (!EqualBy.MemberValues(sv, tv, settings))
-                    {
-                        Throw.ReadonlyMemberDiffers(new SourceAndTargetValue(source, sv, target, tv), getterAndSetter.Member, settings);
-                    }
+            foreach (var getterAndSetter in borrowed.Value)
+            {
+                var sv = getterAndSetter.GetValue(source);
+                var tv = getterAndSetter.GetValue(target);
+
+                if (!EqualBy.MemberValues(sv, tv, settings))
+                {
+                    Throw.ReadonlyMemberDiffers(new SourceAndTargetValue(source, sv, target, tv), getterAndSetter.Member, settings);
                 }
             }
         }

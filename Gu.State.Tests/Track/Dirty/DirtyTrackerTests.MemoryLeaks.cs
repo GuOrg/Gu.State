@@ -80,21 +80,19 @@
                 var x = new WithComplexProperty { ComplexType = new ComplexType("a", 1) };
                 var y = new WithComplexProperty { ComplexType = new ComplexType("a", 1) };
 
-                using (var tracker = Track.IsDirty(x, y))
-                {
-                    Assert.AreEqual(false, tracker.IsDirty);
+                using var tracker = Track.IsDirty(x, y);
+                Assert.AreEqual(false, tracker.IsDirty);
 
-                    var weakReference = new System.WeakReference(x.ComplexType);
-                    Assert.AreEqual(true, weakReference.IsAlive);
-                    x.ComplexType = null;
-                    System.GC.Collect();
-                    Assert.AreEqual(false, weakReference.IsAlive);
+                var weakReference = new System.WeakReference(x.ComplexType);
+                Assert.AreEqual(true, weakReference.IsAlive);
+                x.ComplexType = null;
+                System.GC.Collect();
+                Assert.AreEqual(false, weakReference.IsAlive);
 
-                    weakReference.Target = y.ComplexType;
-                    y.ComplexType = null;
-                    System.GC.Collect();
-                    Assert.AreEqual(false, weakReference.IsAlive);
-                }
+                weakReference.Target = y.ComplexType;
+                y.ComplexType = null;
+                System.GC.Collect();
+                Assert.AreEqual(false, weakReference.IsAlive);
             }
         }
     }

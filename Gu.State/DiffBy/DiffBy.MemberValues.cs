@@ -126,11 +126,9 @@
                 return diff;
             }
 
-            using (var borrow = DiffBuilder.GetOrCreate(x, y, settings))
-            {
-                borrow.Value.UpdateDiffs(x, y, settings);
-                return borrow.Value.CreateValueDiffOrNull();
-            }
+            using var borrow = DiffBuilder.GetOrCreate(x, y, settings);
+            borrow.Value.UpdateDiffs(x, y, settings);
+            return borrow.Value.CreateValueDiffOrNull();
         }
 
         private static void TryAddMemberDiffs(

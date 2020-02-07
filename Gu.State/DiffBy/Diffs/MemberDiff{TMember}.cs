@@ -44,16 +44,14 @@ namespace Gu.State
                 return $"{this.MemberInfo.Name} x: {this.X.ToInvariantOrNullString()} y: {this.Y.ToInvariantOrNullString()}";
             }
 
-            using (var writer = new IndentedTextWriter(new StringWriter(), tabString) { NewLine = newLine })
+            using var writer = new IndentedTextWriter(new StringWriter(), tabString) { NewLine = newLine };
+            using (var disposer = BorrowValueDiffReferenceSet())
             {
-                using (var disposer = BorrowValueDiffReferenceSet())
-                {
-                    writer.Write(this.MemberInfo.Name);
-                    _ = this.WriteDiffs(writer, disposer.Value);
-                }
-
-                return writer.InnerWriter.ToString();
+                writer.Write(this.MemberInfo.Name);
+                _ = this.WriteDiffs(writer, disposer.Value);
             }
+
+            return writer.InnerWriter.ToString();
         }
 
         internal override IndentedTextWriter WriteDiffs(IndentedTextWriter writer, HashSet<ValueDiff> written)

@@ -11,17 +11,15 @@
         internal static bool MemberValues<T>(T x, T y, MemberSettings settings)
         {
             var equalByComparer = settings.GetRootEqualByComparer(x?.GetType() ?? y?.GetType() ?? typeof(T));
-            using (var referencePairs = equalByComparer.CanHaveReferenceLoops ? HashSetPool<ReferencePairStruct>.Borrow(EqualityComparer<ReferencePairStruct>.Default) : null)
+            using var referencePairs = equalByComparer.CanHaveReferenceLoops ? HashSetPool<ReferencePairStruct>.Borrow(EqualityComparer<ReferencePairStruct>.Default) : null;
+            try
             {
-                try
-                {
-                    return equalByComparer.Equals(x, y, settings, referencePairs?.Value);
-                }
-                catch (InvalidOperationException e) when (e.Message == nameof(Throw.CompareWhenError))
-                {
-                    ThrowIfHasErrors(settings.GetRootEqualByComparer(x?.GetType() ?? y?.GetType() ?? typeof(T)), settings, typeof(EqualBy).Name, settings is FieldsSettings ? nameof(FieldValues) : nameof(PropertyValues));
-                    throw;
-                }
+                return equalByComparer.Equals(x, y, settings, referencePairs?.Value);
+            }
+            catch (InvalidOperationException e) when (e.Message == nameof(Throw.CompareWhenError))
+            {
+                ThrowIfHasErrors(settings.GetRootEqualByComparer(x?.GetType() ?? y?.GetType() ?? typeof(T)), settings, typeof(EqualBy).Name, settings is FieldsSettings ? nameof(FieldValues) : nameof(PropertyValues));
+                throw;
             }
         }
 

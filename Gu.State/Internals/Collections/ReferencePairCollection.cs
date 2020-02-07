@@ -45,10 +45,8 @@
                 return false;
             }
 
-            using (var pair = ReferencePair.GetOrCreate(x, y))
-            {
-                return this.pairs.Contains(pair);
-            }
+            using var pair = ReferencePair.GetOrCreate(x, y);
+            return this.pairs.Contains(pair);
         }
 
         private static bool IsReferencePair(object x, object y)

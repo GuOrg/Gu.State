@@ -24,17 +24,13 @@ namespace Gu.State.Tests
 #pragma warning disable IDISP016 // Don't use disposed instance.
                 t1.Dispose();
 #pragma warning restore IDISP016 // Don't use disposed instance.
-                using (var t3 = DirtyTrackerNode.GetOrCreate(x, y, settings, isRoot: true))
-                {
-                    Assert.AreSame(t1, t3);
-                    t2.Dispose();
-                    t3.Dispose();
+                using var t3 = DirtyTrackerNode.GetOrCreate(x, y, settings, isRoot: true);
+                Assert.AreSame(t1, t3);
+                t2.Dispose();
+                t3.Dispose();
 
-                    using (var t4 = DirtyTrackerNode.GetOrCreate(x, y, settings, isRoot: true))
-                    {
-                        Assert.AreNotSame(t1, t4);
-                    }
-                }
+                using var t4 = DirtyTrackerNode.GetOrCreate(x, y, settings, isRoot: true);
+                Assert.AreNotSame(t1, t4);
             }
 
             [Test]
@@ -43,13 +39,9 @@ namespace Gu.State.Tests
                 var x = new WithSimpleProperties { Value = 1, Time = DateTime.MinValue };
                 var y = new WithSimpleProperties { Value = 1, Time = DateTime.MinValue };
                 var settings = PropertiesSettings.GetOrCreate(ReferenceHandling.Structural);
-                using (var t1 = DirtyTrackerNode.GetOrCreate(x, y, settings, isRoot: true))
-                {
-                    using (var t2 = DirtyTrackerNode.GetOrCreate(y, x, settings, isRoot: true))
-                    {
-                        Assert.AreNotSame(t1, t2);
-                    }
-                }
+                using var t1 = DirtyTrackerNode.GetOrCreate(x, y, settings, isRoot: true);
+                using var t2 = DirtyTrackerNode.GetOrCreate(y, x, settings, isRoot: true);
+                Assert.AreNotSame(t1, t2);
             }
 
             [Test]
@@ -57,13 +49,9 @@ namespace Gu.State.Tests
             {
                 var x = new WithSimpleProperties { Value = 1, Time = DateTime.MinValue };
                 var y = new WithSimpleProperties { Value = 1, Time = DateTime.MinValue };
-                using (var t1 = DirtyTrackerNode.GetOrCreate(x, y, PropertiesSettings.GetOrCreate(ReferenceHandling.Structural), isRoot: true))
-                {
-                    using (var t2 = DirtyTrackerNode.GetOrCreate(x, y, PropertiesSettings.GetOrCreate(ReferenceHandling.References), isRoot: true))
-                    {
-                        Assert.AreNotSame(t1, t2);
-                    }
-                }
+                using var t1 = DirtyTrackerNode.GetOrCreate(x, y, PropertiesSettings.GetOrCreate(ReferenceHandling.Structural), isRoot: true);
+                using var t2 = DirtyTrackerNode.GetOrCreate(x, y, PropertiesSettings.GetOrCreate(ReferenceHandling.References), isRoot: true);
+                Assert.AreNotSame(t1, t2);
             }
         }
     }

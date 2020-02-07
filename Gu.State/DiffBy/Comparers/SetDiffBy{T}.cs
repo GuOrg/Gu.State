@@ -53,11 +53,9 @@
         {
             if (typeof(T).Implements<IEquatable<T>>())
             {
-                using (var borrow = HashSetPool<T>.Borrow(EqualityComparer<T>.Default.Equals, EqualityComparer<T>.Default.GetHashCode))
-                {
-                    AddItemDiffs(collectionBuilder, x, y, borrow.Value);
-                    return;
-                }
+                using var borrow = HashSetPool<T>.Borrow(EqualityComparer<T>.Default.Equals, EqualityComparer<T>.Default.GetHashCode);
+                AddItemDiffs(collectionBuilder, x, y, borrow.Value);
+                return;
             }
 
             switch (settings.ReferenceHandling)

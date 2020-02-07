@@ -29,29 +29,25 @@ namespace Gu.State
             internal override bool Equals(IEnumerable<T> x, IEnumerable<T> y, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)
             {
                 var comparer = this.ItemComparer;
-                using (var xe = x.GetEnumerator())
+                using var xe = x.GetEnumerator();
+                using var ye = y.GetEnumerator();
+                bool xn;
+                bool yn;
+                do
                 {
-                    using (var ye = y.GetEnumerator())
+                    xn = xe.MoveNext();
+                    yn = ye.MoveNext();
+                    if (xn && yn)
                     {
-                        bool xn;
-                        bool yn;
-                        do
+                        if (!comparer.Equals(xe.Current, ye.Current, settings, referencePairs))
                         {
-                            xn = xe.MoveNext();
-                            yn = ye.MoveNext();
-                            if (xn && yn)
-                            {
-                                if (!comparer.Equals(xe.Current, ye.Current, settings, referencePairs))
-                                {
-                                    return false;
-                                }
-                            }
+                            return false;
                         }
-                        while (xn && yn);
-
-                        return xn == yn;
                     }
                 }
+                while (xn && yn);
+
+                return xn == yn;
             }
         }
     }

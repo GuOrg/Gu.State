@@ -175,19 +175,17 @@
                 return;
             }
 
-            using (var borrow = ListPool<IUnsubscriber<IChildNode<ChangeTrackerNode>>>.Borrow())
+            using var borrow = ListPool<IUnsubscriber<IChildNode<ChangeTrackerNode>>>.Borrow();
+            for (var i = 0; i < this.SourceList.Count; i++)
             {
-                for (var i = 0; i < this.SourceList.Count; i++)
+                if (this.TryCreateChildNode(i, out var childNode))
                 {
-                    if (this.TryCreateChildNode(i, out var childNode))
-                    {
-                        borrow.Value.Add(childNode);
-                    }
+                    borrow.Value.Add(childNode);
                 }
-
-                this.Children.Reset(borrow.Value);
-                this.Changed?.Invoke(this, RootChangeEventArgs.Create(this, e));
             }
+
+            this.Children.Reset(borrow.Value);
+            this.Changed?.Invoke(this, RootChangeEventArgs.Create(this, e));
         }
 
         private void UpdatePropertyNode(PropertyInfo property)

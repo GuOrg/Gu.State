@@ -163,10 +163,8 @@
 
         internal IEnumerable<DirtyTrackerNode> AllChildNodes()
         {
-            using (var borrow = ReferenceSetPool<DirtyTrackerNode>.Borrow())
-            {
-                return this.AllChildNodes(borrow.Value);
-            }
+            using var borrow = ReferenceSetPool<DirtyTrackerNode>.Borrow();
+            return this.AllChildNodes(borrow.Value);
         }
 
         private static bool IsTrackablePair(object x, object y, PropertiesSettings settings)
