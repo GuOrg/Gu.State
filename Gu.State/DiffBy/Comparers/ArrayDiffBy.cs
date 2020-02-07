@@ -6,6 +6,15 @@
     {
         internal static readonly ArrayDiffBy Default = new ArrayDiffBy();
 
+        public void AddDiffs(
+            DiffBuilder collectionBuilder,
+            object x,
+            object y,
+            MemberSettings settings)
+        {
+            AddDiffs(collectionBuilder, (Array)x, (Array)y, settings);
+        }
+
         internal static bool TryGetOrCreate(object x, object y, out IDiffBy result)
         {
             if (x is Array && y is Array)
@@ -16,15 +25,6 @@
 
             result = null;
             return false;
-        }
-
-        public void AddDiffs(
-            DiffBuilder collectionBuilder,
-            object x,
-            object y,
-            MemberSettings settings)
-        {
-            AddDiffs(collectionBuilder, (Array)x, (Array)y, settings);
         }
 
         private static bool TryGetRankDiff(Array x, Array y, out RankDiff rankDiff)

@@ -23,6 +23,16 @@
             BindingFlags bindingFlags = Constants.DefaultFieldBindingFlags)
             where T : class
         {
+            if (source is null)
+            {
+                throw new System.ArgumentNullException(nameof(source));
+            }
+
+            if (target is null)
+            {
+                throw new System.ArgumentNullException(nameof(target));
+            }
+
             var settings = FieldsSettings.GetOrCreate(referenceHandling, bindingFlags);
             FieldValues(source, target, settings);
         }
@@ -38,8 +48,21 @@
         public static void FieldValues<T>(T source, T target, FieldsSettings settings)
             where T : class
         {
-            Ensure.NotNull(source, nameof(source));
-            Ensure.NotNull(target, nameof(target));
+            if (source is null)
+            {
+                throw new System.ArgumentNullException(nameof(source));
+            }
+
+            if (target is null)
+            {
+                throw new System.ArgumentNullException(nameof(target));
+            }
+
+            if (settings is null)
+            {
+                throw new System.ArgumentNullException(nameof(settings));
+            }
+
             Ensure.SameType(source, target, nameof(source), nameof(target));
             Verify.CanCopyRoot(typeof(T), settings);
             Sync(source, target, settings);

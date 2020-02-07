@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="Rules for Gu.State" Description="Code analysis rules for Gu.State.csproj." ToolsVersion="15.0">
+<RuleSet Name="Rules for Gu.State" Description="Code analysis rules for Gu.State.csproj." ToolsVersion="16.0">
   <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
     <Rule Id="CA1001" Action="Error" />
     <Rule Id="CA1032" Action="Warning" />
@@ -9,7 +9,6 @@
     <Rule Id="CA1056" Action="Warning" />
     <Rule Id="CA1057" Action="Warning" />
     <Rule Id="CA1063" Action="Error" />
-    <Rule Id="CA1303" Action="None" />
     <Rule Id="CA1402" Action="Warning" />
     <Rule Id="CA1406" Action="Warning" />
     <Rule Id="CA1407" Action="Warning" />
@@ -21,12 +20,7 @@
     <Rule Id="CA1414" Action="Warning" />
     <Rule Id="CA1600" Action="Warning" />
     <Rule Id="CA1601" Action="Warning" />
-    <Rule Id="CA1716" Action="None" />
-    <Rule Id="CA1814" Action="None" />
-    <Rule Id="CA1815" Action="None" />
-    <Rule Id="CA1819" Action="None" />
     <Rule Id="CA1821" Action="Warning" />
-    <Rule Id="CA1822" Action="None" />
     <Rule Id="CA1824" Action="Warning" />
     <Rule Id="CA2001" Action="Warning" />
     <Rule Id="CA2003" Action="Warning" />
@@ -45,7 +39,6 @@
     <Rule Id="CA2218" Action="Warning" />
     <Rule Id="CA2219" Action="Warning" />
     <Rule Id="CA2225" Action="Warning" />
-    <Rule Id="CA2227" Action="None" />
     <Rule Id="CA2228" Action="Warning" />
     <Rule Id="CA2230" Action="Warning" />
     <Rule Id="CA2233" Action="Warning" />
@@ -53,6 +46,7 @@
     <Rule Id="CA2243" Action="Warning" />
   </Rules>
   <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp" RuleNamespace="Microsoft.CodeAnalysis.CSharp">
+    <Rule Id="CS1062" Action="None" />
     <Rule Id="CS1573" Action="Info" />
     <Rule Id="CS1591" Action="Info" />
   </Rules>
@@ -65,8 +59,8 @@
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
     <Rule Id="SA0001" Action="None" />
     <Rule Id="SA1118" Action="None" />
-    <Rule Id="SA1404" Action="None" />
     <Rule Id="SA1401" Action="None" />
+    <Rule Id="SA1404" Action="None" />
     <Rule Id="SA1500" Action="None" />
     <Rule Id="SA1600" Action="None" />
     <Rule Id="SA1601" Action="None" />

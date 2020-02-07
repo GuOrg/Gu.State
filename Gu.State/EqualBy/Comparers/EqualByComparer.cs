@@ -6,6 +6,8 @@
     /// <summary>A comparer that compares by member or index.</summary>
     internal abstract class EqualByComparer
     {
+        internal abstract bool CanHaveReferenceLoops { get; }
+
         internal static EqualByComparer Create(Type type, MemberSettings settings)
         {
             if (NullableEqualByComparer.TryGet(type, out var comparer) ||
@@ -22,8 +24,6 @@
 
             return new ErrorEqualByComparer(type, new NotSupported(type, $"Could not find an EqualByComparer<{type.PrettyName()}>"));
         }
-
-        internal abstract bool CanHaveReferenceLoops { get; }
 
         internal abstract bool TryGetError(MemberSettings settings, out Error error);
 

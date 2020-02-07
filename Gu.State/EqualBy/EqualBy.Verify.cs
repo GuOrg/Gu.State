@@ -34,6 +34,11 @@
         /// <param name="settings">The settings to use.</param>
         public static void VerifyCanEqualByPropertyValues<T>(PropertiesSettings settings)
         {
+            if (settings is null)
+            {
+                throw new ArgumentNullException(nameof(settings));
+            }
+
             ThrowIfHasErrors(settings.GetRootEqualByComparer(typeof(T)), settings, typeof(EqualBy).Name, nameof(PropertyValues));
         }
 
@@ -47,6 +52,16 @@
         /// <param name="settings">The settings to use.</param>
         public static void VerifyCanEqualByPropertyValues(Type type, PropertiesSettings settings)
         {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (settings is null)
+            {
+                throw new ArgumentNullException(nameof(settings));
+            }
+
             ThrowIfHasErrors(settings.GetRootEqualByComparer(type), settings, typeof(EqualBy).Name, nameof(PropertyValues));
         }
 
@@ -79,6 +94,11 @@
         /// <param name="settings">The settings to use.</param>
         public static void VerifyCanEqualByFieldValues<T>(FieldsSettings settings)
         {
+            if (settings is null)
+            {
+                throw new ArgumentNullException(nameof(settings));
+            }
+
             ThrowIfHasErrors(settings.GetRootEqualByComparer(typeof(T)), settings, typeof(EqualBy).Name, nameof(FieldValues));
         }
 
@@ -92,6 +112,16 @@
         /// <param name="settings">The settings to use.</param>
         public static void VerifyCanEqualByFieldValues(Type type, FieldsSettings settings)
         {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (settings is null)
+            {
+                throw new ArgumentNullException(nameof(settings));
+            }
+
             ThrowIfHasErrors(settings.GetRootEqualByComparer(type), settings, typeof(EqualBy).Name, nameof(FieldValues));
         }
 

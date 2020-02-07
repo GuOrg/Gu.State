@@ -42,6 +42,11 @@ namespace Gu.State
         /// <returns>True if <paramref name="x"/> and <paramref name="y"/> are equal.</returns>
         public static bool FieldValues<T>(T x, T y, FieldsSettings settings)
         {
+            if (settings is null)
+            {
+                throw new System.ArgumentNullException(nameof(settings));
+            }
+
             return MemberValues(x, y, settings);
         }
     }
