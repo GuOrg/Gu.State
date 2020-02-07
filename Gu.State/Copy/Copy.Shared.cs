@@ -162,7 +162,7 @@
                 return true;
             }
 
-            result = default(T);
+            result = default;
             return false;
         }
 
@@ -174,7 +174,7 @@
                 return true;
             }
 
-            copy = default(T);
+            copy = default;
             return false;
         }
     }

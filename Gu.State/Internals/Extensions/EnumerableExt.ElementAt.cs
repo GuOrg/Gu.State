@@ -22,7 +22,7 @@
                 return list[index];
             }
 
-            return default(T);
+            return default;
         }
 
         internal static object ElementAtOrDefault(this IDictionary dictionary, object key)

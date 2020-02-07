@@ -3,9 +3,9 @@
     using System;
     using System.Collections.Generic;
 
-    internal class ReadOnlyListDiffBy<T> : ListDiffBy, IDiffBy
+    internal sealed class ReadOnlyListDiffBy<T> : ListDiffBy, IDiffBy
     {
-        public static readonly ReadOnlyListDiffBy<T> Default = new ReadOnlyListDiffBy<T>();
+        internal static readonly ReadOnlyListDiffBy<T> Default = new ReadOnlyListDiffBy<T>();
 
         private ReadOnlyListDiffBy()
         {

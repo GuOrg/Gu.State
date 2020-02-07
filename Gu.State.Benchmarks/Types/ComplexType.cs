@@ -5,7 +5,7 @@ namespace Gu.State.Benchmarks
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
 
-    public class ComplexType : INotifyPropertyChanged
+    public sealed class ComplexType : INotifyPropertyChanged
     {
         private string name;
         private int value;
@@ -90,10 +90,10 @@ namespace Gu.State.Benchmarks
             }
         }
 
-        protected bool Equals(ComplexType other) => string.Equals(this.Name, other.Name, StringComparison.Ordinal) &&
+        private bool Equals(ComplexType other) => string.Equals(this.Name, other.Name, StringComparison.Ordinal) &&
                                                     this.Value == other.Value;
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

@@ -11,8 +11,8 @@
                 return true;
             }
 
-            xResult = default(T);
-            yResult = default(T);
+            xResult = default;
+            yResult = default;
             return false;
         }
     }

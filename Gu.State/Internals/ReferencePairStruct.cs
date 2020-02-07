@@ -43,7 +43,7 @@
                 y is null ||
                 typeof(T).IsValueType)
             {
-                result = default(ReferencePairStruct);
+                result = default;
                 return false;
             }
 

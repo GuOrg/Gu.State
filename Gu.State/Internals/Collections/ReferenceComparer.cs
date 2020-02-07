@@ -4,7 +4,7 @@
 
     internal sealed class ReferenceComparer : IEqualityComparer<object>
     {
-        public static readonly ReferenceComparer Default = new ReferenceComparer();
+        internal static readonly ReferenceComparer Default = new ReferenceComparer();
 
         private ReferenceComparer()
         {

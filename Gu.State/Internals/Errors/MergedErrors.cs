@@ -129,7 +129,7 @@
             return true;
         }
 
-        private class ErrorComparer : IEqualityComparer<Error>
+        private sealed class ErrorComparer : IEqualityComparer<Error>
         {
             public static readonly ErrorComparer Default = new ErrorComparer();
 
