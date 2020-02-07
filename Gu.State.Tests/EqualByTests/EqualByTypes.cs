@@ -99,12 +99,12 @@ namespace Gu.State.Tests.EqualByTests
                         return true;
                     }
 
-                    if (ReferenceEquals(x, null))
+                    if (x is null)
                     {
                         return false;
                     }
 
-                    if (ReferenceEquals(y, null))
+                    if (y is null)
                     {
                         return false;
                     }
@@ -143,7 +143,7 @@ namespace Gu.State.Tests.EqualByTests
 
             public bool Equals(EquatableIntCollection other)
             {
-                if (ReferenceEquals(null, other))
+                if (other is null)
                 {
                     return false;
                 }
@@ -158,7 +158,7 @@ namespace Gu.State.Tests.EqualByTests
 
             public override bool Equals(object obj)
             {
-                if (ReferenceEquals(null, obj))
+                if (obj is null)
                 {
                     return false;
                 }
@@ -292,12 +292,12 @@ namespace Gu.State.Tests.EqualByTests
                         return true;
                     }
 
-                    if (ReferenceEquals(x, null))
+                    if (x is null)
                     {
                         return false;
                     }
 
-                    if (ReferenceEquals(y, null))
+                    if (y is null)
                     {
                         return false;
                     }
@@ -341,12 +341,12 @@ namespace Gu.State.Tests.EqualByTests
                         return true;
                     }
 
-                    if (ReferenceEquals(x, null))
+                    if (x is null)
                     {
                         return false;
                     }
 
-                    if (ReferenceEquals(y, null))
+                    if (y is null)
                     {
                         return false;
                     }
@@ -387,7 +387,7 @@ namespace Gu.State.Tests.EqualByTests
 
             public bool Equals(Immutable other)
             {
-                if (ReferenceEquals(null, other))
+                if (other is null)
                 {
                     return false;
                 }
@@ -402,7 +402,7 @@ namespace Gu.State.Tests.EqualByTests
 
             public override bool Equals(object obj)
             {
-                if (ReferenceEquals(null, obj))
+                if (obj is null)
                 {
                     return false;
                 }
@@ -622,12 +622,12 @@ namespace Gu.State.Tests.EqualByTests
                         return true;
                     }
 
-                    if (ReferenceEquals(x, null))
+                    if (x is null)
                     {
                         return false;
                     }
 
-                    if (ReferenceEquals(y, null))
+                    if (y is null)
                     {
                         return false;
                     }

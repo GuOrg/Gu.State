@@ -145,12 +145,12 @@ namespace Gu.State.Tests
                         return true;
                     }
 
-                    if (ReferenceEquals(x, null))
+                    if (x is null)
                     {
                         return false;
                     }
 
-                    if (ReferenceEquals(y, null))
+                    if (y is null)
                     {
                         return false;
                     }
@@ -365,12 +365,12 @@ namespace Gu.State.Tests
                         return true;
                     }
 
-                    if (ReferenceEquals(x, null))
+                    if (x is null)
                     {
                         return false;
                     }
 
-                    if (ReferenceEquals(y, null))
+                    if (y is null)
                     {
                         return false;
                     }
@@ -411,7 +411,7 @@ namespace Gu.State.Tests
 
             public bool Equals(WithGetReadOnlyPropertySealed<T> other)
             {
-                if (ReferenceEquals(null, other))
+                if (other is null)
                 {
                     return false;
                 }
@@ -426,7 +426,7 @@ namespace Gu.State.Tests
 
             public override bool Equals(object obj)
             {
-                if (ReferenceEquals(null, obj))
+                if (obj is null)
                 {
                     return false;
                 }
