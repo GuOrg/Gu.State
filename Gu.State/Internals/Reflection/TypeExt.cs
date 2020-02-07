@@ -30,7 +30,8 @@
                 return type.GetElementType();
             }
 
-            if (type.Name == "IEnumerable`1")
+            if (type is { IsGenericType: true } &&
+                type.GetGenericTypeDefinition() == typeof(IEnumerable<>))
             {
                 return type.GetGenericArguments()
                            .Single();
@@ -49,7 +50,7 @@
 
         internal static bool IsNullable(this Type type)
         {
-            if (type.IsGenericType && !type.IsGenericTypeDefinition)
+            if (type is { IsGenericType: true, IsGenericTypeDefinition: false })
             {
                 // instantiated generic type only
                 var genericType = type.GetGenericTypeDefinition();
