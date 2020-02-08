@@ -1,9 +1,12 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Collections;
     using System.Collections.Generic;
 
+    /// <summary>
+    /// Internal helpers.
+    /// </summary>
     public static partial class Copy
     {
         private static bool IsCopyableCollectionType(Type type)
@@ -34,11 +37,11 @@
             }
 
             if (ArrayCopyer.TryGetOrCreate(source, target, out var copyer) ||
-    ListOfTCopyer.TryGetOrCreate(source, target, out copyer) ||
-    ListCopyer.TryGetOrCreate(source, target, out copyer) ||
-    DictionaryTKeyTValueCopyer.TryGetOrCreate(source, target, out copyer) ||
-    DictionaryCopyer.TryGetOrCreate(source, target, out copyer) ||
-    SetOfTCopyer.TryGetOrCreate(source, target, out copyer))
+                ListOfTCopyer.TryGetOrCreate(source, target, out copyer) ||
+                ListCopyer.TryGetOrCreate(source, target, out copyer) ||
+                DictionaryTKeyTValueCopyer.TryGetOrCreate(source, target, out copyer) ||
+                DictionaryCopyer.TryGetOrCreate(source, target, out copyer) ||
+                SetOfTCopyer.TryGetOrCreate(source, target, out copyer))
             {
                 copyer.Copy(source, target, settings, referencePairs);
                 return;

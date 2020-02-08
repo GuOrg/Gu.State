@@ -1,8 +1,11 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System.Diagnostics;
     using System.Reflection;
 
+    /// <summary>
+    /// Exposes methods for copying via members.
+    /// </summary>
     public static partial class Copy
     {
         internal static void Member<T>(

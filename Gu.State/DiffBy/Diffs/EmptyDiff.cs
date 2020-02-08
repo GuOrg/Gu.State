@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System.CodeDom.Compiler;
     using System.Collections.Generic;
@@ -17,16 +17,10 @@
         public override bool IsEmpty => true;
 
         /// <inheritdoc />
-        public override string ToString()
-        {
-            return $"Empty";
-        }
+        public override string ToString() => $"Empty";
 
         /// <inheritdoc />
-        public override string ToString(string tabString, string newLine)
-        {
-            return this.ToString();
-        }
+        public override string ToString(string tabString, string newLine) => this.ToString();
 
         internal override IndentedTextWriter WriteDiffs(IndentedTextWriter writer, HashSet<ValueDiff> written)
         {

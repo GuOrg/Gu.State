@@ -2,6 +2,9 @@ namespace Gu.State
 {
     using System.Reflection;
 
+    /// <summary>
+    /// Exposes methods for copying via properties.
+    /// </summary>
     public static partial class Copy
     {
         /// <summary>

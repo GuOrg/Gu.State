@@ -4,6 +4,9 @@ namespace Gu.State
     using System.Collections;
     using System.Reflection;
 
+    /// <summary>
+    /// Exposes methods for verifying copying is supported for types.
+    /// </summary>
     public static partial class Copy
     {
         /// <summary>

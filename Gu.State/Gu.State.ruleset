@@ -55,7 +55,7 @@
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
     <Rule Id="SA1206" Action="Info" />
     <Rule Id="SA1313" Action="Info" />
-    <Rule Id="SA1401" Action="Info" />
+    <Rule Id="SA1401" Action="None" />
     <Rule Id="SA1600" Action="None" />
     <Rule Id="SA1601" Action="Info" />
     <Rule Id="SA1611" Action="Info" />

@@ -1,10 +1,13 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Collections;
     using System.Reflection;
     using System.Text;
 
+    /// <summary>
+    /// Internal helpers.
+    /// </summary>
     public static partial class Copy
     {
         private static StringBuilder AppendCopyFailed(this StringBuilder errorBuilder, string className, string methodName)
