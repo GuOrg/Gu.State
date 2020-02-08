@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Collections.Concurrent;
@@ -41,17 +41,15 @@
         {
             if (propertyInfo.DeclaringType.IsValueType)
             {
-                var setter = typeof(StructGetterAndSetter<,>).MakeGenericType(propertyInfo.DeclaringType, propertyInfo.PropertyType);
-                var constructorInfo = setter.GetConstructor(new[] { typeof(PropertyInfo) });
-                //// ReSharper disable once PossibleNullReferenceException nope, not here
-                return (IGetterAndSetter)constructorInfo.Invoke(new object[] { propertyInfo });
+                return (IGetterAndSetter)Activator.CreateInstance(
+                    typeof(StructGetterAndSetter<,>).MakeGenericType(propertyInfo.DeclaringType, propertyInfo.PropertyType),
+                    propertyInfo);
             }
             else
             {
-                var setter = typeof(GetterAndSetter<,>).MakeGenericType(propertyInfo.DeclaringType, propertyInfo.PropertyType);
-                var constructorInfo = setter.GetConstructor(new[] { typeof(PropertyInfo) });
-                //// ReSharper disable once PossibleNullReferenceException nope, not here
-                return (IGetterAndSetter)constructorInfo.Invoke(new object[] { propertyInfo });
+                return (IGetterAndSetter)Activator.CreateInstance(
+                    typeof(GetterAndSetter<,>).MakeGenericType(propertyInfo.DeclaringType, propertyInfo.PropertyType),
+                    propertyInfo);
             }
         }
     }

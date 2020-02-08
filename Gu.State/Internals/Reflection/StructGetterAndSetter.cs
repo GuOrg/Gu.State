@@ -10,7 +10,7 @@ namespace Gu.State
     {
         private readonly GetterDelegate getter;
 
-        internal StructGetterAndSetter(PropertyInfo propertyInfo)
+        public StructGetterAndSetter(PropertyInfo propertyInfo)
         {
             this.Member = propertyInfo;
             this.IsInitOnly = !propertyInfo.CanWrite;
