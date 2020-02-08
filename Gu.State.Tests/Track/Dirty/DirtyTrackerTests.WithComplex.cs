@@ -1,4 +1,4 @@
-﻿namespace Gu.State.Tests
+namespace Gu.State.Tests
 {
     using System.Collections.Generic;
 
@@ -28,15 +28,14 @@
                 CollectionAssert.IsEmpty(changes);
             }
 
-            //[TestCase(ReferenceHandling.References)]
-            [TestCase(ReferenceHandling.Structural)]
-            public void HandlesNull(ReferenceHandling referenceHandling)
+            [Test]
+            public void HandlesNullStructural()
             {
                 var x = new WithComplexProperty();
                 var y = new WithComplexProperty();
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
-                using var tracker = Track.IsDirty(x, y, referenceHandling);
+                using var tracker = Track.IsDirty(x, y, ReferenceHandling.Structural);
                 tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
                 Assert.AreEqual(false, tracker.IsDirty);
                 Assert.AreEqual(null, tracker.Diff);
@@ -59,6 +58,48 @@
                 x.ComplexType = null;
                 Assert.AreEqual(true, tracker.IsDirty);
                 expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
+                CollectionAssert.AreEqual(expectedChanges, changes);
+                expected = "WithComplexProperty ComplexType x: null y: Gu.State.Tests.DirtyTrackerTypes+ComplexType";
+                actual = tracker.Diff.ToString(string.Empty, " ");
+                Assert.AreEqual(expected, actual);
+
+                y.ComplexType = null;
+                Assert.AreEqual(false, tracker.IsDirty);
+                expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
+                CollectionAssert.AreEqual(expectedChanges, changes);
+                Assert.AreEqual(null, tracker.Diff);
+            }
+
+            [Test]
+            public void HandlesNullReferences()
+            {
+                var x = new WithComplexProperty();
+                var y = new WithComplexProperty();
+                var changes = new List<string>();
+                var expectedChanges = new List<string>();
+                using var tracker = Track.IsDirty(x, y, ReferenceHandling.References);
+                tracker.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+                Assert.AreEqual(false, tracker.IsDirty);
+                Assert.AreEqual(null, tracker.Diff);
+                CollectionAssert.IsEmpty(changes);
+
+                x.ComplexType = new ComplexType("a", 1);
+                Assert.AreEqual(true, tracker.IsDirty);
+                expectedChanges.AddRange(new[] { "Diff", "IsDirty" });
+                CollectionAssert.AreEqual(expectedChanges, changes);
+                var expected = "WithComplexProperty ComplexType x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: null";
+                var actual = tracker.Diff.ToString(string.Empty, " ");
+                Assert.AreEqual(expected, actual);
+
+                y.ComplexType = new ComplexType("a", 1);
+                Assert.AreEqual(true, tracker.IsDirty);
+                expectedChanges.Add("Diff");
+                CollectionAssert.AreEqual(expectedChanges, changes);
+                Assert.AreEqual("WithComplexProperty ComplexType x: Gu.State.Tests.DirtyTrackerTypes+ComplexType y: Gu.State.Tests.DirtyTrackerTypes+ComplexType", tracker.Diff.ToString(string.Empty, " "));
+
+                x.ComplexType = null;
+                Assert.AreEqual(true, tracker.IsDirty);
+                expectedChanges.AddRange(new[] { "Diff" });
                 CollectionAssert.AreEqual(expectedChanges, changes);
                 expected = "WithComplexProperty ComplexType x: null y: Gu.State.Tests.DirtyTrackerTypes+ComplexType";
                 actual = tracker.Diff.ToString(string.Empty, " ");
