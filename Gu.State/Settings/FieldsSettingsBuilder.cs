@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Collections;
@@ -80,6 +80,11 @@
         /// <returns>The builder instance for chaining.</returns>
         public FieldsSettingsBuilder AddImmutableType(Type type)
         {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
             if (!this.immutableTypes.Add(type))
             {
                 var message = $"Already added type: {type.FullName}\r\n" +
@@ -95,6 +100,11 @@
         /// <returns>The builder instance for chaining.</returns>
         public FieldsSettingsBuilder AddIgnoredField(FieldInfo fieldInfo)
         {
+            if (fieldInfo is null)
+            {
+                throw new ArgumentNullException(nameof(fieldInfo));
+            }
+
             if (!this.ignoredFields.Add(fieldInfo))
             {
                 var message = $"Already added property: {fieldInfo.DeclaringType?.FullName}.{fieldInfo.Name}\r\n" +
@@ -111,6 +121,11 @@
         /// <returns>The builder instance for chaining.</returns>
         public FieldsSettingsBuilder AddIgnoredField<TSource>(string name)
         {
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
             var fieldInfo = typeof(TSource).GetField(name, Constants.DefaultFieldBindingFlags);
             if (fieldInfo is null)
             {
@@ -124,9 +139,15 @@
 
         /// <summary>Add a custom comparer for type <typeparamref name="T"/> in the setting.</summary>
         /// <typeparam name="T">The type.</typeparam>
+        /// <param name="comparer">The <see cref="IEqualityComparer{T}"/>.</param>
         /// <returns>The builder instance for chaining.</returns>
         public FieldsSettingsBuilder AddComparer<T>(IEqualityComparer<T> comparer)
         {
+            if (comparer is null)
+            {
+                throw new ArgumentNullException(nameof(comparer));
+            }
+
             this.comparers[typeof(T)] = comparer as IEqualityComparer ?? CastingComparer.Create(comparer);
             return this;
         }
@@ -139,6 +160,11 @@
         /// <returns>Self.</returns>
         public FieldsSettingsBuilder AddCustomCopy<T>(Func<T, T, T> copyMethod)
         {
+            if (copyMethod is null)
+            {
+                throw new ArgumentNullException(nameof(copyMethod));
+            }
+
             this.copyers[typeof(T)] = CustomCopy.Create(copyMethod);
             return this;
         }

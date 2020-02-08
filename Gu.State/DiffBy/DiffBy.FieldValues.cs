@@ -38,13 +38,21 @@ namespace Gu.State
         /// <returns>Diff.Empty if <paramref name="x"/> and <paramref name="y"/> are equal.</returns>
         public static Diff FieldValues<T>(T x, T y, FieldsSettings settings)
         {
+            if (x is null)
+            {
+                throw new System.ArgumentNullException(nameof(x));
+            }
+
+            if (y is null)
+            {
+                throw new System.ArgumentNullException(nameof(y));
+            }
+
             if (settings is null)
             {
                 throw new System.ArgumentNullException(nameof(settings));
             }
 
-            Ensure.NotNull(x, nameof(x));
-            Ensure.NotNull(y, nameof(y));
             EqualBy.VerifyCanEqualByMemberValues(x?.GetType() ?? y?.GetType() ?? typeof(T), settings, typeof(DiffBy).Name, nameof(FieldValues));
             return TryCreateValueDiff(x, y, settings) ?? new EmptyDiff(x, y);
         }

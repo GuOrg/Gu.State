@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System.Diagnostics;
     using System.Reflection;
@@ -25,6 +25,16 @@
             ReferenceHandling referenceHandling = ReferenceHandling.Structural,
             BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
         {
+            if (x is null)
+            {
+                throw new System.ArgumentNullException(nameof(x));
+            }
+
+            if (y is null)
+            {
+                throw new System.ArgumentNullException(nameof(y));
+            }
+
             var settings = PropertiesSettings.GetOrCreate(referenceHandling, bindingFlags);
             return PropertyValues(x, y, settings);
         }
@@ -40,9 +50,21 @@
         /// <returns>Diff.Empty if <paramref name="x"/> and <paramref name="y"/> are equal.</returns>
         public static ValueDiff PropertyValues<T>(T x, T y, PropertiesSettings settings)
         {
-            Ensure.NotNull(x, nameof(x));
-            Ensure.NotNull(y, nameof(y));
-            Ensure.NotNull(settings, nameof(settings));
+            if (x is null)
+            {
+                throw new System.ArgumentNullException(nameof(x));
+            }
+
+            if (y is null)
+            {
+                throw new System.ArgumentNullException(nameof(y));
+            }
+
+            if (settings is null)
+            {
+                throw new System.ArgumentNullException(nameof(settings));
+            }
+
             EqualBy.VerifyCanEqualByMemberValues(x?.GetType() ?? y?.GetType() ?? typeof(T), settings, typeof(DiffBy).Name, nameof(PropertyValues));
             return TryCreateValueDiff(x, y, settings) ?? new EmptyDiff(x, y);
         }
