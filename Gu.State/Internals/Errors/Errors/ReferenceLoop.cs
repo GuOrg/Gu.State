@@ -9,7 +9,7 @@ namespace Gu.State
     [DebuggerDisplay("{GetType().Name} Loop: {Path.PathString()}")]
     internal sealed class ReferenceLoop : Error, INotSupported, IWithErrors
     {
-        public ReferenceLoop(MemberPath path)
+        internal ReferenceLoop(MemberPath path)
         {
             this.Path = path;
             var errors = new List<Error>();
@@ -28,7 +28,7 @@ namespace Gu.State
             this.Errors = errors;
         }
 
-        public MemberPath Path { get; }
+        internal MemberPath Path { get; }
 
         public IReadOnlyList<Error> Errors { get; }
 

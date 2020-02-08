@@ -1,10 +1,10 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System.Collections.Generic;
 
     internal sealed class EnumerableDiffBy<T> : EnumerableDiffBy, IDiffBy
     {
-        public static readonly EnumerableDiffBy<T> Default = new EnumerableDiffBy<T>();
+        internal static readonly EnumerableDiffBy<T> Default = new EnumerableDiffBy<T>();
 
         private EnumerableDiffBy()
         {

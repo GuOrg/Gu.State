@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Collections.Generic;
@@ -14,9 +14,9 @@
                 this.Type = type;
             }
 
-            public Type Type { get; }
+            internal Type Type { get; }
 
-            public IReadOnlyList<Error> Errors => this.errors;
+            internal IReadOnlyList<Error> Errors => this.errors;
 
             internal TypeErrorsBuilder Add(Error error)
             {

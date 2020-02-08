@@ -1,4 +1,4 @@
-﻿// ReSharper disable RedundantArgumentDefaultValue
+// ReSharper disable RedundantArgumentDefaultValue
 namespace Gu.State.Tests
 {
     using System;
@@ -25,9 +25,9 @@ namespace Gu.State.Tests
                 var source = new ComplexType();
                 WeakReference weakReference = new WeakReference(source);
                 var tracker = Track.Changes(source, ReferenceHandling.Structural);
-#pragma warning disable IDISP016 // Don't use disposed instance.
+#pragma warning disable IDISP016, IDISP017 // Don't use disposed instance.
                 tracker.Dispose();
-#pragma warning restore IDISP016 // Don't use disposed instance.
+#pragma warning restore IDISP016, IDISP017 // Don't use disposed instance.
                 source = null;
                 GC.Collect();
                 Assert.IsFalse(weakReference.IsAlive);

@@ -33,7 +33,7 @@ namespace Gu.State
             Cache.TryRemove(this, out _);
         }
 
-        public object X
+        internal object X
         {
             get
             {
@@ -42,7 +42,7 @@ namespace Gu.State
             }
         }
 
-        public object Y
+        internal object Y
         {
             get
             {
@@ -61,42 +61,6 @@ namespace Gu.State
         public static bool operator !=(ReferencePair left, ReferencePair right)
         {
             return !Equals(left, right);
-        }
-
-        public static IRefCounted<ReferencePair> GetOrCreate<T>(T x, T y)
-            where T : class
-        {
-            var key = new ReferencePair(x, y);
-            if (!Cache.GetOrAdd(key, p => p).TryRefCount(out var refcounted))
-            {
-                if (!Cache.TryAdd(key, key))
-                {
-                    throw Throw.ShouldNeverGetHereException("Adding created pair failed");
-                }
-
-                if (!key.TryRefCount(out refcounted))
-                {
-                    throw Throw.ShouldNeverGetHereException("Refcounting created pair failed");
-                }
-            }
-
-            return refcounted;
-        }
-
-        public bool Equals(ReferencePair other)
-        {
-            Debug.Assert(!this.disposed, "this.disposed");
-            if (other is null)
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-
-            return ReferenceEquals(this.X, other.X) && ReferenceEquals(this.Y, other.Y);
         }
 
         public override bool Equals(object obj)
@@ -145,6 +109,42 @@ namespace Gu.State
                 Cache.TryRemove(this, out _);
                 this.disposed = true;
             }
+        }
+
+        internal static IRefCounted<ReferencePair> GetOrCreate<T>(T x, T y)
+            where T : class
+        {
+            var key = new ReferencePair(x, y);
+            if (!Cache.GetOrAdd(key, p => p).TryRefCount(out var refcounted))
+            {
+                if (!Cache.TryAdd(key, key))
+                {
+                    throw Throw.ShouldNeverGetHereException("Adding created pair failed");
+                }
+
+                if (!key.TryRefCount(out refcounted))
+                {
+                    throw Throw.ShouldNeverGetHereException("Refcounting created pair failed");
+                }
+            }
+
+            return refcounted;
+        }
+
+        internal bool Equals(ReferencePair other)
+        {
+            Debug.Assert(!this.disposed, "this.disposed");
+            if (other is null)
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            return ReferenceEquals(this.X, other.X) && ReferenceEquals(this.Y, other.Y);
         }
 
         private static int GetHashCode(object x, object y)

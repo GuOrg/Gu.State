@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Collections.Generic;
@@ -138,7 +138,7 @@
         {
             private readonly UnsupportedIndexer error;
 
-            public Indexer(MemberInfo member)
+            internal Indexer(MemberInfo member)
                 : base(member)
             {
                 this.error = UnsupportedIndexer.GetOrCreate((PropertyInfo)member);

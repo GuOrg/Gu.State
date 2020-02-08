@@ -4,7 +4,7 @@ namespace Gu.State
 
     internal class RootItem : PathItem
     {
-        public RootItem(Type type)
+        internal RootItem(Type type)
         {
             this.Type = type;
         }

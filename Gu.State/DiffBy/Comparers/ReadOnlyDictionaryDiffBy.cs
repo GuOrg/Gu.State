@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Collections.Concurrent;
@@ -9,7 +9,7 @@
     {
         private static readonly ConcurrentDictionary<Type, IDiffBy> Cache = new ConcurrentDictionary<Type, IDiffBy>();
 
-        public static bool TryGetOrCreate(object x, object y, out IDiffBy comparer)
+        internal static bool TryGetOrCreate(object x, object y, out IDiffBy comparer)
         {
             if (x.GetType().Implements(typeof(IReadOnlyDictionary<,>)) && y.GetType().Implements(typeof(IReadOnlyDictionary<,>)))
             {

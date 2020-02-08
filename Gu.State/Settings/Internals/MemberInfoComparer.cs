@@ -1,4 +1,4 @@
-﻿namespace Gu.State.Internals
+namespace Gu.State.Internals
 {
     using System.Collections.Generic;
     using System.Reflection;
@@ -7,7 +7,7 @@
     internal sealed class MemberInfoComparer<T> : IEqualityComparer<T>
         where T : MemberInfo
     {
-        public static readonly MemberInfoComparer<T> Default = new MemberInfoComparer<T>();
+        internal static readonly MemberInfoComparer<T> Default = new MemberInfoComparer<T>();
 
         private MemberInfoComparer()
         {

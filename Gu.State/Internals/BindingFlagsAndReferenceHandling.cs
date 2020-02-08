@@ -8,7 +8,7 @@ namespace Gu.State
         private readonly BindingFlags bindingFlags;
         private readonly ReferenceHandling referenceHandling;
 
-        public BindingFlagsAndReferenceHandling(BindingFlags bindingFlags, ReferenceHandling referenceHandling)
+        internal BindingFlagsAndReferenceHandling(BindingFlags bindingFlags, ReferenceHandling referenceHandling)
         {
             this.bindingFlags = bindingFlags;
             this.referenceHandling = referenceHandling;

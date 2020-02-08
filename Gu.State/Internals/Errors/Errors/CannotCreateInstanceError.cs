@@ -7,12 +7,12 @@ namespace Gu.State
     {
         private readonly object sourceValue;
 
-        public CannotCreateInstanceError(object sourceValue)
+        internal CannotCreateInstanceError(object sourceValue)
         {
             this.sourceValue = sourceValue;
         }
 
-        public Type Type => this.sourceValue.GetType();
+        internal Type Type => this.sourceValue.GetType();
 
         public StringBuilder AppendNotSupported(StringBuilder errorBuilder)
         {

@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Collections;
@@ -6,11 +6,12 @@
 
     internal class PaddedPairs : IEnumerable<PaddedPairs.Pair<object>>
     {
-        public static readonly object MissingItem = new Missing();
+        internal static readonly object MissingItem = new Missing();
+
         private readonly IEnumerable x;
         private readonly IEnumerable y;
 
-        public PaddedPairs(IEnumerable x, IEnumerable y)
+        internal PaddedPairs(IEnumerable x, IEnumerable y)
         {
             this.x = x;
             this.y = y;
@@ -35,10 +36,10 @@
         internal struct Pair<T>
             where T : class
         {
-            public readonly T X;
-            public readonly T Y;
+            internal readonly T X;
+            internal readonly T Y;
 
-            public Pair(T x, T y)
+            internal Pair(T x, T y)
             {
                 this.X = x;
                 this.Y = y;
@@ -53,7 +54,7 @@
             private bool mx;
             private bool my;
 
-            public PairEnumerator(IEnumerable x, IEnumerable y)
+            internal PairEnumerator(IEnumerable x, IEnumerable y)
             {
                 this.x = x.GetEnumerator();
                 this.y = y.GetEnumerator();

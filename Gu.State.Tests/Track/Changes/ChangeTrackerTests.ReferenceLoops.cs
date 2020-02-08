@@ -57,9 +57,9 @@ namespace Gu.State.Tests
                 CollectionAssert.IsEmpty(propertyChanges);
                 CollectionAssert.IsEmpty(changes);
 
-#pragma warning disable IDISP016 // Don't use disposed instance.
+#pragma warning disable IDISP016, IDISP017 // Don't use disposed instance.
                 tracker.Dispose();
-#pragma warning restore IDISP016 // Don't use disposed instance.
+#pragma warning restore IDISP016, IDISP017 // Don't use disposed instance.
                 Assert.AreEqual(0, tracker.Changes);
                 CollectionAssert.IsEmpty(propertyChanges);
                 CollectionAssert.IsEmpty(changes);

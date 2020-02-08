@@ -1,10 +1,10 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System.Collections.Generic;
 
     internal static class Set
     {
-        public static bool TryGetComparer<T>(ISet<T> source, out IEqualityComparer<T> comparer)
+        internal static bool TryGetComparer<T>(ISet<T> source, out IEqualityComparer<T> comparer)
         {
             if (source is HashSet<T> hashSet)
             {

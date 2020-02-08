@@ -10,13 +10,13 @@ namespace Gu.State
         private readonly IEnumerable source;
         private readonly IEnumerable target;
 
-        public CannotCopyFixedSizeCollectionsError(IEnumerable source, IEnumerable target)
+        internal CannotCopyFixedSizeCollectionsError(IEnumerable source, IEnumerable target)
         {
             this.source = source;
             this.target = target;
         }
 
-        public Type Type => this.target.GetType();
+        internal Type Type => this.target.GetType();
 
         public StringBuilder AppendNotSupported(StringBuilder errorBuilder)
         {

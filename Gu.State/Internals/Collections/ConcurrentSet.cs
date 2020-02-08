@@ -8,12 +8,12 @@ namespace Gu.State
     {
         private readonly ConcurrentDictionary<T, int> inner;
 
-        public ConcurrentSet()
+        internal ConcurrentSet()
         {
             this.inner = new ConcurrentDictionary<T, int>();
         }
 
-        public ConcurrentSet(IEqualityComparer<T> comparer)
+        internal ConcurrentSet(IEqualityComparer<T> comparer)
         {
             this.inner = new ConcurrentDictionary<T, int>(comparer);
         }

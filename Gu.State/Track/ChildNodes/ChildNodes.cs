@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System.Collections.Concurrent;
     using System.Collections.Generic;
@@ -15,7 +15,7 @@
         {
         }
 
-        public static IBorrowed<ChildNodes<T>> Borrow()
+        internal static IBorrowed<ChildNodes<T>> Borrow()
         {
             if (Cache.TryDequeue(out var childNodes))
             {

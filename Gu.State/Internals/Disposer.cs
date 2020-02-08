@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Diagnostics;
@@ -9,7 +9,7 @@
         private readonly object gate = new object();
         private bool disposed;
 
-        public Disposer(Action dispose)
+        internal Disposer(Action dispose)
         {
             Debug.Assert(dispose != null, "dispose == null");
             this.dispose = dispose;

@@ -1,25 +1,13 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System.Collections;
 
     internal sealed class DictionaryCopyer : ICopyer
     {
-        public static readonly DictionaryCopyer Default = new DictionaryCopyer();
+        internal static readonly DictionaryCopyer Default = new DictionaryCopyer();
 
         private DictionaryCopyer()
         {
-        }
-
-        public static bool TryGetOrCreate(object x, object y, out ICopyer comparer)
-        {
-            if (Is.Type<IDictionary>(x, y))
-            {
-                comparer = Default;
-                return true;
-            }
-
-            comparer = null;
-            return false;
         }
 
         public void Copy(
@@ -29,6 +17,18 @@
             ReferencePairCollection referencePairs)
         {
             Copy((IDictionary)source, (IDictionary)target, settings, referencePairs);
+        }
+
+        internal static bool TryGetOrCreate(object x, object y, out ICopyer comparer)
+        {
+            if (Is.Type<IDictionary>(x, y))
+            {
+                comparer = Default;
+                return true;
+            }
+
+            comparer = null;
+            return false;
         }
 
         internal static void Copy(

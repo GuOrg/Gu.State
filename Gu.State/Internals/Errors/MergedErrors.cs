@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System.Collections;
     using System.Collections.Generic;
@@ -26,7 +26,7 @@
 
         public Error this[int index] => this.errors[index];
 
-        public static IReadOnlyList<Error> MergeAll(TypeErrors typeErrors, IReadOnlyCollection<Error> errors)
+        internal static IReadOnlyList<Error> MergeAll(TypeErrors typeErrors, IReadOnlyCollection<Error> errors)
         {
             var allErrors = new List<Error> { typeErrors };
             Add(errors, allErrors);

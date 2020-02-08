@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -6,22 +6,10 @@
 
     internal sealed class DictionaryTKeyTValueCopyer : ICopyer
     {
-        public static readonly DictionaryTKeyTValueCopyer Default = new DictionaryTKeyTValueCopyer();
+        internal static readonly DictionaryTKeyTValueCopyer Default = new DictionaryTKeyTValueCopyer();
 
         private DictionaryTKeyTValueCopyer()
         {
-        }
-
-        public static bool TryGetOrCreate(object x, object y, out ICopyer comparer)
-        {
-            if (Is.IDictionaryOfTKeyTValue(x, y))
-            {
-                comparer = Default;
-                return true;
-            }
-
-            comparer = null;
-            return false;
         }
 
         public void Copy(object source, object target, MemberSettings settings, ReferencePairCollection referencePairs)
@@ -35,6 +23,18 @@
                                  .GetMethod(nameof(this.Copy), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)
                                  .MakeGenericMethod(genericArguments[0], genericArguments[1]);
             _ = copyMethod.Invoke(null, new[] { source, target, settings, referencePairs });
+        }
+
+        internal static bool TryGetOrCreate(object x, object y, out ICopyer comparer)
+        {
+            if (Is.IDictionaryOfTKeyTValue(x, y))
+            {
+                comparer = Default;
+                return true;
+            }
+
+            comparer = null;
+            return false;
         }
 
         internal static void Copy<TKey, TValue>(IDictionary<TKey, TValue> source, IDictionary<TKey, TValue> target, MemberSettings settings, ReferencePairCollection referencePairs)

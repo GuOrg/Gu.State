@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Collections.Generic;
@@ -6,7 +6,7 @@
 
     internal sealed class SetDiffBy<T> : SetDiffBy, IDiffBy
     {
-        public static readonly SetDiffBy<T> Default = new SetDiffBy<T>();
+        internal static readonly SetDiffBy<T> Default = new SetDiffBy<T>();
 
         private SetDiffBy()
         {

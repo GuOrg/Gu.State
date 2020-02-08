@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System.Collections.Generic;
 
@@ -6,7 +6,7 @@
     {
         private readonly IEqualityComparer<T> comparer;
 
-        public CastingComparer(IEqualityComparer<T> comparer)
+        internal CastingComparer(IEqualityComparer<T> comparer)
         {
             this.comparer = comparer;
         }

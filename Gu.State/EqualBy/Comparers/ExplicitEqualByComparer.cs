@@ -1,15 +1,15 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System.Collections;
     using System.Collections.Generic;
 
     internal class ExplicitEqualByComparer<T> : EqualByComparer<T>
     {
-        public static ExplicitEqualByComparer<T> Default = new ExplicitEqualByComparer<T>(EqualityComparer<T>.Default);
+        internal static ExplicitEqualByComparer<T> Default = new ExplicitEqualByComparer<T>(EqualityComparer<T>.Default);
 
         internal readonly IEqualityComparer<T> EqualityComparer;
 
-        public ExplicitEqualByComparer(IEqualityComparer<T> equalityComparer)
+        internal ExplicitEqualByComparer(IEqualityComparer<T> equalityComparer)
         {
             this.EqualityComparer = equalityComparer;
         }

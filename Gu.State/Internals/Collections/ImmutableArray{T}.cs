@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System.Collections;
     using System.Collections.Generic;
@@ -7,7 +7,7 @@
     {
         private readonly T[] items;
 
-        public ImmutableArray(T[] items)
+        internal ImmutableArray(T[] items)
         {
             this.items = items;
         }

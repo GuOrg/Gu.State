@@ -1,10 +1,10 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System.Collections.Generic;
 
     internal sealed class ReadOnlyDictionaryDiffBy<TKey, TValue> : ReadOnlyDictionaryDiffBy, IDiffBy
     {
-        public static readonly ReadOnlyDictionaryDiffBy<TKey, TValue> Default = new ReadOnlyDictionaryDiffBy<TKey, TValue>();
+        internal static readonly ReadOnlyDictionaryDiffBy<TKey, TValue> Default = new ReadOnlyDictionaryDiffBy<TKey, TValue>();
 
         private ReadOnlyDictionaryDiffBy()
         {

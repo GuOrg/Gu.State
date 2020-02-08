@@ -5,22 +5,10 @@ namespace Gu.State
 
     internal sealed class ListOfTCopyer : ICopyer
     {
-        public static readonly ListOfTCopyer Default = new ListOfTCopyer();
+        internal static readonly ListOfTCopyer Default = new ListOfTCopyer();
 
         private ListOfTCopyer()
         {
-        }
-
-        public static bool TryGetOrCreate(object x, object y, out ICopyer comparer)
-        {
-            if (Is.IListsOfT(x, y))
-            {
-                comparer = Default;
-                return true;
-            }
-
-            comparer = null;
-            return false;
         }
 
         public void Copy(
@@ -34,6 +22,18 @@ namespace Gu.State
                                         .GetMethod(nameof(Copy), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)
                                         .MakeGenericMethod(itemType);
             _ = copyMethod.Invoke(null, new[] { source, target, settings, referencePairs });
+        }
+
+        internal static bool TryGetOrCreate(object x, object y, out ICopyer comparer)
+        {
+            if (Is.IListsOfT(x, y))
+            {
+                comparer = Default;
+                return true;
+            }
+
+            comparer = null;
+            return false;
         }
 
         private static void Copy<T>(

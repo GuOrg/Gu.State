@@ -4,22 +4,10 @@ namespace Gu.State
 
     internal sealed class ListCopyer : ICopyer
     {
-        public static readonly ListCopyer Default = new ListCopyer();
+        internal static readonly ListCopyer Default = new ListCopyer();
 
         private ListCopyer()
         {
-        }
-
-        public static bool TryGetOrCreate(object x, object y, out ICopyer comparer)
-        {
-            if (x is IList && y is IList)
-            {
-                comparer = Default;
-                return true;
-            }
-
-            comparer = null;
-            return false;
         }
 
         public void Copy(
@@ -29,6 +17,18 @@ namespace Gu.State
             ReferencePairCollection referencePairs)
         {
             Copy((IList)source, (IList)target, settings, referencePairs);
+        }
+
+        internal static bool TryGetOrCreate(object x, object y, out ICopyer comparer)
+        {
+            if (x is IList && y is IList)
+            {
+                comparer = Default;
+                return true;
+            }
+
+            comparer = null;
+            return false;
         }
 
         private static void Copy(

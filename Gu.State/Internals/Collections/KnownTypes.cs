@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Collections.Concurrent;
@@ -38,7 +38,7 @@
             }
         }
 
-        public static KnownTypes Create(IEnumerable<Type> ignoredTypes)
+        internal static KnownTypes Create(IEnumerable<Type> ignoredTypes)
         {
             if (ignoredTypes is null || !ignoredTypes.Any())
             {
@@ -48,7 +48,7 @@
             return new KnownTypes(ignoredTypes);
         }
 
-        public bool IsKnownType(Type type)
+        internal bool IsKnownType(Type type)
         {
             if (type is null)
             {

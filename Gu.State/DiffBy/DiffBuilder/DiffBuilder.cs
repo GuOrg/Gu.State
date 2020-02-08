@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Collections.Generic;
@@ -375,7 +375,7 @@
 
         private sealed class SubDiffComparer : IComparer<SubDiff>
         {
-            public static readonly SubDiffComparer Default = new SubDiffComparer();
+            internal static readonly SubDiffComparer Default = new SubDiffComparer();
 
             private SubDiffComparer()
             {

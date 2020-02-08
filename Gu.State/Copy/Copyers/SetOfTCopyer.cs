@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Collections.Generic;
@@ -7,13 +7,13 @@
 
     internal sealed class SetOfTCopyer : ICopyer
     {
-        public static readonly SetOfTCopyer Default = new SetOfTCopyer();
+        internal static readonly SetOfTCopyer Default = new SetOfTCopyer();
 
         private SetOfTCopyer()
         {
         }
 
-        public static bool TryGetOrCreate(object x, object y, out ICopyer comparer)
+        internal static bool TryGetOrCreate(object x, object y, out ICopyer comparer)
         {
             if (Is.ISetsOfT(x, y))
             {
@@ -101,7 +101,7 @@
 
             private bool isCopying;
 
-            public CopyingComparer(
+            internal CopyingComparer(
                 IEqualityComparer<T> inner,
                 MemberSettings settings,
                 ReferencePairCollection referencePairs)

@@ -7,12 +7,12 @@ namespace Gu.State
     [DebuggerDisplay("{GetType().Name} Type: {Type.Name}")]
     internal sealed class NotCopyableCollection : Error, INotSupported
     {
-        public NotCopyableCollection(Type type)
+        internal NotCopyableCollection(Type type)
         {
             this.Type = type;
         }
 
-        public Type Type { get; }
+        internal Type Type { get; }
 
         public StringBuilder AppendNotSupported(StringBuilder errorBuilder)
         {

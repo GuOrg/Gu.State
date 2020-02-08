@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Collections.Generic;
@@ -11,9 +11,9 @@
             this.Error = error;
         }
 
-        public Type Type { get; }
+        internal Type Type { get; }
 
-        public Error Error { get; }
+        internal Error Error { get; }
 
         internal override bool CanHaveReferenceLoops => false;
 

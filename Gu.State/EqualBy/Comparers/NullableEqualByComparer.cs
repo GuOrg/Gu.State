@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Collections.Generic;
@@ -23,7 +23,8 @@
         internal sealed class Comparer<T> : EqualByComparer<T?>
             where T : struct
         {
-            public static readonly Comparer<T> Default = new Comparer<T>();
+            internal static readonly Comparer<T> Default = new Comparer<T>();
+
             private static readonly bool IsEquatable = typeof(T).Equatable();
 
             private Comparer()

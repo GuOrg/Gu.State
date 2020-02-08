@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Runtime.CompilerServices;
@@ -62,7 +62,7 @@
                 private readonly object gate = new object();
                 private int count;
 
-                public RefCounter(TValue value)
+                internal RefCounter(TValue value)
                 {
                     this.valueReference = new WeakReference<TValue>(value);
                     this.count = 1;
@@ -107,7 +107,7 @@
                     }
                 }
 
-                public RefCounter Increment()
+                internal RefCounter Increment()
                 {
                     lock (this.gate)
                     {

@@ -7,21 +7,21 @@ namespace Gu.State
     [DebuggerDisplay("{GetType().Name} Member: {Path.LastMember.DeclaringType.Name}.{Path.LastMember.Name}")]
     internal sealed class MemberErrors : Error, IWithErrors, IExcludableMember, INotsupportedMember
     {
-        public MemberErrors(MemberInfo memberInfo)
+        internal MemberErrors(MemberInfo memberInfo)
             : this(new MemberPath(null).WithMember(memberInfo), null)
         {
         }
 
-        public MemberErrors(MemberPath path, params Error[] errors)
+        internal MemberErrors(MemberPath path, params Error[] errors)
         {
             this.Path = path;
             this.Errors = errors;
         }
 
-        public MemberPath Path { get; }
-
         public MemberInfo Member => this.Path.LastMember;
 
         public IReadOnlyList<Error> Errors { get; }
+
+        internal MemberPath Path { get; }
     }
 }

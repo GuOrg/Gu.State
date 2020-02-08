@@ -122,6 +122,8 @@ public void $TestName$()&#xD;
 	<s:Boolean x:Key="/Default/ReSpeller/UserDictionaries/=en_005Fus/Words/=uint/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/ReSpeller/UserDictionaries/=en_005Fus/Words/=ulong/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/ReSpeller/UserDictionaries/=en_005Fus/Words/=ushort/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=Comparers/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=Copyer/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=sbyte/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Synchronizer/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=uint/@EntryIndexedValue">True</s:Boolean>

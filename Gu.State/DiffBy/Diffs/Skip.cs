@@ -2,12 +2,12 @@ namespace Gu.State
 {
     internal struct Skip
     {
-        public Skip(int i)
+        internal Skip(int i)
         {
             this.I = i;
         }
 
-        public int I { get; }
+        internal int I { get; }
 
         public override string ToString()
         {

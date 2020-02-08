@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Reflection;
@@ -11,7 +11,12 @@
         {
         }
 
-        public static bool TryGetOrCreate(object x, object y, out ICopyer comparer)
+        public void Copy(object source, object target, MemberSettings settings, ReferencePairCollection referencePairs)
+        {
+            Copy((Array)source, (Array)target, settings, referencePairs);
+        }
+        
+        internal static bool TryGetOrCreate(object x, object y, out ICopyer comparer)
         {
             if (Is.Type<Array>(x, y))
             {
@@ -21,11 +26,6 @@
 
             comparer = null;
             return false;
-        }
-
-        public void Copy(object source, object target, MemberSettings settings, ReferencePairCollection referencePairs)
-        {
-            Copy((Array)source, (Array)target, settings, referencePairs);
         }
 
         private static void Copy(Array sourceArray, Array targetArray, MemberSettings settings, ReferencePairCollection referencePairs)

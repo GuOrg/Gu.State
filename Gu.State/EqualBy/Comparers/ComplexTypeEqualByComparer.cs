@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Collections.Generic;
@@ -37,7 +37,7 @@
             private TypeErrors lazyTypeErrors;
             private bool? lazyCanHaveReferenceLoops;
 
-            public Comparer(ImmutableArray<MemberEqualByComparer> memberComparers)
+            internal Comparer(ImmutableArray<MemberEqualByComparer> memberComparers)
             {
                 this.memberComparers = memberComparers;
             }

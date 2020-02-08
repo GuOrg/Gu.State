@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Collections.Generic;
@@ -31,7 +31,7 @@
             internal readonly Type Type;
             internal readonly EqualByComparer Comparer;
 
-            public TypeAndComparer(Type type, EqualByComparer comparer)
+            internal TypeAndComparer(Type type, EqualByComparer comparer)
             {
                 this.Type = type;
                 this.Comparer = comparer;

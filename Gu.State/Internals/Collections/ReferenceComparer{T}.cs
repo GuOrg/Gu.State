@@ -1,11 +1,11 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System.Collections.Generic;
 
     internal sealed class ReferenceComparer<T> : IEqualityComparer<T>
         where T : class
     {
-        public static readonly ReferenceComparer<T> Default = new ReferenceComparer<T>();
+        internal static readonly ReferenceComparer<T> Default = new ReferenceComparer<T>();
 
         private ReferenceComparer()
         {

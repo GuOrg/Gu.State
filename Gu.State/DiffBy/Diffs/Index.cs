@@ -1,13 +1,13 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     internal struct Index
     {
-        public Index(int[] indices)
+        internal Index(int[] indices)
         {
             this.Indices = indices;
         }
 
-        public int[] Indices { get; }
+        internal int[] Indices { get; }
 
         public override string ToString()
         {

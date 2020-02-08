@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Collections.Concurrent;
@@ -39,9 +39,9 @@
 
         private class WrappingComparer : IEqualityComparer<T>
         {
-            public Func<T, int> HashCode { private get; set; }
+            internal Func<T, int> HashCode { private get; set; }
 
-            public Func<T, T, bool> Compare { private get; set; }
+            internal Func<T, T, bool> Compare { private get; set; }
 
             public bool Equals(T x, T y) => this.Compare(x, y);
 

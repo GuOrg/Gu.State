@@ -1,11 +1,11 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Collections.Generic;
 
     internal sealed class ListDiffBy<T> : ListDiffBy, IDiffBy
     {
-        public static readonly ListDiffBy<T> Default = new ListDiffBy<T>();
+        internal static readonly ListDiffBy<T> Default = new ListDiffBy<T>();
 
         private ListDiffBy()
         {
