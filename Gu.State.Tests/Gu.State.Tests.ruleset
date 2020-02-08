@@ -46,7 +46,6 @@
     <Rule Id="CA2243" Action="Warning" />
   </Rules>
   <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp" RuleNamespace="Microsoft.CodeAnalysis.CSharp">
-    <Rule Id="CS1062" Action="None" />
     <Rule Id="CS1573" Action="Info" />
     <Rule Id="CS1591" Action="Info" />
   </Rules>
@@ -54,6 +53,7 @@
     <Rule Id="CA1034" Action="None" />
     <Rule Id="CA1051" Action="None" />
     <Rule Id="CA1052" Action="None" />
+    <Rule Id="CA1062" Action="None" />
     <Rule Id="CA1724" Action="None" />
   </Rules>
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">

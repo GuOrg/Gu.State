@@ -10,7 +10,7 @@ namespace Gu.State.Tests
         {
             if (!ReferenceEquals(expected.Source, actual.Source))
             {
-                throw new AssertionException($"Expected source to be same.");
+                throw new AssertionException("Expected source to be same.");
             }
 
             if (expected.Index != actual.Index)
