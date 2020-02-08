@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Reflection;
@@ -11,7 +11,7 @@
                 type.Name != "ImmutableArray`1")
             {
                 comparer = (EqualByComparer)typeof(ExplicitEqualByComparer<>).MakeGenericType(type)
-                                                              .GetField(nameof(ExplicitEqualByComparer<int>.Default), BindingFlags.Public | BindingFlags.Static)
+                                                              .GetField(nameof(ExplicitEqualByComparer<int>.Default), BindingFlags.NonPublic | BindingFlags.Static)
                                                               .GetValue(null);
                 return true;
             }

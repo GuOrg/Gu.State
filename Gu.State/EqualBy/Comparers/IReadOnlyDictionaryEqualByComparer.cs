@@ -28,7 +28,7 @@ namespace Gu.State
             private readonly ISetEqualByComparer.EqualByComparer<IEnumerable<TKey>, TKey> keysComparer;
             private readonly EqualByComparer valueComparer;
 
-            internal Comparer(EqualByComparer keyComparer, EqualByComparer valueComparer)
+            public Comparer(EqualByComparer keyComparer, EqualByComparer valueComparer)
             {
                 this.keysComparer = new ISetEqualByComparer.EqualByComparer<IEnumerable<TKey>, TKey>(keyComparer);
                 this.valueComparer = valueComparer;

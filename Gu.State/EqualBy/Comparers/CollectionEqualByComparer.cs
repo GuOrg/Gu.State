@@ -1,13 +1,9 @@
 namespace Gu.State
 {
-    using System;
     using System.Collections.Generic;
 
     internal abstract class CollectionEqualByComparer<TCollection, TItem> : EqualByComparer<TCollection>
     {
-        [Obsolete("It has state so Default field can't be used. Adding it here so subclasses do not add it.", error: true)]
-        internal static readonly CollectionEqualByComparer<TCollection, TItem> Default;
-
         protected readonly EqualByComparer ItemComparer;
 
         protected CollectionEqualByComparer(EqualByComparer itemComparer)

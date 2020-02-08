@@ -11,7 +11,7 @@ namespace Gu.State
             if (type.IsNullable())
             {
                 comparer = (EqualByComparer)typeof(Comparer<>).MakeGenericType(type.GenericTypeArguments)
-                                                                      .GetField(nameof(Comparer<int>.Default), BindingFlags.Public | BindingFlags.Static)
+                                                                      .GetField(nameof(Comparer<int>.Default), BindingFlags.NonPublic | BindingFlags.Static)
                                                                       .GetValue(null);
                 return true;
             }

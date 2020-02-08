@@ -37,7 +37,7 @@ namespace Gu.State
             private TypeErrors lazyTypeErrors;
             private bool? lazyCanHaveReferenceLoops;
 
-            internal Comparer(ImmutableArray<MemberEqualByComparer> memberComparers)
+            public Comparer(ImmutableArray<MemberEqualByComparer> memberComparers)
             {
                 this.memberComparers = memberComparers;
             }
