@@ -1,4 +1,4 @@
-﻿// ReSharper disable RedundantArgumentDefaultValue
+// ReSharper disable RedundantArgumentDefaultValue
 namespace Gu.State.Tests
 {
     using System.Collections.ObjectModel;
@@ -59,8 +59,8 @@ namespace Gu.State.Tests
                     CollectionAssert.AreEqual(expected, source);
                     CollectionAssert.AreEqual(expected, target);
 
-                    //Assert.AreSame(source[0], target[0]);
-                    //Assert.AreSame(source[1], target[1]);
+                    Assert.AreNotSame(source[0], target[0]);
+                    Assert.AreNotSame(source[1], target[1]);
                 }
 
                 source.Add(new WithGetReadOnlyPropertySealed<int>(3));

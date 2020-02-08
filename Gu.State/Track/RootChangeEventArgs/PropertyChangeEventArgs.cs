@@ -36,7 +36,7 @@ namespace Gu.State
 
         /// <inheritdoc />
         public bool Equals(PropertyChangeEventArgs other) => Equals(this.Source, other.Source) &&
-                                                             Equals(this.PropertyInfo, other.PropertyInfo);
+                                                                      Equals(this.PropertyInfo, other.PropertyInfo);
 
         /// <inheritdoc />
         public override bool Equals(object obj) => obj is PropertyChangeEventArgs other &&

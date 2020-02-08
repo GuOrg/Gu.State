@@ -100,7 +100,9 @@ namespace Gu.State.Tests.EqualByTests
             Case(new Dictionary<object, string> { { 1, "1" } }, new Dictionary<object, string> { { 1, "1" } }),
             Case(new HashSet<object> { 1, 2.2, "3" }, new HashSet<object> { 1, 2.2, "3" }),
 
+#pragma warning disable IDE0034 // Simplify 'default' expression
             Case(default(ImmutableArray<int>), default(ImmutableArray<int>)),
+#pragma warning restore IDE0034 // Simplify 'default' expression
             Case(ImmutableList.Create(1, 2, 3), ImmutableList.Create(1, 2, 3)),
             Case(ImmutableArray<int>.Empty, ImmutableArray<int>.Empty),
             Case(ImmutableArray.Create(new[] { 1, 2, 3 }), ImmutableArray.Create(new[] { 1, 2, 3 })),

@@ -47,9 +47,9 @@ namespace Gu.State
 
             internal override bool Equals(TCollection x, TCollection y, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)
             {
-                if (EqualityComparer<TCollection>.Default.Equals(x, default(TCollection)))
+                if (EqualityComparer<TCollection>.Default.Equals(x, default))
                 {
-                    return EqualityComparer<TCollection>.Default.Equals(y, default(TCollection));
+                    return EqualityComparer<TCollection>.Default.Equals(y, default);
                 }
 
                 if (x.Count != y.Count)

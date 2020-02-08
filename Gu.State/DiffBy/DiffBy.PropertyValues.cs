@@ -3,7 +3,9 @@ namespace Gu.State
     using System.Diagnostics;
     using System.Reflection;
 
-    /// <summary>Provides methods for comparing tow instances.</summary>
+    /// <summary>
+    /// Methods for diffing by properties.
+    /// </summary>
     public static partial class DiffBy
     {
         /// <summary>

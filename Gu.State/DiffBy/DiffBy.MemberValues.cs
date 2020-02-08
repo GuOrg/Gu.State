@@ -1,9 +1,12 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Diagnostics;
     using System.Reflection;
 
+    /// <summary>
+    /// Methods for diffing by members.
+    /// </summary>
     public static partial class DiffBy
     {
         internal static void UpdateDiffs<T>(this DiffBuilder builder, T x, T y, MemberSettings settings)

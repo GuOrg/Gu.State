@@ -2,6 +2,9 @@ namespace Gu.State
 {
     using System.Reflection;
 
+    /// <summary>
+    /// Methods for diffing by fields.
+    /// </summary>
     public static partial class DiffBy
     {
         /// <summary>

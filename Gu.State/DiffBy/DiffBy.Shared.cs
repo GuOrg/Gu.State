@@ -1,5 +1,8 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
+    /// <summary>
+    /// Helpers.
+    /// </summary>
     public static partial class DiffBy
     {
         private static string DiffMethodName(this MemberSettings settings)

@@ -2,6 +2,9 @@ namespace Gu.State
 {
     using System.Reflection;
 
+    /// <summary>
+    /// Methods for checking if diffing will work for types.
+    /// </summary>
     public static partial class DiffBy
     {
         /// <summary>

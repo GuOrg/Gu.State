@@ -1,4 +1,4 @@
-﻿namespace Gu.State.Tests.Settings
+namespace Gu.State.Tests.Settings
 {
     using System;
     using System.Collections.Generic;

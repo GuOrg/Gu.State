@@ -46,7 +46,7 @@ namespace Gu.State
             }
         }
 
-        private class PairEnumerator : IEnumerator<Pair<object>>
+        private sealed class PairEnumerator : IEnumerator<Pair<object>>
         {
             private readonly IEnumerator x;
             private readonly IEnumerator y;
