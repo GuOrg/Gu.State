@@ -23,16 +23,6 @@ namespace Gu.State
             ReferenceHandling referenceHandling = ReferenceHandling.Structural,
             BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
         {
-            if (x is null)
-            {
-                throw new System.ArgumentNullException(nameof(x));
-            }
-
-            if (y is null)
-            {
-                throw new System.ArgumentNullException(nameof(y));
-            }
-
             var settings = PropertiesSettings.GetOrCreate(referenceHandling, bindingFlags);
             return PropertyValues(x, y, settings);
         }
@@ -48,16 +38,6 @@ namespace Gu.State
         /// <returns>True if <paramref name="x"/> and <paramref name="y"/> are equal.</returns>
         public static bool PropertyValues<T>(T x, T y, PropertiesSettings settings)
         {
-            if (x is null)
-            {
-                throw new System.ArgumentNullException(nameof(x));
-            }
-
-            if (y is null)
-            {
-                throw new System.ArgumentNullException(nameof(y));
-            }
-
             if (settings is null)
             {
                 throw new System.ArgumentNullException(nameof(settings));
