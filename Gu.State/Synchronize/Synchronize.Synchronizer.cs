@@ -5,6 +5,9 @@ namespace Gu.State
     using System.ComponentModel;
     using System.Linq;
 
+    /// <summary>
+    /// Helpers.
+    /// </summary>
     public static partial class Synchronize
     {
         private sealed class Synchronizer : IDisposable

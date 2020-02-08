@@ -2,6 +2,9 @@ namespace Gu.State
 {
     using System.Reflection;
 
+    /// <summary>
+    /// Methods for checking equality by properties.
+    /// </summary>
     public static partial class EqualBy
     {
         /// <summary>

@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Collections;
@@ -25,11 +25,19 @@
         /// <summary>Gets the index at which an element was moved to. </summary>
         public int ToIndex { get; }
 
+        /// <summary>Check if <paramref name="left"/> is equal to <paramref name="right"/>.</summary>
+        /// <param name="left">The left <see cref="MoveEventArgs"/>.</param>
+        /// <param name="right">The right <see cref="MoveEventArgs"/>.</param>
+        /// <returns>True if <paramref name="left"/> is equal to <paramref name="right"/>.</returns>
         public static bool operator ==(MoveEventArgs left, MoveEventArgs right)
         {
             return left.Equals(right);
         }
 
+        /// <summary>Check if <paramref name="left"/> is not equal to <paramref name="right"/>.</summary>
+        /// <param name="left">The left <see cref="MoveEventArgs"/>.</param>
+        /// <param name="right">The right <see cref="MoveEventArgs"/>.</param>
+        /// <returns>True if <paramref name="left"/> is not equal to <paramref name="right"/>.</returns>
         public static bool operator !=(MoveEventArgs left, MoveEventArgs right)
         {
             return !left.Equals(right);

@@ -1,10 +1,13 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Linq;
     using System.Reflection;
     using System.Text;
 
+    /// <summary>
+    /// Methods for verifying if checking equality will work.
+    /// </summary>
     public static partial class EqualBy
     {
         /// <summary>

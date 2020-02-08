@@ -21,11 +21,19 @@ namespace Gu.State
         /// <summary>Gets the index at which an element was added. </summary>
         public int Index { get; }
 
+        /// <summary>Check if <paramref name="left"/> is equal to <paramref name="right"/>.</summary>
+        /// <param name="left">The left <see cref="AddEventArgs"/>.</param>
+        /// <param name="right">The right <see cref="AddEventArgs"/>.</param>
+        /// <returns>True if <paramref name="left"/> is equal to <paramref name="right"/>.</returns>
         public static bool operator ==(AddEventArgs left, AddEventArgs right)
         {
             return left.Equals(right);
         }
 
+        /// <summary>Check if <paramref name="left"/> is not equal to <paramref name="right"/>.</summary>
+        /// <param name="left">The left <see cref="AddEventArgs"/>.</param>
+        /// <param name="right">The right <see cref="AddEventArgs"/>.</param>
+        /// <returns>True if <paramref name="left"/> is not equal to <paramref name="right"/>.</returns>
         public static bool operator !=(AddEventArgs left, AddEventArgs right)
         {
             return !left.Equals(right);
