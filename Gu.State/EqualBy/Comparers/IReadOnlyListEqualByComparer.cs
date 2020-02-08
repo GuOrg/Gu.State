@@ -25,7 +25,7 @@ namespace Gu.State
                 else
                 {
                     comparer = (EqualByComparer)Activator.CreateInstance(
-                        typeof(Comparer<>).MakeGenericType(type.GetItemType()),
+                        typeof(Comparer<,>).MakeGenericType(type, type.GetItemType()),
                         settings.GetEqualByComparerOrDeferred(type.GetItemType()));
                 }
 
@@ -37,15 +37,21 @@ namespace Gu.State
         }
 
         [DebuggerDisplay("IReadOnlyListEqualByComparer<IReadOnlyListEqualByComparer<{typeof(T).PrettyName()}>>")]
-        private class Comparer<T> : CollectionEqualByComparer<IReadOnlyList<T>, T>
+        private class Comparer<TCollection, TItem> : CollectionEqualByComparer<TCollection, TItem>
+            where TCollection : IReadOnlyList<TItem>
         {
             public Comparer(EqualByComparer itemComparer)
                 : base(itemComparer)
             {
             }
 
-            internal override bool Equals(IReadOnlyList<T> x, IReadOnlyList<T> y, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)
+            internal override bool Equals(TCollection x, TCollection y, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)
             {
+                if (EqualityComparer<TCollection>.Default.Equals(x, default(TCollection)))
+                {
+                    return EqualityComparer<TCollection>.Default.Equals(y, default(TCollection));
+                }
+
                 if (x.Count != y.Count)
                 {
                     return false;
