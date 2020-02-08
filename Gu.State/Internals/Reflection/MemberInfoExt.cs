@@ -7,15 +7,12 @@ namespace Gu.State
     {
         internal static Type MemberType(this MemberInfo memberInfo)
         {
-            switch (memberInfo)
+            return memberInfo switch
             {
-                case FieldInfo fieldInfo:
-                    return fieldInfo.FieldType;
-                case PropertyInfo propertyInfo:
-                    return propertyInfo.PropertyType;
-                default:
-                    throw Throw.ShouldNeverGetHereException("Expected FieldInfo or PropertyInfo.");
-            }
+                FieldInfo fieldInfo => fieldInfo.FieldType,
+                PropertyInfo propertyInfo => propertyInfo.PropertyType,
+                _ => throw Throw.ShouldNeverGetHereException("Expected FieldInfo or PropertyInfo."),
+            };
         }
 
         internal static bool IsIndexer(this MemberInfo member)

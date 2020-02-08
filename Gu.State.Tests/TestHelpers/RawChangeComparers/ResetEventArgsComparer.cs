@@ -1,7 +1,5 @@
 namespace Gu.State.Tests
 {
-    using System.Collections;
-
     using NUnit.Framework;
 
     public sealed class ResetEventArgsComparer : EventArgsComparer<ResetEventArgs>
@@ -13,34 +11,6 @@ namespace Gu.State.Tests
             if (!ReferenceEquals(expected.Source, actual.Source))
             {
                 throw new AssertionException($"Expected source to be same.");
-            }
-
-            return true;
-        }
-
-        private static bool Equals(IList x, IList y)
-        {
-            if (x is null && y is null)
-            {
-                return true;
-            }
-
-            if (x is null || y is null)
-            {
-                return false;
-            }
-
-            if (x.Count != y.Count)
-            {
-                return false;
-            }
-
-            for (var i = 0; i < x.Count; i++)
-            {
-                if (!Equals(x[i], y[i]))
-                {
-                    return false;
-                }
             }
 
             return true;

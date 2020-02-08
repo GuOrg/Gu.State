@@ -16,11 +16,19 @@ namespace Gu.State
 
         public PropertyInfo PropertyInfo { get; }
 
+        /// <summary>Check if <paramref name="left"/> is equal to <paramref name="right"/>.</summary>
+        /// <param name="left">The left <see cref="PropertyChangeEventArgs"/>.</param>
+        /// <param name="right">The right <see cref="PropertyChangeEventArgs"/>.</param>
+        /// <returns>True if <paramref name="left"/> is equal to <paramref name="right"/>.</returns>
         public static bool operator ==(PropertyChangeEventArgs left, PropertyChangeEventArgs right)
         {
             return left.Equals(right);
         }
 
+        /// <summary>Check if <paramref name="left"/> is not equal to <paramref name="right"/>.</summary>
+        /// <param name="left">The left <see cref="PropertyChangeEventArgs"/>.</param>
+        /// <param name="right">The right <see cref="PropertyChangeEventArgs"/>.</param>
+        /// <returns>True if <paramref name="left"/> is not equal to <paramref name="right"/>.</returns>
         public static bool operator !=(PropertyChangeEventArgs left, PropertyChangeEventArgs right)
         {
             return !left.Equals(right);

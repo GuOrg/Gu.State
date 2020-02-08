@@ -28,7 +28,9 @@ namespace Gu.State.Tests
 #pragma warning disable IDISP016, IDISP017 // Don't use disposed instance.
                 tracker.Dispose();
 #pragma warning restore IDISP016, IDISP017 // Don't use disposed instance.
+#pragma warning disable IDE0059 // Unnecessary assignment of a value
                 source = null;
+#pragma warning restore IDE0059 // Unnecessary assignment of a value
                 GC.Collect();
                 Assert.IsFalse(weakReference.IsAlive);
                 Assert.NotNull(tracker); // touching it here so it is not optimized away.
@@ -45,7 +47,9 @@ namespace Gu.State.Tests
 
                 var wrx = new System.WeakReference(source);
                 var wrxc = new System.WeakReference(source.Value);
+#pragma warning disable IDE0059 // Unnecessary assignment of a value
                 source = null;
+#pragma warning restore IDE0059 // Unnecessary assignment of a value
                 System.GC.Collect();
                 Assert.AreEqual(false, wrx.IsAlive);
                 Assert.AreEqual(false, wrxc.IsAlive);

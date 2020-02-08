@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
 
@@ -10,7 +10,7 @@
 
         internal static InvalidOperationException ExpectedParameterOfTypes<T1, T2>(string parameterName)
         {
-            var message = $"Expected {nameof(parameterName)} to be either of {typeof(T1).PrettyName()} or {typeof(T2).PrettyName()}";
+            var message = $"Expected {parameterName} to be either of {typeof(T1).PrettyName()} or {typeof(T2).PrettyName()}";
             return ThrowThereIsABugInTheLibrary(message);
         }
 

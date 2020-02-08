@@ -180,15 +180,16 @@ namespace Gu.State
                 throw new ArgumentException(message);
             }
 
-            var propertyInfo = memberExpression.Member as PropertyInfo;
-            if (propertyInfo is null)
+            if (memberExpression.Member is PropertyInfo propertyInfo)
+            {
+                this.IgnoreProperty(propertyInfo);
+                return this;
+            }
+            else
             {
                 var message = $"{nameof(property)} must be a property expression like foo => foo.Bar";
                 throw new ArgumentException(message);
             }
-
-            this.IgnoreProperty(propertyInfo);
-            return this;
         }
 
         /// <summary>Ignore indexers for type <typeparamref name="T"/> in the setting.</summary>

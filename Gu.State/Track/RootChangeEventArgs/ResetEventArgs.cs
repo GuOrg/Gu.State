@@ -17,11 +17,19 @@ namespace Gu.State
         /// <inheritdoc />
         object IRootChangeEventArgs.Source => this.Source;
 
+        /// <summary>Check if <paramref name="left"/> is equal to <paramref name="right"/>.</summary>
+        /// <param name="left">The left <see cref="ResetEventArgs"/>.</param>
+        /// <param name="right">The right <see cref="ResetEventArgs"/>.</param>
+        /// <returns>True if <paramref name="left"/> is equal to <paramref name="right"/>.</returns>
         public static bool operator ==(ResetEventArgs left, ResetEventArgs right)
         {
             return left.Equals(right);
         }
 
+        /// <summary>Check if <paramref name="left"/> is not equal to <paramref name="right"/>.</summary>
+        /// <param name="left">The left <see cref="ResetEventArgs"/>.</param>
+        /// <param name="right">The right <see cref="ResetEventArgs"/>.</param>
+        /// <returns>True if <paramref name="left"/> is not equal to <paramref name="right"/>.</returns>
         public static bool operator !=(ResetEventArgs left, ResetEventArgs right)
         {
             return !left.Equals(right);

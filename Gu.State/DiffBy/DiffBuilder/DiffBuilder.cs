@@ -441,9 +441,9 @@ namespace Gu.State
                     return false;
                 }
 
-                if (TryIs<MemberDiff, IndexDiff>(x, y, out result) ||
-                    TryIs<MemberDiff, RankDiff>(x, y, out result) ||
-                    TryIs<RankDiff, IndexDiff>(x, y, out result))
+                if (TryIs<MemberDiff, IndexDiff>(x, y, out _) ||
+                    TryIs<MemberDiff, RankDiff>(x, y, out _) ||
+                    TryIs<RankDiff, IndexDiff>(x, y, out _))
                 {
                     result = -1;
                     return true;

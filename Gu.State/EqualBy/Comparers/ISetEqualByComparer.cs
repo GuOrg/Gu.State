@@ -33,8 +33,7 @@ namespace Gu.State
             internal override bool Equals(TSet xs, TSet ys, MemberSettings settings, HashSet<ReferencePairStruct> referencePairs)
             {
                 // Not using pattern matching here as AppVeyor does not yet have a VS2019 image.
-                var hashSet = xs as HashSet<TItem>;
-                if (hashSet != null &&
+                if (xs is HashSet<TItem> hashSet &&
                     typeof(TItem).IsSealed &&
                     ReferenceEquals(hashSet.Comparer, EqualityComparer<TItem>.Default) &&
                     settings.IsEquatable(typeof(TItem)))

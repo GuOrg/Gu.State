@@ -1,4 +1,5 @@
-﻿// ReSharper disable UnusedMember.Local
+// ReSharper disable UnusedMember.Local
+#pragma warning disable IDE0051 // Remove unused private members
 namespace Gu.State.Benchmarks
 {
     using System;

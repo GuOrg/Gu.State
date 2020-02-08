@@ -51,8 +51,6 @@ namespace Gu.State
             }
         }
 
-        private bool IsAlive => this.x.IsAlive && this.y.IsAlive;
-
         public static bool operator ==(ReferencePair left, ReferencePair right)
         {
             return Equals(left, right);
@@ -75,13 +73,8 @@ namespace Gu.State
                 return true;
             }
 
-            var other = obj as ReferencePair;
-            if (other is null)
-            {
-                return false;
-            }
-
-            return this.Equals(other);
+            return obj is ReferencePair other &&
+                   this.Equals(other);
         }
 
         public override int GetHashCode()

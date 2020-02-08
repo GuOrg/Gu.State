@@ -1,4 +1,4 @@
-﻿// ReSharper disable All
+// ReSharper disable All
 namespace Gu.State.Tests.Internals.Refelection.EmitSandbox
 {
     using System;
@@ -18,7 +18,6 @@ namespace Gu.State.Tests.Internals.Refelection.EmitSandbox
         [SetUp]
         public void SetUp()
         {
-            var type = typeof(ComplexType);
             var assemblyName = new AssemblyName("Gu.State.Emit");
             var asmBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
             this.moduleBuilder = asmBuilder.DefineDynamicModule("FieldAccessors");
@@ -90,7 +89,7 @@ namespace Gu.State.Tests.Internals.Refelection.EmitSandbox
                 Assert.AreEqual(1, complexType.value);
                 Console.WriteLine($"CachedAssembly {stopwatch.Elapsed}");
 
-                var getter = (Func<ComplexType, int>)accessor.GetMethod($"get_{field.Name}")
+                _ = (Func<ComplexType, int>)accessor.GetMethod($"get_{field.Name}")
                                                              .CreateDelegate(typeof(Func<ComplexType, int>));
             }
 

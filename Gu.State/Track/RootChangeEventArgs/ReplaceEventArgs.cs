@@ -21,11 +21,19 @@ namespace Gu.State
         /// <summary>Gets the index at which an element was replaced. </summary>
         public int Index { get; }
 
+        /// <summary>Check if <paramref name="left"/> is equal to <paramref name="right"/>.</summary>
+        /// <param name="left">The left <see cref="ReplaceEventArgs"/>.</param>
+        /// <param name="right">The right <see cref="ReplaceEventArgs"/>.</param>
+        /// <returns>True if <paramref name="left"/> is equal to <paramref name="right"/>.</returns>
         public static bool operator ==(ReplaceEventArgs left, ReplaceEventArgs right)
         {
             return left.Equals(right);
         }
 
+        /// <summary>Check if <paramref name="left"/> is not equal to <paramref name="right"/>.</summary>
+        /// <param name="left">The left <see cref="ReplaceEventArgs"/>.</param>
+        /// <param name="right">The right <see cref="ReplaceEventArgs"/>.</param>
+        /// <returns>True if <paramref name="left"/> is not equal to <paramref name="right"/>.</returns>
         public static bool operator !=(ReplaceEventArgs left, ReplaceEventArgs right)
         {
             return !left.Equals(right);
