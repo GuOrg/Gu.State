@@ -26,18 +26,18 @@ namespace Gu.State
 
         public Error this[int index] => this.errors[index];
 
-        internal static IReadOnlyList<Error> MergeAll(TypeErrors typeErrors, IReadOnlyCollection<Error> errors)
-        {
-            var allErrors = new List<Error> { typeErrors };
-            Add(errors, allErrors);
-            return allErrors;
-        }
-
         public IEnumerator<Error> GetEnumerator() => this.errors.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
+        }
+
+        internal static IReadOnlyList<Error> MergeAll(TypeErrors typeErrors, IReadOnlyCollection<Error> errors)
+        {
+            var allErrors = new List<Error> { typeErrors };
+            Add(errors, allErrors);
+            return allErrors;
         }
 
         private static void Add(IReadOnlyCollection<Error> errors, List<Error> allErrors, List<IWithErrors> withErrors = null)

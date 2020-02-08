@@ -86,7 +86,7 @@ namespace Gu.State.Benchmarks
         {
             unchecked
             {
-                return ((this.Name?.GetHashCode() ?? 0) * 397) ^ this.Value;
+                return ((this.Name?.GetHashCode(StringComparison.Ordinal) ?? 0) * 397) ^ this.Value;
             }
         }
 

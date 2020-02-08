@@ -13,6 +13,19 @@ namespace Gu.State
         {
         }
 
+        public void Copy(
+            object source,
+            object target,
+            MemberSettings settings,
+            ReferencePairCollection referencePairs)
+        {
+            var itemType = source.GetType().GetItemType();
+            var copyMethod = typeof(SetOfTCopyer)
+                             .GetMethod(nameof(Copy), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)
+                             .MakeGenericMethod(itemType);
+            _ = copyMethod.Invoke(null, new[] { source, target, settings, referencePairs });
+        }
+
         internal static bool TryGetOrCreate(object x, object y, out ICopyer comparer)
         {
             if (Is.ISetsOfT(x, y))
@@ -23,19 +36,6 @@ namespace Gu.State
 
             comparer = null;
             return false;
-        }
-
-        public void Copy(
-            object source,
-            object target,
-            MemberSettings settings,
-            ReferencePairCollection referencePairs)
-        {
-            var itemType = source.GetType().GetItemType();
-            var copyMethod = typeof(SetOfTCopyer)
-                                 .GetMethod(nameof(Copy), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)
-                                 .MakeGenericMethod(itemType);
-            _ = copyMethod.Invoke(null, new[] { source, target, settings, referencePairs });
         }
 
         private static void Copy<T>(

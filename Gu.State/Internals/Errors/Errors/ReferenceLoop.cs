@@ -28,9 +28,9 @@ namespace Gu.State
             this.Errors = errors;
         }
 
-        internal MemberPath Path { get; }
-
         public IReadOnlyList<Error> Errors { get; }
+
+        internal MemberPath Path { get; }
 
         public StringBuilder AppendNotSupported(StringBuilder errorBuilder)
         {

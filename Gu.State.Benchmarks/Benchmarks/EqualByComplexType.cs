@@ -1,4 +1,4 @@
-﻿// ReSharper disable RedundantArgumentDefaultValue
+// ReSharper disable RedundantArgumentDefaultValue
 #pragma warning disable SA1300 // Element must begin with upper-case letter
 #pragma warning disable CA1822 // Mark members as static
 namespace Gu.State.Benchmarks
@@ -50,7 +50,7 @@ namespace Gu.State.Benchmarks
 
         private sealed class ComplexTypeComparer : IEqualityComparer<ComplexType>
         {
-            public static readonly ComplexTypeComparer Default = new ComplexTypeComparer();
+            internal static readonly ComplexTypeComparer Default = new ComplexTypeComparer();
 
             public bool Equals(ComplexType x, ComplexType y)
             {

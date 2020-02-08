@@ -15,7 +15,7 @@ namespace Gu.State
         {
             Copy((Array)source, (Array)target, settings, referencePairs);
         }
-        
+
         internal static bool TryGetOrCreate(object x, object y, out ICopyer comparer)
         {
             if (Is.Type<Array>(x, y))

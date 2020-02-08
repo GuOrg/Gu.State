@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Collections.Generic;
@@ -23,7 +23,6 @@
             }
         }
 
-        [Obsolete("This can probably be removed.")]
         internal static bool TryGetValueEquals<T>(T x, T y, MemberSettings settings, out bool result)
         {
             if (ReferenceEquals(x, y))
