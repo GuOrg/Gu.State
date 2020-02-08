@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System.Reflection;
 
@@ -36,8 +36,21 @@
         public static void PropertyValues<T>(T source, T target, PropertiesSettings settings)
             where T : class
         {
-            Ensure.NotNull(source, nameof(source));
-            Ensure.NotNull(target, nameof(target));
+            if (source is null)
+            {
+                throw new System.ArgumentNullException(nameof(source));
+            }
+
+            if (target is null)
+            {
+                throw new System.ArgumentNullException(nameof(target));
+            }
+
+            if (settings is null)
+            {
+                throw new System.ArgumentNullException(nameof(settings));
+            }
+
             Ensure.SameType(source, target, nameof(source), nameof(target));
             Verify.CanCopyRoot(typeof(T), settings);
             Sync(source, target, settings);

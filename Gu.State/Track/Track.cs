@@ -48,8 +48,21 @@ namespace Gu.State
         public static IDirtyTracker IsDirty<T>(T x, T y, PropertiesSettings settings)
             where T : class, INotifyPropertyChanged
         {
-            Ensure.NotNull(x, nameof(x));
-            Ensure.NotNull(y, nameof(y));
+            if (x is null)
+            {
+                throw new System.ArgumentNullException(nameof(x));
+            }
+
+            if (y is null)
+            {
+                throw new System.ArgumentNullException(nameof(y));
+            }
+
+            if (settings is null)
+            {
+                throw new System.ArgumentNullException(nameof(settings));
+            }
+
             Ensure.NotSame(x, y, nameof(x), nameof(y));
             Ensure.SameType(x, y);
             VerifyCanTrackIsDirty(x.GetType(), settings, typeof(Track).Name, nameof(IsDirty));
@@ -74,7 +87,11 @@ namespace Gu.State
             ReferenceHandling referenceHandling = ReferenceHandling.Structural,
             BindingFlags bindingFlags = Constants.DefaultPropertyBindingFlags)
         {
-            Ensure.NotNull(source, nameof(source));
+            if (source is null)
+            {
+                throw new System.ArgumentNullException(nameof(source));
+            }
+
             var settings = PropertiesSettings.GetOrCreate(referenceHandling: referenceHandling, bindingFlags: bindingFlags);
             return Changes(source, settings);
         }
@@ -85,7 +102,7 @@ namespace Gu.State
         /// <param name="source">The item to track changes for.</param>
         /// <param name="settings">
         /// Configuration for how to track.
-        /// For best performance settings should be cached between usages if anthing other than <see cref="ReferenceHandling"/> or <see cref="BindingFlags"/> is configured.
+        /// For best performance settings should be cached between usages if anything other than <see cref="ReferenceHandling"/> or <see cref="BindingFlags"/> is configured.
         /// </param>
         /// <returns>
         /// An <see cref="IChangeTracker"/> that signals on changes.
@@ -93,8 +110,16 @@ namespace Gu.State
         /// <paramref name="source"/>.</returns>
         public static IChangeTracker Changes(INotifyPropertyChanged source, PropertiesSettings settings)
         {
-            Ensure.NotNull(source, nameof(source));
-            Ensure.NotNull(settings, nameof(settings));
+            if (source is null)
+            {
+                throw new System.ArgumentNullException(nameof(source));
+            }
+
+            if (settings is null)
+            {
+                throw new System.ArgumentNullException(nameof(settings));
+            }
+
             return new ChangeTracker(source, settings);
         }
     }

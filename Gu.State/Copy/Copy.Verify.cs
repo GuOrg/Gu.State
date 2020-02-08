@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Collections;
@@ -50,6 +50,16 @@
         /// <param name="settings">Contains configuration for how copy will be performed.</param>
         public static void VerifyCanCopyPropertyValues(Type type, PropertiesSettings settings)
         {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (settings is null)
+            {
+                throw new ArgumentNullException(nameof(settings));
+            }
+
             Verify.CanCopyRoot(type, settings);
             Verify.CanCopyMemberValues(type, settings, typeof(Copy).Name, nameof(VerifyCanCopyPropertyValues));
         }
@@ -98,6 +108,16 @@
         /// <param name="settings">Contains configuration for how copy is performed.</param>
         public static void VerifyCanCopyFieldValues(Type type, FieldsSettings settings)
         {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (settings is null)
+            {
+                throw new ArgumentNullException(nameof(settings));
+            }
+
             Verify.CanCopyRoot(type, settings);
             Verify.CanCopyMemberValues(type, settings, typeof(Copy).Name, nameof(VerifyCanCopyFieldValues));
         }

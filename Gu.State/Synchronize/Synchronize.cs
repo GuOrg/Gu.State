@@ -41,8 +41,21 @@ namespace Gu.State
         public static IDisposable PropertyValues<T>(T source, T target, PropertiesSettings settings)
             where T : class, INotifyPropertyChanged
         {
-            Ensure.NotNull(source, nameof(source));
-            Ensure.NotNull(target, nameof(target));
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (target is null)
+            {
+                throw new ArgumentNullException(nameof(target));
+            }
+
+            if (settings is null)
+            {
+                throw new ArgumentNullException(nameof(settings));
+            }
+
             Ensure.NotSame(source, target, nameof(source), nameof(target));
             Ensure.SameType(source, target);
             VerifyCanSynchronize(source.GetType(), settings, typeof(Synchronize).Name, nameof(PropertyValues));

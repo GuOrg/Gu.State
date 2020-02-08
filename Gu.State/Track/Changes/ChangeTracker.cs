@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.ComponentModel;
@@ -20,8 +20,16 @@
         /// </summary>
         public ChangeTracker(INotifyPropertyChanged source, PropertiesSettings settings)
         {
-            Ensure.NotNull(source, nameof(source));
-            Ensure.NotNull(settings, nameof(settings));
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (settings is null)
+            {
+                throw new ArgumentNullException(nameof(settings));
+            }
+
             Track.Verify.CanTrackType(source.GetType(), settings);
             this.Settings = settings;
             this.node = ChangeTrackerNode.GetOrCreate(source, settings, isRoot: true);

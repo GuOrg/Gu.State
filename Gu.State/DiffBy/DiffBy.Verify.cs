@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System.Reflection;
 
@@ -33,6 +33,11 @@
         /// <param name="settings">The settings to use.</param>
         public static void VerifyCanDiffByFieldValues<T>(FieldsSettings settings)
         {
+            if (settings is null)
+            {
+                throw new System.ArgumentNullException(nameof(settings));
+            }
+
             EqualBy.VerifyCanEqualByMemberValues(typeof(T), settings, typeof(DiffBy).Name, nameof(FieldValues));
         }
 
@@ -65,6 +70,11 @@
         /// <param name="settings">The settings to use.</param>
         public static void VerifyCanDiffByPropertyValues<T>(PropertiesSettings settings)
         {
+            if (settings is null)
+            {
+                throw new System.ArgumentNullException(nameof(settings));
+            }
+
             EqualBy.VerifyCanEqualByMemberValues(typeof(T), settings, typeof(DiffBy).Name, nameof(PropertyValues));
         }
     }

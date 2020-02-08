@@ -11,6 +11,16 @@ namespace Gu.State
         public RankDiff(Array x, Array y)
             : base(new ValueDiff(x, y))
         {
+            if (x is null)
+            {
+                throw new ArgumentNullException(nameof(x));
+            }
+
+            if (y is null)
+            {
+                throw new ArgumentNullException(nameof(y));
+            }
+
             this.XLengths = GetLengths(x);
             this.YLengths = GetLengths(y);
         }
