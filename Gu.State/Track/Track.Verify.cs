@@ -1,11 +1,13 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.ComponentModel;
     using System.Reflection;
     using System.Text;
 
-    /// <summary>Provides methods for tracking stuff.</summary>
+    /// <summary>
+    /// Methods for checking if tracking dirty will work.
+    /// </summary>
     public static partial class Track
     {
         /// <summary>

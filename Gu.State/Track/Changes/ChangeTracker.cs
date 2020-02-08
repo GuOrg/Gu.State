@@ -18,6 +18,8 @@ namespace Gu.State
         /// <summary>
         /// Initializes a new instance of the <see cref="ChangeTracker"/> class.
         /// </summary>
+        /// <param name="source">The <see cref="INotifyPropertyChanged"/>.</param>
+        /// <param name="settings">The <see cref="PropertiesSettings"/>.</param>
         public ChangeTracker(INotifyPropertyChanged source, PropertiesSettings settings)
         {
             if (source is null)

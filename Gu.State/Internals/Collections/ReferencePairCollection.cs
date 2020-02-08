@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System.Collections.Concurrent;
 
@@ -36,17 +36,6 @@
             }
 
             return added;
-        }
-
-        internal bool Contains(object x, object y)
-        {
-            if (!IsReferencePair(x, y))
-            {
-                return false;
-            }
-
-            using var pair = ReferencePair.GetOrCreate(x, y);
-            return this.pairs.Contains(pair);
         }
 
         private static bool IsReferencePair(object x, object y)

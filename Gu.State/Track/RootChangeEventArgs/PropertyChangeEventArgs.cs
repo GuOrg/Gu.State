@@ -3,8 +3,16 @@ namespace Gu.State
     using System;
     using System.Reflection;
 
+    /// <summary>
+    /// When trackers notify about changes.
+    /// </summary>
     public struct PropertyChangeEventArgs : IRootChangeEventArgs, IEquatable<PropertyChangeEventArgs>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PropertyChangeEventArgs"/> struct.
+        /// </summary>
+        /// <param name="source">The source instance that changed.</param>
+        /// <param name="propertyInfo">The <see cref="PropertyInfo"/>.</param>
         public PropertyChangeEventArgs(object source, PropertyInfo propertyInfo)
         {
             this.PropertyInfo = propertyInfo;
@@ -14,6 +22,9 @@ namespace Gu.State
         /// <inheritdoc />
         public object Source { get; }
 
+        /// <summary>
+        /// Gets the <see cref="PropertyInfo"/>.
+        /// </summary>
         public PropertyInfo PropertyInfo { get; }
 
         /// <summary>Check if <paramref name="left"/> is equal to <paramref name="right"/>.</summary>

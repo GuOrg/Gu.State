@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System.CodeDom.Compiler;
     using System.Collections.Generic;
@@ -18,6 +18,10 @@
             this.Y = yValue;
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the diff is empty.
+        /// always false.
+        /// </summary>
         public override bool IsEmpty => false;
 
         /// <summary>Gets the X value.</summary>
@@ -40,7 +44,8 @@
                 return $"{this.X.GetType().PrettyName()} x: {this.X.ToInvariantOrNullString()} y: {this.Y.ToInvariantOrNullString()}";
             }
 
-            using var writer = new IndentedTextWriter(new StringWriter(), tabString) { NewLine = newLine };
+            using var stringWriter = new StringWriter();
+            using var writer = new IndentedTextWriter(stringWriter, tabString) { NewLine = newLine };
             writer.Write(this.X.GetType().PrettyName());
             using (var disposer = BorrowValueDiffReferenceSet())
             {

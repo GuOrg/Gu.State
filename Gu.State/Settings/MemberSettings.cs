@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Collections;
@@ -8,6 +8,9 @@
     using System.Linq;
     using System.Reflection;
 
+    /// <summary>
+    /// Base type for settings.
+    /// </summary>
     public abstract partial class MemberSettings
     {
         private static readonly IReadOnlyDictionary<Type, EqualByComparer> DefaultComparers = CreateDefaultComparers();
@@ -64,9 +67,10 @@
             {
                 foreach (var kvp in comparers)
                 {
-                    var comparer = (EqualByComparer)typeof(ExplicitEqualByComparer<>).MakeGenericType(kvp.Key)
-                                                                                     .GetMethod(nameof(ExplicitEqualByComparer<int>.Create), BindingFlags.NonPublic | BindingFlags.Static)
-                                                                                     .Invoke(null, new[] { kvp.Value });
+                    var comparer = (EqualByComparer)typeof(ExplicitEqualByComparer<>)
+                                       .MakeGenericType(kvp.Key)
+                                       .GetMethod(nameof(ExplicitEqualByComparer<int>.Create), BindingFlags.NonPublic | BindingFlags.Static)
+                                       .Invoke(null, new[] { kvp.Value });
                     this.equalByComparers[kvp.Key] = comparer;
                     this.rootEqualByComparers[kvp.Key] = comparer;
                 }

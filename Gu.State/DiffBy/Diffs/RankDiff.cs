@@ -8,6 +8,8 @@ namespace Gu.State
     public class RankDiff : SubDiff
     {
         /// <summary> Initializes a new instance of the <see cref="RankDiff"/> class.</summary>
+        /// <param name="x">The left <see cref="Array"/>.</param>
+        /// <param name="y">The right <see cref="Array"/>.</param>
         public RankDiff(Array x, Array y)
             : base(new ValueDiff(x, y))
         {

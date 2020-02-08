@@ -1,9 +1,12 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Collections.Concurrent;
     using System.Globalization;
 
+    /// <summary>
+    /// Base type for settings.
+    /// </summary>
     public abstract partial class MemberSettings
     {
         private static readonly ConcurrentDictionary<Type, bool> EquatableCheckedTypes = new ConcurrentDictionary<Type, bool>

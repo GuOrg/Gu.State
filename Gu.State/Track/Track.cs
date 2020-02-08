@@ -3,6 +3,9 @@ namespace Gu.State
     using System.ComponentModel;
     using System.Reflection;
 
+    /// <summary>
+    /// Methods for tracking dirty.
+    /// </summary>
     public static partial class Track
     {
         /// <summary>

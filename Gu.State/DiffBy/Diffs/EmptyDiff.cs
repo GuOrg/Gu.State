@@ -14,6 +14,10 @@ namespace Gu.State
         {
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the diff is empty.
+        /// always true.
+        /// </summary>
         public override bool IsEmpty => true;
 
         /// <inheritdoc />

@@ -34,9 +34,9 @@ namespace Gu.State
             this.SetValue((TSource)source, (TValue)value);
         }
 
-#pragma warning disable CA1801 // Review unused parameters
+#pragma warning disable IDE0060, CA1801 // Review unused parameters
         public void SetValue(TSource source, TValue value) => throw new InvalidOperationException("Can't set value of struct.");
-#pragma warning restore CA1801 // Review unused parameters
+#pragma warning restore IDE0060, CA1801 // Review unused parameters
 
         public object GetValue(object source)
         {
