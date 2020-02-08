@@ -18,9 +18,9 @@ namespace Gu.State
             ReferencePairCollection referencePairs)
         {
             var itemType = source.GetType().GetItemType();
-            var copyMethod = this.GetType()
-                                        .GetMethod(nameof(Copy), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)
-                                        .MakeGenericMethod(itemType);
+            var copyMethod = typeof(ListOfTCopyer)
+                                 .GetMethod(nameof(Copy), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)
+                                 .MakeGenericMethod(itemType);
             _ = copyMethod.Invoke(null, new[] { source, target, settings, referencePairs });
         }
 

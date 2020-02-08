@@ -54,9 +54,12 @@
     <Rule Id="CA1051" Action="None" />
     <Rule Id="CA1052" Action="None" />
     <Rule Id="CA1062" Action="None" />
+    <Rule Id="CA1716" Action="None" />
     <Rule Id="CA1724" Action="None" />
+    <Rule Id="CA1814" Action="None" />
     <Rule Id="CA1815" Action="None" />
     <Rule Id="CA1819" Action="None" />
+    <Rule Id="CA1822" Action="None" />
     <Rule Id="CA2227" Action="None" />
   </Rules>
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">

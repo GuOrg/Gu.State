@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Collections;
@@ -102,6 +102,11 @@
         /// <returns>The properties.</returns>
         public IEnumerable<PropertyInfo> GetProperties(Type type)
         {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
             return type.GetProperties(this.BindingFlags);
         }
 

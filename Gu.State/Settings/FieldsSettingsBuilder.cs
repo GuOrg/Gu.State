@@ -57,6 +57,11 @@ namespace Gu.State
         /// <returns>The builder instance for chaining.</returns>
         public FieldsSettingsBuilder IgnoreType(Type type)
         {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
             if (!this.ignoredTypes.Add(type))
             {
                 var message = $"Already added type: {type.FullName}\r\n" +
