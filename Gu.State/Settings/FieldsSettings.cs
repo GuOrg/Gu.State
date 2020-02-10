@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Collections;
@@ -95,6 +95,7 @@
             return this.IgnoredMembers.ContainsKey(fieldInfo);
         }
 
+        /// <inheritdoc />
         public override IEnumerable<MemberInfo> GetMembers(Type type)
         {
             while (type != null &&
@@ -109,6 +110,7 @@
             }
         }
 
+        /// <inheritdoc />
         public override bool IsIgnoringMember(MemberInfo member)
         {
             return member is FieldInfo field &&

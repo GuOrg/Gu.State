@@ -2,6 +2,9 @@ namespace Gu.State
 {
     using System.Collections.Concurrent;
 
+    /// <summary>
+    /// A collection with reference pairs.
+    /// </summary>
     public sealed class ReferencePairCollection
     {
         private static readonly ConcurrentQueue<ReferencePairCollection> Cache = new ConcurrentQueue<ReferencePairCollection>();

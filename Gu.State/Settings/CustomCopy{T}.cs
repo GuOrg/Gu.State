@@ -13,7 +13,6 @@ namespace Gu.State
         /// <summary>
         /// Initializes a new instance of the <see cref="CustomCopy{T}"/> class.
         /// </summary>
-        /// <typeparam name="T">The type to copy.</typeparam>
         /// <param name="copyValue">The implementation.</param>
         public CustomCopy(Func<T, T, T> copyValue)
         {

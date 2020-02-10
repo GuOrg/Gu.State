@@ -11,6 +11,11 @@ namespace Gu.State
     /// <typeparam name="T">The type of tracker.</typeparam>
     public abstract class TrackerChangedEventArgs<T> : EventArgs
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TrackerChangedEventArgs{T}"/> class.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="previous">The previous change.</param>
         protected TrackerChangedEventArgs(
             T node,
             TrackerChangedEventArgs<T> previous = null)

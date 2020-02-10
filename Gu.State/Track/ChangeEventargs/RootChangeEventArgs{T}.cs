@@ -4,6 +4,11 @@ namespace Gu.State
     /// <typeparam name="T">The type of tracker.</typeparam>
     public class RootChangeEventArgs<T> : TrackerChangedEventArgs<T>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RootChangeEventArgs{T}"/> class.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="eventArgs">The change info.</param>
         public RootChangeEventArgs(T node, IRootChangeEventArgs eventArgs)
             : base(node, null)
         {

@@ -110,8 +110,10 @@ namespace Gu.State
             return type.GetProperties(this.BindingFlags);
         }
 
+        /// <inheritdoc />
         public override IEnumerable<MemberInfo> GetMembers(Type type) => this.GetProperties(type);
 
+        /// <inheritdoc />
         public override bool IsIgnoringMember(MemberInfo member)
         {
             Debug.Assert(member is PropertyInfo, "member is PropertyInfo");

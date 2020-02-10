@@ -30,6 +30,11 @@ namespace Gu.State
             [typeof(byte)] = true,
         };
 
+        /// <summary>
+        /// Check if <paramref name="type"/> is equatable.
+        /// </summary>
+        /// <param name="type">The <see cref="Type"/>.</param>
+        /// <returns>True if <paramref name="type"/> is equatable.</returns>
         protected static bool IsEquatableCore(Type type)
         {
             if (type is null)
