@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".sln", ".sln", "{7AC03612-F
 		.gitignore = .gitignore
 		appveyor.yml = appveyor.yml
 		azure-pipelines.yml = azure-pipelines.yml
+		.github\dependabot.yml = .github\dependabot.yml
 		Gu.State.sln.DotSettings = Gu.State.sln.DotSettings
 	EndProjectSection
 EndProject
@@ -19,7 +20,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".docs", ".docs", "{2ADA02F1-C4A8-4EA7-9BD8-5350DD9EAA55}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
-		.paket\Readme.paket.md = .paket\Readme.paket.md
 		RELEASE_NOTES.md = RELEASE_NOTES.md
 	EndProjectSection
 EndProject
