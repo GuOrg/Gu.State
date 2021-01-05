@@ -1,4 +1,4 @@
-﻿namespace Gu.State.Tests.EqualByTests
+namespace Gu.State.Tests.EqualByTests
 {
     using System;
     using System.Collections.Generic;
@@ -9,7 +9,7 @@
 
     public abstract class CollectionTests
     {
-        public abstract bool EqualBy<T>(T source, T target, ReferenceHandling referenceHandling)
+        public abstract bool EqualBy<T>(T x, T y, ReferenceHandling referenceHandling)
             where T : class;
 
         [TestCase(ReferenceHandling.References)]
@@ -32,7 +32,7 @@
         }
 
         [Test]
-        public void ListOfWithSimples()
+        public void ListOfWithSimpleProperties()
         {
             var x = new List<WithSimpleProperties> { new WithSimpleProperties(1, 2, "a", StringSplitOptions.RemoveEmptyEntries) };
             var y = new List<WithSimpleProperties> { new WithSimpleProperties(1, 2, "a", StringSplitOptions.RemoveEmptyEntries) };

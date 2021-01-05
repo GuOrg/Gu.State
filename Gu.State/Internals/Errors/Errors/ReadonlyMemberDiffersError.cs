@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Reflection;
@@ -40,29 +40,29 @@
                     throw new InvalidOperationException($"Unhandled member type {this.Member.MemberType}");
             }
 
-            errorBuilder.AppendLine($" - Source value {this.GetType(this.SourceAndTargetValue.SourceValue)}: {this.GetValue(this.SourceAndTargetValue.SourceValue)}.")
-                        .AppendLine($" - Target value {this.GetType(this.SourceAndTargetValue.TargetValue)}: {this.GetValue(this.SourceAndTargetValue.TargetValue)}.");
+            errorBuilder.AppendLine($" - Source value {GetType(this.SourceAndTargetValue.SourceValue)}: {GetValue(this.SourceAndTargetValue.SourceValue)}.")
+                        .AppendLine($" - Target value {GetType(this.SourceAndTargetValue.TargetValue)}: {GetValue(this.SourceAndTargetValue.TargetValue)}.");
             return errorBuilder;
-        }
 
-        private string GetType(object value)
-        {
-            if (value is null)
+            static string GetType(object value)
             {
-                return string.Empty;
+                if (value is null)
+                {
+                    return string.Empty;
+                }
+
+                return $"({value.GetType().PrettyName()})";
             }
 
-            return $"({value.GetType().PrettyName()})";
-        }
-
-        private string GetValue(object value)
-        {
-            if (value is null)
+            static string GetValue(object value)
             {
-                return "null";
-            }
+                if (value is null)
+                {
+                    return "null";
+                }
 
-            return value.ToString();
+                return value.ToString();
+            }
         }
     }
 }

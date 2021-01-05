@@ -1,4 +1,4 @@
-﻿namespace Gu.State.Tests.EqualByTests
+namespace Gu.State.Tests.EqualByTests
 {
     using System.Collections.Generic;
 
@@ -8,7 +8,7 @@
 
     public abstract class SetTests
     {
-        public abstract bool EqualBy<T>(T source, T target, ReferenceHandling referenceHandling)
+        public abstract bool EqualBy<T>(T x, T y, ReferenceHandling referenceHandling)
             where T : class;
 
         [TestCase(ReferenceHandling.Structural)]

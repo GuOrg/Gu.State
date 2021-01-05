@@ -1,4 +1,4 @@
-﻿namespace Gu.State.Tests.DiffTests
+namespace Gu.State.Tests.DiffTests
 {
     using System;
     using System.Collections.Generic;
@@ -10,11 +10,11 @@
 
     public abstract class CollectionTests
     {
-        public abstract Diff DiffBy<T>(T source, T target, ReferenceHandling referenceHandling)
+        public abstract Diff DiffBy<T>(T x, T y, ReferenceHandling referenceHandling)
             where T : class;
 
         [Test]
-        public void ListOfIntsToEmpty()
+        public void ListOfIntToEmpty()
         {
             var x = new List<int> { 1, 2, 3 };
             var y = new List<int>();
@@ -28,7 +28,7 @@
         }
 
         [Test]
-        public void ListOfIntsEmptyToEmpty()
+        public void ListOfIntEmptyToEmpty()
         {
             var x = new List<int>();
             var y = new List<int>();
@@ -42,7 +42,7 @@
         }
 
         [Test]
-        public void ListOfIntsToLonger()
+        public void ListOfIntToLonger()
         {
             var x = new List<int> { 1, 2, 3 };
             var y = new List<int> { 1, 2, 3, 4 };
@@ -56,7 +56,7 @@
         }
 
         [Test]
-        public void ListOfWithSimples()
+        public void ListOfWithSimpleProperties()
         {
             var x = new List<WithSimpleProperties>
             {
@@ -120,7 +120,7 @@
         }
 
         [Test]
-        public void ObservableCollectionOfIntsToEmpty()
+        public void ObservableCollectionOfIntToEmpty()
         {
             var x = new ObservableCollection<int> { 1, 2, 3 };
             var y = new ObservableCollection<int>();
@@ -136,7 +136,7 @@
         }
 
         [Test]
-        public void ObservableCollectionOfIntsToLonger()
+        public void ObservableCollectionOfIntToLonger()
         {
             var x = new ObservableCollection<int> { 1, 2, 3 };
             var y = new ObservableCollection<int> { 1, 2, 3, 4 };
@@ -167,7 +167,7 @@
 
         [TestCase(ReferenceHandling.References)]
         [TestCase(ReferenceHandling.Structural)]
-        public void ImmutableListOfIntsWhenEqual(ReferenceHandling referenceHandling)
+        public void ImmutableListOfIntWhenEqual(ReferenceHandling referenceHandling)
         {
             var x = System.Collections.Immutable.ImmutableList.Create(1, 2, 3);
             var y = System.Collections.Immutable.ImmutableList.Create(1, 2, 3);

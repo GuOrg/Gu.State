@@ -1,4 +1,4 @@
-﻿namespace Gu.State.Tests.DiffTests
+namespace Gu.State.Tests.DiffTests
 {
     using System.Linq;
 
@@ -8,7 +8,7 @@
 
     public abstract class ArrayTests
     {
-        public abstract Diff DiffBy<T>(T source, T target, ReferenceHandling referenceHandling);
+        public abstract Diff DiffBy<T>(T x, T y, ReferenceHandling referenceHandling);
 
         [TestCase("1, 2, 3", "1, 2, 3", "Empty")]
         [TestCase("1, 2, 3", "1, 2", "int[] [2] x: 3 y: missing item")]
@@ -29,7 +29,7 @@
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.References)]
         [TestCase(ReferenceHandling.Structural)]
-        public void IntsWhenEqual(ReferenceHandling referenceHandling)
+        public void ArrayOfIntWhenEqual(ReferenceHandling referenceHandling)
         {
             var x = new[] { 1, 2, 3 };
             var y = new[] { 1, 2, 3 };
@@ -45,7 +45,7 @@
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.References)]
         [TestCase(ReferenceHandling.Structural)]
-        public void ImmutableArrayOfIntsWhenEqual(ReferenceHandling referenceHandling)
+        public void ImmutableArrayOfIntWhenEqual(ReferenceHandling referenceHandling)
         {
             var x = System.Collections.Immutable.ImmutableArray.Create(1, 2, 3);
             var y = System.Collections.Immutable.ImmutableArray.Create(1, 2, 3);
@@ -61,7 +61,7 @@
         [TestCase(0, 0, 1, "Empty")]
         [TestCase(0, 0, 10, "int[,] [0,0] x: 1 y: 10")]
         [TestCase(2, 1, 10, "int[,] [2,1] x: 6 y: 10")]
-        public void Ints2D(int i1, int i2, int yValue, string expected)
+        public void Array2dOfInt(int i1, int i2, int yValue, string expected)
         {
             var x = new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } };
             var y = new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } };
@@ -73,7 +73,7 @@
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.References)]
         [TestCase(ReferenceHandling.Structural)]
-        public void Ints2DWhenRankDiffers(ReferenceHandling referenceHandling)
+        public void ArrayOfIntWhenRankDiffers(ReferenceHandling referenceHandling)
         {
             var x = new int[2, 3];
             var y = new int[3, 2];
@@ -88,7 +88,7 @@
 
         [TestCase(ReferenceHandling.Structural)]
         [TestCase(ReferenceHandling.References)]
-        public void EqualImmutables(ReferenceHandling referenceHandling)
+        public void EqualArrayOfImmutable(ReferenceHandling referenceHandling)
         {
             var source = new[] { new Immutable(1), new Immutable(2), new Immutable(3) };
             var target = new[] { new Immutable(1), new Immutable(2), new Immutable(3) };

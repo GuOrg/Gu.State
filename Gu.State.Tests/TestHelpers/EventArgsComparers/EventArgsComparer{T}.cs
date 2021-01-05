@@ -1,4 +1,4 @@
-﻿namespace Gu.State.Tests
+namespace Gu.State.Tests
 {
     using System;
     using System.Collections.Generic;
@@ -7,7 +7,7 @@
     {
         public Type Type => typeof(T);
 
-        public abstract bool Equals(T expected, T actual);
+        public abstract bool Equals(T x, T y);
 
         public int GetHashCode(T obj)
         {

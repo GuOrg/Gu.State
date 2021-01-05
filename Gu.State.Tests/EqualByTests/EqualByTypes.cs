@@ -736,7 +736,7 @@ namespace Gu.State.Tests.EqualByTests
 
         public sealed class HashCollisionType
         {
-            public int HashValue { get; set; } = 0;
+            public int HashValue { get; set; }
 
             public int Value { get; set; }
 
