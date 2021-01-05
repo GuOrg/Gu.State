@@ -67,7 +67,7 @@ namespace Gu.State
                 throw new System.ArgumentNullException(nameof(settings));
             }
 
-            EqualBy.VerifyCanEqualByMemberValues(x?.GetType() ?? y?.GetType() ?? typeof(T), settings, typeof(DiffBy).Name, nameof(PropertyValues));
+            EqualBy.VerifyCanEqualByMemberValues(x.GetType(), settings, nameof(DiffBy), nameof(PropertyValues));
             return TryCreateValueDiff(x, y, settings) ?? new EmptyDiff(x, y);
         }
 
