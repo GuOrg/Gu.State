@@ -1,4 +1,4 @@
-﻿// ReSharper disable All
+// ReSharper disable All
 #pragma warning disable INPC003 // Notify when property changes.
 #pragma warning disable INPC001 // Implement INotifyPropertyChanged.
 namespace Gu.State.Tests.DiffTests
@@ -539,7 +539,7 @@ namespace Gu.State.Tests.DiffTests
         {
             private int value;
 
-            public int HashValue { get; set; } = 0;
+            public int HashValue { get; set; }
 
             public int Value
             {
