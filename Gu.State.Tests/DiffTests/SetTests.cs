@@ -7,13 +7,13 @@ namespace Gu.State.Tests.DiffTests
 
     public abstract class SetTests
     {
-        public abstract Diff DiffBy<T>(T source, T target, ReferenceHandling referenceHandling)
+        public abstract Diff DiffBy<T>(T x, T y, ReferenceHandling referenceHandling)
             where T : class;
 
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.Structural)]
         [TestCase(ReferenceHandling.References)]
-        public void HashSetOfIntsWhenEqual(ReferenceHandling referenceHandling)
+        public void HashSetOfIntWhenEqual(ReferenceHandling referenceHandling)
         {
             var x = new HashSet<int> { 1, 2, 3 };
             var y = new HashSet<int> { 2, 3, 1 };
@@ -29,7 +29,7 @@ namespace Gu.State.Tests.DiffTests
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.Structural)]
         [TestCase(ReferenceHandling.References)]
-        public void HashSetOfIntsWhenNotEqual(ReferenceHandling referenceHandling)
+        public void HashSetOfIntWhenNotEqual(ReferenceHandling referenceHandling)
         {
             var x = new HashSet<int> { 1, 2, 30 };
             var y = new HashSet<int> { 1, 2, 40 };
@@ -45,7 +45,7 @@ namespace Gu.State.Tests.DiffTests
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.Structural)]
         [TestCase(ReferenceHandling.References)]
-        public void HashSetOfIntsWhenLonger(ReferenceHandling referenceHandling)
+        public void HashSetOfIntWhenLonger(ReferenceHandling referenceHandling)
         {
             var x = new HashSet<int> { 1, 2, 3, 40 };
             var y = new HashSet<int> { 1, 2, 3 };
@@ -166,7 +166,7 @@ namespace Gu.State.Tests.DiffTests
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.References)]
         [TestCase(ReferenceHandling.Structural)]
-        public void ImmutableHashSetOfIntsWhenEqual(ReferenceHandling referenceHandling)
+        public void ImmutableHashSetOfIntWhenEqual(ReferenceHandling referenceHandling)
         {
             var x = System.Collections.Immutable.ImmutableHashSet.Create(1, 2, 3);
             var y = System.Collections.Immutable.ImmutableHashSet.Create(1, 2, 3);

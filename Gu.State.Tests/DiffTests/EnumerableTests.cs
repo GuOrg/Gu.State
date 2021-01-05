@@ -6,7 +6,7 @@ namespace Gu.State.Tests.DiffTests
 
     public abstract class EnumerableTests
     {
-        public abstract Diff DiffBy<T>(T source, T target, ReferenceHandling referenceHandling)
+        public abstract Diff DiffBy<T>(T x, T y, ReferenceHandling referenceHandling)
             where T : class;
 
         [TestCase("1, 2, 3", "1, 2, 3", "Empty")]

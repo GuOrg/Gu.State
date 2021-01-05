@@ -1,4 +1,4 @@
-﻿namespace Gu.State.Tests.DiffTests
+namespace Gu.State.Tests.DiffTests
 {
     using System.Collections.Generic;
 
@@ -6,7 +6,7 @@
 
     public abstract class DictionaryTests
     {
-        public abstract Diff DiffBy<T>(T source, T target, ReferenceHandling referenceHandling)
+        public abstract Diff DiffBy<T>(T x, T y, ReferenceHandling referenceHandling)
             where T : class;
 
         [TestCase(1, "one", "Empty")]

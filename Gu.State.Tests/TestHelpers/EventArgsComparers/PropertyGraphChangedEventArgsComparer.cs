@@ -10,21 +10,21 @@ namespace Gu.State.Tests
         {
         }
 
-        public override bool Equals(PropertyGraphChangedEventArgs<TNode> expected, PropertyGraphChangedEventArgs<TNode> actual)
+        public override bool Equals(PropertyGraphChangedEventArgs<TNode> x, PropertyGraphChangedEventArgs<TNode> y)
         {
-            if (!ReferenceEquals(expected.Node, actual.Node))
+            if (!ReferenceEquals(x.Node, y.Node))
             {
-                throw new AssertionException($"Expected actual.Node to be same as expected.Node");
+                throw new AssertionException($"Expected x.Node to be same as y.Node");
             }
 
-            if (!EventArgsComparer.Default.Equals(expected.Previous, actual.Previous))
+            if (!EventArgsComparer.Default.Equals(x.Previous, y.Previous))
             {
                 return false;
             }
 
-            if (expected.Property != actual.Property)
+            if (x.Property != y.Property)
             {
-                throw new AssertionException($"Expected property {expected.Property.Name} but was {actual.Property.Name}");
+                throw new AssertionException($"Expected property {x.Property.Name} but was {y.Property.Name}");
             }
 
             return true;
