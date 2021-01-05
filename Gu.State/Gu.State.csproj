@@ -2,8 +2,6 @@
   <PropertyGroup>
     <TargetFrameworks>net45</TargetFrameworks>
     <LangVersion>latest</LangVersion>
-    <CodeAnalysisRuleSet>Gu.State.ruleset</CodeAnalysisRuleSet>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -23,7 +21,6 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Version>0.3.1</Version>
     <NeutralLanguage>en</NeutralLanguage>
     <Authors>Johan Larsson</Authors>
@@ -35,6 +32,8 @@
 PERF: EqualBy faster now, still a lot to be done.
 BREAKING: EqualByComparer no longer public.</PackageReleaseNotes>
     <PackageTags>Equals, Copy, Sync, Diff, Dirty</PackageTags>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
