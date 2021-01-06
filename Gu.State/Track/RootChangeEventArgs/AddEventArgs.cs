@@ -4,7 +4,7 @@ namespace Gu.State
     using System.Collections;
 
     /// <summary>This is raised when an element was added to a notifying collection.</summary>
-    public struct AddEventArgs : IRootChangeEventArgs, IEquatable<AddEventArgs>
+    public readonly struct AddEventArgs : IRootChangeEventArgs, IEquatable<AddEventArgs>
     {
         internal AddEventArgs(IList source, int index)
         {

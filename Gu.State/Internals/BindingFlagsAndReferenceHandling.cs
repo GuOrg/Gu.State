@@ -3,7 +3,7 @@ namespace Gu.State
     using System;
     using System.Reflection;
 
-    internal struct BindingFlagsAndReferenceHandling : IEquatable<BindingFlagsAndReferenceHandling>
+    internal readonly struct BindingFlagsAndReferenceHandling : IEquatable<BindingFlagsAndReferenceHandling>
     {
         private readonly BindingFlags bindingFlags;
         private readonly ReferenceHandling referenceHandling;

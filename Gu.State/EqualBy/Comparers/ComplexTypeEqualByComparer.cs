@@ -10,11 +10,14 @@ namespace Gu.State
     {
         internal static bool TryGet(Type type, MemberSettings settings, out EqualByComparer comparer)
         {
-            comparer = (EqualByComparer)Activator.CreateInstance(
+            comparer = Activator.CreateInstance<EqualByComparer>(
                 typeof(Comparer<>).MakeGenericType(type),
-                ImmutableArray.Create(settings.GetEffectiveMembers(type)
-                                              .Concat(IllegalIndexers())
-                                              .Select(m => MemberEqualByComparer.Create(m, settings))));
+                new object[]
+                {
+                    ImmutableArray.Create(settings.GetEffectiveMembers(type)
+                                                  .Concat(IllegalIndexers())
+                                                  .Select(m => MemberEqualByComparer.Create(m, settings))),
+                });
             return true;
 
             IEnumerable<MemberInfo> IllegalIndexers()

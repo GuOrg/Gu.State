@@ -4,7 +4,7 @@ namespace Gu.State
     using System.Collections;
 
     /// <summary>This is raised when an element is removed from a notifying collection.</summary>
-    public struct RemoveEventArgs : IRootChangeEventArgs, IEquatable<RemoveEventArgs>
+    public readonly struct RemoveEventArgs : IRootChangeEventArgs, IEquatable<RemoveEventArgs>
     {
         internal RemoveEventArgs(IList source, int index)
         {

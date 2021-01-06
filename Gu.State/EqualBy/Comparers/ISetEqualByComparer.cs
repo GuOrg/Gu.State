@@ -12,9 +12,9 @@ namespace Gu.State
                 type.Namespace?.StartsWith("System.", StringComparison.Ordinal) == true &&
                 type.Name.EndsWith("Set`1", StringComparison.Ordinal))
             {
-                comparer = (EqualByComparer)Activator.CreateInstance(
+                comparer = Activator.CreateInstance<EqualByComparer>(
                     typeof(EqualByComparer<,>).MakeGenericType(type, type.GetItemType()),
-                    settings.GetEqualByComparerOrDeferred(type.GetItemType()));
+                    new object[] { settings.GetEqualByComparerOrDeferred(type.GetItemType()) });
                 return true;
             }
 

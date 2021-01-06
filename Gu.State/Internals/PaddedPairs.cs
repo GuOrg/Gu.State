@@ -33,7 +33,7 @@ namespace Gu.State
             return new Pair<T>(x, y);
         }
 
-        internal struct Pair<T>
+        internal readonly struct Pair<T>
             where T : class
         {
             internal readonly T X;

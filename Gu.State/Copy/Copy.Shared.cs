@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Diagnostics;
@@ -18,11 +18,9 @@
             var type = sourceValue.GetType();
             if (type.IsArray)
             {
-                var constructor = type.GetConstructor(new[] { typeof(int) });
-                var parameters = new[] { type.GetProperty("Length").GetValue(sourceValue) };
-                //// ReSharper disable once PossibleNullReferenceException nope, never null here
-                var array = constructor.Invoke(parameters);
-                return array;
+                return Activator.CreateInstance<Array>(
+                    type,
+                    new object[] { type.GetProperty("Length").GetValue(sourceValue) });
             }
 
             if (settings.IsImmutable(type))
@@ -32,7 +30,7 @@
 
             try
             {
-                return Activator.CreateInstance(type, nonPublic: true);
+                return System.Activator.CreateInstance(type, nonPublic: true);
             }
 #pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception e)

@@ -6,7 +6,7 @@ namespace Gu.State
     /// <summary>
     /// When trackers notify about changes.
     /// </summary>
-    public struct PropertyChangeEventArgs : IRootChangeEventArgs, IEquatable<PropertyChangeEventArgs>
+    public readonly struct PropertyChangeEventArgs : IRootChangeEventArgs, IEquatable<PropertyChangeEventArgs>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyChangeEventArgs"/> struct.

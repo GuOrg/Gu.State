@@ -11,7 +11,7 @@ namespace Gu.State.Tests.Internals.Refelection.EmitSandbox
     using static Gu.State.Tests.Internals.Reflection.TypeExtTypes;
 
     [Explicit("Sandbox")]
-    public static class FieldAccessorsSandbox
+    public class FieldAccessorsSandbox
     {
         private ModuleBuilder moduleBuilder;
 

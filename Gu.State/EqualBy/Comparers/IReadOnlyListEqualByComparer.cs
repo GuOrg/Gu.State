@@ -12,21 +12,21 @@ namespace Gu.State
             {
                 if (type.IsArray)
                 {
-                    comparer = (EqualByComparer)Activator.CreateInstance(
+                    comparer = Activator.CreateInstance<EqualByComparer>(
                         typeof(ArrayComparer<>).MakeGenericType(type.GetItemType()),
-                        settings.GetEqualByComparerOrDeferred(type.GetItemType()));
+                        new object[] { settings.GetEqualByComparerOrDeferred(type.GetItemType()) });
                 }
                 else if (type.GetGenericTypeDefinition() == typeof(List<>))
                 {
-                    comparer = (EqualByComparer)Activator.CreateInstance(
+                    comparer = Activator.CreateInstance<EqualByComparer>(
                         typeof(ListComparer<>).MakeGenericType(type.GetItemType()),
-                        settings.GetEqualByComparerOrDeferred(type.GetItemType()));
+                        new object[] { settings.GetEqualByComparerOrDeferred(type.GetItemType()) });
                 }
                 else
                 {
-                    comparer = (EqualByComparer)Activator.CreateInstance(
+                    comparer = Activator.CreateInstance<EqualByComparer>(
                         typeof(Comparer<,>).MakeGenericType(type, type.GetItemType()),
-                        settings.GetEqualByComparerOrDeferred(type.GetItemType()));
+                        new object[] { settings.GetEqualByComparerOrDeferred(type.GetItemType()) });
                 }
 
                 return true;

@@ -21,35 +21,34 @@ namespace Gu.State
 
         internal static IGetterAndSetter GetOrCreate(PropertyInfo propertyInfo)
         {
-            return PropertyCache.GetOrAdd(propertyInfo, Create);
+            return PropertyCache.GetOrAdd(propertyInfo, x => Create(x));
+
+            static IGetterAndSetter Create(PropertyInfo propertyInfo)
+            {
+                if (propertyInfo.DeclaringType.IsValueType)
+                {
+                    return Activator.CreateInstance<IGetterAndSetter>(
+                        typeof(StructGetterAndSetter<,>).MakeGenericType(propertyInfo.DeclaringType, propertyInfo.PropertyType),
+                        new object[] { propertyInfo });
+                }
+                else
+                {
+                    return Activator.CreateInstance<IGetterAndSetter>(
+                        typeof(GetterAndSetter<,>).MakeGenericType(propertyInfo.DeclaringType, propertyInfo.PropertyType),
+                        new object[] { propertyInfo });
+                }
+            }
         }
 
         internal static IGetterAndSetter GetOrCreate(FieldInfo fieldInfo)
         {
-            return FieldCache.GetOrAdd(fieldInfo, Create);
-        }
+            return FieldCache.GetOrAdd(fieldInfo, x => Create(x));
 
-        private static IGetterAndSetter Create(FieldInfo fieldInfo)
-        {
-            var setter = typeof(GetterAndSetter<,>).MakeGenericType(fieldInfo.DeclaringType, fieldInfo.FieldType);
-            var constructorInfo = setter.GetConstructor(new[] { typeof(FieldInfo) });
-            //// ReSharper disable once PossibleNullReferenceException nope, not here
-            return (IGetterAndSetter)constructorInfo.Invoke(new object[] { fieldInfo });
-        }
-
-        private static IGetterAndSetter Create(PropertyInfo propertyInfo)
-        {
-            if (propertyInfo.DeclaringType.IsValueType)
+            static IGetterAndSetter Create(FieldInfo fieldInfo)
             {
-                return (IGetterAndSetter)Activator.CreateInstance(
-                    typeof(StructGetterAndSetter<,>).MakeGenericType(propertyInfo.DeclaringType, propertyInfo.PropertyType),
-                    propertyInfo);
-            }
-            else
-            {
-                return (IGetterAndSetter)Activator.CreateInstance(
-                    typeof(GetterAndSetter<,>).MakeGenericType(propertyInfo.DeclaringType, propertyInfo.PropertyType),
-                    propertyInfo);
+                return Activator.CreateInstance<IGetterAndSetter>(
+                    typeof(GetterAndSetter<,>).MakeGenericType(fieldInfo.DeclaringType, fieldInfo.FieldType),
+                    new object[] { fieldInfo });
             }
         }
     }

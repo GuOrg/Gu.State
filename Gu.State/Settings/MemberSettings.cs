@@ -204,7 +204,7 @@ namespace Gu.State
         {
             return type.IsSealed
                 ? this.GetEqualByComparer(type)
-                : (EqualByComparer)Activator.CreateInstance(typeof(DeferredEqualByComparer<>).MakeGenericType(type));
+                : Activator.CreateInstance<EqualByComparer>(typeof(DeferredEqualByComparer<>).MakeGenericType(type), null);
         }
 
         private static IReadOnlyDictionary<Type, EqualByComparer> CreateDefaultComparers()

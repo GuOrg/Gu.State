@@ -1,9 +1,9 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Runtime.CompilerServices;
 
-    internal struct ReferencePairStruct : IEquatable<ReferencePairStruct>
+    internal readonly struct ReferencePairStruct : IEquatable<ReferencePairStruct>
     {
         private readonly object x;
         private readonly object y;

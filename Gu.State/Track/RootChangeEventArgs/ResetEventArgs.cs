@@ -4,7 +4,7 @@ namespace Gu.State
     using System.Collections;
 
     /// <summary>This is raised when a notifying collection signals reset.</summary>
-    public struct ResetEventArgs : IRootChangeEventArgs, IEquatable<ResetEventArgs>
+    public readonly struct ResetEventArgs : IRootChangeEventArgs, IEquatable<ResetEventArgs>
     {
         internal ResetEventArgs(IList source)
         {

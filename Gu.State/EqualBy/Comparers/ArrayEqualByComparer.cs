@@ -15,14 +15,14 @@ namespace Gu.State
                     case 1:
                         return IReadOnlyListEqualByComparer.TryCreate(type, settings, out comparer);
                     case 2:
-                        comparer = (EqualByComparer)Activator.CreateInstance(
+                        comparer = Activator.CreateInstance<EqualByComparer>(
                             typeof(Comparer2D<>).MakeGenericType(type.GetItemType()),
-                            settings.GetEqualByComparerOrDeferred(type.GetItemType()));
+                            new object[] { settings.GetEqualByComparerOrDeferred(type.GetItemType()) });
                         return true;
                     default:
-                        comparer = (EqualByComparer)Activator.CreateInstance(
+                        comparer = Activator.CreateInstance<EqualByComparer>(
                             typeof(Comparer<>).MakeGenericType(type.GetItemType()),
-                            settings.GetEqualByComparerOrDeferred(type.GetItemType()));
+                            new object[] { settings.GetEqualByComparerOrDeferred(type.GetItemType()) });
                         return true;
                 }
             }

@@ -4,7 +4,7 @@ namespace Gu.State
     using System.Collections;
 
     /// <summary>This is raised when an element was replaced in a notifying collection.</summary>
-    public struct ReplaceEventArgs : IRootChangeEventArgs, IEquatable<ReplaceEventArgs>
+    public readonly struct ReplaceEventArgs : IRootChangeEventArgs, IEquatable<ReplaceEventArgs>
     {
         internal ReplaceEventArgs(IList source, int index)
         {

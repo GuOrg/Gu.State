@@ -4,7 +4,7 @@ namespace Gu.State
     using System.Collections;
 
     /// <summary>This is raised when an element is moved in a notifying collection.</summary>
-    public struct MoveEventArgs : IRootChangeEventArgs, IEquatable<MoveEventArgs>
+    public readonly struct MoveEventArgs : IRootChangeEventArgs, IEquatable<MoveEventArgs>
     {
         internal MoveEventArgs(IList source, int fromIndex, int toIndex)
         {

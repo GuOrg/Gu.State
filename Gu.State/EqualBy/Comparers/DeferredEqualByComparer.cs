@@ -26,7 +26,7 @@ namespace Gu.State
             return comparer.Equals(x, y, settings, referencePairs);
         }
 
-        private struct TypeAndComparer
+        private readonly struct TypeAndComparer
         {
             internal readonly Type Type;
             internal readonly EqualByComparer Comparer;
