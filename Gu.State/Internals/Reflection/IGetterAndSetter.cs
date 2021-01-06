@@ -1,9 +1,10 @@
-﻿namespace Gu.State
+#pragma warning disable SA1600 // Elements should be documented
+namespace Gu.State
 {
     using System;
     using System.Reflection;
 
-    /// <summary>Provides functionlaity for getting and setting values for a member.</summary>
+    /// <summary>Provides functionality for getting and setting values for a member.</summary>
     internal interface IGetterAndSetter
     {
         /// <summary>Gets the declaring type of the member.</summary>

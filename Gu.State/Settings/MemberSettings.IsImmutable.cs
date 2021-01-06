@@ -31,6 +31,11 @@ namespace Gu.State
             [typeof(byte)] = true,
         };
 
+        /// <summary>
+        /// Check if <paramref name="type"/> is immutable.
+        /// </summary>
+        /// <param name="type">The <see cref="Type"/>.</param>
+        /// <returns>True if <paramref name="type"/> is immutable.</returns>
         protected static bool IsImmutableCore(Type type)
         {
             return ImmutableCheckedTypes.GetOrAdd(type, x => CheckIfIsImmutable(x, null));
