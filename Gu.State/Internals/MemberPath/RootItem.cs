@@ -9,6 +9,6 @@ namespace Gu.State
             this.Type = type;
         }
 
-        public Type Type { get; }
+        internal Type Type { get; }
     }
 }

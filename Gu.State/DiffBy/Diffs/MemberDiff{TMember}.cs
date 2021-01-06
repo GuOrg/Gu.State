@@ -44,12 +44,11 @@ namespace Gu.State
                 return $"{this.MemberInfo.Name} x: {this.X.ToInvariantOrNullString()} y: {this.Y.ToInvariantOrNullString()}";
             }
 
-            using var writer = new IndentedTextWriter(new StringWriter(), tabString) { NewLine = newLine };
-            using (var disposer = BorrowValueDiffReferenceSet())
-            {
-                writer.Write(this.MemberInfo.Name);
-                _ = this.WriteDiffs(writer, disposer.Value);
-            }
+            using var stringWriter = new StringWriter();
+            using var writer = new IndentedTextWriter(stringWriter, tabString) { NewLine = newLine };
+            using var disposer = BorrowValueDiffReferenceSet();
+            writer.Write(this.MemberInfo.Name);
+            _ = this.WriteDiffs(writer, disposer.Value);
 
             return writer.InnerWriter.ToString();
         }

@@ -12,12 +12,6 @@ Gu.State.ChangeTracker.Dispose() -> void
 Gu.State.ChangeTracker.PropertyChanged -> System.ComponentModel.PropertyChangedEventHandler
 Gu.State.ChangeTracker.Settings.get -> Gu.State.PropertiesSettings
 Gu.State.Copy
-Gu.State.Copy
-Gu.State.Copy
-Gu.State.Copy
-Gu.State.Copy
-Gu.State.Copy
-Gu.State.Copy
 Gu.State.CustomCopy
 Gu.State.CustomCopy.CustomCopy() -> void
 Gu.State.CustomCopy<T>
@@ -26,15 +20,8 @@ Gu.State.CustomCopy<T>.CustomCopy(System.Func<T, T, T> copyValue) -> void
 Gu.State.Diff
 Gu.State.Diff.Diffs.get -> System.Collections.Generic.IReadOnlyCollection<Gu.State.SubDiff>
 Gu.State.DiffBy
-Gu.State.DiffBy
-Gu.State.DiffBy
-Gu.State.DiffBy
-Gu.State.DiffBy
 Gu.State.EmptyDiff
 Gu.State.EmptyDiff.EmptyDiff(object xValue, object yValue) -> void
-Gu.State.EqualBy
-Gu.State.EqualBy
-Gu.State.EqualBy
 Gu.State.EqualBy
 Gu.State.FieldDiff
 Gu.State.FieldDiff.FieldDiff(System.Reflection.FieldInfo fieldInfo, Gu.State.ValueDiff diff) -> void
@@ -81,8 +68,6 @@ Gu.State.MemberDiff<TMember>
 Gu.State.MemberDiff<TMember>.MemberDiff(TMember memberInfo, Gu.State.ValueDiff diff) -> void
 Gu.State.MemberDiff<TMember>.MemberDiff(TMember memberInfo, object xValue, object yValue) -> void
 Gu.State.MemberDiff<TMember>.MemberInfo.get -> TMember
-Gu.State.MemberSettings
-Gu.State.MemberSettings
 Gu.State.MemberSettings
 Gu.State.MemberSettings.BindingFlags.get -> System.Reflection.BindingFlags
 Gu.State.MemberSettings.IgnoredMembers.get -> System.Collections.Concurrent.ConcurrentDictionary<System.Reflection.MemberInfo, bool>

@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System.Collections.Generic;
 
@@ -16,7 +16,7 @@
             var yPair = y as ReferencePair;
             if (xPair != null && yPair != null)
             {
-                return this.Equals(xPair, (ReferencePair)y);
+                return Equals(xPair, (ReferencePair)y);
             }
 
             return ReferenceEquals(x, y);
@@ -27,7 +27,7 @@
             return obj.GetHashCode();
         }
 
-        private bool Equals(ReferencePair x, ReferencePair y)
+        private static bool Equals(ReferencePair x, ReferencePair y)
         {
             return ReferenceEquals(x.X, y.X) && ReferenceEquals(x.Y, y.Y);
         }
