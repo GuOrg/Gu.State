@@ -28,9 +28,11 @@
     <PackageProjectUrl>https://github.com/GuOrg/Gu.State</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/GuOrg/Gu.State</RepositoryUrl>
-    <PackageReleaseNotes>BUGFIXES: Multiple fixes for EqualBy
-PERF: EqualBy faster now, still a lot to be done.
-BREAKING: EqualByComparer no longer public.</PackageReleaseNotes>
+    <PackageReleaseNotes>
+      BUGFIXES: Multiple fixes for EqualBy
+      PERF: EqualBy faster now, still a lot to be done.
+      BREAKING: EqualByComparer no longer public.
+    </PackageReleaseNotes>
     <PackageTags>Equals, Copy, Sync, Diff, Dirty</PackageTags>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>

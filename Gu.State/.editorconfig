@@ -1,4 +1,7 @@
 [*.cs]
 
+# SA1401: Fields should be private
+dotnet_diagnostic.SA1401.severity = none
+
 # SA1633: The file header is missing or not located at the top of the file.
 dotnet_diagnostic.SA1633.severity = none
