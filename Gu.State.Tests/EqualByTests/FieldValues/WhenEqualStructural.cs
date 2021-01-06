@@ -1,9 +1,9 @@
-﻿// ReSharper disable RedundantArgumentDefaultValue
+// ReSharper disable RedundantArgumentDefaultValue
 namespace Gu.State.Tests.EqualByTests.FieldValues
 {
     using NUnit.Framework;
 
-    using static EqualByTypes;
+    using static Gu.State.Tests.EqualByTests.EqualByTypes;
 
     public class WhenEqualStructural
     {

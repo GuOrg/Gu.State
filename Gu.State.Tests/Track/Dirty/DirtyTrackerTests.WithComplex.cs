@@ -6,12 +6,12 @@ namespace Gu.State.Tests
 
     using static DirtyTrackerTypes;
 
-    public partial class DirtyTrackerTests
+    public static partial class DirtyTrackerTests
     {
-        public class WithComplex
+        public static class WithComplex
         {
             [Test]
-            public void CreateAndDisposeStopsListeningToSubProperties()
+            public static void CreateAndDisposeStopsListeningToSubProperties()
             {
                 var x = new WithComplexProperty { ComplexType = new ComplexType("a", 1) };
                 var y = new WithComplexProperty { ComplexType = new ComplexType("a", 1) };
@@ -29,7 +29,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void HandlesNullStructural()
+            public static void HandlesNullStructural()
             {
                 var x = new WithComplexProperty();
                 var y = new WithComplexProperty();
@@ -71,7 +71,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void HandlesNullReferences()
+            public static void HandlesNullReferences()
             {
                 var x = new WithComplexProperty();
                 var y = new WithComplexProperty();
@@ -113,7 +113,7 @@ namespace Gu.State.Tests
             }
 
             [TestCase(ReferenceHandling.Structural)]
-            public void TracksNested(ReferenceHandling referenceHandling)
+            public static void TracksNested(ReferenceHandling referenceHandling)
             {
                 var x = new WithComplexProperty();
                 var y = new WithComplexProperty();
@@ -175,7 +175,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void TracksNestedWithExplicitSetting()
+            public static void TracksNestedWithExplicitSetting()
             {
                 var x = new WithComplexProperty();
                 var y = new WithComplexProperty();
@@ -237,7 +237,7 @@ namespace Gu.State.Tests
             }
 
             [TestCase(ReferenceHandling.Structural)]
-            public void WhenNestedNameChanged(ReferenceHandling referenceHandling)
+            public static void WhenNestedNameChanged(ReferenceHandling referenceHandling)
             {
                 var x = new WithComplexProperty { ComplexType = new ComplexType("a", 1) };
                 var y = new WithComplexProperty { ComplexType = new ComplexType("a", 1) };
@@ -263,7 +263,7 @@ namespace Gu.State.Tests
             }
 
             [TestCase(ReferenceHandling.Structural)]
-            public void WhenRootNameChanged(ReferenceHandling referenceHandling)
+            public static void WhenRootNameChanged(ReferenceHandling referenceHandling)
             {
                 var x = new WithComplexProperty { ComplexType = new ComplexType("a", 1) };
                 var y = new WithComplexProperty { ComplexType = new ComplexType("a", 1) };

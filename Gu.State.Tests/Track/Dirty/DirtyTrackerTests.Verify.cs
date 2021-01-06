@@ -1,4 +1,4 @@
-﻿// ReSharper disable RedundantArgumentDefaultValue
+// ReSharper disable RedundantArgumentDefaultValue
 namespace Gu.State.Tests
 {
     using System;
@@ -7,12 +7,12 @@ namespace Gu.State.Tests
 
     using static DirtyTrackerTypes;
 
-    public partial class DirtyTrackerTests
+    public static partial class DirtyTrackerTests
     {
-        public class Verify
+        public static class Verify
         {
             [Test]
-            public void WithComplexProperty()
+            public static void WithComplexProperty()
             {
                 var expected = "Track.VerifyCanTrackIsDirty(x, y) failed.\r\n" +
                                "The property WithComplexProperty.ComplexType of type ComplexType is not supported.\r\n" +
@@ -38,7 +38,7 @@ namespace Gu.State.Tests
             [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.References)]
             [TestCase(ReferenceHandling.Structural)]
-            public void WithSimpleProperties(ReferenceHandling referenceHandling)
+            public static void WithSimpleProperties(ReferenceHandling referenceHandling)
             {
                 Track.VerifyCanTrackIsDirty<WithSimpleProperties>(referenceHandling);
                 Track.VerifyCanTrackIsDirty<WithSimpleProperties>(PropertiesSettings.GetOrCreate(referenceHandling));
@@ -46,7 +46,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void WithExplicitImmutableAndComparer()
+            public static void WithExplicitImmutableAndComparer()
             {
                 var settings = PropertiesSettings.Build()
                                                  .AddImmutableType<IntCollection>()

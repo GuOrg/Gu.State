@@ -1,4 +1,4 @@
-﻿// ReSharper disable RedundantArgumentDefaultValue
+// ReSharper disable RedundantArgumentDefaultValue
 namespace Gu.State.Tests
 {
     using System.Collections.Generic;
@@ -6,12 +6,12 @@ namespace Gu.State.Tests
 
     using NUnit.Framework;
 
-    public partial class DirtyTrackerTests
+    public static partial class DirtyTrackerTests
     {
-        public class ObservableCollectionOfInt
+        public static class ObservableCollectionOfInt
         {
             [Test]
-            public void CreateDifferentLength()
+            public static void CreateDifferentLength()
             {
                 var x = new ObservableCollection<int> { 1 };
                 var y = new ObservableCollection<int> { 1, 2 };
@@ -21,7 +21,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void AddSameToBoth()
+            public static void AddSameToBoth()
             {
                 var x = new ObservableCollection<int>();
                 var y = new ObservableCollection<int>();
@@ -47,7 +47,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void InsertXAt0()
+            public static void InsertXAt0()
             {
                 var x = new ObservableCollection<int> { 1, 2, 3 };
                 var y = new ObservableCollection<int> { 1, 2, 3 };
@@ -67,7 +67,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void InsertXAt1()
+            public static void InsertXAt1()
             {
                 var x = new ObservableCollection<int> { 1, 2, 3 };
                 var y = new ObservableCollection<int> { 1, 2, 3 };
@@ -87,7 +87,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void InsertYAt0()
+            public static void InsertYAt0()
             {
                 var x = new ObservableCollection<int> { 1, 2, 3 };
                 var y = new ObservableCollection<int> { 1, 2, 3 };
@@ -107,7 +107,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void InsertYAt1()
+            public static void InsertYAt1()
             {
                 var x = new ObservableCollection<int> { 1, 2, 3 };
                 var y = new ObservableCollection<int> { 1, 2, 3 };
@@ -127,7 +127,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void AddDifferent()
+            public static void AddDifferent()
             {
                 var x = new ObservableCollection<int>();
                 var y = new ObservableCollection<int>();
@@ -153,7 +153,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void RemoveTheDifference1()
+            public static void RemoveTheDifference1()
             {
                 var x = new ObservableCollection<int> { 1, 2 };
                 var y = new ObservableCollection<int> { 1 };
@@ -173,7 +173,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void RemoveTheDifference2()
+            public static void RemoveTheDifference2()
             {
                 var x = new ObservableCollection<int> { 1, 2, 3 };
                 var y = new ObservableCollection<int> { 1, 3 };
@@ -193,7 +193,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void Remove0StillDirty()
+            public static void Remove0StillDirty()
             {
                 var x = new ObservableCollection<int> { 1, 2 };
                 var y = new ObservableCollection<int> { 3 };
@@ -213,7 +213,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void Remove1StillDirty()
+            public static void Remove1StillDirty()
             {
                 var x = new ObservableCollection<int> { 1, 2 };
                 var y = new ObservableCollection<int> { 3 };
@@ -233,7 +233,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void ClearBothWhenNotDirty()
+            public static void ClearBothWhenNotDirty()
             {
                 var x = new ObservableCollection<int> { 1, 2 };
                 var y = new ObservableCollection<int> { 1, 2 };
@@ -259,7 +259,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void ClearBothWhenDirty()
+            public static void ClearBothWhenDirty()
             {
                 var x = new ObservableCollection<int> { 1, 2 };
                 var y = new ObservableCollection<int> { 3, 4, 5 };
@@ -285,7 +285,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void MoveX1()
+            public static void MoveX1()
             {
                 var x = new ObservableCollection<int> { 1, 2 };
                 var y = new ObservableCollection<int> { 1, 2 };
@@ -311,7 +311,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void MoveX2()
+            public static void MoveX2()
             {
                 var x = new ObservableCollection<int> { 1, 2, 3, 4 };
                 var y = new ObservableCollection<int> { 1, 2, 3, 4 };
@@ -339,7 +339,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void MoveXThenY()
+            public static void MoveXThenY()
             {
                 var x = new ObservableCollection<int> { 1, 2 };
                 var y = new ObservableCollection<int> { 1, 2 };
@@ -365,7 +365,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void Replace()
+            public static void Replace()
             {
                 var x = new ObservableCollection<int> { 1, 2 };
                 var y = new ObservableCollection<int> { 1, 2 };

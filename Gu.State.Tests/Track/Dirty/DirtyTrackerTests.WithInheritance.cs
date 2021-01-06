@@ -4,12 +4,12 @@ namespace Gu.State.Tests
 
     using static DirtyTrackerTypes;
 
-    public partial class DirtyTrackerTests
+    public static partial class DirtyTrackerTests
     {
-        public class WithInheritance
+        public static class WithInheritance
         {
             [Test]
-            public void NotDirtyWhenSameType()
+            public static void NotDirtyWhenSameType()
             {
                 var x = new With<BaseClass>();
                 var y = new With<BaseClass>();
@@ -20,7 +20,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void DirtyWhenDifferentTypes()
+            public static void DirtyWhenDifferentTypes()
             {
                 var x = new With<BaseClass>();
                 var y = new With<BaseClass>();

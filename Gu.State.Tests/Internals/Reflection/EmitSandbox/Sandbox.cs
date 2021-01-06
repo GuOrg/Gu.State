@@ -8,10 +8,10 @@ namespace Gu.State.Tests.Internals.Refelection.EmitSandbox
 
     using NUnit.Framework;
 
-    using static Reflection.TypeExtTypes;
+    using static Gu.State.Tests.Internals.Reflection.TypeExtTypes;
 
     [Explicit("Sandbox")]
-    public class FieldAccessorsSandbox
+    public static class FieldAccessorsSandbox
     {
         private ModuleBuilder moduleBuilder;
 

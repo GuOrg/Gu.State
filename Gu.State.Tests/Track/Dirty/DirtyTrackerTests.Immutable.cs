@@ -1,4 +1,4 @@
-﻿namespace Gu.State.Tests
+namespace Gu.State.Tests
 {
     using System.Collections.Generic;
 
@@ -6,13 +6,13 @@
 
     using static DirtyTrackerTypes;
 
-    public partial class DirtyTrackerTests
+    public static partial class DirtyTrackerTests
     {
-        public class Immutable
+        public static class Immutable
         {
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
-            public void Tracks(ReferenceHandling referenceHandling)
+            public static void Tracks(ReferenceHandling referenceHandling)
             {
                 var x = new WithImmutableProperty();
                 var y = new WithImmutableProperty();

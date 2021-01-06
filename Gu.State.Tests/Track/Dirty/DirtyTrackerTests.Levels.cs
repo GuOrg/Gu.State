@@ -1,16 +1,16 @@
-﻿namespace Gu.State.Tests
+namespace Gu.State.Tests
 {
     using System.Collections.Generic;
 
     using NUnit.Framework;
     using static DirtyTrackerTypes;
 
-    public partial class DirtyTrackerTests
+    public static partial class DirtyTrackerTests
     {
-        public class Levels
+        public static class Levels
         {
             [Test]
-            public void HandlesNull()
+            public static void HandlesNull()
             {
                 var x = new Level { Next = new Level { Next = new Level { Name = "a" } } };
                 var y = new Level { Next = new Level { Next = new Level { Name = "a" } } };
@@ -76,7 +76,7 @@
             }
 
             [TestCase(ReferenceHandling.Structural)]
-            public void TracksNested(ReferenceHandling referenceHandling)
+            public static void TracksNested(ReferenceHandling referenceHandling)
             {
                 var x = new Level { Next = new Level { Next = new Level { Name = "a" } } };
                 var y = new Level { Next = new Level { Next = new Level { Name = "a" } } };

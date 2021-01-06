@@ -8,12 +8,12 @@ namespace Gu.State.Tests
 
     using static DirtyTrackerTypes;
 
-    public class DirtyTrackerNodeTests
+    public static class DirtyTrackerNodeTests
     {
-        public class Caching
+        public static class Caching
         {
             [Test]
-            public void ReturnsSameWhileAlive()
+            public static void ReturnsSameWhileAlive()
             {
                 var x = new WithSimpleProperties();
                 var y = new WithSimpleProperties();
@@ -34,7 +34,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void ReturnsDifferentForDifferentPairs()
+            public static void ReturnsDifferentForDifferentPairs()
             {
                 var x = new WithSimpleProperties { Value = 1, Time = DateTime.MinValue };
                 var y = new WithSimpleProperties { Value = 1, Time = DateTime.MinValue };
@@ -45,7 +45,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void ReturnsDifferentForDifferentSettings()
+            public static void ReturnsDifferentForDifferentSettings()
             {
                 var x = new WithSimpleProperties { Value = 1, Time = DateTime.MinValue };
                 var y = new WithSimpleProperties { Value = 1, Time = DateTime.MinValue };

@@ -1,10 +1,10 @@
-﻿namespace Gu.State.Tests.CopyTests.PropertyValues
+namespace Gu.State.Tests.CopyTests.PropertyValues
 {
     using System;
 
     using NUnit.Framework;
 
-    using static CopyTypes;
+    using static Gu.State.Tests.CopyTests.CopyTypes;
 
     public class Classes : ClassesTests
     {

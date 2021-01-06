@@ -10,14 +10,14 @@ namespace Gu.State.Tests
     using NUnit.Framework;
     using static DirtyTrackerTypes;
 
-    public partial class DirtyTrackerTests
+    public static partial class DirtyTrackerTests
     {
-        public class Simple
+        public static class Simple
         {
             [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.References)]
             [TestCase(ReferenceHandling.Structural)]
-            public void CreateAndDispose(ReferenceHandling referenceHandling)
+            public static void CreateAndDispose(ReferenceHandling referenceHandling)
             {
                 var x = new WithSimpleProperties { Value = 1, Time = DateTime.MinValue };
                 var y = new WithSimpleProperties { Value = 1, Time = DateTime.MinValue };
@@ -55,7 +55,7 @@ namespace Gu.State.Tests
             [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.References)]
             [TestCase(ReferenceHandling.Structural)]
-            public void CreateAndDisposeExplicitSetting(ReferenceHandling referenceHandling)
+            public static void CreateAndDisposeExplicitSetting(ReferenceHandling referenceHandling)
             {
                 var x = new WithSimpleProperties { Value = 1, Time = DateTime.MinValue };
                 var y = new WithSimpleProperties { Value = 1, Time = DateTime.MinValue };
@@ -91,7 +91,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void DoesNotNotifyWhenMissingProperty()
+            public static void DoesNotNotifyWhenMissingProperty()
             {
                 var x = new WithSimpleProperties { Value = 1, Time = DateTime.MinValue };
                 var y = new WithSimpleProperties { Value = 1, Time = DateTime.MinValue };
@@ -115,7 +115,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void DoesNotNotifyWhenNoChangeWhenNotDirty()
+            public static void DoesNotNotifyWhenNoChangeWhenNotDirty()
             {
                 var x = new WithSimpleProperties { Value = 1, Time = DateTime.MinValue };
                 var y = new WithSimpleProperties { Value = 1, Time = DateTime.MinValue };
@@ -149,7 +149,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void DoesNotNotifyWhenNoChangeWhenDirty()
+            public static void DoesNotNotifyWhenNoChangeWhenDirty()
             {
                 var x = new WithSimpleProperties { Value = 1, Time = DateTime.MinValue };
                 var y = new WithSimpleProperties { Value = 1, Time = DateTime.MinValue.AddSeconds(1) };
@@ -182,7 +182,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void TracksX()
+            public static void TracksX()
             {
                 var x = new WithSimpleProperties { Value = 1, Time = DateTime.MinValue };
                 var y = new WithSimpleProperties { Value = 3, Time = DateTime.MinValue.AddSeconds(1) };
@@ -221,7 +221,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void TracksY()
+            public static void TracksY()
             {
                 var x = new WithSimpleProperties { Value = 1, Time = DateTime.MinValue };
                 var y = new WithSimpleProperties { Value = 3, Time = DateTime.MinValue.AddSeconds(1) };
@@ -259,7 +259,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void WithLength()
+            public static void WithLength()
             {
                 var x = new With<Length> { Value = Length.Zero };
                 var y = new With<Length> { Value = Length.Zero };
@@ -285,7 +285,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void WithBool()
+            public static void WithBool()
             {
                 var x = new With<bool> { Value = true };
                 var y = new With<bool> { Value = true };
@@ -311,7 +311,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void WithImmutableArrayOfInts()
+            public static void WithImmutableArrayOfInts()
             {
                 var x = new With<ImmutableArray<int>> { Value = ImmutableArray<int>.Empty };
                 var y = new With<ImmutableArray<int>> { Value = ImmutableArray<int>.Empty };
@@ -337,7 +337,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void WithExplicitImmutableAndComparer()
+            public static void WithExplicitImmutableAndComparer()
             {
                 var x = new With<IntCollection> { Value = new IntCollection(1) };
                 var y = new With<IntCollection> { Value = new IntCollection(1) };
@@ -370,7 +370,7 @@ namespace Gu.State.Tests
 
             [TestCase(null)]
             [TestCase("")]
-            public void HandlesPropertyChangedEmptyAndNull(string prop)
+            public static void HandlesPropertyChangedEmptyAndNull(string prop)
             {
                 var x = new WithSimpleProperties(1, DateTime.MinValue);
                 var y = new WithSimpleProperties(1, DateTime.MinValue);

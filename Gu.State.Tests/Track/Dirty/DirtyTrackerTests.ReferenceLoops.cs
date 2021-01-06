@@ -5,12 +5,12 @@ namespace Gu.State.Tests
     using NUnit.Framework;
     using static ChangeTrackerTypes;
 
-    public partial class DirtyTrackerTests
+    public static partial class DirtyTrackerTests
     {
-        public class ReferenceLoops
+        public static class ReferenceLoops
         {
             [Test]
-            public void ParentChildCreateWhenParentDirtyLoop()
+            public static void ParentChildCreateWhenParentDirtyLoop()
             {
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
@@ -35,7 +35,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void ParentChildRenameParentLast()
+            public static void ParentChildRenameParentLast()
             {
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
@@ -98,7 +98,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void WithParentChildRenameParentLast()
+            public static void WithParentChildRenameParentLast()
             {
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
@@ -190,7 +190,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void ParentChildRenameChildLast()
+            public static void ParentChildRenameChildLast()
             {
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();

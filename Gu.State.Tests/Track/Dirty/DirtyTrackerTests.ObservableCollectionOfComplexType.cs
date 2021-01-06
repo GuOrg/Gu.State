@@ -1,4 +1,4 @@
-﻿// ReSharper disable RedundantArgumentDefaultValue
+// ReSharper disable RedundantArgumentDefaultValue
 namespace Gu.State.Tests
 {
     using System.Collections.Generic;
@@ -8,13 +8,13 @@ namespace Gu.State.Tests
 
     using static DirtyTrackerTypes;
 
-    public partial class DirtyTrackerTests
+    public static partial class DirtyTrackerTests
     {
-        public class ObservableCollectionOfComplexType
+        public static class ObservableCollectionOfComplexType
         {
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
-            public void CreateAndDispose(ReferenceHandling referenceHandling)
+            public static void CreateAndDispose(ReferenceHandling referenceHandling)
             {
                 var x = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
                 var y = new ObservableCollection<ComplexType>();
@@ -43,7 +43,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void AddSameToBoth()
+            public static void AddSameToBoth()
             {
                 var x = new ObservableCollection<ComplexType>();
                 var y = new ObservableCollection<ComplexType>();
@@ -81,7 +81,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void AddThenUpdate()
+            public static void AddThenUpdate()
             {
                 var x = new ObservableCollection<ComplexType>();
                 var y = new ObservableCollection<ComplexType>();
@@ -112,7 +112,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void AddDifferent()
+            public static void AddDifferent()
             {
                 var x = new ObservableCollection<ComplexType>();
                 var y = new ObservableCollection<ComplexType>();
@@ -152,7 +152,7 @@ namespace Gu.State.Tests
             [TestCase(0)]
             [TestCase(1)]
             [TestCase(2)]
-            public void InsertX(int index)
+            public static void InsertX(int index)
             {
                 var x = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType(), new ComplexType() };
                 var y = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType(), new ComplexType() };
@@ -176,7 +176,7 @@ namespace Gu.State.Tests
             [TestCase(0)]
             [TestCase(1)]
             [TestCase(2)]
-            public void InsertY(int index)
+            public static void InsertY(int index)
             {
                 var x = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType(), new ComplexType() };
                 var y = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType(), new ComplexType() };
@@ -200,7 +200,7 @@ namespace Gu.State.Tests
             [TestCase(0)]
             [TestCase(1)]
             [TestCase(2)]
-            public void InsertXThenYThenUpdate(int index)
+            public static void InsertXThenYThenUpdate(int index)
             {
                 var x = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType(), new ComplexType() };
                 var y = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType(), new ComplexType() };
@@ -228,7 +228,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void RemoveTheDifference()
+            public static void RemoveTheDifference()
             {
                 var x = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
                 var y = new ObservableCollection<ComplexType> { new ComplexType("a", 1) };
@@ -248,7 +248,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void RemoveStillDirty1()
+            public static void RemoveStillDirty1()
             {
                 var x = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
                 var y = new ObservableCollection<ComplexType> { new ComplexType("c", 3) };
@@ -268,7 +268,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void RemoveStillDirty2()
+            public static void RemoveStillDirty2()
             {
                 var x = new ObservableCollection<ComplexType> { new ComplexType("a", 0), new ComplexType("b", 0), new ComplexType("c", 0) };
                 var y = new ObservableCollection<ComplexType> { new ComplexType("d", 0), new ComplexType("e", 0) };
@@ -288,7 +288,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void ClearBothWhenNotDirty()
+            public static void ClearBothWhenNotDirty()
             {
                 var x = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
                 var y = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
@@ -314,7 +314,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void ClearBothWhenDirty()
+            public static void ClearBothWhenDirty()
             {
                 var x = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
                 var y = new ObservableCollection<ComplexType> { new ComplexType("c", 2), new ComplexType("d", 4), new ComplexType("e", 5) };
@@ -343,7 +343,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void MoveX()
+            public static void MoveX()
             {
                 var x = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
                 var y = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
@@ -369,7 +369,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void MoveXThenY()
+            public static void MoveXThenY()
             {
                 var x = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
                 var y = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
@@ -395,7 +395,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void MoveXThenYThenUpdate()
+            public static void MoveXThenYThenUpdate()
             {
                 var x = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
                 var y = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
@@ -423,7 +423,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void Replace()
+            public static void Replace()
             {
                 var x = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
                 var y = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
@@ -450,7 +450,7 @@ namespace Gu.State.Tests
 
             [TestCase(0)]
             [TestCase(1)]
-            public void ReplaceThenUpdate(int index)
+            public static void ReplaceThenUpdate(int index)
             {
                 var x = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
                 var y = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
@@ -478,7 +478,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void TracksItems()
+            public static void TracksItems()
             {
                 var x = new ObservableCollection<ComplexType>();
                 var y = new ObservableCollection<ComplexType>();
@@ -527,7 +527,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void DuplicateItemOneNotification()
+            public static void DuplicateItemOneNotification()
             {
                 var item = new ComplexType("a", 1);
                 var x = new ObservableCollection<ComplexType> { item, item };

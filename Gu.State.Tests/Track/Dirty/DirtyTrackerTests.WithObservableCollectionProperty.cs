@@ -1,4 +1,4 @@
-﻿// ReSharper disable RedundantArgumentDefaultValue
+// ReSharper disable RedundantArgumentDefaultValue
 namespace Gu.State.Tests
 {
     using System.Collections.Generic;
@@ -7,12 +7,12 @@ namespace Gu.State.Tests
 
     using static DirtyTrackerTypes;
 
-    public partial class DirtyTrackerTests
+    public static partial class DirtyTrackerTests
     {
-        public class WithObservableCollectionProperty
+        public static class WithObservableCollectionProperty
         {
             [Test]
-            public void AddSameToBoth()
+            public static void AddSameToBoth()
             {
                 var x = new WithObservableCollectionProperties();
                 var y = new WithObservableCollectionProperties();
@@ -51,7 +51,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void AddDifferent()
+            public static void AddDifferent()
             {
                 var x = new WithObservableCollectionProperties();
                 var y = new WithObservableCollectionProperties();
@@ -89,7 +89,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void RemoveTheDifference()
+            public static void RemoveTheDifference()
             {
                 var x = new WithObservableCollectionProperties(new ComplexType("a", 1), new ComplexType("b", 2));
                 var y = new WithObservableCollectionProperties(new ComplexType("a", 1));
@@ -109,7 +109,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void RemoveStillDirty()
+            public static void RemoveStillDirty()
             {
                 var x = new WithObservableCollectionProperties(new ComplexType("a", 1), new ComplexType("b", 2));
                 var y = new WithObservableCollectionProperties(new ComplexType("c", 3));
@@ -131,7 +131,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void ClearBothWhenNotDirty()
+            public static void ClearBothWhenNotDirty()
             {
                 var x = new WithObservableCollectionProperties(new ComplexType("a", 1), new ComplexType("b", 2));
                 var y = new WithObservableCollectionProperties(new ComplexType("a", 1), new ComplexType("b", 2));
@@ -158,7 +158,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void ClearBothWhenDirty()
+            public static void ClearBothWhenDirty()
             {
                 var x = new WithObservableCollectionProperties(new ComplexType("a", 1), new ComplexType("b", 2));
                 var y = new WithObservableCollectionProperties(new ComplexType("c", 2), new ComplexType("d", 4), new ComplexType("e", 5));
@@ -188,7 +188,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void MoveX()
+            public static void MoveX()
             {
                 var x = new WithObservableCollectionProperties(new ComplexType("a", 1), new ComplexType("b", 2));
                 var y = new WithObservableCollectionProperties(new ComplexType("a", 1), new ComplexType("b", 2));
@@ -216,7 +216,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void MoveXThenY()
+            public static void MoveXThenY()
             {
                 var x = new WithObservableCollectionProperties(new ComplexType("a", 1), new ComplexType("b", 2));
                 var y = new WithObservableCollectionProperties(new ComplexType("a", 1), new ComplexType("b", 2));
@@ -242,7 +242,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void Replace()
+            public static void Replace()
             {
                 var x = new WithObservableCollectionProperties(new ComplexType("a", 1), new ComplexType("b", 2));
                 var y = new WithObservableCollectionProperties(new ComplexType("a", 1), new ComplexType("b", 2));
@@ -268,7 +268,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void TracksItems()
+            public static void TracksItems()
             {
                 var x = new WithObservableCollectionProperties();
                 var y = new WithObservableCollectionProperties();

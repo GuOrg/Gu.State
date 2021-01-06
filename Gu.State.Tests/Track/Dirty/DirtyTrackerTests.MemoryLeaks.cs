@@ -1,4 +1,4 @@
-﻿namespace Gu.State.Tests
+namespace Gu.State.Tests
 {
     using System.Collections.Generic;
 
@@ -6,12 +6,12 @@
 
     using static DirtyTrackerTypes;
 
-    public partial class DirtyTrackerTests
+    public static partial class DirtyTrackerTests
     {
-        public class MemoryLeaks
+        public static class MemoryLeaks
         {
             [SetUp]
-            public void SetUp()
+            public static void SetUp()
             {
 #if DEBUG
                 Assert.Inconclusive("debug build keeps instances alive longer for nicer debugging experience");
@@ -19,7 +19,7 @@
             }
 
             [Test]
-            public void ComplexType()
+            public static void ComplexType()
             {
                 var x = new ComplexType("a", 1);
                 var y = new ComplexType("a", 1);
@@ -45,7 +45,7 @@
 
             [Explicit(IgnoredTests.MemoryLeak)]
             [Test]
-            public void WithComplexProperty()
+            public static void WithComplexProperty()
             {
                 var x = new WithComplexProperty { ComplexType = new ComplexType("a", 1) };
                 var y = new WithComplexProperty { ComplexType = new ComplexType("a", 1) };
@@ -75,7 +75,7 @@
 
             [Explicit(IgnoredTests.MemoryLeak)]
             [Test]
-            public void DoesNotLeakTrackedProperty()
+            public static void DoesNotLeakTrackedProperty()
             {
                 var x = new WithComplexProperty { ComplexType = new ComplexType("a", 1) };
                 var y = new WithComplexProperty { ComplexType = new ComplexType("a", 1) };
