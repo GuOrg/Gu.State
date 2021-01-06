@@ -4,7 +4,9 @@ namespace Gu.State
     using System.Collections;
 
     /// <summary>This is raised when an element was replaced in a notifying collection.</summary>
+#pragma warning disable CA1711 // Identifiers should not have incorrect suffix
     public readonly struct ReplaceEventArgs : IRootChangeEventArgs, IEquatable<ReplaceEventArgs>
+#pragma warning restore CA1711 // Identifiers should not have incorrect suffix
     {
         internal ReplaceEventArgs(IList source, int index)
         {

@@ -5,7 +5,9 @@ namespace Gu.State
     /// <summary>
     /// A collection with reference pairs.
     /// </summary>
+#pragma warning disable CA1711 // Identifiers should not have incorrect suffix
     public sealed class ReferencePairCollection
+#pragma warning restore CA1711 // Identifiers should not have incorrect suffix
     {
         private static readonly ConcurrentQueue<ReferencePairCollection> Cache = new ConcurrentQueue<ReferencePairCollection>();
         private readonly ConcurrentSet<IRefCounted<ReferencePair>> pairs = new ConcurrentSet<IRefCounted<ReferencePair>>();

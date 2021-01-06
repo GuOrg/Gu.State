@@ -371,7 +371,7 @@ namespace Gu.State
         }
 
         // ReSharper disable once UnusedParameter.Local
-        private void OnChildNodeChanged(object _, TrackerChangedEventArgs<DirtyTrackerNode> e)
+        private void OnChildNodeChanged(object sender, TrackerChangedEventArgs<DirtyTrackerNode> e)
         {
             if (this.Builder is null)
             {

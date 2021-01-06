@@ -54,3 +54,6 @@ dotnet_diagnostic.CA2201.severity = none
 # CA2227: Collection properties should be read only
 dotnet_diagnostic.CA2227.severity = none
 
+
+# SA1118: The parameter spans multiple lines
+dotnet_diagnostic.SA1118.severity = none

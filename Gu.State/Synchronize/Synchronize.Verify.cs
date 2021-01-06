@@ -1,8 +1,11 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Reflection;
 
+    /// <summary>
+    /// Methods for checking if synchronize is valie.
+    /// </summary>
     public static partial class Synchronize
     {
         /// <summary>

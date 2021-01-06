@@ -37,7 +37,7 @@ namespace Gu.State
                 }
                 else
                 {
-                    builder.TryAdd(member, xValue, yValue);
+                    _ = builder.TryAdd(member, xValue, yValue);
                 }
 
                 return;
@@ -56,7 +56,7 @@ namespace Gu.State
                     }
                     else
                     {
-                        builder.TryAdd(member, xValue, yValue);
+                        _ = builder.TryAdd(member, xValue, yValue);
                     }
 
                     return;

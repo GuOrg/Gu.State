@@ -140,9 +140,6 @@ Gu.State.SubDiff.SubDiff(Gu.State.ValueDiff valueDiff) -> void
 Gu.State.SubDiff.X.get -> object
 Gu.State.SubDiff.Y.get -> object
 Gu.State.Synchronize
-Gu.State.Synchronize
-Gu.State.Synchronize
-Gu.State.Track
 Gu.State.Track
 Gu.State.TrackerChangedEventArgs<T>
 Gu.State.TrackerChangedEventArgs<T>.Node.get -> T

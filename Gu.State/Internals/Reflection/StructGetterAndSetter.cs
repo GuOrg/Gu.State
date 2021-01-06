@@ -29,14 +29,7 @@ namespace Gu.State
 
         public MemberInfo Member { get; }
 
-        public void SetValue(object source, object value)
-        {
-            this.SetValue((TSource)source, (TValue)value);
-        }
-
-#pragma warning disable IDE0060, CA1801 // Review unused parameters
-        public void SetValue(TSource source, TValue value) => throw new InvalidOperationException("Can't set value of struct.");
-#pragma warning restore IDE0060, CA1801 // Review unused parameters
+        void IGetterAndSetter.SetValue(object source, object value) => throw new InvalidOperationException("Can't set value of struct.");
 
         public object GetValue(object source)
         {
@@ -58,10 +51,7 @@ namespace Gu.State
             return EqualBy.TryGetValueEquals(xv, yv, settings, out equal);
         }
 
-        public void CopyValue(object source, object target)
-        {
-            this.SetValue((TSource)target, this.GetValue((TSource)source));
-        }
+        void IGetterAndSetter.CopyValue(object source, object target) => throw new InvalidOperationException("Can't copy value to struct.");
 
         public TValue GetValue(TSource source)
         {
