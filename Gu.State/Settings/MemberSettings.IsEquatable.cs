@@ -47,7 +47,9 @@ namespace Gu.State
                 return result;
             }
 
+#pragma warning disable CA1508 // Avoid dead conditional code, broken analyzer
             if (type.IsNullable())
+#pragma warning restore CA1508 // Avoid dead conditional code
             {
                 var underlyingType = Nullable.GetUnderlyingType(type);
                 result = IsEquatableCore(underlyingType);

@@ -76,11 +76,6 @@ namespace Gu.State
                     return;
                 }
 
-                if (this.processingNode != null)
-                {
-                    return;
-                }
-
                 while (queue.TryDequeue(out this.processingNode))
                 {
                     if (this.processingNode.IsDirty)
