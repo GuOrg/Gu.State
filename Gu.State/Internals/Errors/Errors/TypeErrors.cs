@@ -30,8 +30,7 @@ namespace Gu.State
 
         internal Type Type { get; }
 
-        internal IReadOnlyList<Error> AllErrors => this.lazyAllErrors ??
-                                                   (this.lazyAllErrors = MergedErrors.MergeAll(this, this.Errors));
+        internal IReadOnlyList<Error> AllErrors => this.lazyAllErrors ??= MergedErrors.MergeAll(this, this.Errors);
 
         internal static TypeErrors Create(ErrorBuilder.TypeErrorsBuilder builder) => new TypeErrors(builder.Type, builder.Errors);
     }

@@ -400,25 +400,9 @@ namespace Gu.State.Tests.EqualByTests
                 return this.Value == other.Value;
             }
 
-            public override bool Equals(object obj)
-            {
-                if (obj is null)
-                {
-                    return false;
-                }
+            public override bool Equals(object obj) => obj is Immutable immutable && this.Equals(immutable);
 
-                if (ReferenceEquals(this, obj))
-                {
-                    return true;
-                }
-
-                return obj is Immutable && this.Equals((Immutable)obj);
-            }
-
-            public override int GetHashCode()
-            {
-                return this.Value;
-            }
+            public override int GetHashCode() => this.Value;
         }
 
         public class WithArrayProperty
