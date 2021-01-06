@@ -1,6 +1,6 @@
-﻿namespace Gu.State.Tests.Internals
+namespace Gu.State.Tests.Internals
 {
-    public class MemberPathTypes
+    public static class MemberPathTypes
     {
         public class With<T>
         {

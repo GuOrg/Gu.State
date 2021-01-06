@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Collections;
@@ -69,9 +69,9 @@
 
                 if (pathItem is CollectionItem collectionItem)
                 {
-                    stringBuilder.Append("[")
+                    stringBuilder.Append('[')
                                  .Append(collectionItem.CollectionType.GetItemType().PrettyName())
-                                 .Append("]");
+                                 .Append(']');
                     continue;
                 }
 

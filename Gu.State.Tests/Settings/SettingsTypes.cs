@@ -149,7 +149,9 @@ namespace Gu.State.Tests.Settings
 
         public sealed class Immutable : IEquatable<Immutable>
         {
+#pragma warning disable SA1304 // Non-private readonly fields should begin with upper-case letter
             internal readonly int value;
+#pragma warning restore SA1304 // Non-private readonly fields should begin with upper-case letter
 
             public int Value => this.value;
 

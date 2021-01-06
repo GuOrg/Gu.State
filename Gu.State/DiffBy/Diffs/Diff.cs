@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System.CodeDom.Compiler;
     using System.Collections.Concurrent;
@@ -9,7 +9,7 @@
     {
         private static readonly IReadOnlyCollection<SubDiff> Empty = new SubDiff[0];
 
-        internal Diff(IReadOnlyCollection<SubDiff> diffs = null)
+        private protected Diff(IReadOnlyCollection<SubDiff> diffs = null)
         {
             this.Diffs = diffs ?? Empty;
         }

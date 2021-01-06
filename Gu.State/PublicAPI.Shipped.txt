@@ -1,13 +1,21 @@
-﻿Gu.State.AddEventArgs
+﻿abstract Gu.State.CastingComparer.Equals(object x, object y) -> bool
+abstract Gu.State.CastingComparer.GetHashCode(object obj) -> int
+abstract Gu.State.CustomCopy.Copy(object source, object target) -> object
+abstract Gu.State.Diff.IsEmpty.get -> bool
+abstract Gu.State.Diff.ToString(string tabString, string newLine) -> string
+abstract Gu.State.MemberSettings.GetMembers(System.Type type) -> System.Collections.Generic.IEnumerable<System.Reflection.MemberInfo>
+abstract Gu.State.MemberSettings.IsIgnoringMember(System.Reflection.MemberInfo member) -> bool
+Gu.State.AddEventArgs
+Gu.State.AddEventArgs.AddEventArgs() -> void
 Gu.State.AddEventArgs.Equals(Gu.State.AddEventArgs other) -> bool
 Gu.State.AddEventArgs.Index.get -> int
 Gu.State.AddEventArgs.Source.get -> System.Collections.IList
 Gu.State.CastingComparer
 Gu.State.CastingComparer.CastingComparer() -> void
 Gu.State.ChangeTracker
-Gu.State.ChangeTracker.ChangeTracker(System.ComponentModel.INotifyPropertyChanged source, Gu.State.PropertiesSettings settings) -> void
 Gu.State.ChangeTracker.Changed -> System.EventHandler
 Gu.State.ChangeTracker.Changes.get -> int
+Gu.State.ChangeTracker.ChangeTracker(System.ComponentModel.INotifyPropertyChanged source, Gu.State.PropertiesSettings settings) -> void
 Gu.State.ChangeTracker.Dispose() -> void
 Gu.State.ChangeTracker.PropertyChanged -> System.ComponentModel.PropertyChangedEventHandler
 Gu.State.ChangeTracker.Settings.get -> Gu.State.PropertiesSettings
@@ -54,12 +62,12 @@ Gu.State.IDirtyTracker
 Gu.State.IDirtyTracker.Diff.get -> Gu.State.ValueDiff
 Gu.State.IDirtyTracker.IsDirty.get -> bool
 Gu.State.IDirtyTracker.Settings.get -> Gu.State.PropertiesSettings
-Gu.State.IRootChangeEventArgs
-Gu.State.IRootChangeEventArgs.Source.get -> object
 Gu.State.IndexDiff
 Gu.State.IndexDiff.Index.get -> object
 Gu.State.IndexDiff.IndexDiff(object index, Gu.State.ValueDiff valueDiff) -> void
 Gu.State.IndexDiff.IndexDiff(object index, object xValue, object yValue) -> void
+Gu.State.IRootChangeEventArgs
+Gu.State.IRootChangeEventArgs.Source.get -> object
 Gu.State.ItemGraphChangedEventArgs<T>
 Gu.State.ItemGraphChangedEventArgs<T>.Index.get -> int
 Gu.State.MemberDiff
@@ -81,6 +89,7 @@ Gu.State.MemberSettings.TryGetCopyer(System.Type type, out Gu.State.CustomCopy c
 Gu.State.MoveEventArgs
 Gu.State.MoveEventArgs.Equals(Gu.State.MoveEventArgs other) -> bool
 Gu.State.MoveEventArgs.FromIndex.get -> int
+Gu.State.MoveEventArgs.MoveEventArgs() -> void
 Gu.State.MoveEventArgs.Source.get -> System.Collections.IList
 Gu.State.MoveEventArgs.ToIndex.get -> int
 Gu.State.PropertiesSettings
@@ -96,13 +105,14 @@ Gu.State.PropertiesSettingsBuilder.AddImmutableType<T>() -> Gu.State.PropertiesS
 Gu.State.PropertiesSettingsBuilder.CreateSettings(Gu.State.ReferenceHandling referenceHandling = Gu.State.ReferenceHandling.Structural, System.Reflection.BindingFlags bindingFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public) -> Gu.State.PropertiesSettings
 Gu.State.PropertiesSettingsBuilder.IgnoreIndexersFor<T>() -> Gu.State.PropertiesSettingsBuilder
 Gu.State.PropertiesSettingsBuilder.IgnoreProperty(System.Reflection.PropertyInfo property) -> Gu.State.PropertiesSettingsBuilder
-Gu.State.PropertiesSettingsBuilder.IgnoreProperty<TSource>(System.Linq.Expressions.Expression<System.Func<TSource, object>> property) -> Gu.State.PropertiesSettingsBuilder
 Gu.State.PropertiesSettingsBuilder.IgnoreProperty<TSource>(string name) -> Gu.State.PropertiesSettingsBuilder
+Gu.State.PropertiesSettingsBuilder.IgnoreProperty<TSource>(System.Linq.Expressions.Expression<System.Func<TSource, object>> property) -> Gu.State.PropertiesSettingsBuilder
 Gu.State.PropertiesSettingsBuilder.IgnoreType(System.Type type) -> Gu.State.PropertiesSettingsBuilder
 Gu.State.PropertiesSettingsBuilder.IgnoreType<T>() -> Gu.State.PropertiesSettingsBuilder
 Gu.State.PropertiesSettingsBuilder.PropertiesSettingsBuilder() -> void
 Gu.State.PropertyChangeEventArgs
 Gu.State.PropertyChangeEventArgs.Equals(Gu.State.PropertyChangeEventArgs other) -> bool
+Gu.State.PropertyChangeEventArgs.PropertyChangeEventArgs() -> void
 Gu.State.PropertyChangeEventArgs.PropertyChangeEventArgs(object source, System.Reflection.PropertyInfo propertyInfo) -> void
 Gu.State.PropertyChangeEventArgs.PropertyInfo.get -> System.Reflection.PropertyInfo
 Gu.State.PropertyChangeEventArgs.Source.get -> object
@@ -124,13 +134,16 @@ Gu.State.ReferencePairCollection
 Gu.State.RemoveEventArgs
 Gu.State.RemoveEventArgs.Equals(Gu.State.RemoveEventArgs other) -> bool
 Gu.State.RemoveEventArgs.Index.get -> int
+Gu.State.RemoveEventArgs.RemoveEventArgs() -> void
 Gu.State.RemoveEventArgs.Source.get -> System.Collections.IList
 Gu.State.ReplaceEventArgs
 Gu.State.ReplaceEventArgs.Equals(Gu.State.ReplaceEventArgs other) -> bool
 Gu.State.ReplaceEventArgs.Index.get -> int
+Gu.State.ReplaceEventArgs.ReplaceEventArgs() -> void
 Gu.State.ReplaceEventArgs.Source.get -> System.Collections.IList
 Gu.State.ResetEventArgs
 Gu.State.ResetEventArgs.Equals(Gu.State.ResetEventArgs other) -> bool
+Gu.State.ResetEventArgs.ResetEventArgs() -> void
 Gu.State.ResetEventArgs.Source.get -> System.Collections.IList
 Gu.State.RootChangeEventArgs<T>
 Gu.State.RootChangeEventArgs<T>.EventArgs.get -> Gu.State.IRootChangeEventArgs
@@ -150,13 +163,6 @@ Gu.State.ValueDiff
 Gu.State.ValueDiff.ValueDiff(object xValue, object yValue, System.Collections.Generic.IReadOnlyCollection<Gu.State.SubDiff> diffs = null) -> void
 Gu.State.ValueDiff.X.get -> object
 Gu.State.ValueDiff.Y.get -> object
-abstract Gu.State.CastingComparer.Equals(object x, object y) -> bool
-abstract Gu.State.CastingComparer.GetHashCode(object obj) -> int
-abstract Gu.State.CustomCopy.Copy(object source, object target) -> object
-abstract Gu.State.Diff.IsEmpty.get -> bool
-abstract Gu.State.Diff.ToString(string tabString, string newLine) -> string
-abstract Gu.State.MemberSettings.GetMembers(System.Type type) -> System.Collections.Generic.IEnumerable<System.Reflection.MemberInfo>
-abstract Gu.State.MemberSettings.IsIgnoringMember(System.Reflection.MemberInfo member) -> bool
 override Gu.State.AddEventArgs.Equals(object obj) -> bool
 override Gu.State.AddEventArgs.GetHashCode() -> int
 override Gu.State.CustomCopy<T>.Copy(object source, object target) -> object
