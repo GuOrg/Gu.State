@@ -6,19 +6,19 @@ namespace Gu.State.Tests
     {
         public static readonly RootChangeEventArgsEventArgsComparer<TNode> Default = new RootChangeEventArgsEventArgsComparer<TNode>();
 
-        public override bool Equals(RootChangeEventArgs<TNode> expected, RootChangeEventArgs<TNode> actual)
+        public override bool Equals(RootChangeEventArgs<TNode> x, RootChangeEventArgs<TNode> y)
         {
-            if (!ReferenceEquals(expected.Node, actual.Node))
+            if (!ReferenceEquals(x.Node, y.Node))
             {
-                throw new AssertionException($"Expected actual.Node to be same as expected.Node");
+                throw new AssertionException($"Expected x.Node to be same as y.Node");
             }
 
-            if (!EventArgsComparer.Default.Equals(expected.Previous, actual.Previous))
+            if (!EventArgsComparer.Default.Equals(x.Previous, y.Previous))
             {
                 return false;
             }
 
-            return EventArgsComparer.Default.Equals(expected.EventArgs, actual.EventArgs);
+            return EventArgsComparer.Default.Equals(x.EventArgs, y.EventArgs);
         }
     }
 }

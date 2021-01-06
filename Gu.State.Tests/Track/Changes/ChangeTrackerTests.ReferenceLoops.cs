@@ -8,12 +8,12 @@ namespace Gu.State.Tests
 
     using static ChangeTrackerTypes;
 
-    public partial class ChangeTrackerTests
+    public static partial class ChangeTrackerTests
     {
-        public class ReferenceLoops
+        public static class ReferenceLoops
         {
             [Test]
-            public void WithSelf()
+            public static void WithSelf()
             {
                 var source = new WithSelf();
                 var propertyChanges = new List<string>();
@@ -41,7 +41,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void CreateAndDisposeParentChildLoop()
+            public static void CreateAndDisposeParentChildLoop()
             {
                 var parent = new Parent { Child = new Child("c") };
                 parent.Child.Parent = parent;
@@ -75,7 +75,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void SequenceOfChanges()
+            public static void SequenceOfChanges()
             {
                 var parent = new Parent { Child = new Child("c") };
 
@@ -116,7 +116,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void ParentChanges()
+            public static void ParentChanges()
             {
                 var parent = new Parent { Child = new Child("c") };
                 var propertyChanges = new List<string>();
@@ -137,7 +137,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void ParentNameChanges()
+            public static void ParentNameChanges()
             {
                 var parent = new Parent { Child = new Child(string.Empty) };
                 parent.Child.Parent = parent;
@@ -160,7 +160,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void ChildNameChanges()
+            public static void ChildNameChanges()
             {
                 var parent = new Parent { Child = new Child(string.Empty) };
                 parent.Child.Parent = parent;

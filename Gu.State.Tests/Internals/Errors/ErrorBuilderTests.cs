@@ -1,13 +1,13 @@
-﻿// ReSharper disable InconsistentNaming
+// ReSharper disable InconsistentNaming
 namespace Gu.State.Tests.Internals.Errors
 {
     using System.Reflection;
     using NUnit.Framework;
 
-    public class TypeErrorsBuilderTests
+    public static partial class ErrorBuilderTests
     {
         [Test]
-        public void FinnishWhenNull()
+        public static void FinnishWhenNull()
         {
             var errors = ErrorBuilder.Start()
                                      .Finnish();
@@ -15,7 +15,7 @@ namespace Gu.State.Tests.Internals.Errors
         }
 
         [Test]
-        public void FinnishAndNoErrors()
+        public static void FinnishAndNoErrors()
         {
             var errors = ErrorBuilder.Start()
                                      .CreateIfNull(typeof(ErrorTypes.With<int>))
@@ -24,7 +24,7 @@ namespace Gu.State.Tests.Internals.Errors
         }
 
         [Test]
-        public void FinnishWithError()
+        public static void FinnishWithError()
         {
             var type = typeof(ErrorTypes.With<int>);
             var errors = ErrorBuilder.Start()
@@ -36,7 +36,7 @@ namespace Gu.State.Tests.Internals.Errors
         }
 
         [Test]
-        public void MergeSame()
+        public static void MergeSame()
         {
             var errors = new TypeErrors(typeof(ErrorTypes.With<int>));
             var merged = ErrorBuilder.Merge(errors, errors);
@@ -44,7 +44,7 @@ namespace Gu.State.Tests.Internals.Errors
         }
 
         [Test]
-        public void RefLoopAndMustNotify()
+        public static void RefLoopAndMustNotify()
         {
             var rootType = typeof(ErrorTypes.With<ErrorTypes.Parent>);
             var valueProperty = rootType.GetProperty(nameof(ErrorTypes.With<ErrorTypes.Parent>.Value), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
@@ -70,7 +70,7 @@ namespace Gu.State.Tests.Internals.Errors
         }
 
         [Test]
-        public void RefLoopAndMemberErrors()
+        public static void RefLoopAndMemberErrors()
         {
             var rootType = typeof(ErrorTypes.With<ErrorTypes.Parent>);
             var valueProperty = rootType.GetProperty(nameof(ErrorTypes.With<ErrorTypes.Parent>.Value), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);

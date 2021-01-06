@@ -7,12 +7,12 @@ namespace Gu.State.Tests
 
     using static ChangeTrackerTypes;
 
-    public partial class ChangeTrackerTests
+    public static partial class ChangeTrackerTests
     {
-        public class MemoryLeaks
+        public static class MemoryLeaks
         {
             [SetUp]
-            public void SetUp()
+            public static void SetUp()
             {
 #if DEBUG // debug build keeps instances alive longer for nicer debugging experience
                 Assert.Inconclusive();
@@ -20,7 +20,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void CreateAndDisposeComplexType()
+            public static void CreateAndDisposeComplexType()
             {
                 var source = new ComplexType();
                 WeakReference weakReference = new WeakReference(source);
@@ -37,7 +37,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void CreateAndDisposeWithComplexType()
+            public static void CreateAndDisposeWithComplexType()
             {
                 var source = new With<ComplexType> { Value = new ComplexType(1, 2) };
 
@@ -56,7 +56,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void DoesNotLeakTrackedProperty()
+            public static void DoesNotLeakTrackedProperty()
             {
                 var source = new With<ComplexType> { Value = new ComplexType() };
                 using (Track.Changes(source, ReferenceHandling.Structural))

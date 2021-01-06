@@ -1,4 +1,4 @@
-﻿namespace Gu.State.Tests.Internals.Errors
+namespace Gu.State.Tests.Internals.Errors
 {
     using System;
     using System.Collections.Generic;
@@ -7,13 +7,13 @@
 
     using NUnit.Framework;
 
-    public partial class ErrorBuilderTests
+    public static partial class ErrorBuilderTests
     {
-        public class CheckIndexers
+        public static class CheckIndexers
         {
             [TestCase(typeof(ErrorTypes.With<int>))]
             [TestCase(typeof(List<int>))]
-            public void CheckIndexersWhenValid(Type type)
+            public static void CheckIndexersWhenValid(Type type)
             {
                 var settings = PropertiesSettings.GetOrCreate();
                 var errors = ErrorBuilder.Start()
@@ -23,7 +23,7 @@
             }
 
             [Test]
-            public void CheckIndexersWhenError()
+            public static void CheckIndexersWhenError()
             {
                 var settings = PropertiesSettings.GetOrCreate();
                 var type = typeof(ErrorTypes.WithIndexer);

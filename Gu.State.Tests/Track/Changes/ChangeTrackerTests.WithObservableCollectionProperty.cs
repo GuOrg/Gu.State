@@ -10,12 +10,12 @@ namespace Gu.State.Tests
 
     using static ChangeTrackerTypes;
 
-    public partial class ChangeTrackerTests
+    public static partial class ChangeTrackerTests
     {
-        public class WithObservableCollectionProperty
+        public static class WithObservableCollectionProperty
         {
             [Test]
-            public void CreateAndDispose()
+            public static void CreateAndDispose()
             {
                 var source = new With<ObservableCollection<ComplexType>> { Value = new ObservableCollection<ComplexType> { new ComplexType() } };
                 var propertyChanges = new List<string>();
@@ -42,7 +42,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void ReplaceCollection()
+            public static void ReplaceCollection()
             {
                 var source = new With<ObservableCollection<ComplexType>> { Value = new ObservableCollection<ComplexType>() };
                 var propertyChanges = new List<string>();
@@ -91,7 +91,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void TracksCollectionProperty()
+            public static void TracksCollectionProperty()
             {
                 var source = new Level
                 {
@@ -138,7 +138,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void Add()
+            public static void Add()
             {
                 var source = new With<ObservableCollection<ComplexType>>
                 {
@@ -252,7 +252,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void Remove()
+            public static void Remove()
             {
                 var source = new With<ObservableCollection<ComplexType>> { Value = new ObservableCollection<ComplexType> { new ComplexType(), null } };
                 var propertyChanges = new List<string>();
@@ -307,7 +307,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void Clear()
+            public static void Clear()
             {
                 var source = new With<ObservableCollection<ComplexType>> { Value = new ObservableCollection<ComplexType> { new ComplexType(), null } };
                 var propertyChanges = new List<string>();
@@ -356,7 +356,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void Replace()
+            public static void Replace()
             {
                 var source = new With<ObservableCollection<ComplexType>>
                 {

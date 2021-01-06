@@ -6,21 +6,21 @@ namespace Gu.State.Tests
     {
         public static readonly MoveEventArgsComparer Default = new MoveEventArgsComparer();
 
-        public override bool Equals(MoveEventArgs expected, MoveEventArgs actual)
+        public override bool Equals(MoveEventArgs x, MoveEventArgs y)
         {
-            if (!ReferenceEquals(expected.Source, actual.Source))
+            if (!ReferenceEquals(x.Source, y.Source))
             {
                 throw new AssertionException($"Expected source to be same.");
             }
 
-            if (expected.FromIndex != actual.FromIndex)
+            if (x.FromIndex != y.FromIndex)
             {
-                throw new AssertionException($"Expected FromIndex to be {expected.FromIndex} but was {actual.FromIndex}");
+                throw new AssertionException($"Expected FromIndex to be {x.FromIndex} but was {y.FromIndex}");
             }
 
-            if (expected.ToIndex != actual.ToIndex)
+            if (x.ToIndex != y.ToIndex)
             {
-                throw new AssertionException($"Expected ToIndex to be {expected.FromIndex} but was {actual.FromIndex}");
+                throw new AssertionException($"Expected ToIndex to be {x.FromIndex} but was {y.FromIndex}");
             }
 
             return true;

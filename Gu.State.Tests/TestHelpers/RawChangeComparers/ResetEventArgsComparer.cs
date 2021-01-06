@@ -6,9 +6,9 @@ namespace Gu.State.Tests
     {
         public static readonly ResetEventArgsComparer Default = new ResetEventArgsComparer();
 
-        public override bool Equals(ResetEventArgs expected, ResetEventArgs actual)
+        public override bool Equals(ResetEventArgs x, ResetEventArgs y)
         {
-            if (!ReferenceEquals(expected.Source, actual.Source))
+            if (!ReferenceEquals(x.Source, y.Source))
             {
                 throw new AssertionException($"Expected source to be same.");
             }

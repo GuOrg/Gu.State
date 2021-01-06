@@ -8,12 +8,12 @@ namespace Gu.State.Tests
 
     using static ChangeTrackerTypes;
 
-    public partial class ChangeTrackerTests
+    public static partial class ChangeTrackerTests
     {
-        public class WithComplex
+        public static class WithComplex
         {
             [Test]
-            public void Subscribes()
+            public static void Subscribes()
             {
                 var source = new With<ComplexType> { Value = new ComplexType() };
                 var propertyChanges = new List<string>();
@@ -41,7 +41,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void StartsSubscribing()
+            public static void StartsSubscribing()
             {
                 var source = new With<ComplexType>();
                 var propertyChanges = new List<string>();
@@ -70,7 +70,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void StopsSubscribing()
+            public static void StopsSubscribing()
             {
                 var source = new With<ComplexType> { Value = new ComplexType() };
                 var propertyChanges = new List<string>();

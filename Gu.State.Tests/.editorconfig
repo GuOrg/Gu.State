@@ -24,6 +24,9 @@ dotnet_diagnostic.CA1051.severity = none
 # CA1062: Validate arguments of public methods
 dotnet_diagnostic.CA1062.severity = none
 
+# CA1708: Identifiers should differ by more than case
+dotnet_diagnostic.CA1708.severity = none
+
 # CA1711: Identifiers should not have incorrect suffix
 dotnet_diagnostic.CA1711.severity = none
 
@@ -38,6 +41,9 @@ dotnet_diagnostic.CA1814.severity = none
 
 # CA1815: Override equals and operator equals on value types
 dotnet_diagnostic.CA1815.severity = none
+
+# CA1819: Properties should not return arrays
+dotnet_diagnostic.CA1819.severity = none
 
 # CA1822: Mark members as static
 dotnet_diagnostic.CA1822.severity = none

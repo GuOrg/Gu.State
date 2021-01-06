@@ -1,4 +1,4 @@
-﻿namespace Gu.State.Tests.Internals.Errors
+namespace Gu.State.Tests.Internals.Errors
 {
     using System;
     using System.Collections.Generic;
@@ -8,13 +8,13 @@
 
     using static ErrorTypes;
 
-    public partial class ErrorBuilderTests
+    public static partial class ErrorBuilderTests
     {
-        public class CheckReferenceHandling
+        public static class CheckReferenceHandling
         {
             [TestCase(typeof(With<int>))]
             [TestCase(typeof(int))]
-            public void CheckReferenceHandlingWhenValid(Type type)
+            public static void CheckReferenceHandlingWhenValid(Type type)
             {
                 var settings = PropertiesSettings.GetOrCreate();
                 var errors = ErrorBuilder.Start()
@@ -25,7 +25,7 @@
 
             [TestCase(true)]
             [TestCase(false)]
-            public void CheckReferenceHandlingWhenRootError(bool requiresRef)
+            public static void CheckReferenceHandlingWhenRootError(bool requiresRef)
             {
                 var settings = PropertiesSettings.GetOrCreate(ReferenceHandling.Throw);
                 var type = typeof(List<ComplexType>);
@@ -56,7 +56,7 @@
             }
 
             [Test]
-            public void CheckReferenceHandlingWhenPropertyError()
+            public static void CheckReferenceHandlingWhenPropertyError()
             {
                 var settings = PropertiesSettings.GetOrCreate(ReferenceHandling.Throw);
                 var type = typeof(With<List<int>>);

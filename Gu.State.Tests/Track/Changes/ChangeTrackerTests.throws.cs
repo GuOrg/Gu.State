@@ -9,13 +9,13 @@ namespace Gu.State.Tests
 
     using static ChangeTrackerTypes;
 
-    public partial class ChangeTrackerTests
+    public static partial class ChangeTrackerTests
     {
-        public class Throws
+        public static class Throws
         {
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.Throw)]
-            public void WithNotifyingStruct(ReferenceHandling referenceHandling)
+            public static void WithNotifyingStruct(ReferenceHandling referenceHandling)
             {
                 var expected = "Track.Changes(x, y) failed.\r\n" +
                                "The type NotifyingStruct is a mutable struct that implements INotifyPropertyChanged.\r\n" +
@@ -44,7 +44,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void WithComplexTypeThrows()
+            public static void WithComplexTypeThrows()
             {
                 var expected = "Track.Changes(x, y) failed.\r\n" +
                                "The property With<ComplexType>.Value of type ComplexType is not supported.\r\n" +
@@ -68,7 +68,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void WithComplexTypeHappyPath()
+            public static void WithComplexTypeHappyPath()
             {
                 Assert.DoesNotThrow(() => Track.Changes(new With<ComplexType>()));
                 Assert.DoesNotThrow(() => Track.Changes(new With<ComplexType>(), ReferenceHandling.Structural));
@@ -76,7 +76,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void AddIllegalThrows()
+            public static void AddIllegalThrows()
             {
                 var expected = "Track.Changes(x, y) failed.\r\n" +
                                "The type IllegalType does not notify changes.\r\n" +
@@ -108,7 +108,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void SetIllegalThrows()
+            public static void SetIllegalThrows()
             {
                 var expected = "Track.Changes(x, y) failed.\r\n" +
                                "The type IllegalType does not notify changes.\r\n" +
@@ -140,7 +140,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void WithIllegal()
+            public static void WithIllegal()
             {
                 var expected = "Track.Changes(x, y) failed.\r\n" +
                                "The type IllegalType does not notify changes.\r\n" +
@@ -171,7 +171,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void IllegalEnumerable()
+            public static void IllegalEnumerable()
             {
                 var expected = "Track.Changes(x, y) failed.\r\n" +
                                "The collection type IllegalEnumerable does not notify changes.\r\n" +
@@ -190,7 +190,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void WithListOfInts()
+            public static void WithListOfInts()
             {
                 var expected = "Track.Changes(x, y) failed.\r\n" +
                                "The collection type List<int> does not notify changes.\r\n" +

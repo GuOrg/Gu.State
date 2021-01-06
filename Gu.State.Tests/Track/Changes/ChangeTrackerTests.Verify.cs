@@ -7,12 +7,12 @@ namespace Gu.State.Tests
 
     using static ChangeTrackerTypes;
 
-    public partial class ChangeTrackerTests
+    public static partial class ChangeTrackerTests
     {
-        public class Verify
+        public static class Verify
         {
             [Test]
-            public void ThrowsWithNotifyingStruct()
+            public static void ThrowsWithNotifyingStruct()
             {
                 var expected = "Track.VerifyCanTrackChanges(x, y) failed.\r\n" +
                                "The type NotifyingStruct is a mutable struct that implements INotifyPropertyChanged.\r\n" +
@@ -38,7 +38,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void WithIllegal()
+            public static void WithIllegal()
             {
                 var expected = "Track.VerifyCanTrackChanges(x, y) failed.\r\n" +
                                "The type IllegalType does not notify changes.\r\n" +
@@ -64,7 +64,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void IllegalEnumerable()
+            public static void IllegalEnumerable()
             {
                 var expected = "Track.VerifyCanTrackChanges(x, y) failed.\r\n" +
                                "The collection type IllegalEnumerable does not notify changes.\r\n" +
@@ -79,7 +79,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void WithListOfInts()
+            public static void WithListOfInts()
             {
                 var expected = "Track.VerifyCanTrackChanges(x, y) failed.\r\n" +
                                "The collection type List<int> does not notify changes.\r\n" +
@@ -106,7 +106,7 @@ namespace Gu.State.Tests
             [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.References)]
             [TestCase(ReferenceHandling.Structural)]
-            public void WithSimpleProperties(ReferenceHandling referenceHandling)
+            public static void WithSimpleProperties(ReferenceHandling referenceHandling)
             {
                 Track.VerifyCanTrackChanges<WithSimpleProperties>(referenceHandling);
                 Track.VerifyCanTrackChanges<WithSimpleProperties>(PropertiesSettings.GetOrCreate(referenceHandling));

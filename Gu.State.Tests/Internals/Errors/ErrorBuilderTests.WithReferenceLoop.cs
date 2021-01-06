@@ -1,16 +1,16 @@
-﻿// ReSharper disable InconsistentNaming
+// ReSharper disable InconsistentNaming
 namespace Gu.State.Tests.Internals.Errors
 {
     using System.Reflection;
     using System.Text;
     using NUnit.Framework;
 
-    public partial class ErrorBuilderTests
+    public static partial class ErrorBuilderTests
     {
-        public class WithReferenceLoop
+        public static class WithReferenceLoop
         {
             [Test]
-            public void WhenError()
+            public static void WhenError()
             {
                 var rootType = typeof(ErrorTypes.With<ErrorTypes.Parent>);
                 var valueProperty = rootType.GetProperty(nameof(ErrorTypes.With<ErrorTypes.Parent>.Value), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);

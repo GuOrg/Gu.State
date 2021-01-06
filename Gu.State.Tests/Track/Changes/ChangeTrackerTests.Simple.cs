@@ -7,15 +7,15 @@ namespace Gu.State.Tests
 
     using static ChangeTrackerTypes;
 
-    public partial class ChangeTrackerTests
+    public static partial class ChangeTrackerTests
     {
-        public class Simple
+        public static class Simple
         {
             [Ignore("Fails on CI")]
             [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.References)]
             [TestCase(ReferenceHandling.Structural)]
-            public void CreateAndDispose(ReferenceHandling referenceHandling)
+            public static void CreateAndDispose(ReferenceHandling referenceHandling)
             {
                 var source = new WithSimpleProperties { Value1 = 1, Time = DateTime.MinValue };
                 var propertyChanges = new List<string>();
@@ -50,7 +50,7 @@ namespace Gu.State.Tests
             [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.References)]
             [TestCase(ReferenceHandling.Structural)]
-            public void CreateAndDisposeExplicitSetting(ReferenceHandling referenceHandling)
+            public static void CreateAndDisposeExplicitSetting(ReferenceHandling referenceHandling)
             {
                 var source = new WithSimpleProperties { Value1 = 1, Time = DateTime.MinValue };
                 var propertyChanges = new List<string>();

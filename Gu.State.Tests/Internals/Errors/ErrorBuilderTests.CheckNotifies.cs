@@ -1,4 +1,4 @@
-﻿namespace Gu.State.Tests.Internals.Errors
+namespace Gu.State.Tests.Internals.Errors
 {
     using System;
     using System.Collections.Generic;
@@ -7,13 +7,13 @@
 
     using NUnit.Framework;
 
-    public partial class ErrorBuilderTests
+    public static partial class ErrorBuilderTests
     {
-        public class CheckNotifies
+        public static class CheckNotifies
         {
             [TestCase(typeof(ObservableCollection<int>))]
             [TestCase(typeof(ErrorTypes.Notifying<int>))]
-            public void CheckNotifiesWhenValid(Type type)
+            public static void CheckNotifiesWhenValid(Type type)
             {
                 var settings = PropertiesSettings.GetOrCreate();
                 var errors = ErrorBuilder.Start()
@@ -23,7 +23,7 @@
             }
 
             [Test]
-            public void CheckNotifiesListOfInt()
+            public static void CheckNotifiesListOfInt()
             {
                 var settings = PropertiesSettings.GetOrCreate();
                 var type = typeof(List<int>);
@@ -46,7 +46,7 @@
             }
 
             [Test]
-            public void CheckNotifiesWithInt()
+            public static void CheckNotifiesWithInt()
             {
                 var settings = PropertiesSettings.GetOrCreate();
                 var type = typeof(ErrorTypes.With<int>);

@@ -7,14 +7,14 @@ namespace Gu.State.Tests
 
     using NUnit.Framework;
 
-    public partial class ChangeTrackerTests
+    public static partial class ChangeTrackerTests
     {
-        public class ObservableCollectionOfInts
+        public static class ObservableCollectionOfInt
         {
             [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
-            public void CreateAndDispose(ReferenceHandling referenceHandling)
+            public static void CreateAndDispose(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<int>();
                 var propertyChanges = new List<string>();
@@ -61,7 +61,7 @@ namespace Gu.State.Tests
             [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
-            public void Add(ReferenceHandling referenceHandling)
+            public static void Add(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<int>();
                 var propertyChanges = new List<string>();
@@ -94,7 +94,7 @@ namespace Gu.State.Tests
             [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
-            public void Remove(ReferenceHandling referenceHandling)
+            public static void Remove(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<int> { 1, 2 };
                 var propertyChanges = new List<string>();
@@ -127,7 +127,7 @@ namespace Gu.State.Tests
             [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
-            public void Clear(ReferenceHandling referenceHandling)
+            public static void Clear(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<int> { 1, 2 };
                 var propertyChanges = new List<string>();
@@ -160,7 +160,7 @@ namespace Gu.State.Tests
             [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
-            public void Replace(ReferenceHandling referenceHandling)
+            public static void Replace(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<int> { 1, 2 };
                 var propertyChanges = new List<string>();
@@ -183,7 +183,7 @@ namespace Gu.State.Tests
             [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
-            public void Move(ReferenceHandling referenceHandling)
+            public static void Move(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<int> { 1, 2 };
                 var propertyChanges = new List<string>();

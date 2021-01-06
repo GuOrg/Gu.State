@@ -6,16 +6,16 @@ namespace Gu.State.Tests
     {
         public static readonly ReplaceEventArgsComparer Default = new ReplaceEventArgsComparer();
 
-        public override bool Equals(ReplaceEventArgs expected, ReplaceEventArgs actual)
+        public override bool Equals(ReplaceEventArgs x, ReplaceEventArgs y)
         {
-            if (!ReferenceEquals(expected.Source, actual.Source))
+            if (!ReferenceEquals(x.Source, y.Source))
             {
                 throw new AssertionException($"Expected source to be same.");
             }
 
-            if (expected.Index != actual.Index)
+            if (x.Index != y.Index)
             {
-                throw new AssertionException($"Expected index to be {expected.Index} but was {actual.Index}");
+                throw new AssertionException($"Expected index to be {x.Index} but was {y.Index}");
             }
 
             return true;

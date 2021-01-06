@@ -8,14 +8,14 @@ namespace Gu.State.Tests
 
     using static ChangeTrackerTypes;
 
-    public partial class ChangeTrackerTests
+    public static partial class ChangeTrackerTests
     {
-        public class PropertyChanged
+        public static class PropertyChanged
         {
             [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
-            public void WithImmutable(ReferenceHandling referenceHandling)
+            public static void WithImmutable(ReferenceHandling referenceHandling)
             {
                 var source = new With<Immutable>();
 

@@ -10,12 +10,12 @@ namespace Gu.State.Tests
 
     using static ChangeTrackerTypes;
 
-    public partial class ChangeTrackerTests
+    public static partial class ChangeTrackerTests
     {
-        public class ObservableCollectionOfComplexTypes
+        public static class ObservableCollectionOfComplexTypes
         {
             [Test]
-            public void CreateAndDispose()
+            public static void CreateAndDispose()
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType() };
                 var propertyChanges = new List<string>();
@@ -48,7 +48,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void Add()
+            public static void Add()
             {
                 var source = new ObservableCollection<ComplexType>();
                 var propertyChanges = new List<string>();
@@ -79,7 +79,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void AddThenItemsNotifies()
+            public static void AddThenItemsNotifies()
             {
                 var source = new ObservableCollection<ComplexType>();
                 var propertyChanges = new List<string>();
@@ -128,7 +128,7 @@ namespace Gu.State.Tests
             [TestCase(0)]
             [TestCase(1)]
             [TestCase(2)]
-            public void Insert(int index)
+            public static void Insert(int index)
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType() };
                 var propertyChanges = new List<string>();
@@ -150,7 +150,7 @@ namespace Gu.State.Tests
 
             [TestCase(0)]
             [TestCase(1)]
-            public void InsertThenItemsNotifies(int index)
+            public static void InsertThenItemsNotifies(int index)
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType() };
                 var propertyChanges = new List<string>();
@@ -190,7 +190,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void Remove()
+            public static void Remove()
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType(), null };
                 var propertyChanges = new List<string>();
@@ -223,7 +223,7 @@ namespace Gu.State.Tests
             [TestCase(0)]
             [TestCase(1)]
             [TestCase(2)]
-            public void RemoveThenItemNotifies(int index)
+            public static void RemoveThenItemNotifies(int index)
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType(), new ComplexType() };
                 var propertyChanges = new List<string>();
@@ -257,7 +257,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void RemoveStopsTracking()
+            public static void RemoveStopsTracking()
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType(), null };
                 var propertyChanges = new List<string>();
@@ -291,7 +291,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void Clear()
+            public static void Clear()
             {
                 var item = new ComplexType();
                 var source = new ObservableCollection<ComplexType> { item, null };
@@ -323,7 +323,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void ClearStopsTracking()
+            public static void ClearStopsTracking()
             {
                 var item = new ComplexType();
                 var source = new ObservableCollection<ComplexType> { item, null };
@@ -350,7 +350,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void Replace()
+            public static void Replace()
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType() };
                 var propertyChanges = new List<string>();
@@ -371,7 +371,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void ReplaceStopsListeningToOld()
+            public static void ReplaceStopsListeningToOld()
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType() };
                 var propertyChanges = new List<string>();
@@ -398,7 +398,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void ReplaceStartsListeningToNew()
+            public static void ReplaceStartsListeningToNew()
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType() };
                 var propertyChanges = new List<string>();
@@ -429,7 +429,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void Move()
+            public static void Move()
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType() };
                 var propertyChanges = new List<string>();
@@ -455,7 +455,7 @@ namespace Gu.State.Tests
             [TestCase(2, 0)]
             [TestCase(2, 1)]
             [TestCase(1, 0)]
-            public void MoveThenItemsNotifies(int from, int to)
+            public static void MoveThenItemsNotifies(int from, int to)
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType(), new ComplexType() };
                 var propertyChanges = new List<string>();
@@ -495,7 +495,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void ItemNotifies()
+            public static void ItemNotifies()
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType() };
                 var propertyChanges = new List<string>();
@@ -520,7 +520,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void SameItemTwiceNotifies()
+            public static void SameItemTwiceNotifies()
             {
                 var item = new ComplexType();
                 var source = new ObservableCollection<ComplexType> { item, item };

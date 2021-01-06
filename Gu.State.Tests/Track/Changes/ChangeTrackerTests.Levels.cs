@@ -9,12 +9,12 @@ namespace Gu.State.Tests
 
     using static ChangeTrackerTypes;
 
-    public partial class ChangeTrackerTests
+    public static partial class ChangeTrackerTests
     {
-        public class Levels
+        public static class Levels
         {
             [Test]
-            public void CreateAndDispose()
+            public static void CreateAndDispose()
             {
                 var source = new Level();
                 var propertyChanges = new List<string>();
@@ -34,7 +34,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void NotifiesRootLevel()
+            public static void NotifiesRootLevel()
             {
                 var source = new Level();
                 var propertyChanges = new List<string>();
@@ -54,7 +54,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void NotifiesOneLevel()
+            public static void NotifiesOneLevel()
             {
                 var source = new Level { Next = new Level() };
                 var propertyChanges = new List<string>();
@@ -82,7 +82,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void StartsSubscribingOneLevel()
+            public static void StartsSubscribingOneLevel()
             {
                 var source = new Level();
                 var propertyChanges = new List<string>();
@@ -110,7 +110,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void StopsSubscribingOneLevel()
+            public static void StopsSubscribingOneLevel()
             {
                 var source = new Level { Next = new Level() };
                 var propertyChanges = new List<string>();
@@ -144,7 +144,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void NotifiesTwoLevels()
+            public static void NotifiesTwoLevels()
             {
                 var source = new Level { Next = new Level { Next = new Level() } };
                 var propertyChanges = new List<string>();
@@ -173,7 +173,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void NotifiesAddTwoLevels()
+            public static void NotifiesAddTwoLevels()
             {
                 var source = new Level { Next = new Level { Next = new Level() } };
                 var propertyChanges = new List<string>();
@@ -248,7 +248,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void NotifiesOnAddSpecialCollection()
+            public static void NotifiesOnAddSpecialCollection()
             {
                 var source = new SpecialCollection();
                 var propertyChanges = new List<string>();

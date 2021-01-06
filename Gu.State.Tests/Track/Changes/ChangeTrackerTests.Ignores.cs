@@ -8,12 +8,12 @@ namespace Gu.State.Tests
 
     using static ChangeTrackerTypes;
 
-    public partial class ChangeTrackerTests
+    public static partial class ChangeTrackerTests
     {
-        public class Ignores
+        public static class Ignores
         {
             [Test]
-            public void IgnoresProperty()
+            public static void IgnoresProperty()
             {
                 var withIllegalObject = new WithIllegal();
                 var propertyInfo = typeof(WithIllegal).GetProperty(nameof(WithIllegal.Illegal), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
@@ -47,7 +47,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void IgnoresPropertyLambda()
+            public static void IgnoresPropertyLambda()
             {
                 var source = new WithIllegal();
                 var settings = new PropertiesSettingsBuilder().IgnoreProperty<WithIllegal>(x => x.Illegal)
@@ -74,7 +74,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void IgnoresBaseClassPropertyLambda()
+            public static void IgnoresBaseClassPropertyLambda()
             {
                 var source = new DerivedClass();
                 var settings = PropertiesSettings.Build()
@@ -103,7 +103,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void IgnoresInterfacePropertyLambda()
+            public static void IgnoresInterfacePropertyLambda()
             {
                 var source = new DerivedClass();
                 var settings = PropertiesSettings.Build()
@@ -132,7 +132,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void IgnoresType()
+            public static void IgnoresType()
             {
                 var source = new With<ComplexType>();
                 var settings = PropertiesSettings.Build()
