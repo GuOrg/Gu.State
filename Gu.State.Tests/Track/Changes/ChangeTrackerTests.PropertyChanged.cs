@@ -1,5 +1,4 @@
-﻿// ReSharper disable RedundantArgumentDefaultValue
-#pragma warning disable IDISP004
+// ReSharper disable RedundantArgumentDefaultValue
 namespace Gu.State.Tests
 {
     using System;

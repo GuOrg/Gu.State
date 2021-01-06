@@ -1,4 +1,4 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     using System;
     using System.Collections;
@@ -6,9 +6,7 @@
     using System.Collections.Specialized;
     using System.ComponentModel;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
 
-    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Interface methods makes more sense with IX names")]
     internal static class Is
     {
         internal static bool SameSize(Array x, Array y)

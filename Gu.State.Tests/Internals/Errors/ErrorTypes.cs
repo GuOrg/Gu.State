@@ -1,7 +1,4 @@
-﻿// ReSharper disable All
 // ReSharper disable All
-#pragma warning disable INPC003 // Notify when property changes.
-#pragma warning disable INPC001 // Implement INotifyPropertyChanged.
 #pragma warning disable 67
 namespace Gu.State.Tests.Internals.Errors
 {
@@ -18,9 +15,7 @@ namespace Gu.State.Tests.Internals.Errors
         {
             public event PropertyChangedEventHandler PropertyChanged;
 
-#pragma warning disable INPC002 // Mutable public property should notify.
             public T Value { get; set; }
-#pragma warning restore INPC002 // Mutable public property should notify.
 
             protected virtual void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
             {

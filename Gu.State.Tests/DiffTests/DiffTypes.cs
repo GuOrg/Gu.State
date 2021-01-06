@@ -1,6 +1,4 @@
 // ReSharper disable All
-#pragma warning disable INPC003 // Notify when property changes.
-#pragma warning disable INPC001 // Implement INotifyPropertyChanged.
 namespace Gu.State.Tests.DiffTests
 {
     using System;

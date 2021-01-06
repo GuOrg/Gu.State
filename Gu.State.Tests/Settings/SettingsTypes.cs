@@ -1,9 +1,6 @@
-﻿// ReSharper disable All
+// ReSharper disable All
 #pragma warning disable 649
-#pragma warning disable INPC001 // Implement INotifyPropertyChanged.
 #pragma warning disable SA1307 // Accessible fields must begin with upper-case letter
-#pragma warning disable SA1401 // Fields must be private
-#pragma warning disable SA1304 // Non-private readonly fields must begin with upper-case letter
 namespace Gu.State.Tests.Settings
 {
     using System;
@@ -62,25 +59,9 @@ namespace Gu.State.Tests.Settings
                 return EqualityComparer<T>.Default.Equals(this.Value, other.Value);
             }
 
-            public override bool Equals(object obj)
-            {
-                if (obj is null)
-                {
-                    return false;
-                }
+            public override bool Equals(object obj) => obj is WithGetReadOnlyPropertySealed<T> x && this.Equals(x);
 
-                if (ReferenceEquals(this, obj))
-                {
-                    return true;
-                }
-
-                return obj is WithGetReadOnlyPropertySealed<T> && this.Equals((WithGetReadOnlyPropertySealed<T>)obj);
-            }
-
-            public override int GetHashCode()
-            {
-                return EqualityComparer<T>.Default.GetHashCode(this.Value);
-            }
+            public override int GetHashCode() => EqualityComparer<T>.Default.GetHashCode(this.Value);
         }
 
         public class WithImmutableImplementingMutableInterfaceExplicit : IMutableInterface

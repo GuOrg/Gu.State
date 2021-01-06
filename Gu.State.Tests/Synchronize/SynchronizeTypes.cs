@@ -1,4 +1,3 @@
-﻿#pragma warning disable INPC003 // Notify when property changes.
 namespace Gu.State.Tests
 {
     using System;

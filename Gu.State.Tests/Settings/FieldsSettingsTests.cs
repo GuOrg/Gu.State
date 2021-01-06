@@ -1,5 +1,4 @@
-﻿// ReSharper disable RedundantArgumentDefaultValue
-#pragma warning disable SA1401 // Fields must be private
+// ReSharper disable RedundantArgumentDefaultValue
 namespace Gu.State.Tests.Settings
 {
     using System;

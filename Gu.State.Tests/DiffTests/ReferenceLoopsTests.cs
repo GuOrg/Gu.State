@@ -1,5 +1,4 @@
 // ReSharper disable RedundantArgumentDefaultValue
-#pragma warning disable INPC013 // Use nameof.
 namespace Gu.State.Tests.DiffTests
 {
     using System;

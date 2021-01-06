@@ -1,4 +1,4 @@
-﻿namespace Gu.State.Tests
+namespace Gu.State.Tests
 {
     using System;
     using System.Linq;
@@ -113,9 +113,7 @@
                     Assert.AreEqual(1, target.IntValue);
                     Assert.AreEqual("2", source.StringValue);
                     Assert.AreEqual("2", target.StringValue);
-#pragma warning disable INPC009 // Don't raise PropertyChanged for missing property.
                     source.OnPropertyChanged("Missing");
-#pragma warning restore INPC009 // Don't raise PropertyChanged for missing property.
                     source.IntValue = 5;
                     Assert.AreEqual(5, source.IntValue);
                     Assert.AreEqual(5, target.IntValue);

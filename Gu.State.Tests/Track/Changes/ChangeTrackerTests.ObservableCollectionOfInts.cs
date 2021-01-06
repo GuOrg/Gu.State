@@ -1,4 +1,3 @@
-#pragma warning disable IDISP004
 namespace Gu.State.Tests
 {
     using System;

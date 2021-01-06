@@ -32,12 +32,10 @@ namespace Gu.State
             {
                 return System.Activator.CreateInstance(type, nonPublic: true);
             }
-#pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception e)
             {
                 throw Throw.CreateCannotCreateInstanceException(sourceValue, settings, e);
             }
-#pragma warning restore CA1031 // Do not catch general exception types
         }
 
         internal static void Sync<T>(T source, T target, MemberSettings settings, ReferencePairCollection referencePairs)
@@ -63,8 +61,9 @@ namespace Gu.State
 
         internal static T CloneWithoutSync<T>(T sourceItem, T targetItem, MemberSettings settings, out bool createdValue, out bool needsSync)
         {
-            if (sourceItem is null || settings.ReferenceHandling == ReferenceHandling.References
-                || ReferenceEquals(sourceItem, targetItem))
+            if (sourceItem is null ||
+                settings.ReferenceHandling == ReferenceHandling.References ||
+                ReferenceEquals(sourceItem, targetItem))
             {
                 needsSync = false;
                 createdValue = true;
@@ -72,7 +71,7 @@ namespace Gu.State
             }
 
             if (TryCopyValue(sourceItem, targetItem, settings, out var copy) ||
-    TryCustomCopy(sourceItem, targetItem, settings, out copy))
+                TryCustomCopy(sourceItem, targetItem, settings, out copy))
             {
                 needsSync = false;
                 createdValue = true;

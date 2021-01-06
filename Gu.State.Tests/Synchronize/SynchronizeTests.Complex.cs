@@ -1,4 +1,4 @@
-﻿// ReSharper disable RedundantArgumentDefaultValue
+// ReSharper disable RedundantArgumentDefaultValue
 namespace Gu.State.Tests
 {
     using NUnit.Framework;
@@ -427,9 +427,7 @@ namespace Gu.State.Tests
                 };
                 using (Synchronize.PropertyValues(source, target, ReferenceHandling.Structural))
                 {
-#pragma warning disable INPC009 // Don't raise PropertyChanged for missing property.
                     source.OnPropertyChanged("Missing");
-#pragma warning restore INPC009 // Don't raise PropertyChanged for missing property.
                     Assert.AreEqual("a", source.Name);
                     Assert.AreEqual("a", target.Name);
                     Assert.AreEqual(1, source.Value);

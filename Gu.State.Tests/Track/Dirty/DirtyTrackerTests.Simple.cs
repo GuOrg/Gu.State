@@ -1,4 +1,3 @@
-#pragma warning disable INPC009 // Don't raise PropertyChanged for missing property.
 namespace Gu.State.Tests
 {
     using System;

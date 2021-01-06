@@ -1,6 +1,4 @@
-﻿// ReSharper disable All
-#pragma warning disable INPC003 // Notify when property changes.
-#pragma warning disable INPC001 // Implement INotifyPropertyChanged.
+// ReSharper disable All
 namespace Gu.State.Tests
 {
     using System;
@@ -192,9 +190,7 @@ namespace Gu.State.Tests
 
         public class IllegalSubType : ComplexType
         {
-#pragma warning disable INPC002 // Mutable public property should notify.
             public IllegalType Illegal { get; set; }
-#pragma warning restore INPC002 // Mutable public property should notify.
         }
 
         public class WithSimpleProperties : INotifyPropertyChanged

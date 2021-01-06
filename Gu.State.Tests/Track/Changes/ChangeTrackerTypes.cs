@@ -1,6 +1,4 @@
-﻿// ReSharper disable All
-#pragma warning disable INPC003 // Notify when property changes.
-#pragma warning disable INPC001 // Implement INotifyPropertyChanged.
+// ReSharper disable All
 namespace Gu.State.Tests
 {
     using System;
@@ -20,9 +18,7 @@ namespace Gu.State.Tests
             int Excluded { get; set; }
         }
 
-#pragma warning disable INPC008 // Struct must not implement INotifyPropertyChanged
         public struct NotifyingStruct : INotifyPropertyChanged
-#pragma warning restore INPC008 // Struct must not implement INotifyPropertyChanged
         {
             private int value;
 
@@ -395,14 +391,10 @@ namespace Gu.State.Tests
 
         public class IllegalSubType : ComplexType
         {
-#pragma warning disable INPC002 // Mutable public property should notify.
             public IllegalType Illegal { get; set; }
-#pragma warning restore INPC002 // Mutable public property should notify.
         }
 
-#pragma warning disable CA1710 // Identifiers should have correct suffix
         public class IllegalEnumerable : INotifyPropertyChanged, IEnumerable<int>
-#pragma warning restore CA1710 // Identifiers should have correct suffix
         {
             public event PropertyChangedEventHandler PropertyChanged;
 

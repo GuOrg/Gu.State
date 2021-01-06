@@ -1,5 +1,4 @@
-﻿// ReSharper disable UnusedMember.Local
-#pragma warning disable INPC001 // Implement INotifyPropertyChanged.
+// ReSharper disable UnusedMember.Local
 namespace Gu.State.Tests.CopyTests
 {
     using System;
@@ -146,25 +145,9 @@ namespace Gu.State.Tests.CopyTests
                 return this.Value == other.Value;
             }
 
-            public override bool Equals(object obj)
-            {
-                if (obj is null)
-                {
-                    return false;
-                }
+            public override bool Equals(object obj) => obj is Immutable immutable && this.Equals(immutable);
 
-                if (ReferenceEquals(this, obj))
-                {
-                    return true;
-                }
-
-                return obj is Immutable && this.Equals((Immutable)obj);
-            }
-
-            public override int GetHashCode()
-            {
-                return this.Value;
-            }
+            public override int GetHashCode() => this.Value;
         }
 
         public class WithArrayProperty
@@ -466,10 +449,8 @@ namespace Gu.State.Tests.CopyTests
 
             public void SetFields(int newIntValue, string newStringValue)
             {
-#pragma warning disable INPC003 // Notify when property changes.
                 this.intValue = newIntValue;
                 this.stringValue = newStringValue;
-#pragma warning restore INPC003 // Notify when property changes.
             }
 
             public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

@@ -1,5 +1,4 @@
-﻿// ReSharper disable RedundantArgumentDefaultValue
-#pragma warning disable INPC013 // Use nameof.
+// ReSharper disable RedundantArgumentDefaultValue
 namespace Gu.State.Tests.CopyTests
 {
     using System.Collections.ObjectModel;
