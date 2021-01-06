@@ -12,16 +12,16 @@
         }
 
         public void AddDiffs(
-            DiffBuilder collectionBuilder,
+            DiffBuilder builder,
             object x,
             object y,
             MemberSettings settings)
         {
-            AddDiffs(collectionBuilder, (IReadOnlyList<T>)x, (IReadOnlyList<T>)y, settings);
+            AddDiffs(builder, (IReadOnlyList<T>)x, (IReadOnlyList<T>)y, settings);
         }
 
         private static void AddDiffs(
-            DiffBuilder collectionBuilder,
+            DiffBuilder builder,
             IReadOnlyList<T> x,
             IReadOnlyList<T> y,
             MemberSettings settings)
@@ -30,7 +30,7 @@
             {
                 var xv = x.ElementAtOrMissing(i);
                 var yv = y.ElementAtOrMissing(i);
-                collectionBuilder.UpdateCollectionItemDiff(xv, yv, i, settings);
+                builder.UpdateCollectionItemDiff(xv, yv, i, settings);
             }
         }
     }

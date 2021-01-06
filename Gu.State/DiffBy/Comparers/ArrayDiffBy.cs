@@ -7,12 +7,12 @@
         internal static readonly ArrayDiffBy Default = new ArrayDiffBy();
 
         public void AddDiffs(
-            DiffBuilder collectionBuilder,
+            DiffBuilder builder,
             object x,
             object y,
             MemberSettings settings)
         {
-            AddDiffs(collectionBuilder, (Array)x, (Array)y, settings);
+            AddDiffs(builder, (Array)x, (Array)y, settings);
         }
 
         internal static bool TryGetOrCreate(object x, object y, out IDiffBy result)
@@ -50,20 +50,20 @@
         }
 
         private static void AddDiffs(
-            DiffBuilder collectionBuilder,
+            DiffBuilder builder,
             Array x,
             Array y,
             MemberSettings settings)
         {
             if (TryGetRankDiff(x, y, out var rankDiff))
             {
-                collectionBuilder.Add(rankDiff);
+                builder.Add(rankDiff);
                 return;
             }
 
             foreach (var index in x.Indices())
             {
-                collectionBuilder.UpdateCollectionItemDiff(x.GetValue(index), y.GetValue(index), new Index(index), settings);
+                builder.UpdateCollectionItemDiff(x.GetValue(index), y.GetValue(index), new Index(index), settings);
             }
         }
     }

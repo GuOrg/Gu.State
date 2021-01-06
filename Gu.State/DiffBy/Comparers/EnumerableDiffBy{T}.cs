@@ -11,16 +11,16 @@ namespace Gu.State
         }
 
         public void AddDiffs(
-            DiffBuilder collectionBuilder,
+            DiffBuilder builder,
             object x,
             object y,
             MemberSettings settings)
         {
-            AddDiffs(collectionBuilder, (IEnumerable<T>)x, (IEnumerable<T>)y, settings);
+            AddDiffs(builder, (IEnumerable<T>)x, (IEnumerable<T>)y, settings);
         }
 
         private static void AddDiffs(
-            DiffBuilder collectionBuilder,
+            DiffBuilder builder,
             IEnumerable<T> x,
             IEnumerable<T> y,
             MemberSettings settings)
@@ -29,7 +29,7 @@ namespace Gu.State
             foreach (var pair in new PaddedPairs(x, y))
             {
                 i++;
-                collectionBuilder.UpdateCollectionItemDiff(pair.X, pair.Y, new Skip(i), settings);
+                builder.UpdateCollectionItemDiff(pair.X, pair.Y, new Skip(i), settings);
             }
         }
     }

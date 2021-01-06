@@ -12,16 +12,16 @@ namespace Gu.State
         }
 
         public void AddDiffs(
-            DiffBuilder collectionBuilder,
+            DiffBuilder builder,
             object x,
             object y,
             MemberSettings settings)
         {
-            AddDiffs(collectionBuilder, (IList<T>)x, (IList<T>)y, settings);
+            AddDiffs(builder, (IList<T>)x, (IList<T>)y, settings);
         }
 
         private static void AddDiffs(
-            DiffBuilder collectionBuilder,
+            DiffBuilder builder,
             IList<T> x,
             IList<T> y,
             MemberSettings settings)
@@ -30,7 +30,7 @@ namespace Gu.State
             {
                 var xv = x.ElementAtOrMissing(i);
                 var yv = y.ElementAtOrMissing(i);
-                collectionBuilder.UpdateCollectionItemDiff(xv, yv, i, settings);
+                builder.UpdateCollectionItemDiff(xv, yv, i, settings);
             }
         }
     }

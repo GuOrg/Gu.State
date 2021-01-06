@@ -13,12 +13,12 @@ namespace Gu.State
         }
 
         public void AddDiffs(
-            DiffBuilder collectionBuilder,
+            DiffBuilder builder,
             object x,
             object y,
             MemberSettings settings)
         {
-            AddDiffs(collectionBuilder, (ISet<T>)x, (ISet<T>)y, settings);
+            AddDiffs(builder, (ISet<T>)x, (ISet<T>)y, settings);
         }
 
         private static void AddItemDiffs(DiffBuilder collectionBuilder, ISet<T> x, ISet<T> y, HashSet<T> borrow)
@@ -46,7 +46,7 @@ namespace Gu.State
 
         // ReSharper disable once UnusedParameter.Local
         private static void AddDiffs(
-            DiffBuilder collectionBuilder,
+            DiffBuilder builder,
             ISet<T> x,
             ISet<T> y,
             MemberSettings settings)
@@ -54,7 +54,7 @@ namespace Gu.State
             if (typeof(T).Implements<IEquatable<T>>())
             {
                 using var borrow = HashSetPool<T>.Borrow(EqualityComparer<T>.Default.Equals, EqualityComparer<T>.Default.GetHashCode);
-                AddItemDiffs(collectionBuilder, x, y, borrow.Value);
+                AddItemDiffs(builder, x, y, borrow.Value);
                 return;
             }
 
@@ -65,14 +65,14 @@ namespace Gu.State
                 case ReferenceHandling.References:
                     using (var borrow = HashSetPool<T>.Borrow((xi, yi) => ReferenceEquals(xi, yi), item => RuntimeHelpers.GetHashCode(item)))
                     {
-                        AddItemDiffs(collectionBuilder, x, y, borrow.Value);
+                        AddItemDiffs(builder, x, y, borrow.Value);
                         return;
                     }
 
                 case ReferenceHandling.Structural:
                     using (var borrow = HashSetPool<T>.Borrow((xi, yi) => EqualBy.MemberValues(xi, yi, settings), xi => 0))
                     {
-                        AddItemDiffs(collectionBuilder, x, y, borrow.Value);
+                        AddItemDiffs(builder, x, y, borrow.Value);
                         return;
                     }
 
