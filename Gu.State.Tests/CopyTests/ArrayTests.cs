@@ -1,4 +1,4 @@
-﻿namespace Gu.State.Tests.CopyTests
+namespace Gu.State.Tests.CopyTests
 {
     using NUnit.Framework;
 
@@ -10,7 +10,7 @@
             where T : class;
 
         [Test]
-        public void Ints()
+        public void ArrayOfInt()
         {
             var source = new[] { 1, 2, 3 };
             var target = new[] { 4, 5, 6 };
@@ -23,7 +23,7 @@
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.Structural)]
         [TestCase(ReferenceHandling.References)]
-        public void Immutables(ReferenceHandling referenceHandling)
+        public void ArrayOfImmutable(ReferenceHandling referenceHandling)
         {
             var source = new[] { new Immutable(1), new Immutable(2), new Immutable(3) };
             var target = new[] { new Immutable(4), new Immutable(5), new Immutable(6) };
@@ -36,7 +36,7 @@
         [TestCase(ReferenceHandling.Throw)]
         [TestCase(ReferenceHandling.Structural)]
         [TestCase(ReferenceHandling.References)]
-        public void Ints2D(ReferenceHandling referenceHandling)
+        public void Array2dOfInt(ReferenceHandling referenceHandling)
         {
             var source = new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } };
             var target = new int[3, 2];

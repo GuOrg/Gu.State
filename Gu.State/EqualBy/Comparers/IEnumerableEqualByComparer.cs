@@ -21,7 +21,8 @@ namespace Gu.State
 
         private class Comparer<T> : CollectionEqualByComparer<IEnumerable<T>, T>
         {
-            public Comparer(EqualByComparer itemComparer)
+            
+            internal Comparer(EqualByComparer itemComparer)
                 : base(itemComparer)
             {
             }

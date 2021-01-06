@@ -10,21 +10,21 @@ namespace Gu.State.Tests
         {
         }
 
-        public override bool Equals(ItemGraphChangedEventArgs<TNode> expected, ItemGraphChangedEventArgs<TNode> actual)
+        public override bool Equals(ItemGraphChangedEventArgs<TNode> x, ItemGraphChangedEventArgs<TNode> y)
         {
-            if (!ReferenceEquals(expected.Node, actual.Node))
+            if (!ReferenceEquals(x.Node, y.Node))
             {
-                throw new AssertionException($"Expected actual.Node to be same as expected.Node");
+                throw new AssertionException($"Expected x.Node to be same as y.Node");
             }
 
-            if (!EventArgsComparer.Default.Equals(expected.Previous, actual.Previous))
+            if (!EventArgsComparer.Default.Equals(x.Previous, y.Previous))
             {
                 return false;
             }
 
-            if (expected.Index != actual.Index)
+            if (x.Index != y.Index)
             {
-                throw new AssertionException($"Expected index to be {expected.Index} but was {actual.Index}");
+                throw new AssertionException($"Expected index to be {x.Index} but was {y.Index}");
             }
 
             return true;

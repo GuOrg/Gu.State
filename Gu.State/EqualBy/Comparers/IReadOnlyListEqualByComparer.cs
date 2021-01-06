@@ -40,7 +40,7 @@ namespace Gu.State
         private class Comparer<TCollection, TItem> : CollectionEqualByComparer<TCollection, TItem>
             where TCollection : IReadOnlyList<TItem>
         {
-            public Comparer(EqualByComparer itemComparer)
+            internal Comparer(EqualByComparer itemComparer)
                 : base(itemComparer)
             {
             }
@@ -73,7 +73,7 @@ namespace Gu.State
         [DebuggerDisplay("ListByComparer<List<{typeof(T).PrettyName()}>>")]
         private class ListComparer<T> : CollectionEqualByComparer<List<T>, T>
         {
-            public ListComparer(EqualByComparer itemComparer)
+            internal ListComparer(EqualByComparer itemComparer)
                 : base(itemComparer)
             {
             }
@@ -101,7 +101,7 @@ namespace Gu.State
         [DebuggerDisplay("ArrayEqualByComparer<{typeof(T).PrettyName()}[]>")]
         private class ArrayComparer<T> : CollectionEqualByComparer<T[], T>
         {
-            public ArrayComparer(EqualByComparer itemComparer)
+            internal ArrayComparer(EqualByComparer itemComparer)
                 : base(itemComparer)
             {
             }

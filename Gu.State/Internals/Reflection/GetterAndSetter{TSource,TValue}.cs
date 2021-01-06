@@ -12,7 +12,7 @@ namespace Gu.State
         private readonly Action<TSource, TValue> setter;
         private readonly Func<TSource, TValue> getter;
 
-        public GetterAndSetter(PropertyInfo propertyInfo)
+        internal GetterAndSetter(PropertyInfo propertyInfo)
         {
             this.Member = propertyInfo;
             this.IsInitOnly = !propertyInfo.CanWrite;
@@ -24,7 +24,7 @@ namespace Gu.State
                               : null;
         }
 
-        public GetterAndSetter(FieldInfo fieldInfo)
+        internal GetterAndSetter(FieldInfo fieldInfo)
         {
             this.Member = fieldInfo;
             this.IsInitOnly = fieldInfo.IsInitOnly;

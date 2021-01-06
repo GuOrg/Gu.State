@@ -25,7 +25,7 @@ namespace Gu.State
         internal class EqualByComparer<TSet, TItem> : CollectionEqualByComparer<TSet, TItem>
             where TSet : IEnumerable<TItem>
         {
-            public EqualByComparer(EqualByComparer itemComparer)
+            internal EqualByComparer(EqualByComparer itemComparer)
                 : base(itemComparer)
             {
             }

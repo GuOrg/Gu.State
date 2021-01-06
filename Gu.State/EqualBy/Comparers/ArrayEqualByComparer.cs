@@ -34,7 +34,7 @@ namespace Gu.State
         [DebuggerDisplay("ArrayEqualByComparer<{typeof(T).PrettyName()}[,]>")]
         private class Comparer2D<T> : CollectionEqualByComparer<T[,], T>
         {
-            public Comparer2D(EqualByComparer equalByComparer)
+            internal Comparer2D(EqualByComparer equalByComparer)
                 : base(equalByComparer)
             {
             }
@@ -65,7 +65,7 @@ namespace Gu.State
         [DebuggerDisplay("ArrayEqualByComparer<{typeof(T).PrettyName()}[?]>")]
         private class Comparer<TItem> : CollectionEqualByComparer<Array, TItem>
         {
-            public Comparer(EqualByComparer equalByComparer)
+            internal Comparer(EqualByComparer equalByComparer)
                 : base(equalByComparer)
             {
             }
