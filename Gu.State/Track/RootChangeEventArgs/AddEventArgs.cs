@@ -4,7 +4,9 @@ namespace Gu.State
     using System.Collections;
 
     /// <summary>This is raised when an element was added to a notifying collection.</summary>
+#pragma warning disable CA1711 // Identifiers should not have incorrect suffix
     public readonly struct AddEventArgs : IRootChangeEventArgs, IEquatable<AddEventArgs>
+#pragma warning restore CA1711 // Identifiers should not have incorrect suffix
     {
         internal AddEventArgs(IList source, int index)
         {

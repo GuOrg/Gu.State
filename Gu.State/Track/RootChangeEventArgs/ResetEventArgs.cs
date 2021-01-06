@@ -4,7 +4,9 @@ namespace Gu.State
     using System.Collections;
 
     /// <summary>This is raised when a notifying collection signals reset.</summary>
+#pragma warning disable CA1711 // Identifiers should not have incorrect suffix
     public readonly struct ResetEventArgs : IRootChangeEventArgs, IEquatable<ResetEventArgs>
+#pragma warning restore CA1711 // Identifiers should not have incorrect suffix
     {
         internal ResetEventArgs(IList source)
         {

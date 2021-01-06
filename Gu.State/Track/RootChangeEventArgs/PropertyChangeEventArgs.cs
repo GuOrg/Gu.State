@@ -6,7 +6,9 @@ namespace Gu.State
     /// <summary>
     /// When trackers notify about changes.
     /// </summary>
+#pragma warning disable CA1711 // Identifiers should not have incorrect suffix
     public readonly struct PropertyChangeEventArgs : IRootChangeEventArgs, IEquatable<PropertyChangeEventArgs>
+#pragma warning restore CA1711 // Identifiers should not have incorrect suffix
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyChangeEventArgs"/> struct.

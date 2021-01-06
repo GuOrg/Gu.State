@@ -9,6 +9,9 @@ dotnet_diagnostic.SA0001.severity = none
 # SA1401: Fields should be private
 dotnet_diagnostic.SA1401.severity = none
 
+# SA1500: Braces for multi-line statements should not share line
+dotnet_diagnostic.SA1500.severity = none
+
 # CA1034: Nested types should not be visible
 dotnet_diagnostic.CA1034.severity = none
 
@@ -21,6 +24,9 @@ dotnet_diagnostic.CA1062.severity = none
 # CA1711: Identifiers should not have incorrect suffix
 dotnet_diagnostic.CA1711.severity = none
 
+# CA1716: Identifiers should not match keywords
+dotnet_diagnostic.CA1716.severity = none
+
 # CA1724: Type names should not match namespaces
 dotnet_diagnostic.CA1724.severity = none
 
@@ -32,3 +38,4 @@ dotnet_diagnostic.CA1822.severity = none
 
 # CA2201: Do not raise reserved exception types
 dotnet_diagnostic.CA2201.severity = none
+

@@ -4,7 +4,9 @@ namespace Gu.State
     using System.Collections;
 
     /// <summary>This is raised when an element is removed from a notifying collection.</summary>
+#pragma warning disable CA1711 // Identifiers should not have incorrect suffix
     public readonly struct RemoveEventArgs : IRootChangeEventArgs, IEquatable<RemoveEventArgs>
+#pragma warning restore CA1711 // Identifiers should not have incorrect suffix
     {
         internal RemoveEventArgs(IList source, int index)
         {

@@ -4,7 +4,9 @@ namespace Gu.State
     using System.Collections;
 
     /// <summary>This is raised when an element is moved in a notifying collection.</summary>
+#pragma warning disable CA1711 // Identifiers should not have incorrect suffix
     public readonly struct MoveEventArgs : IRootChangeEventArgs, IEquatable<MoveEventArgs>
+#pragma warning restore CA1711 // Identifiers should not have incorrect suffix
     {
         internal MoveEventArgs(IList source, int fromIndex, int toIndex)
         {
