@@ -1,14 +1,14 @@
-﻿namespace Gu.State.Tests
+namespace Gu.State.Tests
 {
     using NUnit.Framework;
     using static SynchronizeTypes;
 
-    public partial class SynchronizeTests
+    public static partial class SynchronizeTests
     {
-        public class WithInheritance
+        public static class WithInheritance
         {
             [Test]
-            public void Updates()
+            public static void Updates()
             {
                 var source = new With<BaseClass>();
                 var target = new With<BaseClass>();

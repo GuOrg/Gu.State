@@ -7,13 +7,13 @@ namespace Gu.State.Tests
 
     using static SynchronizeTypes;
 
-    public partial class SynchronizeTests
+    public static partial class SynchronizeTests
     {
-        public class ObservableCollectionOfImmutableTypes
+        public static class ObservableCollectionOfImmutableTypes
         {
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
-            public void CreateAndDisposeWhenTargetIsEmpty(ReferenceHandling referenceHandling)
+            public static void CreateAndDisposeWhenTargetIsEmpty(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
                 var target = new ObservableCollection<WithGetReadOnlyPropertySealed<int>>();
@@ -32,7 +32,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void CreateAndDisposeWhenTargetIsNotEmptyStructural()
+            public static void CreateAndDisposeWhenTargetIsNotEmptyStructural()
             {
                 var source = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
                 var target = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
@@ -49,7 +49,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void CreateAndDisposeWhenTargetIsNotEmptyReference()
+            public static void CreateAndDisposeWhenTargetIsNotEmptyReference()
             {
                 var source = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
                 var target = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
@@ -70,7 +70,7 @@ namespace Gu.State.Tests
 
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
-            public void Add(ReferenceHandling referenceHandling)
+            public static void Add(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<WithGetReadOnlyPropertySealed<int>>();
                 var target = new ObservableCollection<WithGetReadOnlyPropertySealed<int>>();
@@ -86,7 +86,7 @@ namespace Gu.State.Tests
 
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
-            public void Remove(ReferenceHandling referenceHandling)
+            public static void Remove(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
                 var target = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
@@ -105,7 +105,7 @@ namespace Gu.State.Tests
 
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
-            public void Insert(ReferenceHandling referenceHandling)
+            public static void Insert(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
                 var target = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
@@ -123,7 +123,7 @@ namespace Gu.State.Tests
 
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
-            public void Move(ReferenceHandling referenceHandling)
+            public static void Move(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
                 var target = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
@@ -143,7 +143,7 @@ namespace Gu.State.Tests
 
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
-            public void Replace(ReferenceHandling referenceHandling)
+            public static void Replace(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
                 var target = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };

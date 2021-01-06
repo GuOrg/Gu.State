@@ -5,12 +5,12 @@ namespace Gu.State.Tests
 
     using static SynchronizeTypes;
 
-    public partial class SynchronizeTests
+    public static partial class SynchronizeTests
     {
-        public class Complex
+        public static class Complex
         {
             [Test]
-            public void CreateAndDisposeStructural()
+            public static void CreateAndDisposeStructural()
             {
                 var source = new WithComplexProperty("a", 1) { ComplexType = new ComplexType("b", 2) };
                 var target = new WithComplexProperty("c", 3) { ComplexType = new ComplexType("d", 4) };
@@ -105,7 +105,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void CreateAndDisposeStructural1()
+            public static void CreateAndDisposeStructural1()
             {
                 var source = new WithTwoComplexProperties("a", 1) { ComplexValue1 = new ComplexType("a.1", 2), ComplexValue2 = new ComplexType("a.2", 3) };
                 var target = new WithTwoComplexProperties("b", 3) { ComplexValue1 = new ComplexType("b.1", 4) };
@@ -175,7 +175,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void CreateAndDisposeReference()
+            public static void CreateAndDisposeReference()
             {
                 var source = new WithComplexProperty("a", 1) { ComplexType = new ComplexType("b", 2) };
                 var target = new WithComplexProperty("c", 3) { ComplexType = new ComplexType("d", 4) };
@@ -216,7 +216,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void HappyPath()
+            public static void HappyPath()
             {
                 var source = new WithComplexProperty("a", 1)
                 {
@@ -309,7 +309,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void Excludes()
+            public static void Excludes()
             {
                 var source = new WithComplexProperty("a", 1)
                 {
@@ -415,7 +415,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void HandlesMissingProperty()
+            public static void HandlesMissingProperty()
             {
                 var source = new WithComplexProperty("a", 1)
                 {
@@ -456,7 +456,7 @@ namespace Gu.State.Tests
 
             [TestCase(null)]
             [TestCase("")]
-            public void HandlesPropertyChangedEmptyAndNull(string prop)
+            public static void HandlesPropertyChangedEmptyAndNull(string prop)
             {
                 var source = new WithComplexProperty("a", 1)
                 {

@@ -1,4 +1,4 @@
-﻿// ReSharper disable RedundantArgumentDefaultValue
+// ReSharper disable RedundantArgumentDefaultValue
 namespace Gu.State.Tests
 {
     using System.Collections.Generic;
@@ -7,12 +7,12 @@ namespace Gu.State.Tests
 
     using static SynchronizeTypes;
 
-    public partial class SynchronizeTests
+    public static partial class SynchronizeTests
     {
-        public class WithObservableCollectionProperty
+        public static class WithObservableCollectionProperty
         {
             [Test]
-            public void CreateAndDisposeStructural()
+            public static void CreateAndDisposeStructural()
             {
                 var source = new WithObservableCollectionProperties(new ComplexType("a", 1), new ComplexType("b", 2));
                 var target = new WithObservableCollectionProperties();
@@ -53,7 +53,7 @@ namespace Gu.State.Tests
 
             //[TestCase(ReferenceHandling.Reference)]
             [TestCase(ReferenceHandling.Structural)]
-            public void Add(ReferenceHandling referenceHandling)
+            public static void Add(ReferenceHandling referenceHandling)
             {
                 var source = new WithObservableCollectionProperties();
                 var target = new WithObservableCollectionProperties();
@@ -73,7 +73,7 @@ namespace Gu.State.Tests
 
             //[TestCase(ReferenceHandling.Reference)]
             [TestCase(ReferenceHandling.Structural)]
-            public void Remove(ReferenceHandling referenceHandling)
+            public static void Remove(ReferenceHandling referenceHandling)
             {
                 var source = new WithObservableCollectionProperties(new ComplexType("a", 1), new ComplexType("b", 2));
                 var target = new WithObservableCollectionProperties(new ComplexType("a", 1), new ComplexType("b", 2));
@@ -91,7 +91,7 @@ namespace Gu.State.Tests
 
             //[TestCase(ReferenceHandling.Reference)]
             [TestCase(ReferenceHandling.Structural)]
-            public void Insert(ReferenceHandling referenceHandling)
+            public static void Insert(ReferenceHandling referenceHandling)
             {
                 var source = new WithObservableCollectionProperties(new ComplexType("a", 1), new ComplexType("b", 2));
                 var target = new WithObservableCollectionProperties(new ComplexType("a", 1), new ComplexType("b", 2));
@@ -116,7 +116,7 @@ namespace Gu.State.Tests
 
             //[TestCase(ReferenceHandling.Reference)]
             [TestCase(ReferenceHandling.Structural)]
-            public void Move(ReferenceHandling referenceHandling)
+            public static void Move(ReferenceHandling referenceHandling)
             {
                 var source = new WithObservableCollectionProperties(new ComplexType("a", 1), new ComplexType("b", 2));
                 var target = new WithObservableCollectionProperties(new ComplexType("a", 1), new ComplexType("b", 2));
@@ -136,7 +136,7 @@ namespace Gu.State.Tests
 
             //[TestCase(ReferenceHandling.Reference)]
             [TestCase(ReferenceHandling.Structural)]
-            public void Replace(ReferenceHandling referenceHandling)
+            public static void Replace(ReferenceHandling referenceHandling)
             {
                 var source = new WithObservableCollectionProperties(new ComplexType("a", 1), new ComplexType("b", 2));
                 var target = new WithObservableCollectionProperties(new ComplexType("a", 1), new ComplexType("b", 2));
@@ -155,7 +155,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void Synchronizes()
+            public static void Synchronizes()
             {
                 var source = new WithObservableCollectionProperties(new ComplexType("a", 1), new ComplexType("b", 2));
                 var target = new WithObservableCollectionProperties();

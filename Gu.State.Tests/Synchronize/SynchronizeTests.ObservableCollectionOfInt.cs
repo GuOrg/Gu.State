@@ -1,17 +1,17 @@
-﻿namespace Gu.State.Tests
+namespace Gu.State.Tests
 {
     using System.Collections.ObjectModel;
 
     using NUnit.Framework;
 
-    public partial class SynchronizeTests
+    public static partial class SynchronizeTests
     {
-        public class ObservableCollectionOfInts
+        public static class ObservableCollectionOfInt
         {
             [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
-            public void CreateAndDispose(ReferenceHandling referenceHandling)
+            public static void CreateAndDispose(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<int> { 1, 2 };
                 var target = new ObservableCollection<int>();
@@ -30,7 +30,7 @@
             [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
-            public void Add(ReferenceHandling referenceHandling)
+            public static void Add(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<int>();
                 var target = new ObservableCollection<int>();
@@ -49,7 +49,7 @@
             [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
-            public void Remove(ReferenceHandling referenceHandling)
+            public static void Remove(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<int> { 1, 2 };
                 var target = new ObservableCollection<int> { 1, 2 };
@@ -68,7 +68,7 @@
             [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
-            public void Insert(ReferenceHandling referenceHandling)
+            public static void Insert(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<int> { 1, 2 };
                 var target = new ObservableCollection<int> { 1, 2 };
@@ -83,7 +83,7 @@
             [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
-            public void Move(ReferenceHandling referenceHandling)
+            public static void Move(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<int> { 1, 2 };
                 var target = new ObservableCollection<int> { 1, 2 };
@@ -102,7 +102,7 @@
             [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
-            public void Replace(ReferenceHandling referenceHandling)
+            public static void Replace(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<int> { 1, 2 };
                 var target = new ObservableCollection<int> { 1, 2 };

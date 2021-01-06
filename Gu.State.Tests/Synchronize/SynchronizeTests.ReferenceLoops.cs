@@ -1,16 +1,16 @@
-﻿// ReSharper disable RedundantArgumentDefaultValue
+// ReSharper disable RedundantArgumentDefaultValue
 namespace Gu.State.Tests
 {
     using NUnit.Framework;
 
     using static SynchronizeTypes;
 
-    public partial class SynchronizeTests
+    public static partial class SynchronizeTests
     {
-        public class ReferenceLoops
+        public static class ReferenceLoops
         {
             [Test]
-            public void CreateAndDisposeParentChild()
+            public static void CreateAndDisposeParentChild()
             {
                 var source = new Parent("a", new Child("b"));
                 var target = new Parent("b", new Child());

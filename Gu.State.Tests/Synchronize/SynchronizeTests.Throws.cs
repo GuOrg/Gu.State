@@ -1,4 +1,4 @@
-﻿// ReSharper disable RedundantArgumentDefaultValue
+// ReSharper disable RedundantArgumentDefaultValue
 namespace Gu.State.Tests
 {
     using System;
@@ -8,12 +8,12 @@ namespace Gu.State.Tests
 
     using static SynchronizeTypes;
 
-    public partial class SynchronizeTests
+    public static partial class SynchronizeTests
     {
-        public class Throws
+        public static class Throws
         {
             [Test]
-            public void WithComplexPropertyThrows()
+            public static void WithComplexPropertyThrows()
             {
                 var expected = "Synchronize.PropertyValues(x, y) failed.\r\n" +
                                "The property WithComplexProperty.ComplexType of type ComplexType is not supported.\r\n" +
@@ -45,7 +45,7 @@ namespace Gu.State.Tests
             [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
-            public void ThrowsIfTargetChanges(ReferenceHandling referenceHandling)
+            public static void ThrowsIfTargetChanges(ReferenceHandling referenceHandling)
             {
                 var source = new WithSimpleProperties();
                 var target = new WithSimpleProperties();
@@ -61,7 +61,7 @@ namespace Gu.State.Tests
             [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
-            public void ThrowsIfTargetCollectionChanges(ReferenceHandling referenceHandling)
+            public static void ThrowsIfTargetCollectionChanges(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<int> { 1, 2 };
                 var target = new ObservableCollection<int> { 1, 2 };

@@ -7,14 +7,14 @@ namespace Gu.State.Tests
 
     using static SynchronizeTypes;
 
-    public partial class SynchronizeTests
+    public static partial class SynchronizeTests
     {
-        public class Simple
+        public static class Simple
         {
             [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
-            public void HappyPath(ReferenceHandling referenceHandling)
+            public static void HappyPath(ReferenceHandling referenceHandling)
             {
                 var source = new WithSimpleProperties
                 {
@@ -48,7 +48,7 @@ namespace Gu.State.Tests
             [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
-            public void WithCalculated(ReferenceHandling referenceHandling)
+            public static void WithCalculated(ReferenceHandling referenceHandling)
             {
                 var source = new WithCalculatedProperty { Value = 1 };
                 var target = new WithCalculatedProperty { Value = 3 };
@@ -70,7 +70,7 @@ namespace Gu.State.Tests
             [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
-            public void Excludes(ReferenceHandling referenceHandling)
+            public static void Excludes(ReferenceHandling referenceHandling)
             {
                 var source = new WithSimpleProperties { IntValue = 1, StringValue = "2" };
                 var target = new WithSimpleProperties { IntValue = 3, StringValue = "4" };
@@ -103,7 +103,7 @@ namespace Gu.State.Tests
             [TestCase(ReferenceHandling.Throw)]
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
-            public void HandlesMissingProperty(ReferenceHandling referenceHandling)
+            public static void HandlesMissingProperty(ReferenceHandling referenceHandling)
             {
                 var source = new WithSimpleProperties { IntValue = 1, StringValue = "2" };
                 var target = new WithSimpleProperties { IntValue = 3, StringValue = "4" };
@@ -130,7 +130,7 @@ namespace Gu.State.Tests
 
             [TestCase(null)]
             [TestCase("")]
-            public void HandlesPropertyChangedEmptyAndNull(string prop)
+            public static void HandlesPropertyChangedEmptyAndNull(string prop)
             {
                 var source = new WithSimpleProperties { IntValue = 1, StringValue = "2" };
                 var target = new WithSimpleProperties { IntValue = 3, StringValue = "4" };

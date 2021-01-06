@@ -1,4 +1,4 @@
-﻿// ReSharper disable RedundantArgumentDefaultValue
+// ReSharper disable RedundantArgumentDefaultValue
 namespace Gu.State.Tests
 {
     using System.Collections.Generic;
@@ -8,12 +8,12 @@ namespace Gu.State.Tests
 
     using static SynchronizeTypes;
 
-    public partial class SynchronizeTests
+    public static partial class SynchronizeTests
     {
-        public class ObservableCollectionOfComplexTypes
+        public static class ObservableCollectionOfComplexTypes
         {
             [Test]
-            public void CreateAndDisposeStructural()
+            public static void CreateAndDisposeStructural()
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
                 var target = new ObservableCollection<ComplexType>();
@@ -47,7 +47,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void CreateAndDisposeStructural1()
+            public static void CreateAndDisposeStructural1()
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
                 var target = new ObservableCollection<ComplexType>();
@@ -106,7 +106,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void CreateAndDisposeReference()
+            public static void CreateAndDisposeReference()
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
                 var target = new ObservableCollection<ComplexType>();
@@ -137,7 +137,7 @@ namespace Gu.State.Tests
 
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
-            public void Add(ReferenceHandling referenceHandling)
+            public static void Add(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<ComplexType>();
                 var target = new ObservableCollection<ComplexType>();
@@ -152,7 +152,7 @@ namespace Gu.State.Tests
 
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
-            public void AddThenUpdate1(ReferenceHandling referenceHandling)
+            public static void AddThenUpdate1(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<ComplexType>();
                 var target = new ObservableCollection<ComplexType>();
@@ -172,7 +172,7 @@ namespace Gu.State.Tests
 
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
-            public void AddThenUpdate2(ReferenceHandling referenceHandling)
+            public static void AddThenUpdate2(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
                 var target = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
@@ -202,7 +202,7 @@ namespace Gu.State.Tests
 
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
-            public void Remove(ReferenceHandling referenceHandling)
+            public static void Remove(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
                 var target = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
@@ -220,7 +220,7 @@ namespace Gu.State.Tests
 
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
-            public void Insert(ReferenceHandling referenceHandling)
+            public static void Insert(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
                 var target = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
@@ -250,7 +250,7 @@ namespace Gu.State.Tests
 
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
-            public void Move(ReferenceHandling referenceHandling)
+            public static void Move(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
                 var target = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
@@ -270,7 +270,7 @@ namespace Gu.State.Tests
 
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
-            public void MoveThenUpdate(ReferenceHandling referenceHandling)
+            public static void MoveThenUpdate(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2), new ComplexType("c", 3) };
                 var target = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2), new ComplexType("c", 3) };
@@ -300,7 +300,7 @@ namespace Gu.State.Tests
 
             [TestCase(ReferenceHandling.Structural)]
             [TestCase(ReferenceHandling.References)]
-            public void Replace(ReferenceHandling referenceHandling)
+            public static void Replace(ReferenceHandling referenceHandling)
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
                 var target = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
@@ -319,7 +319,7 @@ namespace Gu.State.Tests
             }
 
             [Test]
-            public void Synchronizes()
+            public static void Synchronizes()
             {
                 var source = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
                 var target = new ObservableCollection<ComplexType>();
