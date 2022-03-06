@@ -9,14 +9,14 @@ namespace Gu.State
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     internal sealed class DiffBuilder : IDisposable
     {
-        private static readonly object RankDiffKey = new object();
+        private static readonly object RankDiffKey = new();
         private readonly IRefCounted<ReferencePair> refCountedPair;
 
         private readonly MemberSettings settings;
         private readonly IBorrowed<Dictionary<object, SubDiff>> borrowedDiffs;
         private readonly IBorrowed<Dictionary<object, IRefCounted<DiffBuilder>>> borrowedSubBuilders;
-        private readonly List<SubDiff> diffs = new List<SubDiff>();
-        private readonly object gate = new object();
+        private readonly List<SubDiff> diffs = new();
+        private readonly object gate = new();
         private readonly ValueDiff valueDiff;
 
         private bool needsRefresh;
@@ -375,7 +375,7 @@ namespace Gu.State
 
         private sealed class SubDiffComparer : IComparer<SubDiff>
         {
-            internal static readonly SubDiffComparer Default = new SubDiffComparer();
+            internal static readonly SubDiffComparer Default = new();
 
             private SubDiffComparer()
             {

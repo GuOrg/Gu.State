@@ -16,7 +16,7 @@ namespace Gu.State.Tests.CopyTests
 
         public class ComplexType
         {
-            public static readonly TestComparer Comparer = new TestComparer();
+            public static readonly TestComparer Comparer = new();
 
             public static readonly IEqualityComparer<ComplexType> ByNameComparer = new NameComparer();
 
@@ -233,7 +233,7 @@ namespace Gu.State.Tests.CopyTests
 
         public class WithListProperty<T>
         {
-            public List<T> Items { get; } = new List<T>();
+            public List<T> Items { get; } = new();
         }
 
         public class With<T>
@@ -292,7 +292,7 @@ namespace Gu.State.Tests.CopyTests
 
         public class WithSimpleFields
         {
-            internal static readonly TestComparer Comparer = new TestComparer();
+            internal static readonly TestComparer Comparer = new();
 
             internal int IntValue;
             internal int? NullableIntValue;
@@ -366,7 +366,7 @@ namespace Gu.State.Tests.CopyTests
 
         public class WithSimpleProperties : INotifyPropertyChanged
         {
-            internal static readonly TestComparer Comparer = new TestComparer();
+            internal static readonly TestComparer Comparer = new();
 
             private int intValue;
             private int? nullableIntValue;

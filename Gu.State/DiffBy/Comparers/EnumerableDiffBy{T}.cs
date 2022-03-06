@@ -4,7 +4,7 @@ namespace Gu.State
 
     internal sealed class EnumerableDiffBy<T> : EnumerableDiffBy, IDiffBy
     {
-        internal static readonly EnumerableDiffBy<T> Default = new EnumerableDiffBy<T>();
+        internal static readonly EnumerableDiffBy<T> Default = new();
 
         private EnumerableDiffBy()
         {

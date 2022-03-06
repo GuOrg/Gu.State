@@ -4,7 +4,7 @@ namespace Gu.State
 
     internal sealed class ListCopyer : ICopyer
     {
-        internal static readonly ListCopyer Default = new ListCopyer();
+        internal static readonly ListCopyer Default = new();
 
         private ListCopyer()
         {

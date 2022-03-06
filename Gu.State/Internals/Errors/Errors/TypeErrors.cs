@@ -32,6 +32,6 @@ namespace Gu.State
 
         internal IReadOnlyList<Error> AllErrors => this.lazyAllErrors ??= MergedErrors.MergeAll(this, this.Errors);
 
-        internal static TypeErrors Create(ErrorBuilder.TypeErrorsBuilder builder) => new TypeErrors(builder.Type, builder.Errors);
+        internal static TypeErrors Create(ErrorBuilder.TypeErrorsBuilder builder) => new(builder.Type, builder.Errors);
     }
 }

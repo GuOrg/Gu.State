@@ -6,8 +6,8 @@ namespace Gu.State
 
     internal static class GetterAndSetter
     {
-        private static readonly ConcurrentDictionary<PropertyInfo, IGetterAndSetter> PropertyCache = new ConcurrentDictionary<PropertyInfo, IGetterAndSetter>();
-        private static readonly ConcurrentDictionary<FieldInfo, IGetterAndSetter> FieldCache = new ConcurrentDictionary<FieldInfo, IGetterAndSetter>();
+        private static readonly ConcurrentDictionary<PropertyInfo, IGetterAndSetter> PropertyCache = new();
+        private static readonly ConcurrentDictionary<FieldInfo, IGetterAndSetter> FieldCache = new();
 
         internal static IGetterAndSetter GetOrCreate(MemberInfo member)
         {

@@ -7,7 +7,7 @@ namespace Gu.State
 
     internal sealed class TypeMustNotifyError : Error, IFixWithImmutable, INotSupported, IFixWithNotify
     {
-        private static readonly ConcurrentDictionary<Type, TypeMustNotifyError> Cache = new ConcurrentDictionary<Type, TypeMustNotifyError>();
+        private static readonly ConcurrentDictionary<Type, TypeMustNotifyError> Cache = new();
 
         private TypeMustNotifyError(Type type)
         {

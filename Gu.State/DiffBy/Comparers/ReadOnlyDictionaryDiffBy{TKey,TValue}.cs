@@ -4,7 +4,7 @@ namespace Gu.State
 
     internal sealed class ReadOnlyDictionaryDiffBy<TKey, TValue> : ReadOnlyDictionaryDiffBy, IDiffBy
     {
-        internal static readonly ReadOnlyDictionaryDiffBy<TKey, TValue> Default = new ReadOnlyDictionaryDiffBy<TKey, TValue>();
+        internal static readonly ReadOnlyDictionaryDiffBy<TKey, TValue> Default = new();
 
         private ReadOnlyDictionaryDiffBy()
         {

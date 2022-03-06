@@ -10,7 +10,7 @@ namespace Gu.State
     /// </summary>
     public abstract partial class MemberSettings
     {
-        private static readonly ConcurrentDictionary<Type, bool> ImmutableCheckedTypes = new ConcurrentDictionary<Type, bool>
+        private static readonly ConcurrentDictionary<Type, bool> ImmutableCheckedTypes = new()
         {
             [typeof(Type)] = true,
             [typeof(CultureInfo)] = true,

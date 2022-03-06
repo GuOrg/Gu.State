@@ -9,7 +9,7 @@ namespace Gu.State
     /// </summary>
     public sealed class ChangeTracker : IChangeTracker
     {
-        private static readonly PropertyChangedEventArgs ChangesEventArgs = new PropertyChangedEventArgs(nameof(Changes));
+        private static readonly PropertyChangedEventArgs ChangesEventArgs = new(nameof(Changes));
         private readonly IRefCounted<ChangeTrackerNode> node;
         private bool disposed;
 

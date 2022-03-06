@@ -7,7 +7,7 @@ namespace Gu.State.Internals
     internal sealed class MemberInfoComparer<T> : IEqualityComparer<T>
         where T : MemberInfo
     {
-        internal static readonly MemberInfoComparer<T> Default = new MemberInfoComparer<T>();
+        internal static readonly MemberInfoComparer<T> Default = new();
 
         private MemberInfoComparer()
         {

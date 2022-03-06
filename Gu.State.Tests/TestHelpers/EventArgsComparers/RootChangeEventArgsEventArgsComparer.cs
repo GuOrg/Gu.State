@@ -4,7 +4,7 @@ namespace Gu.State.Tests
 
     public sealed class RootChangeEventArgsEventArgsComparer<TNode> : EventArgsComparer<RootChangeEventArgs<TNode>>
     {
-        public static readonly RootChangeEventArgsEventArgsComparer<TNode> Default = new RootChangeEventArgsEventArgsComparer<TNode>();
+        public static readonly RootChangeEventArgsEventArgsComparer<TNode> Default = new();
 
         public override bool Equals(RootChangeEventArgs<TNode> x, RootChangeEventArgs<TNode> y)
         {

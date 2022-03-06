@@ -6,7 +6,7 @@ namespace Gu.State
 
     internal sealed class SetDiffBy<T> : SetDiffBy, IDiffBy
     {
-        internal static readonly SetDiffBy<T> Default = new SetDiffBy<T>();
+        internal static readonly SetDiffBy<T> Default = new();
 
         private SetDiffBy()
         {

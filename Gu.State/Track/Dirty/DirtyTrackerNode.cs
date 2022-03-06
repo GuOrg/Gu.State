@@ -11,8 +11,8 @@ namespace Gu.State
 
     internal sealed class DirtyTrackerNode : IDirtyTracker, IInitialize<DirtyTrackerNode>, ITrackerNode<DirtyTrackerNode>
     {
-        private static readonly PropertyChangedEventArgs DiffPropertyChangedEventArgs = new PropertyChangedEventArgs(nameof(Diff));
-        private static readonly PropertyChangedEventArgs IsDirtyPropertyChangedEventArgs = new PropertyChangedEventArgs(nameof(IsDirty));
+        private static readonly PropertyChangedEventArgs DiffPropertyChangedEventArgs = new(nameof(Diff));
+        private static readonly PropertyChangedEventArgs IsDirtyPropertyChangedEventArgs = new(nameof(IsDirty));
 
         private readonly IRefCounted<ReferencePair> refCountedPair;
         private readonly IRefCounted<RootChanges> xNode;

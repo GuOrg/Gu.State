@@ -2,7 +2,7 @@ namespace Gu.State
 {
     internal sealed class RequiresReferenceHandling : Error, IFixWithImmutable
     {
-        internal static readonly RequiresReferenceHandling Default = new RequiresReferenceHandling();
+        internal static readonly RequiresReferenceHandling Default = new();
 
         private RequiresReferenceHandling()
         {

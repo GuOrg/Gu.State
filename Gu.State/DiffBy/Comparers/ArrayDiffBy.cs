@@ -4,7 +4,7 @@
 
     internal sealed class ArrayDiffBy : IDiffBy
     {
-        internal static readonly ArrayDiffBy Default = new ArrayDiffBy();
+        internal static readonly ArrayDiffBy Default = new();
 
         public void AddDiffs(
             DiffBuilder builder,

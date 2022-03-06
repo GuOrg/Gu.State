@@ -7,7 +7,7 @@ namespace Gu.State
 
     internal sealed class SetOfTCopyer : ICopyer
     {
-        internal static readonly SetOfTCopyer Default = new SetOfTCopyer();
+        internal static readonly SetOfTCopyer Default = new();
 
         private SetOfTCopyer()
         {

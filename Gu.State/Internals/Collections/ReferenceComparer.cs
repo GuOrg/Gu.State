@@ -4,7 +4,7 @@ namespace Gu.State
 
     internal sealed class ReferenceComparer : IEqualityComparer<object>
     {
-        internal static readonly ReferenceComparer Default = new ReferenceComparer();
+        internal static readonly ReferenceComparer Default = new();
 
         private ReferenceComparer()
         {

@@ -16,7 +16,7 @@ namespace Gu.State.Tests
             [TestCase(ReferenceHandling.References)]
             public static void CreateAndDispose(ReferenceHandling referenceHandling)
             {
-                var x = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
+                var x = new ObservableCollection<ComplexType> { new("a", 1), new("b", 2) };
                 var y = new ObservableCollection<ComplexType>();
                 var changes = new List<string>();
                 using (var tracker = Track.IsDirty(x, y, referenceHandling))
@@ -154,8 +154,8 @@ namespace Gu.State.Tests
             [TestCase(2)]
             public static void InsertX(int index)
             {
-                var x = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType(), new ComplexType() };
-                var y = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType(), new ComplexType() };
+                var x = new ObservableCollection<ComplexType> { new(), new(), new() };
+                var y = new ObservableCollection<ComplexType> { new(), new(), new() };
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
                 using var tracker = Track.IsDirty(x, y, ReferenceHandling.Structural);
@@ -178,8 +178,8 @@ namespace Gu.State.Tests
             [TestCase(2)]
             public static void InsertY(int index)
             {
-                var x = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType(), new ComplexType() };
-                var y = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType(), new ComplexType() };
+                var x = new ObservableCollection<ComplexType> { new(), new(), new() };
+                var y = new ObservableCollection<ComplexType> { new(), new(), new() };
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
                 using var tracker = Track.IsDirty(x, y, ReferenceHandling.Structural);
@@ -202,8 +202,8 @@ namespace Gu.State.Tests
             [TestCase(2)]
             public static void InsertXThenYThenUpdate(int index)
             {
-                var x = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType(), new ComplexType() };
-                var y = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType(), new ComplexType() };
+                var x = new ObservableCollection<ComplexType> { new(), new(), new() };
+                var y = new ObservableCollection<ComplexType> { new(), new(), new() };
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
                 using var tracker = Track.IsDirty(x, y, ReferenceHandling.Structural);
@@ -230,8 +230,8 @@ namespace Gu.State.Tests
             [Test]
             public static void RemoveTheDifference()
             {
-                var x = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
-                var y = new ObservableCollection<ComplexType> { new ComplexType("a", 1) };
+                var x = new ObservableCollection<ComplexType> { new("a", 1), new("b", 2) };
+                var y = new ObservableCollection<ComplexType> { new("a", 1) };
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
                 using var tracker = Track.IsDirty(x, y, ReferenceHandling.Structural);
@@ -250,8 +250,8 @@ namespace Gu.State.Tests
             [Test]
             public static void RemoveStillDirty1()
             {
-                var x = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
-                var y = new ObservableCollection<ComplexType> { new ComplexType("c", 3) };
+                var x = new ObservableCollection<ComplexType> { new("a", 1), new("b", 2) };
+                var y = new ObservableCollection<ComplexType> { new("c", 3) };
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
                 using var tracker = Track.IsDirty(x, y, ReferenceHandling.Structural);
@@ -270,8 +270,8 @@ namespace Gu.State.Tests
             [Test]
             public static void RemoveStillDirty2()
             {
-                var x = new ObservableCollection<ComplexType> { new ComplexType("a", 0), new ComplexType("b", 0), new ComplexType("c", 0) };
-                var y = new ObservableCollection<ComplexType> { new ComplexType("d", 0), new ComplexType("e", 0) };
+                var x = new ObservableCollection<ComplexType> { new("a", 0), new("b", 0), new("c", 0) };
+                var y = new ObservableCollection<ComplexType> { new("d", 0), new("e", 0) };
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
                 using var tracker = Track.IsDirty(x, y, ReferenceHandling.Structural);
@@ -290,8 +290,8 @@ namespace Gu.State.Tests
             [Test]
             public static void ClearBothWhenNotDirty()
             {
-                var x = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
-                var y = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
+                var x = new ObservableCollection<ComplexType> { new("a", 1), new("b", 2) };
+                var y = new ObservableCollection<ComplexType> { new("a", 1), new("b", 2) };
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
                 using var tracker = Track.IsDirty(x, y, ReferenceHandling.Structural);
@@ -316,8 +316,8 @@ namespace Gu.State.Tests
             [Test]
             public static void ClearBothWhenDirty()
             {
-                var x = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
-                var y = new ObservableCollection<ComplexType> { new ComplexType("c", 2), new ComplexType("d", 4), new ComplexType("e", 5) };
+                var x = new ObservableCollection<ComplexType> { new("a", 1), new("b", 2) };
+                var y = new ObservableCollection<ComplexType> { new("c", 2), new("d", 4), new("e", 5) };
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
                 using var tracker = Track.IsDirty(x, y, ReferenceHandling.Structural);
@@ -345,8 +345,8 @@ namespace Gu.State.Tests
             [Test]
             public static void MoveX()
             {
-                var x = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
-                var y = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
+                var x = new ObservableCollection<ComplexType> { new("a", 1), new("b", 2) };
+                var y = new ObservableCollection<ComplexType> { new("a", 1), new("b", 2) };
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
                 using var tracker = Track.IsDirty(x, y, ReferenceHandling.Structural);
@@ -371,8 +371,8 @@ namespace Gu.State.Tests
             [Test]
             public static void MoveXThenY()
             {
-                var x = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
-                var y = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
+                var x = new ObservableCollection<ComplexType> { new("a", 1), new("b", 2) };
+                var y = new ObservableCollection<ComplexType> { new("a", 1), new("b", 2) };
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
                 using var tracker = Track.IsDirty(x, y, ReferenceHandling.Structural);
@@ -397,8 +397,8 @@ namespace Gu.State.Tests
             [Test]
             public static void MoveXThenYThenUpdate()
             {
-                var x = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
-                var y = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
+                var x = new ObservableCollection<ComplexType> { new("a", 1), new("b", 2) };
+                var y = new ObservableCollection<ComplexType> { new("a", 1), new("b", 2) };
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
                 using var tracker = Track.IsDirty(x, y, ReferenceHandling.Structural);
@@ -425,8 +425,8 @@ namespace Gu.State.Tests
             [Test]
             public static void Replace()
             {
-                var x = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
-                var y = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
+                var x = new ObservableCollection<ComplexType> { new("a", 1), new("b", 2) };
+                var y = new ObservableCollection<ComplexType> { new("a", 1), new("b", 2) };
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
                 using var tracker = Track.IsDirty(x, y, ReferenceHandling.Structural);
@@ -452,8 +452,8 @@ namespace Gu.State.Tests
             [TestCase(1)]
             public static void ReplaceThenUpdate(int index)
             {
-                var x = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
-                var y = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
+                var x = new ObservableCollection<ComplexType> { new("a", 1), new("b", 2) };
+                var y = new ObservableCollection<ComplexType> { new("a", 1), new("b", 2) };
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
                 using var tracker = Track.IsDirty(x, y, ReferenceHandling.Structural);
@@ -531,7 +531,7 @@ namespace Gu.State.Tests
             {
                 var item = new ComplexType("a", 1);
                 var x = new ObservableCollection<ComplexType> { item, item };
-                var y = new ObservableCollection<ComplexType> { new ComplexType("a", 1), new ComplexType("a", 1) };
+                var y = new ObservableCollection<ComplexType> { new("a", 1), new("a", 1) };
                 var changes = new List<string>();
                 var expectedChanges = new List<string>();
                 using var tracker = Track.IsDirty(x, y, ReferenceHandling.Structural);

@@ -17,7 +17,7 @@ namespace Gu.State.Tests
             [Test]
             public static void CreateAndDispose()
             {
-                var source = new With<ObservableCollection<ComplexType>> { Value = new ObservableCollection<ComplexType> { new ComplexType() } };
+                var source = new With<ObservableCollection<ComplexType>> { Value = new ObservableCollection<ComplexType> { new() } };
                 var propertyChanges = new List<string>();
                 var changes = new List<EventArgs>();
                 var tracker = Track.Changes(source, ReferenceHandling.Structural);
@@ -58,7 +58,7 @@ namespace Gu.State.Tests
                 CollectionAssert.IsEmpty(changes);
 
                 var observableCollection = source.Value;
-                source.Value = new ObservableCollection<ComplexType> { new ComplexType() };
+                source.Value = new ObservableCollection<ComplexType> { new() };
                 Assert.AreEqual(1, tracker.Changes);
                 CollectionAssert.AreEqual(new[] { "Changes" }, propertyChanges);
                 expectedChanges.Add(RootChangeEventArgs.Create(sourceNode, new PropertyChangeEventArgs(source, source.GetProperty("Value"))));
@@ -254,7 +254,7 @@ namespace Gu.State.Tests
             [Test]
             public static void Remove()
             {
-                var source = new With<ObservableCollection<ComplexType>> { Value = new ObservableCollection<ComplexType> { new ComplexType(), null } };
+                var source = new With<ObservableCollection<ComplexType>> { Value = new ObservableCollection<ComplexType> { new(), null } };
                 var propertyChanges = new List<string>();
                 var changes = new List<EventArgs>();
                 var expectedChanges = new List<EventArgs>();
@@ -309,7 +309,7 @@ namespace Gu.State.Tests
             [Test]
             public static void Clear()
             {
-                var source = new With<ObservableCollection<ComplexType>> { Value = new ObservableCollection<ComplexType> { new ComplexType(), null } };
+                var source = new With<ObservableCollection<ComplexType>> { Value = new ObservableCollection<ComplexType> { new(), null } };
                 var propertyChanges = new List<string>();
                 var changes = new List<EventArgs>();
                 var expectedChanges = new List<EventArgs>();
@@ -360,7 +360,7 @@ namespace Gu.State.Tests
             {
                 var source = new With<ObservableCollection<ComplexType>>
                 {
-                    Value = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType() },
+                    Value = new ObservableCollection<ComplexType> { new(), new() },
                 };
 
                 var propertyChanges = new List<string>();

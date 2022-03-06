@@ -7,7 +7,7 @@ namespace Gu.State
 
     internal class EnumerableDiffBy
     {
-        private static readonly ConcurrentDictionary<Type, IDiffBy> Cache = new ConcurrentDictionary<Type, IDiffBy>();
+        private static readonly ConcurrentDictionary<Type, IDiffBy> Cache = new();
 
         internal static bool TryGetOrCreate(object x, object y, out IDiffBy result)
         {

@@ -60,7 +60,7 @@ namespace Gu.State.Tests.DiffTests
         {
             var x = new List<WithSimpleProperties>
             {
-                new WithSimpleProperties(
+                new(
                     1,
                     2,
                     "a",
@@ -68,7 +68,7 @@ namespace Gu.State.Tests.DiffTests
             };
             var y = new List<WithSimpleProperties>
             {
-                new WithSimpleProperties(
+                new(
                     1,
                     2,
                     "a",
@@ -86,8 +86,8 @@ namespace Gu.State.Tests.DiffTests
         [Test]
         public void ListOfComplex()
         {
-            var x = new List<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) };
-            var y = new List<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) };
+            var x = new List<ComplexType> { new("b", 2), new("c", 3) };
+            var y = new List<ComplexType> { new("b", 2), new("c", 3) };
             var result = this.DiffBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result.IsEmpty);
             Assert.AreEqual("Empty", result.ToString());
@@ -104,7 +104,7 @@ namespace Gu.State.Tests.DiffTests
         [Test]
         public void ListOfComplexSameItems()
         {
-            var x = new List<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) };
+            var x = new List<ComplexType> { new("b", 2), new("c", 3) };
             var y = new List<ComplexType>(x);
             var result = this.DiffBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result.IsEmpty);
@@ -154,8 +154,8 @@ namespace Gu.State.Tests.DiffTests
         [Test]
         public void ObservableCollectionOfComplexType()
         {
-            var x = new ObservableCollection<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) };
-            var y = new ObservableCollection<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) };
+            var x = new ObservableCollection<ComplexType> { new("b", 2), new("c", 3) };
+            var y = new ObservableCollection<ComplexType> { new("b", 2), new("c", 3) };
             var result = this.DiffBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result.IsEmpty);
             Assert.AreEqual("Empty", result.ToString());

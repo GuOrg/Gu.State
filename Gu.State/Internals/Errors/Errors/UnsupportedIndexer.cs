@@ -7,7 +7,7 @@ namespace Gu.State
     [DebuggerDisplay("{GetType().Name} Indexer: {Indexer.Name}")]
     internal sealed class UnsupportedIndexer : Error, IExcludableMember, INotsupportedMember
     {
-        private static readonly ConcurrentDictionary<PropertyInfo, UnsupportedIndexer> Cache = new ConcurrentDictionary<PropertyInfo, UnsupportedIndexer>();
+        private static readonly ConcurrentDictionary<PropertyInfo, UnsupportedIndexer> Cache = new();
 
         private UnsupportedIndexer(PropertyInfo indexer)
         {

@@ -5,7 +5,7 @@ namespace Gu.State
 
     internal class ExplicitEqualByComparer<T> : EqualByComparer<T>
     {
-        internal static ExplicitEqualByComparer<T> Default = new ExplicitEqualByComparer<T>(EqualityComparer<T>.Default);
+        internal static ExplicitEqualByComparer<T> Default = new(EqualityComparer<T>.Default);
 
         internal readonly IEqualityComparer<T> EqualityComparer;
 
@@ -16,7 +16,7 @@ namespace Gu.State
 
         internal override bool CanHaveReferenceLoops => false;
 
-        internal static ExplicitEqualByComparer<T> Create(IEqualityComparer comparer) => new ExplicitEqualByComparer<T>((IEqualityComparer<T>)comparer);
+        internal static ExplicitEqualByComparer<T> Create(IEqualityComparer comparer) => new((IEqualityComparer<T>)comparer);
 
         internal override bool TryGetError(MemberSettings settings, out Error error)
         {

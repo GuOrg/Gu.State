@@ -34,7 +34,7 @@ namespace Gu.State
         private static class RefCountedItem<TValue>
             where TValue : class, IDisposable
         {
-            private static readonly ConditionalWeakTable<TValue, RefCounter> Items = new ConditionalWeakTable<TValue, RefCounter>();
+            private static readonly ConditionalWeakTable<TValue, RefCounter> Items = new();
 
             internal static IRefCounted<TValue> AddOrUpdate(TValue value, out int count, out bool created)
             {
@@ -59,7 +59,7 @@ namespace Gu.State
             private sealed class RefCounter : IRefCounted<TValue>
             {
                 private readonly WeakReference<TValue> valueReference;
-                private readonly object gate = new object();
+                private readonly object gate = new();
                 private int count;
 
                 internal RefCounter(TValue value)

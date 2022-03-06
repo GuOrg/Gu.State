@@ -4,7 +4,7 @@ namespace Gu.State.Tests
 
     public sealed class MoveEventArgsComparer : EventArgsComparer<MoveEventArgs>
     {
-        public static readonly MoveEventArgsComparer Default = new MoveEventArgsComparer();
+        public static readonly MoveEventArgsComparer Default = new();
 
         public override bool Equals(MoveEventArgs x, MoveEventArgs y)
         {

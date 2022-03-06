@@ -4,7 +4,7 @@ namespace Gu.State.Tests
 
     public sealed class ItemGraphChangedEventArgsComparer<TNode> : EventArgsComparer<ItemGraphChangedEventArgs<TNode>>
     {
-        public static readonly ItemGraphChangedEventArgsComparer<TNode> Default = new ItemGraphChangedEventArgsComparer<TNode>();
+        public static readonly ItemGraphChangedEventArgsComparer<TNode> Default = new();
 
         private ItemGraphChangedEventArgsComparer()
         {

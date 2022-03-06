@@ -8,7 +8,7 @@
     {
         private class IndexNodes
         {
-            private readonly List<IUnsubscriber<IChildNode<T>>> nodes = new List<IUnsubscriber<IChildNode<T>>>();
+            private readonly List<IUnsubscriber<IChildNode<T>>> nodes = new();
 
             internal void Clear()
             {

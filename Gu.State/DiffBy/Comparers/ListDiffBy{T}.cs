@@ -5,7 +5,7 @@ namespace Gu.State
 
     internal sealed class ListDiffBy<T> : ListDiffBy, IDiffBy
     {
-        internal static readonly ListDiffBy<T> Default = new ListDiffBy<T>();
+        internal static readonly ListDiffBy<T> Default = new();
 
         private ListDiffBy()
         {

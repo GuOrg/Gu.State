@@ -4,7 +4,7 @@ namespace Gu.State
 
     internal static class ConcurrentQueuePool<T>
     {
-        private static readonly ConcurrentQueue<ConcurrentQueue<T>> Cache = new ConcurrentQueue<ConcurrentQueue<T>>();
+        private static readonly ConcurrentQueue<ConcurrentQueue<T>> Cache = new();
 
         internal static IBorrowed<ConcurrentQueue<T>> Borrow()
         {

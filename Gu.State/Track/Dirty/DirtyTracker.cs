@@ -4,8 +4,8 @@
 
     internal sealed class DirtyTracker : IDirtyTracker
     {
-        private static readonly PropertyChangedEventArgs DiffPropertyChangedEventArgs = new PropertyChangedEventArgs(nameof(Diff));
-        private static readonly PropertyChangedEventArgs IsDirtyPropertyChangedEventArgs = new PropertyChangedEventArgs(nameof(IsDirty));
+        private static readonly PropertyChangedEventArgs DiffPropertyChangedEventArgs = new(nameof(Diff));
+        private static readonly PropertyChangedEventArgs IsDirtyPropertyChangedEventArgs = new(nameof(IsDirty));
 
         private readonly IRefCounted<DirtyTrackerNode> node;
         private bool disposed;

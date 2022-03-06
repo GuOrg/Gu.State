@@ -28,7 +28,7 @@
         [TestCase(ReferenceHandling.References)]
         public void ListOfImmutablesToEmpty(ReferenceHandling referenceHandling)
         {
-            var source = new List<Immutable> { new Immutable(1), new Immutable(2) };
+            var source = new List<Immutable> { new(1), new(2) };
             var target = new List<Immutable>();
             this.CopyMethod(source, target, referenceHandling);
             var expected = new[] { new Immutable(1), new Immutable(2) };
@@ -52,7 +52,7 @@
         {
             var source = new List<WithSimpleProperties>
             {
-                new WithSimpleProperties(
+                new(
                     1,
                     2,
                     "a",
@@ -68,8 +68,8 @@
         [Test]
         public void ListOfComplexToLonger()
         {
-            var source = new List<ComplexType> { new ComplexType("a", 1) };
-            var target = new List<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) };
+            var source = new List<ComplexType> { new("a", 1) };
+            var target = new List<ComplexType> { new("b", 2), new("c", 3) };
             var item = target[0];
             this.CopyMethod(source, target, ReferenceHandling.Structural);
             var expected = new[] { new ComplexType("a", 1) };
@@ -116,8 +116,8 @@
         [Test]
         public void ObservableCollectionOfComplexType()
         {
-            var source = new ObservableCollection<ComplexType> { new ComplexType("a", 1) };
-            var target = new ObservableCollection<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) };
+            var source = new ObservableCollection<ComplexType> { new("a", 1) };
+            var target = new ObservableCollection<ComplexType> { new("b", 2), new("c", 3) };
             var item = target[0];
             this.CopyMethod(source, target, ReferenceHandling.Structural);
             var expected = new[] { new ComplexType("a", 1) };

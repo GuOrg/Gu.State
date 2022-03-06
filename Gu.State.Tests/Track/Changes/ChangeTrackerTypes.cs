@@ -162,8 +162,8 @@ namespace Gu.State.Tests
         {
             private int value;
             private Level next;
-            private ObservableCollection<int> ints = new ObservableCollection<int>();
-            private ObservableCollection<Level> levels = new ObservableCollection<Level>();
+            private ObservableCollection<int> ints = new();
+            private ObservableCollection<Level> levels = new();
             private string name;
             private StringComparison comparison;
 

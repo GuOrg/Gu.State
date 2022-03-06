@@ -10,8 +10,8 @@ namespace Gu.State.Benchmarks
     [MemoryDiagnoser]
     public class EqualByComplexType
     {
-        private static readonly ComplexType X = new ComplexType();
-        private static readonly ComplexType Y = new ComplexType();
+        private static readonly ComplexType X = new();
+        private static readonly ComplexType Y = new();
         private static readonly Func<ComplexType, ComplexType, bool> CompareFunc = (x, y) => x.Name == y.Name && x.Value == y.Value;
         private static readonly PropertiesSettings PropertiesSettingsWithComparer = PropertiesSettings.Build().AddComparer(ComplexTypeComparer.Default).CreateSettings();
         private static readonly FieldsSettings FieldsSettingsWithComparer = FieldsSettings.Build().AddComparer(ComplexTypeComparer.Default).CreateSettings();
@@ -50,7 +50,7 @@ namespace Gu.State.Benchmarks
 
         private sealed class ComplexTypeComparer : IEqualityComparer<ComplexType>
         {
-            internal static readonly ComplexTypeComparer Default = new ComplexTypeComparer();
+            internal static readonly ComplexTypeComparer Default = new();
 
             public bool Equals(ComplexType x, ComplexType y)
             {

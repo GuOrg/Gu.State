@@ -5,7 +5,7 @@ namespace Gu.State
     internal sealed class ReferenceComparer<T> : IEqualityComparer<T>
         where T : class
     {
-        internal static readonly ReferenceComparer<T> Default = new ReferenceComparer<T>();
+        internal static readonly ReferenceComparer<T> Default = new();
 
         private ReferenceComparer()
         {

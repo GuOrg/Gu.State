@@ -93,10 +93,10 @@
             where TKey : class
             where TValue : class
         {
-            internal static readonly ConditionalWeakTable<MemberSettings, TypeCache<TKey, TValue>> SettingsCaches = new ConditionalWeakTable<MemberSettings, TypeCache<TKey, TValue>>();
+            internal static readonly ConditionalWeakTable<MemberSettings, TypeCache<TKey, TValue>> SettingsCaches = new();
 
-            internal readonly ConditionalWeakTable<TKey, TValue> Items = new ConditionalWeakTable<TKey, TValue>();
-            internal readonly object Gate = new object();
+            internal readonly ConditionalWeakTable<TKey, TValue> Items = new();
+            internal readonly object Gate = new();
 
             internal TValue GetOrAdd(TKey source, ConditionalWeakTable<TKey, TValue>.CreateValueCallback creator)
             {

@@ -12,11 +12,11 @@ namespace Gu.State
     /// <summary>Builder for creating <see cref="PropertiesSettings"/>.</summary>
     public class PropertiesSettingsBuilder
     {
-        private readonly HashSet<Type> ignoredTypes = new HashSet<Type>();
-        private readonly HashSet<Type> immutableTypes = new HashSet<Type>();
-        private readonly HashSet<PropertyInfo> ignoredProperties = new HashSet<PropertyInfo>(MemberInfoComparer<PropertyInfo>.Default);
-        private readonly Dictionary<Type, IEqualityComparer> comparers = new Dictionary<Type, IEqualityComparer>();
-        private readonly Dictionary<Type, CustomCopy> copyers = new Dictionary<Type, CustomCopy>();
+        private readonly HashSet<Type> ignoredTypes = new();
+        private readonly HashSet<Type> immutableTypes = new();
+        private readonly HashSet<PropertyInfo> ignoredProperties = new(MemberInfoComparer<PropertyInfo>.Default);
+        private readonly Dictionary<Type, IEqualityComparer> comparers = new();
+        private readonly Dictionary<Type, CustomCopy> copyers = new();
 
         /// <summary>
         /// Create the settings object.

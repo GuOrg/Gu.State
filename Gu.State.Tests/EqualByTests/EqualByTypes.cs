@@ -265,7 +265,7 @@ namespace Gu.State.Tests.EqualByTests
 
         public class ComplexType
         {
-            public static readonly TestComparer Comparer = new TestComparer();
+            public static readonly TestComparer Comparer = new();
 
             public static readonly IEqualityComparer<ComplexType> ByNameComparer = new NameComparer();
 
@@ -498,12 +498,12 @@ namespace Gu.State.Tests.EqualByTests
 
         public class WithListProperty<T>
         {
-            public List<T> Items { get; set; } = new List<T>();
+            public List<T> Items { get; set; } = new();
         }
 
         public class WithSimpleProperties : INotifyPropertyChanged
         {
-            internal static readonly AllMembersComparerImpl AllMembersComparer = new AllMembersComparerImpl();
+            internal static readonly AllMembersComparerImpl AllMembersComparer = new();
 
             private int intValue;
             private int? nullableIntValue;

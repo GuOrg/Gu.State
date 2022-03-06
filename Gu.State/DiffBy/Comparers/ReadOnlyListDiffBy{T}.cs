@@ -5,7 +5,7 @@
 
     internal sealed class ReadOnlyListDiffBy<T> : ListDiffBy, IDiffBy
     {
-        internal static readonly ReadOnlyListDiffBy<T> Default = new ReadOnlyListDiffBy<T>();
+        internal static readonly ReadOnlyListDiffBy<T> Default = new();
 
         private ReadOnlyListDiffBy()
         {

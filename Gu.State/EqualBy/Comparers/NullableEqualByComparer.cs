@@ -23,7 +23,7 @@ namespace Gu.State
         internal sealed class Comparer<T> : EqualByComparer<T?>
             where T : struct
         {
-            internal static readonly Comparer<T> Default = new Comparer<T>();
+            internal static readonly Comparer<T> Default = new();
 
             private static readonly bool IsEquatable = typeof(T).Equatable();
 

@@ -5,7 +5,7 @@
 
     internal sealed class ImmutableSet<T>
     {
-        internal static readonly ImmutableSet<T> Empty = new ImmutableSet<T>(new T[0]);
+        internal static readonly ImmutableSet<T> Empty = new(new T[0]);
         private readonly HashSet<T> set;
 
         private ImmutableSet(IEnumerable<T> items)

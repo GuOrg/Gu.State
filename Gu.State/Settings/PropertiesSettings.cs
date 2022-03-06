@@ -14,7 +14,7 @@ namespace Gu.State
     /// </summary>
     public sealed class PropertiesSettings : MemberSettings
     {
-        private static readonly ConcurrentDictionary<BindingFlagsAndReferenceHandling, PropertiesSettings> Cache = new ConcurrentDictionary<BindingFlagsAndReferenceHandling, PropertiesSettings>();
+        private static readonly ConcurrentDictionary<BindingFlagsAndReferenceHandling, PropertiesSettings> Cache = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertiesSettings"/> class.
@@ -51,7 +51,7 @@ namespace Gu.State
         /// <summary>Gets a collection or ignored properties.</summary>
         public IEnumerable<PropertyInfo> IgnoredProperties => this.IgnoredMembers.Keys.Cast<PropertyInfo>();
 
-        internal ConcurrentDictionary<Type, TypeErrors> TrackableErrors { get; } = new ConcurrentDictionary<Type, TypeErrors>();
+        internal ConcurrentDictionary<Type, TypeErrors> TrackableErrors { get; } = new();
 
         /// <summary> Create a builder for building a <see cref="PropertiesSettings"/>.</summary>
         /// <returns>A <see cref="PropertiesSettingsBuilder"/>.</returns>

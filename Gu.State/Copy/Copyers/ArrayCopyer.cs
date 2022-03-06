@@ -5,7 +5,7 @@ namespace Gu.State
 
     internal class ArrayCopyer : ICopyer
     {
-        private static readonly ArrayCopyer Default = new ArrayCopyer();
+        private static readonly ArrayCopyer Default = new();
 
         private ArrayCopyer()
         {

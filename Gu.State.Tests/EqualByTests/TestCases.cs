@@ -17,7 +17,7 @@ namespace Gu.State.Tests.EqualByTests
 
     public static class TestCases
     {
-        private static readonly WithSimpleProperties SharedWithSimpleProperties = new WithSimpleProperties(1, 2, "3", StringSplitOptions.RemoveEmptyEntries);
+        private static readonly WithSimpleProperties SharedWithSimpleProperties = new(1, 2, "3", StringSplitOptions.RemoveEmptyEntries);
 
         public static readonly TestCaseData[] WhenEqual =
         {
@@ -79,7 +79,7 @@ namespace Gu.State.Tests.EqualByTests
 
             Case(new List<int>(), new List<int>()),
             Case(new List<int> { 1, 2, 3 }, new List<int> { 1, 2, 3 }),
-            Case(new List<Point> { new Point(1, 2), new Point(1, 2) }, new List<Point> { new Point(1, 2), new Point(1, 2) }),
+            Case(new List<Point> { new(1, 2), new(1, 2) }, new List<Point> { new(1, 2), new(1, 2) }),
 
             Case(new HashSet<int>(), new HashSet<int>()),
             Case(new HashSet<int>(new[] { 1, 2, 3 }), new HashSet<int>(new[] { 1, 2, 3 })),
@@ -88,7 +88,7 @@ namespace Gu.State.Tests.EqualByTests
 
             Case(new ObservableCollection<int>(), new ObservableCollection<int>()),
             Case(new ObservableCollection<int> { 1, 2, 3 }, new ObservableCollection<int> { 1, 2, 3 }),
-            Case(new ObservableCollection<Point> { new Point(1, 2), new Point(1, 2) }, new ObservableCollection<Point> { new Point(1, 2), new Point(1, 2) }),
+            Case(new ObservableCollection<Point> { new(1, 2), new(1, 2) }, new ObservableCollection<Point> { new(1, 2), new(1, 2) }),
 
             Case(new Dictionary<int, string> { { 1, "1" } }, new Dictionary<int, string> { { 1, "1" } }),
             Case(new Dictionary<int, WithSimpleProperties> { { 1, SharedWithSimpleProperties } }, new Dictionary<int, WithSimpleProperties> { { 1, SharedWithSimpleProperties } }),
@@ -143,8 +143,8 @@ namespace Gu.State.Tests.EqualByTests
             Case(new With<IReadOnlyList<object>>(new object[] { 1, 2.2, 3 }), new With<IReadOnlyList<object>>(new object[] { 1, 2.2, 3 })),
 
             Case(new[] { new[] { 1, 2, 3 }, new[] { 4, 5 } }, new[] { new[] { 1, 2, 3 }, new[] { 4, 5 } }),
-            Case(new List<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) }, new List<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) }),
-            Case(new HashSet<HashCollisionType> { new HashCollisionType { Value = 1 } }, new HashSet<HashCollisionType> { new HashCollisionType { Value = 1 } }),
+            Case(new List<ComplexType> { new("b", 2), new("c", 3) }, new List<ComplexType> { new("b", 2), new("c", 3) }),
+            Case(new HashSet<HashCollisionType> { new() { Value = 1 } }, new HashSet<HashCollisionType> { new() { Value = 1 } }),
             Case(new Dictionary<HashCollisionType, string> { { new HashCollisionType { Value = 1 }, "1" } }, new Dictionary<HashCollisionType, string> { { new HashCollisionType { Value = 1 }, "1" } }),
 
             Case(new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = 2 }), new With<BaseClass>(new Derived1 { BaseValue = 1, Derived1Value = 2 })),
@@ -152,7 +152,7 @@ namespace Gu.State.Tests.EqualByTests
             Case(new WithComplexProperty("a", 1) { ComplexType = new ComplexType { Name = "1", Value = 2 } }, new WithComplexProperty("a", 1) { ComplexType = new ComplexType { Name = "1", Value = 2 } }),
             Case(new With<ComplexType>(new ComplexType("1", 2)), new With<ComplexType>(new ComplexType("1", 2))),
             Case(new WithListProperty<int> { Items = new List<int>() }, new WithListProperty<int> { Items = new List<int>() }),
-            Case(new ObservableCollection<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) }, new ObservableCollection<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) }),
+            Case(new ObservableCollection<ComplexType> { new("b", 2), new("c", 3) }, new ObservableCollection<ComplexType> { new("b", 2), new("c", 3) }),
 
             Case(new Exception("Message."), new Exception("Message.")),
         };
@@ -310,7 +310,7 @@ namespace Gu.State.Tests.EqualByTests
             Case(new[] { new[] { 1, 2, 3 }, new[] { 4, 5 } }, new[] { new[] { -1, 2, 3 }, new[] { 4, 5 } }),
             Case(new[] { new[] { 1, 2, 3 }, new[] { 4, 5 } }, new[] { new[] { 1, 2, 3 }, new[] { 4, -5 } }),
 
-            Case(new HashSet<HashCollisionType> { new HashCollisionType { Value = 1 } }, new HashSet<HashCollisionType> { new HashCollisionType { Value = -1 } }),
+            Case(new HashSet<HashCollisionType> { new() { Value = 1 } }, new HashSet<HashCollisionType> { new() { Value = -1 } }),
 
             Case(new Dictionary<HashCollisionType, string> { { new HashCollisionType { Value = 1 }, "1" } }, new Dictionary<HashCollisionType, string> { { new HashCollisionType { Value = -1 }, "1" } }),
 
@@ -327,11 +327,11 @@ namespace Gu.State.Tests.EqualByTests
             Case(new With<ComplexType>(new ComplexType("1", 2)), new With<ComplexType>(new ComplexType("1", -2))),
             Case(new WithListProperty<int> { Items = { 1, 2, 3 } },  new WithListProperty<int>()),
             Case(new WithListProperty<int> { Items = { 1, 2, 3 } },  new WithListProperty<int> { Items = new List<int>() }),
-            Case(new ObservableCollection<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) }, new ObservableCollection<ComplexType> { new ComplexType("b", 2), new ComplexType("c", -3) }),
+            Case(new ObservableCollection<ComplexType> { new("b", 2), new("c", 3) }, new ObservableCollection<ComplexType> { new("b", 2), new("c", -3) }),
 
             Case(new Exception("Message 1."), new Exception("Message 2.")),
         };
 
-        private static TestCaseData Case<T>(T x, T y) => new TestCaseData(x, y);
+        private static TestCaseData Case<T>(T x, T y) => new(x, y);
     }
 }

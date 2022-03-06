@@ -4,7 +4,7 @@ namespace Gu.State
 
     internal static class ConcurrentDictionaryPool<TKey, TValue>
     {
-        private static readonly ConcurrentQueue<ConcurrentDictionary<TKey, TValue>> Cache = new ConcurrentQueue<ConcurrentDictionary<TKey, TValue>>();
+        private static readonly ConcurrentQueue<ConcurrentDictionary<TKey, TValue>> Cache = new();
 
         internal static IBorrowed<ConcurrentDictionary<TKey, TValue>> Borrow()
         {

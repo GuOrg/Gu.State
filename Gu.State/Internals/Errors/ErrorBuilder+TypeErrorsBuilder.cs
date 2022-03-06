@@ -7,7 +7,7 @@ namespace Gu.State
     {
         internal sealed class TypeErrorsBuilder : Error
         {
-            private readonly List<Error> errors = new List<Error>();
+            private readonly List<Error> errors = new();
 
             internal TypeErrorsBuilder(Type type)
             {

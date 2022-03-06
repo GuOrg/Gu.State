@@ -8,7 +8,7 @@ namespace Gu.State
     {
         private class PropertyNodes
         {
-            private readonly List<IUnsubscriber<IChildNode<T>>> nodes = new List<IUnsubscriber<IChildNode<T>>>();
+            private readonly List<IUnsubscriber<IChildNode<T>>> nodes = new();
 
             internal void SetValue(PropertyInfo property, IUnsubscriber<IChildNode<T>> childNode)
             {

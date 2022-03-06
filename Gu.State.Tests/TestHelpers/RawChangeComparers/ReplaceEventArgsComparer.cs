@@ -4,7 +4,7 @@ namespace Gu.State.Tests
 
     public sealed class ReplaceEventArgsComparer : EventArgsComparer<ReplaceEventArgs>
     {
-        public static readonly ReplaceEventArgsComparer Default = new ReplaceEventArgsComparer();
+        public static readonly ReplaceEventArgsComparer Default = new();
 
         public override bool Equals(ReplaceEventArgs x, ReplaceEventArgs y)
         {

@@ -5,7 +5,7 @@
 
     internal static class DictionaryPool<TKey, TValue>
     {
-        private static readonly ConcurrentQueue<Dictionary<TKey, TValue>> Cache = new ConcurrentQueue<Dictionary<TKey, TValue>>();
+        private static readonly ConcurrentQueue<Dictionary<TKey, TValue>> Cache = new();
 
         internal static IBorrowed<Dictionary<TKey, TValue>> Borrow()
         {

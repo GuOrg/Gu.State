@@ -17,7 +17,7 @@ namespace Gu.State.Tests
             [Test]
             public static void CreateAndDispose()
             {
-                var source = new ObservableCollection<ComplexType> { new ComplexType() };
+                var source = new ObservableCollection<ComplexType> { new() };
                 var propertyChanges = new List<string>();
                 var changes = new List<EventArgs>();
                 var tracker = Track.Changes(source, ReferenceHandling.Structural);
@@ -130,7 +130,7 @@ namespace Gu.State.Tests
             [TestCase(2)]
             public static void Insert(int index)
             {
-                var source = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType() };
+                var source = new ObservableCollection<ComplexType> { new(), new() };
                 var propertyChanges = new List<string>();
                 var changes = new List<EventArgs>();
                 using var tracker = Track.Changes(source, ReferenceHandling.Structural);
@@ -152,7 +152,7 @@ namespace Gu.State.Tests
             [TestCase(1)]
             public static void InsertThenItemsNotifies(int index)
             {
-                var source = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType() };
+                var source = new ObservableCollection<ComplexType> { new(), new() };
                 var propertyChanges = new List<string>();
                 var changes = new List<EventArgs>();
                 var expectedChanges = new List<EventArgs>();
@@ -192,7 +192,7 @@ namespace Gu.State.Tests
             [Test]
             public static void Remove()
             {
-                var source = new ObservableCollection<ComplexType> { new ComplexType(), null };
+                var source = new ObservableCollection<ComplexType> { new(), null };
                 var propertyChanges = new List<string>();
                 var changes = new List<EventArgs>();
                 using var tracker = Track.Changes(source, ReferenceHandling.Structural);
@@ -225,7 +225,7 @@ namespace Gu.State.Tests
             [TestCase(2)]
             public static void RemoveThenItemNotifies(int index)
             {
-                var source = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType(), new ComplexType() };
+                var source = new ObservableCollection<ComplexType> { new(), new(), new() };
                 var propertyChanges = new List<string>();
                 var changes = new List<EventArgs>();
                 var expectedChanges = new List<EventArgs>();
@@ -259,7 +259,7 @@ namespace Gu.State.Tests
             [Test]
             public static void RemoveStopsTracking()
             {
-                var source = new ObservableCollection<ComplexType> { new ComplexType(), null };
+                var source = new ObservableCollection<ComplexType> { new(), null };
                 var propertyChanges = new List<string>();
                 var changes = new List<EventArgs>();
                 var expectedChanges = new List<EventArgs>();
@@ -352,7 +352,7 @@ namespace Gu.State.Tests
             [Test]
             public static void Replace()
             {
-                var source = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType() };
+                var source = new ObservableCollection<ComplexType> { new(), new() };
                 var propertyChanges = new List<string>();
                 var changes = new List<EventArgs>();
                 using var tracker = Track.Changes(source, ReferenceHandling.Structural);
@@ -373,7 +373,7 @@ namespace Gu.State.Tests
             [Test]
             public static void ReplaceStopsListeningToOld()
             {
-                var source = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType() };
+                var source = new ObservableCollection<ComplexType> { new(), new() };
                 var propertyChanges = new List<string>();
                 var changes = new List<EventArgs>();
                 using var tracker = Track.Changes(source, ReferenceHandling.Structural);
@@ -400,7 +400,7 @@ namespace Gu.State.Tests
             [Test]
             public static void ReplaceStartsListeningToNew()
             {
-                var source = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType() };
+                var source = new ObservableCollection<ComplexType> { new(), new() };
                 var propertyChanges = new List<string>();
                 var changes = new List<EventArgs>();
                 var expected = new List<EventArgs>();
@@ -431,7 +431,7 @@ namespace Gu.State.Tests
             [Test]
             public static void Move()
             {
-                var source = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType() };
+                var source = new ObservableCollection<ComplexType> { new(), new() };
                 var propertyChanges = new List<string>();
                 var changes = new List<EventArgs>();
                 using var tracker = Track.Changes(source, ReferenceHandling.Structural);
@@ -457,7 +457,7 @@ namespace Gu.State.Tests
             [TestCase(1, 0)]
             public static void MoveThenItemsNotifies(int from, int to)
             {
-                var source = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType(), new ComplexType() };
+                var source = new ObservableCollection<ComplexType> { new(), new(), new() };
                 var propertyChanges = new List<string>();
                 var changes = new List<EventArgs>();
                 var expectedChanges = new List<EventArgs>();
@@ -497,7 +497,7 @@ namespace Gu.State.Tests
             [Test]
             public static void ItemNotifies()
             {
-                var source = new ObservableCollection<ComplexType> { new ComplexType(), new ComplexType() };
+                var source = new ObservableCollection<ComplexType> { new(), new() };
                 var propertyChanges = new List<string>();
                 var changes = new List<EventArgs>();
                 using var tracker = Track.Changes(source, ReferenceHandling.Structural);

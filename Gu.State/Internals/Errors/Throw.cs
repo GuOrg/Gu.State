@@ -6,7 +6,7 @@ namespace Gu.State
     {
         internal const string ThereIsABugInTheLibrary = "There is a bug in the library as it:";
 
-        internal static InvalidOperationException CompareWhenError => new InvalidOperationException(nameof(CompareWhenError));
+        internal static InvalidOperationException CompareWhenError => new(nameof(CompareWhenError));
 
         internal static InvalidOperationException ExpectedParameterOfTypes<T1, T2>(string parameterName)
         {

@@ -15,7 +15,7 @@ namespace Gu.State.Tests
             [TestCase(ReferenceHandling.References)]
             public static void CreateAndDisposeWhenTargetIsEmpty(ReferenceHandling referenceHandling)
             {
-                var source = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
+                var source = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new(1), new(2) };
                 var target = new ObservableCollection<WithGetReadOnlyPropertySealed<int>>();
                 using (Synchronize.PropertyValues(source, target, referenceHandling))
                 {
@@ -34,8 +34,8 @@ namespace Gu.State.Tests
             [Test]
             public static void CreateAndDisposeWhenTargetIsNotEmptyStructural()
             {
-                var source = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
-                var target = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
+                var source = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new(1), new(2) };
+                var target = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new(1), new(2) };
                 using (Synchronize.PropertyValues(source, target, ReferenceHandling.Structural))
                 {
                     var expected = new[] { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
@@ -51,8 +51,8 @@ namespace Gu.State.Tests
             [Test]
             public static void CreateAndDisposeWhenTargetIsNotEmptyReference()
             {
-                var source = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
-                var target = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
+                var source = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new(1), new(2) };
+                var target = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new(1), new(2) };
                 using (Synchronize.PropertyValues(source, target, ReferenceHandling.References))
                 {
                     var expected = new[] { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
@@ -88,8 +88,8 @@ namespace Gu.State.Tests
             [TestCase(ReferenceHandling.References)]
             public static void Remove(ReferenceHandling referenceHandling)
             {
-                var source = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
-                var target = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
+                var source = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new(1), new(2) };
+                var target = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new(1), new(2) };
                 using (Synchronize.PropertyValues(source, target, referenceHandling))
                 {
                     source.RemoveAt(1);
@@ -107,8 +107,8 @@ namespace Gu.State.Tests
             [TestCase(ReferenceHandling.References)]
             public static void Insert(ReferenceHandling referenceHandling)
             {
-                var source = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
-                var target = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
+                var source = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new(1), new(2) };
+                var target = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new(1), new(2) };
                 using (Synchronize.PropertyValues(source, target, referenceHandling))
                 {
                     source.Insert(1, new WithGetReadOnlyPropertySealed<int>(3));
@@ -125,8 +125,8 @@ namespace Gu.State.Tests
             [TestCase(ReferenceHandling.References)]
             public static void Move(ReferenceHandling referenceHandling)
             {
-                var source = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
-                var target = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
+                var source = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new(1), new(2) };
+                var target = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new(1), new(2) };
                 using (Synchronize.PropertyValues(source, target, referenceHandling))
                 {
                     source.Move(1, 0);
@@ -145,8 +145,8 @@ namespace Gu.State.Tests
             [TestCase(ReferenceHandling.References)]
             public static void Replace(ReferenceHandling referenceHandling)
             {
-                var source = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
-                var target = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new WithGetReadOnlyPropertySealed<int>(1), new WithGetReadOnlyPropertySealed<int>(2) };
+                var source = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new(1), new(2) };
+                var target = new ObservableCollection<WithGetReadOnlyPropertySealed<int>> { new(1), new(2) };
                 using (Synchronize.PropertyValues(source, target, referenceHandling))
                 {
                     source[0] = new WithGetReadOnlyPropertySealed<int>(3);

@@ -4,7 +4,7 @@ namespace Gu.State.Tests
 
     public sealed class PropertyChangedEventArgsComparer : EventArgsComparer<PropertyChangeEventArgs>
     {
-        public static readonly PropertyChangedEventArgsComparer Default = new PropertyChangedEventArgsComparer();
+        public static readonly PropertyChangedEventArgsComparer Default = new();
 
         public override bool Equals(PropertyChangeEventArgs x, PropertyChangeEventArgs y)
         {

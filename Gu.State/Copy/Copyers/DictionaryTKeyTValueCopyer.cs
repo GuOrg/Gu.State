@@ -6,7 +6,7 @@ namespace Gu.State
 
     internal sealed class DictionaryTKeyTValueCopyer : ICopyer
     {
-        internal static readonly DictionaryTKeyTValueCopyer Default = new DictionaryTKeyTValueCopyer();
+        internal static readonly DictionaryTKeyTValueCopyer Default = new();
 
         private DictionaryTKeyTValueCopyer()
         {

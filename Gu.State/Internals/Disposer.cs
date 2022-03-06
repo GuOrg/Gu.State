@@ -6,7 +6,7 @@ namespace Gu.State
     internal sealed class Disposer : IDisposable
     {
         private readonly Action dispose;
-        private readonly object gate = new object();
+        private readonly object gate = new();
         private bool disposed;
 
         internal Disposer(Action dispose)

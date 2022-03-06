@@ -331,7 +331,7 @@ namespace Gu.State.Tests.DiffTests
 
         public class WithListProperty<T>
         {
-            public List<T> Items { get; set; } = new List<T>();
+            public List<T> Items { get; set; } = new();
         }
 
         public class WithReadonlyProperty<T>
@@ -346,7 +346,7 @@ namespace Gu.State.Tests.DiffTests
 
         public class WithSimpleProperties : INotifyPropertyChanged
         {
-            internal static readonly TestComparer Comparer = new TestComparer();
+            internal static readonly TestComparer Comparer = new();
 
             private int intValue;
             private int? nullableIntValue;

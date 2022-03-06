@@ -14,7 +14,7 @@ namespace Gu.State
         {
             private readonly IRefCounted<DirtyTrackerNode> dirtyTrackerNode;
             private readonly IBorrowed<ConcurrentQueue<DirtyTrackerNode>> borrowedQueue;
-            private readonly object gate = new object();
+            private readonly object gate = new();
             private DirtyTrackerNode processingNode;
 
             internal Synchronizer(INotifyPropertyChanged source, INotifyPropertyChanged target, PropertiesSettings settings)

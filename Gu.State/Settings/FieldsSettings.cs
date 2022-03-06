@@ -13,7 +13,7 @@ namespace Gu.State
     /// </summary>
     public sealed class FieldsSettings : MemberSettings
     {
-        private static readonly ConcurrentDictionary<BindingFlagsAndReferenceHandling, FieldsSettings> Cache = new ConcurrentDictionary<BindingFlagsAndReferenceHandling, FieldsSettings>();
+        private static readonly ConcurrentDictionary<BindingFlagsAndReferenceHandling, FieldsSettings> Cache = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FieldsSettings"/> class.

@@ -4,7 +4,7 @@ namespace Gu.State.Tests
 
     public sealed class PropertyGraphChangedEventArgsComparer<TNode> : EventArgsComparer<PropertyGraphChangedEventArgs<TNode>>
     {
-        public static readonly PropertyGraphChangedEventArgsComparer<TNode> Default = new PropertyGraphChangedEventArgsComparer<TNode>();
+        public static readonly PropertyGraphChangedEventArgsComparer<TNode> Default = new();
 
         private PropertyGraphChangedEventArgsComparer()
         {

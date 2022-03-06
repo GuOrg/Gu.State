@@ -11,7 +11,7 @@ namespace Gu.State.Tests
 
     public sealed class EventArgsComparer : IEqualityComparer<object>, IComparer
     {
-        public static readonly EventArgsComparer Default = new EventArgsComparer();
+        public static readonly EventArgsComparer Default = new();
 
         private EventArgsComparer()
         {

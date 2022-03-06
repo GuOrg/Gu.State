@@ -34,8 +34,8 @@ namespace Gu.State.Tests.EqualByTests
         [Test]
         public void ListOfWithSimpleProperties()
         {
-            var x = new List<WithSimpleProperties> { new WithSimpleProperties(1, 2, "a", StringSplitOptions.RemoveEmptyEntries) };
-            var y = new List<WithSimpleProperties> { new WithSimpleProperties(1, 2, "a", StringSplitOptions.RemoveEmptyEntries) };
+            var x = new List<WithSimpleProperties> { new(1, 2, "a", StringSplitOptions.RemoveEmptyEntries) };
+            var y = new List<WithSimpleProperties> { new(1, 2, "a", StringSplitOptions.RemoveEmptyEntries) };
             var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
 
@@ -46,8 +46,8 @@ namespace Gu.State.Tests.EqualByTests
         [Test]
         public void ListOfComplex()
         {
-            var x = new List<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) };
-            var y = new List<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) };
+            var x = new List<ComplexType> { new("b", 2), new("c", 3) };
+            var y = new List<ComplexType> { new("b", 2), new("c", 3) };
             var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
 
@@ -61,8 +61,8 @@ namespace Gu.State.Tests.EqualByTests
         [Test]
         public void WithListOfPoints()
         {
-            var x = new With<List<Point>>(new List<Point> { new Point(1, 2), new Point(1, 2) });
-            var y = new With<List<Point>>(new List<Point> { new Point(1, 2), new Point(1, 2) });
+            var x = new With<List<Point>>(new List<Point> { new(1, 2), new(1, 2) });
+            var y = new With<List<Point>>(new List<Point> { new(1, 2), new(1, 2) });
 
             var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);
@@ -74,7 +74,7 @@ namespace Gu.State.Tests.EqualByTests
         [Test]
         public void ListOfComplexSameItems()
         {
-            var x = new List<ComplexType> { new ComplexType("b", 2), new ComplexType("c", 3) };
+            var x = new List<ComplexType> { new("b", 2), new("c", 3) };
             var y = new List<ComplexType>(x);
             var result = this.EqualBy(x, y, ReferenceHandling.Structural);
             Assert.AreEqual(true, result);

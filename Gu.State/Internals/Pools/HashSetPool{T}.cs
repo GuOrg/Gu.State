@@ -7,7 +7,7 @@ namespace Gu.State
 
     internal static class HashSetPool<T>
     {
-        private static readonly ConcurrentQueue<HashSet<T>> Cache = new ConcurrentQueue<HashSet<T>>();
+        private static readonly ConcurrentQueue<HashSet<T>> Cache = new();
 
         internal static IBorrowed<HashSet<T>> Borrow(IEqualityComparer<T> comparer)
         {

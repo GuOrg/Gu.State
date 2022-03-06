@@ -7,9 +7,9 @@ namespace Gu.State
     internal partial class ChildNodes<T>
         where T : class, ITrackerNode<T>
     {
-        private static readonly ConcurrentQueue<ChildNodes<T>> Cache = new ConcurrentQueue<ChildNodes<T>>();
-        private readonly PropertyNodes propertyNodes = new PropertyNodes();
-        private readonly IndexNodes indexNodes = new IndexNodes();
+        private static readonly ConcurrentQueue<ChildNodes<T>> Cache = new();
+        private readonly PropertyNodes propertyNodes = new();
+        private readonly IndexNodes indexNodes = new();
 
         private ChildNodes()
         {

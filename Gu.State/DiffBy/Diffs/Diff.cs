@@ -37,7 +37,7 @@ namespace Gu.State
 
         private static class ValueDiffSetPool
         {
-            private static readonly ConcurrentQueue<HashSet<ValueDiff>> Pool = new ConcurrentQueue<HashSet<ValueDiff>>();
+            private static readonly ConcurrentQueue<HashSet<ValueDiff>> Pool = new();
 
             internal static Disposer<HashSet<ValueDiff>> Borrow()
             {

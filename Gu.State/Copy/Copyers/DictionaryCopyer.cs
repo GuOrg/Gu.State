@@ -4,7 +4,7 @@ namespace Gu.State
 
     internal sealed class DictionaryCopyer : ICopyer
     {
-        internal static readonly DictionaryCopyer Default = new DictionaryCopyer();
+        internal static readonly DictionaryCopyer Default = new();
 
         private DictionaryCopyer()
         {

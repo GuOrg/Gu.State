@@ -7,11 +7,11 @@ namespace Gu.State
 
     internal sealed class ReferencePair : IDisposable
     {
-        private static readonly ConcurrentDictionary<ReferencePair, ReferencePair> Cache = new ConcurrentDictionary<ReferencePair, ReferencePair>();
+        private static readonly ConcurrentDictionary<ReferencePair, ReferencePair> Cache = new();
         private readonly WeakReference x;
         private readonly WeakReference y;
         private readonly int hashCode;
-        private readonly object gate = new object();
+        private readonly object gate = new();
         private bool disposed;
 
         private ReferencePair(object x, object y)

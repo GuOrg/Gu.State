@@ -14,8 +14,8 @@ namespace Gu.State.Tests.EqualByTests
         [TestCase(ReferenceHandling.Structural)]
         public void ComplexWhenEqual(ReferenceHandling referenceHandling)
         {
-            var x = new HashSet<ComplexType>(ComplexType.ByNameComparer) { new ComplexType("a", 1) };
-            var y = new HashSet<ComplexType>(ComplexType.ByNameComparer) { new ComplexType("a", 1) };
+            var x = new HashSet<ComplexType>(ComplexType.ByNameComparer) { new("a", 1) };
+            var y = new HashSet<ComplexType>(ComplexType.ByNameComparer) { new("a", 1) };
             var result = this.EqualBy(x, y, referenceHandling);
             Assert.AreEqual(true, result);
 
@@ -27,8 +27,8 @@ namespace Gu.State.Tests.EqualByTests
         [TestCase(ReferenceHandling.References)]
         public void ComplexWhenNotEqual(ReferenceHandling referenceHandling)
         {
-            var x = new HashSet<ComplexType>(ComplexType.ByNameComparer) { new ComplexType("a", 1) };
-            var y = new HashSet<ComplexType>(ComplexType.ByNameComparer) { new ComplexType("a", 2) };
+            var x = new HashSet<ComplexType>(ComplexType.ByNameComparer) { new("a", 1) };
+            var y = new HashSet<ComplexType>(ComplexType.ByNameComparer) { new("a", 2) };
             var result = this.EqualBy(x, y, referenceHandling);
             Assert.AreEqual(false, result);
 
@@ -56,8 +56,8 @@ namespace Gu.State.Tests.EqualByTests
         public void WithCollisionsWhenNotEqual(ReferenceHandling referenceHandling)
         {
             var e1 = new HashCollisionType();
-            var x = new HashSet<HashCollisionType> { e1, new HashCollisionType { Value = 1 } };
-            var y = new HashSet<HashCollisionType> { e1, new HashCollisionType { Value = 2 } };
+            var x = new HashSet<HashCollisionType> { e1, new() { Value = 1 } };
+            var y = new HashSet<HashCollisionType> { e1, new() { Value = 2 } };
             var result = this.EqualBy(x, y, referenceHandling);
             Assert.AreEqual(false, result);
 

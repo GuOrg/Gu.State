@@ -15,10 +15,10 @@ namespace Gu.State
     {
         private static readonly IReadOnlyDictionary<Type, EqualByComparer> DefaultComparers = CreateDefaultComparers();
 
-        private readonly Lazy<ConcurrentDictionary<Type, TypeErrors>> copyErrors = new Lazy<ConcurrentDictionary<Type, TypeErrors>>();
+        private readonly Lazy<ConcurrentDictionary<Type, TypeErrors>> copyErrors = new();
         private readonly ImmutableSet<Type> immutableTypes;
-        private readonly ConcurrentDictionary<Type, EqualByComparer> rootEqualByComparers = new ConcurrentDictionary<Type, EqualByComparer>();
-        private readonly ConcurrentDictionary<Type, EqualByComparer> equalByComparers = new ConcurrentDictionary<Type, EqualByComparer>();
+        private readonly ConcurrentDictionary<Type, EqualByComparer> rootEqualByComparers = new();
+        private readonly ConcurrentDictionary<Type, EqualByComparer> equalByComparers = new();
         private readonly IReadOnlyDictionary<Type, IEqualityComparer> comparers;
         private readonly IReadOnlyDictionary<Type, CustomCopy> copyers;
         private readonly KnownTypes knownTypes;
@@ -86,7 +86,7 @@ namespace Gu.State
         internal ConcurrentDictionary<Type, TypeErrors> CopyErrors => this.copyErrors.Value;
 
         /// <summary>Gets a cache for ignored members.</summary>
-        protected ConcurrentDictionary<MemberInfo, bool> IgnoredMembers { get; } = new ConcurrentDictionary<MemberInfo, bool>();
+        protected ConcurrentDictionary<MemberInfo, bool> IgnoredMembers { get; } = new();
 
 #pragma warning disable CA1822 // Mark members as static
         /// <summary>

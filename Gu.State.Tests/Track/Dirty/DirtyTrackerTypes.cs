@@ -75,7 +75,7 @@ namespace Gu.State.Tests
 
         public class ComplexType : INotifyPropertyChanged
         {
-            public static readonly TestComparer Comparer = new TestComparer();
+            public static readonly TestComparer Comparer = new();
             private string name;
             private int value;
 
@@ -445,8 +445,8 @@ namespace Gu.State.Tests
         {
             private int value;
             private Level next;
-            private ObservableCollection<int> ints = new ObservableCollection<int>();
-            private ObservableCollection<Level> levels = new ObservableCollection<Level>();
+            private ObservableCollection<int> ints = new();
+            private ObservableCollection<Level> levels = new();
             private string name;
             private StringComparison comparison;
 
@@ -708,9 +708,9 @@ namespace Gu.State.Tests
                 }
             }
 
-            public ObservableCollection<ComplexType> Complexes { get; } = new ObservableCollection<ComplexType>();
+            public ObservableCollection<ComplexType> Complexes { get; } = new();
 
-            public ObservableCollection<int> Ints { get; } = new ObservableCollection<int>();
+            public ObservableCollection<int> Ints { get; } = new();
 
             public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
             {

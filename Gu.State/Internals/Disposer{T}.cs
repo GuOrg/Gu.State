@@ -6,7 +6,7 @@
     internal sealed class Disposer<T> : IDisposer<T>, IBorrowed<T>, IUnsubscriber<T>
     {
         private readonly Action<T> dispose;
-        private readonly object gate = new object();
+        private readonly object gate = new();
         private readonly T value;
         private bool disposed;
 

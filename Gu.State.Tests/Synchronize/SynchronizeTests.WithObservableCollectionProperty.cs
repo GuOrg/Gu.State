@@ -161,7 +161,7 @@ namespace Gu.State.Tests
                 var target = new WithObservableCollectionProperties();
                 using (Synchronize.PropertyValues(source, target, ReferenceHandling.Structural))
                 {
-                    var expected = new List<ComplexType> { new ComplexType("a", 1), new ComplexType("b", 2) };
+                    var expected = new List<ComplexType> { new("a", 1), new("b", 2) };
                     CollectionAssert.AreEqual(expected, source.Complexes, ComplexType.Comparer);
                     CollectionAssert.AreEqual(expected, target.Complexes, ComplexType.Comparer);
                     Assert.AreNotSame(source.Complexes[0], target.Complexes[0]);

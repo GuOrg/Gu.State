@@ -9,7 +9,7 @@ namespace Gu.State
     /// </summary>
     public abstract partial class MemberSettings
     {
-        private static readonly ConcurrentDictionary<Type, bool> EquatableCheckedTypes = new ConcurrentDictionary<Type, bool>
+        private static readonly ConcurrentDictionary<Type, bool> EquatableCheckedTypes = new()
         {
             [typeof(Type)] = true,
             [typeof(CultureInfo)] = true,

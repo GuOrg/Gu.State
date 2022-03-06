@@ -18,9 +18,9 @@ namespace Gu.State
                                                                                   typeof(HashSet<>),
                                                                               };
 
-        private static readonly KnownTypes Default = new KnownTypes(null);
+        private static readonly KnownTypes Default = new(null);
 
-        private readonly ConcurrentDictionary<Type, bool> knownTypes = new ConcurrentDictionary<Type, bool>();
+        private readonly ConcurrentDictionary<Type, bool> knownTypes = new();
 
         private KnownTypes(IEnumerable<Type> ignoredTypes)
         {

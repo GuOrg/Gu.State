@@ -131,7 +131,7 @@ namespace Gu.State
 
         private sealed class ErrorComparer : IEqualityComparer<Error>
         {
-            internal static readonly ErrorComparer Default = new ErrorComparer();
+            internal static readonly ErrorComparer Default = new();
 
             private ErrorComparer()
             {

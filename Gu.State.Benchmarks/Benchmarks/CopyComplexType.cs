@@ -5,8 +5,8 @@
     [MemoryDiagnoser]
     public class CopyComplexType
     {
-        private readonly ComplexType source = new ComplexType();
-        private readonly ComplexType target = new ComplexType();
+        private readonly ComplexType source = new();
+        private readonly ComplexType target = new();
 
         [Benchmark(Baseline = true)]
         public ComplexType ManualImplementation()

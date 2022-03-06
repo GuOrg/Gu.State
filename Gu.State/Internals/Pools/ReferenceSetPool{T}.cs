@@ -6,7 +6,7 @@
     internal static class ReferenceSetPool<T>
         where T : class
     {
-        private static readonly ConcurrentQueue<HashSet<T>> Pool = new ConcurrentQueue<HashSet<T>>();
+        private static readonly ConcurrentQueue<HashSet<T>> Pool = new();
 
         internal static IBorrowed<HashSet<T>> Borrow()
         {

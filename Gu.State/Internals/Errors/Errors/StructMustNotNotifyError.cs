@@ -9,7 +9,7 @@ namespace Gu.State
 
     internal sealed class StructMustNotNotifyError : Error, IFixWithImmutable, INotSupported
     {
-        private static readonly ConcurrentDictionary<Type, StructMustNotNotifyError> Cache = new ConcurrentDictionary<Type, StructMustNotNotifyError>();
+        private static readonly ConcurrentDictionary<Type, StructMustNotNotifyError> Cache = new();
 
         private StructMustNotNotifyError(Type type)
         {

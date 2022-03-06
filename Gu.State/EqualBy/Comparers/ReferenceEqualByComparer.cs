@@ -4,7 +4,7 @@
 
     internal sealed class ReferenceEqualByComparer : EqualByComparer
     {
-        internal static readonly ReferenceEqualByComparer Default = new ReferenceEqualByComparer();
+        internal static readonly ReferenceEqualByComparer Default = new();
 
         internal override bool CanHaveReferenceLoops => false;
 
