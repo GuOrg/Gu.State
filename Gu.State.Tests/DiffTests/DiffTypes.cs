@@ -208,7 +208,7 @@ namespace Gu.State.Tests.DiffTests
                     return true;
                 }
 
-                return obj is Immutable && this.Equals((Immutable)obj);
+                return obj is Immutable immutable && this.Equals(immutable);
             }
 
             public override int GetHashCode()

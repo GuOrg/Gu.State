@@ -53,9 +53,7 @@ namespace Gu.State.Tests.EqualByTests
 
             object IWith.Value => this.Value;
 
-#pragma warning disable CA1508 // Avoid dead conditional code, broken analyzer
             public override string ToString() => $"With<{typeof(T).PrettyName()}> {{ {this.Value?.ToString() ?? "null"} }}";
-#pragma warning restore CA1508 // Avoid dead conditional code
         }
 
         public class WithGetSet<T> : IWith
@@ -69,9 +67,7 @@ namespace Gu.State.Tests.EqualByTests
 
             object IWith.Value => this.Value;
 
-#pragma warning disable CA1508 // Avoid dead conditional code, broken analyzer
             public override string ToString() => $"With<{typeof(T).PrettyName()}> {{ {this.Value?.ToString() ?? "null"} }}";
-#pragma warning restore CA1508 // Avoid dead conditional code
         }
 
         public class IntCollection : IReadOnlyList<int>

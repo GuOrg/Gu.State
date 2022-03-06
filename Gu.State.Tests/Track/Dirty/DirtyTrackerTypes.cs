@@ -422,17 +422,13 @@ namespace Gu.State.Tests
 
             public override bool Equals(object obj)
             {
-                if (obj is null)
-                {
-                    return false;
-                }
-
                 if (ReferenceEquals(this, obj))
                 {
                     return true;
                 }
 
-                return obj is WithGetReadOnlyPropertySealed<T> && this.Equals((WithGetReadOnlyPropertySealed<T>)obj);
+                return obj is WithGetReadOnlyPropertySealed<T> @sealed &&
+                       this.Equals(@sealed);
             }
 
             public override int GetHashCode()

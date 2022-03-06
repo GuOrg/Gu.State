@@ -399,9 +399,10 @@ namespace Gu.State
 
             private static int CompareIndex(IndexDiff x, IndexDiff y)
             {
-                if (x.Index is int && y.Index is int)
+                if (x.Index is int xi &&
+                    y.Index is int)
                 {
-                    return ((int)x.Index).CompareTo(y.Index);
+                    return xi.CompareTo(y.Index);
                 }
 
                 if ((x.X == PaddedPairs.MissingItem || x.Y == PaddedPairs.MissingItem) &&
@@ -423,9 +424,10 @@ namespace Gu.State
             private static bool TryCompare<T>(SubDiff x, SubDiff y, Func<T, T, int> compare, out int result)
                 where T : SubDiff
             {
-                if (x is T && y is T)
+                if (x is T diff &&
+                    y is T subDiff)
                 {
-                    result = compare((T)x, (T)y);
+                    result = compare(diff, subDiff);
                     return true;
                 }
 

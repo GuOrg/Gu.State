@@ -11,10 +11,7 @@ namespace Gu.State
         /// <param name="xValue">The x value.</param>
         /// <param name="yValue">The y value.</param>
         /// <param name="diffs">The nested diffs.</param>
-#pragma warning disable RS0022 // Constructor make non-inheritable base class inheritable
-        public ValueDiff(object xValue, object yValue, IReadOnlyCollection<SubDiff> diffs = null)
-#pragma warning restore RS0022 // Constructor make non-inheritable base class inheritable
-            : base(diffs)
+        public ValueDiff(object xValue, object yValue, IReadOnlyCollection<SubDiff> diffs = null) : base(diffs)
         {
             this.X = xValue;
             this.Y = yValue;

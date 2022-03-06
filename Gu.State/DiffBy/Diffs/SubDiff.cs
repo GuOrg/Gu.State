@@ -7,9 +7,7 @@ namespace Gu.State
 
         /// <summary>Initializes a new instance of the <see cref="SubDiff"/> class.</summary>
         /// <param name="valueDiff">The diff.</param>
-#pragma warning disable RS0022 // Constructor make non-inheritable base class inheritable
         protected SubDiff(ValueDiff valueDiff)
-#pragma warning restore RS0022 // Constructor make non-inheritable base class inheritable
             : base(valueDiff?.Diffs)
         {
             this.ValueDiff = valueDiff ?? throw new System.ArgumentNullException(nameof(valueDiff));

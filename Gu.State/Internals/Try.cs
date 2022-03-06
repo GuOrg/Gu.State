@@ -1,13 +1,14 @@
-﻿namespace Gu.State
+namespace Gu.State
 {
     internal static class Try
     {
         internal static bool CastAs<T>(object x, object y, out T xResult, out T yResult)
         {
-            if (x is T && y is T)
+            if (x is T xt &&
+                y is T yt)
             {
-                xResult = (T)x;
-                yResult = (T)y;
+                xResult = xt;
+                yResult = yt;
                 return true;
             }
 

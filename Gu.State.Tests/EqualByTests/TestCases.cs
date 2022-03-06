@@ -1,7 +1,6 @@
 // ReSharper disable RedundantArgumentDefaultValue
 // ReSharper disable RedundantCast
 #pragma warning disable CA1825 // Avoid zero-length array allocations.
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 #pragma warning disable SA1202 // Elements should be ordered by access
 namespace Gu.State.Tests.EqualByTests
 {

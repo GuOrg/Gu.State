@@ -216,9 +216,7 @@ namespace Gu.State
                 throw new ArgumentNullException(nameof(comparer));
             }
 
-#pragma warning disable CA1508 // Avoid dead conditional code, broken analyzer
             this.comparers[typeof(T)] = comparer as IEqualityComparer ?? CastingComparer.Create(comparer);
-#pragma warning restore CA1508 // Avoid dead conditional code
             return this;
         }
 
