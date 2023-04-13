@@ -192,11 +192,7 @@ namespace Gu.State
                     continue;
                 }
 
-                if (memberPath is null)
-                {
-                    memberPath = new MemberPath(type);
-                }
-
+                memberPath ??= new MemberPath(type);
                 typeErrors = VerifyMemberRecursively(typeErrors, type, settings, memberPath, getPropertyErrors, member);
             }
 

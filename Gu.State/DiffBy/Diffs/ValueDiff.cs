@@ -11,7 +11,8 @@ namespace Gu.State
         /// <param name="xValue">The x value.</param>
         /// <param name="yValue">The y value.</param>
         /// <param name="diffs">The nested diffs.</param>
-        public ValueDiff(object xValue, object yValue, IReadOnlyCollection<SubDiff> diffs = null) : base(diffs)
+        public ValueDiff(object xValue, object yValue, IReadOnlyCollection<SubDiff> diffs = null)
+            : base(diffs)
         {
             this.X = xValue;
             this.Y = yValue;

@@ -17,9 +17,9 @@ namespace Gu.State.Benchmarks
         private static readonly FieldsSettings FieldsSettingsWithComparer = FieldsSettings.Build().AddComparer(ComplexTypeComparer.Default).CreateSettings();
 
         [Benchmark(Baseline = true)]
-#pragma warning disable CA1707 // Identifiers should not contain underscores
+#pragma warning disable IDE1006, CA1707 // Identifiers should not contain underscores
         public bool this_x_Equals_this_y() => X.Equals(Y);
-#pragma warning restore CA1707 // Identifiers should not contain underscores
+#pragma warning restore IDE1006, CA1707 // Identifiers should not contain underscores
 
         [Benchmark]
         public bool ObjectEquals() => Equals(X, Y);

@@ -20,7 +20,7 @@ namespace Gu.State.Tests.Settings
             int MutableValue { get; set; }
         }
 
-        public struct WithGetReadOnlyPropertyStruct<T>
+        public readonly struct WithGetReadOnlyPropertyStruct<T>
         {
             public T Value { get; }
         }
